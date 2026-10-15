@@ -1,0 +1,121 @@
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269e..1007361 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -652,6 +652,22 @@ export class WikiPack {
+     return Promise.all([leadHit(), ...picked.map((x) => this.hit(articleId, x.r.id, x.r.start, x.r.end, x.s, "title"))]);
+   }
+ 
++  /** ORACLE-ST (eval only): the article's lead chunk as articlePassages picks it (the prose lead after a "Key facts:" chunk). */
++  async oracleLead(articleId: number): Promise<PackHit | null> {
++    const a = await this.article(articleId);
++    const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY id", [articleId]);
++    if (!rows.length) return null;
++    const lead = a.text.startsWith("Key facts:", rows[0].start) && rows.length > 1 ? rows[1] : rows[0];
++    return this.hit(articleId, lead.id, lead.start, lead.end, 1, "title", true);
++  }
++
++  /** ORACLE-ST (eval only): the article's chunk number `index`, chunks ordered by start (the self-tests' in_pack_facts[].chunk_index). */
++  async oracleChunk(articleId: number, index: number): Promise<PackHit | null> {
++    const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [articleId]);
++    const r = rows[index];
++    return r ? this.hit(articleId, r.id, r.start, r.end, 0, "bm25") : null;
++  }
++
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+   async bm25(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b14..d7ff404 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -219,6 +219,17 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+   };
+ }
+ 
++/** ORACLE-ST (eval only): a pack article's chunk by index (ordered by start), or its lead, in the shape of a retrieved pack passage. */
++export async function packOracleChunk(packId: string, articleId: number, index: number | "lead"): Promise<RetrievedChunk | null> {
++  // A pack file copied into corpus/ outside the catalog is listed as "local-<file name>" (knowledgePacks).
++  const pack = (await knowledgePacks()).find((p) => p.id === packId || p.id === `local-${packId}`);
++  if (!pack || !(await openPack(pack))) return null;
++  const wp = wikiPacks.get(pack.id);
++  if (!wp) return null;
++  const h = index === "lead" ? await wp.oracleLead(articleId) : await wp.oracleChunk(articleId, index);
++  return h ? packHitToChunk(pack.id, h) : null;
++}
++
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 52edfef..47235f1 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -268,6 +268,24 @@ export const DEEP_THINKING_BUDGET = 1024;
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
++/** ORACLE-ST (eval only, default off): BOAR_ORACLE_FILE = JSON {queryId: {pack, article_id, chunk_index, mode: "add" | "only", question}};
++ *  BOAR_PROMPT_DUMP = JSONL file that receives each generation's prompt/messages. Both absent = the shipped code path. */
++const ORACLE_FILE: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_ORACLE_FILE || undefined : undefined;
++const PROMPT_DUMP: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_PROMPT_DUMP || undefined : undefined;
++type OracleEntry = { pack: string; article_id: number; chunk_index: number; mode: "add" | "only"; question: string };
++let oracleByQuestion: Map<string, OracleEntry> | undefined;
++async function oracleFor(query: string): Promise<OracleEntry | undefined> {
++  if (!oracleByQuestion) {
++    const fs = await import("node:fs");
++    const m = JSON.parse(fs.readFileSync(ORACLE_FILE!, "utf8")) as Record<string, OracleEntry>;
++    oracleByQuestion = new Map(Object.values(m).map((e) => [e.question, e]));
++  }
++  return oracleByQuestion.get(query);
++}
++async function dumpPrompt(query: string, prompt: unknown): Promise<void> {
++  const fs = await import("node:fs");
++  fs.appendFileSync(PROMPT_DUMP!, JSON.stringify({ query, prompt }) + "\n");
++}
+ 
+ export interface AnswerContext {
+   systemPrompt?: string;
+@@ -1058,6 +1076,28 @@ export function createAnswerer(deps: AnswerDeps) {
+           }
+         }
+       }
++      // ORACLE-ST (eval only, off unless BOAR_ORACLE_FILE): "add" appends the item's fact chunk after the kept list (no
++      // displacement; skipped when that chunk is already kept); "only" replaces the kept list with [article lead, fact chunk].
++      if (ORACLE_FILE && gen?.mode !== "multipass") {
++        const o = await oracleFor(req.query);
++        if (!o) reasonCodes.push("oracle:no-entry");
++        else {
++          const P = await import("../rag/packs");
++          const fact = await P.packOracleChunk(o.pack, o.article_id, o.chunk_index);
++          if (!fact) reasonCodes.push("oracle:missing");
++          else if (o.mode === "add") {
++            if (sources.some((c) => c.chunkId === fact.chunkId)) reasonCodes.push(`oracle:add-already-kept:${fact.chunkId}`);
++            else {
++              sources = [...sources, fact];
++              reasonCodes.push(`oracle:add:${fact.chunkId}`);
++            }
++          } else {
++            const lead = await P.packOracleChunk(o.pack, o.article_id, "lead");
++            sources = lead && lead.chunkId !== fact.chunkId ? [lead, fact] : [fact];
++            reasonCodes.push(`oracle:only-${sources.length}:${fact.chunkId}`);
++          }
++        }
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }
+@@ -1351,6 +1391,13 @@ export function createAnswerer(deps: AnswerDeps) {
+             onToken: health ? () => {} : onToken,
+             onTimings: (t: GenerationTimings) => (timings = t),
+           };
++          if (PROMPT_DUMP)
++            await dumpPrompt(
++              req.query,
++              useTemplate
++                ? deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++                : deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++            );
+           text = withoutModelReferences(
+             await deps.engine.generate(
+               useTemplate

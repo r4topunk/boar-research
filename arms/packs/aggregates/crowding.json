@@ -1,0 +1,1899 @@
+{
+ "rule": "share_kept <= 0.40 and resolvable gold raw6/kept not lower than baseline (both sets)",
+ "tree": "wt/packs",
+ "config": "--deep --gate rules --k 6 --pool 20; v02 --tasks-from dt512 s42 traces",
+ "sets": {
+  "v02": {
+   "n": 110,
+   "retrieving": 107,
+   "gold_items": 86,
+   "gold_strings": 129,
+   "gold_resolvable_strings": 35,
+   "base": {
+    "kept_slots": 136,
+    "empty_kept": 50,
+    "p50_ms": 169,
+    "gold": {
+     "res_raw6": 18,
+     "res_kept": 15,
+     "all_raw6": 22,
+     "all_kept": 19
+    },
+    "kept_slots_by_pack": {
+     "boar-wikivoyage-en": 109,
+     "seed": 5,
+     "boar-crypto": 22
+    }
+   },
+   "runs": {
+    "qa-travel-se": {
+     "kept_slots": 152,
+     "pack_kept_slots": 48,
+     "share_kept": 0.316,
+     "items_pack_ge1": 20,
+     "pack_raw6_slots": 169,
+     "share_raw6": 0.382,
+     "gold": {
+      "res_raw6": 13,
+      "res_kept": 11,
+      "all_raw6": 17,
+      "all_kept": 15
+     },
+     "gold_items_lower": [
+      "v02-comparison-A04",
+      "v02-explanation-B08",
+      "v02-travel-local-A01",
+      "v02-travel-practical-B01"
+     ],
+     "empty_kept": 48,
+     "changed_kept": 26,
+     "changed_raw": 55,
+     "retrieving": 107,
+     "p50_ms": 206.6,
+     "category": {
+      "matching": [
+       "local-food",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 6,
+       "pack_slots": 9,
+       "kept_slots": 13,
+       "items_pack_ge1": 3,
+       "share": 0.692
+      },
+      "out": {
+       "items": 104,
+       "pack_slots": 39,
+       "kept_slots": 139,
+       "items_pack_ge1": 17,
+       "share": 0.281
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 6,
+        "kept_slots": 25,
+        "items_pack_ge1": 2
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 19,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 18,
+        "kept_slots": 50,
+        "items_pack_ge1": 6
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 7,
+        "kept_slots": 8,
+        "items_pack_ge1": 3
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 1,
+        "kept_slots": 9,
+        "items_pack_ge1": 1
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 5,
+        "kept_slots": 12,
+        "items_pack_ge1": 3
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 7,
+        "kept_slots": 8,
+        "items_pack_ge1": 2
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 2,
+        "kept_slots": 5,
+        "items_pack_ge1": 1
+       }
+      }
+     },
+     "gold_not_lower": false,
+     "pass": false
+    },
+    "qa-ethereum-se": {
+     "kept_slots": 136,
+     "pack_kept_slots": 15,
+     "share_kept": 0.11,
+     "items_pack_ge1": 8,
+     "pack_raw6_slots": 101,
+     "share_raw6": 0.241,
+     "gold": {
+      "res_raw6": 14,
+      "res_kept": 12,
+      "all_raw6": 18,
+      "all_kept": 16
+     },
+     "gold_items_lower": [
+      "v02-crypto-A01",
+      "v02-crypto-B01",
+      "v02-crypto-B05",
+      "v02-crypto-B07"
+     ],
+     "empty_kept": 50,
+     "changed_kept": 9,
+     "changed_raw": 24,
+     "retrieving": 107,
+     "p50_ms": 199.9,
+     "category": {
+      "matching": [
+       "crypto"
+      ],
+      "in": {
+       "items": 13,
+       "pack_slots": 13,
+       "kept_slots": 19,
+       "items_pack_ge1": 7,
+       "share": 0.684
+      },
+      "out": {
+       "items": 97,
+       "pack_slots": 2,
+       "kept_slots": 117,
+       "items_pack_ge1": 1,
+       "share": 0.017
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 23,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 13,
+        "kept_slots": 19,
+        "items_pack_ge1": 7
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 2,
+        "kept_slots": 48,
+        "items_pack_ge1": 1
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 0,
+        "kept_slots": 9,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 11,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": false,
+     "pass": false
+    },
+    "qa-bitcoin-se": {
+     "kept_slots": 144,
+     "pack_kept_slots": 21,
+     "share_kept": 0.146,
+     "items_pack_ge1": 9,
+     "pack_raw6_slots": 102,
+     "share_raw6": 0.239,
+     "gold": {
+      "res_raw6": 14,
+      "res_kept": 12,
+      "all_raw6": 18,
+      "all_kept": 15
+     },
+     "gold_items_lower": [
+      "v02-crypto-A01",
+      "v02-crypto-B01",
+      "v02-crypto-B05",
+      "v02-crypto-B07"
+     ],
+     "empty_kept": 48,
+     "changed_kept": 14,
+     "changed_raw": 35,
+     "retrieving": 107,
+     "p50_ms": 200.1,
+     "category": {
+      "matching": [
+       "crypto"
+      ],
+      "in": {
+       "items": 13,
+       "pack_slots": 18,
+       "kept_slots": 30,
+       "items_pack_ge1": 6,
+       "share": 0.6
+      },
+      "out": {
+       "items": 97,
+       "pack_slots": 3,
+       "kept_slots": 114,
+       "items_pack_ge1": 3,
+       "share": 0.026
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 23,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 18,
+        "kept_slots": 30,
+        "items_pack_ge1": 6
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 1,
+        "kept_slots": 44,
+        "items_pack_ge1": 1
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 0,
+        "kept_slots": 5,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 1,
+        "kept_slots": 10,
+        "items_pack_ge1": 1
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 1,
+        "kept_slots": 8,
+        "items_pack_ge1": 1
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 11,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": false,
+     "pass": false
+    },
+    "qa-health-se": {
+     "kept_slots": 148,
+     "pack_kept_slots": 16,
+     "share_kept": 0.108,
+     "items_pack_ge1": 7,
+     "pack_raw6_slots": 57,
+     "share_raw6": 0.142,
+     "gold": {
+      "res_raw6": 18,
+      "res_kept": 15,
+      "all_raw6": 22,
+      "all_kept": 19
+     },
+     "gold_items_lower": [],
+     "empty_kept": 45,
+     "changed_kept": 11,
+     "changed_raw": 22,
+     "retrieving": 107,
+     "p50_ms": 187.1,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 18,
+       "pack_slots": 14,
+       "kept_slots": 20,
+       "items_pack_ge1": 5,
+       "share": 0.7
+      },
+      "out": {
+       "items": 92,
+       "pack_slots": 2,
+       "kept_slots": 128,
+       "items_pack_ge1": 2,
+       "share": 0.016
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 1,
+        "kept_slots": 24,
+        "items_pack_ge1": 1
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 21,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 3,
+        "kept_slots": 6,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 1,
+        "kept_slots": 46,
+        "items_pack_ge1": 1
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 11,
+        "kept_slots": 14,
+        "items_pack_ge1": 4
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "qa-outdoors-se": {
+     "kept_slots": 146,
+     "pack_kept_slots": 17,
+     "share_kept": 0.116,
+     "items_pack_ge1": 11,
+     "pack_raw6_slots": 89,
+     "share_raw6": 0.213,
+     "gold": {
+      "res_raw6": 18,
+      "res_kept": 15,
+      "all_raw6": 22,
+      "all_kept": 19
+     },
+     "gold_items_lower": [],
+     "empty_kept": 48,
+     "changed_kept": 12,
+     "changed_raw": 34,
+     "retrieving": 107,
+     "p50_ms": 172.4,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 14,
+       "pack_slots": 0,
+       "kept_slots": 6,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "out": {
+       "items": 96,
+       "pack_slots": 17,
+       "kept_slots": 140,
+       "items_pack_ge1": 11,
+       "share": 0.121
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 1,
+        "kept_slots": 24,
+        "items_pack_ge1": 1
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 21,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 9,
+        "kept_slots": 51,
+        "items_pack_ge1": 5
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 5,
+        "kept_slots": 9,
+        "items_pack_ge1": 3
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 1,
+        "kept_slots": 10,
+        "items_pack_ge1": 1
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 1,
+        "kept_slots": 8,
+        "items_pack_ge1": 1
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "boar-firstaid-en": {
+     "kept_slots": 148,
+     "pack_kept_slots": 15,
+     "share_kept": 0.101,
+     "items_pack_ge1": 7,
+     "pack_raw6_slots": 46,
+     "share_raw6": 0.116,
+     "gold": {
+      "res_raw6": 18,
+      "res_kept": 15,
+      "all_raw6": 22,
+      "all_kept": 19
+     },
+     "gold_items_lower": [],
+     "empty_kept": 45,
+     "changed_kept": 9,
+     "changed_raw": 22,
+     "retrieving": 107,
+     "p50_ms": 302,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 18,
+       "pack_slots": 11,
+       "kept_slots": 16,
+       "items_pack_ge1": 4,
+       "share": 0.688
+      },
+      "out": {
+       "items": 92,
+       "pack_slots": 4,
+       "kept_slots": 132,
+       "items_pack_ge1": 3,
+       "share": 0.03
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 3,
+        "kept_slots": 26,
+        "items_pack_ge1": 2
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 21,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 11,
+        "kept_slots": 11,
+        "items_pack_ge1": 4
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 46,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 0,
+        "kept_slots": 5,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "boar-medlineplus-en": {
+     "kept_slots": 138,
+     "pack_kept_slots": 6,
+     "share_kept": 0.043,
+     "items_pack_ge1": 4,
+     "pack_raw6_slots": 48,
+     "share_raw6": 0.117,
+     "gold": {
+      "res_raw6": 18,
+      "res_kept": 15,
+      "all_raw6": 22,
+      "all_kept": 19
+     },
+     "gold_items_lower": [],
+     "empty_kept": 48,
+     "changed_kept": 6,
+     "changed_raw": 26,
+     "retrieving": 107,
+     "p50_ms": 178.3,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 18,
+       "pack_slots": 5,
+       "kept_slots": 11,
+       "items_pack_ge1": 3,
+       "share": 0.455
+      },
+      "out": {
+       "items": 92,
+       "pack_slots": 1,
+       "kept_slots": 127,
+       "items_pack_ge1": 1,
+       "share": 0.008
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 23,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 0,
+        "kept_slots": 21,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 45,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 4,
+        "kept_slots": 7,
+        "items_pack_ge1": 2
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 1,
+        "kept_slots": 10,
+        "items_pack_ge1": 1
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 11,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "se5": {
+     "kept_slots": 163,
+     "pack_kept_slots": 78,
+     "share_kept": 0.479,
+     "items_pack_ge1": 32,
+     "pack_raw6_slots": 332,
+     "share_raw6": 0.615,
+     "gold": {
+      "res_raw6": 9,
+      "res_kept": 8,
+      "all_raw6": 13,
+      "all_kept": 11
+     },
+     "gold_items_lower": [
+      "v02-comparison-A04",
+      "v02-crypto-A01",
+      "v02-crypto-B01",
+      "v02-crypto-B05",
+      "v02-crypto-B07",
+      "v02-explanation-B08",
+      "v02-travel-local-A01",
+      "v02-travel-practical-B01"
+     ],
+     "empty_kept": 46,
+     "changed_kept": 40,
+     "changed_raw": 85,
+     "retrieving": 107,
+     "p50_ms": 314.2,
+     "category": {
+      "matching": [
+       "crypto",
+       "danger",
+       "danger-situation",
+       "health",
+       "local-food",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 37,
+       "pack_slots": 39,
+       "kept_slots": 53,
+       "items_pack_ge1": 16,
+       "share": 0.736
+      },
+      "out": {
+       "items": 73,
+       "pack_slots": 39,
+       "kept_slots": 110,
+       "items_pack_ge1": 16,
+       "share": 0.355
+      },
+      "by_category": {
+       "comparison": {
+        "items": 13,
+        "pack_slots": 6,
+        "kept_slots": 25,
+        "items_pack_ge1": 2
+       },
+       "crypto": {
+        "items": 13,
+        "pack_slots": 16,
+        "kept_slots": 22,
+        "items_pack_ge1": 8
+       },
+       "danger": {
+        "items": 10,
+        "pack_slots": 3,
+        "kept_slots": 6,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 21,
+        "pack_slots": 23,
+        "kept_slots": 51,
+        "items_pack_ge1": 8
+       },
+       "health": {
+        "items": 8,
+        "pack_slots": 11,
+        "kept_slots": 12,
+        "items_pack_ge1": 4
+       },
+       "honesty-refusal": {
+        "items": 12,
+        "pack_slots": 2,
+        "kept_slots": 10,
+        "items_pack_ge1": 1
+       },
+       "reasoning": {
+        "items": 21,
+        "pack_slots": 7,
+        "kept_slots": 13,
+        "items_pack_ge1": 4
+       },
+       "synthesis": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 11,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 2,
+        "pack_slots": 7,
+        "kept_slots": 8,
+        "items_pack_ge1": 2
+       },
+       "travel-practical": {
+        "items": 4,
+        "pack_slots": 2,
+        "kept_slots": 5,
+        "items_pack_ge1": 1
+       }
+      }
+     },
+     "kept_slots_by_pack": {
+      "boar-wikivoyage-en": 74,
+      "qa-travel-se": 41,
+      "seed": 4,
+      "qa-ethereum-se": 11,
+      "boar-crypto": 7,
+      "qa-bitcoin-se": 8,
+      "qa-health-se": 9,
+      "qa-outdoors-se": 9
+     },
+     "gold_not_lower": false,
+     "pass": false
+    }
+   }
+  },
+  "v01": {
+   "n": 60,
+   "retrieving": 54,
+   "gold_items": 39,
+   "gold_strings": 46,
+   "gold_resolvable_strings": 22,
+   "base": {
+    "kept_slots": 111,
+    "empty_kept": 15,
+    "p50_ms": 140.1,
+    "gold": {
+     "res_raw6": 16,
+     "res_kept": 14,
+     "all_raw6": 16,
+     "all_kept": 14
+    },
+    "kept_slots_by_pack": {
+     "boar-wikivoyage-en": 73,
+     "seed": 1,
+     "boar-crypto": 37
+    }
+   },
+   "runs": {
+    "qa-travel-se": {
+     "kept_slots": 102,
+     "pack_kept_slots": 20,
+     "share_kept": 0.196,
+     "items_pack_ge1": 11,
+     "pack_raw6_slots": 71,
+     "share_raw6": 0.26,
+     "gold": {
+      "res_raw6": 11,
+      "res_kept": 9,
+      "all_raw6": 11,
+      "all_kept": 9
+     },
+     "gold_items_lower": [
+      "lan-cmp-001",
+      "lan-exp-006",
+      "lan-ref-004",
+      "lan-rsn-001"
+     ],
+     "empty_kept": 15,
+     "changed_kept": 15,
+     "changed_raw": 26,
+     "retrieving": 54,
+     "p50_ms": 165.0,
+     "category": {
+      "matching": [
+       "local-food",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 6,
+       "pack_slots": 1,
+       "kept_slots": 8,
+       "items_pack_ge1": 1,
+       "share": 0.125
+      },
+      "out": {
+       "items": 54,
+       "pack_slots": 19,
+       "kept_slots": 94,
+       "items_pack_ge1": 10,
+       "share": 0.202
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 7,
+        "kept_slots": 16,
+        "items_pack_ge1": 3
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 2,
+        "kept_slots": 25,
+        "items_pack_ge1": 1
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 2,
+        "kept_slots": 15,
+        "items_pack_ge1": 2
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 1,
+        "kept_slots": 3,
+        "items_pack_ge1": 1
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 2,
+        "kept_slots": 8,
+        "items_pack_ge1": 2
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 5,
+        "kept_slots": 16,
+        "items_pack_ge1": 1
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       }
+      }
+     },
+     "gold_not_lower": false,
+     "pass": false
+    },
+    "qa-ethereum-se": {
+     "kept_slots": 114,
+     "pack_kept_slots": 10,
+     "share_kept": 0.088,
+     "items_pack_ge1": 4,
+     "pack_raw6_slots": 35,
+     "share_raw6": 0.133,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 15,
+      "all_raw6": 16,
+      "all_kept": 15
+     },
+     "gold_items_lower": [],
+     "empty_kept": 15,
+     "changed_kept": 8,
+     "changed_raw": 16,
+     "retrieving": 54,
+     "p50_ms": 157.6,
+     "category": {
+      "matching": [
+       "crypto"
+      ],
+      "in": {
+       "items": 7,
+       "pack_slots": 5,
+       "kept_slots": 30,
+       "items_pack_ge1": 3,
+       "share": 0.167
+      },
+      "out": {
+       "items": 53,
+       "pack_slots": 5,
+       "kept_slots": 84,
+       "items_pack_ge1": 1,
+       "share": 0.06
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 5,
+        "kept_slots": 30,
+        "items_pack_ge1": 3
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 11,
+        "items_pack_ge1": 0
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 5,
+        "kept_slots": 8,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "qa-bitcoin-se": {
+     "kept_slots": 101,
+     "pack_kept_slots": 8,
+     "share_kept": 0.079,
+     "items_pack_ge1": 4,
+     "pack_raw6_slots": 36,
+     "share_raw6": 0.136,
+     "gold": {
+      "res_raw6": 15,
+      "res_kept": 13,
+      "all_raw6": 15,
+      "all_kept": 13
+     },
+     "gold_items_lower": [
+      "lan-cmp-001"
+     ],
+     "empty_kept": 15,
+     "changed_kept": 9,
+     "changed_raw": 13,
+     "retrieving": 54,
+     "p50_ms": 159.9,
+     "category": {
+      "matching": [
+       "crypto"
+      ],
+      "in": {
+       "items": 7,
+       "pack_slots": 3,
+       "kept_slots": 25,
+       "items_pack_ge1": 2,
+       "share": 0.12
+      },
+      "out": {
+       "items": 53,
+       "pack_slots": 5,
+       "kept_slots": 76,
+       "items_pack_ge1": 2,
+       "share": 0.066
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 4,
+        "kept_slots": 13,
+        "items_pack_ge1": 1
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 3,
+        "kept_slots": 25,
+        "items_pack_ge1": 2
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": false,
+     "pass": false
+    },
+    "qa-health-se": {
+     "kept_slots": 115,
+     "pack_kept_slots": 7,
+     "share_kept": 0.061,
+     "items_pack_ge1": 6,
+     "pack_raw6_slots": 21,
+     "share_raw6": 0.078,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 13,
+     "changed_kept": 6,
+     "changed_raw": 12,
+     "retrieving": 54,
+     "p50_ms": 160.0,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 9,
+       "pack_slots": 5,
+       "kept_slots": 13,
+       "items_pack_ge1": 4,
+       "share": 0.385
+      },
+      "out": {
+       "items": 51,
+       "pack_slots": 2,
+       "kept_slots": 102,
+       "items_pack_ge1": 2,
+       "share": 0.02
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 2,
+        "kept_slots": 16,
+        "items_pack_ge1": 2
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 5,
+        "kept_slots": 7,
+        "items_pack_ge1": 4
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 12,
+        "items_pack_ge1": 0
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "qa-outdoors-se": {
+     "kept_slots": 109,
+     "pack_kept_slots": 5,
+     "share_kept": 0.046,
+     "items_pack_ge1": 5,
+     "pack_raw6_slots": 22,
+     "share_raw6": 0.082,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 15,
+     "changed_kept": 8,
+     "changed_raw": 14,
+     "retrieving": 54,
+     "p50_ms": 133.9,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 7,
+       "pack_slots": 1,
+       "kept_slots": 12,
+       "items_pack_ge1": 1,
+       "share": 0.083
+      },
+      "out": {
+       "items": 53,
+       "pack_slots": 4,
+       "kept_slots": 97,
+       "items_pack_ge1": 4,
+       "share": 0.041
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 1,
+        "kept_slots": 14,
+        "items_pack_ge1": 1
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 1,
+        "kept_slots": 6,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 1,
+        "kept_slots": 16,
+        "items_pack_ge1": 1
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 14,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "boar-firstaid-en": {
+     "kept_slots": 116,
+     "pack_kept_slots": 7,
+     "share_kept": 0.06,
+     "items_pack_ge1": 5,
+     "pack_raw6_slots": 19,
+     "share_raw6": 0.071,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 14,
+     "changed_kept": 5,
+     "changed_raw": 10,
+     "retrieving": 54,
+     "p50_ms": 217.2,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 9,
+       "pack_slots": 6,
+       "kept_slots": 14,
+       "items_pack_ge1": 4,
+       "share": 0.429
+      },
+      "out": {
+       "items": 51,
+       "pack_slots": 1,
+       "kept_slots": 102,
+       "items_pack_ge1": 1,
+       "share": 0.01
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 4,
+        "kept_slots": 8,
+        "items_pack_ge1": 2
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 2,
+        "kept_slots": 6,
+        "items_pack_ge1": 2
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "boar-medlineplus-en": {
+     "kept_slots": 114,
+     "pack_kept_slots": 3,
+     "share_kept": 0.026,
+     "items_pack_ge1": 2,
+     "pack_raw6_slots": 18,
+     "share_raw6": 0.066,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 15,
+     "changed_kept": 2,
+     "changed_raw": 8,
+     "retrieving": 54,
+     "p50_ms": 129.0,
+     "category": {
+      "matching": [
+       "danger",
+       "danger-situation",
+       "health"
+      ],
+      "in": {
+       "items": 9,
+       "pack_slots": 3,
+       "kept_slots": 12,
+       "items_pack_ge1": 2,
+       "share": 0.25
+      },
+      "out": {
+       "items": 51,
+       "pack_slots": 0,
+       "kept_slots": 102,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 1,
+        "kept_slots": 7,
+        "items_pack_ge1": 1
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 2,
+        "kept_slots": 5,
+        "items_pack_ge1": 1
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 12,
+        "items_pack_ge1": 0
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    },
+    "se5": {
+     "kept_slots": 100,
+     "pack_kept_slots": 34,
+     "share_kept": 0.34,
+     "items_pack_ge1": 16,
+     "pack_raw6_slots": 128,
+     "share_raw6": 0.456,
+     "gold": {
+      "res_raw6": 11,
+      "res_kept": 9,
+      "all_raw6": 11,
+      "all_kept": 9
+     },
+     "gold_items_lower": [
+      "lan-cmp-001",
+      "lan-exp-006",
+      "lan-ref-004",
+      "lan-rsn-001"
+     ],
+     "empty_kept": 15,
+     "changed_kept": 24,
+     "changed_raw": 38,
+     "retrieving": 54,
+     "p50_ms": 291.0,
+     "category": {
+      "matching": [
+       "crypto",
+       "danger",
+       "danger-situation",
+       "health",
+       "local-food",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 22,
+       "pack_slots": 14,
+       "kept_slots": 44,
+       "items_pack_ge1": 8,
+       "share": 0.318
+      },
+      "out": {
+       "items": 38,
+       "pack_slots": 20,
+       "kept_slots": 56,
+       "items_pack_ge1": 8,
+       "share": 0.357
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 6,
+        "kept_slots": 13,
+        "items_pack_ge1": 2
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 8,
+        "kept_slots": 26,
+        "items_pack_ge1": 4
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 5,
+        "kept_slots": 6,
+        "items_pack_ge1": 3
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 5,
+        "kept_slots": 10,
+        "items_pack_ge1": 3
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 5,
+        "kept_slots": 15,
+        "items_pack_ge1": 1
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 3,
+        "kept_slots": 6,
+        "items_pack_ge1": 1
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 1,
+        "kept_slots": 4,
+        "items_pack_ge1": 1
+       }
+      }
+     },
+     "kept_slots_by_pack": {
+      "boar-wikivoyage-en": 39,
+      "qa-travel-se": 14,
+      "qa-bitcoin-se": 7,
+      "seed": 1,
+      "qa-outdoors-se": 2,
+      "qa-health-se": 3,
+      "qa-ethereum-se": 8,
+      "boar-crypto": 26
+     },
+     "gold_not_lower": false,
+     "pass": false
+    }
+   }
+  }
+ },
+ "verdict": {
+  "qa-travel-se": "user-selected only",
+  "qa-ethereum-se": "user-selected only",
+  "qa-bitcoin-se": "user-selected only",
+  "qa-health-se": "default-eligible",
+  "qa-outdoors-se": "default-eligible",
+  "boar-firstaid-en": "default-eligible",
+  "boar-medlineplus-en": "default-eligible",
+  "se5": "user-selected only"
+ }
+}

@@ -1,0 +1,627 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index f0d6479..b2e9f23 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -50,6 +50,9 @@ interface Settings {
+    *  "append" = HEADPASS-X2 (the dense candidates go to the post-grounding head-pass append path, not to the raw list);
+    *  "append-budget" = HEADPASS-X2b (as "append", every appended chunk within a per-answer prompt-token budget). */
+   packDense2?: boolean | "extra" | "append" | "append-budget";
++  /** HEADPASS-X3 (experimental, default off): cross-encoder reranker over the pack candidates ("x3a"/"x3b": the appended
++   *  chunks; "m2": the fused top-20 before the keep step). */
++  packRerank?: "x3a" | "x3b" | "m2";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -503,6 +506,11 @@ export interface AnswerSettings {
+    *  after grounding through the head-pass path, the retrieved list itself unchanged; "append-budget": HEADPASS-X2b, as
+    *  "append" with the appended chunks (X1 first, then dense) kept only within HEADPASS_BUDGET_TOKENS of added prompt). */
+   packDense2?: boolean | "extra" | "append" | "append-budget";
++  /** HEADPASS-X3 (experimental, default off; src/rag/rerank.ts): "x3a" = after grounding, append (budget-capped, as X2b) up to
++   *  RERANK_D chunks of the top user-pack's candidate union (BM25 top-80 ∪ dense top-12 ∪ the top article's chunks) in
++   *  cross-encoder order; "x3b" = X1's neighbour chunks first, then those; "m2" = the fused top-20 reranked pack-agnostically
++   *  before the keep step (only when a user-installed pack contributes to it). No scorer registered -> setting-absent path. */
++  packRerank?: "x3a" | "x3b" | "m2";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -516,6 +524,7 @@ export async function getAnswerSettings(): Promise<AnswerSettings> {
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
+     ...(s.packHeadPass === "a2" ? { packHeadPass: "a2" as const } : {}),
+     ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : s.packDense2 === "append" ? { packDense2: "append" as const } : s.packDense2 === "append-budget" ? { packDense2: "append-budget" as const } : {}),
++    ...(s.packRerank === "x3a" || s.packRerank === "x3b" || s.packRerank === "m2" ? { packRerank: s.packRerank } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index dedd598..c6229a6 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -239,6 +239,44 @@ export async function packHeadPass(raw: RetrievedChunk[]): Promise<{ first: Retr
+   return null;
+ }
+ 
++/**
++ * HEADPASS-X3 (settings.packRerank "x3a"/"x3b", default off): the reranker's candidate union for the first passage of `raw`
++ * from a user-installed (non-kit) format-2 pack: that pack's BM25 top-`pool` chunks for `query` (no per-article cap), then
++ * `dense` (the ST2 dense candidates retrieve() attached), then every chunk of that passage's article (by start); first
++ * occurrence wins. When `raw` has no such passage, the installed user-pack(s) (non-kit format-2; with one installed, that
++ * pack) give their BM25 top-`pool` chunks and `dense`, with no top article. Null when no user pack is installed.
++ */
++export async function packRerankCandidates(
++  raw: RetrievedChunk[],
++  query: string,
++  dense: RetrievedChunk[] = [],
++  pool = 80
++): Promise<{ packId: string; chunks: RetrievedChunk[] } | null> {
++  for (const c of raw) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    if (!m) continue;
++    const packId = m[1];
++    if (HEADPASS_KIT.has(packId.replace(/^local-/, ""))) continue;
++    const wp = wikiPacks.get(packId);
++    if (!wp) continue;
++    const stems = await wp.stems(query);
++    const bm = stems.length ? (await wp.bm25(stems, pool, wp.tuning.prior, pool)).map((h) => packHitToChunk(packId, h)) : [];
++    const art = (await wp.headChunksOf(Number(m[2]), 0, Number.MAX_SAFE_INTEGER - 1)).map((h) => packHitToChunk(packId, h));
++    const seen = new Set<string>();
++    const chunks = [...bm, ...dense, ...art].filter((x) => !seen.has(x.chunkId) && (seen.add(x.chunkId), true));
++    return { packId, chunks };
++  }
++  const users = [...wikiPacks.entries()].filter(([id]) => !HEADPASS_KIT.has(id.replace(/^local-/, "")));
++  if (!users.length) return null;
++  const all: RetrievedChunk[] = [];
++  for (const [packId, wp] of users) {
++    const stems = await wp.stems(query);
++    if (stems.length) all.push(...(await wp.bm25(stems, pool, wp.tuning.prior, pool)).map((h) => packHitToChunk(packId, h)));
++  }
++  const seen = new Set<string>();
++  return { packId: users[0][0], chunks: [...all, ...dense].filter((x) => !seen.has(x.chunkId) && (seen.add(x.chunkId), true)) };
++}
++
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+diff --git a/src/rag/rerank.test.ts b/src/rag/rerank.test.ts
+new file mode 100644
+index 0000000..37654f2
+--- /dev/null
++++ b/src/rag/rerank.test.ts
+@@ -0,0 +1,45 @@
++import { describe, it, expect, afterEach } from "vitest";
++import { rankByRerank, rerankText, setRerankScorer, unionByChunkId, hasUserPackChunk, RERANK_DOC_CHARS } from "./rerank";
++
++const c = (chunkId: string, title = "T", body = "b") => ({ chunkId, title, body });
++
++afterEach(() => setRerankScorer(null));
++
++describe("HEADPASS-X3 rerank helpers", () => {
++  it("no scorer, empty list, failing or short scorer: null (the caller takes the setting-absent path)", async () => {
++    expect(await rankByRerank("q", [c("a")])).toBeNull();
++    setRerankScorer(async () => [1]);
++    expect(await rankByRerank("q", [])).toBeNull();
++    setRerankScorer(async () => { throw new Error("down"); });
++    expect(await rankByRerank("q", [c("a")])).toBeNull();
++    setRerankScorer(async () => [1]);
++    expect(await rankByRerank("q", [c("a"), c("b")])).toBeNull();
++    setRerankScorer(async () => [null, null]);
++    expect(await rankByRerank("q", [c("a"), c("b")])).toBeNull();
++  });
++
++  it("orders by score desc, ties keep the given order, unscored chunks are left out", async () => {
++    setRerankScorer(async () => [0.1, 0.9, null, 0.9, 0.5]);
++    const r = await rankByRerank("q", [c("a"), c("b"), c("c"), c("d"), c("e")]);
++    expect(r!.map((x) => x.chunkId)).toEqual(["b", "d", "e", "a"]);
++  });
++
++  it("the scorer sees the query and each passage as title + newline + body, cut to RERANK_DOC_CHARS", async () => {
++    let seen: any = null;
++    setRerankScorer(async (q, docs) => ((seen = { q, docs }), docs.map(() => 1)));
++    await rankByRerank("what to do", [c("x", "Burns", "Treatment: cool water"), c("y", "Long", "z".repeat(5000))]);
++    expect(seen.q).toBe("what to do");
++    expect(seen.docs[0]).toEqual({ chunkId: "x", text: "Burns\nTreatment: cool water" });
++    expect(seen.docs[1].text.length).toBe(RERANK_DOC_CHARS);
++    expect(rerankText({ title: "A", body: "B" })).toBe("A\nB");
++  });
++
++  it("union keeps the first occurrence, in list order", () => {
++    expect(unionByChunkId([c("a"), c("b")], [c("b"), c("c")], [c("a"), c("d")]).map((x) => x.chunkId)).toEqual(["a", "b", "c", "d"]);
++  });
++
++  it("kit packs and the seed corpus never count as a user pack", () => {
++    expect(hasUserPackChunk([c("pack:local-boar-crypto:1"), c("pack:boar-wikivoyage-en:2"), c("seed-1")])).toBe(false);
++    expect(hasUserPackChunk([c("pack:local-boar-crypto:1"), c("pack:local-qa-travel-se:7")])).toBe(true);
++  });
++});
+diff --git a/src/rag/rerank.ts b/src/rag/rerank.ts
+new file mode 100644
+index 0000000..9cfad32
+--- /dev/null
++++ b/src/rag/rerank.ts
+@@ -0,0 +1,87 @@
++import type { RetrievedChunk } from "./retrieve.types";
++
++/**
++ * HEADPASS-X3 (settings.packRerank, experimental, default off): a cross-encoder reranker (bge-reranker-v2-m3) scores
++ * passages against the engine's search query. The scorer is pluggable: the product path registers one that calls the
++ * reranker server; the step-0 replay registers one that returns precomputed scores. No scorer registered (or a failing
++ * one) -> every caller takes the setting-absent path.
++ */
++export type RerankScorer = (query: string, docs: { chunkId: string; text: string }[]) => Promise<(number | null)[] | null>;
++
++let scorer: RerankScorer | null = null;
++
++/** Registers (or, with null, removes) the reranker scorer. */
++export function setRerankScorer(fn: RerankScorer | null): void {
++  scorer = fn;
++}
++
++export function rerankScorer(): RerankScorer | null {
++  return scorer;
++}
++
++/** HEADPASS-X3: reranked chunks appended per answer (D). */
++export const RERANK_D = 2;
++/** HEADPASS-X3: BM25 chunks of the top user pack in the candidate union. */
++export const RERANK_BM25_POOL = 80;
++/** HEADPASS-X3 M2: fused list size reranked before the keep step. */
++export const RERANK_M2_POOL = 20;
++/** Characters of a passage sent to the reranker. */
++export const RERANK_DOC_CHARS = 2000;
++
++/** A passage as the engine renders it ("title\nsection: text"), cut to RERANK_DOC_CHARS. */
++export function rerankText(c: { title: string; body: string }): string {
++  return `${c.title}\n${c.body}`.slice(0, RERANK_DOC_CHARS);
++}
++
++/**
++ * `cands` ordered by the reranker's score (desc; ties and unscored chunks keep their given order, unscored ones last are
++ * dropped). Null when no scorer is registered, the scorer fails or returns no score at all.
++ */
++export async function rankByRerank<T extends { chunkId: string; title: string; body: string }>(query: string, cands: T[]): Promise<T[] | null> {
++  if (!scorer || !cands.length) return null;
++  let scores: (number | null)[] | null;
++  try {
++    scores = await scorer(query, cands.map((c) => ({ chunkId: c.chunkId, text: rerankText(c) })));
++  } catch {
++    return null;
++  }
++  if (!scores || scores.length !== cands.length) return null;
++  const scored = cands
++    .map((c, i) => ({ c, i, s: scores![i] }))
++    .filter((x): x is { c: T; i: number; s: number } => typeof x.s === "number" && Number.isFinite(x.s));
++  if (!scored.length) return null;
++  return scored.sort((a, b) => b.s - a.s || a.i - b.i).map((x) => x.c);
++}
++
++/** Union of candidate lists, first occurrence wins (order: lists in the given order). */
++export function unionByChunkId<T extends { chunkId: string }>(...lists: T[][]): T[] {
++  const seen = new Set<string>();
++  const out: T[] = [];
++  for (const l of lists) for (const c of l) if (!seen.has(c.chunkId)) (seen.add(c.chunkId), out.push(c));
++  return out;
++}
++
++/** M2 info attached beside the list retrieve() returns (the list itself stays the plain array). */
++export interface RerankInfo {
++  fired: boolean;
++  /** Why it did not fire: "kit-only" (no user-installed pack chunk in the pool), "noscore" (no scorer / failed). */
++  reason?: "kit-only" | "noscore";
++  pool: number;
++}
++const info = new WeakMap<RetrievedChunk[], RerankInfo>();
++export function attachRerankInfo(list: RetrievedChunk[], i: RerankInfo): RetrievedChunk[] {
++  info.set(list, i);
++  return list;
++}
++export function rerankInfoOf(list: RetrievedChunk[]): RerankInfo | undefined {
++  return info.get(list);
++}
++
++/** HEADPASS kit packs (shipped with the app): a list with no chunk from another pack never fires M2. */
++const KIT = new Set(["boar-crypto", "boar-wikivoyage-en"]);
++export function hasUserPackChunk(list: { chunkId: string }[]): boolean {
++  return list.some((c) => {
++    const m = /^pack:([^:]+):/.exec(c.chunkId);
++    return !!m && !KIT.has(m[1].replace(/^local-/, ""));
++  });
++}
+diff --git a/src/rag/retrieve.rerankm2.test.ts b/src/rag/retrieve.rerankm2.test.ts
+new file mode 100644
+index 0000000..c3aabb7
+--- /dev/null
++++ b/src/rag/retrieve.rerankm2.test.ts
+@@ -0,0 +1,64 @@
++import { describe, it, expect, vi, afterEach } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++
++const { hit, state } = vi.hoisted(() => ({
++  hit: (chunkId: number, title: string, score: number) => ({
++    articleId: chunkId, chunkId, title, section: "", text: `${title} text.`, start: 0, end: 10, score, via: "bm25", source: "simplewiki", views: 0, lead: false, action: false,
++  }),
++  state: { packId: "local-qa-travel-se", calls: [] as number[] },
++}));
++// One large pack with 30 keyword hits; k decides how many come back.
++vi.mock("./packs", async (importOriginal) => {
++  const actual: any = await importOriginal();
++  return {
++    packHitToChunk: actual.packHitToChunk,
++    searchPacks: async () => ({ lexical: [], semantic: [] }),
++    searchWikiPacks: async (_q: string, o: any) => {
++      state.calls.push(o.k);
++      return [{ packId: state.packId, pack: { hasChunkVecs: false }, hits: Array.from({ length: 30 }, (_, i) => hit(i + 1, `Lex ${i + 1}`, 100 - i)) }];
++    },
++  };
++});
++
++import { retrieve } from "./retrieve";
++import { rerankInfoOf, setRerankScorer } from "./rerank";
++
++const ids = (cs: { chunkId: string }[]) => cs.map((c) => c.chunkId);
++afterEach(() => { setRerankScorer(null); state.packId = "local-qa-travel-se"; state.calls = []; });
++
++describe("packRerank m2 (HEADPASS-X3)", () => {
++  it("no scorer: the setting-absent list, reason noscore", async () => {
++    const off = await retrieve("lex question", 6);
++    const m2 = await retrieve("lex question", 6, { packRerank: "m2" });
++    expect(JSON.stringify(m2)).toBe(JSON.stringify(off));
++    expect(rerankInfoOf(m2)).toEqual({ fired: false, reason: "noscore", pool: 20 });
++    expect(rerankInfoOf(off)).toBeUndefined();
++  });
++
++  it("fires: the fused top-20 reranked, the best k returned", async () => {
++    let n = 0;
++    // Reverse order: the 20th passage is the best.
++    setRerankScorer(async (_q, docs) => ((n = docs.length), docs.map((_, i) => i)));
++    const m2 = await retrieve("lex question", 6, { packRerank: "m2" });
++    expect(n).toBe(20);
++    expect(m2).toHaveLength(6);
++    expect(ids(m2)).toEqual([20, 19, 18, 17, 16, 15].map((i) => `pack:local-qa-travel-se:${i}`));
++    expect(rerankInfoOf(m2)).toEqual({ fired: true, pool: 20 });
++  });
++
++  it("kit-only pool: never scored, the setting-absent list (reason kit-only)", async () => {
++    state.packId = "local-boar-crypto";
++    let called = false;
++    setRerankScorer(async (_q, docs) => ((called = true), docs.map(() => 1)));
++    const off = await retrieve("lex question", 6);
++    const m2 = await retrieve("lex question", 6, { packRerank: "m2" });
++    expect(called).toBe(false);
++    expect(JSON.stringify(m2)).toBe(JSON.stringify(off));
++    expect(rerankInfoOf(m2)?.reason).toBe("kit-only");
++  });
++});
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d51d082..a996974 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -11,6 +11,7 @@ import {
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+ import { attachDenseCandidates, rankDenseCandidates } from "./denseCandidates";
++import { attachRerankInfo, hasUserPackChunk, rankByRerank, RERANK_M2_POOL } from "./rerank";
+ import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+@@ -116,8 +117,19 @@ async function semanticSearch(queryVec: Float32Array, limit: number): Promise<Re
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode; packRerank?: "m2" } = {}
+ ): Promise<RetrievedChunk[]> {
++  // HEADPASS-X3 M2 (settings.packRerank "m2", experimental, default off): the fused top-RERANK_M2_POOL list reranked by the
++  // cross-encoder, pack-agnostically, and its best topK returned (before the keep step). Fires only when a user-installed
++  // pack contributes to the pool and a scorer answers; otherwise the setting-absent list (rerankInfoOf says why).
++  if (opts.packRerank === "m2") {
++    const { packRerank: _m2, ...rest } = opts;
++    const pool = await retrieve(query, Math.max(topK, RERANK_M2_POOL), rest);
++    if (!hasUserPackChunk(pool)) return attachRerankInfo(await retrieve(query, topK, rest), { fired: false, reason: "kit-only", pool: pool.length });
++    const ranked = await rankByRerank(query, pool);
++    if (!ranked) return attachRerankInfo(await retrieve(query, topK, rest), { fired: false, reason: "noscore", pool: pool.length });
++    return attachRerankInfo(ranked.slice(0, topK), { fired: true, pool: pool.length });
++  }
+   // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
+   // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
+   const extra = opts.packDense2 === "extra";
+diff --git a/src/routing/answer.headpassx3.test.ts b/src/routing/answer.headpassx3.test.ts
+new file mode 100644
+index 0000000..04ce1c8
+--- /dev/null
++++ b/src/routing/answer.headpassx3.test.ts
+@@ -0,0 +1,174 @@
++import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { assemblePrompt, assembleChatMessages } from "../rag/pure";
++import { attachDenseCandidates } from "../rag/denseCandidates";
++import { setRerankScorer } from "../rag/rerank";
++import type { AnswerSettings } from "../models/settings";
++import type { AnswerEvent } from "./events";
++
++// HEADPASS-X3: X1 neighbours (packHeadPass) and the candidate union (packRerankCandidates) come from packs (mocked).
++const { X1A, X1B, U, st } = vi.hoisted(() => {
++  const mk = (chunkId: string, title: string, body: string) => ({ chunkId, docId: chunkId, title, body, score: 1, matchType: "lexical" as const });
++  return {
++    X1A: mk("pack:u:101", "Canberra", "Canberra has a population of about 470,000 people. It hosts Parliament House and the High Court."),
++    X1B: mk("pack:u:102", "Canberra", "Lake Burley Griffin lies at the centre of Canberra and was filled in 1964."),
++    U: [
++      mk("pack:u:300", "Canberra", "Canberra's climate is oceanic with cold winters."),
++      mk("pack:u:301", "Canberra", "The Australian War Memorial is in Canberra."),
++      mk("pack:u:302", "Canberra", "Canberra was named in 1913."),
++    ],
++    st: { cands: null as null | ((raw: any[], q: string, dense: any[]) => any), candArgs: [] as any[] },
++  };
++});
++vi.mock("../rag/packs", () => ({
++  packHeadPass: async (raw: RetrievedChunk[]) => (raw.length ? { first: raw[0], chunks: [X1A, X1B] } : null),
++  packRerankCandidates: async (raw: RetrievedChunk[], q: string, dense: RetrievedChunk[], pool: number) => {
++    st.candArgs.push({ q, dense: dense.map((c) => c.chunkId), pool });
++    return st.cands ? st.cands(raw, q, dense) : { packId: "u", chunks: [...U, ...dense] };
++  },
++}));
++
++import { createAnswerer, type AnswerDeps, type InstalledLlm } from "./answer";
++
++const chunk = (chunkId: string, title: string, body: string, similarity?: number): RetrievedChunk => ({
++  chunkId, docId: chunkId, title, body, score: 1, matchType: "hybrid", ...(similarity !== undefined ? { similarity } : {}),
++});
++const CANBERRA = chunk("pack:u:100", "Canberra", "Canberra is the capital city of Australia. Founded following the federation of the colonies of Australia as the seat of government for the new nation, it is Australia's largest inland city.");
++const MOLD = chunk("c2", "Mold", "A mold or mould is one of the structures that certain fungi can form. Mold growth needs moisture.");
++const D1 = chunk("pack:u:200", "Australian Capital Territory", "The Australian Capital Territory was created in 1911 to hold the national capital.", 0.71);
++
++const GB = 1024 ** 3;
++const llm: InstalledLlm = { id: "q", label: "Q", filename: "models/q.gguf", sizeBytes: GB, roles: ["fast"], isDefault: true };
++
++let settings: AnswerSettings;
++let retrieveOpts: unknown[];
++let mkRaw: () => RetrievedChunk[];
++function deps(): AnswerDeps {
++  return {
++    facts: false,
++    now: (() => { let t = 0; return () => (t += 5); })(),
++    engine: {
++      async load() { return { fit: null, warning: null }; },
++      async generate(o) { o.onToken?.("Canberra [1]."); return "Canberra [1]."; },
++      async stop() {},
++      getModelInfo: () => ({ filename: llm.filename }),
++      hasEmbeddedChatTemplate: () => true,
++      async estimateFit() { return { verdict: "resident" } as any; },
++    },
++    retrieve: async (_q, _k, o) => (retrieveOpts.push(o), mkRaw()),
++    getSettings: async () => settings,
++    listInstalledLlms: async () => [llm],
++    getActiveModelId: async () => llm.id,
++    runMultipass: async () => { throw new Error("no multipass here"); },
++    assemblePrompt,
++    assembleChatMessages,
++  } as AnswerDeps;
++}
++async function run(query: string) {
++  const events: AnswerEvent[] = [];
++  const result = await createAnswerer(deps()).answer({ query }, (e) => events.push(e), { maxTokens: 256 }).done;
++  const src = events.find((e) => e.type === "sources") as any;
++  return { codes: result.receipt.reasonCodes as string[], sources: (src?.sources ?? []).map((s: RetrievedChunk) => s.chunkId) as string[], text: result.text, events };
++}
++const Q = "Tell me about the city of Canberra in Australia";
++/** Scores by chunkId (unlisted: 0). */
++const scoreBy = (m: Record<string, number>) => setRerankScorer(async (_q, docs) => docs.map((d) => m[d.chunkId] ?? 0));
++const app = (codes: string[]) => codes.filter((c) => c.startsWith("headpass:add:") || c.startsWith("headpass:rerank:add:"));
++
++beforeEach(() => {
++  settings = { quickFirst: true, alwaysComplete: false, deepModelId: undefined };
++  retrieveOpts = [];
++  st.cands = null;
++  st.candArgs = [];
++  mkRaw = () => attachDenseCandidates([CANBERRA, MOLD], { candidates: [D1], sidecar: true });
++});
++afterEach(() => setRerankScorer(null));
++
++describe("HEADPASS-X3 (packRerank x3a / x3b)", () => {
++  it("setting absent: a registered scorer changes nothing and is never called", async () => {
++    let called = false;
++    setRerankScorer(async (_q, d) => ((called = true), d.map(() => 1)));
++    const a = await run(Q);
++    setRerankScorer(null);
++    const b = await run(Q);
++    expect(called).toBe(false);
++    expect(a.sources).toEqual(b.sources);
++    expect(a.codes).toEqual(b.codes);
++    expect(a.codes.some((c) => c.startsWith("headpass:"))).toBe(false);
++    expect(retrieveOpts.every((o) => o === undefined)).toBe(true);
++  });
++
++  it("x3a: the top RERANK_D candidates in reranker order, no X1 chunks; retrieval runs as append; dense candidates join the union", async () => {
++    settings = { ...settings, packRerank: "x3a" };
++    scoreBy({ "pack:u:302": 0.9, "pack:u:200": 0.8, "pack:u:300": 0.1 });
++    const r = await run(Q);
++    expect(retrieveOpts).toEqual([{ packDense2: "append" }]);
++    expect(st.candArgs).toEqual([{ q: Q, dense: ["pack:u:200"], pool: 80 }]);
++    expect(app(r.codes)).toEqual(["headpass:rerank:add:pack:u:302", "headpass:rerank:add:pack:u:200"]);
++    expect(r.sources.slice(-2)).toEqual(["pack:u:302", "pack:u:200"]);
++    expect(r.sources).not.toContain("pack:u:101");
++  });
++
++  it("x3b: X1 neighbours first, then the reranker's top 2 (cap 4)", async () => {
++    settings = { ...settings, packRerank: "x3b" };
++    scoreBy({ "pack:u:301": 0.9, "pack:u:300": 0.5 });
++    const r = await run(Q);
++    expect(app(r.codes)).toEqual(["headpass:add:pack:u:101", "headpass:add:pack:u:102", "headpass:rerank:add:pack:u:301", "headpass:rerank:add:pack:u:300"]);
++  });
++
++  it("kept or X1-appended candidates are skipped (the next one in reranker order takes the slot)", async () => {
++    settings = { ...settings, packRerank: "x3b" };
++    st.cands = () => ({ packId: "u", chunks: [CANBERRA, X1A, ...U] });
++    scoreBy({ "pack:u:100": 1, "pack:u:101": 0.95, "pack:u:300": 0.2, "pack:u:302": 0.6 });
++    const r = await run(Q);
++    expect(r.codes.filter((c) => c.startsWith("headpass:rerank:add:"))).toEqual(["headpass:rerank:add:pack:u:302", "headpass:rerank:add:pack:u:300"]);
++    expect(r.sources.filter((s) => s === "pack:u:101")).toHaveLength(1);
++    expect(r.sources.filter((s) => s === "pack:u:100")).toHaveLength(1);
++  });
++
++  it("no scorer or no candidates: headpass:rerank:nocand; x3b keeps its X1 chunks", async () => {
++    settings = { ...settings, packRerank: "x3b" };
++    const r = await run(Q);
++    expect(r.codes).toContain("headpass:rerank:nocand");
++    expect(app(r.codes)).toEqual(["headpass:add:pack:u:101", "headpass:add:pack:u:102"]);
++    settings = { quickFirst: true, alwaysComplete: false, deepModelId: undefined, packRerank: "x3a" };
++    scoreBy({});
++    st.cands = () => null;
++    const n = await run(Q);
++    expect(n.codes).toContain("headpass:rerank:nocand");
++    expect(app(n.codes)).toEqual([]);
++  });
++
++  it("budget: chunks in order until one would pass HEADPASS_BUDGET_TOKENS; it and the rest are headpass:rerank:dropped", async () => {
++    settings = { ...settings, packRerank: "x3b" };
++    const BIG = chunk("pack:u:400", "Canberra", "Canberra city detail. ".repeat(120)); // ~2,640 chars > 2,400
++    st.cands = () => ({ packId: "u", chunks: [BIG, U[0]] });
++    scoreBy({ "pack:u:400": 0.9, "pack:u:300": 0.8 });
++    const r = await run(Q);
++    expect(app(r.codes)).toEqual(["headpass:add:pack:u:101", "headpass:add:pack:u:102"]);
++    expect(r.codes.filter((c) => c.startsWith("headpass:rerank:dropped:"))).toEqual(["headpass:rerank:dropped:pack:u:400", "headpass:rerank:dropped:pack:u:300"]);
++  });
++
++  it("health-strict: reranked chunks off the health topic are dropped (no backfill)", async () => {
++    settings = { ...settings, packRerank: "x3a" };
++    const BURN = chunk("pack:u:500", "Burns", "Management: Cool the burn under cool running water for 20 minutes. Do not use ice, butter or creams.");
++    const BURN2 = chunk("pack:u:501", "Burns", "First aid: Remove clothing and jewellery near the burn unless stuck to the skin.");
++    const OFF = chunk("pack:u:502", "Ethereum EIPs/ERCs: EIP-7775: BURN opcode", "Abstract: This EIP adds a BURN opcode that burns ether.");
++    mkRaw = () => attachDenseCandidates([BURN], { candidates: [], sidecar: true });
++    st.cands = () => ({ packId: "u", chunks: [OFF, BURN2, D1] });
++    scoreBy({ "pack:u:502": 0.9, "pack:u:501": 0.8, "pack:u:200": 0.7 });
++    const r = await run("How do I treat a burn?");
++    expect(r.codes).toContain("grounding:health-strict");
++    expect(r.codes).toContain("headpass:rerank:health-dropped-1");
++    expect(r.codes.filter((c) => c.startsWith("headpass:rerank:add:"))).toEqual(["headpass:rerank:add:pack:u:501"]);
++  });
++
++  it("m2: retrieval asks for packRerank m2; the append path does not run", async () => {
++    settings = { ...settings, packRerank: "m2" };
++    scoreBy({});
++    const r = await run(Q);
++    expect(retrieveOpts).toEqual([{ packRerank: "m2" }]);
++    expect(r.codes).toContain("headpass:rerank:m2:noscore");
++    expect(app(r.codes)).toEqual([]);
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 37d76a4..58f7a98 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -120,6 +120,7 @@ import type {
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
++import { rankByRerank, rerankInfoOf, RERANK_D, RERANK_BM25_POOL } from "../rag/rerank";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+ import type { MemoryFit } from "../inference/memoryFit";
+@@ -187,7 +188,7 @@ export interface AnswerEngine {
+ export interface AnswerDeps {
+   engine: AnswerEngine;
+   /** `opts.packDense2`: settings.packDense2 (DENSECHUNK-ST true / ST2 "extra" / HEADPASS-X2 "append"), passed only when on. */
+-  retrieve(query: string, k: number, opts?: { packDense2?: boolean | "extra" | "append" }): Promise<RetrievedChunk[]>;
++  retrieve(query: string, k: number, opts?: { packDense2?: boolean | "extra" | "append"; packRerank?: "m2" }): Promise<RetrievedChunk[]>;
+   getSettings(): Promise<AnswerSettings>;
+   listInstalledLlms(): Promise<InstalledLlm[]>;
+   getActiveModelId(): Promise<string | null>;
+@@ -995,6 +996,8 @@ export function createAnswerer(deps: AnswerDeps) {
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+       let retrievalMs: number | undefined;
++      /** HEADPASS-X3: settings.packRerank "x3a" / "x3b" (the reranker chooses the appended chunks), else null. */
++      const rerankX3 = settings.packRerank === "x3a" || settings.packRerank === "x3b" ? settings.packRerank : null;
+       if (plan.retrieve && gen?.mode !== "multipass") {
+         stage("retrieving", plan.instant !== "off" ? "instant" : genTier);
+         const rs = deps.now();
+@@ -1004,7 +1007,12 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await (settings.packDense2 === true || settings.packDense2 === "extra" || settings.packDense2 === "append" || settings.packDense2 === "append-budget"
++        raw = await (rerankX3
++          // HEADPASS-X3 x3a/x3b retrieve as "append" (the dense candidates join the reranker's candidate union).
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: "append" })
++          : settings.packRerank === "m2"
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packRerank: "m2" })
++          : settings.packDense2 === true || settings.packDense2 === "extra" || settings.packDense2 === "append" || settings.packDense2 === "append-budget"
+           // HEADPASS-X2b retrieves as "append" (the budget applies in the append path below).
+           ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 === "append-budget" ? "append" : settings.packDense2 })
+           : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
+@@ -1012,6 +1020,10 @@ export function createAnswerer(deps: AnswerDeps) {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
++        if (settings.packRerank === "m2") {
++          const ri = rerankInfoOf(raw);
++          reasonCodes.push(ri?.fired ? "headpass:rerank:m2:fired" : `headpass:rerank:m2:${ri?.reason ?? "noscore"}`);
++        }
+         retrievalMs = deps.now() - rs;
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+@@ -1089,7 +1101,60 @@ export function createAnswerer(deps: AnswerDeps) {
+       const hpBefore = sources.length;
+       let pendX1: RetrievedChunk[] = [];
+       let pendDense: RetrievedChunk[] = [];
+-      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
++      // HEADPASS-X3 (settings.packRerank "x3a" / "x3b", experimental, default off): the same append path, budget-capped as
++      // X2b; the chunks come from the cross-encoder's order over the candidate union of the first user-pack passage's pack
++      // (packRerankCandidates: BM25 top-RERANK_BM25_POOL ∪ the attached dense candidates ∪ that passage's article chunks):
++      // up to RERANK_D not already kept or appended. "x3b": X1's neighbour chunks (positions 1-2) go first. Health-strict
++      // rule as X1 (no backfill); never multi-pass; codes headpass:rerank:{add,dropped,nocand}. Overrides packHeadPass /
++      // packDense2's append path when set.
++      if (rerankX3 && gen?.mode !== "multipass" && retrievedRaw.length) {
++        const PK = await import("../rag/packs");
++        let pendX1: RetrievedChunk[] = [];
++        const topic = health ? healthTopicTerms(req.query, english) : null;
++        if (rerankX3 === "x3b") {
++          const head = await PK.packHeadPass(retrievedRaw);
++          if (!head) reasonCodes.push("headpass:no-user-pack");
++          else {
++            let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
++            if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
++            if (topic) {
++              const ok = add.filter((c) => onHealthTopic(topic, c));
++              if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
++              add = ok;
++            }
++            pendX1 = add;
++          }
++        }
++        const cands = await PK.packRerankCandidates(retrievedRaw, searchQuery, denseCandidatesOf(retrievedRaw)?.candidates ?? [], RERANK_BM25_POOL);
++        const ranked = cands?.chunks.length ? await rankByRerank(searchQuery, cands.chunks) : null;
++        let pendR: RetrievedChunk[] = [];
++        if (!ranked) reasonCodes.push("headpass:rerank:nocand");
++        else {
++          let add = pickDenseAppend(ranked, [...sources, ...pendX1], pendX1.length, RERANK_D, HEADPASS_MAX_APPEND);
++          if (topic && add.length) {
++            const ok = add.filter((c) => onHealthTopic(topic, c));
++            if (ok.length < add.length) reasonCodes.push(`headpass:rerank:health-dropped-${add.length - ok.length}`);
++            add = ok;
++          }
++          pendR = add;
++        }
++        if (pendX1.length || pendR.length) {
++          let template = true;
++          try { template = deps.engine.hasEmbeddedChatTemplate(); } catch { /* the chat form, as the replay records it */ }
++          const base = sources;
++          const chars = (extra: RetrievedChunk[]) => {
++            const s = [...base, ...extra];
++            return (template
++              ? JSON.stringify(deps.assembleChatMessages(req.query, s, ctx.systemPrompt, ctx.history))
++              : deps.assemblePrompt(req.query, s, ctx.systemPrompt, ctx.history)).length;
++          };
++          const x1Ids = new Set(pendX1.map((c) => c.chunkId));
++          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendR], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:rerank:add:${c.chunkId}`);
++          for (const c of dropped) reasonCodes.push(`headpass:rerank:dropped:${c.chunkId}`);
++          sources = [...sources, ...kept];
++        }
++      } else if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
+         if (settings.packHeadPass === "a2") {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+           if (!head) reasonCodes.push("headpass:no-user-pack");

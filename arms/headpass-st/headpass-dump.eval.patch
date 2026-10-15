@@ -1,0 +1,31 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index d62bbcd..f603de8 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -268,6 +268,12 @@ export const DEEP_THINKING_BUDGET = 1024;
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
++/** HEADPASS-ST eval only (= ORACLE-ST's dump, default off): BOAR_PROMPT_DUMP = JSONL file that receives each generation's prompt/messages. */
++const PROMPT_DUMP: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_PROMPT_DUMP || undefined : undefined;
++async function dumpPrompt(query: string, prompt: unknown): Promise<void> {
++  const fs = await import("node:fs");
++  fs.appendFileSync(PROMPT_DUMP!, JSON.stringify({ query, prompt }) + "\n");
++}
+ 
+ export interface AnswerContext {
+   systemPrompt?: string;
+@@ -1373,6 +1379,13 @@ export function createAnswerer(deps: AnswerDeps) {
+             onToken: health ? () => {} : onToken,
+             onTimings: (t: GenerationTimings) => (timings = t),
+           };
++          if (PROMPT_DUMP)
++            await dumpPrompt(
++              req.query,
++              useTemplate
++                ? deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++                : deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++            );
+           text = withoutModelReferences(
+             await deps.engine.generate(
+               useTemplate

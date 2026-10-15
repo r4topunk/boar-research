@@ -1,0 +1,100 @@
+diff --git a/src/rag/facts.ts b/src/rag/facts.ts
+index 8a676568..aeb8e4f0 100644
+--- a/src/rag/facts.ts
++++ b/src/rag/facts.ts
+@@ -14,6 +14,9 @@
+  * aliases China / UK / Britain / US / USA / America and "the X" aliases ("the Amazon"); "size of" and "bigger/larger/
+  * smaller than" ask for area; a name glued to an unknown capitalised word (Paris Hilton) or a compound property word
+  * (area code) does not fire; a population dated before 2023 prints "(dated YEAR)".
++ * r4 (FACTS-r4-criterion.md): a lowercase or mixed-case name of ≥ 2 words resolves when, case-folded, it is the label or
++ * alias of exactly one entity and none of its words is on the risk list ("mont blanc", "the petronas towers"); the
++ * tokens thw/teh/hte/tje/th read as "the" only right before a name that resolves ("thw netherlands").
+  */
+ import table from "./facts.v1.json";
+ import { titleCandidates } from "./wikiPack";
+@@ -105,6 +108,8 @@ const LOWER_RISK = new Set([
+   "georgia", "turkey", "chad", "jordan", "guinea", "chile", "china", "america", "us", "wellington", "victoria", "sofia",
+   "israel", "santiago", "kingston", "nice", "reading", "male", "malé",
+ ]);
++/** r4 rule 2: typos of "the", read as "the" only when a resolved name follows right after. */
++const THE_TYPOS = /(?<![\p{L}\p{N}'’.-])(thw|teh|hte|tje|th)(?![\p{L}\p{N}'’.-])/gu;
+ /** r3: r3 aliases that may be typed lowercase ("what currency does the uk use"). */
+ const LOWER_ALIASES = ["uk", "u.k", "britain", "usa", "u.s"];
+ /** r3: a lowercase name right after one of these is part of another place ("south sudan", "new mexico"): no answer. */
+@@ -154,7 +159,7 @@ const typedAsName = (cand: string) =>
+ /** Names shared with a well-known place that is not in the table (the US state Georgia): never answered (r2 gate 3). */
+ const HOMONYMS = new Set(["georgia"]);
+ 
+-interface Resolved { ents: FactEntity[]; ambiguous: boolean }
++interface Resolved { ents: FactEntity[]; ambiguous: boolean; starts: number[] }
+ 
+ /** Entities the question names, in question order, longest n-gram first; a word inside a found name never counts again. */
+ export function factEntities(query: string): FactEntity[] {
+@@ -163,11 +168,25 @@ export function factEntities(query: string): FactEntity[] {
+ 
+ /** As factEntities, plus whether any name resolved to two or more entities (r2 gate 3: then the question is not answered). */
+ function resolve(query: string): Resolved {
++  // r4 rule 2: each "the" typo is read as "the" only if, so read, a resolved name starts at the next word.
++  const typos = [...query.matchAll(THE_TYPOS)];
++  if (!typos.length) return resolveTyped(query);
++  const tokenAt = (q: string, offset: number) => [...q.slice(0, offset).matchAll(/[\p{L}\p{N}][\p{L}\p{N}'’.-]*/gu)].length;
++  const accepted = typos.filter((m) => {
++    const q2 = query.slice(0, m.index!) + "the" + query.slice(m.index! + m[0].length);
++    return resolveTyped(q2).starts.includes(tokenAt(query, m.index!) + 1);
++  });
++  let q = query;
++  for (const m of [...accepted].reverse()) q = q.slice(0, m.index!) + "the" + q.slice(m.index! + m[0].length);
++  return resolveTyped(q);
++}
++
++function resolveTyped(query: string): Resolved {
+   const idx = entityIndex();
+   let ambiguous = false;
+   const opening = (query.match(/[\p{L}\p{N}]+/u)?.[0] ?? "").toLowerCase();
+   const used: string[] = [];
+-  const found: Array<{ e: FactEntity; at: number }> = [];
++  const found: Array<{ e: FactEntity; at: number; tok: number }> = [];
+   const low = query.toLowerCase();
+   // Word tokens with offsets, split exactly like titleCandidates (r3: neighbours of a name, a leading "the").
+   const toks = [...query.matchAll(/[\p{L}\p{N}][\p{L}\p{N}'’.-]*/gu)].map((m) => ({
+@@ -194,9 +213,16 @@ function resolve(query: string): Resolved {
+     const next = at >= 0 && at + words.length < toks.length && glued(at + words.length - 1, at + words.length) ? toks[at + words.length] : null;
+     // r3 gate 1: a one-word country/capital name may be typed lowercase ("what is the population of canada").
+     const lowerName = single && !/^\p{Lu}/u.test(cand) && lowerOk!.has(lower);
+-    // r3: a lowercase multi-word name ("south sudan", "mexico city") still needs capitals, and its inner word must not
+-    // answer for it ("sudan", "mexico"): the question is not answered.
+-    if (!single && !typedAsName(cand) && idx.has(lower) && words.some((w) => lowerOk!.has(w))) {
++    // r4 rule 1: a lowercase/mixed-case name of ≥ 2 words resolves when, case-folded, it names exactly one entity (with
++    // an optional typed "the" before it) and no word of it is on the risk list ("mont blanc", "mexico city").
++    let safeList: FactEntity[] | undefined;
++    if (!single && !typedAsName(cand) && !words.some((w) => LOWER_RISK.has(w) || HOMONYMS.has(w))) {
++      const l = idx.get(lower) ?? (prev?.w.toLowerCase() === "the" ? idx.get(`the ${lower}`) : undefined);
++      if (l?.length === 1) safeList = l;
++    }
++    // r3: otherwise a lowercase multi-word name ("south sudan", "mexico city") still needs capitals, and its inner word
++    // must not answer for it ("sudan", "mexico"): the question is not answered.
++    if (!safeList && !single && !typedAsName(cand) && idx.has(lower) && words.some((w) => lowerOk!.has(w))) {
+       used.push(lower);
+       ambiguous = true;
+       continue;
+@@ -204,7 +230,7 @@ function resolve(query: string): Resolved {
+     // A lone word must be written as a name (capitalized), and never be the sentence's opening word.
+     if (single && ((!/^\p{Lu}/u.test(cand) && !lowerName) || lower === opening)) continue;
+     if (cand.length <= 3 && cand !== cand.toUpperCase() && !lowerName) continue;
+-    if (!lowerName && !typedAsName(cand)) continue;
++    if (!lowerName && !safeList && !typedAsName(cand)) continue;
+     let list = idx.get(lower);
+     // r3 gate 2: "the UK", "the Amazon": an alias with a leading "the" matches when the question types the "the".
+     if (!list && prev?.w.toLowerCase() === "the") list = idx.get((lower = `the ${lower}`));
+@@ -231,9 +257,9 @@ function resolve(query: string): Resolved {
+       continue;
+     }
+     const pick = pool[0];
+-    if (!found.some((f) => f.e === pick)) found.push({ e: pick, at: low.indexOf(lower) });
++    if (!found.some((f) => f.e === pick)) found.push({ e: pick, at: low.indexOf(lower), tok: at });
+   }
+-  return { ents: found.sort((x, y) => x.at - y.at).map((f) => f.e), ambiguous };
++  return { ents: found.sort((x, y) => x.at - y.at).map((f) => f.e), ambiguous, starts: found.map((f) => f.tok) };
+ }
+ 
+ /** The templates whose wording the question uses. */

@@ -1,0 +1,120 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf..5366da7 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -44,6 +44,8 @@ interface Settings {
+   placeTileNames?: Record<string, string>;
+   /** CR-2: models whose last load killed the app (cleared by a successful load). */
+   loadCrashedIds?: string[];
++  /** HEADPASS-ST (experimental, default off): "a2" appends, after grounding, the chunks at positions 1-2 of the top user-installed pack article. */
++  packHeadPass?: "off" | "a2";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -489,6 +491,9 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** HEADPASS-ST (experimental, default off): "a2" = after grounding, append the chunks at positions 1-2 (by start) of the
++   *  article of the first raw passage from a user-installed (non-kit) format-2 pack, skipping chunks already kept. */
++  packHeadPass?: "off" | "a2";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -500,6 +505,7 @@ export async function getAnswerSettings(): Promise<AnswerSettings> {
+     deepModelId: s.deepModelId,
+     largeModelConfirmedIds: s.largeModelConfirmedIds ?? [],
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
++    ...(s.packHeadPass === "a2" ? { packHeadPass: "a2" as const } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b14..09fb44a 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -219,6 +219,24 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+   };
+ }
+ 
++/** HEADPASS-ST: kit packs (shipped with the app) never get a head pass; only user-installed format-2 packs do. */
++const HEADPASS_KIT = new Set(["boar-crypto", "boar-wikivoyage-en"]);
++/** HEADPASS-ST (settings.packHeadPass "a2", default off): the first passage of `raw` from a user-installed (non-kit) format-2
++ *  pack, and its article's chunks at positions 1-2 (by start) in the shape of retrieved pack passages; null when none. */
++export async function packHeadPass(raw: RetrievedChunk[]): Promise<{ first: RetrievedChunk; chunks: RetrievedChunk[] } | null> {
++  for (const c of raw) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    if (!m) continue;
++    const packId = m[1];
++    if (HEADPASS_KIT.has(packId.replace(/^local-/, ""))) continue;
++    const wp = wikiPacks.get(packId);
++    if (!wp) continue;
++    const hits = await wp.headChunksOf(Number(m[2]), 1, 2);
++    return { first: c, chunks: hits.map((h) => packHitToChunk(packId, h)) };
++  }
++  return null;
++}
++
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269e..f1f0fd1 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -652,6 +652,15 @@ export class WikiPack {
+     return Promise.all([leadHit(), ...picked.map((x) => this.hit(articleId, x.r.id, x.r.start, x.r.end, x.s, "title"))]);
+   }
+ 
++  /** HEADPASS-ST (settings.packHeadPass "a2", default off): the chunks at positions `from`..`to` (0-based, ordered by
++   *  start) of the article that holds chunk `chunkId`; [] when the chunk is unknown. */
++  async headChunksOf(chunkId: number, from: number, to: number): Promise<PackHit[]> {
++    const row = await this.db.getFirstAsync<{ article_id: number }>("SELECT article_id FROM chunks WHERE id = ?", [chunkId]);
++    if (!row) return [];
++    const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [row.article_id]);
++    return Promise.all(rows.slice(from, to + 1).map((r) => this.hit(row.article_id, r.id, r.start, r.end, 0, "bm25")));
++  }
++
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+   async bm25(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 52edfef..d62bbcd 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -1016,6 +1016,8 @@ export function createAnswerer(deps: AnswerDeps) {
+             (gen?.thinking === false ? 0 : genTier === "deep" ? DEEP_THINKING_BUDGET : FAST_THINKING_BUDGET)
+         )
+       );
++      /** HEADPASS-ST: the retrieved list before the substantive filter (the head pass reads its first user-pack passage). */
++      const retrievedRaw = raw;
+       // Passages without content (an EIP's metadata header, a hex example, a copyright notice) never reach
+       // the prompt (Sextant cry-012), and so are never pinned.
+       const substantive = raw.filter(isSubstantive);
+@@ -1058,6 +1060,26 @@ export function createAnswerer(deps: AnswerDeps) {
+           }
+         }
+       }
++      // HEADPASS-ST (settings.packHeadPass "a2", experimental, default off): append, after grounding, the chunks at positions
++      // 1-2 (by start) of the article of the first raw passage from a user-installed (non-kit) format-2 pack, skipping
++      // chunks already kept. Nothing is displaced; appended chunks skip onSubject/compression (ORACLE-ADD append path);
++      // health-strict questions keep only appended chunks that pass onHealthTopic. Never on multi-pass.
++      if (settings.packHeadPass === "a2" && gen?.mode !== "multipass" && retrievedRaw.length) {
++        const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
++        if (!head) reasonCodes.push("headpass:no-user-pack");
++        else {
++          let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
++          if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
++          if (health) {
++            const topic = healthTopicTerms(req.query, english);
++            const ok = add.filter((c) => onHealthTopic(topic, c));
++            if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
++            add = ok;
++          }
++          for (const c of add) reasonCodes.push(`headpass:add:${c.chunkId}`);
++          sources = [...sources, ...add];
++        }
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }
