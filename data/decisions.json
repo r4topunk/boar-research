@@ -1,0 +1,5820 @@
+{
+ "schema": "boar-publication/decisions",
+ "schema_version": "1.0.0",
+ "generated": "2026-10-25",
+ "license": "CC BY 4.0 (text and data); see /CITATION.cff",
+ "count": 208,
+ "notes": [],
+ "decisions": [
+  {
+   "id": "D-001",
+   "date": "2026-09-26",
+   "time": null,
+   "title": "Thesis: \"quality per second + blind evaluation against a frontier model\"; stay on the existing cross-platform app; plan a no-network Android submission",
+   "context": "Author joins the app maintainer as co-builder; thesis \"quality per second + blind eval vs frontier\"; official Android submission planned as a no-INTERNET variant",
+   "decision": "Thesis: \"quality per second + blind evaluation against a frontier model\"; stay on the existing cross-platform app; plan a no-network Android submission",
+   "alternatives": [
+    "fork a new app; rely on the existing on-phone benchmark"
+   ],
+   "rationale": "the existing claim had solid engineering but no measured research quality",
+   "consequence": "led to the 09-29 research pipeline and 10-01 harness",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-050"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-01"
+   ]
+  },
+  {
+   "id": "D-002",
+   "date": "2026-09-30",
+   "time": null,
+   "title": "References = Claude Opus + web search, frozen once, hashed; never regenerated",
+   "context": "Frozen frontier-plus-web reference answers for the public v0.1 set start being generated (09-30 → 10-02)",
+   "decision": "References = Claude Opus + web search, frozen once, hashed; never regenerated",
+   "alternatives": [
+    "live references per run"
+   ],
+   "rationale": "a fixed denominator makes runs comparable",
+   "consequence": "same refs used for every v0.1 number; regenerating = not comparable",
+   "reversible": "no (by design)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-059"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-04"
+   ]
+  },
+  {
+   "id": "D-003",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Build one evaluation harness (ADR-001): own thin protocol + existing scorers; 5 layers; 7 axes never averaged",
+   "context": "ADR-001 proposes one evaluation harness: 5 layers, one trace schema, 7 axes never averaged, gate vs full modes",
+   "decision": "Build one evaluation harness (ADR-001): own thin protocol + existing scorers; 5 layers; 7 axes never averaged",
+   "alternatives": [
+    "Inspect AI (UK AISI); promptfoo",
+    "Inspect AI (Python, subprocess bridge); promptfoo (no paired bootstrap)"
+   ],
+   "rationale": "each experiment wrote its own scripts; desktop and device rows had different shapes; no regression gate; run noise ≈ effect size",
+   "consequence": "harness became boar-eval, later the public boar-bench",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1305",
+    "F-678"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-02",
+    "D-method-01"
+   ]
+  },
+  {
+   "id": "D-004",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Replace the 27 items borrowed from a competitor's question list with own items (bench v0.1)",
+   "context": "27 items from a competing team's fork removed from the bench; replaced with original items of the same slot (bench v0.1)",
+   "decision": "Replace the 27 items borrowed from a competitor's question list with own items (bench v0.1)",
+   "alternatives": [
+    "keep them",
+    "keep them with attribution"
+   ],
+   "rationale": "do not copy competitors' test cases; clean benchmark",
+   "consequence": "v0.1 = 60 public items (57 EN judged)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-099",
+    "F-101"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-03",
+    "D-method-03"
+   ]
+  },
+  {
+   "id": "D-005",
+   "date": "2026-10-01",
+   "time": "23:00",
+   "title": "Report a quality effect only if it exceeds the MDE printed by the diff tool",
+   "context": "Rule: an effect is reported only if it exceeds the minimum detectable effect (MDE)",
+   "decision": "Report a quality effect only if it exceeds the MDE printed by the diff tool",
+   "alternatives": [
+    "report any sign"
+   ],
+   "rationale": "run-to-run noise (Δ 0.031) as large as effects",
+   "consequence": "became house rule; later refined (two-seed, seed-noise rule)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1137"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-04"
+   ]
+  },
+  {
+   "id": "D-006",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Freeze every deciding criterion (sha256) before data; blind sets written by separate writers, never read by researchers",
+   "context": "Embedding danger detector criterion frozen before its blind set exists (start of learned-detector line)",
+   "decision": "Freeze every deciding criterion (sha256) before data; blind sets written by separate writers, never read by researchers",
+   "alternatives": [
+    "iterate without freezes"
+   ],
+   "rationale": "avoid post-hoc tuning",
+   "consequence": "65/65 criterion shas verify by 10-10",
+   "reversible": "yes (method)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-100"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-05"
+   ]
+  },
+  {
+   "id": "D-007",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Seven axes (quality, truthfulness, safety, retrieval, latency, resources, stability), never averaged into one score",
+   "context": "Research mandate: three researcher lanes (retrieval, models, evaluation/safety) write \"technique cards\"; a runner executes arms",
+   "decision": "Seven axes (quality, truthfulness, safety, retrieval, latency, resources, stability), never averaged into one score",
+   "alternatives": [
+    "single composite score"
+   ],
+   "rationale": "one average hides safety and latency regressions",
+   "consequence": "quality ratio became the published number; other axes reported separately",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-290"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-02"
+   ]
+  },
+  {
+   "id": "D-008",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Research agents work in fixed lanes, write one \"technique card\" per idea, never run experiments or touch the product; only the coordinator queues runs",
+   "context": "Research mandate: three researcher lanes (retrieval, models, evaluation/safety) write \"technique cards\"; a runner executes arms",
+   "decision": "Research agents work in fixed lanes, write one \"technique card\" per idea, never run experiments or touch the product; only the coordinator queues runs",
+   "alternatives": [
+    "Agents run their own tests"
+   ],
+   "rationale": "Avoid duplicate work; separate proposing from measuring",
+   "consequence": "the retrieval research agent 19 cards, the models/latency research agent 22, the evaluation/safety research agent 23; runner agent executed",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-823"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-01"
+   ]
+  },
+  {
+   "id": "D-009",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Every pass/fail criterion written and sha256-frozen before the run; no edits after verdicts, only dated addenda",
+   "context": "First frozen criteria on fresh sets (hm-fresh2/3) before any reading",
+   "decision": "Every pass/fail criterion written and sha256-frozen before the run; no edits after verdicts, only dated addenda",
+   "alternatives": [
+    "Judge then decide"
+   ],
+   "rationale": "Prevent tuning the rule to the result",
+   "consequence": "65/65 criterion hashes verified 10-10; 16 of 17 re-verified by an outside critic 10-16",
+   "reversible": "no (core method)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: \"18/19 re-verified\" → 16/17 (CRITIQUE:6) or 19/20 in the C6 spot-check (CRITIQUE:72-75).",
+   "fact_ids": [
+    "F-1136"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-02"
+   ]
+  },
+  {
+   "id": "D-010",
+   "date": "2026-10-02",
+   "time": "06:10",
+   "title": "Strategy memo: Android-only, three fronts (knowledge into the 4B's context; device truth + reader; held-out bench + claim); stop iPhone/1.5B quality work, perso",
+   "context": "Strategy memo (high-tier model, one call): Android-only, three fronts; stop iPhone/1.5B and prompt work",
+   "decision": "Strategy memo: Android-only, three fronts (knowledge into the 4B's context; device truth + reader; held-out bench + claim); stop iPhone/1.5B quality work, persona/prompt work, same-class reader swaps",
+   "alternatives": [
+    "continue broad fronts"
+   ],
+   "rationale": "measured gap; only the 4B near the bar",
+   "consequence": "iPhone work stopped; knowledge front closed later that day",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-697"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-06"
+   ]
+  },
+  {
+   "id": "D-011",
+   "date": "2026-10-02",
+   "time": "11:15",
+   "title": "Bar on the RAW ratio; every publication shows raw + floor-removed + above-always-decline side by side",
+   "context": "Author's morning decisions: bar on the raw ratio, but always publish raw + floor-removed + above-decline side by side",
+   "decision": "Bar on the RAW ratio; every publication shows raw + floor-removed + above-always-decline side by side",
+   "alternatives": [
+    "lead with floor-adjusted",
+    "Floor-adjusted only"
+   ],
+   "rationale": "rubric floor gives a blank system ~0.20–0.31",
+   "consequence": "headline later switched to floor-adjusted (D-chron-early-21) while raw stays the formal rule",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "Floor-adjusted ratio + win/tie/loss became the headline on 2026-10-06 (applied 2026-10-07); the raw rule is still printed as the formal rule.",
+   "superseded_by": "D-036",
+   "verification_note": null,
+   "fact_ids": [
+    "F-264",
+    "F-271"
+   ],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "status_label": "superseded by D-036",
+   "aliases": [
+    "D-chron-early-07",
+    "D-process-05"
+   ]
+  },
+  {
+   "id": "D-012",
+   "date": "2026-10-02",
+   "time": "12:40",
+   "title": "Close the knowledge-pack front for the bounty after the big-pack gate failed replay (\"no fourth pack iteration\")",
+   "context": "Big-pack relevance gate fails replay → knowledge front closed for the bounty (kill rule K1)",
+   "decision": "Close the knowledge-pack front for the bounty after the big-pack gate failed replay (\"no fourth pack iteration\")",
+   "alternatives": [
+    "a fourth pack iteration (G1′)"
+   ],
+   "rationale": "kill rule K1 pre-registered in the strategy memo",
+   "consequence": "packs reopened later only for the deep tier and as products",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "packs reopened later only for the deep tier and as products",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-072"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-early-08"
+   ]
+  },
+  {
+   "id": "D-013",
+   "date": "2026-10-02",
+   "time": "12:55",
+   "title": "Run the deep tier (35B MoE); its ratio counts only reported separately from the default, with its latency",
+   "context": "Deep tier (35B MoE) approved; counts only if reported separately from the default",
+   "decision": "Run the deep tier (35B MoE); its ratio counts only reported separately from the default, with its latency",
+   "alternatives": [
+    "ignore deep tier"
+   ],
+   "rationale": "first candidate lever with a prior above noise; bounty hint about large MoE",
+   "consequence": "deep35 +0.060 (first lever above MDE)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-074"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-09"
+   ]
+  },
+  {
+   "id": "D-014",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Treat the bounty as qualitative: judged by a public confirmation, not a numeric benchmark",
+   "context": "Bounty re-read: winning is a public confirmation, not a numeric benchmark",
+   "decision": "Treat the bounty as qualitative: judged by a public confirmation, not a numeric benchmark",
+   "alternatives": [
+    "treat our ratio as the decision"
+   ],
+   "rationale": "bounty text",
+   "consequence": "private ratio kept as instrument; claim framing open",
+   "reversible": "n/a",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-111"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-10"
+   ]
+  },
+  {
+   "id": "D-015",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Hold v0.2 as held-out: develop on v0.1, confirm only on v0.2",
+   "context": "Direction: two tracks only (harness + pipeline technique); v0.2 = held-out, confirm only",
+   "decision": "Hold v0.2 as held-out: develop on v0.1, confirm only on v0.2",
+   "alternatives": null,
+   "rationale": "avoid tuning on the claim set",
+   "consequence": "v0.2 later burnt (D-chron-early-22)",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "v0.2 was declared burnt → dev on 2026-10-06.",
+   "superseded_by": "D-037",
+   "verification_note": null,
+   "fact_ids": [
+    "F-112"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "superseded by D-037",
+   "aliases": [
+    "D-chron-early-11"
+   ]
+  },
+  {
+   "id": "D-016",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Restate deep35 memory: \"≤ 8 GiB\" was our own estimate, not a bounty rule; macOS footprint ≠ phone RSS",
+   "context": "Strategy memo (high-tier model, one call): Android-only, three fronts; stop iPhone/1.5B and prompt work",
+   "decision": "Restate deep35 memory: \"≤ 8 GiB\" was our own estimate, not a bounty rule; macOS footprint ≠ phone RSS",
+   "alternatives": [
+    "keep \"fails memory\""
+   ],
+   "rationale": "the author asked why 8 GB if the bounty says 12 GB",
+   "consequence": "Linux 6,750 MiB (≈ 6.6 GiB) container test passed 10/10",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Same unit fix as F-chron-early-30.",
+   "fact_ids": [
+    "F-069"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-12"
+   ]
+  },
+  {
+   "id": "D-018",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "\"Iterate fast first, rigor later\": sha freeze only when an idea goes to the full bench or held-out; funnel L0 → L1 → L2 → L3",
+   "context": "Author: \"iterate fast first, rigor later\" (sha only when an idea reaches the full/held-out bench); no fixed greeting rules",
+   "decision": "\"Iterate fast first, rigor later\": sha freeze only when an idea goes to the full bench or held-out; funnel L0 → L1 → L2 → L3",
+   "alternatives": [
+    "freeze every step"
+   ],
+   "rationale": "speed of iteration",
+   "consequence": "funnel became standard (BOUNTY-BOARD rules)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-113"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-14"
+   ]
+  },
+  {
+   "id": "D-019",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Pairwise judging in both A/B orders; disagreement = tie; scores averaged across orders",
+   "context": "Rubric-floor risk found: a blank system scores ~0.20–0.31 of the reference",
+   "decision": "Pairwise judging in both A/B orders; disagreement = tie; scores averaged across orders",
+   "alternatives": [
+    "single order"
+   ],
+   "rationale": "removes position bias",
+   "consequence": "position consistency 96.5-100 % measured",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1139"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-05"
+   ]
+  },
+  {
+   "id": "D-020",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Freeze the analysis plan (metrics, CI method, seeds, wording rules) before items existed",
+   "context": "Held-out v0.2 analysis plan frozen (combined sha fe100e91…); items frozen in a second commit",
+   "decision": "Freeze the analysis plan (metrics, CI method, seeds, wording rules) before items existed",
+   "alternatives": [
+    "decide after seeing numbers"
+   ],
+   "rationale": "prevents tuning metric to results",
+   "consequence": "plan hashed (375ff004…); later changes only as dated addenda",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-114"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-06"
+   ]
+  },
+  {
+   "id": "D-021",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Primary metric = raw ratio, bar > 0.50 (the author's decision on 2026-10-02, not the app maintainer's)",
+   "context": "Direction: \"eval + pipeline technique\" (better answers from the same model)",
+   "decision": "Primary metric = raw ratio, bar > 0.50 (the author's decision on 2026-10-02, not the app maintainer's)",
+   "alternatives": [
+    "floor-aware metric"
+   ],
+   "rationale": null,
+   "consequence": null,
+   "reversible": "—",
+   "status": "superseded",
+   "status_note": "Floor-adjusted ratio + win/tie/loss became the headline on 2026-10-06 (applied 2026-10-07); the raw rule is still printed as the formal rule.",
+   "superseded_by": "D-036",
+   "verification_note": "the scrubbed public plan says 'the maintainer's decision', but the private original names the author; in the publication 'the app maintainer' means the upstream maintainer, so write 'the author's decision'",
+   "fact_ids": [
+    "F-1306"
+   ],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "status_label": "superseded by D-036",
+   "aliases": [
+    "D-method-07"
+   ]
+  },
+  {
+   "id": "D-022",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Blind / held-out sets: researchers never open, list or grep them; coordinator runs them by script, aggregates only",
+   "context": "Blind-set rule widened after a filename-only grep leaked set composition",
+   "decision": "Blind / held-out sets: researchers never open, list or grep them; coordinator runs them by script, aggregates only",
+   "alternatives": [
+    "Trust-based access"
+   ],
+   "rationale": "A filename-only grep had leaked set composition",
+   "consequence": "Rule widened to blind/ on 10-10; pre-commit hook blocks blind plaintext",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Same fix as the timeline row: incident at QUEUE:144; MANDATE scope widening dated 10-10.",
+   "fact_ids": [
+    "F-828"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-03"
+   ]
+  },
+  {
+   "id": "D-023",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Expensive strategy agent (the strategy agent, Fable tier) only for few big decisions, with a self-contained dossier; never loops",
+   "context": "Strategy agent (the strategy agent) memo S1: three fronts, ~1 in 4 chance the CI lower bound clears 0.50; stop list",
+   "decision": "Expensive strategy agent (the strategy agent, Fable tier) only for few big decisions, with a self-contained dossier; never loops",
+   "alternatives": [
+    "Continuous strategy agent"
+   ],
+   "rationale": "Cost: most expensive tier",
+   "consequence": "Used once (S1 memo) in the record read",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-829"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-04"
+   ]
+  },
+  {
+   "id": "D-024",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Make the memory-fit estimate repack-aware and load with no_extra_bufts on Android only",
+   "context": "iPhone 13 repack probe: llama.rn does not repack on iOS; fit-repack stays Android-only",
+   "decision": "Make the memory-fit estimate repack-aware and load with no_extra_bufts on Android only",
+   "alternatives": [
+    "apply to iOS too; leave as is"
+   ],
+   "rationale": "repack copied ~2.3 GiB of weights into anonymous memory and the phone killed the 4B",
+   "consequence": "Android-only variant frozen; iOS unchanged pending device evidence",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-679"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-01"
+   ]
+  },
+  {
+   "id": "D-025",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Move v0.2 plaintext out of researcher-readable paths after an exposure; treat the exposed item as seen",
+   "context": "Final cut 2 (cut 1b + exposure fix + citation fix)",
+   "decision": "Move v0.2 plaintext out of researcher-readable paths after an exposure; treat the exposed item as seen",
+   "alternatives": [
+    "ignore"
+   ],
+   "rationale": "a trace scan printed one held-out item",
+   "consequence": "git history still held the plaintext → later \"burnt\"",
+   "reversible": "partly (history is permanent)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Same date fix as the timeline row: the exposure is dated 10-03, not 10-02 22:05.",
+   "fact_ids": [
+    "F-138"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-15"
+   ]
+  },
+  {
+   "id": "D-026",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Declare three health blind sets dev; commission fresh blind sets from writers with no file access",
+   "context": "Several health blind sets declared dev after traces sat in readable paths",
+   "decision": "Declare three health blind sets dev; commission fresh blind sets from writers with no file access",
+   "alternatives": [
+    "keep them blind"
+   ],
+   "rationale": "traces sat in readable paths and were used as dev",
+   "consequence": "new sets health-fresh1/2/3, chat-v3, meta-fresh1",
+   "reversible": "n/a",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-304"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-16"
+   ]
+  },
+  {
+   "id": "D-027",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "No human review: an independent Opus reviewer agent decides content/wording; caveat \"AI-reviewed, not clinically reviewed\" stays",
+   "context": "\"No human review\": an independent Opus reviewer agent decides content; caveat \"AI-reviewed, not clinically reviewed\"",
+   "decision": "No human review: an independent Opus reviewer agent decides content/wording; caveat \"AI-reviewed, not clinically reviewed\" stays",
+   "alternatives": [
+    "human/clinical sign-off",
+    "Author or clinician signs off"
+   ],
+   "rationale": "speed; author unavailable for 39 card decisions",
+   "consequence": "reviewer changed 25/31 cards",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1219",
+    "F-834"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-17",
+    "D-process-06"
+   ]
+  },
+  {
+   "id": "D-028",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Single goal = win the bounty; English only; no more work inside the maintainer's app; build a dedicated measurement app",
+   "context": "No more work inside the app maintainer's app; build \"BOAR Bench\" measurement app",
+   "decision": "Single goal = win the bounty; English only; no more work inside the maintainer's app; build a dedicated measurement app",
+   "alternatives": [
+    "keep improving the general product"
+   ],
+   "rationale": "focus",
+   "consequence": "PT/ES lines parked; BOAR Bench built",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-075"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-18"
+   ]
+  },
+  {
+   "id": "D-029",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Park the retrieval line after rv2 failed despite more gold in context",
+   "context": "Retrieval v2 killed: gold-in-context 7 → 18 yet quality −0.021",
+   "decision": "Park the retrieval line after rv2 failed despite more gold in context",
+   "alternatives": [
+    "another retrieval variant"
+   ],
+   "rationale": "gold-sentence-in-context did not translate into judged quality",
+   "consequence": "retrieval reopened later only for the deep tier",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "retrieval reopened later only for the deep tier",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-572"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-early-19"
+   ]
+  },
+  {
+   "id": "D-030",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Single goal = the bounty bar; other quality work after the bounty",
+   "context": "Direction change: single goal = win the bounty; lanes re-tasked",
+   "decision": "Single goal = the bounty bar; other quality work after the bounty",
+   "alternatives": [
+    "keep broad product work"
+   ],
+   "rationale": "deadline + focus",
+   "consequence": "lanes re-assigned (model tier, health minimum, speed, demo device)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-076"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-02"
+   ]
+  },
+  {
+   "id": "D-031",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team",
+   "context": "Direction: 4B default tier only; deep tier parked; no team chat agents, coordinator + subagents",
+   "decision": "Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team",
+   "alternatives": [
+    "keep deep tier active"
+   ],
+   "rationale": "token budget; no 12 GB phone",
+   "consequence": "4B levers exhausted by 10-05; deep tier reopened 10-06",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "4B levers exhausted by 10-05; deep tier reopened 10-06",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-704"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-early-20"
+   ]
+  },
+  {
+   "id": "D-032",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Adopt cut 3 (verdict guard + arithmetic repair + snakebite text)",
+   "context": "Cut 3 adopted (cut 2 + verdict guard v3 + arithmetic repair + snakebite text); L1 Δ +0.029 [+0.007, +0.058]",
+   "decision": "Adopt cut 3 (verdict guard + arithmetic repair + snakebite text)",
+   "alternatives": [
+    "computed-verdict override family (all failed gates)",
+    "verdict guard v4, water card, computed verdict"
+   ],
+   "rationale": "L1 Δ +0.029 [+0.007, +0.058], confident-wrong 15 → 9, unsafe 0",
+   "consequence": "Cut 3 became the first claim build; claim runs 10-05",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1220",
+    "F-1221"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-01",
+    "D-system-03"
+   ]
+  },
+  {
+   "id": "D-033",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Park the web-only knowledge pack for the bounty (public-figure blog pack and a research-forum pack were the alternatives).",
+   "context": "Knowledge-pack sizing: web-only pack parked for the bounty",
+   "decision": "Park the web-only knowledge pack for the bounty (public-figure blog pack and a research-forum pack were the alternatives).",
+   "alternatives": [
+    "public-figure blog pack, ethresear.ch pack"
+   ],
+   "rationale": "gains come from non-redistributable sources or in-kit misses; best pack +0.007 net",
+   "consequence": "later replaced by the open-corpus Knowledge Pack program (10-12)",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "later replaced by the open-corpus Knowledge Pack program (10-12)",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-084"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-system-04"
+   ]
+  },
+  {
+   "id": "D-034",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Fix the KV session save path (KVFIX) and block fragment/figurative instant answers (INSTANT-FRAG) → cut 4",
+   "context": "Cut 4 = cut 3 + KVFIX + INSTANT-FRAG (+ INSTANT-SUBJ)",
+   "decision": "Fix the KV session save path (KVFIX) and block fragment/figurative instant answers (INSTANT-FRAG) → cut 4",
+   "alternatives": [
+    "skip the route gate; threads; repack"
+   ],
+   "rationale": "A15 smoke: every question re-prefilled the prefixes; \"capital of France\" answered with a Lyon fragment",
+   "consequence": "cut 4 built; KVFIX real gate is the device",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-705"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-05"
+   ]
+  },
+  {
+   "id": "D-035",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Bench APK with INTERNET permission removed (no-network by construction)",
+   "context": "No-network measurement APK (INTERNET permission removed by construction)",
+   "decision": "Bench APK with INTERNET permission removed (no-network by construction)",
+   "alternatives": [
+    "rely on airplane mode only"
+   ],
+   "rationale": "prove offline operation statically",
+   "consequence": "audit verdict NO-NETWORK-BY-CONSTRUCTION; later phone runs used it",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-706"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-06"
+   ]
+  },
+  {
+   "id": "D-036",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Headline = floor-adjusted ratio + win/tie/loss (+ share of items ≥ 3/5), raw second; own bar = floor-adj ≥ 0.50 on V-para",
+   "context": "Honest-metric rewrite: headline becomes floor-adjusted ratio + win/tie/loss, raw second",
+   "decision": "Headline = floor-adjusted ratio + win/tie/loss (+ share of items ≥ 3/5), raw second; own bar = floor-adj ≥ 0.50 on V-para",
+   "alternatives": [
+    "keep raw headline",
+    "Raw headline"
+   ],
+   "rationale": "raw 0.50 is ~61 % free because of the rubric floor",
+   "consequence": "board and claim draft rewritten 10-06 22:40",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix (D1 is l.53). Date nuance: decided 10-06 in the audit, applied to the claim draft v3.1 on 10-07 (CRITIQUE-2026-10-16.md:24); floor scale pre-registered as companion 10-02 (analysis-plan.md:22-25)",
+   "fact_ids": [
+    "F-1146",
+    "F-1226",
+    "F-1227"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-21",
+    "D-method-09",
+    "D-process-08"
+   ]
+  },
+  {
+   "id": "D-037",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Treat v0.2 as burnt (dev); a final number needs v0.3 written outside the Claude family",
+   "context": "Retrieval scorecard: coverage is the largest failure bucket (49 %); recall@5 0.333",
+   "decision": "Treat v0.2 as burnt (dev); a final number needs v0.3 written outside the Claude family",
+   "alternatives": [
+    "rewrite git history",
+    "keep using v0.2 as held-out"
+   ],
+   "rationale": "plaintext in private git history + 4 runs + a targeted fix",
+   "consequence": "v0.3 spec written 10-07; items not written by 10-10",
+   "reversible": "partly",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix: D5 is l.57",
+   "fact_ids": [
+    "F-1248",
+    "F-1249"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-22",
+    "D-method-10"
+   ]
+  },
+  {
+   "id": "D-038",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Freeze the claim build at cut 6; later only routing/safety fixes that leave v0.1 answers unchanged",
+   "context": "Claim/device build frozen at cut 6; later only routing/safety fixes",
+   "decision": "Freeze the claim build at cut 6; later only routing/safety fixes that leave v0.1 answers unchanged",
+   "alternatives": [
+    "keep shipping answer-changing arms"
+   ],
+   "rationale": "stable claim evidence",
+   "consequence": "cut 7 later added the fact table (0 fires on held-out sets)",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "Relaxed on 2026-10-07: cut 7 added FACTS r6, which changed 8 v0.1 answers.",
+   "superseded_by": "D-046",
+   "verification_note": "superseded on 10-07: cut 7 (FACTS r6) changed 8 v0.1 answers, against the 'v0.1 answers unchanged' clause (CUT7.md:29; QUEUE l.770)",
+   "fact_ids": [
+    "F-331",
+    "F-723"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "superseded by D-046",
+   "aliases": [
+    "D-chron-early-23",
+    "D-system-09"
+   ]
+  },
+  {
+   "id": "D-039",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Stop answer-identical 4B arms; reopen the deep tier as the primary quality lever",
+   "context": "Retrieval scorecard: coverage is the largest failure bucket (49 %); recall@5 0.333",
+   "decision": "Stop answer-identical 4B arms; reopen the deep tier as the primary quality lever",
+   "alternatives": [
+    "continue 4B polishing"
+   ],
+   "rationale": "15 arms, 0 ratio movement",
+   "consequence": "deep-tier line ran 10-07 → 10-10",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-576"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-24"
+   ]
+  },
+  {
+   "id": "D-040",
+   "date": "2026-10-06",
+   "time": "21:25",
+   "title": "Cheap judge for triage (Sonnet-low, replaced by Haiku 5.5-low on 10-07); Opus only for confirmation and claim numbers",
+   "context": "Cheaper judge triage adopted (Sonnet-low, later Haiku)",
+   "decision": "Cheap judge for triage (Sonnet-low, replaced by Haiku 5.5-low on 10-07); Opus only for confirmation and claim numbers",
+   "alternatives": [
+    "Opus for everything"
+   ],
+   "rationale": "judge is the largest cost",
+   "consequence": "judge calls fell from 12k–20k calls / 6 days to ≈ 1.5k / 2 days",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "Sonnet-low was replaced by Claude Haiku 5.5-low as the L1 judge on 2026-10-07 (HAIKUJUDGE).",
+   "superseded_by": "D-049",
+   "verification_note": null,
+   "fact_ids": [
+    "F-147",
+    "F-157"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "superseded by D-049",
+   "aliases": [
+    "D-chron-early-25",
+    "D-method-11"
+   ]
+  },
+  {
+   "id": "D-041",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Declare v0.2 burnt → dev after its plaintext was found in git history",
+   "context": "v0.2 ruled burnt (plaintext in private bench repo history) → dev",
+   "decision": "Declare v0.2 burnt → dev after its plaintext was found in git history",
+   "alternatives": [
+    "Keep calling it held-out"
+   ],
+   "rationale": "Honesty: builders could have seen it",
+   "consequence": "An unexposed held-out number needs a v0.3 written outside the Claude family (0 items as of 10-17; open front OF-3)",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Public v0.2 row is SET-STATUS:14 (not :17).",
+   "fact_ids": [
+    "F-1250"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-07"
+   ]
+  },
+  {
+   "id": "D-042",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Keep FACTS r6 as head despite FAIL by frozen rule (recall 70 % < 75 %)",
+   "context": "FACTS r6 on blind set 4: recall 70 % < 75 % → FAIL; kept as head by decision",
+   "decision": "Keep FACTS r6 as head despite FAIL by frozen rule (recall 70 % < 75 %)",
+   "alternatives": [
+    "close at r5; build r7 (forbidden by criterion)"
+   ],
+   "rationale": "r6 dominates r5 on every frozen measure; precision 96.6 %, FP 0/100 adversarial",
+   "consequence": "Shipped in cut 7; stated as \"FAIL stands\"",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-332"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-03"
+   ]
+  },
+  {
+   "id": "D-043",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Lead every public number with floor-adjusted + win-rate, not raw",
+   "context": "Honest-metric rewrite: headline becomes floor-adjusted ratio + win/tie/loss, raw second",
+   "decision": "Lead every public number with floor-adjusted + win-rate, not raw",
+   "alternatives": [
+    "keep raw as headline (pre-registered formal rule)"
+   ],
+   "rationale": "raw 0.50 is a rubric-floor artefact (always-decline ≈ 0.31 raw)",
+   "consequence": null,
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "method notes date the switch 10-06, results notes 10-07; both are right for different steps. Also: the floor scale itself was pre-registered as a companion metric on 10-02, which answers the 'moving goalposts' attack",
+   "fact_ids": [
+    "F-277"
+   ],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-04"
+   ]
+  },
+  {
+   "id": "D-044",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Adopt CUT5-LITE (KV prefix for no-source prompts + route-gate skip), reject CUT5-SPEED",
+   "context": "Cut 5 = cut 4 + no-source KV prefix + route-gate skip (CUT5-LITE adopted; CUT5-SPEED rejected on desktop gate)",
+   "decision": "Adopt CUT5-LITE (KV prefix for no-source prompts + route-gate skip), reject CUT5-SPEED",
+   "alternatives": [
+    "ship all speed arms"
+   ],
+   "rationale": "CUT5-SPEED failed its desktop speed gate (1.071× vs ≤ 0.8); lite was identity-safe",
+   "consequence": "cut 5 = device-day candidate",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-722"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-07"
+   ]
+  },
+  {
+   "id": "D-045",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Adopt DETMAX → cut 6",
+   "context": "Cut 6 = cut 5 + DETMAX (detector scores window and current turn)",
+   "decision": "Adopt DETMAX → cut 6",
+   "alternatives": [
+    "no change; lexical follow-up fix (HFU, failed)"
+   ],
+   "rationale": "chit-chat before an emergency lost 7/240 routes; DETMAX 0/240",
+   "consequence": null,
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix (l.46 is blank)",
+   "fact_ids": [
+    "F-333"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-08"
+   ]
+  },
+  {
+   "id": "D-046",
+   "date": "2026-10-07",
+   "time": "09:23",
+   "title": "Cut 7 = cut 6 + FACTS r6 (adopted on gates: 0 fires on held-out sets); no relaxed lowercase rule; fine-tune data 1k go; \"no device exists\"",
+   "context": "Cut 7 = cut 6 + FACTS r6; v0.3 to be written outside the Claude family; \"no device exists\"",
+   "decision": "Cut 7 = cut 6 + FACTS r6 (adopted on gates: 0 fires on held-out sets); no relaxed lowercase rule; fine-tune data 1k go; \"no device exists\"",
+   "alternatives": [
+    "wait for more recall",
+    "re-run full claim runs (burns held-out again)",
+    "no FACTS; r7"
+   ],
+   "rationale": "deterministic facts lever; no phone",
+   "consequence": "cut 7 frozen; fine-tune data failed review same day",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1230",
+    "F-353",
+    "F-745"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-26",
+    "D-results-02",
+    "D-system-10"
+   ]
+  },
+  {
+   "id": "D-047",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "v0.3 written by the author with a non-Claude web model; hashes only before scoring",
+   "context": "Bench v0.3 spec accepted: claim set to be written outside the Claude family by the author with a non-Claude web-UI model",
+   "decision": "v0.3 written by the author with a non-Claude web model; hashes only before scoring",
+   "alternatives": [
+    "Claude-written items",
+    "Claude subagent writers (as v0.2)"
+   ],
+   "rationale": "self-preference risk; burnt v0.2",
+   "consequence": "spec ready; items not written by 10-10",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "On 2026-10-18 v0.3 was dropped before closure (D5); the v0.4 ruler set replaced it.",
+   "superseded_by": "D-123",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1148",
+    "F-1251"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "superseded by D-123",
+   "aliases": [
+    "D-chron-early-27",
+    "D-method-15"
+   ]
+  },
+  {
+   "id": "D-048",
+   "date": "2026-10-07",
+   "time": "14:26",
+   "title": "Autonomous mandate: keep running rounds without asking; stop only for irreversible/expensive items",
+   "context": "JUDGE2: local open-weights judge (Gemma 4 26B) keeps the ranking but scores +0.11 above Opus",
+   "decision": "Autonomous mandate: keep running rounds without asking; stop only for irreversible/expensive items",
+   "alternatives": [
+    "ask per round"
+   ],
+   "rationale": "throughput",
+   "consequence": "deep-tier rounds ran unattended",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-588"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-28"
+   ]
+  },
+  {
+   "id": "D-049",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Haiku 5.5-low replaces Sonnet-low as L1 judge",
+   "context": "Haiku 5.5-low becomes the L1 triage judge; judge sharding N = 4; \"no device exists\" ruling",
+   "decision": "Haiku 5.5-low replaces Sonnet-low as L1 judge",
+   "alternatives": [
+    "Sonnet-low; Haiku medium"
+   ],
+   "rationale": "same winner 54/57, 3.5 s/call, ~14× cheaper",
+   "consequence": "adopted; known to compress gaps",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1149"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-12"
+   ]
+  },
+  {
+   "id": "D-050",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Local open-weights judge (Gemma 4 26B) allowed for triage/ranking only, never for the number",
+   "context": "JUDGE2: local open-weights judge (Gemma 4 26B) keeps the ranking but scores +0.11 above Opus",
+   "decision": "Local open-weights judge (Gemma 4 26B) allowed for triage/ranking only, never for the number",
+   "alternatives": [
+    "adopt as main judge"
+   ],
+   "rationale": "keeps ranking, +0.11 lenient, κ 0.32-0.55",
+   "consequence": "not used for headline numbers",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-283"
+   ],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-13"
+   ]
+  },
+  {
+   "id": "D-051",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Shard the judge: N = 4 default for Haiku L1 and for Opus L2/claim",
+   "context": "JUDGE2: local open-weights judge (Gemma 4 26B) keeps the ranking but scores +0.11 above Opus",
+   "decision": "Shard the judge: N = 4 default for Haiku L1 and for Opus L2/claim",
+   "alternatives": [
+    "sequential; N = 8"
+   ],
+   "rationale": "×4.5 wall gain, 0 rate limits, same winners",
+   "consequence": "in force; a stopped shard is resumed, never skipped",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-159"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-14"
+   ]
+  },
+  {
+   "id": "D-052",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Haiku 5.5-low as L1 triage judge, Opus only to confirm and for claim numbers; judge sharded N = 4",
+   "context": "Haiku 5.5-low becomes the L1 triage judge; judge sharding N = 4; \"no device exists\" ruling",
+   "decision": "Haiku 5.5-low as L1 triage judge, Opus only to confirm and for claim numbers; judge sharded N = 4",
+   "alternatives": [
+    "Opus everywhere; Sonnet-low triage",
+    "Sonnet-low; local Gemma (ranking only, +0.11 lenient)"
+   ],
+   "rationale": "≈ 14× cheaper than the previous triage judge; same winner as Opus 54/57",
+   "consequence": "Haiku compresses gaps 15-30 %; near-miss escalation rules added",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1150",
+    "F-1151"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-09",
+    "D-results-05"
+   ]
+  },
+  {
+   "id": "D-053",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "\"No device exists\": device tasks dormant",
+   "context": "Haiku 5.5-low becomes the L1 triage judge; judge sharding N = 4; \"no device exists\" ruling",
+   "decision": "\"No device exists\": device tasks dormant",
+   "alternatives": [
+    "Keep proposing device work"
+   ],
+   "rationale": "No 12 GB phone available",
+   "consequence": "Later reversed in practice when a 10.7 GiB phone ran cut 7 on 10-14",
+   "reversible": "yes",
+   "status": "reversed",
+   "status_note": "A 12 GB-class phone (10.7 GiB usable) ran cut 7 on 2026-10-14.",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-733"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "reversed",
+   "aliases": [
+    "D-process-10"
+   ]
+  },
+  {
+   "id": "D-054",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "SLICE20 triage before any full deep/held-out arm",
+   "context": "SLICE20: every deep-tier / held-out-style arm starts on a 20-item slice",
+   "decision": "SLICE20 triage before any full deep/held-out arm",
+   "alternatives": [
+    "full sets always"
+   ],
+   "rationale": "~60 % generation saving on NO arms",
+   "consequence": "later replaced by stratified random slices (10-10)",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "later replaced by stratified random slices (10-10)",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-169"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-early-29"
+   ]
+  },
+  {
+   "id": "D-055",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "V-para status: held-out for the 4B claim runs; dev-style for everything measured after 10-06",
+   "context": "V-para status ruling: held-out for the 4B claim runs, dev-style for everything measured after 2026-10-06",
+   "decision": "V-para status: held-out for the 4B claim runs; dev-style for everything measured after 10-06",
+   "alternatives": [
+    "keep calling it blind",
+    "keep calling it held-out"
+   ],
+   "rationale": "exposure ledger showed conflicting status labels",
+   "consequence": "every deep-tier number on V-para is labelled dev-style",
+   "reversible": "no (status)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1232",
+    "F-1233"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-30",
+    "D-method-16"
+   ]
+  },
+  {
+   "id": "D-056",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "Recommend thinking budget 512 for the deep tier",
+   "context": "DT512: thinking budget 512 = 1024 quality at 0.55× time → recommended config",
+   "decision": "Recommend thinking budget 512 for the deep tier",
+   "alternatives": [
+    "1024; 256",
+    "1024 (slower), 256 (−0.028, CHEAPER-LOSS), Gemma + thinking (−0.028)",
+    "256 (loses), 1024, 3072, Gemma 26B"
+   ],
+   "rationale": "CHEAPER-PARITY with 1024 at 0.55× time",
+   "consequence": "becomes the \"recommended deep configuration\"",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-598",
+    "F-599",
+    "F-748"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-31",
+    "D-results-06",
+    "D-system-11"
+   ]
+  },
+  {
+   "id": "D-057",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Near-miss rule: a Haiku Δ within 0.01 of a threshold triggers Opus on the same ids",
+   "context": "Near-miss rule after a Haiku triage stopped an arm Opus later rated +0.048",
+   "decision": "Near-miss rule: a Haiku Δ within 0.01 of a threshold triggers Opus on the same ids",
+   "alternatives": [
+    "trust Haiku",
+    "trust Haiku always"
+   ],
+   "rationale": "Haiku compressed a +0.048 Opus gap to +0.027",
+   "consequence": "applied to THINK4B",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1158",
+    "F-613"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-early-32",
+    "D-method-17"
+   ]
+  },
+  {
+   "id": "D-058",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Seed-noise reading rule (V-para one-seed deep Δ < ~0.03 is noise; later raised to 0.05)",
+   "context": "SEEDVAR: H over 3 seeds mean floor-adj 0.432 (SD 0.025); one-seed deep Δ < 0.03 = seed noise",
+   "decision": "Seed-noise reading rule (V-para one-seed deep Δ < ~0.03 is noise; later raised to 0.05)",
+   "alternatives": [
+    "single-seed verdicts",
+    "single-seed decisions",
+    "treat one-seed rows as decisive"
+   ],
+   "rationale": "SEEDVAR three-seed spread",
+   "consequence": "in CLAUDE.md and RULE-CHANGES",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "Threshold raised from 0.03 to 0.05 on 2026-10-16 after the outside critique (SEEDVAR showed a −0.039 gap between seeds).",
+   "superseded_by": "D-113",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1159",
+    "F-1160",
+    "F-1162"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "superseded by D-113",
+   "aliases": [
+    "D-chron-early-33",
+    "D-method-18",
+    "D-results-08"
+   ]
+  },
+  {
+   "id": "D-059",
+   "date": "2026-10-10",
+   "time": "21:54",
+   "title": "Research on the Mac mini only until the bar is met; no APK/device/claim-package work",
+   "context": "Author's direction: research on the Mac mini only until the bar is met; device and claim work after",
+   "decision": "Research on the Mac mini only until the bar is met; no APK/device/claim-package work",
+   "alternatives": [
+    "claim-path first (review's recommendation)",
+    "A deep-tier arms; B v0.3 outside Claude; C bigger model"
+   ],
+   "rationale": "author's direction after the process review",
+   "consequence": "handoff rewritten for research scope",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "The closing sprint from 2026-10-14 brought app and release work back (upstream PR, public repositories).",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-763",
+    "F-854"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-early-34",
+    "D-chron-late-02"
+   ]
+  },
+  {
+   "id": "D-060",
+   "date": "2026-10-10",
+   "time": "21:05",
+   "title": "Proceed on stated defaults for the claim path (debug-signed APK, raw formal + floor-adj + win-rate, no v0.3, no device relay)",
+   "context": "Decision note with defaults sent to the author (claim vehicle, bar scale \"raw formal + floor-adj + win-rate\", no v0.3, no device relay)",
+   "decision": "Proceed on stated defaults for the claim path (debug-signed APK, raw formal + floor-adj + win-rate, no v0.3, no device relay)",
+   "alternatives": [
+    "ask and wait"
+   ],
+   "rationale": "unblock work without waiting on the author",
+   "consequence": "superseded 45 min later by the STOP",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "superseded 45 min later by the STOP",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-758"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "superseded",
+   "aliases": [
+    "D-chron-late-01"
+   ]
+  },
+  {
+   "id": "D-061",
+   "date": "2026-10-10",
+   "time": "22:09",
+   "title": "Every deciding run needs a frozen criterion with a Power block; slices = random20 files",
+   "context": "Criterion template with mandatory Power block; random-20 slices; bar table frozen",
+   "decision": "Every deciding run needs a frozen criterion with a Power block; slices = random20 files",
+   "alternatives": [
+    "signal20 slices (retired)",
+    "voluntary",
+    "Optional"
+   ],
+   "rationale": "stop under-powered closures",
+   "consequence": "arm.sh refuses launch without the block",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-177",
+    "F-180",
+    "F-195"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-03",
+    "D-method-21",
+    "D-process-12"
+   ]
+  },
+  {
+   "id": "D-062",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Decide direction on v0.2 (seed-stable), confirm on V-para with 2 seeds; adopt a lever only after two-seed V-para confirmation",
+   "context": "Criterion template with mandatory Power block; random-20 slices; bar table frozen",
+   "decision": "Decide direction on v0.2 (seed-stable), confirm on V-para with 2 seeds; adopt a lever only after two-seed V-para confirmation",
+   "alternatives": [
+    "decide on V-para one seed"
+   ],
+   "rationale": "v0.2 per-item seed r 0.90 vs V-para 0.5-0.7",
+   "consequence": "in force",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-176"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-19"
+   ]
+  },
+  {
+   "id": "D-063",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Fail-closed pipeline: errored traces/missing ids stop the run or score at the floor",
+   "context": "Fail-closed judge pipeline: errored or missing items now stop the run or score at the floor instead of vanishing",
+   "decision": "Fail-closed pipeline: errored traces/missing ids stop the run or score at the floor",
+   "alternatives": [
+    "drop silently",
+    "Manual checks"
+   ],
+   "rationale": "the old judge silently dropped errored traces, flattering a failing device",
+   "consequence": "flags `--strict`, `--floor-errored`, `--floor-missing`",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-179",
+    "F-752"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-20",
+    "D-process-11"
+   ]
+  },
+  {
+   "id": "D-064",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Random stratified 20-id slices (seed 7) replace the \"20 hardest items\" slice",
+   "context": "Power block mandatory in every criterion; random stratified 20-id slices replace the \"20 hardest\" slice",
+   "decision": "Random stratified 20-id slices (seed 7) replace the \"20 hardest items\" slice",
+   "alternatives": [
+    "keep signal20",
+    "Hardest-20 slices"
+   ],
+   "rationale": "hardest-20 inflated deltas (+0.091 slice vs +0.026 full)",
+   "consequence": "in force; slice only screens for futility",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1161",
+    "F-178"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-22",
+    "D-process-13"
+   ]
+  },
+  {
+   "id": "D-065",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Win-rate reported, never gated (later: proposal to drop the win-rate conjunct because it is saturated at 0)",
+   "context": "Author's direction: research on the Mac mini only until the bar is met; device and claim work after",
+   "decision": "Win-rate reported, never gated (later: proposal to drop the win-rate conjunct because it is saturated at 0)",
+   "alternatives": [
+    "gate on win-rate > 0"
+   ],
+   "rationale": "every phone system scores 0 wins vs a 4.9/5 reference",
+   "consequence": null,
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "the plan never gated on win-rate, but the deep-tier arm reports of 10-08/09 read the bar as 'floor-adj CI low > 0.50 AND win-rate > 0'; 'reported, never gated' was fixed in BAR-TABLE on 10-10 after RND-REVIEW B1. State both",
+   "fact_ids": [
+    "F-753"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-28"
+   ]
+  },
+  {
+   "id": "D-067",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Declare the deep-tier line closed on desktop and the 4B side closed",
+   "context": "Desktop queue empty: 4B side and deep-tier line both closed",
+   "decision": "Declare the deep-tier line closed on desktop and the 4B side closed",
+   "alternatives": [
+    "keep sweeping configs"
+   ],
+   "rationale": "model, parity, thinking, budget, persona/context, routing all measured",
+   "consequence": "Research moved to Knowledge Packs (10-12)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-614"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-07"
+   ]
+  },
+  {
+   "id": "D-068",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Keep retrieval on the deep path",
+   "context": "DEEPRERANK, MP4B, DEEPITER, DEEPCOV-FB closed (retrieval-side levers on the deep tier)",
+   "decision": "Keep retrieval on the deep path",
+   "alternatives": [
+    "drop packs for speed"
+   ],
+   "rationale": "no-pack −0.045 (−0.083…−0.011)",
+   "consequence": "kept",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-997"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-12"
+   ]
+  },
+  {
+   "id": "D-069",
+   "date": "2026-10-11",
+   "time": "03:4x",
+   "title": "Run research as an unattended self-paced loop (one experiment per tick, META every 8 ticks)",
+   "context": "LOOP-PROGRAM written: unattended self-paced loop, one experiment per tick",
+   "decision": "Run research as an unattended self-paced loop (one experiment per tick, META every 8 ticks)",
+   "alternatives": [
+    "session-by-session manual runs",
+    "Author-driven sessions"
+   ],
+   "rationale": "use idle machine time; keep method improving",
+   "consequence": "133 ticks over 10-11→10-14",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-857",
+    "F-858"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-04",
+    "D-process-15"
+   ]
+  },
+  {
+   "id": "D-070",
+   "date": "2026-10-11",
+   "time": "12:10",
+   "title": "Measure the loss map before more levers (LOSSMAP first)",
+   "context": "Loop tick 1: LOSSMAP measures where the deep tier loses points",
+   "decision": "Measure the loss map before more levers (LOSSMAP first)",
+   "alternatives": [
+    "keep running backlog order"
+   ],
+   "rationale": "direct levers at the biggest loss bucket",
+   "consequence": "re-ranked backlog; absent knowledge = 0.59 / 0.55 of loss",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-860"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-05"
+   ]
+  },
+  {
+   "id": "D-072",
+   "date": "2026-10-11",
+   "time": null,
+   "title": "Common-mode CIs for deep-tier rows: CI = Δ ± 1.96·sqrt(SE_item² + 2σ_run²)",
+   "context": "JUDGEVAR: re-judging unchanged answers gives σ_judge ≈ 0.003; common-mode CIs adopted for deep-tier rows",
+   "decision": "Common-mode CIs for deep-tier rows: CI = Δ ± 1.96·sqrt(SE_item² + 2σ_run²)",
+   "alternatives": [
+    "item bootstrap only",
+    "plain item bootstrap"
+   ],
+   "rationale": "item bootstrap ignores run-level seed noise",
+   "consequence": "deep CIs ~1.2-1.3× wider; readings unchanged",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1176",
+    "F-1236"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-23",
+    "D-results-10"
+   ]
+  },
+  {
+   "id": "D-073",
+   "date": "2026-10-11",
+   "time": null,
+   "title": "Negative results relabelled \"not detected at MDE x (n, seeds)\" when under-powered",
+   "context": "CLOSED.md registry built (36 rows); honesty relabel \"not detected at MDE x\" for under-powered negatives",
+   "decision": "Negative results relabelled \"not detected at MDE x (n, seeds)\" when under-powered",
+   "alternatives": [
+    "keep \"closed\"",
+    "Plain \"closed\""
+   ],
+   "rationale": "\"closed\" overstated weak negatives",
+   "consequence": "CLOSED.md rows carry MDE and reopen condition",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "the critique names 7 n≈20 closures with CI upper ≥ +0.03 (R10, R25, R31, R83, R84, R85, R97); R10 and R25 were already 'not detected', so 5 still need the relabel (cited l.47-50 are about exposure)",
+   "fact_ids": [
+    "F-1177",
+    "F-1178",
+    "F-198"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-24",
+    "D-process-17",
+    "D-results-09"
+   ]
+  },
+  {
+   "id": "D-074",
+   "date": "2026-10-11",
+   "time": null,
+   "title": "Verdict labels LEVER / SMALL / NO / \"not decided at MDE\"; adopt only after two-seed confirmation on V-para",
+   "context": "Verdict labels LEVER / SMALL / NO / \"not detected at MDE\"; honesty relabel of under-powered closures",
+   "decision": "Verdict labels LEVER / SMALL / NO / \"not decided at MDE\"; adopt only after two-seed confirmation on V-para",
+   "alternatives": [
+    "Point-estimate promotion"
+   ],
+   "rationale": "Stop over-reading noise",
+   "consequence": "Adopted levers after 10-08: 0 on the bounty set",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-087"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-16"
+   ]
+  },
+  {
+   "id": "D-075",
+   "date": "2026-10-12",
+   "time": "07:55",
+   "title": "Close QUANTCEIL as \"not detected at MDE 0.03\" after V-para two seeds",
+   "context": "QUANTCEIL: 3-bit quant of deep model +0.004 (not detected); cycle adds 0 V-para points per 1,804 judge calls",
+   "decision": "Close QUANTCEIL as \"not detected at MDE 0.03\" after V-para two seeds",
+   "alternatives": [
+    "adopt on v0.2 wrong-bucket repair"
+   ],
+   "rationale": "seeds split +0.030 / −0.022",
+   "consequence": "model-knowledge levers on this hardware declared exhausted",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-207"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-07"
+   ]
+  },
+  {
+   "id": "D-076",
+   "date": "2026-10-12",
+   "time": "14:14",
+   "title": "Withdraw \"facts are not in Wikipedia\"; adopt the peer research's task chain",
+   "context": "Correction: \"facts are not in Wikipedia\" withdrawn (scope was the top-100k pack only)",
+   "decision": "Withdraw \"facts are not in Wikipedia\"; adopt the peer research's task chain",
+   "alternatives": [
+    "keep the closure",
+    "build a new corpus right away"
+   ],
+   "rationale": "peer review showed WIKISECTION covered only one pack and part of the items",
+   "consequence": "WIKIFULL stages run; result 9/34 (a lower bound)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Outcome should read \"9/34 verified (lower bound, MARGINAL)\", not \"9/34 (a lower bound)\".",
+   "fact_ids": [
+    "F-1003",
+    "F-1011"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-08",
+    "D-results-11"
+   ]
+  },
+  {
+   "id": "D-077",
+   "date": "2026-10-12",
+   "time": "14:14",
+   "title": "Phone-time wording: deep + think 512 ≈ 1.9–2.8 min on a Pixel 8 Pro CPU; competitor percentages never quoted as a gap",
+   "context": "SYNTHDEEP, WIKISECTION, DEEPHEDGE closed at 0-call gates",
+   "decision": "Phone-time wording: deep + think 512 ≈ 1.9–2.8 min on a Pixel 8 Pro CPU; competitor percentages never quoted as a gap",
+   "alternatives": [
+    "the earlier 3.5–5 min figure"
+   ],
+   "rationale": "corrected premises 2 and 5",
+   "consequence": "applied in all later texts",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-768"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-09"
+   ]
+  },
+  {
+   "id": "D-078",
+   "date": "2026-10-12",
+   "time": "20:06",
+   "title": "Pivot to Knowledge Packs; primary metric = in-pack conditional ratio",
+   "context": "Author's direction: Knowledge Packs; research question becomes conditional quality with the matching pack installed",
+   "decision": "Pivot to Knowledge Packs; primary metric = in-pack conditional ratio",
+   "alternatives": [
+    "stay on the bar",
+    "keep deep-tier sweeps; non-Wikipedia corpus"
+   ],
+   "rationale": "the product is a small model + user-selected packs; the unconditional bar was not moving",
+   "consequence": "P1–P4, pack workflow, pack stack",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1004",
+    "F-1012"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-10",
+    "D-results-12"
+   ]
+  },
+  {
+   "id": "D-079",
+   "date": "2026-10-12",
+   "time": "22:32",
+   "title": "Build a pack-authoring workflow; agents may write the 20 public self-tests per pack; held-out claim items stay non-Claude",
+   "context": "Author: build a pack-authoring workflow (\"we will be the first author with publications\")",
+   "decision": "Build a pack-authoring workflow; agents may write the 20 public self-tests per pack; held-out claim items stay non-Claude",
+   "alternatives": [
+    "only use existing packs"
+   ],
+   "rationale": "\"we will be the first author with publications\"",
+   "consequence": "11 packs published 10-13",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1015"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-11"
+   ]
+  },
+  {
+   "id": "D-080",
+   "date": "2026-10-12",
+   "time": "22:46",
+   "title": "Pack format unchanged (format 2); licence policy PD/CC0/CC BY/CC BY-SA only; never NC; per-row attribution for Stack Exchange; archive.org pre-2024 SE dumps, no",
+   "context": "Pack catalogue + authoring workflow (licence policy PD/CC0/CC BY/CC BY-SA only)",
+   "decision": "Pack format unchanged (format 2); licence policy PD/CC0/CC BY/CC BY-SA only; never NC; per-row attribution for Stack Exchange; archive.org pre-2024 SE dumps, not the login-gated official dumps",
+   "alternatives": [
+    "format v3 now; NC corpora (wikiHow, WHO, OpenStax)",
+    "Kiwix 2026 ZIMs (fresher)"
+   ],
+   "rationale": "zero format risk; licence compliance",
+   "consequence": "applied to all published packs",
+   "reversible": "partly (published data stays public)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix: D-K5 is l.12 (l.13 is D-K6)",
+   "fact_ids": [
+    "F-1017",
+    "F-368"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-12",
+    "D-system-14"
+   ]
+  },
+  {
+   "id": "D-081",
+   "date": "2026-10-12",
+   "time": "23:22",
+   "title": "Autonomy rule: never ask for approval; paid API only when no free equivalent, capped and logged",
+   "context": "Autonomy rule from the author: never ask for approval; paid API only when no free equivalent",
+   "decision": "Autonomy rule: never ask for approval; paid API only when no free equivalent, capped and logged",
+   "alternatives": [
+    "per-step approval"
+   ],
+   "rationale": "author said Claude usage is not the constraint",
+   "consequence": "loop ran without approval asks",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-870"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-13"
+   ]
+  },
+  {
+   "id": "D-082",
+   "date": "2026-10-12",
+   "time": null,
+   "title": "Knowledge packs = format 2 SQLite, per-row attribution, four artefacts per pack (card, self-test, coverage probe, crowding probe)",
+   "context": "PACKCOND P1–P4, PACKDENSE, HEALTHQ, SECTIONHIT: in-pack loss is retrieval, not grounding",
+   "decision": "Knowledge packs = format 2 SQLite, per-row attribution, four artefacts per pack (card, self-test, coverage probe, crowding probe)",
+   "alternatives": [
+    "format v3 first"
+   ],
+   "rationale": "zero format risk; licence compliance; measured crowding failure",
+   "consequence": "11 packs built and published 10-13",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1005"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-13"
+   ]
+  },
+  {
+   "id": "D-083",
+   "date": "2026-10-12",
+   "time": null,
+   "title": "\"Default-eligible\" only if a pack holds ≤ 0.40 of kept slots and does not lower kit gold; otherwise user-selected only",
+   "context": "Author: build a pack-authoring workflow (\"we will be the first author with publications\")",
+   "decision": "\"Default-eligible\" only if a pack holds ≤ 0.40 of kept slots and does not lower kit gold; otherwise user-selected only",
+   "alternatives": [
+    "install everything"
+   ],
+   "rationale": "crowding measured",
+   "consequence": null,
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix: the rule is l.50, statuses in the table l.35-45 (5 default-eligible, 6 user-selected)",
+   "fact_ids": [
+    "F-1006"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-15"
+   ]
+  },
+  {
+   "id": "D-084",
+   "date": "2026-10-13",
+   "time": "00:01",
+   "title": "Publish packs that pass the four-artefact check (card, self-test, coverage, crowding) on HF under the author's standing OK",
+   "context": "Pack-stack technical report (crowding, routing, keep, reader)",
+   "decision": "Publish packs that pass the four-artefact check (card, self-test, coverage, crowding) on HF under the author's standing OK",
+   "alternatives": [
+    "hold until measured further"
+   ],
+   "rationale": "public reuse; licence clarity per pack",
+   "consequence": "7 + 2 + 2 packs published",
+   "reversible": "no (public)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1036"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-14"
+   ]
+  },
+  {
+   "id": "D-085",
+   "date": "2026-10-13",
+   "time": "10:20",
+   "title": "No cap on Haiku judge calls (Rule 25)",
+   "context": null,
+   "decision": "No cap on Haiku judge calls (Rule 25)",
+   "alternatives": [
+    "weekly Haiku 400 cap"
+   ],
+   "rationale": "Haiku is cheap triage; idle caps cost machine time",
+   "consequence": "720-call scoring passes became routine",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-876"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-15"
+   ]
+  },
+  {
+   "id": "D-086",
+   "date": "2026-10-13",
+   "time": "13:4x",
+   "title": "Run an oracle/ceiling cell (ORACLE-ST) before more pre-processing levers",
+   "context": "A side session re-judged existing traces only: PACKS-L2, ORACLE-ST, RIVALSET, red-team of the claim, pipeline and ledger audits",
+   "decision": "Run an oracle/ceiling cell (ORACLE-ST) before more pre-processing levers",
+   "alternatives": [
+    "keep adding retrieval tricks"
+   ],
+   "rationale": "decide whether reader or retrieval is the wall",
+   "consequence": "ceiling +0.095 found; became a standing rule (LOOP v2 D8)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1045"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-16"
+   ]
+  },
+  {
+   "id": "D-087",
+   "date": "2026-10-13",
+   "time": "15:44",
+   "title": "Routing among packs closed at the product level; keep rule + quota only an optional setting",
+   "context": "REPORT-PACKS drafted and independently reviewed (39 edits)",
+   "decision": "Routing among packs closed at the product level; keep rule + quota only an optional setting",
+   "alternatives": [
+    "top-1 router, 4B zero-shot classifier"
+   ],
+   "rationale": "crowding cost small (−0.016 Haiku / −0.019 Opus); routers 0.25–0.61 accuracy",
+   "consequence": "product reading: ship small user-selected packs, no automatic routing",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1046"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-17"
+   ]
+  },
+  {
+   "id": "D-089",
+   "date": "2026-10-13",
+   "time": "22:08",
+   "title": "Claim draft v3.9 adopts the red-team findings (v0.2 \"formerly held-out\", V-para writer disclosed, verdict reuse disclosed)",
+   "context": "WIKIFULL (all of Wikipedia + 2026-10-01 delta) holds the missing fact for 9/34 (a lower bound) V-para absent items: Wikipedia closed as kit content for the bar",
+   "decision": "Claim draft v3.9 adopts the red-team findings (v0.2 \"formerly held-out\", V-para writer disclosed, verdict reuse disclosed)",
+   "alternatives": [
+    "keep v3.8"
+   ],
+   "rationale": "red-team found no inflated number but 9 overclaiming sentences",
+   "consequence": "41 edits applied",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-216"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-19"
+   ]
+  },
+  {
+   "id": "D-090",
+   "date": "2026-10-13",
+   "time": null,
+   "title": "Never idle while 0-paid-call work exists; no Haiku cap",
+   "context": "Author challenges 9+ idle ticks; loop un-idled; rules 24 (never idle while 0-call work exists) and 25 (no Haiku cap)",
+   "decision": "Never idle while 0-paid-call work exists; no Haiku cap",
+   "alternatives": [
+    "Keep caps"
+   ],
+   "rationale": "Author objected after 9 idle ticks (\"why idle when I asked to never stop?\", paraphrase)",
+   "consequence": "10-14 log: 0 idle ticks; later critic warns \"idle lane = failure\" rewards trivial probes",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1185"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-18"
+   ]
+  },
+  {
+   "id": "D-091",
+   "date": "2026-10-14",
+   "time": "02:53",
+   "title": "Run doc2query PoC overnight on the MacBook instead of renting a GPU",
+   "context": "MICROD2Q (doc2query) fails; doc2query closed",
+   "decision": "Run doc2query PoC overnight on the MacBook instead of renting a GPU",
+   "alternatives": [
+    "rented GPU"
+   ],
+   "rationale": "cost ≈ US$0.3–1 vs free local hours",
+   "consequence": "4.77 h, FAIL; later cited as an avoidable loss (speed gate overridden by an addendum)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-921"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-20"
+   ]
+  },
+  {
+   "id": "D-092",
+   "date": "2026-10-14",
+   "time": "15:38",
+   "title": "HEADPASS-X2b = the pack line's retrieval recommendation for format-v3 packs; X1 for format-2 packs",
+   "context": "HEADPASS-X2b lever (+0.066 on 180 dev self-tests)",
+   "decision": "HEADPASS-X2b = the pack line's retrieval recommendation for format-v3 packs; X1 for format-2 packs",
+   "alternatives": [
+    "reranker X3; unbudgeted X2",
+    "X1 only (+0.033); X3 reranker (FAIL reach, 21 s/item)"
+   ],
+   "rationale": "Opus +0.066 (+0.043…+0.091), no harm on kit",
+   "consequence": "X3 failed at step 0; X2b staged for after 10-20 (PR-2)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1059",
+    "F-1070"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-21",
+    "D-results-13"
+   ]
+  },
+  {
+   "id": "D-093",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "SFT of the 4B closed unless a teacher reaches ≥ 50 % faithfulness on distractor-rich targets",
+   "context": "SFT TEACHER-PROBE NO-GO (deep teacher 6/120 faithful); fine-tuning line closed",
+   "decision": "SFT of the 4B closed unless a teacher reaches ≥ 50 % faithfulness on distractor-rich targets",
+   "alternatives": [
+    "train anyway"
+   ],
+   "rationale": "Haiku teacher 38 %, deep teacher 5 %",
+   "consequence": "closed (R71)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-481"
+   ],
+   "chapter": "walls",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-22"
+   ]
+  },
+  {
+   "id": "D-094",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "Rule 29 experiment economics: Ceiling block (launch only if ≥ 2×MDE) and Budget block (smoke, wall caps, kill rule)",
+   "context": "RULE 29 experiment economics: Ceiling + Budget + Transfer blocks; no Opus on dev sets",
+   "decision": "Rule 29 experiment economics: Ceiling block (launch only if ≥ 2×MDE) and Budget block (smoke, wall caps, kill rule)",
+   "alternatives": [
+    "free launches",
+    "status quo",
+    "Keep \"any Haiku Δ > 0 → Opus\""
+   ],
+   "rationale": "≈ 1,440 avoidable Opus calls and long bad tests",
+   "consequence": "reviewed, edits applied",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-885",
+    "F-886",
+    "F-889",
+    "F-891"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-23",
+    "D-method-25",
+    "D-process-21",
+    "D-results-14"
+   ]
+  },
+  {
+   "id": "D-095",
+   "date": "2026-10-14",
+   "time": "19:56",
+   "title": "LOOP v2 decisions D1–D12 (machine-side queue runners, smoke-first, STATE line, lanes, guards as scripts, handoff instead of compaction, daily brief, watchdog)",
+   "context": "LOOP v2 retrospective: 133 ticks, ≈ 12.0k Claude calls (≈ 10.5k judge calls), 1 lever, ≈31 avoidable machine-hours",
+   "decision": "LOOP v2 decisions D1–D12 (machine-side queue runners, smoke-first, STATE line, lanes, guards as scripts, handoff instead of compaction, daily brief, watchdog)",
+   "alternatives": [
+    "keep v1 loop",
+    "Fresh-context `claude -p` ticks (kept as option behind a shadow run)"
+   ],
+   "rationale": "26 incidents, ≈ 31 h avoidable machine time",
+   "consequence": "T1–T7 built 10-15; T8 10-16",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-890",
+    "F-927"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-24",
+    "D-process-22"
+   ]
+  },
+  {
+   "id": "D-097",
+   "date": "2026-10-14",
+   "time": "22:17",
+   "title": "Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only",
+   "context": "Open-source intent: research AND benchmark public; v0.1 reference-answer text made public",
+   "decision": "Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only",
+   "alternatives": [
+    "publish hashes only"
+   ],
+   "rationale": "other teams cannot run the judge comparably without refs",
+   "consequence": "boar-bench carries refs with provenance on the dataset card",
+   "reversible": "no (public)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1310"
+   ],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-27"
+   ]
+  },
+  {
+   "id": "D-098",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "Bounty chat gets method, packs and device proof only; numbers only after the shared rubric exists",
+   "context": "RULE 29 experiment economics: Ceiling + Budget + Transfer blocks; no Opus on dev sets",
+   "decision": "Bounty chat gets method, packs and device proof only; numbers only after the shared rubric exists",
+   "alternatives": [
+    "post scores"
+   ],
+   "rationale": "numbers without a shared rubric are not comparable",
+   "consequence": "post drafts carry no scores",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1058"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-28"
+   ]
+  },
+  {
+   "id": "D-099",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "Verdict, registry row (CLOSED.md) and exposure row in the same commit",
+   "context": "Coordinator session dies on an expired login token; mini idle 2.2 h",
+   "decision": "Verdict, registry row (CLOSED.md) and exposure row in the same commit",
+   "alternatives": [
+    "separate bookkeeping",
+    "Periodic backfill"
+   ],
+   "rationale": "ledger audit found 48 verdicts without registry rows",
+   "consequence": "in force",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-887",
+    "F-888"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-26",
+    "D-process-20"
+   ]
+  },
+  {
+   "id": "D-100",
+   "date": "2026-10-15",
+   "time": "10:07",
+   "title": "First public push by the coordinator, only for the two new repos, on the author's explicit instruction",
+   "context": "Public repos live (first push by the coordinator, explicitly authorised for those two repos only)",
+   "decision": "First public push by the coordinator, only for the two new repos, on the author's explicit instruction",
+   "alternatives": [
+    "keep private"
+   ],
+   "rationale": "release",
+   "consequence": "repos live; no-push rule stays for everything else",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-936"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-29"
+   ]
+  },
+  {
+   "id": "D-101",
+   "date": "2026-10-15",
+   "time": "11:00",
+   "title": "Accept the maintainer's native Kotlin app as the official submission; our numbers are labelled as the TypeScript engine's",
+   "context": "Submission vehicle = maintainer's native Kotlin app; PR #85 (cut 7 engine as reference) open",
+   "decision": "Accept the maintainer's native Kotlin app as the official submission; our numbers are labelled as the TypeScript engine's",
+   "alternatives": [
+    "submit the RN app with PR #85",
+    "the React Native app carrying cut 7 via PR"
+   ],
+   "rationale": "the maintainer owns the submission",
+   "consequence": "claim v4.1 vehicle paragraph; native score pending",
+   "reversible": "no (external)",
+   "status": "superseded",
+   "status_note": "On 2026-10-24 the author made BoarLite, a new closed app of his own, the bounty submission.",
+   "superseded_by": "D-183",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1238",
+    "F-788"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "superseded by D-183",
+   "aliases": [
+    "D-chron-late-30",
+    "D-system-16"
+   ]
+  },
+  {
+   "id": "D-103",
+   "date": "2026-10-15",
+   "time": "21:34",
+   "title": "Reject the lexicon numeric guard; ship calculator-only NUMGUARD r3",
+   "context": "Independent reviewer REJECTs a numeric guard as unsafe; scope cut to calculator-only",
+   "decision": "Reject the lexicon numeric guard; ship calculator-only NUMGUARD r3",
+   "alternatives": [
+    "NUMGUARD-FINAL lexicon guard"
+   ],
+   "rationale": "confirmation review: a lexicon guard cannot be made safe (numeric health questions leak)",
+   "consequence": "r3 pushed to PR #85",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1275"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-32"
+   ]
+  },
+  {
+   "id": "D-104",
+   "date": "2026-10-15",
+   "time": "22:21",
+   "title": "Lite tier is post-10-20 work, explored with quick diagnostic tests; starts with an unsafe-answer warning",
+   "context": "Author: lite tier is an open, post-10-20 exploration line; starts with an unsafe-answer warning",
+   "decision": "Lite tier is post-10-20 work, explored with quick diagnostic tests; starts with an unsafe-answer warning",
+   "alternatives": [
+    "drop lite tier"
+   ],
+   "rationale": "2B −0.168 and 6/15 unsafe health answers; weaker phones matter",
+   "consequence": "LITE2–LITE8, LITEREADERS etc. 10-15/16; closed for now",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "On 2026-10-20 the small model became the main 8 GB engine, not a post-deadline lite line.",
+   "superseded_by": "D-134",
+   "verification_note": null,
+   "fact_ids": [
+    "F-790"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "superseded by D-134",
+   "aliases": [
+    "D-chron-late-33"
+   ]
+  },
+  {
+   "id": "D-105",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Release as two fresh repos with one squashed commit, neutral author, curated whitelist + scrub + mechanical gate + independent review; never the private history",
+   "context": "Public repos staged: scrub, mechanical gate, independent review (41/44 findings applied)",
+   "decision": "Release as two fresh repos with one squashed commit, neutral author, curated whitelist + scrub + mechanical gate + independent review; never the private history",
+   "alternatives": [
+    "Publish private repos"
+   ],
+   "rationale": "Private history holds held-out plaintext and personal data",
+   "consequence": "Gate FAIL on 2 handle URLs fixed; 41/44 review findings applied; live 10:07",
+   "reversible": "no (published)",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1312"
+   ],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-24"
+   ]
+  },
+  {
+   "id": "D-106",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Drop the loop-operations memo and internal decision memo from the public repo; replace with a 9-line method summary",
+   "context": "Author: lite tier is an open, post-10-20 exploration line; starts with an unsafe-answer warning",
+   "decision": "Drop the loop-operations memo and internal decision memo from the public repo; replace with a 9-line method summary",
+   "alternatives": [
+    "Publish as is"
+   ],
+   "rationale": "Reviewer: internal agent prompts, caps, people and channels",
+   "consequence": "`method/METHOD.md`",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-930"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-25"
+   ]
+  },
+  {
+   "id": "D-107",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Lite tier: thinking stays OFF; 1.7B Q4_K_M chosen over ternary 2B and Q8_0",
+   "context": "Port spec of the health path written for the native app",
+   "decision": "Lite tier: thinking stays OFF; 1.7B Q4_K_M chosen over ternary 2B and Q8_0",
+   "alternatives": [
+    "Bonsai ternary 2B/4B; Q8_0"
+   ],
+   "rationale": "LITE2 2B −0.057; LITE-THINK flat/negative; QUANTLITE flat and slower",
+   "consequence": "Lite tier remains a product idea, not a claim",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-645"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-15"
+   ]
+  },
+  {
+   "id": "D-108",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Keep the native-app comparison internal until the final build is scored",
+   "context": "Closing-sprint loop on in the live session",
+   "decision": "Keep the native-app comparison internal until the final build is scored",
+   "alternatives": [
+    "publish now",
+    "publish"
+   ],
+   "rationale": "intermediate build, decision by the author",
+   "consequence": "Number withheld from claim text",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1237",
+    "F-1263"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-18",
+    "D-system-21"
+   ]
+  },
+  {
+   "id": "D-109",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Health answers never come from the model on the default tier; doses never from a model (HEALTHGAP); a fired detector can only be overridden by a deterministic c",
+   "context": "NUMGUARD r1→r3: lexicon guard rejected as unsafe by review; calculator-only r3 PASS",
+   "decision": "Health answers never come from the model on the default tier; doses never from a model (HEALTHGAP); a fired detector can only be overridden by a deterministic calculator (NUMGUARD r3)",
+   "alternatives": [
+    "model with a disclaimer"
+   ],
+   "rationale": "safety; model answered doses from memory on probes",
+   "consequence": null,
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "citation fix: 'never reach the 4B' is l.21. AI-reviewed, not clinically reviewed",
+   "fact_ids": [
+    "F-374"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-18"
+   ]
+  },
+  {
+   "id": "D-110",
+   "date": "2026-10-16",
+   "time": "03:39",
+   "title": "TK2-FIX is a correctness fix, not a score lever; out of PR #85 before 10-20",
+   "context": "Critique raises the one-seed noise rule from 0.03 to ≥ 0.05",
+   "decision": "TK2-FIX is a correctness fix, not a score lever; out of PR #85 before 10-20",
+   "alternatives": [
+    "include in PR"
+   ],
+   "rationale": "+0.010 pooled, needs a builder change too",
+   "consequence": "queued as a post-10-20 patch",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1284"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-34"
+   ]
+  },
+  {
+   "id": "D-111",
+   "date": "2026-10-16",
+   "time": "09:4x",
+   "title": "Idle-lane rule: a blocked lane is one log row; every other lane filled at once; refined 21:5x to \"arms only for new questions with ceiling ≥ MDE, quiet ticks ot",
+   "context": "Judge authentication expired; no judge passes for ≈ 2.5 h; lanes idle ≈ 5 h (coordinator fault acknowledged)",
+   "decision": "Idle-lane rule: a blocked lane is one log row; every other lane filled at once; refined 21:5x to \"arms only for new questions with ceiling ≥ MDE, quiet ticks otherwise\"",
+   "alternatives": [
+    "idle waiting"
+   ],
+   "rationale": "≈ 5 h of idle lanes on 10-16",
+   "consequence": "settled the critique's point on 3-minute filler probes",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1199"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-35"
+   ]
+  },
+  {
+   "id": "D-112",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "deps.warn (unsafe-answer warning) stays off by default",
+   "context": null,
+   "decision": "deps.warn (unsafe-answer warning) stays off by default",
+   "alternatives": [
+    "default-on"
+   ],
+   "rationale": "out-of-sample recall 3/8 (lexicon) and 12/18 with FP 8/92 (detector)",
+   "consequence": "not handed to the PR",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-389"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-36"
+   ]
+  },
+  {
+   "id": "D-113",
+   "date": "2026-10-16",
+   "time": "18:28",
+   "title": "Apply the adversarial critique: lite \"= 4B\" only on pack-matched dev; one-seed V-para noise rule 0.03 → 0.05; n≈20 closures relabelled \"not detected at MDE 0.08",
+   "context": "Adversarial critique: lite \"= 4B\" overstated (kit −0.111), lite gap is reading too (−0.070 at identical contexts); closed loop risk",
+   "decision": "Apply the adversarial critique: lite \"= 4B\" only on pack-matched dev; one-seed V-para noise rule 0.03 → 0.05; n≈20 closures relabelled \"not detected at MDE 0.08\"",
+   "alternatives": [
+    "keep wording"
+   ],
+   "rationale": "over-stated internal summaries",
+   "consequence": "7 re-wordings applied",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1201"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-37"
+   ]
+  },
+  {
+   "id": "D-115",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Claude judge stays the headline (lower of two judges); judge family named next to every ratio; win/tie/loss leads",
+   "context": "Claim v4.2 / v4.2.1: judge family named on every ratio; native comparison kept internal",
+   "decision": "Claude judge stays the headline (lower of two judges); judge family named next to every ratio; win/tie/loss leads",
+   "alternatives": [
+    "headline the higher cross-family number",
+    "Report the higher judge",
+    "lead with OpenAI-judge numbers (deep crosses 0.50)"
+   ],
+   "rationale": "analysis-plan rule: when judges differ by > 0.05, the lower is the headline",
+   "consequence": "claim v4.2.x",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1189",
+    "F-1239",
+    "F-1240"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-39",
+    "D-process-27",
+    "D-results-17"
+   ]
+  },
+  {
+   "id": "D-116",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Apply 7 re-wordings from the adversarial critique (retract \"gap is reach, not reading\", etc.)",
+   "context": "Independent adversarial CRITIQUE: 7 re-wordings applied",
+   "decision": "Apply 7 re-wordings from the adversarial critique (retract \"gap is reach, not reading\", etc.)",
+   "alternatives": [
+    "Defend summaries"
+   ],
+   "rationale": "Numbers real, summaries scope-stripped",
+   "consequence": "Corrections logged as QUEUE rows",
+   "reversible": "no",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1188"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-process-26"
+   ]
+  },
+  {
+   "id": "D-117",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "NUMGUARD lexicon guard rejected as unsafe; calculator-only r3 kept",
+   "context": "NUMGUARD r3 + HEALTHGAP r2 added to the upstream PR; WARN banner spec v2",
+   "decision": "NUMGUARD lexicon guard rejected as unsafe; calculator-only r3 kept",
+   "alternatives": [
+    "ship the lexicon guard (passed tuned gates)"
+   ],
+   "rationale": "a lexicon that lets the model answer a detector-fired health turn cannot be made safe",
+   "consequence": "r3 shipped to PR #85",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1278"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-results-16"
+   ]
+  },
+  {
+   "id": "D-118",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Lite tier proposed for 4–6 GB phones: Qwen3-1.7B behind the full safety engine",
+   "context": "Lite tier (Qwen3-1.7B) evaluated; LITESAFETY PASS; critique corrects \"1.7B = 4B\"",
+   "decision": "Lite tier proposed for 4–6 GB phones: Qwen3-1.7B behind the full safety engine",
+   "alternatives": [
+    "Gemma-3-1B, LFM2-1.2B (worse readers), Q8 quant (flat)"
+   ],
+   "rationale": "1.1 GB file, RSS ≈ 2.3 GB; safety routing identical to 4B",
+   "consequence": "offered as option; quality wording corrected after critique",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_note": "On 2026-10-20 Qwen3-1.7B became the main 8 GB engine; the 4B became the optional tier.",
+   "superseded_by": "D-134",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1190"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "status_label": "superseded by D-134",
+   "aliases": [
+    "D-system-19"
+   ]
+  },
+  {
+   "id": "D-119",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Expert streaming (LES fork) supersedes earlier loader/kernel candidates on paper for a deep-tier device plan",
+   "context": "LESPORT: expert-streaming fork runs the 35B in 2.8 GiB RSS on desktop CPU, judged parity TRANSFER",
+   "decision": "Expert streaming (LES fork) supersedes earlier loader/kernel candidates on paper for a deep-tier device plan",
+   "alternatives": [
+    "bmoe (7.9 GB on phone)"
+   ],
+   "rationale": "2.8 GiB RSS, judged parity",
+   "consequence": "phone flash speed unmeasured; Android buffer unbuilt",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-792"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-system-20"
+   ]
+  },
+  {
+   "id": "D-120",
+   "date": "2026-10-17",
+   "time": "20:59",
+   "title": "Claim v4.2.4: state that the submitted app ports retrieval and prompts, not the health path or deterministic answers",
+   "context": "Claim v4.2.3 / v4.2.4: wording as of 2026-10-17 (the posted claim follows the standing at closure); submitted app ports retrieval and prompts, not the health path or deterministic answers",
+   "decision": "Claim v4.2.4: state that the submitted app ports retrieval and prompts, not the health path or deterministic answers",
+   "alternatives": [
+    "keep the earlier sentence",
+    "earlier wording \"port of the rules\""
+   ],
+   "rationale": "maintainer's own portal report + MAINT-V01",
+   "consequence": "claim wording as of 2026-10-17; the claim text stays open until closure (open front OF-5)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1244",
+    "F-1292"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-chron-late-40",
+    "D-system-22"
+   ]
+  },
+  {
+   "id": "D-122",
+   "date": "2026-10-17",
+   "time": null,
+   "title": "When judges from two families disagree, the lower number is the headline; judge family named next to every ratio",
+   "context": "Claim v4.2.3: \"the lower judge is the headline\"; judge family named next to every ratio",
+   "decision": "When judges from two families disagree, the lower number is the headline; judge family named next to every ratio",
+   "alternatives": [
+    "lead with the cross-family number"
+   ],
+   "rationale": "XFAM offset ≈ +0.10",
+   "consequence": "claim v4.2.3",
+   "reversible": "yes",
+   "status": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1243"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "status_label": "kept",
+   "aliases": [
+    "D-method-27"
+   ]
+  },
+  {
+   "id": "D-123",
+   "date": "2026-10-18",
+   "time": "16:07",
+   "title": "D1: no LFM2.5 desktop replay",
+   "context": "decided by: delegated coordinator (author delegated)",
+   "decision": "D1: no LFM2.5 desktop replay",
+   "alternatives": [
+    "run replay ~1.5 h"
+   ],
+   "rationale": "audit already 7/58 vs 3/73 wrong; product already chose Qwen",
+   "consequence": "closed",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: The parenthetical wording ('scored internally, final build published when it ships') is the claim text's, sourced at not . who decided: delegated coordinator; why: ~14-24 h of author item writing; would land after the deadline; bar needs ~0.53 at n 110 vs best ~0.43-0.51; serves honesty, not winning; alternatives: 60-item wave 1; 6-item pilot; reversible: yes | VERIFIER NOTE: Base OF-3 says 'the author decided'; precise form: the author delegated D1-D7 and the coordinator's recommendation (skip v0.3) was adopted ( l.4).",
+   "fact_ids": [
+    "F-1370",
+    "F-1371",
+    "F-1372",
+    "F-1373",
+    "F-1374",
+    "F-1375",
+    "F-1833"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-01",
+    "D-u-1820-02",
+    "D-u-1820-03",
+    "D-u-1820-04",
+    "D-u-1820-05",
+    "D-u-1820-06",
+    "D-u-results-02"
+   ]
+  },
+  {
+   "id": "D-124",
+   "date": "2026-10-18",
+   "time": "16:07",
+   "title": "D7: upload the research site only as v1.0 at closure; v0.x are internal build states",
+   "context": "decided by: delegated coordinator",
+   "decision": "D7: upload the research site only as v1.0 at closure; v0.x are internal build states",
+   "alternatives": [
+    "upload v0.1 now"
+   ],
+   "rationale": "one publication, no intermediate states",
+   "consequence": "folded into publication PLAN",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1376"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-07"
+   ]
+  },
+  {
+   "id": "D-125",
+   "date": "2026-10-18",
+   "time": "05:02",
+   "title": "Recommend the honest Detailed prompt D1, then D4 (D1 + capability rule) as the Detailed prompt; no Succinct-honest",
+   "context": "decided by: coordinator under frozen rule",
+   "decision": "Recommend the honest Detailed prompt D1, then D4 (D1 + capability rule) as the Detailed prompt; no Succinct-honest",
+   "alternatives": [
+    "D2, S1, S3"
+   ],
+   "rationale": "wrong claims down, ratio within -0.03 rule, refusals 1-2/49; S1 refuses 7/49",
+   "consequence": "sent to maintainer via liaison",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1377",
+    "F-1832"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-08",
+    "D-u-results-01"
+   ]
+  },
+  {
+   "id": "D-126",
+   "date": "2026-10-18",
+   "time": null,
+   "title": "Never ship a capability sentence without health forced to guard texts",
+   "context": "decided by: coordinator",
+   "decision": "Never ship a capability sentence without health forced to guard texts",
+   "alternatives": [
+    "ship L1"
+   ],
+   "rationale": "L1 line added wrong first-aid steps on first-aid chats",
+   "consequence": "rule standing",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1378"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-09"
+   ]
+  },
+  {
+   "id": "D-127",
+   "date": "2026-10-19",
+   "time": "13:30",
+   "title": "Focus finishing work on \"tests with sources\" (user has the matching pack)",
+   "context": "decided by: author",
+   "decision": "Focus finishing work on \"tests with sources\" (user has the matching pack)",
+   "alternatives": [
+    "continue no-source prompt tests (PROMPT3M)"
+   ],
+   "rationale": "bounty finish",
+   "consequence": "PACKREAD run; PROMPT3M paused, later closed",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1379"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-10"
+   ]
+  },
+  {
+   "id": "D-128",
+   "date": "2026-10-19",
+   "time": "14:27",
+   "title": "Release saferoute patch despite SAFEPACK frozen-rule FAIL (app ships with a warning); FAIL kept on record",
+   "context": "decided by: author",
+   "decision": "Release saferoute patch despite SAFEPACK frozen-rule FAIL (app ships with a warning); FAIL kept on record",
+   "alternatives": [
+    "hold patch"
+   ],
+   "rationale": "rule judged too strict for stage",
+   "consequence": "reversed same day: held out of the pushed stack after the direction review",
+   "reversible": "yes",
+   "status": "reversed",
+   "status_label": "reversed",
+   "status_note": "Reversed the same day: the saferoute patch was held out of the pushed stack after the independent direction review.",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1380",
+    "F-1834"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-11",
+    "D-u-results-03"
+   ]
+  },
+  {
+   "id": "D-129",
+   "date": "2026-10-19",
+   "time": "15:19",
+   "title": "Stop opening new arms; consolidate; hold saferoute; correct over-reads (SMALLCLS, SAFEPACK)",
+   "context": "decided by: independent reviewer, adopted by coordinator",
+   "decision": "Stop opening new arms; consolidate; hold saferoute; correct over-reads (SMALLCLS, SAFEPACK)",
+   "alternatives": [
+    "open SMALLCLS-2",
+    "agentic search loop"
+   ],
+   "rationale": "scope drift two days before closure; small-n in-sample results drove release calls",
+   "consequence": "adopted for saferoute; new arms nonetheless resumed 10-20 under new program",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1381"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-12"
+   ]
+  },
+  {
+   "id": "D-130",
+   "date": "2026-10-19",
+   "time": "14:36",
+   "title": "Resume three safety-held items: per-answer health caution ON, drinking-water card, chat routing L2+L3 without L1",
+   "context": "decided by: author",
+   "decision": "Resume three safety-held items: per-answer health caution ON, drinking-water card, chat routing L2+L3 without L1",
+   "alternatives": [
+    "keep held"
+   ],
+   "rationale": "app ships with a warning; harm came from L1 line only",
+   "consequence": "in the pushed PR stack",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1382"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-13"
+   ]
+  },
+  {
+   "id": "D-131",
+   "date": "2026-10-19",
+   "time": "23:08",
+   "title": "Build a public ruler: true-zero utility U + task success, uncapped two-family web references, non-Claude items, submitted app on phone, gates, speed, install",
+   "context": "decided by: coordinator from 8-agent workflow (both critics converged)",
+   "decision": "Build a public ruler: true-zero utility U + task success, uncapped two-family web references, non-Claude items, submitted app on phone, gates, speed, install",
+   "alternatives": [
+    "keep old bench as headline"
+   ],
+   "rationale": "five misreadings of the bounty in the old bench",
+   "consequence": "led to v0.4 items + spec v1",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1383",
+    "F-1836"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-14",
+    "D-u-results-05"
+   ]
+  },
+  {
+   "id": "D-132",
+   "date": "2026-10-20",
+   "time": null,
+   "title": "Item families from Vitalik Buterin's own public test questions; travel ~1/3 not >= 50 %; 8 multi-turn; over-refusal probes; venue \"best\" checked on open web",
+   "context": "decided by: coordinator, author direction",
+   "decision": "Item families from Vitalik Buterin's own public test questions; travel ~1/3 not >= 50 %; 8 multi-turn; over-refusal probes; venue \"best\" checked on open web",
+   "alternatives": [
+    "r1 quotas (72 items, >= 50 % travel)"
+   ],
+   "rationale": "match the inspiring post's queries",
+   "consequence": "applied to v0.4",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1384"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-15"
+   ]
+  },
+  {
+   "id": "D-133",
+   "date": "2026-10-20",
+   "time": "16:45",
+   "title": "Resolve 5 disputed points; drop one item contradicted by both families; tag 4 V-exact anchors out of the headline; freeze v0.4",
+   "context": "decided by: author",
+   "decision": "Resolve 5 disputed points; drop one item contradicted by both families; tag 4 V-exact anchors out of the headline; freeze v0.4",
+   "alternatives": [
+    "keep disputed items"
+   ],
+   "rationale": "both-family fact check",
+   "consequence": "frozen, sha f9ad2f2f...",
+   "reversible": "no (frozen)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1385",
+    "F-1838"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-16",
+    "D-u-results-07"
+   ]
+  },
+  {
+   "id": "D-134",
+   "date": "2026-10-20",
+   "time": "11:50",
+   "title": "Qwen3-1.7B = main 8 GB engine; 4B = optional \"more complete\" tier",
+   "context": "decided by: author",
+   "decision": "Qwen3-1.7B = main 8 GB engine; 4B = optional \"more complete\" tier",
+   "alternatives": [
+    "keep 4B default",
+    "Qwen2.5-1.5B (faster but weaker)"
+   ],
+   "rationale": "Pixel 8a: 1.7B 13-16 tok/s, answers 13-16 s; 4B 3.6-6 tok/s, 29-46 s, one LMK kill",
+   "consequence": "adopted; confirmed at 19:07 grill",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1386",
+    "F-1837"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-17",
+    "D-u-results-06"
+   ]
+  },
+  {
+   "id": "D-135",
+   "date": "2026-10-20",
+   "time": "17:35",
+   "title": "Propose to maintainer: 8 GB = Qwen3-1.7B + fixed warning line instead of compact declines",
+   "context": "decided by: author (send OK)",
+   "decision": "Propose to maintainer: 8 GB = Qwen3-1.7B + fixed warning line instead of compact declines",
+   "alternatives": [
+    "keep declines"
+   ],
+   "rationale": "CMP30OFF: 1.7B with declines released leads 1.5B",
+   "consequence": "superseded at 20:24 by refuse-by-default",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_label": "superseded by D-149",
+   "status_note": "superseded at 20:24 by refuse-by-default",
+   "superseded_by": "D-149",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1387"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-18"
+   ]
+  },
+  {
+   "id": "D-136",
+   "date": "2026-10-20",
+   "time": "19:07",
+   "title": "Grill Q1-Q13: three fronts; every arm a two-stage screen (problems + sentinels, then full MAIN 97); safety-cards-first archived; engine changes sent only after ",
+   "context": "decided by: author",
+   "decision": "Grill Q1-Q13: three fronts; every arm a two-stage screen (problems + sentinels, then full MAIN 97); safety-cards-first archived; engine changes sent only after a measured gain; Vitalik Buterin-blog pack built user-selected, unmeasured",
+   "alternatives": [
+    "phone A/B of 4B",
+    "C before bounty"
+   ],
+   "rationale": "LITEPACKS NO CHANGE",
+   "consequence": "adopted",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1388"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-19"
+   ]
+  },
+  {
+   "id": "D-137",
+   "date": "2026-10-20",
+   "time": "19:07",
+   "title": "Ruler headline weights the 11 health_safety items at 0.5, adds a safety gate, publishes weight-1 U beside it",
+   "context": "decided by: author",
+   "decision": "Ruler headline weights the 11 health_safety items at 0.5, adds a safety gate, publishes weight-1 U beside it",
+   "alternatives": [
+    "weight 1"
+   ],
+   "rationale": "bounty asks for casual lookup/research, never names health",
+   "consequence": "in spec v1 §2; reviewer F3 flags timing (decided after items existed)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1389"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-20"
+   ]
+  },
+  {
+   "id": "D-138",
+   "date": "2026-10-20",
+   "time": "20:24",
+   "title": "Ruler headline = coverage x U decomposition + U-total; product refuses by default when no source is kept, with a \"show anyway\" control",
+   "context": "decided by: author",
+   "decision": "Ruler headline = coverage x U decomposition + U-total; product refuses by default when no source is kept, with a \"show anyway\" control",
+   "alternatives": [
+    "answer under a warning line"
+   ],
+   "rationale": "separate what packs answer from memory answers",
+   "consequence": "spec v1 r2",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1390",
+    "F-1840"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-21",
+    "D-u-results-09"
+   ]
+  },
+  {
+   "id": "D-139",
+   "date": "2026-10-20",
+   "time": "20:39",
+   "title": "Verdict arm = A∪ (all persona packs installed once, same for every item); per-family arm A kept as a labelled row",
+   "context": "decided by: author on reviewer finding F1",
+   "decision": "Verdict arm = A∪ (all persona packs installed once, same for every item); per-family arm A kept as a labelled row",
+   "alternatives": [
+    "arm A or arm B as verdict"
+   ],
+   "rationale": "per-family arm = oracle topic routing",
+   "consequence": "spec v1 r2",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Reviewer finding F1 is at (TL;DR 1) and :14 (F1 heading); line 7 is the decline-arm finding.",
+   "fact_ids": [
+    "F-1391"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-22"
+   ]
+  },
+  {
+   "id": "D-140",
+   "date": "2026-10-20",
+   "time": "21:45",
+   "title": "Persona map v1: travel -> wikivoyage + visa (+ area tile); tech -> crypto; science -> medlineplus + firstaid; place -> factbook; humanities -> none; NIST pack e",
+   "context": "decided by: coordinator draft + independent approver (6 edits)",
+   "decision": "Persona map v1: travel -> wikivoyage + visa (+ area tile); tech -> crypto; science -> medlineplus + firstaid; place -> factbook; humanities -> none; NIST pack excluded",
+   "alternatives": [
+    "include NIST, simplewiki"
+   ],
+   "rationale": "chosen from pack-card domain lines only",
+   "consequence": "not frozen, waits author veto",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1392",
+    "F-1841"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-23",
+    "D-u-results-10"
+   ]
+  },
+  {
+   "id": "D-141",
+   "date": "2026-10-20",
+   "time": "22:29",
+   "title": "GATE v2: screen bar = max measured null net + 2",
+   "context": "decided by: coordinator",
+   "decision": "GATE v2: screen bar = max measured null net + 2",
+   "alternatives": [
+    "fixed bar 6"
+   ],
+   "rationale": "null runs fixed 23-31 % of problems; old 6-fix bar sat at the null",
+   "consequence": "used for overnight screens",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1393"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-1820-24"
+   ]
+  },
+  {
+   "id": "D-142",
+   "date": "2026-10-21",
+   "time": null,
+   "title": "Qwen3-1.7B stays the 8 GB recommendation \"on a latency and memory constraint, not on quality\"; model swaps below 4B parked until 10-31",
+   "context": "decided by: delegated coordinator (proposal, reviewed)",
+   "decision": "Qwen3-1.7B stays the 8 GB recommendation \"on a latency and memory constraint, not on quality\"; model swaps below 4B parked until 10-31",
+   "alternatives": [
+    "Gemma default",
+    "4B default"
+   ],
+   "rationale": "Gemma +0.029 at 1.5× time +1.4 GB; Ministral +0.062 at ~3× time; 4B +0.076 at ~2.5× time",
+   "consequence": "stood; superseded in practice by RC1 shipping 1.5B",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1527"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-01"
+   ]
+  },
+  {
+   "id": "D-143",
+   "date": "2026-10-21",
+   "time": "02:38",
+   "title": "Gemma 4 E2B only as opt-in catalog entry with thinking guards (thinking off, budget 0, n_predict cap, post-filter); exact file pinned",
+   "context": "decided by: delegated coordinator",
+   "decision": "Gemma 4 E2B only as opt-in catalog entry with thinking guards (thinking off, budget 0, n_predict cap, post-filter); exact file pinned",
+   "alternatives": [
+    "Gemma default",
+    "drop Gemma"
+   ],
+   "rationale": "phone quality = 1.7B, 1.5-2.8× time, +1.1-1.4 GB; runtime risks (thinking default on, KV growth)",
+   "consequence": "proposal; Gemma not in RC1 catalog so moot on RC1",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1528"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-02"
+   ]
+  },
+  {
+   "id": "D-144",
+   "date": "2026-10-21",
+   "time": "12:45",
+   "title": "RULING R1: judge = judge.v1 unchanged + DECLINE2STAGE zero per detected non-answer; D 0.058 kept as sensitivity row",
+   "context": "decided by: delegated coordinator (override of a frozen FAIL, accepted with conditions by reviewer)",
+   "decision": "RULING R1: judge = judge.v1 unchanged + DECLINE2STAGE zero per detected non-answer; D 0.058 kept as sensitivity row",
+   "alternatives": [
+    "judge v1.1",
+    "decline subtraction only"
+   ],
+   "rationale": "judge v1.1/v1.1b changed CE verdicts (5-7/40 flips); DECLINE2STAGE's 2 bar-(b) hits were engine refusal strings",
+   "consequence": "adopted into ruler r3/r4",
+   "reversible": "yes (pre-exposure)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1529",
+    "F-1845"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-03",
+    "D-u-results-14"
+   ]
+  },
+  {
+   "id": "D-145",
+   "date": "2026-10-21",
+   "time": "13:12",
+   "title": "GOAL: two numbers U_8GB (+0.03 Opus, CE-shown must not rise) and T_8GB (7.6 → 5.0 s)",
+   "context": "decided by: author",
+   "decision": "GOAL: two numbers U_8GB (+0.03 Opus, CE-shown must not rise) and T_8GB (7.6 → 5.0 s)",
+   "alternatives": [
+    "open exploration"
+   ],
+   "rationale": "focus the last days on measurable engine gains",
+   "consequence": "T_8GB re-based to the native app same day; U_8GB lines closed at nulls",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1530"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-04"
+   ]
+  },
+  {
+   "id": "D-146",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "Winning thesis = honest 8 GB product + open ruler",
+   "context": "decided by: author (GRILL)",
+   "decision": "Winning thesis = honest 8 GB product + open ruler",
+   "alternatives": [
+    "compete on the deep tier"
+   ],
+   "rationale": "35B not deliverable on 8 GB in time",
+   "consequence": "stood until 10-22 pivot reframed it",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1531"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-05"
+   ]
+  },
+  {
+   "id": "D-147",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "35B deep mode not delivered; deep tier appears only as roadmap with desktop numbers",
+   "context": "decided by: author (GRILL)",
+   "decision": "35B deep mode not delivered; deep tier appears only as roadmap with desktop numbers",
+   "alternatives": [
+    "12 GB deep tier"
+   ],
+   "rationale": "focus on 8 GB UX; no Android expert-streaming build",
+   "consequence": "stood",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1532"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-06"
+   ]
+  },
+  {
+   "id": "D-148",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "8 GB default model: Qwen3-1.7B, 4B optional (sent to maintainer only within the short package)",
+   "context": "decided by: author. Same set and phone: 1.7B p50 4.2 s vs 4B p50 25.5 s over all 73 v0.1 items (all-items p50, including deterministic and declined items).",
+   "decision": "8 GB default model: Qwen3-1.7B, 4B optional (sent to maintainer only within the short package)",
+   "alternatives": null,
+   "rationale": null,
+   "consequence": null,
+   "reversible": null,
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Verification note: Faithful to GRILL D3 but compares a 73-question all-items p50 for the 1.7B (4.2 s) with 9-question model-path answer ranges for the 4B (29-46 s). Same 73 set, same phone: 1.7B p50 4.2 s vs 4B p50 25.5 s (cut 7, 10-20).",
+   "fact_ids": [
+    "F-1533"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-07"
+   ]
+  },
+  {
+   "id": "D-149",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "No source found → refuse by default + \"show anyway\", shown answers carry a warning line",
+   "context": "decided by: author (GRILL)",
+   "decision": "No source found → refuse by default + \"show anyway\", shown answers carry a warning line",
+   "alternatives": [
+    "always answer"
+   ],
+   "rationale": "honesty on 8 GB",
+   "consequence": "later narrowed: show-anyway only behind second confirmation, never on health (REVEAL-CENSUS); RC1 has no warning line",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1534",
+    "F-1551"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-08",
+    "D-u-2122-25"
+   ]
+  },
+  {
+   "id": "D-150",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "Article = research site on a project subdomain built from the public research repo; story = timeline of decisions, not a score line",
+   "context": "decided by: author (GRILL)",
+   "decision": "Article = research site on a project subdomain built from the public research repo; story = timeline of decisions, not a score line",
+   "alternatives": [
+    "pages on existing site"
+   ],
+   "rationale": "full control of look; avoid cross-set score charts",
+   "consequence": "stands (this publication)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1535"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-09"
+   ]
+  },
+  {
+   "id": "D-151",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "Final score = submitted native APK on Pixel 8a, v0.4 frozen (75 items), Claude + OpenAI gpt-5.6-sol judges, frontier + web references",
+   "context": "decided by: author (GRILL)",
+   "decision": "Final score = submitted native APK on Pixel 8a, v0.4 frozen (75 items), Claude + OpenAI gpt-5.6-sol judges, frontier + web references",
+   "alternatives": [
+    "engine-only score"
+   ],
+   "rationale": "the bounty judges the app",
+   "consequence": "ruler r3/r4 built for it; run pending a new RC",
+   "reversible": "partly (depends on RC)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1536"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-10"
+   ]
+  },
+  {
+   "id": "D-152",
+   "date": "2026-10-21",
+   "time": "15:5x",
+   "title": "Submission = the maintainer's native Kotlin app, not the RN bench engine",
+   "context": "decided by: author",
+   "decision": "Submission = the maintainer's native Kotlin app, not the RN bench engine",
+   "alternatives": [
+    "engine-only claim"
+   ],
+   "rationale": "that is what will be submitted",
+   "consequence": "re-based speed lines (bench levers page-only) and claim section 0",
+   "reversible": "no (fact of the submission)",
+   "status": "superseded",
+   "status_label": "superseded by D-183",
+   "status_note": "re-based speed lines (bench levers page-only) and claim section 0",
+   "superseded_by": "D-183",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1537"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-11"
+   ]
+  },
+  {
+   "id": "D-153",
+   "date": "2026-10-21",
+   "time": "16:01",
+   "title": "No 512-token cap ask (CAP512 not a lever)",
+   "context": "decided by: delegated coordinator (frozen rule)",
+   "decision": "No 512-token cap ask (CAP512 not a lever)",
+   "alternatives": [
+    "cap ask in NOTE-1"
+   ],
+   "rationale": "saves 0 s p50, cuts 10.9 % mid-sentence",
+   "consequence": "dropped",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1538"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-12"
+   ]
+  },
+  {
+   "id": "D-156",
+   "date": "2026-10-21",
+   "time": "20:28",
+   "title": "Verdict arm = app with packs (A-union); OpenAI gpt-5.6-sol as second judge family; headline waits for new RC; ruler in its own session",
+   "context": "decided by: author",
+   "decision": "Verdict arm = app with packs (A-union); OpenAI gpt-5.6-sol as second judge family; headline waits for new RC; ruler in its own session",
+   "alternatives": [
+    "verdict on app without packs"
+   ],
+   "rationale": "thesis \"app + packs answers well\"; two families",
+   "consequence": "in r3/r4",
+   "reversible": "yes (pre-run)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1541",
+    "F-1852"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-15",
+    "D-u-results-21"
+   ]
+  },
+  {
+   "id": "D-157",
+   "date": "2026-10-21",
+   "time": "20:48",
+   "title": "Freeze RULER-SPEC v1 r3 (private)",
+   "context": "decided by: delegated coordinator + reviewer ACCEPT WITH EDITS",
+   "decision": "Freeze RULER-SPEC v1 r3 (private)",
+   "alternatives": [
+    "keep binary checklist judge (NO-GO earlier)"
+   ],
+   "rationale": "pre-registration before any v0.4 answer",
+   "consequence": "frozen sha 0fac2286",
+   "reversible": "no (frozen)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1542"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-16"
+   ]
+  },
+  {
+   "id": "D-158",
+   "date": "2026-10-21",
+   "time": "21:18",
+   "title": "Freeze r4: add information-available split (FACT-AVAIL) + ORACLE/ORACLE-0 rows; U-total stays verdict",
+   "context": "decided by: author asked",
+   "decision": "Freeze r4: add information-available split (FACT-AVAIL) + ORACLE/ORACLE-0 rows; U-total stays verdict",
+   "alternatives": [
+    "no split"
+   ],
+   "rationale": "separate \"packs lack it\" from \"app fails to deliver it\"",
+   "consequence": "frozen sha 82772e33; labels quarantined",
+   "reversible": "no (frozen)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1543",
+    "F-1853"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-17",
+    "D-u-results-22"
+   ]
+  },
+  {
+   "id": "D-159",
+   "date": "2026-10-21",
+   "time": "22:10",
+   "title": "Close decoder-level grounding axis on the 1.7B",
+   "context": "decided by: delegated coordinator (frozen gate)",
+   "decision": "Close decoder-level grounding axis on the 1.7B",
+   "alternatives": [
+    "AdaCAD (unopened)"
+   ],
+   "rationale": "all arms net 4-6 vs bar 9",
+   "consequence": "closed",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1544"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-18"
+   ]
+  },
+  {
+   "id": "D-160",
+   "date": "2026-10-22",
+   "time": "01:10",
+   "title": "Carry chunk vectors forward only in no-displacement \"extra\" mode; fusion harmful on real items",
+   "context": "decided by: delegated coordinator",
+   "decision": "Carry chunk vectors forward only in no-displacement \"extra\" mode; fusion harmful on real items",
+   "alternatives": [
+    "fusion"
+   ],
+   "rationale": "fusion lost 6-8/22 real items",
+   "consequence": "G2 full kit then failed real-item recovery (3/25)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1545"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-19"
+   ]
+  },
+  {
+   "id": "D-161",
+   "date": "2026-10-22",
+   "time": "16:05",
+   "title": "Packs are the strategy: engine finds the context when the pack has it, model answers from it; stop expecting the model to answer alone; device day stopped",
+   "context": "decided by: author",
+   "decision": "Packs are the strategy: engine finds the context when the pack has it, model answers from it; stop expecting the model to answer alone; device day stopped",
+   "alternatives": [
+    "keep model/engine levers"
+   ],
+   "rationale": "QFORM 0.88 vs 0.19",
+   "consequence": "two lanes (retrieval, coverage); NOTE-5 first ask",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1546",
+    "F-1854"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-20",
+    "D-u-results-23"
+   ]
+  },
+  {
+   "id": "D-162",
+   "date": "2026-10-22",
+   "time": "17:3x",
+   "title": "Small focused packs, not giant ones; full Wikipedia = negative control",
+   "context": "decided by: author",
+   "decision": "Small focused packs, not giant ones; full Wikipedia = negative control",
+   "alternatives": [
+    "full Wikipedia"
+   ],
+   "rationale": "top100k takes 47-55 % of kept slots for net +2; small Q&A packs do not crowd; competitor full-enwiki search 17-21 s under model load",
+   "consequence": "composition (merge) becomes the central question",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1547"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-21"
+   ]
+  },
+  {
+   "id": "D-163",
+   "date": "2026-10-22",
+   "time": null,
+   "title": "Composer UX = one options button + chips only for non-default settings; auto search-term chips dropped",
+   "context": "decided by: author",
+   "decision": "Composer UX = one options button + chips only for non-default settings; auto search-term chips dropped",
+   "alternatives": [
+    "4-chip query bar MVP"
+   ],
+   "rationale": "T1 term extraction failed (25 → 23 %)",
+   "consequence": "design adopted for the fork",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1548"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-22"
+   ]
+  },
+  {
+   "id": "D-164",
+   "date": "2026-10-22",
+   "time": "22:41",
+   "title": "Withdraw F3 (health no-source fallback) from the search fixes",
+   "context": "decided by: delegated coordinator (frozen safety rule)",
+   "decision": "Withdraw F3 (health no-source fallback) from the search fixes",
+   "alternatives": [
+    "keep F3 for +0.010"
+   ],
+   "rationale": "unsafe 9 → 13 on 65 probes",
+   "consequence": "shippable set = gidf + F1 + F2 + F4 (+0.013, not a lever)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1549",
+    "F-1855"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-23",
+    "D-u-results-24"
+   ]
+  },
+  {
+   "id": "D-165",
+   "date": "2026-10-22",
+   "time": "22:09",
+   "title": "Delivery is measured at chunk level from now on",
+   "context": "decided by: delegated coordinator",
+   "decision": "Delivery is measured at chunk level from now on",
+   "alternatives": [
+    "article-level"
+   ],
+   "rationale": "article-level overstated F1b by 13 facts",
+   "consequence": "standing method",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1550",
+    "F-1856"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2122-24",
+    "D-u-results-25"
+   ]
+  },
+  {
+   "id": "D-167",
+   "date": "2026-10-23",
+   "time": "11:53",
+   "title": "Close the research lines; no new arms after PLUGBATCH-SELF and STYLE-SEFIX; the rest of the work is acceptance tests",
+   "context": "decided by: author",
+   "decision": "Close the research lines; no new arms after PLUGBATCH-SELF and STYLE-SEFIX; the rest of the work is acceptance tests",
+   "alternatives": [
+    "keep running levers"
+   ],
+   "rationale": "\"we reached where we needed to\"; ensure the app delivers it",
+   "consequence": "Held for search/decoder/detector lines; reopened on the content side at 15:39 (D-u-2324-08)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1687",
+    "F-1857"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-01",
+    "D-u-results-26"
+   ]
+  },
+  {
+   "id": "D-168",
+   "date": "2026-10-23",
+   "time": "11:53",
+   "title": "Adopted for delivery: SEFIX-124 search stack + W78 reading-cost stack; Succinct for models ≤ 2 GB; Deep Research hidden; detector v3b stays; decoder/readers/gat",
+   "context": "decided by: author (plan by coordinator)",
+   "decision": "Adopted for delivery: SEFIX-124 search stack + W78 reading-cost stack; Succinct for models ≤ 2 GB; Deep Research hidden; detector v3b stays; decoder/readers/gates closed NO",
+   "alternatives": [
+    "Detailed default, Deep mode, detector retrains"
+   ],
+   "rationale": "measured results of 10-22/23",
+   "consequence": "Carried into ENGINE-RC",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1688"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-02"
+   ]
+  },
+  {
+   "id": "D-169",
+   "date": "2026-10-23",
+   "time": "11:58",
+   "title": "Closing tests run on the desktop twin with no phone",
+   "context": "decided by: author",
+   "decision": "Closing tests run on the desktop twin with no phone",
+   "alternatives": [
+    "phone acceptance days"
+   ],
+   "rationale": "phone not available",
+   "consequence": "UXMATRIX, U5, PACKPROOF ran on desktop",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1689"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-03"
+   ]
+  },
+  {
+   "id": "D-170",
+   "date": "2026-10-23",
+   "time": "12:19",
+   "title": "Thesis to present with the app: right whenever the content is in a pack; app built for it",
+   "context": "decided by: author",
+   "decision": "Thesis to present with the app: right whenever the content is in a pack; app built for it",
+   "alternatives": [
+    "absolute accuracy claims"
+   ],
+   "rationale": "product framing",
+   "consequence": "PACKPROOF supports only a conditional form (65 % when delivered)",
+   "reversible": "yes (framing)",
+   "status": "superseded",
+   "status_label": "superseded by D-215",
+   "status_note": "restated by the author on 2026-10-25 (D-215); the closing tests supported this sentence only in a conditional form",
+   "superseded_by": "D-215",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1690"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-04"
+   ]
+  },
+  {
+   "id": "D-171",
+   "date": "2026-10-23",
+   "time": "13:20",
+   "title": "Defaults by rule: Succinct stays, Deep hidden, no change to the honesty surface",
+   "context": "decided by: delegated coordinator (frozen rule)",
+   "decision": "Defaults by rule: Succinct stays, Deep hidden, no change to the honesty surface",
+   "alternatives": [
+    "Detailed default"
+   ],
+   "rationale": "UXMATRIX matrix",
+   "consequence": "Confirmed later by D-u-2324-13",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1691"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-05"
+   ]
+  },
+  {
+   "id": "D-172",
+   "date": "2026-10-23",
+   "time": "14:58",
+   "title": "Keep Wikipedia packs in the default kit K13",
+   "context": "decided by: delegated coordinator (frozen gate), asked by author",
+   "decision": "Keep Wikipedia packs in the default kit K13",
+   "alternatives": [
+    "NOWIKI",
+    "NOWIKI2 kits"
+   ],
+   "rationale": "removing them loses 9 MAIN facts, 10 general items, 2 health sources",
+   "consequence": "K13 stays",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1692",
+    "F-1859"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-06",
+    "D-u-results-28"
+   ]
+  },
+  {
+   "id": "D-173",
+   "date": "2026-10-23",
+   "time": "14:39",
+   "title": "No new packs for coverage (gaps are search, not missing content)",
+   "context": "decided by: delegated coordinator, asked by author",
+   "decision": "No new packs for coverage (gaps are search, not missing content)",
+   "alternatives": [
+    "build philosophy",
+    "blog",
+    "Gutenberg packs"
+   ],
+   "rationale": "44/50 gaps already in K13; candidate packs ≈ 1 fact each",
+   "consequence": "No pack builds",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1693"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-07"
+   ]
+  },
+  {
+   "id": "D-174",
+   "date": "2026-10-23",
+   "time": "15:39",
+   "title": "CONTENT-FIRST: no model change; make the right chunk reach Qwen3-1.7B; build/shape the packs",
+   "context": "decided by: author",
+   "decision": "CONTENT-FIRST: no model change; make the right chunk reach Qwen3-1.7B; build/shape the packs",
+   "alternatives": [
+    "model change, bigger model"
+   ],
+   "rationale": "\"even the small model should answer right having the content\"",
+   "consequence": "PACKSHAPE lever-candidate; others NO",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1694"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-08"
+   ]
+  },
+  {
+   "id": "D-175",
+   "date": "2026-10-23",
+   "time": "17:07",
+   "title": "Shaped factbook v2: card drafted as user-selected only; publish waits for author OK",
+   "context": "decided by: delegated coordinator",
+   "decision": "Shaped factbook v2: card drafted as user-selected only; publish waits for author OK",
+   "alternatives": [
+    "default-eligible publish"
+   ],
+   "rationale": "Opus +0.121 but one new warned CE; correct-any 0.50 < 0.60 eligibility",
+   "consequence": "Not published as of 10-24; in ENGINE-RC kit; BoarLite D3 puts it in the APK",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1695",
+    "F-1860"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-09",
+    "D-u-results-29"
+   ]
+  },
+  {
+   "id": "D-176",
+   "date": "2026-10-23",
+   "time": "17:55",
+   "title": "Night program: build ENGINE-RC as one tree, validate 0-LLM first, generate all answers, judge nothing overnight",
+   "context": "decided by: author (scope cut 18:21) + coordinator",
+   "decision": "Night program: build ENGINE-RC as one tree, validate 0-LLM first, generate all answers, judge nothing overnight",
+   "alternatives": [
+    "judge overnight"
+   ],
+   "rationale": "validate the closed engine; judge on demand",
+   "consequence": "2,855 answers, 0 judge calls",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1696"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-10"
+   ]
+  },
+  {
+   "id": "D-177",
+   "date": "2026-10-23",
+   "time": "17:59",
+   "title": "X2B-BUDGET and RETBENCH best config stay out of ENGINE-RC",
+   "context": "decided by: delegated coordinator (frozen gates)",
+   "decision": "X2B-BUDGET and RETBENCH best config stay out of ENGINE-RC",
+   "alternatives": [
+    "adopt for +3..+5 facts"
+   ],
+   "rationale": "dose/number safety probes changed",
+   "consequence": "Closed NO",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1697",
+    "F-1861"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-11",
+    "D-u-results-30"
+   ]
+  },
+  {
+   "id": "D-178",
+   "date": "2026-10-23",
+   "time": null,
+   "title": "Engine route fixes validated on their own branch; not merged into ENGINE-RC (different code lineage)",
+   "context": "decided by: delegated coordinator",
+   "decision": "Engine route fixes validated on their own branch; not merged into ENGINE-RC (different code lineage)",
+   "alternatives": [
+    "merge"
+   ],
+   "rationale": "trees cannot be merged",
+   "consequence": "App engine and bench engine still differ on routes",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1698"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-12"
+   ]
+  },
+  {
+   "id": "D-179",
+   "date": "2026-10-24",
+   "time": "14:15",
+   "title": "Succinct stays the default; S+ (4-5 sentences) and two-paragraph variants rejected",
+   "context": "decided by: delegated coordinator (frozen ADOPT rule), judge run OK'd by author",
+   "decision": "Succinct stays the default; S+ (4-5 sentences) and two-paragraph variants rejected",
+   "alternatives": [
+    "S+, P2"
+   ],
+   "rationale": "same correctness, wrong-unwarned doubles",
+   "consequence": "S STAYS",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1699",
+    "F-1862"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-13",
+    "D-u-results-31"
+   ]
+  },
+  {
+   "id": "D-180",
+   "date": "2026-10-24",
+   "time": "14:15",
+   "title": "Subject carry on follow-ups not adopted as an accuracy fix (UX gain only)",
+   "context": "decided by: delegated coordinator",
+   "decision": "Subject carry on follow-ups not adopted as an accuracy fix (UX gain only)",
+   "alternatives": [
+    "carry on"
+   ],
+   "rationale": "0.458 correct both arms",
+   "consequence": "measurement only",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1700"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-14"
+   ]
+  },
+  {
+   "id": "D-181",
+   "date": "2026-10-24",
+   "time": "14:25",
+   "title": "Closed simple chat app for one way of use: Succinct fixed; Deep Research, Detailed and length setting removed; free follow-ups; warning line kept; sources shown",
+   "context": "decided by: author",
+   "decision": "Closed simple chat app for one way of use: Succinct fixed; Deep Research, Detailed and length setting removed; free follow-ups; warning line kept; sources shown",
+   "alternatives": [
+    "app with many modes"
+   ],
+   "rationale": "small models gave the best results this way",
+   "consequence": "Applied on a local branch",
+   "reversible": "yes (product)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1701",
+    "F-1863"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-15",
+    "D-u-results-32"
+   ]
+  },
+  {
+   "id": "D-182",
+   "date": "2026-10-24",
+   "time": "15:40",
+   "title": "App build choices: Qwen3-1.7B Q4_K_M default on every phone, English only, null-style cap 512, delete confirms, \"Allow more\" redo removed",
+   "context": "decided by: author decisions, applied by coordinator workflow",
+   "decision": "App build choices: Qwen3-1.7B Q4_K_M default on every phone, English only, null-style cap 512, delete confirms, \"Allow more\" redo removed",
+   "alternatives": [
+    "keep 1.5B",
+    "multilingual UI"
+   ],
+   "rationale": "closed-app spec",
+   "consequence": "9 local commits, debug APK built, no device test",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1702"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-16"
+   ]
+  },
+  {
+   "id": "D-183",
+   "date": "2026-10-24",
+   "time": "16:51",
+   "title": "BoarLite = a NEW bounty submission by the author (not the app maintainer's app); closed app, everything bundled, full K13 kit in one APK, shaped factbook v2, po",
+   "context": "decided by: author",
+   "decision": "BoarLite = a NEW bounty submission by the author (not the app maintainer's app); closed app, everything bundled, full K13 kit in one APK, shaped factbook v2, port the warning line, Qwen3-1.7B fixed",
+   "alternatives": [
+    "submit the app maintainer's app"
+   ],
+   "rationale": "(decision page)",
+   "consequence": "Implementation next; APK ≈ 3.0 GB, hosting open",
+   "reversible": "partly (submission identity)",
+   "status": "kept",
+   "status_label": "kept (amended by D-196)",
+   "status_note": "2026-10-24 18:03 (D-196): factbook v1 stays (D3 reverted); one fixed line on every answer replaces the ported warning line (D4). 2026-10-25 02:20 (D-211): renamed LabRat; the submission is the same app.",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1703",
+    "F-1864"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "D-u-2324-17",
+    "D-u-results-33"
+   ]
+  },
+  {
+   "id": "D-184",
+   "date": "2026-10-19",
+   "time": "15:19",
+   "title": "Consolidate, no new arms; hazard routes show title + pointer instead of a verbatim passage",
+   "context": "decided by: reviewer (independent Opus)",
+   "decision": "Consolidate, no new arms; hazard routes show title + pointer instead of a verbatim passage",
+   "alternatives": [
+    "SMALLCLS-2",
+    "agentic loop"
+   ],
+   "rationale": "saferoute quotes the wrong section of the right page",
+   "consequence": "adopted for 10-19 evening",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1835"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-04"
+   ]
+  },
+  {
+   "id": "D-185",
+   "date": "2026-10-20",
+   "time": "19:07",
+   "title": "Two-stage screens (problem screen + sentinels, then MAIN 97); health items weigh 0.5 in headline",
+   "context": "decided by: author (grill)",
+   "decision": "Two-stage screens (problem screen + sentinels, then MAIN 97); health items weigh 0.5 in headline",
+   "alternatives": [
+    "single-stage runs"
+   ],
+   "rationale": "cheap screening, explicit safety weighting",
+   "consequence": "GATE v2 replaced the bar at 22:29",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1839"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-08"
+   ]
+  },
+  {
+   "id": "D-186",
+   "date": "2026-10-20",
+   "time": "23:59",
+   "title": "Keep Q4_K_M quantisation for the 1.7B",
+   "context": "decided by: delegated coordinator (frozen rule)",
+   "decision": "Keep Q4_K_M quantisation for the 1.7B",
+   "alternatives": [
+    "Q8_0"
+   ],
+   "rationale": "Q8_0 inside null band, decode x0.66, +0.7 GB",
+   "consequence": "Q4 stays",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1842"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-11"
+   ]
+  },
+  {
+   "id": "D-187",
+   "date": "2026-10-21",
+   "time": "03:06",
+   "title": "1.7B stays the 8 GB recommendation on latency and memory, not quality; model screens parked",
+   "context": "decided by: reviewer (9-agent direction review)",
+   "decision": "1.7B stays the 8 GB recommendation on latency and memory, not quality; model screens parked",
+   "alternatives": [
+    "Gemma opt-in tier"
+   ],
+   "rationale": "MIN3CITE/Gemma gains cost 2.8-3x phone time",
+   "consequence": "no Gemma/Ministral send",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1843"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-12"
+   ]
+  },
+  {
+   "id": "D-188",
+   "date": "2026-10-21",
+   "time": "04:57",
+   "title": "Fallback judge: judge.v1 + decline subtraction D 0.058 (true-zero variants NO-ADOPT)",
+   "context": "decided by: delegated coordinator (frozen kill clauses)",
+   "decision": "Fallback judge: judge.v1 + decline subtraction D 0.058 (true-zero variants NO-ADOPT)",
+   "alternatives": [
+    "v1.1",
+    "U from completeness+usefulness"
+   ],
+   "rationale": "v1.1/v1.1b flip CEs and raise retest SD",
+   "consequence": "superseded by RULING R1 12:45",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_label": "superseded by D-144",
+   "status_note": "superseded by RULING R1 12:45",
+   "superseded_by": "D-144",
+   "verification_note": null,
+   "fact_ids": [
+    "F-1844"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-13"
+   ]
+  },
+  {
+   "id": "D-189",
+   "date": "2026-10-21",
+   "time": "12:45",
+   "title": "Close MIN3CITE (Ministral + citation prompt) as dominated by the 4B; do not send",
+   "context": "decided by: delegated coordinator (revisit kill clauses)",
+   "decision": "Close MIN3CITE (Ministral + citation prompt) as dominated by the 4B; do not send",
+   "alternatives": [
+    "Ministral opt-in"
+   ],
+   "rationale": "Opus +0.047 but −0.037 vs 4B, ~3x time",
+   "consequence": "closed",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1846"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-15"
+   ]
+  },
+  {
+   "id": "D-190",
+   "date": "2026-10-21",
+   "time": "13:18",
+   "title": "X2b head pass stays on (off is safe only at the edge, for kit-only installs)",
+   "context": "decided by: delegated coordinator (frozen rule)",
+   "decision": "X2b head pass stays on (off is safe only at the edge, for kit-only installs)",
+   "alternatives": [
+    "turn X2b off"
+   ],
+   "rationale": "CE-unwarned clause fails by 1 item",
+   "consequence": "kept on",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1847"
+   ],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-16"
+   ]
+  },
+  {
+   "id": "D-191",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "Honest 8 GB UX; no 35B deep mode delivered; final score = submitted native APK on Pixel 8a with v0.4, Claude + OpenAI gpt-5.6-sol judges",
+   "context": "decided by: author (grill D1-D10)",
+   "decision": "Honest 8 GB UX; no 35B deep mode delivered; final score = submitted native APK on Pixel 8a with v0.4, Claude + OpenAI gpt-5.6-sol judges",
+   "alternatives": [
+    "deliver deep mode"
+   ],
+   "rationale": "deep tier needs 12 GB and integration work",
+   "consequence": "deep tier appears only as roadmap",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1848"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-17"
+   ]
+  },
+  {
+   "id": "D-192",
+   "date": "2026-10-21",
+   "time": "14:16",
+   "title": "Keep all six A∪ packs installed by default (visa, medlineplus not pruned)",
+   "context": "decided by: delegated coordinator (frozen clause) + product call left to author",
+   "decision": "Keep all six A∪ packs installed by default (visa, medlineplus not pruned)",
+   "alternatives": [
+    "prune visa/medlineplus"
+   ],
+   "rationale": "each pack reaches kept context on dev items",
+   "consequence": "kept",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1849"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-18"
+   ]
+  },
+  {
+   "id": "D-193",
+   "date": "2026-10-21",
+   "time": "19:28",
+   "title": "Adopt --no-repack as cross-host pairing flag for text pairing only; claim numbers keep default",
+   "context": "decided by: delegated coordinator (frozen rule)",
+   "decision": "Adopt --no-repack as cross-host pairing flag for text pairing only; claim numbers keep default",
+   "alternatives": [
+    "per-host pairing only"
+   ],
+   "rationale": "97/97 identical across hosts, quality-neutral (−0.012)",
+   "consequence": "adopted for pairing",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1851"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-20"
+   ]
+  },
+  {
+   "id": "D-194",
+   "date": "2026-10-23",
+   "time": "12:18",
+   "title": "Succinct stays the 1.7B default; no conditional Detailed for delivered facts",
+   "context": "decided by: delegated coordinator",
+   "decision": "Succinct stays the 1.7B default; no conditional Detailed for delivered facts",
+   "alternatives": [
+    "Detailed when fact delivered"
+   ],
+   "rationale": "STYLE-SEFIX dU −0.028, CE 26→46 per 100",
+   "consequence": "kept",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1858"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-27"
+   ]
+  },
+  {
+   "id": "D-195",
+   "date": "2026-10-21",
+   "time": "05:30",
+   "title": "No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card",
+   "context": "decided by: delegated coordinator + spec reviewer",
+   "decision": "No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card",
+   "alternatives": [
+    "publish kit early"
+   ],
+   "rationale": "held-out discipline",
+   "consequence": "quarantine in spec §2.4",
+   "reversible": "no",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-1865"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "D-u-results-34"
+   ]
+  },
+  {
+   "id": "D-196",
+   "date": "2026-10-24",
+   "time": "18:03",
+   "title": "BoarLite: minimal health path; a fixed line replaces the ported warning line (D4); factbook v1 stays (D3 reverted); port the bench search",
+   "context": "decided by: author, on the native-engine comparison of 16:08-17:39 (numbers internal-pending-author)",
+   "decision": "Port a minimal health path (fixed safe text plus emergency number when no health-family source is kept); replace D4 with one fixed, discreet line on every answer; keep factbook v1; port SEFIX-124 + HEADPASS-X2b before the submission under a frozen criterion (SEARCHPORT)",
+   "alternatives": [
+    "port the no-citation warning line (D4)",
+    "ship the shaped factbook v2 (D3)",
+    "submit without the search port"
+   ],
+   "rationale": "the native path had no health grounding of its own; the comparison numbers stay internal (PD-09)",
+   "consequence": "health gate, fixed line and factbook v1 landed by 18:12 (fb6ffbf6); SEARCHPORT criterion frozen 18:1x",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2189"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-1803"
+   ]
+  },
+  {
+   "id": "D-197",
+   "date": "2026-10-24",
+   "time": "18:23",
+   "title": "Health detector B+FU (lexical rules + follow-up) chosen for BoarLite's health gate",
+   "context": "decided by: the BoarLite build session, checks set by the coordinator; the app's lexical test missed 29 of ENGINE-RC's 41 gated probes",
+   "decision": "Gate a turn when the app's health test OR 11 lexical rules OR a short follow-up of a health turn fires; run the gate after retrieval",
+   "alternatives": [
+    "title overlap with health articles (gated 5 of 19 health self-tests)",
+    "port the mmBERT health detector (106 MB, 2-3 days)"
+   ],
+   "rationale": "catches all 4 invented-dose answers with 0 new false fires on 251 non-health dev items; fitted on the probes",
+   "consequence": "41-42 of 65 probes get the fixed text; 12 of 60 health self-tests too (Wikipedia-only articles)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2192",
+    "F-2193"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-bfu"
+   ]
+  },
+  {
+   "id": "D-198",
+   "date": "2026-10-24",
+   "time": "18:34",
+   "title": "SEARCHPORT P1 left out of BoarLite after failing its frozen safety gate; switch off",
+   "context": "decided by: frozen criterion (one fix, one re-gate, then stop)",
+   "decision": "Keep the ported search code with SearchPort off (byte-identical prompts); no screen, no P2",
+   "alternatives": [
+    "ship P1 with the one fix",
+    "a second fix without a new criterion"
+   ],
+   "rationale": "gate d failed: 3 probe answers gained a dose figure from appended health passages",
+   "consequence": "re-evaluated under the GROUNDED-DOSE rule at 19:13 (Addendum 1)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2196"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-sp-p1"
+   ]
+  },
+  {
+   "id": "D-199",
+   "date": "2026-10-24",
+   "time": "18:51",
+   "title": "BoarLite onboarding: unpack screen + 5-card tour; Open only when the model is loaded",
+   "context": "decided by: author",
+   "decision": "Approve the unpack screen and a 5-card tour with a live strip; remove downloads, model choice, style, Deep Research and language from setup",
+   "alternatives": null,
+   "rationale": "a closed app has nothing to download or choose; the first answer must not wait silently for the model",
+   "consequence": "onboarding 2cf2c9db; model preload b8df70d9; first answer on the Pixel 11.9 s instead of about 2 min",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2199"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-onboarding"
+   ]
+  },
+  {
+   "id": "D-200",
+   "date": "2026-10-24",
+   "time": "19:1x",
+   "title": "GROUNDED-DOSE: judge health safety by grounded dose figures, not by kept-list proxies",
+   "context": "decided by: author ('we over-weighted safety and cut good changes')",
+   "decision": "A health answer is safe iff it is the fixed text or every dose/amount figure appears in a shown passage; re-evaluate SEARCHPORT, X2B-BUDGET 900 and RETBENCH B-k4comp40 with it",
+   "alternatives": [
+    "keep the 'kept list unchanged' and 'no new dose figure' proxies"
+   ],
+   "rationale": "three retrieval changes had been rejected on proxies, not on measured harm",
+   "consequence": "arm A FAIL, arms B and C PASS; arm B shows a grounded figure can still be a toxic threshold",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2202"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-gd-rule"
+   ]
+  },
+  {
+   "id": "D-201",
+   "date": "2026-10-24",
+   "time": "19:13",
+   "title": "SEARCHPORT Addendum 1: NOT-WORTH for the submission; switch stays off",
+   "context": "decided by: frozen addendum reading",
+   "decision": "Keep SearchPort off in the candidate APK",
+   "alternatives": null,
+   "rationale": "ungrounded dose figures 9 vs 5 with the port on (arm A FAIL)",
+   "consequence": "Addendum 2 (ON_NO_HEALTH) frozen 19:2x",
+   "reversible": "yes",
+   "status": "superseded",
+   "status_label": "superseded by D-203",
+   "status_note": "19:35: the port was merged as ON_NO_HEALTH under the author's prior condition",
+   "superseded_by": "D-203",
+   "verification_note": null,
+   "fact_ids": [
+    "F-2203"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-a1"
+   ]
+  },
+  {
+   "id": "D-202",
+   "date": "2026-10-24",
+   "time": "19:32",
+   "title": "BoarLite ships with the Wikipedia-health limitation; medical Wikipedia titles after the submission",
+   "context": "decided by: coordinator, delegated by the author (19:3x)",
+   "decision": "Keep Wikipedia in the kit; the gate counts only firstaid, MedlinePlus and health Q&A as health sources; 12 of 60 health self-tests get the fixed text",
+   "alternatives": [
+    "drop the Wikipedia packs (facts 42 → 33, topics 25 → 11)",
+    "port ENGINE-RC's health-topic routing before the submission"
+   ],
+   "rationale": "fixed text on a Wikipedia-only health article is the safe failure; a curated title list needs its own re-gate",
+   "consequence": "post-submission: medical Wikipedia titles as health sources, re-gated with the grounded-dose rule and a toxic-threshold check",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2206"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-wiki"
+   ]
+  },
+  {
+   "id": "D-203",
+   "date": "2026-10-24",
+   "time": "19:35",
+   "title": "Search port merged into BoarLite as ON_NO_HEALTH despite a frozen-criterion FAIL by the letter",
+   "context": "decided by: coordinator under the author's standing condition (19:2x: 'I accept the health loss if it is worth it for the rest')",
+   "decision": "Set SearchPort mode ON_NO_HEALTH (port on except on turns the health predicate reads as health); rerun the probes and false-fire set; build and smoke the final APK",
+   "alternatives": [
+    "keep the port off (the frozen verdict)",
+    "port on for every turn (Addendum 1: FAIL)"
+   ],
+   "rationale": "S2 met the usefulness bar; the health cost is 2 more ungrounded figures on the probes, with no probe leaving the fixed text",
+   "consequence": "final candidate b4ef94f3; the port changes no health path on the 65 probes",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": "Frozen criterion verdict: not WORTH-IT (S1 grounded-dose 6 vs 4 ungrounded). Adopted by the author's prior condition, not by the criterion.",
+   "fact_ids": [
+    "F-2207",
+    "F-2209"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-onh"
+   ]
+  },
+  {
+   "id": "D-204",
+   "date": "2026-10-24",
+   "time": "20:1x",
+   "title": "Final ruler run frozen: BoarLite b4ef94f3, v0.4, one seed, both judge families",
+   "context": "decided by: author approved the frozen addendum",
+   "decision": "Run v0.4 (spec r4) on the desktop twin of b4ef94f3 with one seed (42), Claude Opus vs Claude references and gpt-5.6-sol vs its references; no tuning after this run; engine frozen unless the phone smoke forces an engine fix",
+   "alternatives": [
+    "two seeds as in the spec",
+    "wait for a phone run"
+   ],
+   "rationale": "one seed was the author's choice; stated in every number",
+   "consequence": "run complete 20:34; numbers published by the author's decision of 2026-10-25 as history (F-2215, F-2217; the paired delta vs the native engine branch, [internal row], stays internal); the headline is the on-phone run DEVICE-FINAL (OF-8)",
+   "reversible": "no (the set is exposed by the run)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2214"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-rf"
+   ]
+  },
+  {
+   "id": "D-205",
+   "date": "2026-10-24",
+   "time": "20:32",
+   "title": "Rebuild the release APK from 6aa7508a (two UI-only commits after b4ef94f3)",
+   "context": "decided by: coordinator, after the author noticed the phone showed the older tour",
+   "decision": "Rebuild and reinstall the release APK from 6aa7508a with the factbook v1 bundle; smoke on the Pixel",
+   "alternatives": null,
+   "rationale": "0 engine files changed, so the final ruler run stays valid",
+   "consequence": "APK rebuild and phone smoke pending as of 20:34",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2213"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-d-rebuild"
+   ]
+  },
+  {
+   "id": "D-206",
+   "date": "2026-10-24",
+   "time": "22:10",
+   "title": "Remove the long-chat summary from BoarLite",
+   "context": "decided by: author (screens review; code removal recorded as an owner decision)",
+   "decision": "Switch the long-chat summary off and remove its code",
+   "alternatives": null,
+   "rationale": "on the Pixel the 1.7B used only the last 3 exchanges of a long chat",
+   "consequence": "summary code removed (d14804bf); chat history sent as before",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2221"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-summary-off"
+   ]
+  },
+  {
+   "id": "D-207",
+   "date": "2026-10-24",
+   "time": "21:30",
+   "title": "Remove the PIN lock from BoarLite",
+   "context": "decided by: author (screens review)",
+   "decision": "No PIN lock; PIN code and the sealed-chat legacy removed; reset texts no longer mention a PIN",
+   "alternatives": null,
+   "rationale": "a closed, simple app",
+   "consequence": "PIN legacy dropped at 00:43 (e4625222)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2220",
+    "F-2222"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-pin-off"
+   ]
+  },
+  {
+   "id": "D-208",
+   "date": "2026-10-24",
+   "time": "23:51",
+   "title": "Remove Portuguese support: the submitted app is English only",
+   "context": "decided by: author (owner decision recorded in the commit)",
+   "decision": "Remove Portuguese support, task patterns and greetings, keeping words that are also English",
+   "alternatives": null,
+   "rationale": "the bounty is English only; the closed app has one language",
+   "consequence": "English retrieval for short queries pinned by tests (ce38c43f)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2222"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-portuguese"
+   ]
+  },
+  {
+   "id": "D-209",
+   "date": "2026-10-24",
+   "time": "22:55",
+   "title": "Remove the Expo/React Native tree and the code unreachable in the closed app",
+   "context": "decided by: author (owner decisions recorded in the commits)",
+   "decision": "Ship the native Android code only; remove the Detailed style, adaptive routing, persona and length options and Deep Research beyond the recap",
+   "alternatives": null,
+   "rationale": "none of it is reachable in a Succinct-only closed app",
+   "consequence": "274 engine tests pass; engine module 124 files changed, almost all removals; no ruler rerun",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2222",
+    "F-2223"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-dead-code"
+   ]
+  },
+  {
+   "id": "D-210",
+   "date": "2026-10-25",
+   "time": "01:11",
+   "title": "Simplify Settings; ship the licence texts in About; keep 50 chats",
+   "context": "decided by: author (UI review round)",
+   "decision": "Settings without the Knowledge section or the title switch (titles always on); Clear chat history under Start over; 50 chats kept instead of 10; MIT licence texts in About → Credits",
+   "alternatives": null,
+   "rationale": "with 10 chats the drawer never scrolled and old chats were deleted",
+   "consequence": "device-checked on the Pixel 8a",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2222"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-settings"
+   ]
+  },
+  {
+   "id": "D-211",
+   "date": "2026-10-25",
+   "time": "02:20",
+   "title": "Rename BoarLite to LabRat; the assistant is Rat",
+   "context": "decided by: author, at the app maintainer's request",
+   "decision": "Rename the app in the UI, docs and assets; name the assistant Rat in the byline, notification and the grounding prompt's identity line; keep the package id",
+   "alternatives": null,
+   "rationale": "the app maintainer asked for a distinct name",
+   "consequence": "the identity line of the grounding prompt changes after the ruler run (ruler number = b4ef94f3); DEVICE-FINAL measures 7788924a",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2224",
+    "F-2225"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-labrat"
+   ]
+  },
+  {
+   "id": "D-212",
+   "date": "2026-10-25",
+   "time": "03:3x",
+   "title": "Run DEVICE-FINAL: the final on-phone benchmark matrix of LabRat for publication",
+   "context": "decided by: author (asked for the final benchmarks with the app running the engine on the phone, full matrix overnight)",
+   "decision": "Freeze the criterion before generation; run M1-M5 on the Pixel 8a; claim numbers = M1 (both families) + M5; no tuning, no engine change",
+   "alternatives": [
+    "keep the desktop-twin ruler run as the only ruler reading"
+   ],
+   "rationale": "the bounty is about a phone; the ruler run so far was a desktop twin of b4ef94f3",
+   "consequence": "running as of this update; restarted once after an APK install interrupted it",
+   "reversible": "no (the sets are exposed by the run)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": "Completed 2026-10-25 13:2x (X-406; F-2238): interrupted once and resumed; seed 44 dropped for time.",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2227",
+    "F-2228",
+    "F-2229"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-device-final"
+   ]
+  },
+  {
+   "id": "D-213",
+   "date": "2026-10-25",
+   "time": "11:24",
+   "title": "LabRat logo: n8 (a magnifier whose ring is a rat's head)",
+   "context": "decided by: author, after 4 logo rounds",
+   "decision": "Use n8 in the app, launcher and splash",
+   "alternatives": null,
+   "rationale": null,
+   "consequence": "APK installed on the Pixel 8a; smoke 6/6",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2226"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-logo"
+   ]
+  },
+  {
+   "id": "D-214",
+   "date": "2026-10-25",
+   "time": null,
+   "title": "Host the LabRat APK on Hugging Face with a public install page",
+   "context": "decided by: author (OK given 2026-10-25)",
+   "decision": "Upload the 3.04 GB APK to a Hugging Face repository with its sha256 and a public install page; keep the code repository private",
+   "alternatives": [
+    "GitHub release assets (must be under 2 GiB)"
+   ],
+   "rationale": "the APK is 3.04 GB",
+   "consequence": "upload after the final bundled build; a browser-install test on a certified phone planned",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": "2026-10-25 15:3x-15:4x (D-218): APK hosted on Hugging Face; the code repository was made public (labrat-boar-fork).",
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2230",
+    "F-2231"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-d-hosting"
+   ]
+  },
+  {
+   "id": "D-215",
+   "date": "2026-10-25",
+   "time": null,
+   "title": "Thesis restated: small models need external knowledge; a harness built around a small model's real capabilities, tuned for the app user",
+   "context": "decided by: author (publication decision 5, 2026-10-25)",
+   "decision": "State the thesis as: small models need external knowledge; we learned that and built a harness around a small model's real capabilities, tuned for the app user's experience; the conditional closing-test numbers are its evidence and honest limits",
+   "alternatives": [
+    "the conditional form as the thesis, the 2026-10-23 sentence quoted as the tested hypothesis",
+    "the 2026-10-23 sentence as the main claim"
+   ],
+   "rationale": "the closing tests support only the conditional form of the 2026-10-23 sentence; the restated thesis describes what was built and learned",
+   "consequence": "replaces D-170 as the thesis statement; claims S40 and U41-U43 in content/claims-and-caveats.md",
+   "reversible": "yes (framing)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2236",
+    "F-1704",
+    "F-1705",
+    "F-1706",
+    "F-1707",
+    "F-2080"
+   ],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "U5-d-thesis-2026-10-25"
+   ]
+  },
+  {
+   "id": "D-216",
+   "date": "2026-10-25",
+   "time": null,
+   "title": "Publish LabRat's numbers, keep the app maintainer's internal; headline = DEVICE-FINAL; b4ef94f3 desktop run = history; applyShown documented, not fixed",
+   "context": "decided by: author (publication decisions 1-4, 2026-10-25)",
+   "decision": "Numbers of BoarLite/LabRat (incl. RULER-FINAL on b4ef94f3 and the coming DEVICE-FINAL rows) are public; RC1, native-engine-branch, app-pipeline-replica and MAINT numbers stay internal-pending-author; the headline is the final v0.4 ruler on the phone; the desktop b4ef94f3 run is history; Citations.applyShown is a known limitation",
+   "alternatives": [
+    "keep all app numbers internal",
+    "publish everything",
+    "rerun the desktop ruler on LabRat code",
+    "fix applyShown and re-measure"
+   ],
+   "rationale": "LabRat is the author's own app; the maintainer's numbers need his consent; a fix would invalidate the measured engine",
+   "consequence": "F-2215, F-2217, F-2208 and E-473 public; [internal row] stays internal (carries the native branch's absolute)",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2237",
+    "F-2215",
+    "F-2232"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U5-d-pubnumbers-2026-10-25"
+   ]
+  },
+  {
+   "id": "D-217",
+   "date": "2026-10-25",
+   "time": "14:0x",
+   "title": "Keep the carbon-monoxide probe answer as a known limitation; no health-gate change before the submission",
+   "context": "decided by: author",
+   "decision": "List the probe in the submission's limitations; no engine change",
+   "alternatives": [
+    "add the reading to the health gate's terms (an engine change)"
+   ],
+   "rationale": "an engine change before the submission would make the measured engine differ from the one installed",
+   "consequence": "listed under limitations",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2245",
+    "F-2241"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-d-co"
+   ]
+  },
+  {
+   "id": "D-218",
+   "date": "2026-10-25",
+   "time": "15:4x",
+   "title": "Make the LabRat repository public as labrat-boar-fork",
+   "context": "decided by: author (OK given 2026-10-25)",
+   "decision": "Rename the repository labrat-boar-fork and make it public with README, results, pack provenance and licence",
+   "alternatives": [
+    "keep the code private (D-214)"
+   ],
+   "rationale": "judges and readers can check the app and rebuild its bundle from public URLs",
+   "consequence": "repository public; supersedes the 'code stays private' part of D-214",
+   "reversible": "no (public)",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2247",
+    "F-2246"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-d-public"
+   ]
+  },
+  {
+   "id": "D-219",
+   "date": "2026-10-25",
+   "time": "16:29",
+   "title": "Submission announcement: one post with the 60 s video, no thread",
+   "context": "decided by: author",
+   "decision": "One post with the video plus a short poidh text, numbers from DEVICE-FINAL",
+   "alternatives": [
+    "an 8-post thread"
+   ],
+   "rationale": null,
+   "consequence": "post prepared; not posted as of the record",
+   "reversible": "yes",
+   "status": "kept",
+   "status_label": "kept",
+   "status_note": null,
+   "superseded_by": null,
+   "verification_note": null,
+   "fact_ids": [
+    "F-2251"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-d-one-post"
+   ]
+  }
+ ]
+}

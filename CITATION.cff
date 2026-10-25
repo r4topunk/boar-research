@@ -1,0 +1,58 @@
+# Draft. Replace every [PLACEHOLDER] before publishing; validate with `cffconvert --validate`.
+cff-version: 1.2.0
+message: "If you use this research, its data or its benchmark, please cite it as below."
+type: dataset
+title: "RatLab — A Boar Research: an offline phone research assistant measured against 'half as good as internet + frontier AI' (research record and benchmark)"
+abstract: >-
+  Research record (v0.4-preprint, as of 2026-10-25; research lines closed by the author on
+  2026-10-23) of BOAR, an offline Android research assistant built for poidh bounty #31
+  ("more than 50 % as good as internet plus a frontier AI", at most 12 GB RAM, English).
+  It covers two benchmarks (frozen frontier-plus-web references, a pairwise LLM judge in both
+  presentation orders, pre-registered pass/fail rules; a second 75-item ruler written half by
+  each judge family), about 390 recorded experiments, the decision log and the standing.
+  As of 2026-10-25, under the Claude judge, the 0.50 bar was not reached on the earlier held-out sets
+  and no unexposed held-out number exists: the frozen 4B build scores floor-adjusted 0.261
+  (0.224-0.300), raw 0.413 (0.384-0.445), 0 wins of 51 on the bounty-style set (V-para, held-out
+  at run time, 2 seeds, Claude Opus judge); a 35B deep tier with a 512-token thinking budget
+  reaches floor-adjusted 0.436 (0.401-0.472) on development data, desktop only, and was not
+  delivered. The author's thesis: small models need external knowledge, so the project built a
+  harness around a small model's real capabilities, tuned for the app user's experience. Its
+  evidence and limits come from closing tests on pack-written questions (Claude Haiku outcome
+  labels, one seed): the 1.7B main engine is right on 65 % of items when search delivers the
+  item's own article, which happens on 54 %, with no gain on real development items. The second
+  ruler run on the desktop twin of the submitted app's pre-rename engine (b4ef94f3, one seed)
+  won 0 of 71 under both judge families with a lower-family U-total of 0.164, below the bar
+  (history); the headline is the same ruler measured on the phone with the submitted app,
+  LabRat (formerly BoarLite), which is running (DEVICE-FINAL). See data/status.json.
+authors:
+  - alias: "r4to"
+    affiliation: "Independent researcher"
+version: "0.4-preprint"   # v0.x internal build states; 1.0 (+ DOI) at closure of the record (D7)
+date-released: "[YYYY-MM-DD]"
+url: "[URL]"
+repository: "[URL-RESEARCH-REPO]"
+repository-code: "[URL-BENCH-REPO]"
+license: CC-BY-4.0
+keywords:
+  - offline AI
+  - on-device LLM
+  - retrieval-augmented generation
+  - LLM-as-judge
+  - evaluation methodology
+  - pre-registration
+  - negative results
+  - mixture of experts
+  - Android
+# identifiers:            # uncomment when a DOI is minted
+#   - type: doi
+#     value: "[DOI-optional]"
+#     description: "Archived snapshot of the publication"
+preferred-citation:
+  type: report
+  title: "RatLab — A Boar Research: an offline phone research assistant measured against 'half as good as internet + frontier AI'"
+  authors:
+    - alias: "r4to"
+      affiliation: "Independent researcher"
+  year: "[YYYY]"
+  url: "[URL]"
+  notes: "Independent research. Text CC BY 4.0; code Apache-2.0; data per source (the publication's own data CC BY 4.0). A Zenodo DOI is minted at v1.0. Health material is AI-reviewed, not clinically reviewed."

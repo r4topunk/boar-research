@@ -1,0 +1,31 @@
+# LabRat
+
+> Living preprint · as of 2026-10-25 · map node G-labrat (concept) · interim record, not a final result.
+
+**LabRat**
+
+Plain: The submitted offline chat app's name from 2026-10-25; it was called BoarLite before.
+
+Technical: Renamed at the app maintainer's request in commit 7788924a; same package id and bundled knowledge as BoarLite; the grounding prompt's identity line names the assistant Rat (added after the RULER-FINAL run on b4ef94f3) (the ruler run predates the Rat persona line). Measured on the phone by DEVICE-FINAL.
+
+## Incoming
+
+- uses: [D-211] Rename BoarLite to LabRat; the assistant is Rat (renamed; the Rat persona line after the ruler run) → https://r4topunk.github.io/boar-research/map/d-211.md
+
+Read chapter 15, One simple app: LabRat: https://r4topunk.github.io/boar-research/research/submission.md
+
+## Facts cited {#facts}
+
+Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/facts.json. Each line gives the claim, the number with its metric family, set and status, judge, n, seeds, CI, date and caveat.
+
+<!-- lint:exempt:start -->
+- [F-2224] BoarLite renamed LabRat at the app maintainer's request (commit 7788924a): the name changes in the UI, docs and assets; the assistant is called Rat (answer byline, notification, and the grounding prompt's identity line); a new rat mark in the app, launcher and splash. Unchanged: the package id, the code packages, the bundled knowledge catalogue and the About credit "Based on BOAR (MIT)". Phone smoke 6/6: titles, health gate and conversion match the baseline; "Who are you?" answers "I am Rat…" BoarLite → LabRat; assistant Rat; smoke 6/6 · set device smoke (dev) (dev, development data) · judge none (smoke checks) · n 6 smoke questions · seeds UNKNOWN · CI not computed · date 2026-10-25 02:20 · caveat: A rename plus one prompt line; a smoke test, not a quality measurement. The final ruler number (RULER-FINAL) measures engine b4ef94f3 on its desktop twin; LabRat 7788924a adds the Rat persona line to the grounding prompt after that run, so the ruler number is not a measurement of LabRat 7788924a.
+- [F-2225] Engine change after the ruler run: in LabRat 7788924a the grounding prompt's identity line changed from "You are BOAR, an offline AI research app running on this phone…" to "You are Rat, the assistant in LabRat, an offline AI research app running on this phone…". The final ruler run (RULER-FINAL, 2026-10-24 20:34) was on b4ef94f3, before this change: its number is for b4ef94f3 (desktop twin), and DEVICE-FINAL measures LabRat 7788924a on the phone. persona line changed after RULER-FINAL · set UNKNOWN (status UNKNOWN) · judge UNKNOWN · n UNKNOWN · seeds UNKNOWN · CI not computed · date 2026-10-25 02:20 · caveat: The final ruler number (RULER-FINAL) measures engine b4ef94f3 on its desktop twin; LabRat 7788924a adds the Rat persona line to the grounding prompt after that run, so the ruler number is not a measurement of LabRat 7788924a.
+- [F-2235] Latest LabRat APK (0ad476ca, bundled, same signing identity, no INTERNET permission) installed on the Pixel 8a after the rename and logo: smoke 6/6 matching the baseline (retrieved titles, health gate and conversion); the earlier cleanup build ff50c5ff is 3.04 GB. The APK built from b4ef94f3, the ruler engine, is kept. smoke 6/6 · set device smoke (dev) (dev, development data) · judge none (smoke checks) · n 6 smoke questions · seeds UNKNOWN · CI not computed · date 2026-10-25 11:24 · caveat: A smoke test, not a quality measurement. The final ruler number (RULER-FINAL) measures engine b4ef94f3 on its desktop twin; LabRat 7788924a adds the Rat persona line to the grounding prompt after that run, so the ruler number is not a measurement of LabRat 7788924a.
+
+<!-- lint:exempt:end -->
+---
+
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+
+AI-reviewed, not clinically reviewed. Nothing here is medical advice.

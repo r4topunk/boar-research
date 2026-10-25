@@ -1,0 +1,78 @@
+# RatLab — A Boar Research: can an offline phone be "half as good as internet + frontier AI"?
+
+> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+>
+> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+
+> RatLab is the research record of BOAR, an offline Android research assistant built for poidh bounty #31, which asks for an app "more than 50 % as good as internet plus a frontier AI" on a phone with at most 12 GB of RAM, in English; the submitted app is LabRat (formerly BoarLite), whose assistant is called Rat. This is the record (v0.4-preprint, as of 2026-10-25 03:30) of r4to, an independent researcher, working with a team of AI agents from 2026-09-17: two benchmarks, about 400 recorded experiments, most with a pass/fail rule frozen before the run [F-041], the decisions and the standing. The author closed the research lines on 2026-10-23. The thesis (the author's, 2026-10-25): small models need external knowledge; the project learned that and built a harness around a small model's real capabilities, tuned for the app user's experience (health gate, code-computed arithmetic, pack search and delivery, a short answer style, a fixed check-the-source line, refusals) [F-2236]. Its evidence and limits (closing tests, Claude Haiku outcome labels, questions written from the packs, one seed): with the matching pack the 1.7B main engine is right on 48 % vs 26 % without, 65 % when search delivers the item's own article, which it does on 54 %; no pack reached 0.75; no gain on real development items [F-1704] [F-1705] [F-1706] [F-1707] [F-2080]. Headline: the second ruler (bench v0.4, 75 items written half by each judge family, frozen before any answer) measured on the phone with LabRat itself (DEVICE-FINAL); it is running and has no result yet [F-2227]. History: the same ruler on the desktop twin of the app's pre-rename engine b4ef94f3 (one seed, before the Rat persona line) won 0 of 71 under both judge families, with U-total 0.164 (0.123-0.208) under Claude Opus and 0.245 (0.194-0.300) under OpenAI gpt-5.6-sol; the lower family is below the 0.50 bar [F-2215] [F-2225]. As of 2026-10-25, old scale (judge.v1 ratio), also history: under the Claude judge the 0.50 bar was not reached on the earlier held-out sets, and no unexposed held-out number exists; the frozen 4B build on the bounty-style set (V-para, held-out at run time, n 51, 2 seeds) scores floor-adjusted 0.261 (0.224–0.300) and raw 0.413 (0.384–0.445), with 0 wins in 51 [F-001]; a 35B deep tier with a 512-token thinking budget reaches floor-adjusted 0.436 (0.401–0.472) on development data, desktop only, and was not delivered [F-009] [F-1532]. As of 2026-10-25, LabRat is the author's own closed offline app (Qwen3-1.7B, 13 knowledge packs in one 3 GB APK, no internet permission): a health gate shows fixed safe text on 41 of 65 development safety probes (rules fitted on them), and it ran offline on a Pixel 8a (unpack 14 s, 0 bytes network, first answer 11.9 s on a pre-rename build) [F-2210] [F-2198] [F-2201]. Its search improvement was merged although its pre-registered safety criterion failed by the letter (6 vs 4 ungrounded dose figures), because the author had accepted that trade-off before the run [F-2207] [F-2209]. Known limitation: the chat shows the streamed answer without the pipeline's citation-support step (not fixed, so the measured engine is the installed one) [F-2232]. The APK will be hosted on Hugging Face [F-2230].
+
+How to read the numbers:
+
+- Status first: treat every result as the standing as of the date in [data/status.json](https://r4topunk.github.io/boar-research/data/status.json) (`as_of`), and check that file for the open fronts and anything that landed since.
+- As of 2026-10-25, three metric families, never compared with each other: (1) the judge.v1 ratio (raw and floor-adjusted; on the MAIN 97 and CV5 51 development sets written "U"); (2) outcome-label shares (correct-any, CWS, WU …: one label per answer, a share of n, not a ratio to a reference); (3) the ruler's U-total (bench v0.4; the phone run of LabRat is the headline and is not in yet; the desktop run of b4ef94f3 is history, below the bar) (the ruler run predates the Rat persona line). The 0.50 bar applies to (1) and (3) only.
+- For the old ratio: every answer is compared with a frozen reference written by Claude Opus with web search; a Claude Opus judge scores both in both presentation orders (1–5 on correctness, completeness, usefulness). A system that declines everything already gets ≈ 0.31 raw [F-003], so the headline is the floor-adjusted ratio together with win/tie/loss.
+- Every number names its set and that set's status: v0.1 (public dev), v0.2 (burnt, now dev), V-para (held-out only for the 4B claim runs, dev-style after 2026-10-06), MAIN 97 / CV5 51 / UXMATRIX 60 (dev), the 180 pack self-tests (dev, written from the packs), v0.4 (the second ruler: half Claude-written, exposed to three engines on 2026-10-24) [F-038].
+- A judge from another model family scores everything ≈ 0.10 higher but keeps the ranking and a near-zero win-rate; it was run post-hoc, so the stricter Claude number stays the headline [F-017].
+- Numbers of LabRat (formerly BoarLite), the author's own submission, are published (author's decision of 2026-10-25); numbers of the app maintainer's earlier app are not. DEVICE-FINAL is running and has no results in this record; when it lands, its numbers become the headline in [data/status.json](https://r4topunk.github.io/boar-research/data/status.json) (`headline`). Research-engine numbers do not describe the submitted app.
+- Fact ids like [F-001] resolve in https://r4topunk.github.io/boar-research/data/facts.json; cite them when you quote a number.
+
+## Start here
+
+- [Ask your AI about this research](https://r4topunk.github.io/boar-research/ask-your-ai.md): a copyable prompt that makes any assistant answer from these files, with fact ids
+- [The whole paper in one file](https://r4topunk.github.io/boar-research/llms-full.txt): all 18 chapters at the AI-professional depth, the decision log, the glossary and the canonical facts
+- [Status and open fronts](https://r4topunk.github.io/boar-research/data/status.json): as_of date, research state (closed 2026-10-23), headline fact ids, the open and dropped fronts and what each would change, changelog
+- [Where it stands (live)](https://r4topunk.github.io/boar-research/research/honest-number.md): the standing in three metric families (dated), and why it is stated this way
+
+## Chapters (each has #curious, #tech and #ai sections)
+
+- [1 · The question](https://r4topunk.github.io/boar-research/research/question.md): the bounty, its constraints and why "half as good" is a measurement problem
+- [2 · Building a ruler](https://r4topunk.github.io/boar-research/research/ruler.md): frozen frontier references, the pairwise judge, held-out sets and pre-registered pass/fail rules
+- [3 · The floor trap](https://r4topunk.github.io/boar-research/research/floor-trap.md): why raw 0.50 is mostly free and how the floor-adjusted ratio fixes it
+- [4 · Seven frozen builds](https://r4topunk.github.io/boar-research/research/builds.md): what each "cut" added and why held-out quality did not move beyond noise
+- [5 · The walls](https://r4topunk.github.io/boar-research/research/walls.md): oracle tests, closed-book model swaps, retrieval variants and prompts that did not move the small model
+- [6 · The deep tier](https://r4topunk.github.io/boar-research/research/deep-tier.md): the 35B mixture-of-experts model and thinking budget, the only lever that climbed the ladder (desktop only; not delivered)
+- [7 · A phone on a desk, and in a hand](https://r4topunk.github.io/boar-research/research/phone.md): desktop-phone parity, memory, latency; the deep tier never ran on a phone
+- [8 · The agent lab](https://r4topunk.github.io/boar-research/research/agent-lab.md): a research organisation made of AI agents, the unattended loop, rules written after mistakes
+- [9 · Knowledge packs](https://r4topunk.github.io/boar-research/research/packs.md): open offline libraries, crowding, the oracle ceiling and the 4B-era retrieval lever (HEADPASS-X2b)
+- [10 · Measuring the measurer](https://r4topunk.github.io/boar-research/research/measurer.md): judge noise, seed noise, judge family, reference length, winner's curse
+- [11 · A smaller engine for 8 GB phones](https://r4topunk.github.io/boar-research/research/small-engine.md): why Qwen3-1.7B became the main engine (speed and memory, not quality) and what did not close its reading gap
+- [12 · A second ruler](https://r4topunk.github.io/boar-research/research/new-ruler.md): bench v0.4, U-total, a zero for non-answers, two judge families; frozen, exposed; the desktop run of the app's engine (history, below the bar) and the phone run (the headline, running)
+- [13 · Delivery, not coverage](https://r4topunk.github.io/boar-research/research/delivery.md): getting the fact-bearing passage to the model; self-test gains that do not transfer; a withdrawn unsafe fix
+- [14 · Closing the research](https://r4topunk.github.io/boar-research/research/closure.md): the author's thesis (small models need external knowledge; a harness built around a small model's real capabilities), its evidence and limits in the closing tests; the closed engine and its validation
+- [15 · One simple app: LabRat](https://r4topunk.github.io/boar-research/research/submission.md): the author's own closed, Succinct-only app (formerly BoarLite): health gate, fixed line, the search-port trade-off, the Wikipedia-health limitation, a phone run, the cleanup and the rename (one prompt line after the ruler run), the on-phone matrix running
+- [16 · Where it stands (live)](https://r4topunk.github.io/boar-research/research/honest-number.md): three panels (old ratio, outcome labels, the second ruler), the claim text, what is not claimed
+- [17 · Open fronts and hand-off](https://r4topunk.github.io/boar-research/research/handoff.md): delivery and hosting, the on-phone matrix (DEVICE-FINAL), claim text and pack publication still open; the desktop ruler run landed and is history; deep tier on a phone, expert streaming on Android and v0.3 dropped; tools already public
+- [18 · Reproduce it](https://r4topunk.github.io/boar-research/research/reproduce.md): what is public and rerunnable, and what is not
+
+## Data (static JSON, schema in data/SCHEMA.md)
+
+- [facts.json](https://r4topunk.github.io/boar-research/data/facts.json): every verified number and statement with set, status, judge, n, seeds, CI, caveat and public source line
+- [experiments.json](https://r4topunk.github.io/boar-research/data/experiments.json): the experiment catalogue, each with its question, pre-registration, result and verdict (adopted, closed, not detected, parity, measurement)
+- [decisions.json](https://r4topunk.github.io/boar-research/data/decisions.json): the decision log, ADR-style, with what was later superseded or reversed ([Markdown](https://r4topunk.github.io/boar-research/data/decisions.md))
+- [timeline.json](https://r4topunk.github.io/boar-research/data/timeline.json): dated events from 2026-09-17 to 2026-10-25
+- [status.json](https://r4topunk.github.io/boar-research/data/status.json): record status (as_of, research_state, research_closed_on, standing, open fronts, changelog)
+- [glossary.json](https://r4topunk.github.io/boar-research/data/glossary.json): every internal term with a plain and a technical definition ([Markdown](https://r4topunk.github.io/boar-research/data/glossary.md))
+- [SCHEMA.md](https://r4topunk.github.io/boar-research/data/SCHEMA.md): field definitions, enums and validation rules
+
+## Reading by depth (every chapter twin also has #curious, #tech and #ai sections)
+
+- [Curious](https://r4topunk.github.io/boar-research/layers/curious.md): the story and the headline numbers, no jargon
+- [Tech people](https://r4topunk.github.io/boar-research/layers/tech.md): how the system and the method work
+- [AI professionals](https://r4topunk.github.io/boar-research/layers/ai.md): every number with its full scope, power and threats to validity
+
+## For machines
+
+- [For AI](https://r4topunk.github.io/boar-research/for-ai/): the copyable prompt, the links, how to cite
+- [Article, Markdown twin](https://r4topunk.github.io/boar-research/index.md): the 10-minute article with fact ids
+- [Data page](https://r4topunk.github.io/boar-research/data/): what each data file holds, with a Dataset description
+
+## Licence and citation
+
+- Text and data CC BY 4.0; code Apache-2.0; third-party material keeps its own licence (Wikipedia and Stack Exchange derived material CC BY-SA, OpenStreetMap ODbL, Wikidata CC0).
+- Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Machine use is welcome: load, index, summarise and quote, with the fact ids or a link travelling with the quote.
+- AI-reviewed, not clinically reviewed. Nothing here is medical advice.
+
+## Optional
+
+- [CITATION.cff](https://r4topunk.github.io/boar-research/CITATION.cff): how to cite this work (text CC BY 4.0; code Apache-2.0; data per source, the publication's own data CC BY 4.0; a Zenodo DOI is minted at v1.0)
+- [Data index](https://r4topunk.github.io/boar-research/data/index.json): every data file with its row count and sha256
