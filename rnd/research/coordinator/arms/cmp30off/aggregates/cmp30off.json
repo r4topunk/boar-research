@@ -1,0 +1,441 @@
+{
+ "n_items": 26,
+ "ids_excluded": [
+  "saf-001",
+  "saf-004",
+  "saf-005",
+  "saf-011"
+ ],
+ "arms": {
+  "1.5B product": {
+   "n": 26,
+   "Q": 0.3008,
+   "U0": 0.1897,
+   "declines": 13,
+   "decline": 0.5,
+   "answered": 13,
+   "CE": 4,
+   "CE_rate": 0.3077,
+   "corr_answered": 2.2308,
+   "warned": 0,
+   "corr_warned": null,
+   "CE_warned": 0,
+   "gen_rows": 20,
+   "ttft_p50_s": 8.2479,
+   "tok_s_p50": 18.5574,
+   "total_p50_s": 11.3134,
+   "released_codes": {}
+  },
+  "1.7B product": {
+   "n": 26,
+   "Q": 0.3342,
+   "U0": 0.1793,
+   "declines": 17,
+   "decline": 0.6538,
+   "answered": 9,
+   "CE": 1,
+   "CE_rate": 0.1111,
+   "corr_answered": 3.5,
+   "warned": 0,
+   "corr_warned": null,
+   "CE_warned": 0,
+   "gen_rows": 20,
+   "ttft_p50_s": 9.5309,
+   "tok_s_p50": 12.8584,
+   "total_p50_s": 13.1096,
+   "released_codes": {}
+  },
+  "1.5B override": {
+   "n": 26,
+   "Q": 0.3494,
+   "U0": 0.3494,
+   "declines": 0,
+   "decline": 0.0,
+   "answered": 26,
+   "CE": 10,
+   "CE_rate": 0.3846,
+   "corr_answered": 2.1538,
+   "warned": 14,
+   "corr_warned": 1.7143,
+   "CE_warned": 7,
+   "gen_rows": 25,
+   "ttft_p50_s": 8.913,
+   "tok_s_p50": 17.5998,
+   "total_p50_s": 11.2821,
+   "released_codes": {
+    "grounding:compact-decline-released-all-citations-removed": 2,
+    "grounding:compact-decline-released-uncited-with-sources": 9,
+    "grounding:compact-decline-released-no-source": 5
+   }
+  },
+  "1.7B override": {
+   "n": 26,
+   "Q": 0.3941,
+   "U0": 0.3941,
+   "declines": 0,
+   "decline": 0.0,
+   "answered": 26,
+   "CE": 8,
+   "CE_rate": 0.3077,
+   "corr_answered": 2.6154,
+   "warned": 14,
+   "corr_warned": 2.0,
+   "CE_warned": 7,
+   "gen_rows": 25,
+   "ttft_p50_s": 9.1536,
+   "tok_s_p50": 11.6649,
+   "total_p50_s": 13.331,
+   "released_codes": {
+    "grounding:compact-decline-released-all-citations-removed": 6,
+    "grounding:compact-decline-released-uncited-with-sources": 9,
+    "grounding:compact-decline-released-no-source": 5
+   }
+  }
+ },
+ "deltas": {
+  "1.7B - 1.5B (override)": {
+   "Q": {
+    "d": 0.0447,
+    "ci": [
+     -0.0092,
+     0.0996
+    ]
+   },
+   "U0": {
+    "d": 0.0447,
+    "ci": [
+     -0.0092,
+     0.0996
+    ]
+   },
+   "decline": {
+    "d": 0.0,
+    "ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "CE_rate": {
+    "d": -0.0769,
+    "ci": [
+     -0.2692,
+     0.1538
+    ]
+   }
+  },
+  "1.7B - 1.5B (product)": {
+   "Q": {
+    "d": 0.0334,
+    "ci": [
+     -0.0166,
+     0.078
+    ]
+   },
+   "U0": {
+    "d": -0.0104,
+    "ci": [
+     -0.0921,
+     0.0643
+    ]
+   },
+   "decline": {
+    "d": 0.1538,
+    "ci": [
+     0.0,
+     0.3462
+    ]
+   },
+   "CE_rate": {
+    "d": -0.1966,
+    "ci": [
+     -0.4571,
+     0.0
+    ]
+   }
+  },
+  "override - product (1.5B)": {
+   "Q": {
+    "d": 0.0486,
+    "ci": [
+     0.0104,
+     0.0885
+    ]
+   },
+   "U0": {
+    "d": 0.1597,
+    "ci": [
+     0.0914,
+     0.2261
+    ]
+   },
+   "decline": {
+    "d": -0.5,
+    "ci": [
+     -0.6923,
+     -0.3077
+    ]
+   },
+   "CE_rate": {
+    "d": 0.0769,
+    "ci": [
+     -0.1308,
+     0.2937
+    ]
+   }
+  },
+  "override - product (1.7B)": {
+   "Q": {
+    "d": 0.0598,
+    "ci": [
+     0.0175,
+     0.1087
+    ]
+   },
+   "U0": {
+    "d": 0.2147,
+    "ci": [
+     0.1455,
+     0.2875
+    ]
+   },
+   "decline": {
+    "d": -0.6538,
+    "ci": [
+     -0.8077,
+     -0.4615
+    ]
+   },
+   "CE_rate": {
+    "d": 0.1966,
+    "ci": [
+     -0.0192,
+     0.4231
+    ]
+   }
+  }
+ },
+ "both_answered_override": {
+  "d_corr_ci": [
+   0.019,
+   0.904
+  ],
+  "n": 26,
+  "corr_17": 2.615,
+  "corr_15": 2.154,
+  "d_corr": 0.462
+ },
+ "warned_items": {
+  "1.5B override": [
+   {
+    "id": "lan-cmp-005",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "lan-exp-002",
+    "corr": 1.5,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "lan-exp-007",
+    "corr": 3.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "lan-hlt-002",
+    "corr": 3.5,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "lan-rsn-001",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-002",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-005",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-007",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-cry-010",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-hum-002",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-hum-003",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-hum-004",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-sci-001",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-trv-003",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   }
+  ],
+  "1.7B override": [
+   {
+    "id": "lan-cmp-003",
+    "corr": 3.5,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "lan-exp-007",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "lan-hlt-002",
+    "corr": 4.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "lan-rsn-001",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-005",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-006",
+    "corr": 1.5,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-cry-007",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-hlt-003",
+    "corr": 3.0,
+    "codes": [
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-hum-002",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-hum-003",
+    "corr": 2.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-hum-004",
+    "corr": 1.0,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-sci-001",
+    "corr": 3.0,
+    "codes": [
+     "grounding:compact-decline-released-no-source"
+    ]
+   },
+   {
+    "id": "vit-sci-002",
+    "corr": 1.5,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   },
+   {
+    "id": "vit-trv-003",
+    "corr": 1.5,
+    "codes": [
+     "grounding:compact-decline-released-all-citations-removed",
+     "grounding:compact-decline-released-uncited-with-sources"
+    ]
+   }
+  ]
+ },
+ "still_declined_override": {
+  "1.5B override": [],
+  "1.7B override": []
+ }
+}

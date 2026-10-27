@@ -1,0 +1,36 @@
+{"oracleadd": {"n": 180, "errors": 0, "p50_s": 13.07, "kept_total": 422, "kept_mean": 2.34, "kept_hist": {"0": 4, "1": 52, "2": 44, "3": 44, "4": 30, "5": 6}, "promptTokens_p50": 621.5, "items_with_llm_prompt": 152, "fact_chunk_text_in_final_prompt": 132, "oracle_codes": {"oracle:add:": 152, "oracle:add-already-kept": 27, "oracle:only-2": 0, "oracle:only-1": 0, "oracle:missing": 0, "oracle:no-entry": 0}}, "oracleonly": {"n": 12, "errors": 0, "p50_s": 10.42, "kept_total": 24, "kept_mean": 2.0, "kept_hist": {"2": 12}, "promptTokens_p50": 554.0, "items_with_llm_prompt": 12, "fact_chunk_text_in_final_prompt": 12, "oracle_codes": {"oracle:add:": 0, "oracle:add-already-kept": 0, "oracle:only-2": 12, "oracle:only-1": 0, "oracle:missing": 0, "oracle:no-entry": 0}}, "S": {"n": 180, "errors": 0, "p50_s": 8.3, "kept_total": 273, "kept_mean": 1.52, "kept_hist": {"0": 51, "1": 37, "2": 53, "3": 26, "4": 13}, "promptTokens_p50": 453.5, "items_with_llm_prompt": 0, "fact_chunk_text_in_final_prompt": 0, "oracle_codes": {"oracle:add:": 0, "oracle:add-already-kept": 0, "oracle:only-2": 0, "oracle:only-1": 0, "oracle:missing": 0, "oracle:no-entry": 0}}}
+== oracleadd-opus: n 180 cell raw 0.596 [0.569, 0.621] vs S 0.5 [0.475, 0.527]
+   pooled: {"n": 180, "d_raw": 0.095, "d_raw_ci": [0.07, 0.122], "d_above_min": 0.119, "d_above_min_ci": [0.088, 0.153], "items_better_worse": [96, 38]}
+   SE: {"n": 100, "d_raw": 0.112, "d_raw_ci": [0.074, 0.15], "d_above_min": 0.14, "d_above_min_ci": [0.092, 0.189], "items_better_worse": [62, 23]}
+   topic: {"n": 80, "d_raw": 0.075, "d_raw_ci": [0.043, 0.109], "d_above_min": 0.093, "d_above_min_ci": [0.053, 0.137], "items_better_worse": [34, 15]}
+   S_kept_fact_chunk: {"n": 43, "d_raw": 0.043, "d_raw_ci": [0.011, 0.079], "d_above_min": 0.054, "d_above_min_ci": [0.014, 0.099], "items_better_worse": [13, 9]}
+   S_not_kept_fact_chunk: {"n": 137, "d_raw": 0.112, "d_raw_ci": [0.081, 0.143], "d_above_min": 0.14, "d_above_min_ci": [0.101, 0.179], "items_better_worse": [83, 29]}
+   oracle_chunk_already_kept: {"n": 27, "d_raw": -0.007, "d_raw_ci": [-0.02, 0.005], "d_above_min": -0.009, "d_above_min_ci": [-0.025, 0.006], "items_better_worse": [2, 6]}
+   oracle_chunk_appended: {"n": 153, "d_raw": 0.113, "d_raw_ci": [0.083, 0.142], "d_above_min": 0.142, "d_above_min_ci": [0.104, 0.178], "items_better_worse": [94, 32]}
+   pack:qa-travel-se: {"n": 20, "d_raw": 0.166, "d_raw_ci": [0.1, 0.236], "d_above_min": 0.209, "d_above_min_ci": [0.126, 0.296], "items_better_worse": [16, 3]}
+   pack:qa-ethereum-se: {"n": 20, "d_raw": 0.08, "d_raw_ci": [-0.016, 0.188], "d_above_min": 0.102, "d_above_min_ci": [-0.018, 0.238], "items_better_worse": [13, 5]}
+   pack:qa-bitcoin-se: {"n": 20, "d_raw": 0.155, "d_raw_ci": [0.051, 0.257], "d_above_min": 0.194, "d_above_min_ci": [0.064, 0.322], "items_better_worse": [12, 7]}
+   pack:qa-health-se: {"n": 20, "d_raw": 0.081, "d_raw_ci": [0.022, 0.141], "d_above_min": 0.1, "d_above_min_ci": [0.026, 0.176], "items_better_worse": [11, 4]}
+   pack:qa-outdoors-se: {"n": 20, "d_raw": 0.076, "d_raw_ci": [0.017, 0.148], "d_above_min": 0.095, "d_above_min_ci": [0.021, 0.185], "items_better_worse": [10, 4]}
+   pack:boar-firstaid-en: {"n": 20, "d_raw": 0.117, "d_raw_ci": [0.039, 0.195], "d_above_min": 0.146, "d_above_min_ci": [0.049, 0.244], "items_better_worse": [11, 3]}
+   pack:boar-medlineplus-en: {"n": 20, "d_raw": 0.071, "d_raw_ci": [0.019, 0.126], "d_above_min": 0.088, "d_above_min_ci": [0.024, 0.157], "items_better_worse": [8, 2]}
+   pack:boar-factbook: {"n": 20, "d_raw": 0.084, "d_raw_ci": [0.01, 0.16], "d_above_min": 0.105, "d_above_min_ci": [0.012, 0.201], "items_better_worse": [10, 4]}
+   pack:boar-simplewiki-en: {"n": 20, "d_raw": 0.028, "d_raw_ci": [-0.011, 0.075], "d_above_min": 0.035, "d_above_min_ci": [-0.014, 0.092], "items_better_worse": [5, 6]}
+== oracleadd-haiku: n 180 cell raw 0.583 [0.557, 0.608] vs S 0.493 [0.47, 0.516]
+   pooled: {"n": 180, "d_raw": 0.09, "d_raw_ci": [0.066, 0.114], "d_above_min": 0.113, "d_above_min_ci": [0.084, 0.144], "items_better_worse": [107, 47]}
+   SE: {"n": 100, "d_raw": 0.096, "d_raw_ci": [0.063, 0.129], "d_above_min": 0.122, "d_above_min_ci": [0.08, 0.164], "items_better_worse": [66, 26]}
+   topic: {"n": 80, "d_raw": 0.083, "d_raw_ci": [0.049, 0.119], "d_above_min": 0.103, "d_above_min_ci": [0.061, 0.148], "items_better_worse": [41, 21]}
+   S_kept_fact_chunk: {"n": 43, "d_raw": 0.045, "d_raw_ci": [0.006, 0.088], "d_above_min": 0.055, "d_above_min_ci": [0.007, 0.11], "items_better_worse": [16, 13]}
+   S_not_kept_fact_chunk: {"n": 137, "d_raw": 0.105, "d_raw_ci": [0.078, 0.131], "d_above_min": 0.132, "d_above_min_ci": [0.099, 0.166], "items_better_worse": [91, 34]}
+   oracle_chunk_already_kept: {"n": 27, "d_raw": -0.0, "d_raw_ci": [-0.018, 0.017], "d_above_min": -0.002, "d_above_min_ci": [-0.024, 0.018], "items_better_worse": [6, 10]}
+   oracle_chunk_appended: {"n": 153, "d_raw": 0.106, "d_raw_ci": [0.079, 0.132], "d_above_min": 0.134, "d_above_min_ci": [0.099, 0.167], "items_better_worse": [101, 37]}
+   pack:qa-travel-se: {"n": 20, "d_raw": 0.159, "d_raw_ci": [0.113, 0.21], "d_above_min": 0.197, "d_above_min_ci": [0.139, 0.264], "items_better_worse": [17, 2]}
+   pack:qa-ethereum-se: {"n": 20, "d_raw": 0.067, "d_raw_ci": [-0.012, 0.152], "d_above_min": 0.088, "d_above_min_ci": [-0.013, 0.196], "items_better_worse": [12, 6]}
+   pack:qa-bitcoin-se: {"n": 20, "d_raw": 0.149, "d_raw_ci": [0.051, 0.239], "d_above_min": 0.191, "d_above_min_ci": [0.066, 0.306], "items_better_worse": [15, 5]}
+   pack:qa-health-se: {"n": 20, "d_raw": 0.049, "d_raw_ci": [-0.008, 0.106], "d_above_min": 0.063, "d_above_min_ci": [-0.011, 0.136], "items_better_worse": [12, 6]}
+   pack:qa-outdoors-se: {"n": 20, "d_raw": 0.054, "d_raw_ci": [-0.001, 0.125], "d_above_min": 0.067, "d_above_min_ci": [0.0, 0.154], "items_better_worse": [10, 7]}
+   pack:boar-firstaid-en: {"n": 20, "d_raw": 0.132, "d_raw_ci": [0.05, 0.222], "d_above_min": 0.165, "d_above_min_ci": [0.062, 0.279], "items_better_worse": [12, 4]}
+   pack:boar-medlineplus-en: {"n": 20, "d_raw": 0.065, "d_raw_ci": [0.012, 0.125], "d_above_min": 0.083, "d_above_min_ci": [0.016, 0.158], "items_better_worse": [12, 7]}
+   pack:boar-factbook: {"n": 20, "d_raw": 0.1, "d_raw_ci": [0.027, 0.181], "d_above_min": 0.122, "d_above_min_ci": [0.03, 0.224], "items_better_worse": [11, 4]}
+   pack:boar-simplewiki-en: {"n": 20, "d_raw": 0.035, "d_raw_ci": [-0.002, 0.077], "d_above_min": 0.044, "d_above_min_ci": [-0.002, 0.096], "items_better_worse": [6, 6]}
+verdict {'rule': 'RETRIEVAL-HEADROOM', 'add_minus_s_opus': np.float64(0.095), 'ci': [0.07, 0.122]}

@@ -1,0 +1,27 @@
+diff --git a/adapters/desktop-node/runner/adapter.ts b/adapters/desktop-node/runner/adapter.ts
+index 4714454..26439e0 100644
+--- a/adapters/desktop-node/runner/adapter.ts
++++ b/adapters/desktop-node/runner/adapter.ts
+@@ -170,6 +170,9 @@ const MODELS: Record<string, { file: string; sha256: string }> = {
+   "bonsai2-4b-ptq1_0": { file: "bonsai2/Ternary-Bonsai-2-4B-PTQ1_0.gguf", sha256: "56711263ec9a9ffeaa74a3a0e58dece8127cf9268404746c721113ca76994d60" },
+   // BONSAI2-2B (2026-10-15): prism-ml/Ternary-Bonsai-2-2B-gguf @ 683f7be2 (Apache-2.0; base Qwen3.5-2B, ternary PTQ1_0); lite-tier measurement, same path as the 4B.
+   "bonsai2-2b-ptq1_0": { file: "bonsai2/Ternary-Bonsai-2-2B-PTQ1_0.gguf", sha256: "36061ad406df8a4903a6db005be350c50fabfaf717f9ef0acf4b76adcd9929fa" },
++  // LITE2 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; hybrid-thinking Qwen3-1.7B, Q4_K_M; the official Qwen repo ships Q8_0 only).
++  // Stock llama.cpp (b11010); lite-tier control for the ternary 2B; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + the engine's enable_thinking:false).
++  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -196,6 +199,12 @@ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
+     filename: "models/bonsai2-2b-ptq1_0.gguf", sizeBytes: 429183456, answerTier: "default",
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
++  // LITE2: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
++  "qwen3-1.7b-q4km": {
++    id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
++    filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, answerTier: "default",
++    capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
++  },
+   // THINK4B: shaped like the Android default (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-4b-thinking-2507-q4km": {
+     id: "qwen3-4b-thinking-2507-q4km", kind: "llm", label: "Qwen3-4B-Thinking-2507 (Q4_K_M)",

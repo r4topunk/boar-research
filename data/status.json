@@ -1,0 +1,334 @@
+{
+ "schema": "boar-publication/status",
+ "schema_version": "1.3.0",
+ "as_of": "2026-10-25",
+ "research_state": "closed",
+ "research_closed_on": "2026-10-23",
+ "planned_close": null,
+ "version": "1.0",
+ "license": "CC BY 4.0 (text and data)",
+ "banner": "Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar",
+ "standing": [
+  "F-038",
+  "F-1653",
+  "F-1690",
+  "F-1704",
+  "F-1707",
+  "F-2100",
+  "F-1727",
+  "F-2077",
+  "F-1386",
+  "F-2070",
+  "F-1532",
+  "F-2210",
+  "F-2201",
+  "F-2207",
+  "F-2209",
+  "F-2214",
+  "F-2212",
+  "F-2224",
+  "F-2225",
+  "F-2235",
+  "F-2227",
+  "F-2236",
+  "F-2237",
+  "F-2238",
+  "F-2239",
+  "F-2240",
+  "F-2241",
+  "F-2242",
+  "F-2246",
+  "F-2247",
+  "F-2248"
+ ],
+ "open_fronts": [
+  {
+   "id": "OF-1",
+   "title": "Deep tier on a 12 GB-class phone",
+   "question": "Does the recommended deep configuration (35B mixture-of-experts + 512-token thinking budget) run on a 12 GB-class Android phone, at what latency and memory, and with the same judged quality as on the desktop?",
+   "why_it_matters": "Every deep-tier number in the record is desktop only; the phone time is a projection from third-party public rates, and the bounty is about a phone.",
+   "what_would_change": "If it runs with judged parity: the deep-tier rows in 'The deep tier' and 'A phone on a desk, and in a hand' gain a measured phone scope, the projection F-035 is replaced by a measurement, and 'Where it stands (live)' can describe the deep tier as a phone configuration. If it does not fit in memory, is too slow to use, or loses quality on the phone: the deep tier stays a desktop-only result, the phone standing remains the frozen 4B build (F-001, F-023), and the attempt is recorded as a negative result.",
+   "related_fact_ids": [
+    "F-009",
+    "F-013",
+    "F-023",
+    "F-035",
+    "F-037",
+    "F-1532"
+   ],
+   "owner": "author",
+   "state": "dropped",
+   "note": "Dropped by author decision on 2026-10-21: no 35B deep mode is delivered for the bounty; the deep tier appears only as a roadmap with its desktop numbers. No deep-tier phone run exists as of 2026-10-24; F-035 stays a projection."
+  },
+  {
+   "id": "OF-2",
+   "title": "Expert-streaming engine on Android",
+   "question": "Can the expert-streaming engine, judged equivalent to the desktop server on the 35B model, be built for Android and run within a phone's memory at a usable speed?",
+   "why_it_matters": "On a desktop CPU it runs the 35B model in under 3 GiB of RAM; on a phone only an analytic speed projection exists, and the Android build needs memory and thinking-budget work that is not done.",
+   "what_would_change": "If it builds and runs: OF-1 gains a low-memory path, and the analytic projection F-793 is replaced by a measured phone speed in 'A phone on a desk, and in a hand'. If it does not: the phone path for the deep tier rests on the other on-device engine (F-037), and the expert-streaming result stays a desktop-only finding (F-036).",
+   "related_fact_ids": [
+    "F-036",
+    "F-037",
+    "F-793",
+    "F-2118"
+   ],
+   "owner": "author",
+   "state": "dropped",
+   "note": "The expert-streaming engine was cross-built for Android arm64 on 2026-10-19; phone speed and memory were never measured. Dropped with OF-1 when the deep tier left the delivery (2026-10-21)."
+  },
+  {
+   "id": "OF-3",
+   "title": "Held-out set written outside the Claude family (bench v0.3)",
+   "question": "What do the frozen build and the deep tier score on questions and references written outside the Claude model family and never exposed to the builders?",
+   "why_it_matters": "It is the only path to an unexposed held-out number: v0.2 is burnt and V-para is dev-style for everything after 2026-10-06. It also tests the judge-family self-preference threat at the item level, not only at the judge level.",
+   "what_would_change": "If items are written and scored before closure: their reading becomes the held-out number in 'Where it stands (live)' and in the claim text, in whichever direction it falls, under the analysis plan's lower-judge rule. If not: the record closes stating that no unexposed held-out number exists, and the current standing (F-001) stays the only held-out-at-run-time reading.",
+   "related_fact_ids": [
+    "F-001",
+    "F-038",
+    "F-205",
+    "F-1251",
+    "F-1282",
+    "F-1374",
+    "F-2070"
+   ],
+   "owner": "author",
+   "state": "dropped",
+   "note": "No v0.3 was written (decision D5, 2026-10-18). Its role passed to the ruler set v0.4 (open front OF-6), which is not written outside the Claude family (half Claude, half OpenAI gpt-5.6-sol). The record therefore has no unexposed held-out number written outside the Claude family; F-001 remains the only held-out-at-run-time reading on the old scale."
+  },
+  {
+   "id": "OF-4",
+   "title": "Scoring of the submitted app (LabRat, formerly BoarLite)",
+   "question": "How does the submitted app score on the frozen ruler, measured on a phone, and may its numbers be published?",
+   "why_it_matters": "The submission changed twice: the app maintainer's native app (2026-10-15, reaffirmed 2026-10-21), then BoarLite, the author's own closed app (2026-10-24). Research-engine numbers do not transfer to either app.",
+   "what_would_change": "The submitted app's numbers are public by the author's decision of 2026-10-25 (AD-15 (b)): the on-phone DEVICE-FINAL run of LabRat 7788924a (OF-8) becomes the headline in whichever direction it falls; the desktop-twin run of b4ef94f3 (one seed) stays as history with the persona-line caveat. Release-candidate scores of the app maintainer's app stay internal.",
+   "related_fact_ids": [
+    "F-1289",
+    "F-1537",
+    "F-2210",
+    "F-2198",
+    "F-2201",
+    "F-2213",
+    "F-2214",
+    "F-2219",
+    "F-2224",
+    "F-2225",
+    "F-2235",
+    "F-2230",
+    "F-2231",
+    "F-2246",
+    "F-2247",
+    "F-2238",
+    "F-2248"
+   ],
+   "owner": "author",
+   "state": "landed",
+   "note": "As of 2026-10-24 20:34: BoarLite final candidate b4ef94f3 built (health gate, fixed line, factbook v1, QuickMath, search port ON_NO_HEALTH) and an earlier candidate smoke-tested offline on a Pixel 8a (model ready 18 s, first answer 11.9 s). Pending: the release APK rebuilt from 6aa7508a with two UI-only commits (0 engine files) and its phone smoke, APK hosting (above a 2 GB asset limit), a ruler run on the phone. Its ruler scores exist on the desktop twin and are internal-pending-author (PD-09 / AD-15); scores of the app maintainer's RC1 and of the native engine branch stay internal. Update 20:47: the final release APK (UI-only commits on top of b4ef94f3) passed its offline smoke on the Pixel 8a (F-2219); APK hosting remains. Update 2026-10-25: renamed LabRat at the app maintainer's request (7788924a, assistant Rat; same package id); the Rat persona line entered the grounding prompt after the ruler run on b4ef94f3, so that number is for b4ef94f3, not for LabRat 7788924a. Cleanup decisions: long-chat summary, PIN, Portuguese and the Expo/React Native tree removed, Settings simplified, licences in About. Hosting decided: Hugging Face (GitHub release assets cap 2 GiB; APK 3.04 GB), upload pending. Install-path risk: Android developer verification may add an 'advanced flow' for browser installs (scope unconfirmed; a test on a certified phone is planned). Open engine bug: the citation-support step is not applied to the streamed answer; a fix would need a ruler rerun. Landed 2026-10-25: LabRat scored on the phone (OF-8); LabRat 1.0.0 (dcc515fc, same engine module as the measured build) hosted on Hugging Face with its sha256 (15:3x); source public as labrat-boar-fork (15:4x)."
+  },
+  {
+   "id": "OF-5",
+   "title": "Claim text on the bounty",
+   "question": "Which wording is posted to the bounty at closure, and in which vehicle?",
+   "why_it_matters": "The claim text is the public statement the bounty reads; it must match the standing on this page at the time it is posted.",
+   "what_would_change": "The claim text follows the standing at closure: if OF-1 to OF-3 move the standing, the claim sentence moves with it; if they do not, the current sentence (F-1245) stands. The site quotes the posted version with its date.",
+   "related_fact_ids": [
+    "F-004",
+    "F-017",
+    "F-018",
+    "F-1245",
+    "F-1371",
+    "F-2233",
+    "F-2251",
+    "F-2252"
+   ],
+   "owner": "author",
+   "state": "pending",
+   "note": "Claim post v4.2.4 was prepared paste-ready on 2026-10-18; whether and when it was posted is not in the record (UNKNOWN). The submission is now LabRat (formerly BoarLite). The claim-text plan (2026-10-24 PM) leads with what the app does and the final ruler numbers labelled with both judge families, seeds, desktop twin or phone, and win-rate; wording goes to an independent reviewer, then the author. It cannot quote ruler numbers while they are internal (AD-15), and the on-phone numbers (OF-8) are not in yet. Author decision 2026-10-25: the revised claim is posted with a link to the article; corrections in the public repositories are the author's push. Update 2026-10-25 16:29: a submission post (one post with a 60 s video, numbers from DEVICE-FINAL) is prepared; as of 16:46 it is not recorded as posted. The article is live (16:46)."
+  },
+  {
+   "id": "OF-6",
+   "title": "Ruler v0.4 verdict run",
+   "owner": "author",
+   "state": "landed",
+   "question": "What is the submitted app's U-total on the frozen 71 headline items under both judge families (Claude and OpenAI gpt-5.6-sol), measured on a phone, against the pre-registered verdict rule?",
+   "why_it_matters": "The ruler replaces the old judge.v1 ratio as the headline metric for the submitted app; until it runs, the record has no verdict number for the bounty question.",
+   "what_would_change": "If the lower-family U-total has CI low > 0.50 with all gates passed, the standing becomes \"meets the bar\" for that app; if the point estimate is above 0.50 with CI low below, \"above, not established\"; otherwise \"below the bar\". In every case it is printed beside the old-scale numbers, never pooled with them.",
+   "related_fact_ids": [
+    "F-2070",
+    "F-2108",
+    "F-1536",
+    "F-1543",
+    "F-2212",
+    "F-2214",
+    "F-2225",
+    "F-2215",
+    "F-2217"
+   ],
+   "note": "Landed 2026-10-24 20:34 as a desktop-twin run: references of both families 75/75 (OpenAI gpt-5.6-sol half completed 20:05); BoarLite b4ef94f3 scored on the 71 headline items under both judge families, one seed, stage 1 not run, no phone run. The verdict numbers are internal-pending-author (internal_fact_ids) until the author rules on AD-15; the ruler is now exposed to three engines. Update 2026-10-25: this run measured b4ef94f3; LabRat 7788924a adds the Rat persona line to the grounding prompt after it, so its number must not be attributed to LabRat without that caveat; the on-phone re-measure of LabRat is OF-8. Update 2026-10-25 (author's publication decisions): the numbers are public as history (F-2215, F-2217): lower-family U-total 0.164, win-rate 0 of 71 under both families, below the 0.50 bar; the paired delta vs the native engine branch (F-2216) stays internal because it prints that branch's absolute.",
+   "internal_fact_ids": [
+    "F-2216"
+   ]
+  },
+  {
+   "id": "OF-7",
+   "title": "Shaped factbook and pack publication",
+   "owner": "author",
+   "state": "pending",
+   "question": "Is the shaped factbook pack (v2) published, and does the pack-side lever hold beyond its 20 dev items?",
+   "why_it_matters": "Pack shaping is the one content-side lever that survived the closing tests; BoarLite ships factbook v1, not the shaped v2 (decision 2026-10-24 18:03).",
+   "what_would_change": "If confirmed on more items, the delivery chapter gains a measured pack-side lever; if not, it stays NOT-CONFIRMED by its frozen rule (one new warned confident error) and is described as such.",
+   "related_fact_ids": [
+    "F-2104",
+    "F-1718",
+    "F-1695"
+   ],
+   "note": "NOT-CONFIRMED by its frozen rule (2 seeds, n 20, dev); dropped from BoarLite on 2026-10-24 18:03 (factbook v1 stays); the v2 card is drafted as user-selected only; publishing waits for the author. Author decision 2026-10-25: factbook v2 is not published; its verdict stays NOT-CONFIRMED (F-2104) and LabRat ships factbook v1 (D-196)."
+  },
+  {
+   "id": "OF-8",
+   "title": "DEVICE-FINAL: final on-phone matrix",
+   "owner": "author",
+   "state": "landed",
+   "question": "What do LabRat 7788924a's claim numbers read when the app answers on the phone itself (ruler v0.4 under both judge families with seeds stated; speed, memory and offline behaviour), under the criterion frozen before the run?",
+   "why_it_matters": "Every ruler reading so far is a desktop twin of b4ef94f3; the bounty asks about a phone, and the shipped app differs from the ruler engine by the Rat persona line.",
+   "what_would_change": "When it lands, its claim numbers (M1 under both judge families, seeds and win-rate stated; M5 speed, memory and offline) become the publication's final standing for the submitted app, in whichever direction they fall, beside the desktop-twin reading and never pooled with it; M2-M4 enter as product numbers. Its numbers are public by the author's decision of 2026-10-25 (AD-15 (b)); M1 fills the status headline template. If the matrix does not complete, the standing stays the desktop twin of b4ef94f3 with the persona-line caveat, and the record says the on-phone run did not finish.",
+   "related_fact_ids": [
+    "F-2227",
+    "F-2228",
+    "F-2229",
+    "F-2225",
+    "F-2214",
+    "F-2238",
+    "F-2239",
+    "F-2240",
+    "F-2241",
+    "F-2242",
+    "F-2243",
+    "F-2244"
+   ],
+   "note": "Landed 2026-10-25 13:2x: on a Pixel 8a, 0 of 71 wins under both judge families; U-total Claude 0.165 (0.127–0.205), gpt-5.6-sol 0.242 (0.194–0.296), seeds 42 and 43 (44 dropped for time); below the 0.50 bar; the phone repeats the desktop twin (paired +0.003 / −0.007). Interrupted once at 11:31 and resumed."
+  }
+ ],
+ "changelog": [
+  {
+   "date": "2026-10-18",
+   "version": "0.1-preprint",
+   "change": "First living-preprint version: content reframed as interim; status banner, standing and open fronts added."
+  },
+  {
+   "date": "2026-10-18",
+   "version": "0.1-preprint",
+   "change": "Author delegates seven open decisions (D1-D7); adopted: no bench v0.3 before closure, claim v4.2.4 prepared, site uploaded only as v1.0 at closure. Honest-prompt line closed (HONESTPROMPT)."
+  },
+  {
+   "date": "2026-10-19",
+   "version": "0.1-preprint",
+   "change": "V-para diagnosis: the 4B gap is mostly wrong-from-memory and absent knowledge; independent direction review says stop opening arms. Public ruler designed (BENCH-RULER)."
+  },
+  {
+   "date": "2026-10-20",
+   "version": "0.1-preprint",
+   "change": "Pivot: Qwen3-1.7B becomes the main 8 GB engine (4B optional tier) on phone latency and memory; bench v0.4 item set frozen (75 items) before any system answered; refuse-by-default product rule."
+  },
+  {
+   "date": "2026-10-21",
+   "version": "0.1-preprint",
+   "change": "RULER-SPEC v1 r3 and r4 frozen (judge.v1 + DECLINE2STAGE, A∪ verdict arm, two judge families, information-available split); author: no 35B deep mode delivered, submission = the app maintainer's native app; release-candidate scores kept internal."
+  },
+  {
+   "date": "2026-10-22",
+   "version": "0.1-preprint",
+   "change": "Direction: packs and delivery are the strategy; small focused packs; delivery counted at chunk level; search fixes SEFIX-124 adopted for delivery (+0.013, not a lever; F3 withdrawn as unsafe)."
+  },
+  {
+   "date": "2026-10-23",
+   "version": "0.1-preprint",
+   "change": "Author closes the research lines (11:53); closing tests (UXMATRIX, PACKPROOF, U5, WARN-KEPT, NOWIKI, PACK-GAP, QREWRITE); thesis held only in a conditional form; CONTENT-FIRST pack work (shaped factbook); ENGINE-RC built and validated overnight."
+  },
+  {
+   "date": "2026-10-24",
+   "version": "0.2-preprint",
+   "change": "Validation judge keeps Succinct; author decides a closed, simple, Succinct-only chat app and declares BoarLite (his own app) the submission; first ruler v0.4 answers (desktop twins, Claude half only, internal); status reframed: research closed, delivery and ruler run open."
+  },
+  {
+   "date": "2026-10-24",
+   "version": "0.3-preprint",
+   "change": "Evening (17:39-20:34): BoarLite final candidate b4ef94f3 (health gate B+FU, fixed line, factbook v1, QuickMath, preload, onboarding); device smoke on a Pixel 8a (unpack 14 s, 0 B network, PSS 3.09 GB, first answer 11.9 s); SEARCHPORT failed its frozen safety gate and its grounded-dose re-gate, then merged as ON_NO_HEALTH by the author's prior condition although Addendum 2 failed S1 by the letter; GROUNDED-DOSE rule (arms B, C pass); Wikipedia-health limitation accepted; second-family references 75/75; final ruler run on BoarLite's engine landed (OF-6), numbers internal pending the author (AD-15)."
+  },
+  {
+   "date": "2026-10-24",
+   "version": "0.3-preprint",
+   "change": "20:47: final BoarLite release APK (6aa7508a, engine b4ef94f3) passes its offline smoke on a Pixel 8a."
+  },
+  {
+   "date": "2026-10-25",
+   "version": "0.4-preprint",
+   "change": "BoarLite renamed LabRat (assistant Rat) at the app maintainer's request; the Rat persona line entered the grounding prompt after the ruler run (ruler number = b4ef94f3); cleanup decisions (long-chat summary, PIN, Portuguese and the Expo/React Native tree removed; Settings simplified; licences in About); logo n8; APK hosting decided (Hugging Face); install-path risk noted; DEVICE-FINAL criterion frozen and the on-phone matrix started (OF-8, running; interrupted once by an APK install and restarted); open engine bug Citations.applyShown recorded."
+  },
+  {
+   "date": "2026-10-25",
+   "version": "0.4-preprint",
+   "change": "Author's publication decisions: LabRat (formerly BoarLite) numbers public, the app maintainer's app numbers stay internal; headline = the final ruler on the phone (DEVICE-FINAL, templated, running); the desktop ruler run of b4ef94f3 published as history (lower-family U-total 0.164, 0 of 71 wins, below the 0.50 bar); thesis restated (F-2236); Citations.applyShown documented as a known limitation."
+  },
+  {
+   "date": "2026-10-25",
+   "version": "1.0",
+   "change": "Final: DEVICE-FINAL landed (OF-8): on a Pixel 8a LabRat wins 0 of 71 under both judge families, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), two seeds, below the 0.50 bar; phone = desktop twin; M2-M5 product numbers added. LabRat 1.0.0 hosted on Hugging Face and its source public (OF-4 landed); pack counts stated once (13 shipped, 9 self-tested, 7 tested on the phone); article live; headline filled."
+  }
+ ],
+ "notes": [
+  "This file is the single source for the site's status banner, the live standing and the open-fronts list. Update it whenever a new result lands (PLAN.md task PT-13).",
+  "Pass/fail criteria for the runs behind these open fronts are frozen (sha256) in the research repository before each run, not here. This file only reports state; it never defines a criterion.",
+  "Standing lists the fact ids of the headline numbers as of as_of; a number that changes gets a new fact row, never an edit of the old one.",
+  "No open front is predicted to succeed or fail; what_would_change states both directions.",
+  "EDITOR FLAG (2026-10-24): the headline changed. OLD standing (as of 2026-10-18): F-001, F-002, F-004, F-009, F-012, F-013, F-015, F-016, F-017, F-018, F-023, F-035, F-038, F-1245 — judge.v1 ratios (raw + floor-adjusted) of the frozen 4B build and the desktop deep tier on V-para / v0.2, Claude headline, win-rate 0. NEW standing (as of 2026-10-24): research closed; thesis supported only in a conditional form (outcome labels on pack-written self-tests); small engine Qwen3-1.7B; submission BoarLite; ruler v0.4 frozen with no verdict. The old rows stay in standing because they are still the only claim-build numbers on the old scale. Never put the outcome-label shares, the ruler U-total and the judge.v1 ratio on one axis.",
+  "Three metric families now coexist: (1) judge.v1 ratio, raw and floor-adjusted (old headline; V-para, v0.2, MAIN 97, CV5 51); (2) outcome-label shares (CWS, correct-any, WU, WW, HU; Claude Haiku labels on 60 or 180 dev items); (3) ruler v0.4 U-total (71 headline items, health weight 0.5, min over two judge families). Each is defined in glossary.json.",
+  "research_state = closed means the author closed the research lines on 2026-10-23 (no new research arms). Content-side pack work reopened that afternoon under CONTENT-FIRST, validation of the closed engine ran overnight, and product decisions followed on 2026-10-24; the ruler verdict run and the BoarLite delivery are still open (OF-4, OF-6).",
+  "planned_close is null: the research lines closed on 2026-10-23 (research_closed_on); the date of the v1.0 upload is not in the record. The bounty page gives a public decision date of 2026-10-31 (F-040).",
+  "EDITOR FLAG (2026-10-24 20:34): standing drops F-1703 (BoarLite as first declared: factbook v2, ported warning line) and F-2108 (v0.4 exposed, no verdict) and adds the final candidate (F-2210), the phone run (F-2201), the search-port trade-off (F-2207, F-2209), the second-family references (F-2212) and the final ruler run as a process row (F-2214; numbers internal). The 'ruler v0.4 frozen with no verdict' wording of the earlier flag is superseded.",
+  "Submitted-app numbers (the app maintainer's RC1, its replica deltas, the native engine branch, the first ruler v0.4 numbers of both engines, and BoarLite's own scores incl. the final ruler run and the search-port S2 counts) are visibility internal-pending-author: no author ruling lifting PD-09 exists as of 2026-10-24 20:34 (AD-15). An independent review held that publishing an engine-vs-app delta while withholding the app's absolute is a material omission: publish both or neither.",
+  "Evening 2026-10-24: as_of_time (added 1.2.0) gives the clock time of as_of; open fronts may carry internal_fact_ids (added 1.2.0), ids of internal-pending-author rows that resolve the front and must not render. The banner deliberately states no direction for the ruler verdict while its numbers are internal.",
+  "EDITOR FLAG (2026-10-25): standing drops F-2219 (6aa7508a release APK, superseded) and adds the rename (F-2224), the persona-line caveat (F-2225), the latest LabRat APK smoke (F-2235) and the DEVICE-FINAL criterion (F-2227). The RULER-FINAL number is for b4ef94f3; never attribute it to LabRat 7788924a without the persona-line caveat.",
+  "as_of_time 2026-10-25: 03:30 stands for the last research-log row included (DEVICE-FINAL start, recorded as 03:3x, minute not stated); later product events of the same day (logo 11:24, run interruption 11:28, hosting) are included as dated rows.",
+  "EDITOR FLAG (2026-10-25, author decisions): standing moves the old-scale rows (F-001, F-002, F-004, F-009, F-017, F-018) to history.old_scale and adds the restated thesis (F-2236) and the publication decision (F-2237); headline (added 1.3.0) is a template filled only by DEVICE-FINAL rows; history (added 1.3.0) lists earlier readings never pooled with it. F-2215 / F-2217 / F-2208 / E-473 are public (AD-15 (b)); F-2216 and every row about the app maintainer's app or the native engine branch stay internal.",
+  "EDITOR FLAG (2026-10-25 final): headline landed from F-2238, F-2239 and F-2240; the desktop-twin run of b4ef94f3 stays history (never pooled). apply_author_decisions.py leaves status.json alone once the headline has landed.",
+  "as_of_time 2026-10-25 final: 16:46 is the last record row folded in (article v1 live); later marketing rows (bento grid, film v2) are not research rows."
+ ],
+ "as_of_time": "16:46",
+ "headline": {
+  "label": "Final ruler (bench v0.4) measured on the phone: LabRat on a Pixel 8a (DEVICE-FINAL, M1 + M5)",
+  "front": "OF-8",
+  "state": "landed",
+  "fact_ids": [
+   "F-2238",
+   "F-2239",
+   "F-2240"
+  ],
+  "metric": "ruler U-total (71 headline items, health weight 0.5); verdict = the lower of the two judge families; never on one axis with the judge.v1 ratio or outcome-label shares",
+  "order": [
+   "win-rate under both judge families",
+   "U-total per family with CI and seeds",
+   "minimum over families and its CI",
+   "verdict against the 0.50 bar, stated plainly",
+   "M5 speed, memory, offline"
+  ],
+  "template": "As of 2026-10-25, on a Pixel 8a in airplane mode, LabRat won 0 of 71 head-to-heads under the Claude Opus judge and 0 of 71 under OpenAI gpt-5.6-sol (via the Codex CLI). Ruler U-total: Claude 0.165 (0.127–0.205; seeds 42, 43), gpt-5.6-sol 0.242 (0.194–0.296; seeds 42, 43); the lower family, 0.165 (0.127–0.205), is below the 0.50 bar. Speed and memory: median answer 13.9 s, first word 9.8 s, 11.8 tokens/s, peak memory 3.87 GB, no network traffic.",
+  "placeholder": "DEVICE-FINAL is running as of {{as_of}}; the headline number is not in the record yet.",
+  "note": "Landed 2026-10-25 13:2x; filled from the DEVICE-FINAL rows (no placeholders left). Verdict word by the pre-registered rule: the lower family's point and CI are under 0.50, so 'below'. Numbers public by the author's decision of 2026-10-25 (AD-15 (b))."
+ },
+ "history": {
+  "note": "Earlier readings kept as history, never pooled with the headline: the old judge.v1 ratio (the 4B V-para ladder) and the desktop-twin ruler run of b4ef94f3 (before the Rat persona line; F-2223, F-2225).",
+  "old_scale": [
+   "F-001",
+   "F-002",
+   "F-004",
+   "F-009",
+   "F-017",
+   "F-018"
+  ],
+  "desktop_ruler": [
+   "F-2215",
+   "F-2217",
+   "F-2214"
+  ]
+ }
+}

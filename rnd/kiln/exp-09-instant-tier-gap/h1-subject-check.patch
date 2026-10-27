@@ -1,0 +1,73 @@
+# exp-09 H1 'instant/extractive source must be about the question subject' against boar-app 611a4b92. LOCAL BRANCH ONLY (rule 0).
+# Off unless EXPO_PUBLIC_H1_SUBJECT=1.
+
+diff -ruN h1-a/src/routing/answer.ts h1-b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-09-30 19:22:02
++++ b/src/routing/answer.ts	2026-10-01 06:17:12
+@@ -74,7 +74,7 @@
+ import type { LoadFailureKind } from "../inference/loadError";
+ import { DepthModel, planAnswer, resolveDeepModel, AnswerPlan, deepAutoIneligibility } from "./depth";
+ import { isCompactModel, pickDefaultAnswerModel, tooBigForLowRam } from "./defaultModel";
+-import { o2Decide, o2Enabled, o2Message } from "./o2WeakSupport";
++import { namedEntities, o2Decide, o2Enabled, o2Message, titleCovers } from "./o2WeakSupport";
+ import { buildVerificationInput, parseVerificationVerdict, VERIFICATION_INSTRUCTION } from "./verify";
+ import { taskRequest } from "../inference/format";
+ import {
+@@ -767,6 +767,15 @@
+       // Any other PT question: the English names it mentions, from the lexicon (PT-1, "estacoes do ano" -> Season).
+       const names = pt && !english ? (deps.englishNames ?? defaultEnglishNames)(req.query) : [];
+       if (names.length) reasonCodes.push("match:pt-en-names");
++      // exp-09 H1 (local branch, measurement only): an instant snippet or a health excerpt is served only from a source
++      // ABOUT the question's subject (its title names it; O2's titleCovers: "South Holland" is not "the Netherlands",
++      // "Kantō region" is not "Japan"). Subject: health topic terms / a PT question's lexicon names / EN named entities.
++      // No subject extracted -> keep (fail open). Off unless EXPO_PUBLIC_H1_SUBJECT=1.
++      const h1On = process.env.EXPO_PUBLIC_H1_SUBJECT === "1";
++      const h1Terms = h1On
++        ? (isHealthQuestion(req.query) ? [...healthTopicTerms(req.query, english)] : pt ? (deps.englishNames ?? defaultEnglishNames)(req.query) : namedEntities(req.query)).filter((t) => t && t.length > 2)
++        : [];
++      const h1About = (title: string) => !h1On || !h1Terms.length || h1Terms.some((t) => titleCovers(t, title));
+       /** What the sources are matched against: the English words for a translated PT question. */
+       // Identifiers the question names ("EIP-7251") stay in what sources are matched against (Sextant dddd8a8:
+       // with names ["Ethereum"] only, the EIP page lost to the Ethereum articles).
+@@ -882,7 +891,8 @@
+           onSubject(pool[snip.sourceIndex]) &&
+           termCoverage(matchQuery, `${pool[snip.sourceIndex].title} ${snip.text}`) >= MIN_TERM_COVERAGE &&
+           // The sentence itself names the subject, not only its page's title (Sextant q7, EN and PT).
+-          sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text);
++          sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text) &&
++          (h1About(pool[snip.sourceIndex].title) || (reasonCodes.push("instant:h1-not-about-subject"), false));
+         if (snip && sourceIndex >= 0 && !covers) reasonCodes.push("instant:off-topic");
+         if (snip && sourceIndex >= 0 && covers) {
+           markVisible();
+@@ -931,6 +941,10 @@
+         // dng-001: "pressure immobilization … remains a point of controversy"). None: emergency + get care.
+         let text = "";
+         for (const k of healthSourceOrder(fullSources, rules.procedure ?? null)) {
++          if (!h1About(fullSources[k].title)) {
++            reasonCodes.push(`grounding:h1-not-about-subject-${k + 1}`);
++            continue;
++          }
+           const first = healthExtract(fullSources[k], k + 1, pt, rules);
+           if (!safeHealthExcerpt(first)) {
+             reasonCodes.push(`grounding:health-unsafe-excerpt-${k + 1}`);
+diff -ruN h1-a/src/routing/o2WeakSupport.ts h1-b/src/routing/o2WeakSupport.ts
+--- a/src/routing/o2WeakSupport.ts	2026-09-30 19:22:02
++++ b/src/routing/o2WeakSupport.ts	2026-10-01 06:17:12
+@@ -125,7 +125,7 @@
+ };
+ 
+ /** Quoted spans, capitalized spans (not sentence-initial) and codes like EIP-7251 / ERC-20. */
+-function namedEntities(q: string): string[] {
++export function namedEntities(q: string): string[] {
+   const ents: string[] = [];
+   for (const m of q.matchAll(/(?<![\p{L}\p{N}_])['"‘“]([^'"’”]{3,40})['"’”]/gu)) ents.push(m[1]);
+   const toks = q.match(/[\p{L}\p{N}_\-’']+|[^\p{L}\p{N}_\s]/gu) ?? [];
+@@ -212,7 +212,7 @@
+  * Aboutness: the passage's title contains the subject (token subsequence after normalization and plural stemming).
+  * Part-of relations are NOT coverage: "Kantō region" does not cover "Japan".
+  */
+-function titleCovers(term: string, title: string): boolean {
++export function titleCovers(term: string, title: string): boolean {
+   const t = words(norm(title.replace(PREFIX, ""))).map(stem);
+   const s = words(norm(term))
+     .filter((w) => !["the", "a", "an"].includes(w))

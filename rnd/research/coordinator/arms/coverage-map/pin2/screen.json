@@ -1,0 +1,777 @@
+{
+ "criterion_sha256": "175076c03903517a46524f96cebbbcca4e07350f11b70ae67c150234e29b98dc",
+ "context": {
+  "main": {
+   "n": 97,
+   "total_base": 56812,
+   "total_arm": 57333,
+   "ratio": 1.0092,
+   "total_pass": true,
+   "compressor_over_budget": [],
+   "no_compressor_call": 11,
+   "compressor_without_budget_code": []
+  },
+  "t27": {
+   "n": 27,
+   "total_base": 8701,
+   "total_arm": 8987,
+   "ratio": 1.0329,
+   "total_pass": true,
+   "compressor_over_budget": [],
+   "no_compressor_call": 1,
+   "compressor_without_budget_code": []
+  },
+  "PASS": true
+ },
+ "counts": {
+  "better": 3,
+  "worse": 1,
+  "tie": 3
+ },
+ "paired_U_main_divergent": {
+  "n": 5,
+  "U_base": 0.4638,
+  "U_pin2": 0.4818,
+  "dU": 0.018,
+  "ci": [
+   -0.0337,
+   0.0679
+  ]
+ },
+ "health_items": [],
+ "health_losses": [],
+ "new_CE": [],
+ "haiku_calls": 24,
+ "rule": {
+  "context_PASS": true,
+  "better_ge_worse_plus_2": true,
+  "health_losses_0": true,
+  "new_CE_0": true
+ },
+ "verdict": "LEVER-CANDIDATE",
+ "items": {
+  "vit-hum-002": {
+   "set": "main",
+   "health": false,
+   "identical": false,
+   "base_text": "Not found in this phone's offline library. From the model's memory, may be wrong:\nMozi's idea of universal love emphasized social order and sharing, while Confucianism focused on moral cultivation and hierarchical relationships. Mencius attacked Mozi's universal love by arguing that human nature is inherently good, contradicting Mozi's belief in the need for external moral instruction.",
+   "pin2_text": "Not found in this phone's offline library. From the model's memory, may be wrong:\nMozi's idea of universal love emphasized social order and shared responsibility, whereas Confucianism focused on moral cultivation and hierarchical relationships. Mencius attacked Mozi's universal love by arguing that human nature is inherently good, contradicting Mozi's belief in the necessity of external morality.",
+   "warned": {
+    "base": true,
+    "pin2": true
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Mozi",
+     "Zhou dynasty",
+     "Zhou dynasty",
+     "Theory of Evil Human Nature"
+    ],
+    "pin2": [
+     "Mozi",
+     "Mozi",
+     "Zhou dynasty",
+     "Zhou dynasty",
+     "Theory of Evil Human Nature"
+    ]
+   },
+   "s": {
+    "base": 1.0,
+    "pin2": 1.3333333333333333
+   },
+   "sref": {
+    "base": 4.833333333333334,
+    "pin2": 4.5
+   },
+   "corr": {
+    "base": 1.0,
+    "pin2": 2.0
+   },
+   "judgment": "vs-reference",
+   "raw": {
+    "base": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 1,
+       "completeness": 1,
+       "usefulness": 1
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 4,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 1,
+       "completeness": 1,
+       "usefulness": 1
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     }
+    ],
+    "pin2": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 2,
+       "completeness": 1,
+       "usefulness": 1
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 2,
+       "completeness": 1,
+       "usefulness": 1
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 4,
+       "usefulness": 5
+      }
+     }
+    ]
+   },
+   "d": 0.33333333333333326,
+   "verdict": "better",
+   "new_CE": false,
+   "CE": {
+    "base": true,
+    "pin2": false
+   }
+  },
+  "vit-cry-008": {
+   "set": "main",
+   "health": false,
+   "identical": false,
+   "base_text": "Not found in this phone's offline library. From the model's memory, may be wrong:\nGlamsterdam is a protocol upgrade for Ethereum aimed at improving L1 scaling. Its headline feature is ePBS (EIP-7732), which separates the proposer from the builder, enhancing throughput and enabling higher transaction volumes.",
+   "pin2_text": "Glamsterdam is an Ethereum protocol upgrade aimed at improving L1 scaling [3]. Its headline feature is ePBS (EIP-7732), which separates the proposer from the builder, enhancing throughput and enabling higher transaction speeds.",
+   "warned": {
+    "base": true,
+    "pin2": false
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "ethereum.org: Glamsterdam",
+     "ethereum.org: Glamsterdam",
+     "Prometheus Global Media",
+     "Where is this Google Meet backdrop?"
+    ],
+    "pin2": [
+     "ethereum.org: Glamsterdam",
+     "ethereum.org: Glamsterdam",
+     "ethereum.org: Glamsterdam",
+     "Prometheus Global Media",
+     "Where is this Google Meet backdrop?"
+    ]
+   },
+   "s": {
+    "base": 2.5,
+    "pin2": 2.3333333333333335
+   },
+   "sref": {
+    "base": 3.833333333333333,
+    "pin2": 3.833333333333333
+   },
+   "corr": {
+    "base": 3.5,
+    "pin2": 3.0
+   },
+   "judgment": "vs-reference",
+   "raw": {
+    "base": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 3,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     }
+    ],
+    "pin2": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 3,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     }
+    ]
+   },
+   "d": -0.16666666666666652,
+   "verdict": "tie",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  },
+  "lan-exp-005": {
+   "set": "main",
+   "health": false,
+   "identical": false,
+   "base_text": "The Sahara is the largest desert in the world, covering about 9.2 million square kilometers [3]. It spans Morocco, Algeria, Tunisia, Libya, Egypt, Mauritania, Mali, Niger, Chad, and Sudan [3]. In the past, the Sahara had larger areas and was more fertile, but it later dried up.",
+   "pin2_text": "The Sahara is the largest hot desert in the world, spanning multiple countries in North Africa [2]. It has been both larger and smaller over time, and it has experienced extreme climate conditions, including long periods of drought. In the past, it was more fertile but later dried up.",
+   "warned": {
+    "base": false,
+    "pin2": false
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Sahara",
+     "Sahara",
+     "Sahara"
+    ],
+    "pin2": [
+     "Sahara",
+     "Sahara",
+     "Sahara",
+     "Sahara"
+    ]
+   },
+   "s": {
+    "base": 2.0,
+    "pin2": 1.8333333333333335
+   },
+   "sref": {
+    "base": 5.0,
+    "pin2": 5.0
+   },
+   "corr": {
+    "base": 2.0,
+    "pin2": 3.0
+   },
+   "judgment": "vs-reference",
+   "raw": {
+    "base": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 2,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 2,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     }
+    ],
+    "pin2": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 1,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 1,
+       "usefulness": 1
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     }
+    ]
+   },
+   "d": -0.16666666666666652,
+   "verdict": "tie",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  },
+  "trv-004": {
+   "set": "main",
+   "health": false,
+   "identical": false,
+   "base_text": "Take the metro to the airport station and switch to the light blue line to reach Baixa-Chiado [5]. The metro is fast, affordable, and directly connects to the city center.",
+   "pin2_text": "Take the metro to the airport station and switch to the light blue line to reach Baixa-Chiado [7]. The metro is fast, affordable, and directly connects to the city center.",
+   "warned": {
+    "base": false,
+    "pin2": false
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Lisbon: Getting from the airport to city center",
+     "Wikivoyage: Lisbon Airport",
+     "Lisbon: Getting from the airport to city center",
+     "Lisbon: Getting from the airport to city center",
+     "Lisbon: Getting from the airport to city center"
+    ],
+    "pin2": [
+     "Lisbon: Getting from the airport to city center",
+     "Wikivoyage: Lisbon Airport",
+     "Wikivoyage: Lisbon Airport",
+     "Wikivoyage: Lisbon Airport",
+     "Lisbon: Getting from the airport to city center",
+     "Lisbon: Getting from the airport to city center",
+     "Lisbon: Getting from the airport to city center"
+    ]
+   },
+   "s": {
+    "base": 2.0,
+    "pin2": 2.333333333333333
+   },
+   "sref": {
+    "base": 4.666666666666667,
+    "pin2": 4.666666666666667
+   },
+   "corr": {
+    "base": 2.0,
+    "pin2": 2.5
+   },
+   "judgment": "vs-reference",
+   "raw": {
+    "base": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 1,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     }
+    ],
+    "pin2": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 2,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     }
+    ]
+   },
+   "d": 0.33333333333333304,
+   "verdict": "better",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  },
+  "st-qa-cooking-se-004": {
+   "set": "main",
+   "health": false,
+   "identical": false,
+   "base_text": "Yes, rendered tallow can be stored in well-sealed glass jars in a cool, dark basement for up to a year [1]. The fat will remain safe to use as long as it doesn't smell bad.",
+   "pin2_text": "Tallow can be stored in a cool, dark basement for up to a year when kept in airtight glass jars [1]. Oxidation may occur, but it's generally safe to use after that period.",
+   "warned": {
+    "base": false,
+    "pin2": false
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Can I store suet or home-rendered tallow at room temperature for a year?",
+     "Can I rely on smell to tell if rendered animal fat is bad?",
+     "Appropedia: Tallow",
+     "Appropedia: Tallow",
+     "Can I store suet or home-rendered tallow at room temperature for a year?"
+    ],
+    "pin2": [
+     "Can I store suet or home-rendered tallow at room temperature for a year?",
+     "Can I rely on smell to tell if rendered animal fat is bad?",
+     "Appropedia: Tallow",
+     "Appropedia: Tallow",
+     "Appropedia: Tallow",
+     "Can I store suet or home-rendered tallow at room temperature for a year?",
+     "Can I store suet or home-rendered tallow at room temperature for a year?"
+    ]
+   },
+   "s": {
+    "base": 3.166666666666667,
+    "pin2": 3.166666666666667
+   },
+   "sref": {
+    "base": 4.666666666666666,
+    "pin2": 4.833333333333334
+   },
+   "corr": {
+    "base": 4.0,
+    "pin2": 4.0
+   },
+   "judgment": "vs-reference",
+   "raw": {
+    "base": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 2,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 4,
+       "usefulness": 4
+      }
+     }
+    ],
+    "pin2": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 2,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 5,
+       "usefulness": 5
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 5,
+       "completeness": 4,
+       "usefulness": 5
+      }
+     }
+    ]
+   },
+   "d": 0.0,
+   "verdict": "tie",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  },
+  "b15": {
+   "set": "t27",
+   "health": false,
+   "identical": false,
+   "base_text": "Kyoto was the capital of Japan during the Heian period (794–1185), a time of cultural flourishing [2]. It played a central role in Japanese religious and artistic life. The city is often seen as the heart of Japan's classical culture [1].",
+   "pin2_text": "Kyoto was the capital of Japan during the Heian period (794–1185), a time of cultural flourishing [2]. It was the seat of the imperial court for over a millennium until 1869 [4]. The city is closely tied to Japanese cultural heritage and historical events.",
+   "warned": {
+    "base": false,
+    "pin2": false
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Heian period",
+     "History of Japan"
+    ],
+    "pin2": [
+     "Heian period",
+     "History of Japan",
+     "Kyoto",
+     "Kyoto"
+    ]
+   },
+   "s": {
+    "base": 3.0,
+    "pin2": 3.5
+   },
+   "corr": {
+    "base": 4.0,
+    "pin2": 4.5
+   },
+   "winners": [
+    "tie",
+    "boar"
+   ],
+   "judgment": "head-to-head",
+   "raw": {
+    "h2h": [
+     {
+      "winner": "tie",
+      "boar": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      }
+     },
+     {
+      "winner": "boar",
+      "boar": {
+       "correctness": 5,
+       "completeness": 3,
+       "usefulness": 3
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 2,
+       "usefulness": 2
+      }
+     }
+    ]
+   },
+   "d": 0.5,
+   "verdict": "better",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  },
+  "b18": {
+   "set": "t27",
+   "health": false,
+   "identical": false,
+   "base_text": "Not found in this phone's offline library. From the model's memory, may be wrong:\nCheetahs reach top speed by accelerating rapidly, using powerful hindlimbs and a flexible spine. They can maintain this speed for short bursts, typically around 20-30 seconds, due to their energy-efficient hunting strategy.",
+   "pin2_text": "Not found in this phone's offline library. From the model's memory, may be wrong:\nCheetahs reach top speed by using their powerful hindlimbs and flexible spine, and they can maintain this speed for short bursts due to their energy-efficient hunting strategy.",
+   "warned": {
+    "base": true,
+    "pin2": true
+   },
+   "declined": {
+    "base": false,
+    "pin2": false
+   },
+   "live_eq_replay": {
+    "base": true,
+    "pin2": true
+   },
+   "kept": {
+    "base": [
+     "Cheetah"
+    ],
+    "pin2": [
+     "Cheetah",
+     "Cheetah"
+    ]
+   },
+   "s": {
+    "base": 3.3333333333333335,
+    "pin2": 2.5
+   },
+   "corr": {
+    "base": 4.0,
+    "pin2": 3.5
+   },
+   "winners": [
+    "ref",
+    "ref"
+   ],
+   "judgment": "head-to-head",
+   "raw": {
+    "h2h": [
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 3,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      }
+     },
+     {
+      "winner": "ref",
+      "boar": {
+       "correctness": 4,
+       "completeness": 2,
+       "usefulness": 2
+      },
+      "ref": {
+       "correctness": 4,
+       "completeness": 3,
+       "usefulness": 3
+      }
+     }
+    ]
+   },
+   "d": -0.8333333333333335,
+   "verdict": "worse",
+   "new_CE": false,
+   "CE": {
+    "base": false,
+    "pin2": false
+   }
+  }
+ }
+}

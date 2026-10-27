@@ -1,0 +1,849 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-005": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "What did Adam Smith actually mean by the 'invisible hand', and how often does the phrase appear in The Wealth of Nations?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2413183",
+       "title": "Adam Smith",
+       "share": 1.0,
+       "anchor": 0.585,
+       "bm25_rank": 0,
+       "text": "Disagreement exists between classical and neoclassical economists about the central message of Smith's most influential work: An Inquiry into the Nature and Causes of the Wealth of Nations (1776). Neoclassical economists emphasise Smith's invisible hand, a concept mentioned in the middle of his work \u2013 Book\u00a0IV, Chapter\u00a0II \u2013 and classical economists believe that Smith stated his programme for promot"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:57425",
+       "title": "Invisible hand",
+       "share": 1.0,
+       "anchor": 0.585,
+       "bm25_rank": 0,
+       "text": "More famously, it is also used once in his Wealth of Nations, when arguing that governments do not normally need to force international traders to invest in their own home country. In both cases, Adam Smith speaks of an invisible hand, never of the invisible hand."
+      },
+      {
+       "chunk": "pack:wiki-vital5:57424",
+       "title": "Invisible hand",
+       "share": 1.0,
+       "anchor": 0.539,
+       "bm25_rank": 2,
+       "text": "The invisible hand is a metaphor inspired by the Scottish economist and moral philosopher Adam Smith that describes the incentives which free markets sometimes create for self-interested people to accidentally act in the public interest, even when this is not something they intended. Smith originally mentioned the term in two specific, but different, economic examples. It is used once in his Theor"
+      }
+     ]
+    }
+   }
+  },
+  "lan-cmp-002": {
+   "set": "v0.1",
+   "tag": "nature",
+   "question": "Is a polar bear bigger than a grizzly bear?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:307613",
+       "title": "Shiretoko National Park",
+       "share": 1.0,
+       "anchor": 0.519,
+       "bm25_rank": 190,
+       "text": "Shiretoko claims Japan's largest bear population, a fact stressed to no end in local tourist literature. In practice, the Hokkaido brown bear (ezo-higuma) is no match for the North American grizzly, and you are exceedingly unlikely to be attacked if you observe a modicum of common sense. That said, most hikers wear tinkling bells known as kumasuzu to alert bears (which shy away from human contact)"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3638650",
+       "title": "Kodiak bear",
+       "share": 1.0,
+       "anchor": 0.776,
+       "bm25_rank": 17,
+       "text": "The Kodiak bear (Ursus arctos middendorffi), also known as the Kodiak brown bear and sometimes the Alaskan brown bear, inhabits the islands of the Kodiak Archipelago in southwest Alaska. It is one of the largest recognized subspecies or population of the brown bear, and one of the two largest bears alive today, the other being the polar bear. They are also considered by some to be a population of "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3638658",
+       "title": "Kodiak bear",
+       "share": 1.0,
+       "anchor": 0.519,
+       "bm25_rank": 138,
+       "text": "Also, an individual named Teddy, which portrayed a killer bear in the movie Grizzly, stood 3.4 metres (11\u00a0ft) tall on its hind legs and was the largest bear in captivity at the time."
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1893556",
+       "title": ".300 Winchester Magnum",
+       "share": 1.0,
+       "anchor": 0.519,
+       "bm25_rank": 172,
+       "text": "The .300 Winchester Magnum cartridge is effective on dangerous game such as bear. Both black bears and grizzly bears are hunted using the cartridge. The .300 Winchester Magnum is a lighter cartridge than typically necessary for the largest bears; loaded with heavier bullets, hunters have had success with the cartridge against these large bears."
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:80274",
+       "title": "Kodiak bear",
+       "share": 1.0,
+       "anchor": 0.776,
+       "bm25_rank": 1,
+       "text": "The Kodiak bear (Ursus arctos middendorffi), also known as the Kodiak brown bear and sometimes the Alaskan brown bear, inhabits the islands of the Kodiak Archipelago in southwest Alaska. It is one of the largest recognized subspecies or population of the brown bear, and one of the two largest bears alive today, the other being the polar bear. Kodiak bears are also considered by some to be a popula"
+      }
+     ]
+    }
+   }
+  },
+  "vit-trv-003": {
+   "set": "v0.1",
+   "tag": "travel",
+   "question": "How do I get from Chiang Mai to Pai, and what should I know about the road?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 49,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:252078",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 13,
+       "text": "Rte 1095 isn't as bad as people make it out to be. There isn't much traffic and you can hear the cars and trucks coming. The downside is the road is crappy, but not uniformly so. But because you never know what lies around the next bend, you're forced to drive conservatively. If you're a little adventurous, rent a motorcycle in Chiang Mai and make the ride up to Pai. You can stop at the waterfalls"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:252077",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 0.711,
+       "bm25_rank": 0,
+       "text": "Rte 1095 which connects Pai with Mae Hong Son (50 km as the crow flies, but approximately 110 km by road) and Chiang Mai (135 km) is a very scenic route through the mountains which takes several hours. It's a steep and winding drive, with lots of curves, so take a plastic bag and some motion sickness pills if you need them. Police report that an average of two accidents a day happen on the Chiang "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:252079",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 0.711,
+       "bm25_rank": 15,
+       "text": "- Pai Bus Station: As of 2017 September, Prempracha is the only transport provider into Pai with Minivans (150 baht) that leave hourly from Chiang Mai (Arcade terminal) and Mae Hong Son between 05:30 to 17:30. There is also once daily fan bus (actually songthaew for 80 baht) running, but foreigners are usually refused to take them. The trip takes some 3 hours and can be gruesome cramped in a miniv"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 20,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:43318",
+       "title": "How do I go from Vientiane to Chiang Mai?",
+       "share": 1.0,
+       "anchor": 0.825,
+       "bm25_rank": 7,
+       "text": "When taking international buses in Asia, there is in most cases no direct connection, specially when the cities are not connected with a direct straight road. It's better to look for 2 or more connections to get you there.\n\nSame in this case. You can take a bus from the Vientiane Central Bus station to to Khon Kaen:\n\nKhon Kaen 08:15, 14:45. Price: 50,000 kip, 4-5 hours\n\nand then from there another"
+      },
+      {
+       "chunk": "pack:qa-travel-se:125999",
+       "title": "How long will it take to go from Chiang Mai to Pai on a scooter?",
+       "share": 1.0,
+       "anchor": 0.711,
+       "bm25_rank": 13,
+       "text": "It may depend a lot on how confident you are on a scooter, and specifically on Thai roads with Thai traffic.\n\nIt's around 120km one way.\n\nThis video shows the trip and runs for about 2 hours. It's unclear exactly how close to the town it starts though.\n\nAdventuresunsets points out it's windy, with \"762 turns during the whole 3-4 hour drive.\" That's probably not ideal for a beginner."
+      },
+      {
+       "chunk": "pack:qa-travel-se:27209",
+       "title": "Can I get a bus from Vang Vieng, Laos, to Chiang Mai, Thailand?",
+       "share": 1.0,
+       "anchor": 0.666,
+       "bm25_rank": 5,
+       "text": "Tags: transportation, buses, thailand, laos\n\nI am currently in Luang Probang, Laos, and I want to go from Vang Vieng to Chiang Mai, Thailand. Throughout my travels, many travel agencies tell me lies stating that I can't get buses from a certain place to another and stuff like that. I'm guessing it's to make us book other things there. (On arriving in those places I realised they were lies.). I ask"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3317692",
+       "title": "Chiang Mai",
+       "share": 1.0,
+       "anchor": 0.535,
+       "bm25_rank": 128,
+       "text": "As population density continues to grow, greater pressure is placed upon the city's transportation system. During peak hours, the road traffic is often badly congested. The city officials as well as researchers and experts have been trying to find feasible solutions to tackle the city's traffic problems. Most of them agree that factors such as lack of public transport, increasing number of motor v"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 49,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2165874",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 7,
+       "text": "Rte 1095 isn't as bad as people make it out to be. There isn't much traffic and you can hear the cars and trucks coming. The downside is the road is crappy, but not uniformly so. But because you never know what lies around the next bend, you're forced to drive conservatively. If you're a little adventurous, rent a motorcycle in Chiang Mai and make the ride up to Pai. You can stop at the waterfalls"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2165873",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 0.711,
+       "bm25_rank": 0,
+       "text": "Rte 1095 which connects Pai with Mae Hong Son (50 km as the crow flies, but approximately 110 km by road) and Chiang Mai (135 km) is a very scenic route through the mountains which takes several hours. It's a steep and winding drive, with lots of curves, so take a plastic bag and some motion sickness pills if you need them. Police report that an average of two accidents a day happen on the Chiang "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2165875",
+       "title": "Pai",
+       "share": 1.0,
+       "anchor": 0.711,
+       "bm25_rank": 10,
+       "text": "- Pai Bus Station: As of 2017 September, Prempracha is the only transport provider into Pai with Minivans (150 baht) that leave hourly from Chiang Mai (Arcade terminal) and Mae Hong Son between 05:30 to 17:30. There is also once daily fan bus (actually songthaew for 80 baht) running, but foreigners are usually refused to take them. The trip takes some 3 hours and can be gruesome cramped in a miniv"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-005": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is the difference between Privacy Pools and Tornado Cash?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {}
+  },
+  "vit-cry-011": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "Why did Terra (UST/LUNA) collapse in 2022?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:47608",
+       "title": "Stablecoin",
+       "share": 1.0,
+       "anchor": 0.826,
+       "bm25_rank": 3,
+       "text": "- In June 2021, IRON stablecoin, which is an algorithmic stablecoin partially collateralized by USDC, de-pegged after large selling orders to its linked TITAN token.\n- In May 2022, Terra's stablecoin UST lost its peg with the US dollar. The subsequent failure of Terraform Labs resulted in the loss of nearly [usage detail removed] billion invested in UST and LUNA tokens. Terraform Labs filed for bankruptcy in January"
+      },
+      {
+       "chunk": "pack:boar-crypto:47245",
+       "title": "Cryptocurrency",
+       "share": 0.5,
+       "anchor": 0.826,
+       "bm25_rank": 2,
+       "text": "Stablecoins are cryptocurrencies designed to maintain a stable level of purchasing power. Notably, these designs are not foolproof, as a number of stablecoins have crashed or lost their peg. For example, on 11 May 2022, Terra's stablecoin UST fell from $1 to 26 cents. The subsequent failure of Terraform Labs resulted in the loss of nearly $40B invested in the Terra and Luna coins. In September 202"
+      },
+      {
+       "chunk": "pack:boar-crypto:47584",
+       "title": "Stablecoin",
+       "share": 0.5,
+       "anchor": 0.769,
+       "bm25_rank": 5,
+       "text": "In May 2022, UST broke its peg with its price plunging to 10 cents, while LUNA fell to \"virtually zero\", down from an all-time high of [usage detail removed]. The collapse wiped out almost [usage detail removed] billion of market capitalization over the course of a week.\n\nIn the case of TerraUSD, another contributing factor to its failure was its proof-of-stake mechanism. The fall in the price of LUNA caused validators to sell the"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 11,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2420272",
+       "title": "Terra (blockchain)",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 5,
+       "text": "Terra is a blockchain that leverages fiat-pegged stablecoins to power a payment system.  For consensus, the Terra blockchain uses a proof-of-stake codesign. Several stablecoins are built atop the Terra protocol, including TerraUSD, which was the third largest stablecoin by market capitalization before its collapse in May 2022. The Terra blockchain has a fully-functional ecosystem of decentralized "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3770770",
+       "title": "Stablecoin",
+       "share": 1.0,
+       "anchor": 0.826,
+       "bm25_rank": 12,
+       "text": "- In June 2021, IRON stablecoin, which is an algorithmic stable coin partially collateralized by USDC, de-pegged after large selling orders to its linked TITAN token.[90]\n- In May 2022, Terra's stablecoin UST lost its peg with the US dollar. The subsequent failure of Terraform Labs resulted in the loss of nearly [usage detail removed] billion invested in UST and LUNA tokens.[91][89] Terraform Labs filed for bankrupt"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:448820",
+       "title": "Cryptocurrency bubble",
+       "share": 1.0,
+       "anchor": 0.769,
+       "bm25_rank": 3,
+       "text": "##### Collapse of Terra-Luna\nIn May 2022, the stablecoin TerraUSD fell to [usage detail removed]. This was supposed to be pegged to the US dollar via a complex algorithmic relationship with its support coin Luna. The loss of the peg resulted in Luna falling to almost zero, down from its high of [usage detail removed]. The collapse wiped out [usage detail removed]\u00a0billion of total current value in a week. On 25 May, a proposal was approved to rei"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1613791",
+       "title": "Cryptocurrency",
+       "share": 0.5,
+       "anchor": 0.826,
+       "bm25_rank": 0,
+       "text": "Stablecoins are cryptocurrencies designed to maintain a stable level of purchasing power. Notably, these designs are not foolproof, as a number of stablecoins have crashed or lost their peg. For example, on 11 May 2022, Terra's stablecoin UST fell from $1 to 26 cents. The subsequent failure of Terraform Labs resulted in the loss of nearly $40B invested in the Terra and Luna coins. In September 202"
+      }
+     ]
+    }
+   }
+  },
+  "vit-hlt-003": {
+   "set": "v0.1",
+   "tag": "health",
+   "question": "Is dengue more dangerous the second time you get it?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:397832",
+       "title": "Pests",
+       "share": 1.0,
+       "anchor": 0.652,
+       "bm25_rank": 163,
+       "text": "Mosquitoes exist around the world, especially in wetlands. In parts of the tropics, mosquitoes carry malaria, dengue fever, Zika virus, or yellow fever. Other diseases, including West Nile virus, can be spread by mosquitoes in some temperate latitudes. Swarms of mosquitoes can be a problem also where they do not carry diseases, and even a single mosquito bite can be an irritation and annoyance as "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:501695",
+       "title": "Hiking and bushwalking in Australia",
+       "share": 1.0,
+       "anchor": 0.502,
+       "bm25_rank": 187,
+       "text": "In the Top End of the Northern Territory, the Far North of Queensland and the Kimberley region of Western Australia, but particularly in the Northern Territory, saltwater (estuarine) crocodiles can get very aggressive and pose a severe threat and have killed people in the past. It is advisable to stay at least 100 metres from the water\u2019s edge and it is vital to follow warning signs \u2013 unlike snakes"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:137664",
+       "title": "Dengue fever",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 10,
+       "text": "In 2009, the WHO created a simpler system which divided dengue fever into two types:\n- Uncomplicated: People who just have the febrile stage of dengue fever, and never go into the critical phase. They get better on their own or just need basic medical help.\n- Severe: People who have symptoms that could kill them, or have serious complications from dengue."
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:137657",
+       "title": "Dengue fever",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 21,
+       "text": "Once a person gets the dengue virus from a mosquito, the virus attaches to and enters the person's white blood cells. As the white blood cells move around the body, the virus makes copies of itself. The white blood cells react by making many special proteins, like interferon, which tell the immune system to work harder because there is a threat in the body. These proteins cause the fever, flu-like"
+      }
+     ]
+    },
+    "boar-medlineplus-en": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-medlineplus-en:796",
+       "title": "Dengue",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 0,
+       "text": "- A high fever\n- Nausea and vomiting\n- Rash\n- Aches and pains (eye pain, usually behind the eyes, and pain in the muscles, joints, or bones)\n\nThe symptoms usually last two to seven days.\n\nSevere dengue is a serious form of the illness. About 1 in 20 people who get sick with dengue will develop severe dengue. It can cause shock, internal bleeding, and even death. People are more likely to develop s"
+      },
+      {
+       "chunk": "pack:boar-medlineplus-en:795",
+       "title": "Dengue",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 1,
+       "text": "What is dengue?\n\nDengue is a viral infection. It can be caused by four related viruses. You can get it if an infected mosquito bites you. It is common in warm, wet areas of the world. Although rare, it can be found in some parts of the United States. Outbreaks are more common during rainy seasons.\n\nHow does dengue spread?\n\nDengue spreads to people through the bite of an infected mosquito. It does "
+      },
+      {
+       "chunk": "pack:boar-medlineplus-en:797",
+       "title": "Dengue",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 2,
+       "text": "What are the treatments for dengue?\n\nThere is no specific medicine to treat dengue. Most people will get better after about a week. But if you think you might have dengue:\n\n- See a health care provider and mention any recent travel.\n- Rest as much as possible.\n- Take acetaminophen to control fever and relieve pain. But do not take aspirin or ibuprofen.\n- Drink plenty of fluids to prevent dehydrati"
+      }
+     ]
+    },
+    "boar-firstaid-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-firstaid-en:21460",
+       "title": "Stay safe",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 4,
+       "text": "Some of your medicines may be unavailable or even illegal at your destination; especially in some Asian countries (such as the Emirates) you could get into severe trouble if you have these at customs or try to get them mailed to you.\n- Menstrual pads can be difficult to obtain in some less developed countries.\n- Be aware of the potential hazards from pests (including tick or insect bites) in the p"
+      }
+     ]
+    },
+    "qa-health-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-health-se:20633",
+       "title": "Does constant exposure to Dengue over a population, increases or decreases the mortality of the epidemic?",
+       "share": 1.0,
+       "anchor": 0.785,
+       "bm25_rank": 0,
+       "text": "But anyway, I wanted to know if there is evidence of exposure to Dengue increasing or decreasing the mortality in a population. It is known exposure to other variant of Dengue significantly increases the chances of severe Dengue, though you get immunity to the same variant\n\nDengue in Peru - This is what happens when you get infected a second time (Spanish)"
+      },
+      {
+       "chunk": "pack:qa-health-se:20634",
+       "title": "Does constant exposure to Dengue over a population, increases or decreases the mortality of the epidemic?",
+       "share": 1.0,
+       "anchor": 0.632,
+       "bm25_rank": 1,
+       "text": "Simply put, it is widely thought that there is an increased risk of death or serious harm with subsequent Dengue infections. The WHO has this to say on their website on Dengue:\n\nIndividuals who are infected for the second time are at greater risk of severe dengue.\n\nSource. WHO Dengue and Severe Dengue. https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue Website accessed 08 Ma"
+      },
+      {
+       "chunk": "pack:qa-health-se:9308",
+       "title": "Is 2nd hand smoking worse than 1st hand smoking",
+       "share": 1.0,
+       "anchor": 0.502,
+       "bm25_rank": 18,
+       "text": "TL;DR\n\nYes, if one was to inhale the same amount of smoke passively as smokers inhale actively, it would be more dangerous. This is hardly the case though, as smokers also inhale parts of second hand smoke, and because as always, dosis facit venenum.\n\nRisk of Second Hand Smoke\n\nRisk of developing cancer\n\nExposure to secondhand smoke raises the risk -- by as much as 30 percent [1.3 times] -- that o"
+      }
+     ]
+    },
+    "qa-outdoors-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-outdoors-se:23368",
+       "title": "Found a black snake in my backyard. Is it dangerous?",
+       "share": 1.0,
+       "anchor": 0.502,
+       "bm25_rank": 42,
+       "text": "Second, it was in the news recently in a nearby county that a man was woken from his sleep in the middle of the night by a non-native snake falling on him. \"What the ----!?!\" you might ask... snakes falling on people in their sleep??? It turned out that he was in an apartment, and the neighbor who lived above him had a pet snake which had escaped its cage in the night, slipped between some floor-b"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:18427",
+       "title": "What's more dangerous: sleeping in the car or drowsy driving when on a road-trip?",
+       "share": 1.0,
+       "anchor": 0.502,
+       "bm25_rank": 31,
+       "text": "Are you more likely to get into an accident due to drowsy driving?\n\nYES, there is a good chance that you will have an accident and die if you drive while drowsy. It takes one second to hit another car or get off the road and hit a tree or something else. Remember, drowsy driving is not different than suicide bombing! you can kill yourself and other innocent people.\n\nAccording to the DrowsyDriving."
+      },
+      {
+       "chunk": "pack:qa-travel-se:34192",
+       "title": "Working in Europe on Schengen Tourist Visa",
+       "share": 1.0,
+       "anchor": 0.502,
+       "bm25_rank": 57,
+       "text": "Europe's a big place, so I'm generalizing with a wide brush here, but if you work illegally, you're likely to get exploited, the chances of getting busted are high, and the consequences are severe.\n\nFirst, if you're working illegally, you have no rights. You can get paid less than minimum wage, not be paid what you were promised, be made to work illegal hours or in unsafe conditions etc, and becau"
+      }
+     ]
+    },
+    "qa-cooking-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:41907",
+       "title": "Can I use Basmati Rice for fried rice?",
+       "share": 1.0,
+       "anchor": 0.605,
+       "bm25_rank": 37,
+       "text": "Yes! In fact, I try to use anything other than plain white rice when I make fried rice! Any leftover rice is better than fresh, since it fries better after drying out in your refrigerator. (I like to use equal parts white and brown rice, or cook the rice in beer instead of water, to get more depth of flavor in the resulting fried rice.) You can also chop up and add any leftover meat or veggies to "
+      }
+     ]
+    },
+    "boar-preparedness-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-preparedness-en:14012",
+       "title": "Stay safe",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 5,
+       "text": "Some of your medicines may be unavailable or even illegal at your destination; especially in some Asian countries (such as the Emirates) you could get into severe trouble if you have these at customs or try to get them mailed to you.\n- Menstrual pads can be difficult to obtain in some less developed countries.\n- Be aware of the potential hazards from pests (including tick or insect bites) in the p"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1850456",
+       "title": "Dengue fever",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 6,
+       "text": "As of March 2023, dengue is endemic in more than 100 countries with cases reported in every continent with the exception of Antarctica. The Americas, Southeast Asia and the Western Pacific regions are the most seriously affected. It is difficult to estimate the full extent of the disease, as many cases are mild and not correctly diagnosed. WHO currently estimates that 3.9\u00a0billion people are at ris"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3061107",
+       "title": "Spanish flu",
+       "share": 1.0,
+       "anchor": 0.632,
+       "bm25_rank": 106,
+       "text": "Because the virus that caused the disease was too small to be seen under a microscope at the time, there were problems with correctly diagnosing it. The bacterium Haemophilus influenzae was instead mistakenly thought to be the cause, as it was big enough to be seen and was present in many, though not all, patients. For this reason, a vaccine that was used against that bacillus did not make infecti"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2311801",
+       "title": "Pests",
+       "share": 1.0,
+       "anchor": 0.652,
+       "bm25_rank": 183,
+       "text": ", Zika virus and Yellow fever has a recognizable stance and appearance.]]\n\nMosquitoes exist around the world, especially in wetlands. In parts of the tropics, mosquitoes carry malaria, dengue fever, Zika virus, or yellow fever. Other diseases, including West Nile virus, can be spread by mosquitoes in some temperate latitudes. Swarms of mosquitoes can be a problem also where they do not carry disea"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2235060",
+       "title": "Stay safe",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 114,
+       "text": "Some of your medicines may be unavailable or even illegal at your destination; especially in some Asian countries (such as the Emirates) you could get into severe trouble if you have these at customs or try to get them mailed to you.\n- Menstrual pads can be difficult to obtain in some less developed countries.\n- Be aware of the potential hazards from pests (including tick or insect bites) in the p"
+      }
+     ]
+    }
+   }
+  },
+  "lan-ref-004": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "How big is Iceland in square kilometres?",
+   "K1": "S1",
+   "K3": "S2",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:238170",
+       "title": "Bog",
+       "share": 1.0,
+       "anchor": 0.717,
+       "bm25_rank": 9,
+       "text": "The world's largest peat bog is in the Congo (Brazzaville). It is as big as England. The bog covers between 100,000 and 200,000 square kilometres (40,000 to 80,000 sq miles), with the peat layer reaching up to 7m (23) beneath the ground. It holds billions of tonnes of partially decayed vegetation."
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:78786",
+       "title": "Tropical Storm Jose (2005)",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 78,
+       "text": "It was also reported that the storm damaged at least 16 thousand homes and about 250 square kilometres (60 thousand acres) of land used for cattle. In addition, over 420 square kilometres (103 thousand acres) of various crops, including sugar cane, corn and bananas, were flooded. Many boats were also lost as a result of Jose. 90 active medical brigades were sent to the region to reduce the risk of"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 8,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1424871",
+       "title": "Iceland",
+       "share": 1.0,
+       "anchor": 0.812,
+       "bm25_rank": 2,
+       "text": "Deforestation, climatic deterioration during the Little Ice Age, and overgrazing by sheep imported by settlers caused a loss of critical topsoil due to erosion. Today, many farms have been abandoned. Three-quarters of Iceland's 100,000 square kilometres (39,000\u00a0sq\u00a0mi) is affected by soil erosion; 18,000\u00a0km2 (6,900\u00a0sq\u00a0mi) is affected to a degree serious enough to make the land useless. Only a few s"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1797965",
+       "title": "Locust",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 35,
+       "text": "In the desert locust plague in Africa, the Middle East, and Asia that lasted from 1966 to 1969, the number of locusts increased from two to 30 billion over two generations, but the area covered decreased from over 100,000 square kilometres (39,000\u00a0sq\u00a0mi) to 5,000 square kilometres (1,900\u00a0sq\u00a0mi)."
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:28265",
+       "title": "Sahara",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 75,
+       "text": "The vast central hyper-arid core of the desert is virtually never affected by northerly or southerly atmospheric disturbances and permanently remains under the influence of the strongest anticyclonic weather regime, and the annual average rainfall can drop to less than 1 millimetre (0.04\u00a0in). In fact, most of the Sahara receives less than 20 millimetres (0.8\u00a0in). Of the 9,000,000 square kilometres"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:102429",
+       "title": "Kluane / Wrangell\u2013St. Elias / Glacier Bay / Tatshenshini-Alsek",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 29,
+       "text": "Kluane / Wrangell\u2013St. Elias / Glacier Bay / Tatshenshini-Alsek is an international park system located in Canada and the United States, at the border of Yukon, Alaska, and British Columbia. It was declared a UNESCO World Heritage Site in 1994 for the spectacular glacier and icefield landscapes as well as for the importance of grizzly bears, caribou and Dall sheep habitat. The total area of the sit"
+      },
+      {
+       "chunk": "pack:wiki-vital5:84519",
+       "title": "Ternate",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 145,
+       "text": "In total, the city has a land area of 162. 20 square kilometres and had a total population of 185,705 according to the 2010 census, and 205,001 according to the 2020 census, with a density of 1,264 people per square kilometre; the official estimate as of mid-2024 was 210,836 (comprising 104,128 males and 100,792 females in 2023). It is the biggest and most densely populated city in the province, a"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1494619",
+       "title": "Ili Kazakh Autonomous Prefecture",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 26,
+       "text": "Due to its strategic location in the middle of Asia, Ili Kazakh Autonomous Prefecture has become an important commercial hub and dry port for trade with Europe and the Middle East.\nIn the autonomous prefecture, there are four types of landforms: 83,632 square kilometres of mountains, 62,989 square kilometres of hills, 102,974 square kilometres of plains, and 20,439 square kilometres of desert. Thr"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:978995",
+       "title": "Western Australian Legislative Assembly",
+       "share": 1.0,
+       "anchor": 0.529,
+       "bm25_rank": 58,
+       "text": "The only distinction for rural seats is that any seat with an area of 100,000 square kilometres (38,610\u00a0sq\u00a0mi) or greater (that is, 4% of the State's land area) may have a variation of +10%\u201320% from the average, using an adjusted population based on the seat's area in square kilometres."
+      }
+     ]
+    }
+   }
+  },
+  "lan-cmp-005": {
+   "set": "v0.1",
+   "tag": "nature",
+   "question": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:325103",
+       "title": "Sundarbans (Bangladesh)",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 14,
+       "text": "While as a tourist you are unlikely to face any danger from the local wildlife, it is wise to be informed that two of the most potentially dangerous animals on Earth reside within the Sundarbans. The Sundarbans is well known as the only place left where Bengal Tigers still hunt and kill humans, and they do it regularly. These victims are always locals who live within the Sundarbans and rely on it "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:252732",
+       "title": "Palau",
+       "share": 1.0,
+       "anchor": 0.613,
+       "bm25_rank": 11,
+       "text": "Palau is quite a safe country to visit. Walking in downtown Koror at night, even past midnight is quite safe. But as with any place in the world today, common sense prevails. Pedestrians should be careful, as sidewalks are limited even in downtown Koror.\nSaltwater Crocodiles (Crocodylus porosus) still exist in Palau's mangroves and in the beautiful Rock Islands and can potentially be found anywher"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:34543",
+       "title": "Crocodile",
+       "share": 1.0,
+       "anchor": 0.651,
+       "bm25_rank": 4,
+       "text": "Crocodiles live in rivers, lakes and dams in parts of America, Asia, Africa and Australia. Some of the crocodiles from Australia live in salt water. These saltwater crocodiles are normally bigger than the ones that live in fresh water. While crocodiles spend most of their time in water, they can come out and move around on the land.\n\nCrocodiles cannot breathe underwater: they breathe air. This is "
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 10,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2440128",
+       "title": "Saltwater crocodile",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 1,
+       "text": "The weight of a crocodile increases approximately cubically as length increases (see square\u2013cube law). This explains why individuals at 6\u00a0m (20\u00a0ft) weigh more than twice as much as individuals at 5\u00a0m (16\u00a0ft). In crocodiles, linear growth eventually decreases and they start getting bulkier at a certain point.\nSaltwater crocodiles are the largest extant riparian predators in the world. However, they"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2440161",
+       "title": "Saltwater crocodile",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 4,
+       "text": "In Australia, goannas (Varanus giganteus) commonly eat freshwater crocodile eggs (feeding on up to 95% of the clutch if discovered), but are relatively unlikely to eat saltwater crocodile eggs due to the vigilance of the imposing mother, with about 25% of the eggs being lost to goannas (less than half as many Nile crocodile eggs are estimated to be eaten by monitors in Africa). A majority of the l"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2440169",
+       "title": "Saltwater crocodile",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 5,
+       "text": "Of all the crocodilians, the saltwater crocodile and Nile crocodile have the strongest tendency to becoming man-eating animals. The saltwater crocodile has a long history of attacking humans who unknowingly venture into its territory. As a result of its power, intimidating size and speed, survival of a predatory attack is unlikely if the crocodile is able to make direct contact. The only recommend"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:70969",
+       "title": "Saltwater crocodile",
+       "share": 1.0,
+       "anchor": 0.613,
+       "bm25_rank": 7,
+       "text": "Males can grow to a weight of 1,000\u20131,500 kg (2,200\u20133,300 lb) and a length of 6 m (20 ft), rarely exceeding 6. 3 m (21 ft). Females are much smaller and rarely surpass 3 m (9. 8 ft). It is also called the estuarine crocodile, Indo-Pacific crocodile, marine crocodile, sea crocodile, and, informally, the saltie. A large and opportunistic hypercarnivorous apex predator, they ambush most of their prey"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2238969",
+       "title": "Sundarbans (Bangladesh)",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 23,
+       "text": "While as a tourist you are unlikely to face any danger from the local wildlife, it is wise to be informed that two of the most potentially dangerous animals on Earth reside within the Sundarbans. The Sundarbans is well known as the only place left where Bengal Tigers still hunt and kill humans, and they do it regularly. These victims are always locals who live within the Sundarbans and rely on it "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2166528",
+       "title": "Palau",
+       "share": 1.0,
+       "anchor": 0.613,
+       "bm25_rank": 20,
+       "text": "Palau is quite a safe country to visit. Walking in downtown Koror at night, even past midnight is quite safe. But as with any place in the world today, common sense prevails. Pedestrians should be careful, as sidewalks are limited even in downtown Koror.\nSaltwater Crocodiles (Crocodylus porosus) still exist in Palau's mangroves and in the beautiful Rock Islands and can potentially be found anywher"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-001": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Food-safety rules let cooked dishes cool over several hours, so why is thawing frozen meat on the kitchen counter discouraged?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-007": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "My green onions wilt and dry out in the fridge within days. How do I keep the leafy tops fresh longer?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-013": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Tell me how to rescue a cast iron pot with a thick layer of burnt-on food.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-019": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Tell me how to cut and time garlic in a vegetable saute if I want the strongest garlic taste.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-005": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Tell me how to get a refund check payable to me and my former roommate deposited when we now live in different cities.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-011": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Walk me through how vested restricted stock units are taxed, including what happens when I later sell the shares.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:20053",
+       "title": "Tax implications of restricted stock units",
+       "share": 1.0,
+       "anchor": 0.591,
+       "bm25_rank": 40,
+       "text": "RSU are taxed when vested, based on their value at that point, as salary. If you don't sell to cover, you need to pay the taxes, if you sell to cover - you sell the portion that is worth the taxes (brokers do that automatically, and remit the taxes on your behalf).\n\nOnce paid your taxes, it becomes a regular stock position - short term gains if you sell within a year after vesting, long term if yo"
+      },
+      {
+       "chunk": "pack:qa-money-se:109638",
+       "title": "What are the tax implications of receiving part of one's salary in stock?",
+       "share": 0.5,
+       "anchor": 0.525,
+       "bm25_rank": 127,
+       "text": "what are the implications of having more or less of one's income in publicly traded shares?\n\nStock-based compensation is taxed in several parts.\n\nFirst it's taxed as ordinary income when it's vested, which can be immediately or in groups over several years. Typically, this tax is automatically deducted from the shares that you get, meaning if you are awarded, say 1,000 shares and are subject to 40"
+      },
+      {
+       "chunk": "pack:qa-money-se:42237",
+       "title": "What are the tax consequences of ISO exercising with an 83B election after the stocks FMV has gone up?",
+       "share": 0.5,
+       "anchor": 0.508,
+       "bm25_rank": 69,
+       "text": "83(b) election is for restricted stocks, not options, so my answer assumes exercise at vest/at grant (early exercise).\n\nWill I have to pay tax on (2000 * 8 = $16000)\n\nYes.\n\nWill it be a regular income tax or AMT or a short term capital gain?\n\nYou have no gain. You vested at $10 and sold at $10, you got a wash. The $16K you mentioned earlier is the benefit you got from the company, which is not a g"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-017": {
+   "set": "cm",
+   "tag": "money",
+   "question": "List the cash I should have ready beyond a 20% down payment when buying my first home.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

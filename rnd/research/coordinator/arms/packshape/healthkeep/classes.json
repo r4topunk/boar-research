@@ -1,0 +1,2256 @@
+{
+ "st-boar-firstaid-en-001": {
+  "cls": "OK",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "wound"
+  ],
+  "nkept": 3,
+  "rank": [
+   1
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:7652"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Explain how to improvise a seal for a stab or gunshot wound to the chest that is sucking air.",
+  "cat": "trauma/chest-wound",
+  "own_title": "First Aid/Chest & Abdominal Injuries",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:680->329",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-1",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-1",
+   "headpass:dense:add:pack:local-boar-firstaid-en:7652",
+   "instant:off-health",
+   "grounding:health-extractive"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "raw_other": 2
+ },
+ "st-boar-firstaid-en-002": {
+  "cls": "C2",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "cpr"
+  ],
+  "nkept": 1,
+  "rank": [
+   15
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": true,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "How deep, how fast and in what ratio with breaths should an adult receive chest compressions during CPR?",
+  "cat": "cpr/compressions",
+  "own_title": "First Aid/C for Compressions",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:805->329",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-1",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-extractive"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "qa-health-se",
+   "boar-firstaid-en"
+  ],
+  "raw_other": 1
+ },
+ "st-boar-firstaid-en-003": {
+  "cls": "C1",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I twisted my ankle hard on the trail and can't tell if it's broken. What first aid should I give it?",
+  "cat": "fractures/sprains",
+  "own_title": "First Aid/Musculoskeletal Injuries",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:1405->299",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:health-dropped-1",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "qa-outdoors-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-wikivoyage-en",
+   "qa-outdoors-se",
+   "boar-firstaid-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-firstaid-en-004": {
+  "cls": "C1",
+  "p": 0.999,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "hypothermic"
+  ],
+  "nkept": 0,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Why shouldn't a severely hypothermic, confused person be rewarmed quickly in the field?",
+  "cat": "cold/hypothermia",
+  "own_title": "Outdoor Survival/First Aid",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.999",
+   "detector:fire",
+   "context:714->167",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-1",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source",
+   "grounding:fa-card-hypothermia"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "qa-outdoors-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "qa-outdoors-se",
+   "qa-outdoors-se",
+   "qa-money-se",
+   "qa-money-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-005": {
+  "cls": "B",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   2,
+   7
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:7621"
+   ],
+   "bud": [],
+   "hdrop": [
+    "pack:local-boar-firstaid-en:7621"
+   ]
+  },
+  "q": "Tell me what to do, and not do, when something is stuck in someone's eye.",
+  "cat": "head/eye-injuries",
+  "own_title": "First Aid/Head & Facial Injuries",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:875->300",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "qa-health-se",
+   "boar-wikivoyage-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-firstaid-en-006": {
+  "cls": "C1",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "injur"
+  ],
+  "nkept": 2,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I come across an injured person on a busy road. What should I check before touching them?",
+  "cat": "scene-safety",
+  "own_title": "First Aid/Emergency First Aid & Initial Action Steps",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:935->204",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-2",
+   "grounding:health-best-restored",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-1",
+   "headpass:dense:add:pack:local-qa-health-se:10209",
+   "instant:off-health",
+   "grounding:health-extractive"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "qa-health-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-wikivoyage-en",
+   "boar-simplewiki-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-firstaid-en-007": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [
+   1,
+   13
+  ],
+  "wr": [
+   6
+  ],
+  "own_raw": false,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [
+    "pack:local-boar-firstaid-en:7732"
+   ],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:7732"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "In a survival situation, why is it a mistake to ration the water you already carry, and what water sources should you avoid?",
+  "cat": "water/survival",
+  "own_title": "Outdoor Survival/Water",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:681->356",
+   "grounding:off-topic-dropped-2",
+   "headpass:add:pack:local-qa-travel-se:24356",
+   "headpass:add:pack:local-qa-travel-se:24357",
+   "headpass:dense:add:pack:local-boar-firstaid-en:7732",
+   "headpass:budget:dropped:pack:local-qa-outdoors-se:8421"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "qa-outdoors-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "qa-travel-se",
+   "qa-outdoors-se",
+   "qa-outdoors-se",
+   "qa-outdoors-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-008": {
+  "cls": "C2",
+  "p": 0.892,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   6
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "What is the first thing to do if a climber becomes confused high in the mountains due to the altitude?",
+  "cat": "altitude/mountain-injuries",
+  "own_title": "ATP 4-02.11 \u2014 Chapter 17 Climatic and Environmental Injuries: Mountainous Terrain Injuries",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.892",
+   "detector:fire",
+   "context:723->284",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-2",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "qa-outdoors-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "boar-simplewiki-en",
+   "qa-travel-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-009": {
+  "cls": "C1",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I'm first at a car crash. When is it OK to drag someone out of the vehicle?",
+  "cat": "rescue/casualty-movement",
+  "own_title": "ATP 4-02.11 \u2014 Chapter 2 Casualty Extraction and Movement: Casualty Extraction",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:907->550",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-4",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "qa-travel-se",
+   "qa-travel-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "qa-money-se",
+   "qa-money-se",
+   "boar-wikivoyage-en",
+   "qa-money-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-010": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 3,
+  "rank": [
+   1,
+   2
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:6263"
+   ],
+   "bud": [
+    "pack:local-boar-firstaid-en:6262"
+   ],
+   "hdrop": []
+  },
+  "q": "How quickly can a house fire become deadly, and what kills most victims?",
+  "cat": "burns/home-fire",
+  "own_title": "Home Fires (Ready.gov)",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:839->372",
+   "grounding:off-topic-dropped-3",
+   "grounding:no-good-source",
+   "headpass:add:pack:local-boar-firstaid-en:20820",
+   "headpass:add:pack:local-boar-firstaid-en:20821",
+   "headpass:dense:add:pack:local-boar-firstaid-en:6263",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:6262"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-wikivoyage-en",
+   "boar-simplewiki-en",
+   "boar-simplewiki-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-firstaid-en-011": {
+  "cls": "C1",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Describe what to do if a so-called dirty bomb goes off while I'm outside.",
+  "cat": "disasters/radiological",
+  "own_title": "Radiological Dispersion Device (Ready.gov)",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:1284->321",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-4",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-wikivoyage-en",
+   "boar-wikivoyage-en",
+   "boar-simplewiki-en",
+   "vital5",
+   "boar-wikivoyage-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 6
+ },
+ "st-boar-firstaid-en-012": {
+  "cls": "C2",
+  "p": 0.78,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   7
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "During a heat wave, are electric fans enough to keep someone safe?",
+  "cat": "heat/prevention",
+  "own_title": "Get #SummerReady (Ready.gov)",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.780",
+   "detector:fire",
+   "context:684->308",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "qa-cooking-se",
+   "vital5",
+   "qa-cooking-se",
+   "qa-cooking-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-013": {
+  "cls": "C2",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   7
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Give me the basics of choosing and preparing a safe spot for a survival campfire.",
+  "cat": "survival/fire",
+  "own_title": "US Army Survival Manual FM 21-76: CHAPTER 7 - FIRECRAFT ",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:628->359",
+   "grounding:off-topic-dropped-2",
+   "headpass:add:pack:local-qa-cooking-se:4416",
+   "headpass:add:pack:local-qa-cooking-se:4417",
+   "headpass:dense:add:pack:local-qa-outdoors-se:780",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:6156"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "qa-cooking-se",
+   "vital5",
+   "qa-cooking-se",
+   "qa-outdoors-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-014": {
+  "cls": "C1",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "What is a warming center, and who can use one during cold nights?",
+  "cat": "shelter/emergency",
+  "own_title": "Emergency shelter",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:461->261",
+   "grounding:off-topic-dropped-1",
+   "headpass:add:pack:local-qa-cooking-se:54000",
+   "headpass:add:pack:local-qa-cooking-se:54001",
+   "headpass:dense:add:pack:local-boar-firstaid-en:10432",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:10433",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "qa-cooking-se",
+   "boar-simplewiki-en",
+   "boar-simplewiki-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-015": {
+  "cls": "E",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [
+   2
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-firstaid-en:9579"
+   ],
+   "hdrop": []
+  },
+  "q": "I'm leading a long expedition. How can I protect participants' mental health along with their physical safety?",
+  "cat": "wilderness-medicine/mental-health",
+  "own_title": "Wilderness medical emergency",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:940->477",
+   "grounding:off-topic-dropped-1",
+   "headpass:add:pack:local-qa-travel-se:103634",
+   "headpass:add:pack:local-qa-travel-se:103635",
+   "headpass:dense:add:pack:local-boar-firstaid-en:9701",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:9579"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "qa-travel-se",
+   "boar-wikivoyage-en",
+   "qa-outdoors-se",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-016": {
+  "cls": "B",
+  "p": 0.995,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   1
+  ],
+  "wr": [],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:17638"
+   ],
+   "bud": [],
+   "hdrop": [
+    "pack:local-boar-firstaid-en:17638"
+   ]
+  },
+  "q": "In a slow sand filter, is it the sand that cleans the water?",
+  "cat": "water/purification",
+  "own_title": "Slow sand filter",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.995",
+   "detector:fire",
+   "context:693->446",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-4",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "raw_other": 0
+ },
+ "st-boar-firstaid-en-017": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 3,
+  "rank": [
+   4
+  ],
+  "wr": [],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:15333"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Why might authorities detain or force people through decontamination after a chemical release?",
+  "cat": "disasters/decontamination",
+  "own_title": "Mass decontamination",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:498->241",
+   "grounding:off-topic-dropped-3",
+   "grounding:no-good-source",
+   "headpass:add:pack:local-boar-firstaid-en:15333",
+   "headpass:add:pack:local-boar-firstaid-en:15334",
+   "headpass:dense:add:pack:local-boar-firstaid-en:15317",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:15328"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "vital5",
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "raw_other": 1
+ },
+ "st-boar-firstaid-en-018": {
+  "cls": "C2",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   15
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I'm travelling somewhere with dodgy tap water and only have a clear plastic bottle. Can sunlight make the water safe?",
+  "cat": "water/travel",
+  "own_title": "Water",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:568->525",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-4",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "qa-outdoors-se",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "qa-travel-se",
+   "qa-health-se",
+   "qa-cooking-se",
+   "qa-cooking-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-019": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 2,
+  "rank": [
+   2,
+   6
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-firstaid-en:21646"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Which parts of the world have the most destructive earthquakes, and why are some quakes far from these zones especially deadly?",
+  "cat": "disasters/earthquake",
+  "own_title": "Earthquake safety",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:558->321",
+   "grounding:off-topic-dropped-2",
+   "grounding:no-good-source",
+   "headpass:no-user-pack",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:4219",
+   "headpass:dense:add:pack:local-boar-firstaid-en:21646"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-wikivoyage-en",
+   "vital5",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-firstaid-en-020": {
+  "cls": "C2",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [
+   5
+  ],
+  "wr": [],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Give me the key design rules for building a ventilated pit latrine that doesn't smell or attract flies.",
+  "cat": "sanitation/latrines",
+  "own_title": "Single Ventilated Improved Pit",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:683->419",
+   "headpass:already-kept-1",
+   "headpass:add:pack:local-boar-firstaid-en:3273",
+   "headpass:dense:add:pack:local-boar-firstaid-en:3277",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:3274",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "raw_other": 0
+ },
+ "st-boar-medlineplus-en-001": {
+  "cls": "OK",
+  "p": 0.016,
+  "fire": false,
+  "health": true,
+  "topic": [
+   "asthma,medicine"
+  ],
+  "nkept": 2,
+  "rank": [
+   9
+  ],
+  "wr": [
+   2
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:2290"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2290"
+   ],
+   "pre": [
+    "pack:local-boar-medlineplus-en:2290"
+   ],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I just found out I'm pregnant and I take daily asthma medicine. Should I stop it, and can I keep taking my usual multivitamin?",
+  "cat": "medicines/pregnancy",
+  "own_title": "Pregnancy and Medicines",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.016",
+   "context:485->202",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-1",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-1",
+   "headpass:dense:add:pack:local-boar-firstaid-en:19551",
+   "instant:off-health",
+   "grounding:health-extractive"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "qa-health-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 1
+ },
+ "st-boar-medlineplus-en-002": {
+  "cls": "OK",
+  "p": 0.098,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 3,
+  "rank": [
+   1
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-medlineplus-en:1014"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Who has a higher chance of getting endocarditis, the infection of the heart lining and valves?",
+  "cat": "conditions/heart-infection",
+  "own_title": "Endocarditis",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.098",
+   "context:638->427",
+   "grounding:off-topic-dropped-3",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:1014",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:1013"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "boar-firstaid-en",
+   "boar-simplewiki-en"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-003": {
+  "cls": "E",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [
+   2,
+   10
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-medlineplus-en:2968"
+   ],
+   "hdrop": []
+  },
+  "q": "How many international units of vitamin D per day are recommended for adults, and who needs more?",
+  "cat": "prevention/nutrition",
+  "own_title": "Vitamin D",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:614->210",
+   "headpass:add:pack:local-boar-simplewiki-en:7585",
+   "headpass:add:pack:local-boar-simplewiki-en:7586",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:70555",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:2968",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "vital5",
+   "boar-simplewiki-en",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-004": {
+  "cls": "OK",
+  "p": 0.005,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 6,
+  "rank": [
+   2
+  ],
+  "wr": [
+   2,
+   10
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:949"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:948",
+    "pack:local-boar-medlineplus-en:949"
+   ],
+   "pre": [],
+   "app": [
+    "pack:local-boar-medlineplus-en:948"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "My mouth feels sticky and dry most of the day. What usually causes this?",
+  "cat": "symptoms/mouth",
+  "own_title": "Dry Mouth",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.005",
+   "context:598->119",
+   "headpass:add:pack:local-boar-simplewiki-en:53495",
+   "headpass:add:pack:local-boar-simplewiki-en:53496",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:285003",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:948",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en",
+   "qa-cooking-se",
+   "qa-cooking-se"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-005": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   3
+  ],
+  "wr": [
+   1
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:2366"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2366"
+   ],
+   "pre": [],
+   "app": [
+    "pack:local-boar-medlineplus-en:2365"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Explain how crabs (pubic lice) are passed between people and how to get rid of them.",
+  "cat": "conditions/parasites",
+  "own_title": "Pubic Lice",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:678->71",
+   "headpass:already-kept-1",
+   "headpass:add:pack:local-boar-medlineplus-en:2365",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:244963",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:2364",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "vital5",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-006": {
+  "cls": "B",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   24
+  ],
+  "wr": [
+   2
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:784"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:784"
+   ],
+   "pre": [
+    "pack:local-boar-medlineplus-en:784"
+   ],
+   "app": [
+    "pack:local-boar-medlineplus-en:783",
+    "pack:local-boar-medlineplus-en:784"
+   ],
+   "bud": [],
+   "hdrop": [
+    "pack:local-boar-medlineplus-en:783",
+    "pack:local-boar-medlineplus-en:784"
+   ]
+  },
+  "q": "What can cause an elderly hospital patient to suddenly become confused and agitated?",
+  "cat": "conditions/confusion",
+  "own_title": "Delirium",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:382->93",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-2",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-simplewiki-en"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 0
+ },
+ "st-boar-medlineplus-en-007": {
+  "cls": "E",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 5,
+  "rank": [
+   2,
+   16
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-medlineplus-en:3042"
+   ],
+   "hdrop": []
+  },
+  "q": "I'm pregnant and planning a holiday somewhere with a Zika outbreak. What's the risk and what does the CDC advise?",
+  "cat": "conditions/infection-travel",
+  "own_title": "Zika Virus",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:737->320",
+   "headpass:already-kept-1",
+   "headpass:add:pack:local-boar-simplewiki-en:298623",
+   "headpass:dense:add:pack:local-qa-travel-se:76839",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:3042",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "qa-travel-se",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "vital5",
+   "qa-travel-se"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-008": {
+  "cls": "C2",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 6,
+  "rank": [
+   4
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "What are the warning signs of high blood sugar, and why does it happen in people with diabetes?",
+  "cat": "conditions/diabetes",
+  "own_title": "Hyperglycemia",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:522->452",
+   "headpass:no-user-pack",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:225425",
+   "headpass:dense:add:pack:local-boar-simplewiki-en:204858",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-simplewiki-en"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "vital5",
+   "vital5",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-009": {
+  "cls": "E",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   1,
+   2
+  ],
+  "wr": [
+   5
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2404"
+   ],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-medlineplus-en:2403",
+    "pack:local-boar-medlineplus-en:2404"
+   ],
+   "hdrop": []
+  },
+  "q": "Tell me why radon in a house matters and when I should test for it.",
+  "cat": "prevention/environment",
+  "own_title": "Radon",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:771->289",
+   "headpass:add:pack:local-qa-travel-se:143930",
+   "headpass:add:pack:local-qa-travel-se:143931",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:2404",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:2403"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 0,
+  "raw_packs": [
+   "qa-travel-se",
+   "vital5",
+   "qa-money-se",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-010": {
+  "cls": "C2",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "fever"
+  ],
+  "nkept": 0,
+  "rank": [
+   3,
+   4
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I've been on antibiotics for two weeks and now have watery diarrhea and a fever. Could it be C. diff?",
+  "cat": "conditions/infection",
+  "own_title": "C. diff Infections",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:568->283",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "boar-simplewiki-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-011": {
+  "cls": "B",
+  "p": 0.995,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   1
+  ],
+  "wr": [
+   2
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:2846"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2846"
+   ],
+   "pre": [
+    "pack:local-boar-medlineplus-en:2846"
+   ],
+   "app": [
+    "pack:local-boar-medlineplus-en:2845",
+    "pack:local-boar-medlineplus-en:2846"
+   ],
+   "bud": [],
+   "hdrop": [
+    "pack:local-boar-medlineplus-en:2845",
+    "pack:local-boar-medlineplus-en:2846"
+   ]
+  },
+  "q": "What are the common types and causes of a shaking hand tremor?",
+  "cat": "symptoms/movement",
+  "own_title": "Tremor",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.995",
+   "detector:fire",
+   "context:800->258",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "boar-simplewiki-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "boar-medlineplus-en",
+   "boar-simplewiki-en",
+   "boar-simplewiki-en"
+  ],
+  "raw_other": 2
+ },
+ "st-boar-medlineplus-en-012": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   1
+  ],
+  "wr": [
+   3
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:2981"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2981"
+   ],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-medlineplus-en:2982"
+   ],
+   "hdrop": []
+  },
+  "q": "My lab report lists a VLDL value but I never had a direct VLDL test. How was it calculated and what level is healthy?",
+  "cat": "tests/cholesterol",
+  "own_title": "VLDL Cholesterol",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:802->312",
+   "grounding:keep-noproper-restored-1",
+   "grounding:off-topic-dropped-1",
+   "headpass:add:pack:local-qa-money-se:121902",
+   "headpass:add:pack:local-qa-money-se:121903",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:2982",
+   "headpass:budget:dropped:pack:local-qa-health-se:17377"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "qa-health-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "qa-money-se",
+   "boar-medlineplus-en",
+   "boar-medlineplus-en",
+   "qa-money-se"
+  ],
+  "raw_other": 2
+ },
+ "st-boar-medlineplus-en-013": {
+  "cls": "OK",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 3,
+  "rank": [
+   3
+  ],
+  "wr": [
+   1
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:159"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:159"
+   ],
+   "pre": [],
+   "app": [
+    "pack:local-boar-medlineplus-en:161"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Which irregular heart rhythm do doctors see most often, and what test usually picks it up?",
+  "cat": "conditions/heart-rhythm",
+  "own_title": "Arrhythmia",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:681->176",
+   "grounding:off-topic-dropped-2",
+   "grounding:no-good-source",
+   "headpass:add:pack:local-boar-medlineplus-en:160",
+   "headpass:add:pack:local-boar-medlineplus-en:161",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:163",
+   "headpass:budget:dropped:pack:local-boar-simplewiki-en:298552"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "boar-simplewiki-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "vital5",
+   "qa-health-se",
+   "vital5"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-014": {
+  "cls": "E",
+  "p": 0.004,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   3,
+   7
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [
+    "pack:local-boar-medlineplus-en:477"
+   ],
+   "hdrop": []
+  },
+  "q": "List the risk factors and typical symptoms of cataracts.",
+  "cat": "conditions/eyes",
+  "own_title": "Cataract",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.004",
+   "context:562->309",
+   "headpass:add:pack:local-boar-simplewiki-en:57262",
+   "headpass:add:pack:local-boar-simplewiki-en:57263",
+   "headpass:budget:dropped:pack:local-boar-simplewiki-en:57266",
+   "headpass:budget:dropped:pack:local-boar-medlineplus-en:477",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "vital5",
+   "vital5"
+  ],
+  "raw_other": 4
+ },
+ "st-boar-medlineplus-en-015": {
+  "cls": "OK",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [
+   "concussion"
+  ],
+  "nkept": 5,
+  "rank": [
+   3,
+   16
+  ],
+  "wr": [],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [
+    "pack:local-boar-medlineplus-en:693"
+   ],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "My son bumped his head at football practice. Which signs after a concussion mean we should get help urgently?",
+  "cat": "conditions/head-injury",
+  "own_title": "Concussion",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:607->306",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-1",
+   "headpass:add:pack:local-boar-medlineplus-en:693",
+   "headpass:add:pack:local-boar-medlineplus-en:694",
+   "headpass:dense:add:pack:local-boar-firstaid-en:19918",
+   "headpass:budget:dropped:pack:local-boar-firstaid-en:7614",
+   "instant:off-health",
+   "grounding:health-extractive"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "vital5",
+   "qa-health-se",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 2
+ },
+ "st-boar-medlineplus-en-016": {
+  "cls": "OK",
+  "p": 0.001,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 3,
+  "rank": [],
+  "wr": [
+   1
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [
+    "pack:local-boar-medlineplus-en:1227"
+   ],
+   "wide": [
+    "pack:local-boar-medlineplus-en:1227"
+   ],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Which sudden eye symptoms point to an emergency type of glaucoma?",
+  "cat": "conditions/eyes",
+  "own_title": "Glaucoma",
+  "codes": [
+   "task:lookup",
+   "retrieve:yes",
+   "instant:may-finish",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.001",
+   "context:627->89",
+   "headpass:already-kept-1",
+   "headpass:add:pack:local-boar-medlineplus-en:1228",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:1226",
+   "headpass:budget:dropped:pack:local-qa-health-se:1113",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "qa-health-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "boar-medlineplus-en",
+   "vital5",
+   "qa-travel-se"
+  ],
+  "raw_other": 2
+ },
+ "st-boar-medlineplus-en-017": {
+  "cls": "C2",
+  "p": 1.0,
+  "fire": true,
+  "health": true,
+  "topic": [],
+  "nkept": 0,
+  "rank": [
+   3
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "With a stomach bug, when should an adult stop waiting it out and contact a provider?",
+  "cat": "symptoms/digestive",
+  "own_title": "Gastroenteritis",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=1.000",
+   "detector:fire",
+   "context:586->328",
+   "grounding:health-strict",
+   "grounding:health-off-topic-dropped-3",
+   "headpass:health-dropped-2",
+   "headpass:dense:health-dropped-2",
+   "instant:off-health",
+   "grounding:health-no-source"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "qa-travel-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "qa-travel-se",
+   "boar-wikivoyage-en",
+   "boar-wikivoyage-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-018": {
+  "cls": "D",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 6,
+  "rank": [
+   5
+  ],
+  "wr": [
+   6
+  ],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [
+    "pack:local-boar-medlineplus-en:2348"
+   ],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Explain what a PSA blood test can and cannot tell a man about prostate cancer.",
+  "cat": "tests/screening",
+  "own_title": "Prostate Cancer Screening",
+  "codes": [
+   "task:research",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:636->376",
+   "grounding:off-topic-dropped-1",
+   "headpass:add:pack:local-boar-simplewiki-en:192673",
+   "headpass:add:pack:local-boar-simplewiki-en:192674",
+   "headpass:dense:add:pack:local-boar-medlineplus-en:2342",
+   "headpass:budget:dropped:pack:local-qa-health-se:8149",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-medlineplus-en",
+   "qa-health-se"
+  ],
+  "picks_other": 1,
+  "raw_packs": [
+   "vital5",
+   "vital5",
+   "boar-simplewiki-en",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-019": {
+  "cls": "C2",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 7,
+  "rank": [
+   26
+  ],
+  "wr": [],
+  "own_raw": true,
+  "own_wide": true,
+  "own_kept": true,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "Tell me what to keep in the car before driving during a winter storm.",
+  "cat": "prevention/disasters",
+  "own_title": "Winter Weather Emergencies",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:660->461",
+   "headpass:add:pack:local-qa-money-se:31026",
+   "headpass:dense:add:pack:local-boar-firstaid-en:6201",
+   "headpass:dense:add:pack:local-boar-firstaid-en:17116",
+   "instant:off-topic"
+  ],
+  "picks": [
+   "boar-firstaid-en",
+   "boar-firstaid-en"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "qa-money-se",
+   "boar-wikivoyage-en",
+   "boar-wikivoyage-en",
+   "boar-medlineplus-en"
+  ],
+  "raw_other": 3
+ },
+ "st-boar-medlineplus-en-020": {
+  "cls": "C2",
+  "p": 0.0,
+  "fire": false,
+  "health": false,
+  "topic": null,
+  "nkept": 4,
+  "rank": [
+   7,
+   15
+  ],
+  "wr": [],
+  "own_raw": false,
+  "own_wide": false,
+  "own_kept": false,
+  "fact_in": {
+   "raw": [],
+   "wide": [],
+   "pre": [],
+   "app": [],
+   "bud": [],
+   "hdrop": []
+  },
+  "q": "I'm nervous about vaccinating my kids. How common are serious side effects, and is there a link to autism?",
+  "cat": "medicines/vaccines",
+  "own_title": "Vaccine Safety",
+  "codes": [
+   "task:chat",
+   "retrieve:yes",
+   "instant:preview",
+   "generate:user-model-qwen3-1.7b-q4km",
+   "offer-deep:multipass",
+   "detector:p=0.000",
+   "context:570->277",
+   "grounding:off-topic-dropped-1",
+   "headpass:add:pack:local-boar-simplewiki-en:32166",
+   "headpass:add:pack:local-boar-simplewiki-en:32167",
+   "headpass:budget:dropped:pack:local-qa-health-se:4724",
+   "headpass:budget:dropped:pack:local-qa-health-se:597"
+  ],
+  "picks": [
+   "qa-health-se",
+   "qa-health-se"
+  ],
+  "picks_other": 2,
+  "raw_packs": [
+   "boar-simplewiki-en",
+   "vital5",
+   "vital5",
+   "qa-health-se"
+  ],
+  "raw_other": 4
+ }
+}

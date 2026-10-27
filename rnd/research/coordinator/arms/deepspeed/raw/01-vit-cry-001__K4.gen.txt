@@ -1,0 +1,14 @@
+Ethereum currently relies on the fact that no quantum computer exists at scale to break ECDSA today, meaning funds are safe for now [2]. In the future, the network plans to use account abstraction (specifically EIP-8141) to enable signature agility, allowing users to migrate to quantum-resistant keypairs before their funds are compromised [5]. This approach ensures that active funds remain safe through proactive migration rather than a forced protocol-wide upgrade [5].
+
+generation: 95 tokens, 0.133 s/token (7.542 tok/s)
+compute: 54.7% CPU occupancy (0.2901 cpu-s/token over 4 threads), 0.00 major faults/token
+ngram: 9/27 drafts accepted (33.3%), 1.10 tokens per verify decode (86 decodes for 95 tokens)
+ngram: drafting costs 0.0000 s/token on top of decode → 7.54 tok/s effective (vs 7.54 reported)
+ngram: drafted on 9 of 86 steps (10.5%); the rest decoded plainly
+prefill: 637 tokens, 20.515 s (31.1 tok/s) | model load 9.353 s | TTFT 29.868 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 12857.1 MiB (135.34 MiB/token), decode 0.133 s/token (compute 0.062 + cache mgmt 0.003 + flash I/O 0.307 s/token, 440 MiB/s)
+moe-cache: 43.2% hit, resident 1499.7 MiB
+moe-cache: 25595 evictions, 19188 re-reads (202.0/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.067 s/token (flash reads overlapped with FFN compute)
+moe-prefetch: 57.7 MiB speculative, 22/47 experts useful (47%)

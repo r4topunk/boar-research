@@ -1,0 +1,196 @@
+items with key and non-key sources: 27; pairs 59
+within-item AUC  cosine 0.780  |  reranker 0.729
+top-1 is key-bearing: cosine 22/27  reranker 20/27
+reranker throughput (M-series CPU/Metal, desktop): 84 docs, ~20774 tokens in ~4752 ms incl. embedding+IO
+
+ios-main-v5-t0|lan-exp-001 | Give me a quick overview of Singapore: where it is, how it became inde
+  top cos: Wikivoyage: Singapore (KEY)
+  top rr : Singapore (KEY)
+  *Wikivoyage: Singapore cos=0.73 rr=0.52 [kept]
+  *Singapore cos=0.71 rr=0.52 [kept]
+  Wikivoyage: Narva cos=0.49 rr=0.50
+
+ios-main-v5-t0|lan-ref-001 | Who received the Nobel Prize in Literature in 2017?
+  top cos: Kazuo Ishiguro (KEY)
+  top rr : Abdulrazak Gurnah
+  Wikivoyage: Nobel tourism cos=0.61 rr=0.52
+  *Kazuo Ishiguro cos=0.71 rr=0.52 [kept]
+  Abdulrazak Gurnah cos=0.71 rr=0.53
+
+ios-main-v5-t0|vit-cry-001 | How would Ethereum protect users' funds if a quantum computer suddenly
+  top cos: ethereum.org: Post-quantum cryptography on Ethereum (KEY)
+  top rr : ethereum.org: Post-quantum cryptography on Ethereum (KEY)
+  *ethereum.org: Post-quantum cryptography on Ethereum cos=0.80 rr=0.53 [kept]
+  Ethereum EIPs/ERCs: ERC-7524: PLUME Signature in Wallets cos=0.62 rr=0.50 [kept]
+  Ethereum EIPs/ERCs: EIP-8202: Scheme-Agile Transactions cos=0.54 rr=0.50 [kept]
+
+ios-main-v5-t0|vit-cry-003 | What does EIP-4444 history expiry change for Ethereum node operators, 
+  top cos: Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients (KEY)
+  top rr : Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients (KEY)
+  *Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients cos=0.78 rr=0.52 [kept]
+  *ethereum.org: Statelessness, state expiry and history expiry cos=0.76 rr=0.52 [kept]
+  Ethereum EIPs/ERCs: EIP-7927: History Expiry Meta cos=0.74 rr=0.52 [kept]
+
+ios-main-v5-t0|vit-cry-011 | Why did Terra (UST/LUNA) collapse in 2022?
+  top cos: Stablecoin (KEY)
+  top rr : History of bitcoin
+  History of bitcoin cos=0.49 rr=0.50 [kept]
+  *Stablecoin cos=0.50 rr=0.50 [kept]
+  Cryptocurrency cos=0.47 rr=0.50 [kept]
+
+ios-main-v5-t0|vit-hlt-001 | My friend just got stung by a jellyfish while swimming in Thailand. Sh
+  top cos: Wikivoyage: Langkawi (KEY)
+  top rr : Wikivoyage: Vung Tau (KEY)
+  Wikivoyage: Gulf Islands National Seashore cos=0.45 rr=0.50
+  *Wikivoyage: Vung Tau cos=0.44 rr=0.50
+  *Wikivoyage: Langkawi cos=0.47 rr=0.50
+  *Wikivoyage: Darwin cos=0.42 rr=0.50
+
+ios-main-v5-t0|vit-hlt-002 | I'm at 4,000 m in the Andes with a headache and nausea. What should I 
+  top cos: Wikivoyage: Altitude sickness (KEY)
+  top rr : Wikivoyage: Altitude sickness (KEY)
+  *Wikivoyage: Altitude sickness cos=0.65 rr=0.51
+  Wikivoyage: North Sikkim cos=0.44 rr=0.50
+
+ios-main-v5-t0|lan-rsn-003 | Which land animal runs fastest, and for how long can it keep up its to
+  top cos: Common ostrich
+  top rr : Common ostrich
+  Common ostrich cos=0.73 rr=0.54 [kept]
+  *Cheetah cos=0.72 rr=0.53
+  Sailfish cos=0.72 rr=0.51
+  Pronghorn cos=0.72 rr=0.53
+
+ios-main-v5-t0|lan-cmp-003 | Which countries are bigger than India by area?
+  top cos: India (KEY)
+  top rr : India (KEY)
+  *India cos=0.78 rr=0.54 [kept]
+  Northeast India cos=0.71 rr=0.53 [kept]
+  *Wikivoyage: India cos=0.77 rr=0.53 [kept]
+
+ios-main-v5-t0|lan-ref-004 | How big is Iceland in square kilometres?
+  top cos: Reykjavík (KEY)
+  top rr : Reykjavík (KEY)
+  *Wikivoyage: Driving in Iceland cos=0.61 rr=0.51
+  *Reykjavík cos=0.72 rr=0.52
+  *Iceland cos=0.71 rr=0.51 [kept]
+  Wikivoyage: South Iceland cos=0.67 rr=0.51 [kept]
+
+ios-main-v5-t0|lan-exp-003 | Give me the essentials on Kenya: its location, capital, official langu
+  top cos: Wikivoyage: Nairobi (KEY)
+  top rr : Wikivoyage: Nairobi (KEY)
+  *Wikivoyage: Angola cos=0.56 rr=0.50
+  Wikivoyage: Mexico cos=0.51 rr=0.50
+  Wikivoyage: Bangladesh cos=0.53 rr=0.50
+  *Wikivoyage: Nairobi cos=0.71 rr=0.51
+
+ios-main-v5-t0|lan-cmp-004 | Which weighs more on average, an adult male moose or an adult male Ame
+  top cos: Moose
+  top rr : Moose
+  Moose cos=0.76 rr=0.53 [kept]
+  *American bison cos=0.73 rr=0.53 [kept]
+  Wikivoyage: North American wildlife cos=0.56 rr=0.50
+  Wikivoyage: Macquarie Island cos=0.33 rr=0.50
+
+ios-main-v5-t0|lan-cmp-005 | Which grows bigger, the saltwater crocodile or the Nile crocodile?
+  top cos: Nile crocodile
+  top rr : Saltwater crocodile (KEY)
+  Nile crocodile cos=0.74 rr=0.54 [kept]
+  *Saltwater crocodile cos=0.74 rr=0.54
+
+ios-main-v5-t0|lan-rsn-005 | Which are the longest rivers on Earth, and why is the ranking of the t
+  top cos: Amazon River (KEY)
+  top rr : Amazon River (KEY)
+  Wikivoyage: Extreme points cos=0.67 rr=0.51
+  *Amazon River cos=0.77 rr=0.53
+  Mackenzie River cos=0.74 rr=0.52 [kept]
+  Nile cos=0.73 rr=0.52
+
+ios-main-v5-t0|lan-rsn-006 | How long did the Hundred Years' War actually last, and which two kingd
+  top cos: Hundred Years' War (KEY)
+  top rr : Hundred Years' War (KEY)
+  *Hundred Years' War cos=0.83 rr=0.53 [kept]
+  Wars of the Three Kingdoms cos=0.74 rr=0.51 [kept]
+  Wars of the Roses cos=0.74 rr=0.52 [kept]
+
+ios-main-s42|lan-exp-001 | Give me a quick overview of Singapore: where it is, how it became inde
+  top cos: Wikivoyage: Singapore (KEY)
+  top rr : Wikivoyage: Singapore (KEY)
+  *Wikivoyage: Singapore cos=0.73 rr=0.52 [kept]
+  Wikivoyage: Narva cos=0.49 rr=0.50
+  *Wikivoyage: Tajikistan cos=0.57 rr=0.50
+
+ios-main-s42|lan-exp-002 | What are the key facts about Montenegro: capital, currency, coastline 
+  top cos: Wikivoyage: Montenegro (KEY)
+  top rr : Wikivoyage: Montenegro (KEY)
+  *Wikivoyage: Montenegro cos=0.75 rr=0.52 [kept]
+  Bitcoin cos=0.53 rr=0.50
+  Algorithmic Contract Types Unified Standards cos=0.40 rr=0.50
+
+ios-main-s42|vit-cry-001 | How would Ethereum protect users' funds if a quantum computer suddenly
+  top cos: ethereum.org: Post-quantum cryptography on Ethereum (KEY)
+  top rr : ethereum.org: Post-quantum cryptography on Ethereum (KEY)
+  *ethereum.org: Post-quantum cryptography on Ethereum cos=0.80 rr=0.53 [kept]
+  Ethereum EIPs/ERCs: ERC-7524: PLUME Signature in Wallets cos=0.62 rr=0.50 [kept]
+  Ethereum EIPs/ERCs: EIP-8202: Scheme-Agile Transactions cos=0.54 rr=0.50 [kept]
+
+ios-main-s42|vit-cry-003 | What does EIP-4444 history expiry change for Ethereum node operators, 
+  top cos: Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients (KEY)
+  top rr : Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients (KEY)
+  *Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients cos=0.78 rr=0.52 [kept]
+  *ethereum.org: Statelessness, state expiry and history expiry cos=0.76 rr=0.52 [kept]
+  Ethereum EIPs/ERCs: EIP-7927: History Expiry Meta cos=0.74 rr=0.52 [kept]
+
+ios-main-s42|vit-cry-011 | Why did Terra (UST/LUNA) collapse in 2022?
+  top cos: Stablecoin (KEY)
+  top rr : History of bitcoin
+  History of bitcoin cos=0.49 rr=0.50 [kept]
+  *Stablecoin cos=0.50 rr=0.50 [kept]
+  Cryptocurrency cos=0.47 rr=0.50 [kept]
+
+ios-main-s42|vit-hlt-001 | My friend just got stung by a jellyfish while swimming in Thailand. Sh
+  top cos: Wikivoyage: Langkawi (KEY)
+  top rr : Wikivoyage: Vung Tau (KEY)
+  Wikivoyage: Gulf Islands National Seashore cos=0.45 rr=0.50
+  *Wikivoyage: Vung Tau cos=0.44 rr=0.50
+  *Wikivoyage: Langkawi cos=0.47 rr=0.50
+  *Wikivoyage: Darwin cos=0.42 rr=0.50
+
+ios-main-s42|vit-hlt-002 | I'm at 4,000 m in the Andes with a headache and nausea. What should I 
+  top cos: Wikivoyage: Altitude sickness (KEY)
+  top rr : Wikivoyage: Altitude sickness (KEY)
+  *Wikivoyage: Altitude sickness cos=0.65 rr=0.51
+  Wikivoyage: North Sikkim cos=0.44 rr=0.50
+
+ios-main-s42|vit-hlt-003 | Is dengue more dangerous the second time you get it?
+  top cos: Wikivoyage: Dengue fever
+  top rr : Wikivoyage: Dengue fever
+  Wikivoyage: Dengue fever cos=0.70 rr=0.51 [kept]
+  *Wikivoyage: Dangerous animals cos=0.54 rr=0.51 [kept]
+
+ios-main-s42|lan-cmp-003 | Which countries are bigger than India by area?
+  top cos: Wikivoyage: India (KEY)
+  top rr : Wikivoyage: India (KEY)
+  *Wikivoyage: India cos=0.77 rr=0.53 [kept]
+  Wikivoyage: Jamnagar cos=0.51 rr=0.51
+
+ios-main-s42|lan-ref-004 | How big is Iceland in square kilometres?
+  top cos: Wikivoyage: South Iceland
+  top rr : Wikivoyage: North Iceland
+  *Wikivoyage: Driving in Iceland cos=0.61 rr=0.51
+  Wikivoyage: South Iceland cos=0.67 rr=0.51 [kept]
+  Wikivoyage: North Iceland cos=0.66 rr=0.52 [kept]
+  Wikivoyage: European quick reference cos=0.48 rr=0.51
+
+ios-main-s42|lan-exp-003 | Give me the essentials on Kenya: its location, capital, official langu
+  top cos: Wikivoyage: Nairobi (KEY)
+  top rr : Wikivoyage: Nairobi (KEY)
+  *Wikivoyage: Angola cos=0.56 rr=0.50
+  Wikivoyage: Mexico cos=0.51 rr=0.50
+  Wikivoyage: Bangladesh cos=0.53 rr=0.50
+  *Wikivoyage: Nairobi cos=0.71 rr=0.51
+
+ios-main-s42|lan-ref-005 | Which city hosted the 2016 Summer Olympics?
+  top cos: Wikivoyage: Olympic Games (KEY)
+  top rr : Wikivoyage: Olympic Games (KEY)
+  *Wikivoyage: Olympic Games cos=0.65 rr=0.51 [kept]
+  Wikivoyage: Sarajevo cos=0.49 rr=0.50

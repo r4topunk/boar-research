@@ -1,0 +1,9 @@
+# Cut 4 device fixes on cut 3 — frozen 2026-10-05 by the coordinator before any code (motivated by the A15 smoke, coordinator/device/A15-SMOKE-DIAGNOSIS.md)
+
+## KVFIX — KV session save path bug (src/inference/LlamaEngine.ts: key embeds "models/…gguf" → cache/kv/models/ never created → saveSession fails → gate + answer prefixes re-prefilled every question; desktop shim no-ops saveSession)
+Fix: sanitize the key (no path separators) and mkdir the target dirname; no other change.
+Gates: (1) unit tests incl. a key with "/" round-trips save → load; (2) desktop v0.1 EN s44 replay: answers byte-identical to cut 3 except ≤ 1 item/seed run-to-run noise (lan-exp-007 precedent); (3) device (next phone run, any tester): "[gate] session save failed" absent, gate prefix prefill and answer prefix prefill not repeated on question ≥ 2 (stage timers/logcat), model-path TTFT p50 down vs the A15 smoke on the same device class. (3) is reported when a device run exists; KVFIX ships on (1)+(2) because it only repairs intended behaviour.
+## INSTANT-FRAG — off-topic instant extractive answer (warm-up "What is the capital of France?" → Wikivoyage Lyon "France's gastronomic capital…"; reproduced on desktop)
+Fix: in the instant-final decision, block snippets that do not answer the question — at minimum list/heading fragments ("- —…" starts) and figurative-modifier matches ("gastronomic/culinary/… capital"), falling through to the normal path. No other change.
+Gates: L0 stub replay on v0.1 EN + V-exact + the warm-up question + ≥ 20 fresh 'capital/largest/currency of X' lookups written by a blind writer: the France question no longer finishes instant with the Lyon line; 0 instant answers lost that were correct before on v0.1/V-exact; report how many dev messages change tier. L1 v0.1 EN s44+s45 (same-day control, changed items only, judge.v1-med): no changed item down ≥ 1.0, unsafe 0, cw not up, Δ ≥ 0.
+Stop rule: one revision after an L0 FAIL; none after L1.

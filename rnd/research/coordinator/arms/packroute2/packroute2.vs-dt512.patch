@@ -1,0 +1,676 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf1..88917584 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -44,6 +44,11 @@ interface Settings {
+   placeTileNames?: Record<string, string>;
+   /** CR-2: models whose last load killed the app (cleared by a successful load). */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST: chunk-vector two-stage search in packs that carry chunk_vecs (default off); "extra" = DENSECHUNK-ST2 appended slots. */
++  packDense2?: boolean | "extra";
++  /** PACKROUTE (default off): with several packs installed, "router" searches the kit + one routed pack, "quota" caps each pack's slots;
++   *  PACKROUTE-2 "llm"/"llmq": the kit + the pack a 4B classifier call chose ("none": kit only / every pack capped). */
++  packRoute?: "off" | "router" | "quota" | "llm" | "llmq";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -489,6 +494,12 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST (default off): a pack's chunk-vector sidecar adds a two-stage semantic list to its search (true: fused;
++   *  "extra": DENSECHUNK-ST2, its best hits appended after the list). */
++  packDense2?: boolean | "extra";
++  /** PACKROUTE (default off): "router" = kit packs + at most one routed pack per question; "quota" = at most 2 slots per pack;
++   *  PACKROUTE-2 "llm"/"llmq" = kit packs + the classifier's pack (AnswerDeps.routePack). */
++  packRoute?: "off" | "router" | "quota" | "llm" | "llmq";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -500,6 +511,8 @@ export async function getAnswerSettings(): Promise<AnswerSettings> {
+     deepModelId: s.deepModelId,
+     largeModelConfirmedIds: s.largeModelConfirmedIds ?? [],
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
++    ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : {}),
++    ...(s.packRoute === "router" || s.packRoute === "quota" || s.packRoute === "llm" || s.packRoute === "llmq" ? { packRoute: s.packRoute } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..d43d073f 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -18,6 +18,7 @@ import { WikiPack, type PackHit, type PackSearchOptions, type Stem } from "./wik
+ import { guard, type Guarded } from "./guardedDb";
+ import { registerResetHook } from "../services/resetOrder";
+ import { EXPLAIN_INTENT, explainingFirst } from "./explain";
++import { isKitPack, voteRoute, type PackRoute, type PackRouteInput } from "./packRoute";
+ 
+ const PACK_CANDIDATES = 400;
+ const EMBEDDING_SHA256 = MODEL_CATALOG.find((m) => m.kind === "embedding" && m.required)!.sha256;
+@@ -152,18 +153,24 @@ export interface WikiPackResult {
+   pack: WikiPack;
+   hits: PackHit[];
+   stems: Stem[];
++  /** packDense2: the pack's two-stage chunk-vector hits (absent when off or the pack has no chunk_vecs). */
++  semantic?: PackHit[];
+ }
+ 
+-/** Searches every installed format-2 pack (a failing pack is skipped). */
+-export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}): Promise<WikiPackResult[]> {
++/**
++ * Searches every installed format-2 pack (a failing pack is skipped). `only` (PACKROUTE router): the packs to search,
++ * by id; absent = all.
++ */
++export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}, only?: (packId: string) => boolean): Promise<WikiPackResult[]> {
+   const out: WikiPackResult[] = [];
+   for (const pack of await knowledgePacks()) {
++    if (only && !only(pack.id)) continue;
+     try {
+       if (!(await openPack(pack))) continue;
+       const wp = wikiPacks.get(pack.id);
+       if (!wp) continue;
+-      const { hits, stems } = await wp.searchDetailed(query, opts);
+-      out.push({ packId: pack.id, pack: wp, hits, stems });
++      const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
++      out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
+     } catch (e: any) {
+       console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+     }
+@@ -171,6 +178,38 @@ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {
+   return out;
+ }
+ 
++/** PACKROUTE: the router's decisions, newest last (read by the retrieval replay; capped). */
++export const packRouteLog: PackRoute[] = [];
++
++/**
++ * PACKROUTE router: scores every installed non-kit format-2 pack for the question (src/rag/packRoute.ts voteRoute)
++ * from its keyword candidates (bm25Candidates), their articles' lead cosine and the articles the question names.
++ * No article text is read. A failing pack is left out.
++ */
++export async function routeWikiPacks(query: string, queryVec: Float32Array): Promise<PackRoute> {
++  const inputs: PackRouteInput[] = [];
++  for (const pack of await knowledgePacks()) {
++    if (isKitPack(pack.id)) continue;
++    try {
++      if (!(await openPack(pack))) continue;
++      const wp = wikiPacks.get(pack.id);
++      if (!wp) continue;
++      const stems = await wp.stems(query);
++      const named = (await wp.titlesInQuestion(query, stems)).filter((t) => t.share >= wp.tuning.namedMinShare);
++      const cands = await wp.bm25Candidates(stems);
++      const ids = [...new Set([...named.map((t) => t.id), ...cands.map((c) => c.articleId)])];
++      const sim = ids.length ? await wp.leadSimilarity(ids, queryVec) : new Map<number, number>();
++      inputs.push({ packId: pack.id, lead: sim.size ? Math.max(...sim.values()) : null, fts: cands.map((c) => c.score), title: named.length > 0 });
++    } catch (e: any) {
++      console.warn(`[packs] route scoring failed in ${pack.id}:`, e?.message ?? e);
++    }
++  }
++  const route = voteRoute(inputs);
++  packRouteLog.push(route);
++  if (packRouteLog.length > 50) packRouteLog.splice(0, packRouteLog.length - 50);
++  return route;
++}
++
+ const SOURCE_LABEL: Record<PackHit["source"], string> = {
+   enwiki: "Wikipedia",
+   enwikivoyage: "Wikivoyage",
+@@ -181,6 +220,10 @@ const SOURCE_LABEL: Record<PackHit["source"], string> = {
+   ethspecs: "Ethereum specs",
+   ethereumorg: "ethereum.org",
+   bips: "Bitcoin BIPs",
++  stackexchange: "Stack Exchange",
++  medlineplus: "MedlinePlus",
++  factbook: "CIA World Factbook (archive)",
++  simplewiki: "Simple English Wikipedia",
+ };
+ 
+ /** URL of a pack article: its recorded URL, else the Wikipedia/Wikivoyage/Wikibooks page for its title. */
+@@ -200,7 +243,11 @@ export function normalizeUrl(url: string): string {
+ 
+ export function articleUrl(title: string, source: PackHit["source"], url?: string): string {
+   if (url) return normalizeUrl(url);
+-  const host = source === "enwikivoyage" ? "en.wikivoyage.org" : source === "enwikibooks" ? "en.wikibooks.org" : "en.wikipedia.org";
++  const host =
++    source === "enwikivoyage" ? "en.wikivoyage.org"
++    : source === "enwikibooks" ? "en.wikibooks.org"
++    : source === "simplewiki" ? "simple.wikipedia.org"
++    : "en.wikipedia.org";
+   return `https://${host}/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
+ }
+ 
+@@ -212,7 +259,8 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+     docId: `pack:${packId}:a${h.articleId}`,
+     title: h.source === "enwiki" ? h.title : `${label}: ${h.title}`,
+     body: h.section ? `${h.section}: ${h.text}` : h.text,
+-    source: `${label} — ${articleUrl(h.title, h.source, h.url)}${h.license ? ` (${h.license})` : ""}`,
++    // Per-row credit last (Stack Exchange's CC BY-SA asks for author, profile link and question link).
++    source: `${label} — ${articleUrl(h.title, h.source, h.url)}${h.license ? ` (${h.license})` : ""}${h.attribution ? ` — ${h.attribution}` : ""}`,
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..20727ea8 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -10,7 +10,8 @@ import {
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+-import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
++import { packHitToChunk, routeWikiPacks, searchPacks, searchWikiPacks } from "./packs";
++import { capPerPack, isKitPack, llmRouteFilter, quotaOn, type PackRouteMode } from "./packRoute";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+ import { EXPLAIN_INTENT } from "./explain";
+@@ -115,25 +116,48 @@ async function semanticSearch(queryVec: Float32Array, limit: number): Promise<Re
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode; packRoute?: PackRouteMode; packRouteChoice?: string | null } = {}
+ ): Promise<RetrievedChunk[]> {
+-  const main = await retrieveOne(query, topK, opts);
++  routeCodes.length = 0;
++  const out = await retrieveRouted(query, topK, opts);
++  // PACKROUTE router: its decisions travel with the result (not enumerable: the list itself is unchanged).
++  if (routeCodes.length) Object.defineProperty(out, "packRouteCodes", { value: routeCodes.splice(0), enumerable: false });
++  return out;
++}
++
++/** PACKROUTE router reason codes of the retrieve() call in progress (packroute:<pack>|none, packroute-votes:…). */
++const routeCodes: string[] = [];
++
++async function retrieveRouted(
++  query: string,
++  topK: number,
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode; packRoute?: PackRouteMode; packRouteChoice?: string | null }
++): Promise<RetrievedChunk[]> {
++  // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
++  // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
++  const extra = opts.packDense2 === "extra";
++  const mainR = await retrieveOneDetailed(query, topK, opts);
++  const main = mainR.chunks;
+   // A Portuguese question against English sources: search again with the English names it mentions
+   // (Wikipedia's own interlanguage links, src/rag/ptLexicon.ts), and put those results first. The English
+   // embedder and keyword index barely match Portuguese words, so the first search alone finds noise.
+-  if (!looksPortuguese(query)) return main;
++  if (!looksPortuguese(query)) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // A standard's number in the question (EIP-1559, ERC-20, BIP-32) names its page exactly: it goes before any
+   // lexicon name, which for these questions is often only the generic "Ethereum".
+   const ids = identifiersIn(query);
+   const names = [...ids, ...englishNamesIn(query, opts.lexicon ?? ptLexicon()).filter((n) => !ids.includes(n))];
+-  if (!names.length) return main;
++  if (!names.length) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // The names alone ("Earthquake") don't say the question asks what to do; the question does.
+-  const found = await retrieveOne(names.join(" "), topK, {
++  const foundR = await retrieveOneDetailed(names.join(" "), topK, {
+     includeWikiPacks: opts.includeWikiPacks,
+     titles: names,
+     action: ACTION_INTENT.test(query),
+     explain: EXPLAIN_INTENT.test(query),
++    ...(opts.packDense2 ? { packDense2: opts.packDense2 } : {}),
++    ...(opts.packRoute && opts.packRoute !== "off" ? { packRoute: opts.packRoute } : {}),
++    ...(opts.packRouteChoice !== undefined ? { packRouteChoice: opts.packRouteChoice } : {}),
+   });
++  const found = foundR.chunks;
+   // Sources without a title boost (bundled corpus, format-1 packs): the article whose title is one of the names first.
+   const named = new Set(names.map((n) => n.toLowerCase()));
+   // A what-to-do question: passages from a section that says what to do (the preparedness pack's Treatment,
+@@ -150,7 +174,32 @@ export async function retrieve(
+   );
+   // The page of a standard the question names by number first, from either search.
+   const byId = (c: RetrievedChunk) => ids.some((id) => titleHasIdentifier(c.title, id));
+-  return dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
++  const both = dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]);
++  // PACKROUTE quota: the merged list too holds at most PACK_QUOTA slots per non-kit pack.
++  const out = (quotaOn(opts.packRoute, opts.packRouteChoice) ? capPerPack(both) : both).slice(0, topK);
++  return extra ? appendDenseExtra(out, [...mainR.dense, ...foundR.dense]) : out;
++}
++
++/** packDense2: off (absent/false), true = the dense chunk hits join the fusion (DENSECHUNK-ST), "extra" = appended slots (DENSECHUNK-ST2). */
++export type PackDense2Mode = boolean | "extra";
++/** packDense2 "extra": at most this many dense chunk hits are appended after the retrieved list. */
++export const DENSE2_EXTRA = 2;
++
++/**
++ * packDense2 "extra": appends to `list` the best `max` dense chunk hits (similarity order, ties in the given order) whose
++ * chunkId is not already in it. The hits are already at cosine >= MIN_SEMANTIC_SIMILARITY (WikiPack.denseChunks).
++ * Nothing in `list` moves or is dropped.
++ */
++export function appendDenseExtra(list: RetrievedChunk[], dense: RetrievedChunk[], max = DENSE2_EXTRA): RetrievedChunk[] {
++  if (!dense.length || max <= 0) return list;
++  const seen = new Set(list.map((c) => c.chunkId));
++  const add = dense
++    .map((c, i) => ({ c, i }))
++    .sort((a, b) => (b.c.similarity ?? 0) - (a.c.similarity ?? 0) || a.i - b.i)
++    .map((x) => x.c)
++    .filter((c) => !seen.has(c.chunkId) && (seen.add(c.chunkId), true))
++    .slice(0, max);
++  return add.length ? [...list, ...add] : list;
+ }
+ 
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+@@ -158,13 +207,21 @@ export function isDisambiguation(c: { title: string; body: string }): boolean {
+   return /\(disambiguation\)$/i.test(c.title) || /\bmay (also )?refer to\b/i.test(c.body.slice(0, 300));
+ }
+ 
+-async function retrieveOne(
++async function retrieveOneDetailed(
+   query: string,
+   topK: number,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean }
+-): Promise<RetrievedChunk[]> {
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean; packDense2?: PackDense2Mode; packRoute?: PackRouteMode; packRouteChoice?: string | null }
++): Promise<{ chunks: RetrievedChunk[]; dense: RetrievedChunk[] }> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
++  // PACKROUTE router: the kit packs and at most one other pack, chosen before the search (src/rag/packRoute.ts).
++  const route = opts.packRoute === "router" && includeWikiPacks ? await routeWikiPacks(query, queryVec).catch(() => null) : null;
++  if (route) routeCodes.push(...route.codes);
++  // PACKROUTE-2 "llm"/"llmq": the route decided before retrieval (packRouteChoice), reported like the router's.
++  const llm = opts.packRoute === "llm" || opts.packRoute === "llmq";
++  if (llm && includeWikiPacks) routeCodes.push(`packroute:${opts.packRoute}-${opts.packRouteChoice ? opts.packRouteChoice : "nochoice"}`);
++  const only = route ? (id: string) => isKitPack(id) || id === route.selected : llm ? llmRouteFilter(opts.packRoute, opts.packRouteChoice) : undefined;
++  const quota = quotaOn(opts.packRoute, opts.packRouteChoice);
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+     lexicalSearch(query, queryVec, topK * 2),
+     semanticSearch(queryVec, topK * 2),
+@@ -177,7 +234,8 @@ async function retrieveOne(
+           ...(titles ? { titles } : {}),
+           ...(opts.action !== undefined ? { action: opts.action } : {}),
+           ...(opts.explain !== undefined ? { explain: opts.explain } : {}),
+-        }).catch(() => [])
++          ...(opts.packDense2 ? { dense2: true } : {}),
++        }, only).catch(() => [])
+       : Promise.resolve([]),
+   ]);
+ 
+@@ -192,10 +250,18 @@ async function retrieveOne(
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+   // take the top-K or per-article slots before the gate sees the rest. Large-pack hits have their
+   // own ranking and no similarity, so they aren't gated here.
++  // packDense2: a large pack's chunk-vector hits (already at cosine >= MIN_SEMANTIC_SIMILARITY) join the semantic list,
++  // so a passage found by both its words and its meaning adds up (fuseRetrievalResults); off: the list is empty.
++  const wikiSemantic = wiki.flatMap((w) =>
++    (w.semantic ?? []).map((h) => ({ ...packHitToChunk(w.packId, h), matchType: "semantic" as const, similarity: h.score }))
++  );
++  // "extra": the dense list stays out of the fusion and is returned beside the result (retrieve appends it).
++  const extra = opts.packDense2 === "extra";
+   const fused = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    gateByRelevance([...semantic, ...packs.semantic]),
+-    topK
++    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
++    // PACKROUTE quota: the whole ranked list, so the slots a capped pack gives up go to the next candidates.
++    quota ? Number.MAX_SAFE_INTEGER : topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+   // right after the named articles, instead of competing in the fusion with keyword noise from the bundled corpus.
+@@ -208,10 +274,14 @@ async function retrieveOne(
+   const seen = new Set(first.map((c) => c.chunkId));
+   // One copy per article passage across libraries (src/rag/dedupe.ts), before the cut, so a dropped
+   // copy makes room for the next distinct source.
+-  const result = dedupeArticleCopies([
++  const deduped = dedupeArticleCopies([
+     ...first.filter((c, i) => first.findIndex((x) => x.chunkId === c.chunkId) === i),
+     ...fused.filter((c) => !seen.has(c.chunkId)),
+-  ]).slice(0, Math.max(topK, named.length));
++  ]);
++  // PACKROUTE quota: at most PACK_QUOTA slots per non-kit pack, named articles included.
++  const held = new Map<string, number>();
++  const capped = quota ? capPerPack(deduped, undefined, held) : deduped;
++  const result = capped.slice(0, Math.max(topK, quota ? named.filter((c) => capped.includes(c)).length : named.length));
+   // A what-to-do question: the lay sources the pack search added past its limit (a first-aid manual next to the
+   // clinical article) must reach the answer, not be cut here with the rest of the keyword hits.
+   if (action) {
+@@ -220,9 +290,12 @@ async function retrieveOne(
+       .flatMap((w) => w.hits.filter((h) => LAY_SOURCES.has(h.source)).map((h) => packHitToChunk(w.packId, h)))
+       .filter((c) => !inResult.has(c.chunkId));
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+-    result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
++    const extraLay = dedupeArticleCopies([...result, ...lay]).slice(result.length);
++    // PACKROUTE quota: the pack slots counted over the kept list only, then the same cap on the lay extras.
++    if (quota) held.clear(), capPerPack(result, undefined, held);
++    result.push(...(quota ? capPerPack(extraLay, undefined, held) : extraLay).slice(0, 2));
+   }
+-  return result;
++  return { chunks: result, dense: extra ? wikiSemantic : [] };
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 35877fca..6a940832 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -184,7 +184,12 @@ export interface AnswerEngine {
+ 
+ export interface AnswerDeps {
+   engine: AnswerEngine;
+-  retrieve(query: string, k: number): Promise<RetrievedChunk[]>;
++  /** `opts.packDense2`: settings.packDense2 (DENSECHUNK-ST true / ST2 "extra"), passed only when on. */
++  /** `opts.packRoute`: settings.packRoute (PACKROUTE "router" / "quota"), passed only when on. */
++  retrieve(query: string, k: number, opts?: { packDense2?: boolean | "extra"; packRoute?: "off" | "router" | "quota" | "llm" | "llmq"; packRouteChoice?: string | null }): Promise<RetrievedChunk[]>;
++  /** PACKROUTE-2 (settings.packRoute "llm"/"llmq"): the installed pack the question goes to, or "none"; null = undecided
++   *  (every pack is searched). The product path asks the 4B (one short classifier call); the replay reads a routes file. */
++  routePack?(question: string): Promise<string | null>;
+   getSettings(): Promise<AnswerSettings>;
+   listInstalledLlms(): Promise<InstalledLlm[]>;
+   getActiveModelId(): Promise<string | null>;
+@@ -980,10 +985,23 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await deps.retrieve(searchQuery, gen?.retrieveK ?? 6).catch((e) => {
++        const retrieveOpts = {
++          ...(settings.packDense2 === true || settings.packDense2 === "extra" ? { packDense2: settings.packDense2 } : {}),
++          ...(settings.packRoute === "router" || settings.packRoute === "quota" ? { packRoute: settings.packRoute } : {}),
++          ...(settings.packRoute === "llm" || settings.packRoute === "llmq"
++            ? { packRoute: settings.packRoute, packRouteChoice: deps.routePack ? await deps.routePack(req.query).catch(() => null) : null }
++            : {}),
++        };
++        raw = await (Object.keys(retrieveOpts).length
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, retrieveOpts)
++          : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
++        ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
++        // PACKROUTE router: which pack the question went to (src/rag/retrieve.ts attaches the codes to the list).
++        const routed = (raw as { packRouteCodes?: unknown }).packRouteCodes;
++        if (Array.isArray(routed)) reasonCodes.push(...routed);
+         retrievalMs = deps.now() - rs;
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+diff --git a/src/routing/answerService.ts b/src/routing/answerService.ts
+index 2b278e17..e44a0da4 100644
+--- a/src/routing/answerService.ts
++++ b/src/routing/answerService.ts
+@@ -75,7 +75,7 @@ function knowledgeReady(): Promise<void> {
+ 
+ export const { answer, deepen, effectiveModel: effectiveAnswerModel } = createAnswerer({
+   engine: llamaEngine,
+-  retrieve: (q, k) => retrieve(q, k),
++  retrieve: (q, k, o) => retrieve(q, k, o),
+   knowledgeReady,
+   englishNames: (query) => englishNamesIn(query, ptLexicon()),
+   getSettings: getAnswerSettings,
+diff --git a/src/rag/packRoute.ts b/src/rag/packRoute.ts
+new file mode 100644
+index 00000000..6d0941ce
+--- /dev/null
++++ b/src/rag/packRoute.ts
+@@ -0,0 +1,116 @@
++/**
++ * PACKROUTE (default off): what to do when several Knowledge Packs are installed at once.
++ *
++ * - "router": before the pack search, every installed non-kit pack is scored for the question and gets up to three
++ *   votes: (i) the highest lead cosine of its best candidate article, (ii) the largest share of the pooled top
++ *   ROUTE_FTS_POOL keyword candidates over all non-kit packs, (iii) an article the question names (titlesInQuestion,
++ *   share >= the pack's namedMinShare). The pack with the most votes is searched when it has at least
++ *   ROUTE_MIN_VOTES and no other pack has as many; otherwise none is. The kit packs are always searched.
++ * - "quota": every pack is searched as without the setting, but each non-kit pack holds at most PACK_QUOTA of the
++ *   retrieved slots; the slots it would have taken go to the next candidates.
++ *
++ * - "llm" (PACKROUTE-2): the route is decided outside retrieval (a 4B classifier call over the installed packs'
++ *   descriptions; step 0: a routes file) and passed as `packRouteChoice` (a pack id or "none"): the kit packs + the chosen
++ *   pack are searched; "none" = the kit packs only. No choice (the call failed) = every pack, as without the setting.
++ * - "llmq" (PACKROUTE-2): as "llm", but "none" = every pack with the "quota" cap.
++ *
++ * Pure: no database or native imports (tests and src/rag/packs.ts use it).
++ */
++export type PackRouteMode = "off" | "router" | "quota" | "llm" | "llmq";
++
++/** PACKROUTE-2: the packs to search for an externally decided route ("llm"/"llmq"); undefined = every pack. */
++export function llmRouteFilter(mode: PackRouteMode | undefined, choice: string | null | undefined): ((packId: string) => boolean) | undefined {
++  if ((mode !== "llm" && mode !== "llmq") || !choice) return undefined;
++  if (choice === "none") return mode === "llm" ? (id) => isKitPack(id) : undefined;
++  return (id) => isKitPack(id) || basePackId(id) === basePackId(choice);
++}
++
++/** The "quota" cap applies: mode "quota", or "llmq" routed to none. */
++export const quotaOn = (mode: PackRouteMode | undefined, choice: string | null | undefined) =>
++  mode === "quota" || (mode === "llmq" && choice === "none");
++
++/** Packs shipped with the claim build: always searched, never routed or capped. */
++export const KIT_PACK_IDS = new Set(["boar-crypto", "boar-wikivoyage-en"]);
++export const ROUTE_FTS_POOL = 20;
++export const ROUTE_MIN_VOTES = 2;
++export const PACK_QUOTA = 2;
++
++/** A pack id without the "local-" prefix of a pack file found in corpus/ outside the catalog. */
++export const basePackId = (id: string) => id.replace(/^local-/, "");
++export const isKitPack = (id: string) => KIT_PACK_IDS.has(basePackId(id));
++
++/** The pack id of a retrieved chunk ("pack:<id>:<chunk>"), or null for the bundled corpus. */
++export function chunkPackId(chunkId: string): string | null {
++  const m = /^pack:([^:]+):/.exec(chunkId);
++  return m ? m[1] : null;
++}
++
++export interface PackRouteInput {
++  packId: string;
++  /** Best lead cosine over the pack's candidate articles (null: no candidate with a lead vector). */
++  lead: number | null;
++  /** The pack's keyword candidates' scores (bm25Candidates order). */
++  fts: number[];
++  /** The question names one of the pack's articles. */
++  title: boolean;
++}
++
++export interface PackRoute {
++  selected: string | null;
++  votes: Record<string, number>;
++  /** Per pack: lead cosine, candidates in the pooled top ROUTE_FTS_POOL, title match. */
++  scores: Array<{ packId: string; lead: number | null; fts: number; title: boolean }>;
++  codes: string[];
++}
++
++/** The single argmax of `value` over `xs`, or null when there is none or it is tied. */
++function uniqueMax<T>(xs: T[], value: (x: T) => number | null): T | null {
++  let best: T | null = null, bestV = -Infinity, tied = false;
++  for (const x of xs) {
++    const v = value(x);
++    if (v === null || !Number.isFinite(v)) continue;
++    if (v > bestV) (best = x), (bestV = v), (tied = false);
++    else if (v === bestV) tied = true;
++  }
++  return tied ? null : best;
++}
++
++/** The router's vote (deterministic; ties never win a vote or the route). */
++export function voteRoute(inputs: PackRouteInput[], pool = ROUTE_FTS_POOL, minVotes = ROUTE_MIN_VOTES): PackRoute {
++  const votes: Record<string, number> = Object.fromEntries(inputs.map((p) => [p.packId, 0]));
++  const lead = uniqueMax(inputs, (p) => p.lead);
++  if (lead) votes[lead.packId]++;
++  // Pooled keyword candidates: score order, ties by pack order then rank.
++  const pooled = inputs
++    .flatMap((p, pi) => p.fts.map((s, r) => ({ packId: p.packId, s, pi, r })))
++    .sort((a, b) => b.s - a.s || a.pi - b.pi || a.r - b.r)
++    .slice(0, pool);
++  const share = new Map<string, number>();
++  for (const c of pooled) share.set(c.packId, (share.get(c.packId) ?? 0) + 1);
++  const fts = uniqueMax(inputs, (p) => share.get(p.packId) ?? null);
++  if (fts) votes[fts.packId]++;
++  for (const p of inputs) if (p.title) votes[p.packId]++;
++  const top = uniqueMax(inputs, (p) => votes[p.packId]);
++  const selected = top && votes[top.packId] >= minVotes ? top.packId : null;
++  const scores = inputs.map((p) => ({ packId: p.packId, lead: p.lead === null ? null : +p.lead.toFixed(4), fts: share.get(p.packId) ?? 0, title: p.title }));
++  const codes = [
++    `packroute:${selected ? basePackId(selected) : "none"}`,
++    ...inputs.filter((p) => votes[p.packId] > 0).map((p) => `packroute-votes:${basePackId(p.packId)}-${votes[p.packId]}`),
++  ];
++  return { selected, votes, scores, codes };
++}
++
++/**
++ * Quota: keeps `list`'s order, dropping a non-kit pack's chunk once that pack already holds `cap` of the kept ones.
++ * The bundled corpus and the kit packs are never capped.
++ */
++export function capPerPack<T extends { chunkId: string }>(list: T[], cap = PACK_QUOTA, held: Map<string, number> = new Map()): T[] {
++  return list.filter((c) => {
++    const p = chunkPackId(c.chunkId);
++    if (!p || isKitPack(p)) return true;
++    const n = held.get(p) ?? 0;
++    if (n >= cap) return false;
++    held.set(p, n + 1);
++    return true;
++  });
++}
+diff --git a/src/rag/packRoute.test.ts b/src/rag/packRoute.test.ts
+new file mode 100644
+index 00000000..15e6729a
+--- /dev/null
++++ b/src/rag/packRoute.test.ts
+@@ -0,0 +1,150 @@
++import { describe, it, expect, vi } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++
++const { hit, calls } = vi.hoisted(() => ({
++  hit: (chunkId: number, title: string, score: number) => ({
++    articleId: chunkId, chunkId, title, section: "", text: `${title} text.`, start: 0, end: 10, score, via: "bm25", source: "simplewiki", views: 0, lead: false, action: false,
++  }),
++  calls: { searched: [] as string[][] },
++}));
++// Three packs: the kit's wikivoyage (2 weak hits), pack "local-a" (6 strong hits), pack "local-b" (3 middling hits).
++vi.mock("./packs", async (importOriginal) => {
++  const actual: any = await importOriginal();
++  const all = [
++    { packId: "local-boar-wikivoyage-en", hits: [hit(1, "Kit 1", 3), hit(2, "Kit 2", 2)] },
++    { packId: "local-a", hits: [1, 2, 3, 4, 5, 6].map((i) => hit(10 + i, `A ${i}`, 20 - i)) },
++    { packId: "local-b", hits: [1, 2, 3].map((i) => hit(20 + i, `B ${i}`, 9 - i)) },
++  ];
++  return {
++    packHitToChunk: actual.packHitToChunk,
++    searchPacks: async () => ({ lexical: [], semantic: [] }),
++    searchWikiPacks: async (_q: string, _o: any, only?: (id: string) => boolean) => {
++      const r = all.filter((p) => !only || only(p.packId));
++      calls.searched.push(r.map((p) => p.packId));
++      return r;
++    },
++    // b: lead + title (2 votes), a: keyword share (1 vote) -> b
++    routeWikiPacks: async () => (await import("./packRoute")).voteRoute([
++      { packId: "local-a", lead: 0.6, fts: [20, 19, 18], title: false },
++      { packId: "local-b", lead: 0.7, fts: [9], title: true },
++    ]),
++  };
++});
++
++import { voteRoute, capPerPack, chunkPackId, isKitPack, basePackId, llmRouteFilter, quotaOn } from "./packRoute";
++import { retrieve } from "./retrieve";
++
++const ids = (cs: { chunkId: string }[]) => cs.map((c) => c.chunkId);
++const packsOf = (cs: { chunkId: string }[]) => cs.map((c) => chunkPackId(c.chunkId));
++
++describe("voteRoute", () => {
++  it("lead, keyword share and title votes; the pack with >= 2 votes wins", () => {
++    const r = voteRoute([
++      { packId: "local-a", lead: 0.8, fts: [10, 9, 8], title: false },
++      { packId: "local-b", lead: 0.7, fts: [5], title: true },
++    ]);
++    expect(r.votes).toEqual({ "local-a": 2, "local-b": 1 });
++    expect(r.selected).toBe("local-a");
++    expect(r.codes).toEqual(["packroute:a", "packroute-votes:a-2", "packroute-votes:b-1"]);
++    expect(r.scores[0]).toEqual({ packId: "local-a", lead: 0.8, fts: 3, title: false });
++  });
++  it("split votes or a tie route to none", () => {
++    expect(voteRoute([
++      { packId: "a", lead: 0.8, fts: [1], title: false },
++      { packId: "b", lead: 0.7, fts: [5, 4], title: false },
++    ]).selected).toBeNull();
++    // a: lead + title = 2, b: fts + title = 2 -> tie -> none
++    const t = voteRoute([
++      { packId: "a", lead: 0.8, fts: [1], title: true },
++      { packId: "b", lead: 0.7, fts: [5, 4], title: true },
++    ]);
++    expect(t.selected).toBeNull();
++    expect(t.codes[0]).toBe("packroute:none");
++    // tied lead cosines give no lead vote
++    expect(voteRoute([
++      { packId: "a", lead: 0.8, fts: [9], title: false },
++      { packId: "b", lead: 0.8, fts: [], title: false },
++    ]).votes).toEqual({ a: 1, b: 0 });
++  });
++  it("the keyword share is over the pooled top 20", () => {
++    const r = voteRoute([
++      { packId: "a", lead: null, fts: Array.from({ length: 15 }, (_, i) => 100 - i), title: false },
++      { packId: "b", lead: null, fts: Array.from({ length: 30 }, (_, i) => 50 - i), title: true },
++    ]);
++    expect(r.scores.map((s) => s.fts)).toEqual([15, 5]);
++    expect(r.votes).toEqual({ a: 1, b: 1 });
++    expect(r.selected).toBeNull();
++  });
++  it("no packs: none", () => expect(voteRoute([]).selected).toBeNull());
++});
++
++describe("capPerPack", () => {
++  it("caps non-kit packs, never the kit or the bundled corpus, keeping order", () => {
++    const l = ["pack:local-a:1", "seed-1", "pack:local-a:2", "pack:local-a:3", "pack:local-boar-crypto:1", "pack:local-boar-crypto:2", "pack:local-boar-crypto:3", "pack:local-b:1"].map((chunkId) => ({ chunkId }));
++    expect(ids(capPerPack(l))).toEqual(["pack:local-a:1", "seed-1", "pack:local-a:2", "pack:local-boar-crypto:1", "pack:local-boar-crypto:2", "pack:local-boar-crypto:3", "pack:local-b:1"]);
++    expect(isKitPack("local-boar-wikivoyage-en") && isKitPack("boar-crypto") && !isKitPack("local-qa-travel-se")).toBe(true);
++    expect(basePackId("local-qa-health-se")).toBe("qa-health-se");
++  });
++});
++
++describe("retrieve with packRoute", () => {
++  it("off: every pack searched, the strong pack takes the slots", async () => {
++    calls.searched.length = 0;
++    const off = await retrieve("question", 6);
++    expect(calls.searched.at(-1)).toEqual(["local-boar-wikivoyage-en", "local-a", "local-b"]);
++    expect(packsOf(off).filter((p) => p === "local-a").length).toBeGreaterThan(2);
++    expect((off as any).packRouteCodes).toBeUndefined();
++    expect(ids(await retrieve("question", 6, { packRoute: "off" }))).toEqual(ids(off));
++  });
++  it("quota: at most 2 slots per non-kit pack, the freed slots go to the others", async () => {
++    const q = await retrieve("question", 6, { packRoute: "quota" });
++    const n = (p: string) => packsOf(q).filter((x) => x === p).length;
++    expect(n("local-a")).toBe(2);
++    expect(n("local-b")).toBe(2);
++    expect(n("local-boar-wikivoyage-en")).toBe(2);
++    expect(q).toHaveLength(6);
++  });
++  it("router: the kit plus the routed pack only, with its reason codes", async () => {
++    calls.searched.length = 0;
++    const r = await retrieve("question", 6, { packRoute: "router" });
++    expect(calls.searched.at(-1)).toEqual(["local-boar-wikivoyage-en", "local-b"]);
++    expect(new Set(packsOf(r))).toEqual(new Set(["local-boar-wikivoyage-en", "local-b"]));
++    expect((r as any).packRouteCodes).toEqual(["packroute:b", "packroute-votes:a-1", "packroute-votes:b-2"]);
++  });
++});
++
++describe("PACKROUTE-2 llm / llmq (route supplied from outside)", () => {
++  it("llmRouteFilter / quotaOn", () => {
++    expect(llmRouteFilter(undefined, "a")).toBeUndefined();
++    expect(llmRouteFilter("router", "a")).toBeUndefined();
++    expect(llmRouteFilter("llm", null)).toBeUndefined();
++    const f = llmRouteFilter("llm", "qa-health-se")!;
++    expect([f("local-qa-health-se"), f("boar-crypto"), f("local-qa-travel-se")]).toEqual([true, true, false]);
++    const n = llmRouteFilter("llm", "none")!;
++    expect([n("local-boar-wikivoyage-en"), n("local-a")]).toEqual([true, false]);
++    expect(llmRouteFilter("llmq", "none")).toBeUndefined();
++    expect([quotaOn("llmq", "none"), quotaOn("llmq", "a"), quotaOn("llm", "none"), quotaOn("quota", undefined), quotaOn(undefined, "none")]).toEqual([true, false, false, true, false]);
++  });
++  it("llm: the kit plus the chosen pack; none = the kit only; no choice = every pack", async () => {
++    calls.searched.length = 0;
++    const r = await retrieve("question", 6, { packRoute: "llm", packRouteChoice: "a" });
++    expect(calls.searched.at(-1)).toEqual(["local-boar-wikivoyage-en", "local-a"]);
++    expect((r as any).packRouteCodes).toEqual(["packroute:llm-a"]);
++    await retrieve("question", 6, { packRoute: "llm", packRouteChoice: "none" });
++    expect(calls.searched.at(-1)).toEqual(["local-boar-wikivoyage-en"]);
++    const off = await retrieve("question", 6);
++    expect(ids(await retrieve("question", 6, { packRoute: "llm", packRouteChoice: null }))).toEqual(ids(off));
++  });
++  it("llmq: a chosen pack as llm; none = every pack with the quota", async () => {
++    const a = await retrieve("question", 6, { packRoute: "llmq", packRouteChoice: "b" });
++    expect(ids(a)).toEqual(ids(await retrieve("question", 6, { packRoute: "llm", packRouteChoice: "b" })));
++    const q = await retrieve("question", 6, { packRoute: "llmq", packRouteChoice: "none" });
++    expect(ids(q)).toEqual(ids(await retrieve("question", 6, { packRoute: "quota" })));
++    expect((q as any).packRouteCodes).toEqual(["packroute:llmq-none"]);
++  });
++});

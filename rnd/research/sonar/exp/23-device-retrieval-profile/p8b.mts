@@ -1,0 +1,11 @@
+import fs from "node:fs";
+import { DatabaseSync } from "node:sqlite";
+import { decompress as fz } from "<workspace>/boar-app/node_modules/fzstd/esm/index.mjs";
+import { WikiPack, setPrefetch } from "./src/rag/wikiPack.ts";
+const ST = new Map<string, number>();
+const mk = (p: string) => { const raw = new DatabaseSync(p, { readOnly: true }); const w = (f: any) => async (s: string, a: any[] = []) => { const k = s.replace(/\s+/g, " ").slice(0, 70); ST.set(k, (ST.get(k) ?? 0) + 1); return f(s, a); };
+  return { getAllAsync: w((s: string, a: any[]) => raw.prepare(s).all(...a)), getFirstAsync: w((s: string, a: any[]) => raw.prepare(s).get(...a) ?? null), execAsync: w((s: string) => raw.exec(s)), runAsync: w((s: string, a: any[]) => raw.prepare(s).run(...a)) }; };
+const qs = "<workspace>/boar-eval/bench/v0.1/questions.public.jsonl <workspace>/boar-eval/runs/night-2026-10-01/questions-v58x.jsonl".split(" ").flatMap((f) => fs.readFileSync(f, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l)));
+setPrefetch(true); const packs: any[] = []; for (const p of ["<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite", "<workspace>/shared-data/crypto/boar-crypto.sqlite"]) packs.push(await WikiPack.open(mk(p) as any, fz));
+ST.clear(); for (const it of qs) for (const wp of packs) await wp.searchDetailed(it.question ?? it.query, { k: 3 });
+for (const [k, v] of [...ST.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12)) console.log(`${(v / qs.length).toFixed(1).padStart(6)}/q  ${k}`);

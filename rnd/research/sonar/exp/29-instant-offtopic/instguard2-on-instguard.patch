@@ -1,0 +1,54 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 03c0d28..4d0601e 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -50,6 +50,7 @@ import {
+   NO_SOURCE_INSTRUCTION,
+   uncitedPreface,
+   noHealthSourceAnswer,
++  isSpanishQuestion,
+   onTopic,
+   namedByLexicon,
+   PT_QUESTION,
+@@ -930,7 +931,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // "not from the offline library" instruction below, never quoting them.
+       if (health && gen?.mode !== "multipass" && sources.length === 0) {
+         reasonCodes.push("grounding:health-no-source");
+-        const text = noHealthSourceAnswer(pt);
++        const text = noHealthSourceAnswer(pt, isSpanishQuestion(req.query));
+         markVisible();
+         emit({ type: "token", answerId, tier: genTier, text });
+         return finish(genTier, "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: "No offline source", retrievalMs }));
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index f843911..d752adf 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -395,7 +395,8 @@ export function onHealthTopic(topic: Set<string>, chunk: RetrievedChunk): boolea
+   // ("Oral rehydration therapy › Treatment" is an action section, not about burns). So does a
+   // lay first-aid source whose text names it (Army FM 21-76 "Before you start treating a
+   // snakebite...", Wikibooks "Outdoor Survival/First Aid › Insect and animal bite").
+-  return (action === true || LAY_SOURCE.test(chunk.title)) && titleNames(chunk.body, topic);
++  // Not inside a hyphenated compound: "traffic-choked" (Wikivoyage: Kabul) is not about choking (Sonar exp-29).
++  return (action === true || LAY_SOURCE.test(chunk.title)) && titleNames(chunk.body.replace(/\p{L}+(?:-\p{L}+)+/gu, " "), topic);
+ }
+ 
+ /** Next to the question (small models follow instructions there, s32): health answers stay inside the sources. */
+@@ -1222,8 +1223,17 @@ export function riskyHealthInstruction(answer: string): string | null {
+   return null;
+ }
+ 
++/** A Spanish question (no ES path elsewhere): inverted marks, or two words Portuguese and English don't use. */
++const ES_ONLY = /(?<![\p{L}])(qué|cómo|cuándo|dónde|hago|hijo|hija|niño|niña|niños|bebé|mi|una|está|tragó|picó|mordió|ayuda|ayudarlo|ayudarla|pila|alacrán|peligroso|grave|es|se|muy|tiene|puedo|debo|hacer)(?![\p{L}])/giu;
++export function isSpanishQuestion(query: string): boolean {
++  if (/[¿¡]/.test(query)) return true;
++  return new Set((query.match(ES_ONLY) ?? []).map((w) => w.toLowerCase())).size >= 3;
++}
++
+ /** Health question without a good source: fixed text, no model. */
+-export function noHealthSourceAnswer(pt: boolean): string {
++export function noHealthSourceAnswer(pt: boolean, es = false): string {
++  if (es && !pt)
++    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar consejos de salud de memoria. En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
+   return pt
+     ? "Não tenho uma fonte offline confiável sobre isso, então não vou arriscar orientações de saúde de memória. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
+     : "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";

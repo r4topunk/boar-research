@@ -1,0 +1,13 @@
+top statements over 60 questions (calls, ms):
+    6887    122ms  SELECT id FROM articles WHERE title = ? COLLATE NOCASE AND source = ? ORDER BY views DESC 
+    6850    138ms  SELECT r.article_id FROM redirects r JOIN articles a ON a.id = r.article_id WHERE r.title 
+    4784    115ms  SELECT title, source, views, block_id, off, len FROM articles WHERE id = ?
+    4563    668ms  SELECT zdata FROM blocks WHERE id = ?
+    2632     61ms  SELECT url, license FROM article_meta WHERE article_id = ?
+    1872     28ms  SELECT doc FROM df WHERE term = ?
+    1191     27ms  DELETE FROM temp.qtok
+    1191     18ms  INSERT INTO temp.qtok (x) VALUES (?)
+    1191     26ms  SELECT term FROM temp.qtok_v
+    1074    106ms  SELECT doc FROM temp.fts_v WHERE term = ?
+     110   1071ms  SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views FROM (SELECT rowid, bm25(
+      60      1ms  SELECT title FROM articles WHERE id = ?

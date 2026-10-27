@@ -1,0 +1,157 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 4d9caa8..bf79694 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -78,6 +78,7 @@ import { calculate } from "./calculators";
+ import { travelDistanceAnswer } from "./travelDistance";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
++import { premiseGuard } from "./premiseGuard";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard } from "./firstAidCards";
+ import { DETECTOR_FLOOR } from "./emergencyHead";
+ import type { LoadFailureKind } from "../inference/loadError";
+@@ -1449,6 +1450,23 @@ export function createAnswerer(deps: AnswerDeps) {
+           text = stripped;
+           finalText = text;
+         }
++        // Premise guard (Compass, EN): an uncited answer that denies the question's own premise ("Gríma does not kill
++        // Saruman") is withheld (the decline line) or loses the denying clause or sentence.
++        if (!pt && !isSpanishQuestion(req.query)) {
++          const pg = premiseGuard(req.query, text);
++          if (pg?.action === "decline") {
++            reasonCodes.push("grounding:premise-denial-declined");
++            const message = sources.length ? "The passages found don't support this answer." : "I didn't find this in this phone's library.";
++            emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
++            finalText = message;
++            return finish(genTier, "success", message, [], baseReceipt);
++          }
++          if (pg?.action === "edit") {
++            reasonCodes.push("grounding:premise-denial-removed");
++            text = pg.text;
++            finalText = text;
++          }
++        }
+         // Sources that passed the topic guard are on topic.
+         const onTopicSources = guarded ? sources.length : 0;
+         if (onTopicSources > 0) reasonCodes.push("grounding:uncited-on-topic");
+diff --git a/src/routing/premiseGuard.test.ts b/src/routing/premiseGuard.test.ts
+new file mode 100644
+index 0000000..0edcaa2
+--- /dev/null
++++ b/src/routing/premiseGuard.test.ts
+@@ -0,0 +1,22 @@
++import { describe, expect, it } from "vitest";
++import { premiseGuard } from "./premiseGuard";
++
++describe("premiseGuard (EN)", () => {
++  const grima = "Why does Gríma kill Saruman in The Lord of the Rings?";
++  it("withholds an answer whose thesis denies the premise (V-exact vit-hum-004)", () => {
++    expect(premiseGuard(grima, "Gríma Wormtongue does not kill Saruman in *The Lord of the Rings*. Saruman is killed by a group of Rohan soldiers.")).toEqual({ action: "decline" });
++  });
++  it("drops a denied clause and keeps the rest (vit-hum-002)", () => {
++    const r = premiseGuard(
++      "How did Mozi's idea of universal love differ from the Confucian view, and how did Mencius attack it?",
++      "Mozi's universal love advocated equal care for all. Mencius did not directly attack Mozi's idea, but criticized its feasibility. There is no historical evidence that Mencius specifically attacked Mozi's philosophy."
++    );
++    expect(r).toEqual({ action: "edit", text: "Mozi's universal love advocated equal care for all. Mencius criticized its feasibility." });
++  });
++  it("leaves affirming answers, myth corrections, hypotheticals and how-to questions alone", () => {
++    expect(premiseGuard(grima, "Gríma kills Saruman after Saruman mocks and kicks him on the doorstep of Bag End.")).toBeNull();
++    expect(premiseGuard("Why did Einstein fail math in school?", "Einstein did not fail math; this is a common myth. He excelled at it.")).toBeNull();
++    expect(premiseGuard("How would Mozi answer the critique that universal love is self-defeating?", "Mozi would argue that universal love is not self-defeating.")).toBeNull();
++    expect(premiseGuard("How do I stop my generator from stalling?", "It does not stall if the choke is set.")).toBeNull();
++  });
++});
+diff --git a/src/routing/premiseGuard.ts b/src/routing/premiseGuard.ts
+new file mode 100644
+index 0000000..3423435
+--- /dev/null
++++ b/src/routing/premiseGuard.ts
+@@ -0,0 +1,87 @@
++// Factual-premise guard (Compass 2026-10-03, truthfulness lane; V-exact vit-hum-004). "Why does Gríma kill Saruman in The
++// Lord of the Rings?" got "Gríma Wormtongue does not kill Saruman…" from the 4B in both seeds, uncited, with a different
++// invented killer each time. An answer that denies the question's own premise, with no citation behind it, is the most
++// confident kind of error a model can make; without a source the engine withholds it (the existing decline lines).
++// English only. Pure.
++
++const W = "[\\p{L}\\p{N}'’-]";
++/** A question that presupposes something: "Why does X kill Y?", "How did X become Y?", "When did X leave Y?" */
++const PREMISE_Q = /^\s*(?:why|how come|how|when|where|what (?:made|caused|led|drove)|in what way)\b[^?]*\b(?:does|did|do|is|was|were|are|has|had|have|can|could|would)\b/iu;
++/** Not a premise to deny: how-to, how much/many/far/long, opinions, hypotheticals. */
++const NOT_PREMISE = /^\s*how (?:do|can|should|much|many|far|long|old|big|often|to)\b|\b(?:should i|can i|could i|would you|do you think|if)\b|^\s*(?:how|what|why|when|where)\b[^?]*\bwould\b/iu;
++const NEG = /\b(?:does not|did not|do not|is not|was not|were not|are not|has not|had not|have not|cannot|can not|never|doesn['’]t|didn['’]t|don['’]t|isn['’]t|wasn['’]t|weren['’]t|aren['’]t|hasn['’]t|hadn['’]t|haven['’]t|can['’]t|no (?:\p{L}+ )?evidence|not true)\b/iu;
++/** The answer names the premise as a myth or misconception: a deliberate correction of a false premise, kept. */
++const MYTH = /\b(?:myths?|misconceptions?|misbelief|popular belief|commonly (?:believed|thought|said)|common belief|widely believed|urban legend|legend has it|contrary to popular|it is often said|is often claimed|apocryphal)\b/iu;
++const STOP = new Set(
++  "why how come when where what made caused led drove in way does did do is was were are has had have can could would the a an of to and or for on at by with from into about as that this these those his her their its he she it they them who whom which there here than then so such very much many some any all not no".split(" ")
++);
++
++function tokens(s: string): string[] {
++  return (s.toLowerCase().normalize("NFC").match(new RegExp(`${W}+`, "gu")) ?? [])
++    .map((t) => t.replace(/['’]s$/, "").replace(/(?:ing|ed|es|s)$/, ""))
++    .filter((t) => t.length >= 3 && !STOP.has(t));
++}
++
++function sentences(text: string): string[] {
++  return text
++    .replace(/\s+/g, " ")
++    .split(/(?<=[.!?])\s+(?=[A-Z\p{Lu}"“*])/u)
++    .map((s) => s.trim())
++    .filter(Boolean);
++}
++
++function denies(q: Set<string>, s: string): RegExpExecArray | null {
++  const m = NEG.exec(s);
++  if (!m) return null;
++  if (tokens(s.slice(0, m.index)).length > 10) return null; // the negation is not the sentence's claim
++  const shared = new Set(tokens(s).filter((t) => q.has(t)));
++  return shared.size >= 2 && tokens(s.slice(m.index + m[0].length)).some((t) => q.has(t)) ? m : null;
++}
++
++/** "Mencius did not directly attack Mozi's idea, but criticized its feasibility…" -> "Mencius criticized its feasibility…". */
++function dropDeniedClause(s: string, m: RegExpExecArray): string | null {
++  const rest = s.slice(m.index + m[0].length);
++  const but = /,?\s+but\s+(?:rather\s+|instead\s+)?/iu.exec(rest);
++  if (!but) return null;
++  const subject = s.slice(0, m.index).trim();
++  const tail = rest.slice(but.index + but[0].length).trim();
++  if (!subject || !tail || NEG.test(tail.split(/[,;]/)[0])) return null;
++  // "…, but he criticized…" -> "He criticized…" (the tail has its own subject).
++  const pron = /^(?:he|she|it|they)\s+/iu.exec(tail);
++  if (pron) return `${subject} ${tail.slice(pron[0].length)}`;
++  if (/^(?:this|that|these|those)\b/iu.test(tail)) return tail[0].toUpperCase() + tail.slice(1);
++  return `${subject} ${tail}`;
++}
++
++/** The answer's first two sentences deny the question's premise (the L0 detector). */
++export function deniesPremise(question: string, answer: string): boolean {
++  if (!PREMISE_Q.test(question) || NOT_PREMISE.test(question)) return false;
++  const q = new Set(tokens(question));
++  return q.size >= 2 && sentences(answer).slice(0, 2).some((s) => denies(q, s) !== null);
++}
++
++/**
++ * What to do with an UNCITED answer that denies the question's premise:
++ * - the first sentence is the denial (its thesis) and has no "…, but …" -> "decline" (the caller shows its decline line);
++ * - otherwise every denying sentence loses its denied clause ("X did not A, but B" -> "X B") or, without one, is dropped.
++ * null when nothing denies the premise.
++ */
++export function premiseGuard(question: string, answer: string): { action: "decline" } | { action: "edit"; text: string } | null {
++  if (!PREMISE_Q.test(question) || NOT_PREMISE.test(question) || MYTH.test(answer)) return null;
++  const q = new Set(tokens(question));
++  if (q.size < 2) return null;
++  const ss = sentences(answer);
++  let changed = false;
++  const kept: string[] = [];
++  for (let i = 0; i < ss.length; i++) {
++    const m = denies(q, ss[i]);
++    if (!m) { kept.push(ss[i]); continue; }
++    changed = true;
++    const fixed = dropDeniedClause(ss[i], m);
++    // A rewrite that still denies the premise ("…, and he did not oppose universal love") is dropped too.
++    if (fixed && !NEG.test(fixed)) kept.push(fixed);
++    else if (i === 0) return { action: "decline" };
++  }
++  if (!changed) return null;
++  return kept.length ? { action: "edit", text: kept.join(" ") } : { action: "decline" };
++}

@@ -1,0 +1,87 @@
+--- rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
++++ rs-R5/src/rag/packs.ts	2026-10-22 20:30:58
+@@ -248,6 +248,25 @@
+   };
+ }
+ 
++/** RS_STICKY (SEARCHPAR arm R5, bench-only): the carried chunks of the previous turn (its `sources` event) as full passages: a format-2 pack chunk is
++ *  re-read from its pack by id (the original text, not the compressed copy the prompt carried); any other chunk is used as carried. */
++export async function rsRehydrate(carried: RetrievedChunk[]): Promise<RetrievedChunk[]> {
++  const out: RetrievedChunk[] = [];
++  for (const c of carried) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    const wp = m ? wikiPacks.get(m[1]) : undefined;
++    let full: RetrievedChunk | null = null;
++    if (m && wp) {
++      try {
++        const h = await wp.rsChunkOf(Number(m[2]));
++        if (h) full = { ...packHitToChunk(m[1], h), score: c.score, ...(typeof c.similarity === "number" ? { similarity: c.similarity } : {}) };
++      } catch {}
++    }
++    out.push(full ?? c);
++  }
++  return out;
++}
++
+ /** HEADPASS-ST: kit packs (shipped with the app) never get a head pass; only user-installed format-2 packs do. */
+ const HEADPASS_KIT = new Set(["boar-crypto", "boar-wikivoyage-en"]);
+ /** HEADPASS-ST (settings.packHeadPass "a2", default off): the first passage of `raw` from a user-installed (non-kit) format-2
+--- rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
++++ rs-R5/src/rag/wikiPack.ts	2026-10-22 20:30:58
+@@ -711,6 +711,12 @@
+     if (!row) return [];
+     const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [row.article_id]);
+     return Promise.all(rows.slice(from, to + 1).map((r) => this.hit(row.article_id, r.id, r.start, r.end, 0, "bm25")));
++  }
++
++  /** RS_STICKY (SEARCHPAR arm R5, bench-only): the passage with chunk id `chunkId` as a hit (its original text, not a compressed copy); null when unknown. */
++  async rsChunkOf(chunkId: number): Promise<PackHit | null> {
++    const row = await this.db.getFirstAsync<{ article_id: number; start: number; end: number }>("SELECT article_id, start, end FROM chunks WHERE id = ?", [chunkId]);
++    return row ? this.hit(row.article_id, chunkId, row.start, row.end, 0, "bm25") : null;
+   }
+ 
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-R5/src/routing/answer.ts	2026-10-22 20:31:12
+@@ -1094,6 +1094,41 @@
+           }
+         }
+       }
++      // RS_STICKY (SEARCHPAR arm R5 STICKY-SOURCES, bench-only, default off = unchanged): on a turn with history, the previous turn's kept
++      // chunks (ctx.history.rsSticky = the chunks of that turn's `sources` event, at most RS_STICKY_MAX = 4) join the candidates as pinned-last:
++      // they are re-read from their pack by id (original passage), go through compressContext and the same keep step (onSubject, or
++      // onHealthTopic for health) AFTER the base list is final, with only the work budget the base list left over, so they can never
++      // displace, reorder or shrink a chunk the base pipeline kept. RS_STICKY=1: matched against this turn's text only. RS_STICKY=2: matched
++      // against the previous user question + this turn's text (the subject carries over). Never on multi-pass or without history.
++      const rsSticky = (globalThis as any).process?.env?.RS_STICKY;
++      if ((rsSticky === "1" || rsSticky === "2") && plan.retrieve && gen?.mode !== "multipass") {
++        const carried: RetrievedChunk[] = ((ctx.history as any)?.rsSticky ?? []).slice(0, Number((globalThis as any).process?.env?.RS_STICKY_MAX ?? 4));
++        if (carried.length) {
++          const prevUser = [...(ctx.history?.turns ?? [])].reverse().find((t) => t.role === "user")?.text ?? "";
++          const sq = rsSticky === "2" ? `${prevUser} ${matchQuery}` : matchQuery;
++          const have = new Set(sources.map((c) => c.chunkId));
++          const cand = (await (await import("../rag/packs")).rsRehydrate(carried)).filter((c) => !have.has(c.chunkId) && isSubstantive(c));
++          reasonCodes.push(`sticky:carried-${carried.length}`);
++          if (carried.length > cand.length) reasonCodes.push(`sticky:already-kept-${carried.length - cand.length}`);
++          if (cand.length) {
++            const left = Math.max(0, budget - compressed.tokensAfter);
++            let st = left >= 64 ? compressContext(sq, cand, { tokenBudget: left }).chunks : [];
++            if (st.length < cand.length) reasonCodes.push(`sticky:compress-dropped-${cand.length - st.length}`);
++            if (health) {
++              const topic = healthTopicTerms(req.query, english);
++              const ok = st.filter((c) => onHealthTopic(topic, c));
++              if (ok.length < st.length) reasonCodes.push(`sticky:health-dropped-${st.length - ok.length}`);
++              st = ok;
++            } else if (guarded) {
++              const ok = st.filter((c) => (rsSticky === "2" ? onTopic(sq, c) : onSubject(c)));
++              if (ok.length < st.length) reasonCodes.push(`sticky:off-topic-dropped-${st.length - ok.length}`);
++              st = ok;
++            }
++            for (const c of st) reasonCodes.push(`sticky:add:${c.chunkId}`);
++            sources = [...sources, ...st];
++          }
++        }
++      }
+       // HEADPASS-ST (settings.packHeadPass "a2", experimental, default off): append, after grounding, the chunks at positions
+       // 1-2 (by start) of the article of the first raw passage from a user-installed (non-kit) format-2 pack, skipping
+       // chunks already kept. Nothing is displaced; appended chunks skip onSubject/compression (ORACLE-ADD append path);

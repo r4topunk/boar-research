@@ -1,0 +1,16 @@
+--- a/be/adapter.ts (6298e5d3)
++++ b/be/adapter.ts (8dd1faff = cut7-stack adapter)
+@@ -764,10 +764,11 @@
+   const answerer = A.createAnswerer({
+     engine,
+     // The engine's only retrieval dependency, wrapped: what it returns here is retrieval.raw (before any gate).
+-    retrieve: async (q: string, k: number) => {
++    // STACK: the engine's retrieve options (settings.packRoute "quota") are forwarded; none -> the call is unchanged.
++    retrieve: async (q: string, k: number, o?: any) => {
+       const t = performance.now();
+       try {
+-        const chunks: ChunkLike[] = await Rt.retrieve(q, k);
++        const chunks: ChunkLike[] = o ? await Rt.retrieve(q, k, o) : await Rt.retrieve(q, k);
+         raw.push(...chunks.map(sourceRef));
+         events.push({ tMs: at(), type: "retrieve", origin: "adapter", query: q, k, n: chunks.length, ms: round1(performance.now() - t),
+                       sources: chunks.map(sourceRef) });

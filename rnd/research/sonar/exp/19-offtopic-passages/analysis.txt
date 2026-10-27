@@ -1,0 +1,15 @@
+pairs 53: helpful 20, unhelpful 33 (same-subject 31, off-topic 2); items with >=1 unhelpful passage: 19/30; key-bearing passages 4 (helpful 3)
+  AUC helpful>unhelpful  passCos  : 0.773 (n=53)
+  AUC helpful>unhelpful  titleCos : 0.694 (n=53)
+  AUC helpful>unhelpful  leadCos  : 0.526 (n=52)
+  AUC helpful>unhelpful  bestSent : 0.542 (n=53)
+  AUC helpful>unhelpful  n        : 0.511 (n=53)
+  drop if passCos<0.6 (never empty): dropped unhelpful 5/33, dropped helpful 0/20, dropped key-bearing 0, passages kept 48/53
+  drop if passCos<0.65 (never empty): dropped unhelpful 8/33, dropped helpful 1/20, dropped key-bearing 0, passages kept 44/53
+  drop if passCos<0.7 (never empty): dropped unhelpful 11/33, dropped helpful 2/20, dropped key-bearing 1, passages kept 40/53
+  drop if passCos<0.72 (never empty): dropped unhelpful 13/33, dropped helpful 2/20, dropped key-bearing 1, passages kept 38/53
+  drop if passCos<0.75 (never empty): dropped unhelpful 14/33, dropped helpful 3/20, dropped key-bearing 1, passages kept 36/53
+  drop if bestSent<0.2 (never empty): dropped unhelpful 0/33, dropped helpful 1/20, dropped key-bearing 0, passages kept 52/53
+  drop if bestSent<0.3 (never empty): dropped unhelpful 5/33, dropped helpful 2/20, dropped key-bearing 0, passages kept 46/53
+  drop if bestSent<0.4 (never empty): dropped unhelpful 11/33, dropped helpful 4/20, dropped key-bearing 0, passages kept 38/53
+  drop if bestSent<0.5 (never empty): dropped unhelpful 13/33, dropped helpful 7/20, dropped key-bearing 0, passages kept 33/53

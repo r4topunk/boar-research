@@ -1,0 +1,12 @@
+--- a/be/adapter-litedecline.ts	2026-10-21 03:21:18
++++ b/be/adapter-litedecline.ts	2026-10-21 03:21:19
+@@ -51,7 +51,8 @@
+ const ROOT = join(HERE, "..");
+ const HOME = os.homedir();
+ const SHARED_MODELS = process.env.BOAR_SHARED_MODELS ?? join(HOME, "boar/shared-models");
+-const PACK_DIRS = (process.env.BOAR_EVAL_PACK_DIRS ?? `${HOME}/boar/shared-data/packs:${HOME}/boar/shared-data/crypto`).split(":");
++const PACK_DIRS = (process.env.BOAR_EVAL_PACK_DIRS ?? `${HOME}/boar/shared-data/packs:${HOME}/boar/shared-data/crypto`).split(":").concat([`${HOME}/boar/shared-data/packs/wave4`]);
++// COVERAGE-MATRIX (2026-10-21): wave4 appended LAST so only boar-visa-en (wave4-only) resolves there; every other pack resolves as before.
+ 
+ // ---------------------------------------------------------------- args + requests (before any app import: shims read env)
+ const argv = process.argv.slice(2);

@@ -1,0 +1,11 @@
+--- be-cut7-warn/src/routing/conditionCards.ts	2026-10-16 01:02:01
++++ be-cut7-warn-facards/src/routing/conditionCards.ts	2026-10-21 14:32:18
+@@ -98,7 +98,7 @@
+   // round 4 (2026-10-03): Sonar's EN/PT terms (instcards v0.1/v1) + ES.
+   bleeding: new RegExp(u(`${B}(bleeding (?:a lot|heavily|badly)|won'?t stop bleeding|blood (?:is )?(?:pouring|spurting)|sangrando muito|sangramento forte|n[ãa]o para de sangrar|sangra mucho|no (?:deja|para) de sangrar|sangrado (?:abundante|fuerte)|hemorragia(?! nasal))`), "iu"),
+   stroke: new RegExp(u(`(?<!heat ?)${B}(face (?:is |was )?droop\\w*|crooked (?:smile|face)|stroke(?![\\p{L}\\p{N}_])|one side (?:of (?:his|her) body )?(?:is )?weak|boca torta|rosto (?:ca[íi]do|torto)|derrame|${B}avc${E}|${B}ictus${E}|cara ca[íi]da|accidente cerebrovascular|habla arrastrada)`), "iu"),
+-  anaphylaxis: new RegExp(u(`${B}(anaphyla|anafila|throat (?:is )?(?:swelling|closing)|lips? (?:are |is )?swelling|garganta (?:inchando|fechando)|choque anafil|se le (?:cierra|hincha) la garganta|reacci[óo]n al[ée]rgica grave|shock anafil)`), "iu"),
++  anaphylaxis: new RegExp(u(`${B}(anaphyla|anafila|epinephrine|epi-?pens?${E}|adrenaline (?:auto-?injector|pen)|auto-?injector|throat (?:is )?(?:swelling|closing)|lips? (?:are |is )?swelling|garganta (?:inchando|fechando)|choque anafil|se le (?:cierra|hincha) la garganta|reacci[óo]n al[ée]rgica grave|shock anafil)`), "iu"),
+   eyechem: new RegExp(u(`${B}((?:bleach|chemical|cleaning product|acid|alkali)\\w* .{0,25}(?:eye)|(?:eye).{0,25}(?:bleach|chemical)|(?:sanit[áa]ria|produto qu[íi]mico|produto de limpeza).{0,25}olho|(?:lej[íi]a|producto qu[íi]mico|cloro).{0,25}ojo|ojo.{0,25}(?:lej[íi]a|qu[íi]mico))`), "iu"),
+   electric: new RegExp(u(`${B}(electric(?:al)? shock|electrocut|live (?:wire|cable)|got a shock|tomou choque|levou um choque|fio desencapado|descarga el[ée]ctrica|electrocutad\\w*|cable pelado|le dio la corriente)`), "iu"),
+   altitude: new RegExp(u(`${B}(altitude sickness|mountain sickness|high altitude|soroche|mal de altitude|doen[çc]a da altitude|mal da montanha|mal de altura|mal de monta[ñn]a|apunamiento)`), "iu"),

@@ -1,0 +1,93 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 36ea603..e192b24 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -65,6 +65,7 @@ import {
+   excerptRules,
+   emergencyLine,
+   healthTopicTerms,
++  healthDropTitle,
+   onHealthTopic,
+   riskyHealthInstruction,
+   termCoverage,
+@@ -79,7 +80,7 @@ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
+ import { numericGuard } from "./numguard";
+-import { healthReasons, settleTier, streamStartTier, warnCopy, warnLang, warnOf } from "./warn";
++import { HEALTH_PACK_IDS, healthReasons, settleTier, streamStartTier, warnCopy, warnLang, warnOf } from "./warn";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -167,6 +168,12 @@ function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes
+   return { text: noHealthSourceAnswer(pt, es), label: "No offline source" };
+ }
+ 
++/** HEALTHDROP: the health pack a chunk comes from, by its id ("pack:<packId>:<chunk>"; a side-loaded file is "local-<name>"), or null. */
++function healthPackIdOf(c: RetrievedChunk): string | null {
++  const m = /^pack:(?:local-)?([^:]+):/.exec(c.chunkId ?? "");
++  return m && HEALTH_PACK_IDS.has(m[1]) ? m[1] : null;
++}
++
+ /** Development builds log each answer's checks to Metro ([ANSWER] lines); never in a release build or a test. */
+ const DEV_LOG = typeof __DEV__ !== "undefined" && __DEV__ && process.env.NODE_ENV !== "test";
+ 
+@@ -263,6 +270,13 @@ export interface AnswerDeps {
+    * replaces the weak_sources seal and the uncited preface. Default off; true = on. Off, every event and text is unchanged.
+    */
+   warn?: boolean;
++  /**
++   * HEALTHDROP: when the health-strict topic filter leaves no source, keep the first retrieved chunk from a health pack
++   * (MedlinePlus, Health Stack Exchange, first aid) whose title names a word of the question, and answer from it on the
++   * extractive path (healthdrop:kept). Never on a HEALTHGAP turn, a condition-card turn, the deep tier or multi-pass.
++   * Default off; true = on.
++   */
++  healthDrop?: boolean;
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -1181,6 +1195,22 @@ export function createAnswerer(deps: AnswerDeps) {
+             reasonCodes.push("grounding:health-best-restored");
+           }
+         }
++        // HEALTHDROP (deps.healthDrop): every source was dropped, but a health pack's chunk titled by the question's own words
++        // was retrieved: keep it (the extractive path below quotes it), rather than the no-source line.
++        if (
++          deps.healthDrop === true &&
++          sources.length === 0 &&
++          !healthGap &&
++          req.tier !== "deep" &&
++          gen?.mode !== "multipass" &&
++          conversationCondition(req.query, userTurns).condition === null
++        ) {
++          const rescued = raw.find((c) => healthPackIdOf(c) !== null && healthDropTitle(req.query, topic, c.title));
++          if (rescued) {
++            sources = [rescued];
++            reasonCodes.push("healthdrop:kept");
++          }
++        }
+       }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 421df8b..f345b3c 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -603,6 +603,17 @@ function titleNames(title: string, terms: Iterable<string>): boolean {
+   return false;
+ }
+ 
++/**
++ * HEALTHDROP (deps.healthDrop): a dropped health-pack chunk may be kept when its bare title (the source label
++ * "US government: " / "Wikibooks: " stripped) shares a term with the question's content words (minus the words that
++ * name no condition) or with its health topic terms. Title only: a body mention never counts.
++ */
++export function healthDropTitle(query: string, topic: Set<string>, title: string): boolean {
++  const bare = title.replace(/^[^:]{1,30}:\s*/, "");
++  const words = new Set([...tokenizeTerms(query).filter((t) => !GENERIC_TOPIC.has(t)), ...topic]);
++  return titleNames(bare, words);
++}
++
+ /** A pack chunk's section path ("During your trip > ... > Water contamination"), or "". */
+ function sectionHeading(chunk: RetrievedChunk): string {
+   const colon = chunk.body.indexOf(":");

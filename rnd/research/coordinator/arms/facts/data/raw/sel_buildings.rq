@@ -1,0 +1,3 @@
+SELECT ?item (MAX(?a) AS ?v) WHERE { ?item wdt:P31 wd:Q11303 ; p:P2048/psn:P2048/wikibase:quantityAmount ?a .
+  FILTER NOT EXISTS { ?item wdt:P576 ?end } }
+ GROUP BY ?item ORDER BY DESC(?v) LIMIT 140

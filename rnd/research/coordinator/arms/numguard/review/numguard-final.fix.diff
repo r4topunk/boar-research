@@ -1,0 +1,72 @@
+--- a/src/routing/numguard.ts	2026-10-15 21:27:08
++++ b/src/routing/numguard.ts	2026-10-15 21:31:28
+@@ -12,7 +12,11 @@
+   /\b(?:trapped|stuck|rising|flood\w*|fire|smoke|drown\w*|sinking|emergency|leak\w*|gas|danger\w*|unsafe|collaps\w*|avalanche|hurricane|tornado|lost|dying|dead|unconscious|attack\w*|bitten|bite|stung|hypotherm\w*|frostbite|choking|suicid\w*|kill\w*)\b/i;
+ // A short explicit list on top: people, care settings and symptoms the two lists above do not name.
+ const PERSON_CARE =
+-  /\b(?:pregnan\w*|child(?:ren)?|kids?|son|daughter|sick|ill|illness|hospital|doctor|nurse|vomit\w*|diarrh\w*|rash|cough\w*|headaches?|ache\w*|dizz\w*|nause\w*|thermometer|body temperature|my temperature|weigh(?:t|s)? loss|bmi|alcohol|drunk|safe(?:ly)?|hurt\w*|wound\w*|burn\w*|cpr|(?:my|his|her|their|your|our) (?:temp|temperature)|\d+[\s-]*(?:year|month|week|day)s?[\s-]*old|paracetamol|acetaminophen|ibuprofen|aspirin|tylenol|advil|benadryl|antibiotic\w*|amoxicillin|units? of|urin\w*|pee\w*|poop\w*|stool|toxic\w*|bleach|ingest\w*|swallow\w*|drank|drink\w*|beers?|wine|vodka|bac|sober|bp|blood pressure|saturation|unconscious|wake up|survive|surviv\w*|without (?:food|water)|fell|fall(?:s|en)?|hit (?:his|her|my|their)? ?head|faint\w*)\b/i;
++  /\b(?:pregnan\w*|child(?:ren)?|kids?|son|daughter|sick|ill|illness|hospital|doctor|nurse|vomit\w*|diarrh\w*|rash|cough\w*|headaches?|ache\w*|dizz\w*|nause\w*|thermometer|body temperature|my temperature|weigh(?:t|s)? loss|bmi|alcohol|drunk|safe(?:ly)?|hurt\w*|wound\w*|burn\w*|cpr|(?:my|his|her|their|your|our) (?:temp|temperature)|\d+[\s-]*(?:year|month|week|day)s?[\s-]*old|paracetamol|acetaminophen|ibuprofen|aspirin|tylenol|advil|benadryl|antibiotic\w*|amoxicillin|units? of|urin\w*|pee\w*|poop\w*|stool|toxic\w*|bleach|ingest\w*|swallow\w*|drank|drink\w*|beers?|wine|vodka|bac|sober|bp|blood pressure|saturation|unconscious|wake up|survive|surviv\w*|without (?:food|water)|fell|fall(?:s|en)?|hit (?:his|her|my|their)? ?head|faint\w*|\w+'s (?:core )?temp\w*|core temp\w*|boy|girl|husband|wife|partner|mom|mum|mother|dad|father|grand\w*|friend|patient|newborn|stranded|chest|passed out|water broke)\b/i;
++// A body temperature (30-45 °C, 86-113 °F) is a person's, whatever the wording.
++const BODY_TEMP = /\b(?:3\d|4[0-5])(?:[.,]\d+)?\s?(?:°\s?|degrees? )?c(?:elsius)?\b|\b(?:8[6-9]|9\d|10\d|11[0-3])(?:[.,]\d+)?\s?(?:°\s?|degrees? )?f(?:ahrenheit)?\b/i;
++// Accented Latin letters (not × ÷): not an English message.
++const NON_EN = /[À-ÖØ-öø-ɏ]/;
+ 
+ const NUM = String.raw`\d[\d,]*(?:\.\d+)?`;
+ // A number followed by a unit, a currency or a percent.
+@@ -23,7 +27,7 @@
+ const CLOCK = /\b\d{1,2}(?::\d{2}\s?(?:am|pm)?|\s?(?:am|pm))\b/i;
+ // A conversion target ("in psi", "to Celsius", "convert") or a clock question: the shape of a misfire, not of a situation.
+ const CONVERT =
+-  /\b(?:convert\w*|(?:in|to|into) (?:fahrenheit|celsius|kelvin|psi|bar|kpa|hpa|mph|km\/h|kph|feet|ft|inches|cm|mm|metres|meters|miles|kilomet(?:re|er)s|yards|pounds|lbs|kg|kilograms|grams|ounces|oz|litres|liters|gallons|pints|cups|ml|watt-hours|wh|kwh|euros?|dollars?|usd|eur|gbp))\b/i;
++  /\b(?:convert(?:s|ed|ing)?|(?:in|to|into) (?:fahrenheit|celsius|kelvin|psi|bar|kpa|hpa|mph|km\/h|kph|feet|ft|inches|cm|mm|metres|meters|miles|kilomet(?:re|er)s|yards|pounds|lbs|kg|kilograms|grams|ounces|oz|litres|liters|gallons|pints|cups|ml|watt-hours|wh|kwh|euros?|dollars?|usd|eur|gbp))\b/i;
+ const HOW_MANY_UNIT =
+   /\bhow many (?:kilomet(?:re|er)s|km|miles|feet|ft|metres|meters|inches|cm|yards|pounds|lbs|kg|kilograms|grams|ounces|oz|litres|liters|gallons|pints|cups|psi|watt-hours|wh|kwh) (?:is|are|in|make)\b/i;
+ const WHEN = /\b(?:what time|when (?:does|do|will|did)|arrive|arrives)\b/i;
+@@ -44,7 +48,7 @@
+ /** The guard: English, no health lexicon in this or any earlier user turn, AND (a calculator match OR numeric intent). */
+ export function numericGuard(query: string, pt: boolean, userTurns: string[] = []): boolean {
+   // EN only (the lexicon is English, like the arithmetic and travel shortcuts); any earlier user turn with a health word keeps the refusal.
+-  if (pt || isSpanishQuestion(query)) return false;
++  if (pt || isSpanishQuestion(query) || NON_EN.test(query) || BODY_TEMP.test(query)) return false;
+   if ([query, ...userTurns].some(numguardHealthLexicon)) return false;
+   return calculate(query, pt) !== null || numericIntent(query);
+ }
+--- a/src/routing/answer.ts	2026-10-15 21:27:08
++++ b/src/routing/answer.ts	2026-10-15 21:31:38
+@@ -741,7 +741,7 @@
+         // table entity and asks exactly one property (population, area, capital, height, length, depth, dates, plugs/voltage,
+         // host city, award winner); comparisons get a computed verdict. Never on a health or emergency message (EN only).
+         const fact =
+-          deps.facts === false || learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) || isHealthQuestion(req.query) || isCardEmergency(req.query)
++          deps.facts === false || learned?.fire || numguard || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) || isHealthQuestion(req.query) || isCardEmergency(req.query)
+             ? null
+             : factsAnswer(req.query);
+         if (fact) {
+@@ -751,6 +751,12 @@
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: fact.text, sources: [], receipt: r, cited: [] };
+         }
++      }
++
++      // NUMGUARD: no calculator answered the guarded turn -> the detector's call stands; a model never answers a fired message.
++      if (numguard && learned) {
++        learned = { p: learned.p, fire: true };
++        detectorCodes.splice(detectorCodes.indexOf("numguard:fired"), 1, "numguard:no-calculator");
+       }
+ 
+       // Places questions never touch a model: the answer is built from the
+@@ -858,14 +864,6 @@
+         verifiers: depthModels.filter((m) => m.roles.includes("verifier") && deepAutoIneligibility(m) === null),
+         hasReusedSources: !!req.reuseSources?.length,
+       });
+-      // NUMGUARD: reaching the plan means no calculator, arithmetic, travel or FACTS shortcut answered the guarded turn; the model
+-      // answers it closed-book.
+-      if (numguard && numguardOpt.skipRetrieval && plan.retrieve) {
+-        plan.retrieve = false;
+-        const at = plan.reasonCodes.indexOf("retrieve:yes");
+-        if (at >= 0) plan.reasonCodes.splice(at, 1, "retrieve:no", "numguard:noretrieve");
+-        else plan.reasonCodes.push("retrieve:no", "numguard:noretrieve");
+-      }
+       const reasonCodes = [`task:${taskType}`, ...gateCodes, ...plan.reasonCodes, ...(lowRamNote ? [lowRamNote] : []), ...detectorCodes];
+       if (!deepModel && !settings.deepModelId) {
+         for (const m of depthModels.filter((d) => d.roles.includes("reasoning"))) {

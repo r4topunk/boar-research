@@ -1,0 +1,47 @@
+# Tool calling with small models (<= 8B), on-device: literature sweep
+
+Status: LEADS, not conclusions. Sweep date 2026-10-19. Tags: [F] = page opened with WebFetch (numbers come from the fetch extraction, not re-checked against PDF tables); [S] = search snippet only.
+
+## Sources
+
+| # | Source (title, URL) | Models / sizes | Prompt format | Measured numbers | Tag |
+|---|---|---|---|---|---|
+| 1 | When2Call: When (not) to Call Tools, NAACL 2025, https://arxiv.org/html/2504.18851v1 | Llama 3.1 8B, Qwen 2.5 7B/72B, xLAM 7B FC-R, Mistral-NeMo-Minitron 8B (SFT / When2Call-SFT / RPO); Llama 3.2 1B/3B | Tools as JSON in system prompt by default; Qwen 2.5 uses `<tools>`/`<tool_call>` tags | Tool hallucination on no-tool questions: Llama 3.1 8B 67%, Qwen 2.5 7B 21%, xLAM 7B 24%, MNM 8B SFT 19%, MNM 8B RPO 1.2%. When2Call F1: Llama 3.1 8B 16.6, Qwen 2.5 7B 32.0, MNM RPO 52.4. Per-category recall (derived from confusion tables): Qwen 2.5 7B tool-call 83.2%, follow-up 59.7%, unable-to-answer 6.0%; MNM RPO unable 65.6%. BFCL AST / irrelevance (same table): Llama 3.1 8B 51.6 / 40.0, Qwen 2.5 7B 64.1 / 51.4, xLAM 7B 58.3 / 79.8 | [F] |
+| 2 | Less is More: Optimizing Function Calling for LLM Execution on Edge Devices, arXiv 2411.15399, https://arxiv.org/html/2411.15399v1 | Hermes2-Pro-8B, Llama3.1-8B, Mistral-8B, Phi3-8B, Qwen2-1.5B, Qwen2-7B; q4_0 to q8_0; Jetson AGX Orin | Native tool calls; 51 tools (BFCL), 46 (GeoEngine); 16K ctx | Llama3.1-8B BFCL success full precision 63.04%, quantized 20.43–44.35%. Table II (Llama3.1-8B q4_K_M): 46 tools fails, 19 tools succeeds (exec 30 s to 20 s, power 27 W to 26 W). Reduced-set success (BFCL): Hermes2-Pro 71%, Llama3.1 44.2%, Qwen2-7B 68%, Qwen2-1.5B ~40%. Method: LLM drafts "ideal tool" descriptions, FAISS k-NN, fall back to all tools when similarity low | [F] |
+| 3 | Hammer: Robust Function-Calling for On-Device Language Models via Function Masking, arXiv 2410.04587, https://arxiv.org/html/2410.04587 | Hammer-1.5B / 4B / 7B (Qwen2 / Qwen1.5-4B / Qwen2.5-Coder bases) | JSON task block + tool list with randomized parameter keys + strict JSON output `[{"name","arguments"}]` or `[]` | BFCL irrelevance / relevance: Hammer-1.5B 72.18 / 92.68; Hammer-4B 68.66 / 90.24; Hammer-7B 72.87 / 92.68; Functionary-Small-v3.1-8B 68.36 / 85.37; xLAM-1.3B 61.21 / 95.12; xLAM-7B 79.76 / 80.49. Note: 4B is below 1.5B on irrelevance. Ablation numbers only as plots (masking ratio, ~10% irrelevance data best) | [F] |
+| 4 | How Many Tools Should an LLM Agent See? arXiv 2605.24660, https://arxiv.org/html/2605.24660 | Claude Sonnet 4.6 as the downstream model; no small-model results | Tool selection before the LLM (retrieval/RL shortlist) | BFCL: learned shortlist ~7 tools vs 50 tools (coverage 90.3% vs 90.8%); choice accuracy 93.1% (shortlist) vs 87.1% (fixed K=5). Not a small-model result | [F] (not applicable to 4B; kept for the shortlist pattern) |
+| 5 | BFCL project page, https://sky.cs.berkeley.edu/project/berkeley-function-calling-leaderboard/ | n/a | n/a | Defines "relevance/irrelevance" as: none of the provided functions fits, an error message is given. ~2k pairs (1,680 Python). No small-model numbers on the page | [F] (definitions only) |
+| 6 | Epoch AI, BFCL benchmark review, https://epoch.ai/benchmarks/berkeley-function-calling-leaderboard/review | n/a | n/a | Rated v4 "Flawed": defects affecting accuracy in 24 of 50 sampled tasks (48%); irrelevance is 10% of the score | [S] |
+| 7 | BFCL leaderboard mirror (search result) | Qwen3-4B-Ins, Qwen3-8B (labels truncated) | n/a | Overall ~35.7 / 35.5 for two Qwen3-4B entries; Qwen3-8B ~42.6. Labels and metric unclear; check gorilla leaderboard | [S] |
+| 8 | Qwen docs, Function Calling, https://qwen.readthedocs.io/en/stable/framework/function_call.html | Qwen3 | Hermes-style recommended; vLLM `--tool-call-parser hermes`; Qwen-Agent canonical; `enable_thinking` toggle | No numbers. Advises against ReAct/stopword templates for reasoning models ("may output stopwords in the thought section"). Thinking output returned as reasoning_content. Tag format not given on the page | [F] |
+| 9 | Liquid AI docs, Tool use, https://docs.liquid.ai/lfm/key-concepts/tool-use.md | LFM2 / LFM2.5 (2.6B, 1.2B Thinking, 8B-A1B, 24B-A2B) | LFM2: list tokens `<|tool_list_start|>`/`<|tool_list_end|>` + response tokens; LFM2.5: `<|tool_call_start|>`/`<|tool_call_end|>`. Default output is Pythonic, JSON on request via system prompt | No numbers. vLLM: `--tool-call-parser lfm2`. Parser flags for llama.cpp not on the page | [F] |
+| 10 | llama.cpp function calling (mirror), https://mintlify.wiki/ggml-org/llama.cpp/advanced/function-calling | Native handlers: Llama 3.1/3.2/3.3, Functionary v3.1/3.2, Hermes 2/3, Qwen 2.5 / Coder, Mistral Nemo, FireFunction v2, Command R7B, DeepSeek R1 (exp.) | `--jinja` required; `--chat-template-file` override | No numbers. Unknown template falls back to "Chat format: Generic", which "may consume more tokens than native format". Mirror, not the official repo; check ggml-org/llama.cpp docs/function-calling.md | [F] (mirror) |
+| 11 | Lyceum, tool-calling latency blog, https://lyceum.technology/magazine/tool-calling-latency-llm-inference/ | cloud models | n/a | Estimate: a 10-function schema adds 400–800 input tokens. Vendor estimate, not measured on device | [S] |
+| 12 | Small language model NPU prefill, arXiv 2407.05858 "Fast On-device LLM Inference with NPUs" | mobile models | n/a | Prefill is most of total latency in mobile UI-automation and chat-summary tasks; share grows with prompt length. No tool-schema measurement | [S] |
+| 13 | Small Language Models: Survey, Measurements, and Insights, arXiv 2409.15790 | Bloom-1B1, Qwen1.5-1.8B on edge | n/a | First-token time roughly linear in prompt length (edge devices) | [S] |
+| 14 | NESTFUL, arXiv 2409.03797 | GPT-4o and others; small models not broken out in snippet | JSON API sequences | Full sequence match: top model 25–28% (version-dependent). Nested chained calls are hard for everyone; no small-model numbers | [S] |
+| 15 | tau-bench, arXiv 2406.12045 | GPT-4o, Claude 3, Llama-3-70B (original paper) | n/a | pass^1: gpt-4o 35.2% on airline; open models behind proprietary. No Qwen3-4B pass^k found | [S] |
+| 16 | Qwen3-4B tau2 fine-tune model card (featherless), https://featherless.ai/models/Jarrodbarnes/Qwen3-4B-tau2-grpo-v1 | Qwen3-4B-Instruct (base and fine-tune) | n/a | Pass@4 59.0% / Pass@1 36.0% (fine-tune) vs Pass@4 14.3% (base). Pass@k, not pass^k; community card, not verified | [S] |
+| 17 | CONFETTI, arXiv 2506.01859 | various | n/a | Accuracy by number of APIs, but uneven bins (15 examples at 20+ APIs). Weak tool-count evidence | [S] |
+| 18 | When2Call follow-on: LLM Agents Already Know When to Call Tools, arXiv 2605.09252 | not read | n/a | Not opened; title suggests a no-reasoning call decision study. Lead only | [S] |
+
+Count: 18 sources, 10 with numbers. Only sources 1, 2, 3 measure small (1–8B) models directly on tool calling; 2 and 3 are the strongest numeric leads for this topic.
+
+## Gaps
+
+- No measured Qwen3-4B (or LFM2, Phi-4-mini, Gemma-3 4B) numbers on BFCL irrelevance or When2Call were found. The BFCL leaderboard row for Qwen3-4B needs a direct check.
+- Tool-count sweep on small models: only one small-model datapoint (Less-is-More, 46 vs 19 tools, Llama 3.1 8B on one GeoEngine query, one device). The "Less is More" paper reports no curve over tool counts.
+- Prompt format A/B (JSON in system prompt vs native `--jinja` template vs XML) at <= 8B: not found as a controlled study. When2Call uses per-model preferred formats, so format and model are confounded.
+- Tool description length: no measured effect found.
+- Tool-schema token overhead on phones: only a cloud vendor estimate (400–800 tokens for 10 functions) and general prefill findings. No measurement for a 4B on Android CPU/GPU.
+- tau-bench / NESTFUL: no small-model (<= 8B) numbers found.
+- llama.cpp template support list: only a third-party mirror. Official list and version not verified. Liquid LFM2 llama.cpp parser support not confirmed.
+- BFCL v4 is flagged as flawed by Epoch (48% of sampled tasks had defects), so irrelevance numbers across leaderboard versions are not directly comparable.
+- Hammer ablation numbers are plots only; masking gain not quantified in text.
+
+## What this means for a 4B on-device model (TENTATIVE)
+
+- Keep the per-turn tool set small (shortlist of 2–4 candidates) rather than offering all tools. Source 2 shows an 8B model failing at 46 tools and passing at 19 on one query; this is one case, so verify with our own tool-count sweep on the 4B.
+- Expect false calls more than missed calls on no-tool questions, and test that directly. When2Call shows base models calling tools when they should not (Llama 3.1 8B 67% hallucination on no-tool items), and Qwen 2.5 7B recovers "unable to answer" only 6% of the time. Build a no-call set and measure it, not only call accuracy.
+- Use the model's native template through llama-server `--jinja` (Qwen Hermes-style, Llama, Hermes handlers listed); check the template is recognised in the log (avoid "Chat format: Generic"), and do not use ReAct-style stopword templates for Qwen3 thinking mode (source 8).
+- Measure prefill cost of the tool schema on the target phone before committing to many tools: the only evidence is a vendor estimate (400–800 tokens per 10 tools) and general prefill-dominates findings (sources 11–12), so latency is unknown for our device.

@@ -1,0 +1,12 @@
+{
+ "_comment": "RULER-SPEC-v1 r3 §4.1. where: phone = the RC on the Pixel via the hook (+ ui-queue); desktop = never on the phone. gens = generations per item. Packs are installed only through the RC's own user flows (§4.2).",
+ "AU":  {"name": "A-union persona union (verdict)", "where": "phone", "gens": 2, "packs": "B kit + boar-wikivoyage-en, boar-visa-en, boar-crypto, boar-medlineplus-en, boar-firstaid-en, boar-factbook (+ places tiles if the RC can use them); persona-map-v1.json is binding", "showAnyway": true, "judges": ["opus", "codex", "haiku-low"]},
+ "AUP": {"name": "A-union-partial (only if some A-union packs cannot be installed)", "where": "phone", "gens": 2, "packs": "exactly the installable subset of AU, listed in state", "showAnyway": true, "judges": ["opus", "codex", "haiku-low"]},
+ "B":   {"name": "out of the box", "where": "phone", "gens": 2, "packs": "what the RC installs by default following its README only", "showAnyway": true, "judges": ["opus", "codex", "haiku-low"]},
+ "A":   {"name": "persona (topic known in advance)", "where": "phone", "gens": 1, "packs": "B kit + the family's persona packs; one build per --family, packs switched between families", "showAnyway": true, "judges": ["haiku-low"]},
+ "C":   {"name": "no reference", "where": "phone", "gens": 1, "packs": "none (built-in KB disabled if the RC allows; else stated)", "showAnyway": true, "judges": ["haiku-low"]},
+ "D":   {"name": "interference", "where": "phone", "gens": 1, "packs": "A + persona-map-v1 D sets", "showAnyway": false, "judges": ["haiku-low"]},
+ "DECLINE": {"name": "decline arm, 3 variants, 15-item retest subset", "where": "desktop", "gens": 1, "packs": "-", "judges": ["opus", "codex"]},
+ "ONEB": {"name": "1B no-RAG closed-book", "where": "desktop", "gens": 1, "packs": "-", "judges": ["haiku-low"]},
+ "_hook_capabilities_default": {"source": "our reading of the maintainer's pre-release snapshot wt/native-qa 5f8cc8f4 (DeviceEval.kt, DeviceEvalRunner.kt), not of the RC", "pipeline": "legacy", "multiTurn": false, "showAnyway": false, "location": false, "packSelection": false, "declinedField": null, "keptTextField": null, "keptField": "retrievalUsed/retrievedTitles", "seed": false, "style": "personalities.json defaultId (GAP row 2)"}
+}

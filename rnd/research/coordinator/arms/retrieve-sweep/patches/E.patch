@@ -1,0 +1,14 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts rs-E/src/rag/retrieve.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts	2026-10-14 08:07:31
++++ rs-E/src/rag/retrieve.ts	2026-10-21 23:34:16
+@@ -239,7 +239,9 @@
+   const extra = opts.packDense2 === "extra" || opts.packDense2 === "append";
+   const fused = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
++    // RS_MINSIM (RETRIEVE-SWEEP arm E, bench-only env switch, default off = unchanged): the dense hits' relevance floor is
++    // RS_MINSIM instead of ANSWER_MIN_SIMILARITY (0.7); keyword hits keep 0.7.
++    [...gateByRelevance([...semantic, ...packs.semantic], Number((globalThis as any).process?.env?.RS_MINSIM) > 0 ? Number((globalThis as any).process?.env?.RS_MINSIM) : undefined), ...(extra ? [] : wikiSemantic)],
+     topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes

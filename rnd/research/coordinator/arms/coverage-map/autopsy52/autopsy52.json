@@ -1,0 +1,3853 @@
+{
+ "meta": {
+  "arm": "AUTOPSY52",
+  "date": "2026-10-22",
+  "label": "N10.gidf",
+  "tau_lead": 0.77,
+  "note": "0 LLM; ids + facts only, no question text; cm facts = selftest in_pack_facts; per-pack ranks from an instrumented replay (identity 52/52 vs compose/replays/main.N10.gidf.jsonl)"
+ },
+ "items": {
+  "st-qa-cooking-se-003": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 8, outside engine k=4 (same-pack threads outrank)",
+   "key_fact": "Cartouche controls evaporation; Lids drip unevenly",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 1022,
+    "thread_title": "What's the purpose of a parchment lid?",
+    "chunk_ids": [
+     5420,
+     5421
+    ],
+    "chunk_index": [
+     2,
+     3
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 8
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "round",
+     "simmer",
+     "lid"
+    ],
+    "pool_rank_article": 15,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 7
+    },
+    "lead_rank": 2,
+    "lead_cos": 0.7804,
+    "lex_rank_if_maxdf25": 28,
+    "dropped_domain_terms": [
+     "paper",
+     "cover",
+     "normal",
+     "rather",
+     "pot",
+     "pan",
+     "bake",
+     "recip"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Simmering with or without the lid",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "72432"
+    },
+    {
+     "title": "Cookware and bakeware",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "53768"
+    },
+    {
+     "title": "Does leaving the lid on make a difference to whether the mea",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "67355"
+    },
+    {
+     "title": "When a recipe says, 'simmer uncovered', what's the issue?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "28175"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 2, lex df25 rank 28)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-cooking-se-015": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "another pack outranks: gold in the pack's own hits, gidf fusion puts other packs first",
+   "key_fact": "Carryover rise 10F; Brining 24 hours",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 218,
+    "thread_title": "Why does my chicken breast become so dry?",
+    "chunk_ids": [
+     1251,
+     1252
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "thigh",
+     "whenev",
+     "juici",
+     "bird"
+    ],
+    "pool_rank_article": 29,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 9
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8017,
+    "lex_rank_if_maxdf25": 1,
+    "dropped_domain_terms": [
+     "wrong",
+     "roast",
+     "whole",
+     "white",
+     "come",
+     "dry",
+     "meat"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Baking chicken - temperature vs time",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "8072"
+    },
+    {
+     "title": "Searing",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "54860"
+    },
+    {
+     "title": "Can I safely roast a chicken for 4 to 5 hours on a low heat?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "6000"
+    },
+    {
+     "title": "Roasting",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "25651"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-money-se-001": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Soft pull does not affect score; Similar hard pulls in a window count once",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 7732,
+    "thread_title": "Do credit checks affect credit scores?",
+    "chunk_ids": [
+     33537,
+     33538
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 3,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "lender",
+     "lower",
+     "report"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 43,
+    "lead_cos": 0.7354,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "look",
+     "credit",
+     "score"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Removed late payment, score went down",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "68825"
+    },
+    {
+     "title": "Credit rating",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "82504"
+    },
+    {
+     "title": "Will a mortgage lender ever lower a locked rate?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "108033"
+    }
+   ],
+   "kept_n": 7,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 43, lex df25 rank None)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-007": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "another pack outranks: gold in the pack's own hits, gidf fusion puts other packs first",
+   "key_fact": "12 USC 1759(b) common bond; Regulators restrict them to protect banks",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 15801,
+    "thread_title": "Why are U.S. credit unions not open to everyone?",
+    "chunk_ids": [
+     65313,
+     65311
+    ],
+    "chunk_index": [
+     3,
+     1
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 3,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "walk",
+     "union",
+     "american"
+    ],
+    "pool_rank_article": 31,
+    "pack_hit_rank": {
+     "raw": 1,
+     "wide": 1
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7194,
+    "lex_rank_if_maxdf25": 9,
+    "dropped_domain_terms": [
+     "stop",
+     "custom",
+     "credit",
+     "accept"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Do all American ATMs charge an extra fee for cash withdrawal",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "3693"
+    },
+    {
+     "title": "Wikivoyage: Summerside",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "451678"
+    },
+    {
+     "title": "Bought business class ticket, but now agency wants to change",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "87068"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 0, lex df25 rank 9)",
+   "class": "A3_se_other_pack_outranks"
+  },
+  "st-qa-money-se-013": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 8, outside engine k=4 (same-pack threads outrank)",
+   "key_fact": "Pass-through, not an adder; Bears pro-rata share of acquired funds",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 3676,
+    "thread_title": "Does the expense ratio of a fund-of-funds include the expense ratios of its hold",
+    "chunk_ids": [
+     16978,
+     16979
+    ],
+    "chunk_index": [
+     2,
+     3
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 8
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 8
+   },
+   "pack_search": {
+    "terms": [
+     "target",
+     "top",
+     "underli",
+     "ratio"
+    ],
+    "pool_rank_article": 10,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 9
+    },
+    "lead_rank": 1,
+    "lead_cos": 0.8192,
+    "lex_rank_if_maxdf25": 3,
+    "dropped_domain_terms": [
+     "mutual",
+     "date",
+     "hold",
+     "charg",
+     "expens",
+     "fund",
+     "state"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "What are the fees in a targeted retirement fund?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "36087"
+    },
+    {
+     "title": "Why do you think there is a difference in these 2 funds' exp",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "31550"
+    },
+    {
+     "title": "What is the ticker symbol for \"Vanguard Target Retirement 20",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "46781"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 L=2",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-money-se-019": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "same-pack threads outrank: gold in bm25 pool at 40/80, not in the pack's top hits",
+   "key_fact": "Worst case a week for a check; Another bank takes over",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 698,
+    "thread_title": "Would you withdraw your money from your bank if you thought it was going under?",
+    "chunk_ids": [
+     3469,
+     3470
+    ],
+    "chunk_index": [
+     4,
+     5
+    ],
+    "n_chunks": 8
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "shaki",
+     "fdic",
+     "within"
+    ],
+    "pool_rank_article": 40,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 3,
+    "lead_cos": 0.7835,
+    "lex_rank_if_maxdf25": 1,
+    "dropped_domain_terms": [
+     "balanc",
+     "move",
+     "limit",
+     "financi",
+     "look",
+     "bank",
+     "monei"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Moving a 401k balance to multiple FDIC-insured IRAs to prote",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "116612"
+    },
+    {
+     "title": "How do rich people guarantee the safety of their money, when",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "26587"
+    },
+    {
+     "title": "Paying for a house in cash and am concerned about FDIC insur",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "115968"
+    },
+    {
+     "title": "Has anyone ever lost money over the FDIC limit?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "114888"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 3, lex df25 rank 1)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-cooking-se-010": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 9, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Diluted white cranberry juice; Citrus/verjuice options",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 1574,
+    "thread_title": "What can be substituted for vinegar in sushi rice?",
+    "chunk_ids": [
+     8015,
+     8017
+    ],
+    "chunk_index": [
+     1,
+     3
+    ],
+    "n_chunks": 8
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 9
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "allerg",
+     "sushi",
+     "tabl",
+     "someon"
+    ],
+    "pool_rank_article": 19,
+    "pack_hit_rank": {
+     "raw": 3,
+     "wide": 3
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8349,
+    "lex_rank_if_maxdf25": 4,
+    "dropped_domain_terms": [
+     "vinegar",
+     "rice",
+     "season",
+     "suggest"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Sushi",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "31179"
+    },
+    {
+     "title": "Sushi",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "15660"
+    },
+    {
+     "title": "Rice allergy",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "301067"
+    },
+    {
+     "title": "Potato and rice diet to prevent allergic reactions to calm d",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "6531"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A3_se_other_pack_outranks"
+  },
+  "st-qa-cooking-se-016": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Definitions: simmer, boil, roiling boil; Initial bubbles are dissolved air",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 3266,
+    "thread_title": "At what point is water considered \"at a boil?\"",
+    "chunk_ids": [
+     16129,
+     16130
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "count",
+     "stage",
+     "bubbl"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7717,
+    "lex_rank_if_maxdf25": 3,
+    "dropped_domain_terms": [
+     "bring",
+     "pot",
+     "sai",
+     "boil",
+     "recip"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Boiling",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "69412"
+    },
+    {
+     "title": "Tips for a novice backpacker",
+     "pack": "qa-outdoors-se",
+     "match": "lexical",
+     "chunk": "6045"
+    },
+    {
+     "title": "Boiling",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "21074"
+    },
+    {
+     "title": "Are there unnoticable effects of cooked food going bad?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "39662"
+    }
+   ],
+   "kept_n": 5,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-002": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Lose interest during interest-free period; About $5 per year",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 4118,
+    "thread_title": "Is there any drawback to paying credit card bills immediately rather than waitin",
+    "chunk_ids": [
+     18907,
+     18906
+    ],
+    "chunk_index": [
+     2,
+     1
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "arriv",
+     "settl",
+     "wait"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7872,
+    "lex_rank_if_maxdf25": 12,
+    "dropped_domain_terms": [
+     "statement",
+     "lose",
+     "alwai",
+     "date",
+     "anyth",
+     "instead",
+     "due",
+     "dai"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Captain Jack Harkness",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "128702"
+    },
+    {
+     "title": "How can certain credit card payment patterns affect my credi",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "42710"
+    }
+   ],
+   "kept_n": 3,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-008": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S3",
+   "sub_stage": "lexical S3 via a sibling thread holding 1 of 2 facts (wide-only); gold thread: lexical miss",
+   "key_fact": "Decide by tax rate now vs retirement; Partial conversion fills the bracket",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 2610,
+    "thread_title": "Best to roll over a 401(k) into a Roth IRA or traditional IRA?",
+    "chunk_ids": [
+     12407,
+     12405
+    ],
+    "chunk_index": [
+     3,
+     1
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "destin",
+     "pre",
+     "401"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 11,
+    "lead_cos": 0.8283,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "roth",
+     "old",
+     "sens",
+     "job",
+     "ira",
+     "move",
+     "go",
+     "make"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Individual retirement account",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "295943"
+    },
+    {
+     "title": "Roth 401(k) pre-mature withdrawal: Is company match subject ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "41979"
+    },
+    {
+     "title": "Rolling over pre-tax employer contributions into my Roth 401",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "118143"
+    },
+    {
+     "title": "Conflicting advice about what to do with my 401k / Roth IRA",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "104869"
+    }
+   ],
+   "kept_n": 5,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 11, lex df25 rank None)",
+   "class": "A_other"
+  },
+  "st-qa-money-se-014": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Authorized participants arbitrage; Illiquid holdings vary",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 6041,
+    "thread_title": "Will an ETF increase in price if an underlying stock increases in price",
+    "chunk_ids": [
+     26898,
+     26897
+    ],
+    "chunk_index": [
+     2,
+     1
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "basket",
+     "jump",
+     "nobodi",
+     "rise"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7964,
+    "lex_rank_if_maxdf25": 25,
+    "dropped_domain_terms": [
+     "etf",
+     "whether",
+     "10",
+     "even",
+     "bui",
+     "stock",
+     "on"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "I bought an option it has a volume of 3 it expires two weeks",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "126005"
+    },
+    {
+     "title": "I bought an option it has a volume of 3 it expires two weeks",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "126004"
+    },
+    {
+     "title": "What can make a stock price rise without good news or result",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "59150"
+    },
+    {
+     "title": "Is it prudent to sell a stock on a 40% rise in 2 months",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "47274"
+    }
+   ],
+   "kept_n": 3,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-020": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Linked to current inflation; Composite rate formula",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 33402,
+    "thread_title": "Why did the composite rate for I bonds issued drop to 6.89% from 9.62% when the ",
+    "chunk_ids": [
+     136998,
+     136999
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 3
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "fell",
+     "seri",
+     "reserv",
+     "rais"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.802,
+    "lex_rank_if_maxdf25": 5,
+    "dropped_domain_terms": [
+     "feder",
+     "bond",
+     "save",
+     "rate",
+     "interest"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "1998 Russian financial crisis",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "458684"
+    },
+    {
+     "title": "Federal Reserve",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "5723"
+    },
+    {
+     "title": "Interest rate",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "41175"
+    },
+    {
+     "title": "2008 financial crisis",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "111771"
+    }
+   ],
+   "kept_n": 7,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-005": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: health-strict filter (onHealthTopic) drops the gold thread in raw",
+   "key_fact": "Fill only to the shoulder; Loose lids mean it has not kept",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 17340,
+    "thread_title": "Can jams and compotes be frozen?",
+    "chunk_ids": [
+     69536,
+     69537
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": 0,
+    "wide": 0
+   },
+   "gold_chunk_rank": {
+    "raw": 1,
+    "wide": 1
+   },
+   "pack_search": {
+    "terms": [
+     "unheat",
+     "minu",
+     "shed",
+     "winter",
+     "spend",
+     "jam",
+     "crack",
+     "drop",
+     "homemad"
+    ],
+    "pool_rank_article": 13,
+    "pack_hit_rank": {
+     "raw": 0,
+     "wide": 0
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7796,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "glass",
+     "jar",
+     "20"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Can jams and compotes be frozen?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "69535"
+    },
+    {
+     "title": "Can jams and compotes be frozen?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "69536"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": true
+   },
+   "cheapest_fix": "F3 then F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-cooking-se-011": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 6, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Replace some water with heavy cream; Clarified butter, a teaspoon per cup",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 14402,
+    "thread_title": "What is a good substitute for full cream milk powder?",
+    "chunk_ids": [
+     59212,
+     59213
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 3
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 6
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "skim",
+     "powder",
+     "kind"
+    ],
+    "pool_rank_article": 0,
+    "pack_hit_rank": {
+     "raw": 0,
+     "wide": 0
+    },
+    "lead_rank": 1,
+    "lead_cos": 0.83,
+    "lex_rank_if_maxdf25": 7,
+    "dropped_domain_terms": [
+     "whole",
+     "fat",
+     "milk",
+     "bread",
+     "add",
+     "want",
+     "need",
+     "recip"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Powdered milk",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "18377"
+    },
+    {
+     "title": "Skimmed milk",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "93950"
+    },
+    {
+     "title": "Skimmed milk",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "30386"
+    },
+    {
+     "title": "Cream",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "39064"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 L=2",
+   "class": "A3_se_other_pack_outranks"
+  },
+  "st-qa-cooking-se-017": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: health-strict filter (onHealthTopic) drops the gold thread in raw",
+   "key_fact": "Boil the milk alone; Decalcifying agent in the kettle",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 7229,
+    "thread_title": "Fresh milk curdles when added to hot coffee and tea",
+    "chunk_ids": [
+     32761,
+     32761
+    ],
+    "chunk_index": [
+     1,
+     1
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": 1,
+    "wide": 1
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "offic",
+     "suddenli",
+     "curdl",
+     "hit"
+    ],
+    "pool_rank_article": 6,
+    "pack_hit_rank": {
+     "raw": 1,
+     "wide": 1
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7695,
+    "lex_rank_if_maxdf25": 2,
+    "dropped_domain_terms": [
+     "coffe",
+     "smell",
+     "everi",
+     "caus",
+     "fine",
+     "milk",
+     "find",
+     "tast"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Half and half cream already curdled in a fresh carton",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "71587"
+    },
+    {
+     "title": "Fresh milk curdles when added to hot coffee and tea",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "32763"
+    },
+    {
+     "title": "Fresh milk curdles when added to hot coffee and tea",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "32764"
+    },
+    {
+     "title": "Why does salt prevent soy milk from curdling in hot coffee?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "30463"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F2 SE-TERMS (keep domain terms)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-money-se-003": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "same-pack threads outrank: gold in bm25 pool at 19/80, not in the pack's top hits",
+   "key_fact": "Not all issuers report authorized users; Fee and benefits do not impact score",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 34233,
+    "thread_title": "Improving my credit score by getting my own card vs being added as an authorized",
+    "chunk_ids": [
+     140102,
+     140103
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "user",
+     "member",
+     "author",
+     "myself"
+    ],
+    "pool_rank_article": 19,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8548,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "premium",
+     "build",
+     "ad",
+     "famili",
+     "open",
+     "secur",
+     "better",
+     "card"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "How long does an account stay 'open' on your credit report",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "44664"
+    },
+    {
+     "title": "Cancelling New accounts",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "83249"
+    },
+    {
+     "title": "Will Adding myself as a co-holder of my parent's credit card",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "6178"
+    },
+    {
+     "title": "If spouse is already an authorized user, can they get their ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "11345"
+    }
+   ],
+   "kept_n": 5,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-money-se-009": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Not apples to apples; Net 80,000; Matching deposit",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 14286,
+    "thread_title": "Is 401k as good as it sounds given the way it is taxed?",
+    "chunk_ids": [
+     58902,
+     58902,
+     58906
+    ],
+    "chunk_index": [
+     1,
+     1,
+     5
+    ],
+    "n_chunks": 15
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "ordinari",
+     "brokerag",
+     "regular"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 53,
+    "lead_cos": 0.7728,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "401",
+     "rather",
+     "withdraw",
+     "deal",
+     "lower",
+     "capit",
+     "gain",
+     "better"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Post Tax 401k or Taxable Brokerage Account?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "88977"
+    },
+    {
+     "title": "What retirement accounts are available without age based wit",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "47412"
+    },
+    {
+     "title": "How are withdrawals from traditional IRA taxed?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "63574"
+    },
+    {
+     "title": "Does transferring assets from regular brokerage to revocable",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "127561"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 53, lex df25 rank None)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-015": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Deferred interest for the entire period; Rule of thumb: highest interest rate first",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 2393,
+    "thread_title": "Snowball debt or pay off a large amount?",
+    "chunk_ids": [
+     11401,
+     11400
+    ],
+    "chunk_index": [
+     2,
+     1
+    ],
+    "n_chunks": 6
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "windfal",
+     "defer",
+     "24",
+     "soon",
+     "14",
+     "store",
+     "split"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 2,
+    "lead_cos": 0.79,
+    "lex_rank_if_maxdf25": 19,
+    "dropped_domain_terms": [
+     "zero",
+     "big",
+     "got",
+     "ow",
+     "small",
+     "000",
+     "end",
+     "card"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "One-time estimated tax payment for windfall",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "119061"
+    },
+    {
+     "title": "3-year horizon before trading up to next home: put windfall ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "27750"
+    },
+    {
+     "title": "3-year horizon before trading up to next home: put windfall ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "27757"
+    },
+    {
+     "title": "What do I need to do, tax-wise, for a sudden windfall?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "97101"
+    }
+   ],
+   "kept_n": 2,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 2, lex df25 rank 19)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-006": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Portions, room for expansion, vacuum seal; Large vegetable pieces change texture",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 1196,
+    "thread_title": "Can you freeze soup?",
+    "chunk_ids": [
+     6289,
+     6292
+    ],
+    "chunk_index": [
+     1,
+     4
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "turkei",
+     "reheat",
+     "big"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7737,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "soup",
+     "quickli",
+     "freez",
+     "pot",
+     "veget",
+     "still",
+     "tast",
+     "good"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Reheating turkey",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "20230"
+    },
+    {
+     "title": "Reheating turkey",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "20231"
+    },
+    {
+     "title": "Reheat a turkey without drying it out?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "20268"
+    },
+    {
+     "title": "Reheat a turkey without drying it out?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "20270"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-018": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 8, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Definition of smoke point; Shimmer before smoke",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 24252,
+    "thread_title": "Is it obvious when an oil reaches its smoking point?",
+    "chunk_ids": [
+     93250,
+     93251
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 3
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 8
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 11
+   },
+   "pack_search": {
+    "terms": [
+     "gaug",
+     "visibl",
+     "smoke"
+    ],
+    "pool_rank_article": 5,
+    "pack_hit_rank": {
+     "raw": 3,
+     "wide": 3
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8513,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "assum",
+     "fry",
+     "point",
+     "still",
+     "oil",
+     "heat"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Which oil is healthiest for frying?",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "11282"
+    },
+    {
+     "title": "Which oil is healthiest for frying?",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "11283"
+    },
+    {
+     "title": "Can consuming food that was cooked with olive oil have a neg",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "1157"
+    },
+    {
+     "title": "What is the health danger of frying past a smoking point?",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "1097"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-money-se-004": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "It's a scam; Money could be dirty; law enforcement",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 26751,
+    "thread_title": "Someone's telling me that he will send me 1000 dollars and I have to send half b",
+    "chunk_ids": [
+     110817,
+     110818
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 3
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "stranger",
+     "paypal",
+     "phone"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8428,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "address",
+     "500",
+     "onlin",
+     "offer",
+     "000",
+     "number",
+     "put",
+     "return"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "privacy concerns when receiving money from paypal from stran",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "37001"
+    },
+    {
+     "title": "privacy concerns when receiving money from paypal from stran",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "37000"
+    },
+    {
+     "title": "got text from paypal telling me i paid for something i didn'",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "121607"
+    },
+    {
+     "title": "A stranger requests to buy eBay item in installments",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "116384"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-money-se-010": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 4, outside engine k=4 (same-pack threads outrank)",
+   "key_fact": "Not eligible until 2021, no 2020 contributions; Partial year proportionally reduced",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 30070,
+    "thread_title": "New HSA contribution deadline for previous tax year",
+    "chunk_ids": [
+     124074,
+     124073
+    ],
+    "chunk_index": [
+     3,
+     2
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 4
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 5
+   },
+   "pack_search": {
+    "terms": [
+     "deadlin",
+     "januari",
+     "april",
+     "hsa",
+     "prior"
+    ],
+    "pool_rank_article": 4,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 4
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8736,
+    "lex_rank_if_maxdf25": 1,
+    "dropped_domain_terms": [
+     "high",
+     "file",
+     "deduct",
+     "plan",
+     "start",
+     "put",
+     "still",
+     "year"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Contribution limits and deadlines for HSA clarification",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "91263"
+    },
+    {
+     "title": "Can a custodian refuse prior-year IRA/HSA deposit postmarked",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "41414"
+    },
+    {
+     "title": "Can a custodian refuse prior-year IRA/HSA deposit postmarked",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "41418"
+    },
+    {
+     "title": "Allowed to make a post-tax HSA contribution if pre-tax contr",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "53480"
+    }
+   ],
+   "kept_n": 3,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-money-se-016": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 10, outside engine k=4 (same-pack threads outrank)",
+   "key_fact": "Opportunity cost [usage detail removed]K; Term quote [usage detail removed]/yr",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 16685,
+    "thread_title": "Should I purchase a whole life insurance policy? (I am close to retirement)",
+    "chunk_ids": [
+     68994,
+     68995
+    ],
+    "chunk_index": [
+     2,
+     3
+    ],
+    "n_chunks": 12
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 10
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "75k",
+     "rep",
+     "400k",
+     "65",
+     "push",
+     "front",
+     "wise",
+     "polici"
+    ],
+    "pool_rank_article": 61,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 10
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8113,
+    "lex_rank_if_maxdf25": 2,
+    "dropped_domain_terms": [
+     "plu",
+     "whole",
+     "life",
+     "larg",
+     "sale",
+     "save",
+     "fund",
+     "year"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Is it wise to switch investment strategy frequently?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "29897"
+    },
+    {
+     "title": "~$75k in savings - Pay off house before new home?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "65943"
+    },
+    {
+     "title": "Do I need term life insurance at age 57?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "78036"
+    },
+    {
+     "title": "Life Insurance - How Much is too Much?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "37116"
+    }
+   ],
+   "kept_n": 7,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-cooking-se-001": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "same-pack threads outrank: gold in bm25 pool at 51/80, not in the pack's top hits",
+   "key_fact": "Exterior is in the danger zone before the interior thaws; Cooked food starts with a very low count",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 3980,
+    "thread_title": "Why can food be left out to cool (140F to 40F in < 6h) but not to defrost?",
+    "chunk_ids": [
+     19348,
+     19347
+    ],
+    "chunk_index": [
+     3,
+     2
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "discourag",
+     "counter",
+     "rule",
+     "thaw"
+    ],
+    "pool_rank_article": 51,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 2,
+    "lead_cos": 0.7871,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "sever",
+     "frozen",
+     "kitchen",
+     "safeti",
+     "cool",
+     "dish",
+     "let",
+     "hour"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Is it safe to cook pork chops that thawed on counter overnig",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "47251"
+    },
+    {
+     "title": "Frozen food",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "59969"
+    },
+    {
+     "title": "Frozen food",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "59970"
+    },
+    {
+     "title": "Frozen dinner",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "83058"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 2, lex df25 rank None)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-cooking-se-007": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Paper towel then plastic bag; Over-water method about 5 days",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 16130,
+    "thread_title": "How to preserve scallions?",
+    "chunk_ids": [
+     65301,
+     65303
+    ],
+    "chunk_index": [
+     1,
+     3
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "wilt",
+     "leafi",
+     "within"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 1,
+    "lead_cos": 0.7692,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "green",
+     "onion",
+     "fridg",
+     "longer",
+     "fresh",
+     "dai",
+     "top",
+     "dry"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "How can I stop wasting food?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "7131"
+    },
+    {
+     "title": "Onion",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "24860"
+    },
+    {
+     "title": "Can alcohol and salt lengthen the shelf life of vegetables i",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "43548"
+    },
+    {
+     "title": "Techniques to Remove Water from Vegetables?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "60026"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F2 SE-TERMS (keep domain terms)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-013": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: health-strict filter (onHealthTopic) drops the gold thread in raw",
+   "key_fact": "Kosher salt then reseason; Vinegar prevents rust after lye",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 1387,
+    "thread_title": "How to clean a burnt cast iron pot?",
+    "chunk_ids": [
+     7181,
+     7182
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": 2,
+    "wide": 2
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 4
+   },
+   "pack_search": {
+    "terms": [
+     "rescu",
+     "burnt",
+     "cast"
+    ],
+    "pool_rank_article": 0,
+    "pack_hit_rank": {
+     "raw": 0,
+     "wide": 0
+    },
+    "lead_rank": 13,
+    "lead_cos": 0.7424,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "iron",
+     "layer",
+     "thick",
+     "pot",
+     "food"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Selecting backpacking cooking pot \u2013 teflon, aluminum, steel,",
+     "pack": "qa-outdoors-se",
+     "match": "lexical",
+     "chunk": "1859"
+    },
+    {
+     "title": "Selecting backpacking cooking pot \u2013 teflon, aluminum, steel,",
+     "pack": "qa-outdoors-se",
+     "match": "lexical",
+     "chunk": "1857"
+    },
+    {
+     "title": "How to clean a burnt cast iron pot?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "7180"
+    },
+    {
+     "title": "Campfire",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "8904"
+    }
+   ],
+   "kept_n": 0,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F2 SE-TERMS (keep domain terms)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-cooking-se-019": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "same-pack threads outrank: gold in bm25 pool at 19/80, not in the pack's top hits",
+   "key_fact": "Finer cut is stronger; 30 seconds at the end",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 10205,
+    "thread_title": "When should garlic be added to the pan to get maximum pungency?",
+    "chunk_ids": [
+     44039,
+     44039
+    ],
+    "chunk_index": [
+     3,
+     3
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "strongest",
+     "saut",
+     "garlic"
+    ],
+    "pool_rank_article": 19,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 5,
+    "lead_cos": 0.7865,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "veget",
+     "cut",
+     "tast",
+     "want",
+     "time"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "How do I neutralize a strong garlic flavor?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "18299"
+    },
+    {
+     "title": "Garlic bread",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "93791"
+    },
+    {
+     "title": "Pickling",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "90730"
+    },
+    {
+     "title": "How long should I saute garlic?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "754"
+    }
+   ],
+   "kept_n": 5,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 5, lex df25 rank 0)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-money-se-005": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Change to and/or; Two checks for half each",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 2059,
+    "thread_title": "How do I sign over a check made out to two people?",
+    "chunk_ids": [
+     9844,
+     9846
+    ],
+    "chunk_index": [
+     1,
+     3
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "roommat",
+     "payabl",
+     "former",
+     "citi"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7694,
+    "lex_rank_if_maxdf25": 1,
+    "dropped_domain_terms": [
+     "refund",
+     "deposit",
+     "live",
+     "check",
+     "differ",
+     "get"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "How to split joint expenses at regular intervals in double-e",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "117295"
+    },
+    {
+     "title": "Does a bank have to tell me if a check made out to me was ca",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "97008"
+    },
+    {
+     "title": "How to split joint expenses at regular intervals in double-e",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "117298"
+    },
+    {
+     "title": "Seismic microzonation",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "16275"
+    }
+   ],
+   "kept_n": 2,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F2 SE-TERMS (keep domain terms)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-011": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S3",
+   "sub_stage": "lexical S3 via a sibling thread holding 1 of 2 facts (wide-only); gold thread: same-pack threads outrank",
+   "key_fact": "Taxed when vested as salary; Then a regular stock position",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 4365,
+    "thread_title": "Tax implications of restricted stock units",
+    "chunk_ids": [
+     20053,
+     20053
+    ],
+    "chunk_index": [
+     2,
+     2
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "vest",
+     "walk",
+     "restrict"
+    ],
+    "pool_rank_article": 27,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 2,
+    "lead_cos": 0.8305,
+    "lex_rank_if_maxdf25": 10,
+    "dropped_domain_terms": [
+     "later",
+     "includ",
+     "happen",
+     "share",
+     "unit",
+     "sell",
+     "stock",
+     "tax"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Wash sales + restricted stock in USA: grant date or vesting ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "25376"
+    },
+    {
+     "title": "Capital gains tax",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "68775"
+    },
+    {
+     "title": "How do I calculate the cost basis of Restricted Stock Units ",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "79538"
+    },
+    {
+     "title": "Share (finance)",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "77668"
+    }
+   ],
+   "kept_n": 5,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 2, lex df25 rank 10)",
+   "class": "A2_se_same_pack_outranks"
+  },
+  "st-qa-money-se-017": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Escrow quarter, closing costs, repair fund; Home inspection [usage detail removed]",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 2402,
+    "thread_title": "On top of 20% down, are there any more rules of thumb for money needed to buy a ",
+    "chunk_ids": [
+     11439,
+     11438
+    ],
+    "chunk_index": [
+     4,
+     3
+    ],
+    "n_chunks": 6
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "readi",
+     "beyond",
+     "list"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.8345,
+    "lex_rank_if_maxdf25": 23,
+    "dropped_domain_terms": [
+     "20",
+     "home",
+     "cash",
+     "first",
+     "payment",
+     "bui"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Cash register",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "182577"
+    },
+    {
+     "title": "Wikivoyage: Packing list",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "251652"
+    },
+    {
+     "title": "Wikivoyage: Almaty",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "6597"
+    },
+    {
+     "title": "Wikivoyage: Vaasa",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "354638"
+    }
+   ],
+   "kept_n": 6,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 0, lex df25 rank 23)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-002": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 7, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Low oxygen as in oil-preserved tinned food; The poison is tasteless",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 19149,
+    "thread_title": "What are the major causes of food poisoning?",
+    "chunk_ids": [
+     75469,
+     75469
+    ],
+    "chunk_index": [
+     2,
+     2
+    ],
+    "n_chunks": 5
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 7
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 7
+   },
+   "pack_search": {
+    "terms": [
+     "poison",
+     "gone",
+     "worri"
+    ],
+    "pool_rank_article": 13,
+    "pack_hit_rank": {
+     "raw": 1,
+     "wide": 1
+    },
+    "lead_rank": ">300",
+    "lead_cos": null,
+    "lex_rank_if_maxdf25": 0,
+    "dropped_domain_terms": [
+     "wrong",
+     "preserv",
+     "kind",
+     "home",
+     "veget",
+     "someth",
+     "oil",
+     "tast"
+    ]
+   },
+   "health_strict": true,
+   "winners_raw": [
+    {
+     "title": "Is using vegetable oil bad for a ketogenic diet?",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "5493"
+    },
+    {
+     "title": "Vegetable oil",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "45980"
+    },
+    {
+     "title": "Cooking oil",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "114494"
+    },
+    {
+     "title": "Is using vegetable oil bad for a ketogenic diet?",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "5492"
+    }
+   ],
+   "kept_n": 2,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F3 then F2 SE-TERMS (keep domain terms)",
+   "class": "B_health_strict_misfire"
+  },
+  "st-qa-cooking-se-014": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Under-proofing bubbles flat and large; most common; Dock with a fork",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 1264,
+    "thread_title": "How can huge bubbles in pizza crust be prevented?",
+    "chunk_ids": [
+     6610,
+     6612
+    ],
+    "chunk_index": [
+     1,
+     3
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "dome",
+     "puf",
+     "giant",
+     "tip",
+     "homemad"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 61,
+    "lead_cos": 0.7405,
+    "lex_rank_if_maxdf25": null,
+    "dropped_domain_terms": [
+     "stop",
+     "pizza",
+     "base",
+     "oven"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "How do pizza parlors prevent the dough from puffing up?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "97853"
+    },
+    {
+     "title": "Why did my pizza toppings slide off while baking?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "93884"
+    },
+    {
+     "title": "How do pizza parlors prevent the dough from puffing up?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "97854"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 61, lex df25 rank None)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-cooking-se-020": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 11, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Sugar fully incorporated, avoids gritty custard; Minimum temperature 155/160F",
+   "gold": {
+    "pack": "qa-cooking-se",
+    "article_id": 15879,
+    "thread_title": "Why is there a 2 step heating process for making custard for ice cream",
+    "chunk_ids": [
+     64438,
+     64439
+    ],
+    "chunk_index": [
+     2,
+     3
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 11
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 11
+   },
+   "pack_search": {
+    "terms": [
+     "dairi",
+     "yolk",
+     "ic"
+    ],
+    "pool_rank_article": 6,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": 6
+    },
+    "lead_rank": 0,
+    "lead_cos": 0.7845,
+    "lex_rank_if_maxdf25": 6,
+    "dropped_domain_terms": [
+     "warm",
+     "cream",
+     "egg",
+     "first",
+     "go",
+     "recip",
+     "cook"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Wikivoyage: Nowy Targ",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "243048"
+    },
+    {
+     "title": "Ice cream",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "23601"
+    },
+    {
+     "title": "Wikivoyage: American cuisine",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "464230"
+    },
+    {
+     "title": "Can any custard be made into a frozen custard?",
+     "pack": "qa-cooking-se",
+     "match": "lexical",
+     "chunk": "33579"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": true,
+    "F1_with_F3": true,
+    "F1_L2": true,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F1 SE-LEAD (top-1 lead thread, chunks 1-2)",
+   "class": "A3_se_other_pack_outranks"
+  },
+  "st-qa-money-se-006": {
+   "set": "cm",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: gold thread at wide 4, outside engine k=4 (other packs take raw slots)",
+   "key_fact": "Batch at end of business day; Money changes hands only for the difference",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 7923,
+    "thread_title": "Why do (ACH) payments that withdraw or deposit on my bank account require 1+ bus",
+    "chunk_ids": [
+     34215,
+     34213
+    ],
+    "chunk_index": [
+     3,
+     1
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": 4
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": 4
+   },
+   "pack_search": {
+    "terms": [
+     "ordinari",
+     "direct",
+     "clear"
+    ],
+    "pool_rank_article": 13,
+    "pack_hit_rank": {
+     "raw": 0,
+     "wide": 0
+    },
+    "lead_rank": 1,
+    "lead_cos": 0.8003,
+    "lex_rank_if_maxdf25": 1,
+    "dropped_domain_terms": [
+     "deposit",
+     "transfer",
+     "busi",
+     "dai",
+     "take",
+     "bank"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Wikivoyage: Philippines",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "261489"
+    },
+    {
+     "title": "Wikivoyage: Johor Bahru",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "158689"
+    },
+    {
+     "title": "Wikivoyage: Davos",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "84759"
+    },
+    {
+     "title": "Standard Visitor visa refused TWICE based in Tax and lots mo",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "55927"
+    }
+   ],
+   "kept_n": 2,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": true,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F2 SE-TERMS (keep domain terms)",
+   "class": "A3_se_other_pack_outranks"
+  },
+  "st-qa-money-se-012": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "Higher rates on marginal income; 62% marginal between 100k and 120k",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 16197,
+    "thread_title": "Are there in-between tax bands in the UK",
+    "chunk_ids": [
+     66967,
+     66968
+    ],
+    "chunk_index": [
+     1,
+     2
+    ],
+    "n_chunks": 4
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "pound",
+     "threshold",
+     "doubl"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 54,
+    "lead_cos": 0.7415,
+    "lex_rank_if_maxdf25": 2,
+    "dropped_domain_terms": [
+     "coupl",
+     "uk",
+     "bill",
+     "earn",
+     "higher",
+     "total",
+     "rate",
+     "incom"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Monthly income section",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "101594"
+    },
+    {
+     "title": "How to calculate effective rate of tax - UK",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "134049"
+    },
+    {
+     "title": "What should I put under Savings and Investments in the UK Vi",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "92772"
+    },
+    {
+     "title": "How do I answer visa questions about my salary?",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "122564"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": true,
+    "F3_alone": false
+   },
+   "cheapest_fix": "F2 SE-TERMS (keep domain terms)",
+   "class": "A1_se_lexical_miss"
+  },
+  "st-qa-money-se-018": {
+   "set": "cm",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "lexical miss: gold thread not in the pack's bm25 pool (domain terms dropped by maxDf 2%)",
+   "key_fact": "No equity at end of lease; Lease cheaper only if payments below depreciation",
+   "gold": {
+    "pack": "qa-money-se",
+    "article_id": 23431,
+    "thread_title": "What should I consider in a decision to lease or buy a car?",
+    "chunk_ids": [
+     96658,
+     96658
+    ],
+    "chunk_index": [
+     2,
+     2
+    ],
+    "n_chunks": 7
+   },
+   "engine_k": 4,
+   "gold_article_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "gold_chunk_rank": {
+    "raw": null,
+    "wide": null
+   },
+   "pack_search": {
+    "terms": [
+     "outright",
+     "conveni",
+     "leas"
+    ],
+    "pool_rank_article": null,
+    "pack_hit_rank": {
+     "raw": null,
+     "wide": null
+    },
+    "lead_rank": 7,
+    "lead_cos": 0.7982,
+    "lex_rank_if_maxdf25": 9,
+    "dropped_domain_terms": [
+     "sens",
+     "car",
+     "someon",
+     "cash",
+     "save",
+     "valu",
+     "bui",
+     "make"
+    ]
+   },
+   "health_strict": false,
+   "winners_raw": [
+    {
+     "title": "Lease vs buy car with cash?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "54225"
+    },
+    {
+     "title": "Why not pay in full upfront for a car?",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "36158"
+    },
+    {
+     "title": "Best way to physically move monetary value around",
+     "pack": "qa-travel-se",
+     "match": "lexical",
+     "chunk": "46247"
+    },
+    {
+     "title": "Selling a Car or Keeping It",
+     "pack": "qa-money-se",
+     "match": "lexical",
+     "chunk": "63101"
+    }
+   ],
+   "kept_n": 4,
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   },
+   "cheapest_fix": "none of F1-F3 (lead rank 7, lex df25 rank 9)",
+   "class": "A1_se_lexical_miss"
+  },
+  "lan-ref-001": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-winner short-circuit (no retrieval; facts layer answers)",
+   "key_fact": "2017 Literature Nobel: Kazuo Ishiguro",
+   "gold": {
+    "where": "wiki-vital5 Kazuo Ishiguro / simplewiki 234015"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-winner"
+   ],
+   "cheapest_fix": "none: not a loss (facts layer)",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-rsn-007": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-dates short-circuit",
+   "key_fact": "Berlin Wall built 1961, fell 1989",
+   "gold": {
+    "where": "simplewiki 43483 Berlin Wall"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-dates"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-exp-006": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-height short-circuit",
+   "key_fact": "Kilimanjaro 5,895 m dormant stratovolcano",
+   "gold": {
+    "where": "wiki-vital5 40508"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-height"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-ref-005": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-host short-circuit",
+   "key_fact": "2016 Summer Olympics host: Rio de Janeiro",
+   "gold": {
+    "where": "wiki-vital5 78879 (side mention)"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-host"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-cmp-001": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-population short-circuit",
+   "key_fact": "Brazil ~213M vs Russia ~144M people",
+   "gold": {
+    "where": "factbook Brazil"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-population"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-ref-004": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:facts-area short-circuit",
+   "key_fact": "Iceland about 103,000 km2",
+   "gold": {
+    "where": "pool FP (Bog, storm area chunks)"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:facts-area"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-trv-004": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "router: answer:calculator-travel-distance short-circuit",
+   "key_fact": "Paris-Rome walk ~1,400 km each way",
+   "gold": {
+    "where": "pool FP (Rome/Old Rome bar list)"
+   },
+   "winners_raw": [],
+   "kept_n": 0,
+   "reason": [
+    "answer:calculator-travel-distance"
+   ],
+   "cheapest_fix": "none: not a loss",
+   "class": "C_router_shortcircuit",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-cry-007": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "ruler FP: pool matched 'ACC' (sports, Bolivia party); d/acc not in any kit pack",
+   "key_fact": "d/acc = defensive/decentralized accelerationism (Vitalik)",
+   "gold": {
+    "where": "none in kit"
+   },
+   "winners_raw": [
+    {
+     "title": "Wikivoyage: Accra",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "1388"
+    },
+    {
+     "title": "Wikivoyage: Accra",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "1421"
+    },
+    {
+     "title": "Wikivoyage: Accra",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "1441"
+    }
+   ],
+   "kept_n": 2,
+   "reason": [
+    "context:595->88",
+    "grounding:off-topic-dropped-3",
+    "grounding:no-good-source"
+   ],
+   "cheapest_fix": "content (ship a Vitalik blog pack)",
+   "class": "D_content_absent_ruler_fp",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-cmp-003": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "ruler FP: area ranking table stripped at build; pool hits are single-word matches",
+   "key_fact": "Russia, Canada, US, China, Brazil, Australia bigger than India",
+   "gold": {
+    "where": "none in kit (table)"
+   },
+   "winners_raw": [
+    {
+     "title": "India",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "7971"
+    },
+    {
+     "title": "Northeast India",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "72111"
+    },
+    {
+     "title": "Nagaland",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "42825"
+    }
+   ],
+   "kept_n": 5,
+   "reason": [
+    "context:420->380"
+   ],
+   "cheapest_fix": "content (keep list/table rows)",
+   "class": "D_content_absent_ruler_fp",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-cry-009": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "rank: Pectra 41393 (2048 ETH) at wide 5, outside k=4; named EIP-7251 takes 3 of 4 raw slots",
+   "key_fact": "Max effective balance 2048 ETH after EIP-7251",
+   "gold": {
+    "where": "boar-crypto 41393 ethereum.org Pectra"
+   },
+   "winners_raw": [
+    {
+     "title": "Ethereum EIPs/ERCs: EIP-7251: Increase the MAX_EFFECTIVE_BAL",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "14399"
+    },
+    {
+     "title": "Ethereum EIPs/ERCs: EIP-7251: Increase the MAX_EFFECTIVE_BAL",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "14402"
+    },
+    {
+     "title": "Ethereum EIPs/ERCs: EIP-7251: Increase the MAX_EFFECTIVE_BAL",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "14400"
+    },
+    {
+     "title": "Ethereum EIPs/ERCs: EIP-8222: Lean Staking",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "26738"
+    }
+   ],
+   "kept_n": 5,
+   "reason": [
+    "context:pinned-3",
+    "context:408->335"
+   ],
+   "cheapest_fix": "per-article cap 2 on named hits (or A74 ground-dense)",
+   "class": "F_engine_other",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-hlt-001": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: health-strict topic set empty for jellyfish (H2); fa-card fires",
+   "key_fact": "Vinegar, not fresh water, on jellyfish stings",
+   "gold": {
+    "where": "wikivoyage 130055 Gulf Islands / 84351 Darwin"
+   },
+   "winners_raw": [
+    {
+     "title": "Wikivoyage: Gulf Islands National Seashore",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "130055"
+    },
+    {
+     "title": "Wikivoyage: Langkawi",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "182789"
+    },
+    {
+     "title": "Wikivoyage: Vung Tau",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "362322"
+    },
+    {
+     "title": "Wikivoyage: Darwin",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "84351"
+    }
+   ],
+   "kept_n": 0,
+   "reason": [
+    "context:780->476",
+    "grounding:health-strict",
+    "grounding:health-off-topic-dropped-4",
+    "grounding:health-no-source",
+    "grounding:fa-card-jellyfish"
+   ],
+   "cheapest_fix": "card answer wins (H2 rejected on safety); not a pack fix",
+   "class": "F_engine_other",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-hlt-002": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: health-strict symptom-only topic + compression drop altitude chunks",
+   "key_fact": "Headache+nausea at altitude = AMS: stop ascending, descend",
+   "gold": {
+    "where": "wikivoyage 7446/7462 Altitude sickness"
+   },
+   "winners_raw": [
+    {
+     "title": "Wikibooks: First Aid/Heat-Related Illness & Injury",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "7596"
+    },
+    {
+     "title": "US government: Extreme Heat (Ready.gov)",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "6165"
+    },
+    {
+     "title": "US government: Extreme Heat (Ready.gov)",
+     "pack": "boar-firstaid-en",
+     "match": "lexical",
+     "chunk": "6163"
+    },
+    {
+     "title": "Flickering/flashing in corner of eye and nausea when exposed",
+     "pack": "qa-health-se",
+     "match": "lexical",
+     "chunk": "10715"
+    }
+   ],
+   "kept_n": 0,
+   "reason": [
+    "context:1227->175",
+    "grounding:health-strict",
+    "grounding:health-off-topic-dropped-2",
+    "grounding:health-no-source",
+    "grounding:fa-card-altitude"
+   ],
+   "cheapest_fix": "card answer wins; not a pack fix",
+   "class": "F_engine_other",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "vit-cry-010": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: compressContext cut the fact sentence of kept 40957 (705->390 chars), budget binding",
+   "key_fact": "DAO fork; dissenters formed Ethereum Classic",
+   "gold": {
+    "where": "boar-crypto 40957 Timeline of Ethereum forks"
+   },
+   "winners_raw": [
+    {
+     "title": "Ethereum",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "325665"
+    },
+    {
+     "title": "ethereum.org: Timeline of all Ethereum forks (2014 to presen",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "40957"
+    },
+    {
+     "title": "ethereum.org: Introduction to Ethereum governance",
+     "pack": "boar-crypto",
+     "match": "lexical",
+     "chunk": "41008"
+    }
+   ],
+   "kept_n": 6,
+   "reason": [
+    "context:581->392",
+    "headpass:budget:dropped:pack:local-boar-simplewiki-en:325660"
+   ],
+   "cheapest_fix": "H3 tested 0/25; leave",
+   "class": "F_engine_other",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-cmp-002": {
+   "set": "v0.1",
+   "stage": "S2",
+   "label_stage": "S2",
+   "sub_stage": "dense dedup: Kodiak 80274 (weights) not retrieved; sibling 80275 at wide 3; dense append takes Polar bear 35004+35009",
+   "key_fact": "Polar bear males 350-700 kg vs grizzly 180-360 kg",
+   "gold": {
+    "where": "wiki-vital5 80274 Kodiak bear"
+   },
+   "winners_raw": [
+    {
+     "title": "Brown bear",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "2110"
+    },
+    {
+     "title": "Grizzly\u2013polar bear hybrid",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "431228"
+    },
+    {
+     "title": "Polar bear",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "13541"
+    }
+   ],
+   "kept_n": 5,
+   "reason": [
+    "context:375->285"
+   ],
+   "cheapest_fix": "H1 per-article dense dedup",
+   "class": "F_engine_other",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-cmp-005": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: onTopic proper-noun gate drops raw #2 Saltwater crocodile 70969 (no 'Nile' in text)",
+   "key_fact": "Saltwater croc males 6 m / 1,000+ kg, bigger than Nile",
+   "gold": {
+    "where": "wiki-vital5 70969 Saltwater crocodile"
+   },
+   "winners_raw": [
+    {
+     "title": "Nile crocodile",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "83580"
+    },
+    {
+     "title": "Nile crocodile",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "83581"
+    },
+    {
+     "title": "Saltwater crocodile",
+     "pack": "wiki-vital5",
+     "match": "hybrid",
+     "chunk": "70969"
+    }
+   ],
+   "kept_n": 4,
+   "reason": [
+    "context:396->286",
+    "grounding:off-topic-dropped-1"
+   ],
+   "cheapest_fix": "compare questions: proper-noun gate per entity (any named entity in title)",
+   "class": "E_keep_propernoun_gate",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  },
+  "lan-rsn-005": {
+   "set": "v0.1",
+   "stage": "S3",
+   "label_stage": "S3",
+   "sub_stage": "keep: Amazon River 761 (raw #1) dropped by onSubject (proper noun 'Earth' absent); X1 Gilgit neighbours take budget",
+   "key_fact": "Nile vs Amazon length disputed by source/measurement",
+   "gold": {
+    "where": "wiki-vital5 761 Amazon River"
+   },
+   "winners_raw": [
+    {
+     "title": "Gilgit-Baltistan",
+     "pack": "boar-simplewiki-en",
+     "match": "lexical",
+     "chunk": "108394"
+    },
+    {
+     "title": "Amazon River",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "761"
+    },
+    {
+     "title": "Wikivoyage: Extreme points",
+     "pack": "boar-wikivoyage-en",
+     "match": "lexical",
+     "chunk": "457653"
+    },
+    {
+     "title": "Mackenzie River",
+     "pack": "wiki-vital5",
+     "match": "semantic",
+     "chunk": "52938"
+    }
+   ],
+   "kept_n": 3,
+   "reason": [
+    "context:530->209",
+    "grounding:off-topic-dropped-1",
+    "headpass:budget:dropped:pack:local-boar-simplewiki-en:750",
+    "headpass:budget:dropped:pack:local-boar-simplewiki-en:19276"
+   ],
+   "cheapest_fix": "proper-noun gate exemption + H1 slate",
+   "class": "E_keep_propernoun_gate",
+   "recover": {
+    "F1": false,
+    "F1_with_F3": false,
+    "F1_L2": false,
+    "F2": false,
+    "F3_alone": false
+   }
+  }
+ }
+}

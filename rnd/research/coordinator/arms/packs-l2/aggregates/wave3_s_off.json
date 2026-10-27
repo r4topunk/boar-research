@@ -1,0 +1,454 @@
+{
+ "cell": "S-OFF",
+ "estimator": "per-item bootstrap ratio-of-sums diff, B 2000, seed 11, paired on queryId",
+ "judges": {
+  "opus": {
+   "pooled": {
+    "S": {
+     "n": 40,
+     "raw": 0.426,
+     "raw_ci": [
+      0.377,
+      0.477
+     ],
+     "above_min": 0.279,
+     "above_min_ci": [
+      0.219,
+      0.343
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      40
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 40,
+     "raw": 0.38,
+     "raw_ci": [
+      0.339,
+      0.42
+     ],
+     "above_min": 0.222,
+     "above_min_ci": [
+      0.172,
+      0.272
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      40
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 40,
+     "d_raw": 0.045,
+     "d_raw_ci": [
+      0.007,
+      0.087
+     ],
+     "d_above_min": 0.057,
+     "d_above_min_ci": [
+      0.008,
+      0.109
+     ],
+     "items_better_worse": [
+      14,
+      7
+     ]
+    },
+    "packs_complete": [
+     "qa-cooking-se",
+     "qa-money-se"
+    ]
+   }
+  },
+  "haiku": {
+   "pooled": {
+    "S": {
+     "n": 40,
+     "raw": 0.46,
+     "raw_ci": [
+      0.414,
+      0.508
+     ],
+     "above_min": 0.308,
+     "above_min_ci": [
+      0.249,
+      0.37
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      40
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 40,
+     "raw": 0.44,
+     "raw_ci": [
+      0.399,
+      0.48
+     ],
+     "above_min": 0.282,
+     "above_min_ci": [
+      0.229,
+      0.334
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      40
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 40,
+     "d_raw": 0.02,
+     "d_raw_ci": [
+      -0.011,
+      0.054
+     ],
+     "d_above_min": 0.026,
+     "d_above_min_ci": [
+      -0.014,
+      0.07
+     ],
+     "items_better_worse": [
+      18,
+      13
+     ]
+    },
+    "packs_complete": [
+     "qa-cooking-se",
+     "qa-money-se"
+    ]
+   }
+  }
+ },
+ "packs": [
+  {
+   "pack": "qa-cooking-se",
+   "family": "SE",
+   "opus": {
+    "files": {
+     "S": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-cooking-se-cut7-s42.judgments.opus.jsonl",
+     "OFF": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-cooking-se-cut7-nopack-s42.judgments.opus.jsonl"
+    },
+    "rows": {
+     "S": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-opus-5-5"
+      ]
+     },
+     "OFF": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-opus-5-5"
+      ]
+     }
+    },
+    "n_paired": 20,
+    "S": {
+     "n": 20,
+     "raw": 0.434,
+     "raw_ci": [
+      0.362,
+      0.502
+     ],
+     "above_min": 0.291,
+     "above_min_ci": [
+      0.202,
+      0.375
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.382,
+     "raw_ci": [
+      0.324,
+      0.44
+     ],
+     "above_min": 0.225,
+     "above_min_ci": [
+      0.153,
+      0.3
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 20,
+     "d_raw": 0.053,
+     "d_raw_ci": [
+      -0.006,
+      0.115
+     ],
+     "d_above_min": 0.066,
+     "d_above_min_ci": [
+      -0.006,
+      0.144
+     ],
+     "items_better_worse": [
+      8,
+      3
+     ]
+    }
+   },
+   "haiku": {
+    "files": {
+     "S": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-cooking-se-cut7-s42.judgments.jsonl",
+     "OFF": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-cooking-se-cut7-nopack-s42.judgments.jsonl"
+    },
+    "rows": {
+     "S": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-haiku-5-5"
+      ]
+     },
+     "OFF": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-haiku-5-5"
+      ]
+     }
+    },
+    "n_paired": 20,
+    "S": {
+     "n": 20,
+     "raw": 0.464,
+     "raw_ci": [
+      0.391,
+      0.531
+     ],
+     "above_min": 0.315,
+     "above_min_ci": [
+      0.22,
+      0.401
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.454,
+     "raw_ci": [
+      0.386,
+      0.52
+     ],
+     "above_min": 0.302,
+     "above_min_ci": [
+      0.212,
+      0.388
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 20,
+     "d_raw": 0.01,
+     "d_raw_ci": [
+      -0.039,
+      0.065
+     ],
+     "d_above_min": 0.013,
+     "d_above_min_ci": [
+      -0.05,
+      0.086
+     ],
+     "items_better_worse": [
+      8,
+      8
+     ]
+    }
+   }
+  },
+  {
+   "pack": "qa-money-se",
+   "family": "SE",
+   "opus": {
+    "files": {
+     "S": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-money-se-cut7-s42.judgments.opus.jsonl",
+     "OFF": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-money-se-cut7-nopack-s42.judgments.opus.jsonl"
+    },
+    "rows": {
+     "S": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-opus-5-5"
+      ]
+     },
+     "OFF": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-opus-5-5"
+      ]
+     }
+    },
+    "n_paired": 20,
+    "S": {
+     "n": 20,
+     "raw": 0.417,
+     "raw_ci": [
+      0.345,
+      0.489
+     ],
+     "above_min": 0.267,
+     "above_min_ci": [
+      0.178,
+      0.357
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.379,
+     "raw_ci": [
+      0.327,
+      0.433
+     ],
+     "above_min": 0.22,
+     "above_min_ci": [
+      0.155,
+      0.288
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 20,
+     "d_raw": 0.038,
+     "d_raw_ci": [
+      -0.012,
+      0.091
+     ],
+     "d_above_min": 0.047,
+     "d_above_min_ci": [
+      -0.016,
+      0.115
+     ],
+     "items_better_worse": [
+      6,
+      4
+     ]
+    }
+   },
+   "haiku": {
+    "files": {
+     "S": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-money-se-cut7-s42.judgments.jsonl",
+     "OFF": "<workspace>/rnd/research/coordinator/arms/packs/selftest-runs/st-qa-money-se-cut7-nopack-s42.judgments.jsonl"
+    },
+    "rows": {
+     "S": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-haiku-5-5"
+      ]
+     },
+     "OFF": {
+      "rows": 40,
+      "ok": 40,
+      "judgeModel": [
+       "claude-haiku-5-5"
+      ]
+     }
+    },
+    "n_paired": 20,
+    "S": {
+     "n": 20,
+     "raw": 0.456,
+     "raw_ci": [
+      0.394,
+      0.516
+     ],
+     "above_min": 0.302,
+     "above_min_ci": [
+      0.222,
+      0.379
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.425,
+     "raw_ci": [
+      0.378,
+      0.471
+     ],
+     "above_min": 0.262,
+     "above_min_ci": [
+      0.203,
+      0.321
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "paired": {
+     "n": 20,
+     "d_raw": 0.03,
+     "d_raw_ci": [
+      -0.007,
+      0.072
+     ],
+     "d_above_min": 0.039,
+     "d_above_min_ci": [
+      -0.009,
+      0.095
+     ],
+     "items_better_worse": [
+      10,
+      5
+     ]
+    }
+   }
+  }
+ ]
+}

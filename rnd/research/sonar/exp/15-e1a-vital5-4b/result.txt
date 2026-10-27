@@ -1,0 +1,9 @@
+and-qwen-s42 0.5212 -> and-main-v5-s42 0.5232  Δ +0.0021
+and-qwen-s43 0.5027 -> and-main-v5-s43 0.5000  Δ -0.0027
+POOLED 2 seeds, n=57 items: Δratio -0.0003  95% CI -0.0352 … +0.0353
+largest losses: [('lan-cmp-001', -0.567), ('lan-cmp-002', -0.222), ('lan-hlt-002', -0.2), ('vit-sci-002', -0.2), ('lan-ref-004', -0.18)]
+largest gains: [('vit-hum-005', 0.117), ('lan-exp-006', 0.183), ('lan-exp-005', 0.2), ('lan-cmp-005', 0.334), ('lan-ref-001', 0.567)]
+
+Diagnosis of the two largest losers (both seeds identical):
+- lan-cmp-001 Brazil vs Russia: with vital5 shown [Brazil, Wikivoyage: Brazil, Russia]; 4B states 214M vs 140M then concludes "No ... Russia more populous" (comparison reasoning error with correct numbers in context). Without vital5 it answered correctly from memory.
+- lan-cmp-002 polar vs grizzly: with vital5 the route becomes tier=instant (extractive snippet "Of the land carnivorans, it is rivaled in size only by ... the polar bear ..." shown as the final answer); the 4B never answers. vital5 adds 3 instant-tier items (lan-cmp-002, saf-005, saf-006) on both seeds.

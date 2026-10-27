@@ -1,0 +1,676 @@
+{
+ "summary": {
+  "chunks": 20,
+  "parse_rate": 1,
+  "questions": 100,
+  "dup_rate": 0,
+  "over20_rate": 0,
+  "filter_threshold": 0.7296,
+  "kept_questions": 52,
+  "keep_rate": 0.52,
+  "finish_length": 0,
+  "ms_mean": 20549.9,
+  "ctoks_mean": 70.85,
+  "inflation": {
+   "n": 10,
+   "jac_all_sorted": [
+    0,
+    0.1,
+    0.111,
+    0.154,
+    0.182,
+    0.188,
+    0.2,
+    0.2,
+    0.25,
+    0.286
+   ],
+   "jac_kept_sorted": [
+    0,
+    0,
+    0.091,
+    0.1,
+    0.125,
+    0.154,
+    0.2,
+    0.2,
+    0.25,
+    0.286
+   ]
+  }
+ },
+ "inflation": [
+  {
+   "id": "st-qa-travel-se-011",
+   "pack": "qa-travel-se",
+   "chunk": 93073,
+   "split": "article_cap",
+   "jac_all": 0.18181818181818182,
+   "jac_kept": 0.09090909090909091
+  },
+  {
+   "id": "st-qa-ethereum-se-015",
+   "pack": "qa-ethereum-se",
+   "chunk": 9701,
+   "split": "own_pack_rank",
+   "jac_all": 0.25,
+   "jac_kept": 0.25
+  },
+  {
+   "id": "st-qa-ethereum-se-019",
+   "pack": "qa-ethereum-se",
+   "chunk": 666,
+   "split": "lexical_deep_rank",
+   "jac_all": 0.1875,
+   "jac_kept": 0.125
+  },
+  {
+   "id": "st-qa-bitcoin-se-004",
+   "pack": "qa-bitcoin-se",
+   "chunk": 58406,
+   "split": "lexical_no_match",
+   "jac_all": 0.1,
+   "jac_kept": 0.1
+  },
+  {
+   "id": "st-qa-bitcoin-se-016",
+   "pack": "qa-bitcoin-se",
+   "chunk": 1289,
+   "split": "article_found_other_chunk",
+   "jac_all": 0,
+   "jac_kept": 0
+  },
+  {
+   "id": "st-boar-firstaid-en-005",
+   "pack": "boar-firstaid-en",
+   "chunk": 7619,
+   "split": "relevance_gate",
+   "jac_all": 0.2857142857142857,
+   "jac_kept": 0.2857142857142857
+  },
+  {
+   "id": "st-boar-medlineplus-en-013",
+   "pack": "boar-medlineplus-en",
+   "chunk": 159,
+   "split": "raw_dropped_grounding",
+   "jac_all": 0.15384615384615385,
+   "jac_kept": 0.15384615384615385
+  },
+  {
+   "id": "st-boar-factbook-012",
+   "pack": "boar-factbook",
+   "chunk": 692,
+   "split": "article_cap",
+   "jac_all": 0.1111111111111111,
+   "jac_kept": 0
+  },
+  {
+   "id": "st-boar-factbook-016",
+   "pack": "boar-factbook",
+   "chunk": 4102,
+   "split": "raw_dropped_grounding",
+   "jac_all": 0.2,
+   "jac_kept": 0.2
+  },
+  {
+   "id": "st-boar-simplewiki-en-009",
+   "pack": "boar-simplewiki-en",
+   "chunk": 123537,
+   "split": "article_cap",
+   "jac_all": 0.2,
+   "jac_kept": 0.2
+  }
+ ],
+ "per": [
+  {
+   "pack": "qa-travel-se",
+   "chunk": 93073,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Do I need to tip at a restaurant in Thailand?",
+    "Should I tip at a fancy restaurant in Thailand?",
+    "Is tipping common for food in Thailand?",
+    "Do Thai restaurants usually expect tips?",
+    "What should I do if I'm unsure about tipping in Thailand?"
+   ],
+   "sims": [
+    0.8774,
+    0.8578,
+    0.8871,
+    0.8505,
+    0.8451
+   ],
+   "finish": "stop",
+   "ms": 15063,
+   "ctoks": 54,
+   "kept": [
+    "Is tipping common for food in Thailand?",
+    "Do I need to tip at a restaurant in Thailand?",
+    "Should I tip at a fancy restaurant in Thailand?"
+   ]
+  },
+  {
+   "pack": "qa-bitcoin-se",
+   "chunk": 1289,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Can I tell if someone is trying to take control of the Bitcoin network?",
+    "Will my wallet show a warning if a big block change happens?",
+    "Can I just resubmit a transaction if it gets deleted?",
+    "Do I need to do anything if my transaction gets reversed?",
+    "Is there a log that shows when blocks are changed?"
+   ],
+   "sims": [
+    0.7293,
+    0.7517,
+    0.7317,
+    0.7181,
+    0.7146
+   ],
+   "finish": "stop",
+   "ms": 19678,
+   "ctoks": 69,
+   "kept": [
+    "Will my wallet show a warning if a big block change happens?",
+    "Can I just resubmit a transaction if it gets deleted?"
+   ]
+  },
+  {
+   "pack": "qa-bitcoin-se",
+   "chunk": 58406,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "How long does it take for my transaction to be processed after I send it?",
+    "When does my payment actually get added to the blockchain?",
+    "Do I have to wait 10 minutes for my transaction to be confirmed?",
+    "Is my transaction checked right away or later?",
+    "Will my money show up in my wallet after 10 minutes?"
+   ],
+   "sims": [
+    0.7355,
+    0.8053,
+    0.7416,
+    0.7043,
+    0.7498
+   ],
+   "finish": "stop",
+   "ms": 22769,
+   "ctoks": 71,
+   "kept": [
+    "When does my payment actually get added to the blockchain?",
+    "Will my money show up in my wallet after 10 minutes?",
+    "Do I have to wait 10 minutes for my transaction to be confirmed?"
+   ]
+  },
+  {
+   "pack": "qa-ethereum-se",
+   "chunk": 666,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Do I need to trust a website to keep my crypto keys safe when using Metamask?",
+    "Is the main problem with Metamask that it sends my transactions to a remote server?",
+    "Can I use my own computer to check blockchain info instead of relying on Metamask?",
+    "Are wallets like Metamask really unsafe because they store keys online?",
+    "If I don’t trust a remote server, can I switch to one I control myself?"
+   ],
+   "sims": [
+    0.806,
+    0.805,
+    0.7481,
+    0.7799,
+    0.7214
+   ],
+   "finish": "stop",
+   "ms": 34774,
+   "ctoks": 92,
+   "kept": [
+    "Do I need to trust a website to keep my crypto keys safe when using Metamask?",
+    "Is the main problem with Metamask that it sends my transactions to a remote server?",
+    "Are wallets like Metamask really unsafe because they store keys online?"
+   ]
+  },
+  {
+   "pack": "qa-ethereum-se",
+   "chunk": 9701,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "What's the difference between distributed and decentralized systems?",
+    "Are all decentralized systems also distributed?",
+    "Can a system be spread out without being in control of one center?",
+    "Does Ethereum run on a decentralized system?",
+    "Is a cloud-based app considered decentralized?"
+   ],
+   "sims": [
+    0.8713,
+    0.8132,
+    0.634,
+    0.8019,
+    0.7397
+   ],
+   "finish": "stop",
+   "ms": 34203,
+   "ctoks": 52,
+   "kept": [
+    "What's the difference between distributed and decentralized systems?",
+    "Are all decentralized systems also distributed?",
+    "Does Ethereum run on a decentralized system?"
+   ]
+  },
+  {
+   "pack": "boar-firstaid-en",
+   "chunk": 7619,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "What should I do if something hurts my eyelid but not my eye?",
+    "Can I use a bandage to cover my eye after a cut?",
+    "Should I try to pull out a piece stuck in my eye?",
+    "What if my eye is hurt and something went through it?",
+    "Do I need to go to the hospital after an eye injury?"
+   ],
+   "sims": [
+    0.741,
+    0.8067,
+    0.726,
+    0.744,
+    0.7375
+   ],
+   "finish": "stop",
+   "ms": 37441,
+   "ctoks": 72,
+   "kept": [
+    "Can I use a bandage to cover my eye after a cut?",
+    "What if my eye is hurt and something went through it?",
+    "What should I do if something hurts my eyelid but not my eye?"
+   ]
+  },
+  {
+   "pack": "boar-factbook",
+   "chunk": 4102,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "When did English and Irish people first settle on Montserrat?",
+    "When did the first African slaves arrive on Montserrat?",
+    "Who finally got control of Montserrat in the 1780s?",
+    "What happened to Montserrat’s economy in the 1800s?",
+    "When was the last volcano eruption on Montserrat?"
+   ],
+   "sims": [
+    0.7878,
+    0.7962,
+    0.7325,
+    0.7546,
+    0.7558
+   ],
+   "finish": "stop",
+   "ms": 34361,
+   "ctoks": 70,
+   "kept": [
+    "When did the first African slaves arrive on Montserrat?",
+    "When did English and Irish people first settle on Montserrat?",
+    "When was the last volcano eruption on Montserrat?"
+   ]
+  },
+  {
+   "pack": "boar-factbook",
+   "chunk": 692,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "What is Eritrea's capital city?",
+    "How big is Eritrea in square kilometers?",
+    "What percentage of Eritrea’s population is Tigrinya?",
+    "What is the main religion in Eritrea?",
+    "How much does Eritrea earn per person each year?"
+   ],
+   "sims": [
+    0.7143,
+    0.7282,
+    0.7146,
+    0.6894,
+    0.7245
+   ],
+   "finish": "stop",
+   "ms": 30325,
+   "ctoks": 59,
+   "kept": []
+  },
+  {
+   "pack": "boar-simplewiki-en",
+   "chunk": 123537,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "When did the Zirids stop being part of the Fatimid Caliphate?",
+    "What happened when the Zirids became independent and switched to Sunni Islam?",
+    "Why did the Fatimids lose control of Syria and the Levant?",
+    "Who took over Egypt in 1169 and how did they get it?",
+    "What dynasty started after Saladin took control of Egypt?"
+   ],
+   "sims": [
+    0.8061,
+    0.7658,
+    0.7675,
+    0.6675,
+    0.7077
+   ],
+   "finish": "stop",
+   "ms": 20781,
+   "ctoks": 80,
+   "kept": [
+    "When did the Zirids stop being part of the Fatimid Caliphate?",
+    "Why did the Fatimids lose control of Syria and the Levant?",
+    "What happened when the Zirids became independent and switched to Sunni Islam?"
+   ]
+  },
+  {
+   "pack": "boar-medlineplus-en",
+   "chunk": 159,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "What is an arrhythmia?",
+    "Does my heart beating too fast or too slow mean I have an arrhythmia?",
+    "What does it feel like when my heart skips a beat?",
+    "What's the most common type of heart rhythm problem?",
+    "Can a slow or fast heartbeat be normal or a sign of trouble?"
+   ],
+   "sims": [
+    0.8759,
+    0.856,
+    0.6898,
+    0.7466,
+    0.7389
+   ],
+   "finish": "stop",
+   "ms": 17500,
+   "ctoks": 66,
+   "kept": [
+    "What is an arrhythmia?",
+    "Does my heart beating too fast or too slow mean I have an arrhythmia?",
+    "What's the most common type of heart rhythm problem?"
+   ]
+  },
+  {
+   "pack": "boar-crypto",
+   "chunk": 53253,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Why do vehicles need privacy protection when they connect to the internet?",
+    "How can privacy be kept safe when cars share data with a cloud server?",
+    "What is local differential privacy and how does it help car data?",
+    "Why is it hard and expensive to protect car data using privacy tools?",
+    "Can cars and the cloud learn together without sharing personal data?"
+   ],
+   "sims": [
+    0.7567,
+    0.7845,
+    0.8439,
+    0.7222,
+    0.7655
+   ],
+   "finish": "stop",
+   "ms": 19854,
+   "ctoks": 72,
+   "kept": [
+    "What is local differential privacy and how does it help car data?",
+    "How can privacy be kept safe when cars share data with a cloud server?",
+    "Can cars and the cloud learn together without sharing personal data?"
+   ]
+  },
+  {
+   "pack": "qa-health-se",
+   "chunk": 14907,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Is \"test\" used for the whole thing or just one part in lab reports?",
+    "Does \"high glucose\" mean the glucose level was high or the whole test was high?",
+    "Can I say \"my test was high\" when it's just one marker?",
+    "What’s the difference between a test and a marker in a lab?",
+    "If a report has many tests, is one of them called a test or the whole thing?"
+   ],
+   "sims": [
+    0.8178,
+    0.7076,
+    0.7786,
+    0.7897,
+    0.7801
+   ],
+   "finish": "stop",
+   "ms": 15260,
+   "ctoks": 89,
+   "kept": [
+    "Is \"test\" used for the whole thing or just one part in lab reports?",
+    "What’s the difference between a test and a marker in a lab?",
+    "If a report has many tests, is one of them called a test or the whole thing?"
+   ]
+  },
+  {
+   "pack": "qa-bitcoin-se",
+   "chunk": 26022,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Where should I start to learn about Bitcoin if I’m not sure where to begin?",
+    "What reading materials do you recommend for someone new to Bitcoin?",
+    "Is there a simple guide to help me understand Bitcoin before diving into code?",
+    "Can I learn Bitcoin basics without reading the source code first?",
+    "What’s a good first step before trying to understand the Bitcoin code?"
+   ],
+   "sims": [
+    0.7663,
+    0.7804,
+    0.8562,
+    0.7922,
+    0.8232
+   ],
+   "finish": "stop",
+   "ms": 13635,
+   "ctoks": 75,
+   "kept": [
+    "Is there a simple guide to help me understand Bitcoin before diving into code?",
+    "What’s a good first step before trying to understand the Bitcoin code?",
+    "Can I learn Bitcoin basics without reading the source code first?"
+   ]
+  },
+  {
+   "pack": "boar-crypto",
+   "chunk": 29379,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "If a BIP is fully approved, can it be marked as closed?",
+    "Can someone take over a BIP after it’s approved and keep it active?",
+    "What happens if someone agrees to use a BIP within four weeks?",
+    "Does a BIP stay open if someone decides to adopt it?",
+    "If a BIP is closed, can it still be used?"
+   ],
+   "sims": [
+    0.7485,
+    0.7767,
+    0.7642,
+    0.7939,
+    0.7454
+   ],
+   "finish": "stop",
+   "ms": 13328,
+   "ctoks": 76,
+   "kept": [
+    "Does a BIP stay open if someone decides to adopt it?",
+    "Can someone take over a BIP after it’s approved and keep it active?",
+    "What happens if someone agrees to use a BIP within four weeks?"
+   ]
+  },
+  {
+   "pack": "boar-crypto",
+   "chunk": 27817,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "When does the WAM stop growing after Ethereum starts using the new system?",
+    "Is there a period when no blocks are deleted in the early stages?",
+    "How long does it take for the system to reach full stability?",
+    "What happens to the list of blocks during the first few blocks after launch?",
+    "Does the list of blocks keep getting bigger during the early phase?"
+   ],
+   "sims": [
+    0.7296,
+    0.7498,
+    0.6354,
+    0.7029,
+    0.701
+   ],
+   "finish": "stop",
+   "ms": 14372,
+   "ctoks": 75,
+   "kept": [
+    "Is there a period when no blocks are deleted in the early stages?",
+    "When does the WAM stop growing after Ethereum starts using the new system?"
+   ]
+  },
+  {
+   "pack": "boar-factbook",
+   "chunk": 703,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "How many years of school do kids in Eritrea usually finish?",
+    "How long do boys typically go to school in Eritrea?",
+    "How long do girls usually go to school in Eritrea?",
+    "What is the average school life span for children in Eritrea?",
+    "Is there a difference in how long boys and girls go to school in Eritrea?"
+   ],
+   "sims": [
+    0.6447,
+    0.6113,
+    0.6038,
+    0.7184,
+    0.6499
+   ],
+   "finish": "stop",
+   "ms": 15537,
+   "ctoks": 77,
+   "kept": []
+  },
+  {
+   "pack": "boar-firstaid-en",
+   "chunk": 19061,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "How did night soil collectors carry the buckets in old times?",
+    "What did collectors use to carry the full buckets?",
+    "Did people in Singapore use a similar method?",
+    "What was the old name for night soil collection in Chinese?",
+    "Why were honey buckets used for night soil?"
+   ],
+   "sims": [
+    0.7691,
+    0.6983,
+    0.6783,
+    0.8079,
+    0.7334
+   ],
+   "finish": "stop",
+   "ms": 15427,
+   "ctoks": 57,
+   "kept": [
+    "What was the old name for night soil collection in Chinese?",
+    "How did night soil collectors carry the buckets in old times?",
+    "Why were honey buckets used for night soil?"
+   ]
+  },
+  {
+   "pack": "qa-ethereum-se",
+   "chunk": 57714,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "How do I sign a transaction using my wallet password?",
+    "What password do I need to enter to sign a transaction?",
+    "Can I use my wallet password to create a signing key?",
+    "How do I get a key from my password for signing?",
+    "What steps do I take to sign a transaction with a password?"
+   ],
+   "sims": [
+    0.7776,
+    0.7729,
+    0.6891,
+    0.6847,
+    0.7682
+   ],
+   "finish": "stop",
+   "ms": 11794,
+   "ctoks": 65,
+   "kept": [
+    "How do I sign a transaction using my wallet password?",
+    "What password do I need to enter to sign a transaction?",
+    "What steps do I take to sign a transaction with a password?"
+   ]
+  },
+  {
+   "pack": "boar-firstaid-en",
+   "chunk": 21994,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "What should I do if someone has a chest wound and can't breathe?",
+    "If a person has a chest injury and no open wound, could it be a serious condition?",
+    "How do I know if a chest wound needs a chest seal?",
+    "What is a tension pneumothorax and when should I act?",
+    "Can I use a chest seal if the wound is from something going through the chest?"
+   ],
+   "sims": [
+    0.7605,
+    0.7664,
+    0.8038,
+    0.7301,
+    0.831
+   ],
+   "finish": "stop",
+   "ms": 16175,
+   "ctoks": 83,
+   "kept": [
+    "Can I use a chest seal if the wound is from something going through the chest?",
+    "How do I know if a chest wound needs a chest seal?",
+    "If a person has a chest injury and no open wound, could it be a serious condition?"
+   ]
+  },
+  {
+   "pack": "qa-health-se",
+   "chunk": 20410,
+   "n": 5,
+   "parsed": true,
+   "qs": [
+    "Why do doctors pay attention to common problems like heartburn?",
+    "Are small, everyday issues like hiccups studied by scientists?",
+    "Does a minor headache get a lot of medical research?",
+    "Why do scientists study things that seem trivial?",
+    "Is there research on things like flatulence or sneezing?"
+   ],
+   "sims": [
+    0.7828,
+    0.7758,
+    0.7776,
+    0.6605,
+    0.7466
+   ],
+   "finish": "stop",
+   "ms": 8721,
+   "ctoks": 63,
+   "kept": [
+    "Why do doctors pay attention to common problems like heartburn?",
+    "Does a minor headache get a lot of medical research?",
+    "Are small, everyday issues like hiccups studied by scientists?"
+   ]
+  }
+ ]
+}

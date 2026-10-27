@@ -1,0 +1,444 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 0676e59..1771e7d 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -2412,3 +2412,111 @@ describe("answer(): HEALTHGAP dose with a kept source (rule v1.2 §2.5)", () =>
+     f.deps.healthgap = undefined;
+   });
+ });
++
++describe("answer(): SOURCEGROUP (deps.groupSources)", () => {
++  const PAGE = "Wikivoyage — https://en.wikivoyage.org/wiki/Canberra";
++  const CAN_A = { ...chunk("ca", "Canberra", "Canberra is the capital city of Australia. It is Australia's largest inland city."), source: PAGE };
++  const CAN_B = {
++    ...chunk("cb", "Canberra", "Canberra, the capital of Australia, was designed by the American architects Walter Burley Griffin and Marion Mahony Griffin after an international design contest."),
++    source: PAGE,
++  };
++  const HALL_S = { ...HALL, source: "Wikipedia — https://en.wikipedia.org/wiki/Hall_Primary_School" };
++  const TWO = "Canberra is the capital city of Australia [1]. Canberra was designed by the American architects Walter Burley Griffin and Marion Mahony Griffin [2].";
++  const Q = "Why was Canberra chosen as the capital of Australia?";
++  const noId = (x: unknown) => JSON.stringify(x).replace(/"answerId":"[^"]*"/g, '"answerId":""');
++  const single = async (text: string, on: boolean | undefined, big = false) => {
++    f = makeFake();
++    if (big) {
++      f.installed = [lfm];
++      f.activeId = "lfm8";
++    }
++    f.retrieved = [CAN_A, CAN_B];
++    if (on !== undefined) f.deps.groupSources = on;
++    f.deps.engine.generate = async (o) => {
++      o.onToken?.(text);
++      return text;
++    };
++    return collect(Q);
++  };
++
++  it("off (default and false) is byte-identical: per-passage numbering, no sourceGroups, no code", async () => {
++    const absent = await single(TWO, undefined);
++    const off = await single(TWO, false);
++    expect(noId(off.events)).toBe(noId(absent.events));
++    expect(noId(off.result)).toBe(noId(absent.result));
++    expect(absent.result.text).toBe(TWO);
++    expect(absent.result.cited).toEqual([1, 2]);
++    expect(absent.result.sourceGroups).toBeUndefined();
++    expect(absent.result.receipt.reasonCodes.some((c) => c.startsWith("sources:grouped"))).toBe(false);
++  });
++
++  it("on: one group per page, markers renumbered, done carries finalText/cited/sourceGroups and the receipt the code", async () => {
++    const { events, result } = await single(TWO, true);
++    expect(result.text).toBe(TWO.replace("[2]", "[1]"));
++    expect(result.cited).toEqual([1]);
++    expect(result.sources.map((c) => c.chunkId)).toEqual(["ca", "cb"]);
++    expect(result.sourceGroups!.map((g) => [g.n, g.title, g.passages.map((p) => [p.chunkId, p.sourceIndex])])).toEqual([[1, "Canberra", [["ca", 0], ["cb", 1]]]]);
++    expect(result.receipt.reasonCodes).toContain("sources:grouped:2->1");
++    const done = events.find((e) => e.type === "done") as any;
++    expect(done).toMatchObject({ finalText: result.text, cited: [1] });
++    expect(done.sourceGroups).toEqual(result.sourceGroups);
++    // The sources event stays per passage; the reducer keeps the groups for the renderer.
++    expect((events.find((e) => e.type === "sources") as any).sources).toHaveLength(2);
++    let state = initialAnswer(result.answerId);
++    for (const e of events) state = answerReducer(state, e);
++    expect(state.sourceGroups?.map((g) => g.passages.length)).toEqual([2]);
++    expect(state.fast?.text).toBe(result.text);
++  });
++
++  it("on: an answer without citations keeps its text; the warning and cited are as before", async () => {
++    const text = "Canberra is a planned city.";
++    // The 8B keeps an uncited answer (the compact model declines it, with no sources).
++    const off = await single(text, undefined, true);
++    const on = await single(text, true, true);
++    expect(on.result.text).toBe(off.result.text);
++    expect(on.result.cited).toEqual([]);
++    expect(noId(on.events.filter((e) => e.type === "warning"))).toBe(noId(off.events.filter((e) => e.type === "warning")));
++    expect((on.events.find((e) => e.type === "done") as any).finalText).toBe((off.events.find((e) => e.type === "done") as any).finalText);
++    expect(on.result.sources).toHaveLength(2);
++    expect(on.result.sourceGroups).toHaveLength(1);
++    expect(on.result.receipt.reasonCodes).toContain("sources:grouped:2->1");
++  });
++
++  it("on: no page repeats -> text, cited and codes identical to off, one group per source", async () => {
++    const text = "Canberra is the capital city of Australia [1].";
++    f = makeFake();
++    const runOne = async (on: boolean) => {
++      f = makeFake();
++      f.retrieved = [CAN_A, HALL_S];
++      f.deps.groupSources = on;
++      f.deps.engine.generate = async (o) => {
++        o.onToken?.(text);
++        return text;
++      };
++      return collect(Q);
++    };
++    const off = await runOne(false);
++    const on = await runOne(true);
++    expect(on.result.text).toBe(off.result.text);
++    expect(on.result.cited).toEqual(off.result.cited);
++    expect(on.result.receipt.reasonCodes).toEqual(off.result.receipt.reasonCodes);
++    expect(on.result.sourceGroups!.length).toBe(on.result.sources.length);
++  });
++
++  it("on: a multi-pass answer is grouped after synthesis ([1] [3] [2] with 3 = page 1 -> [1] [1] [2])", async () => {
++    f.deps.groupSources = true;
++    const synth =
++      "Canberra is the capital city of Australia [1]. Canberra was designed by the American architects Walter Burley Griffin and Marion Mahony Griffin [3]. Hall Primary School opened in 1912 [2].";
++    f.deps.runMultipass = async (_q, _s, _h, _m, onProgress, onToken, _stop, options) => {
++      options.onSources?.([CAN_A, HALL_S, CAN_B]);
++      onProgress({ stage: "synthesizing" });
++      onToken(synth);
++      return { answer: synth, subQuestions: ["a", "b"], citations: [CAN_A, HALL_S, CAN_B], fullCitations: [CAN_A, HALL_S, CAN_B] };
++    };
++    const r = await createAnswerer(f.deps).deepen(Q, [CAN_A, HALL_S, CAN_B], () => {}, ctx).done;
++    expect(r.receipt.reasonCodes).toContain("sources:grouped:3->2");
++    expect(r.text).toBe(synth.replace("[3]", "[1]").replace("1912 [2]", "1912 [2]"));
++    expect(r.cited).toEqual([1, 2]);
++    expect(r.sourceGroups!.map((g) => g.passages.map((p) => p.sourceIndex))).toEqual([[0, 2], [1]]);
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 22ca042..79ae11b 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -79,6 +79,7 @@ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
+ import { numericGuard } from "./numguard";
++import { groupSources, type SourceGroup } from "./sourceGroups";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -254,6 +255,13 @@ export interface AnswerDeps {
+    * answers a fired message. Default off; true = on.
+    */
+   numguard?: boolean;
++  /**
++   * SOURCEGROUP (src/routing/sourceGroups.ts): after the answer is final, the passages of one page (same URL, else
++   * same title) become one source group; [n] in the text and cited are renumbered to the groups (first appearance
++   * in the source list), done/result carry sourceGroups (each with its passages), code sources:grouped:<before>-><after>
++   * when a page had more than one passage. The sources event and result.sources stay per passage. Default off; true = on.
++   */
++  groupSources?: boolean;
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -978,8 +986,22 @@ export function createAnswerer(deps: AnswerDeps) {
+       ): AnswerResult => {
+         // CT-2: which sources the final text really cites (after the CT-1 check); none -> the chat
+         // shows no "Sources" card for this answer.
+-        const cited =
++        let cited =
+           citedOverride ?? [...new Set([...text.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])))].filter((n) => n >= 1 && n <= sources.length);
++        // SOURCEGROUP: one entry per page; [n] and cited move to the group numbers (the passages stay in sourceGroups).
++        let sourceGroups: SourceGroup[] | undefined;
++        if (deps.groupSources === true && sources.length) {
++          const g = groupSources(text, sources, citedOverride);
++          sourceGroups = g.groups;
++          if (g.after < g.before) {
++            reasonCodes.push(`sources:grouped:${g.before}->${g.after}`);
++            if (g.text !== text) {
++              text = g.text;
++              finalText = text;
++            }
++            cited = g.cited;
++          }
++        }
+         // One rule for the chat (Quill/Prism CT-5): a model's answer that cites nothing gets the
+         // weak_sources warning (the "general knowledge" seal), on every path: deep, multipass, PT,
+         // answer-anyway, and the 4B with an on-topic source that it didn't cite.
+@@ -987,10 +1009,10 @@ export function createAnswerer(deps: AnswerDeps) {
+           reasonCodes.push("grounding:uncited-warning");
+           emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source backs this answer." });
+         }
+-        emit({ type: "done", answerId, tier, outcome, receipt: r, error, cited, ...(finalText !== undefined ? { finalText } : {}) });
++        emit({ type: "done", answerId, tier, outcome, receipt: r, error, cited, ...(finalText !== undefined ? { finalText } : {}), ...(sourceGroups ? { sourceGroups } : {}) });
+         if (DEV_LOG) console.log(`[ANSWER] done ${JSON.stringify({ q: req.query.slice(0, 80), tier, outcome, codes: reasonCodes, text: text.slice(0, 200) })}`);
+         record(outcome, r, error);
+-        return { answerId, tier, outcome, text, sources, receipt: r, cited };
++        return { answerId, tier, outcome, text, sources, receipt: r, cited, ...(sourceGroups ? { sourceGroups } : {}) };
+       };
+ 
+       // CT-3 (Prism/Piston, 34efdf8): "Who won the football match yesterday?" -> "Meath won... [1]"
+diff --git a/src/routing/answerReducer.ts b/src/routing/answerReducer.ts
+index c427fc5..4ddd250 100644
+--- a/src/routing/answerReducer.ts
++++ b/src/routing/answerReducer.ts
+@@ -1,5 +1,6 @@
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import type { SourceChunk } from "./events";
++import type { SourceGroup } from "./sourceGroups";
+ import {
+   type AnswerErrorCode,
+   type AnswerEvent,
+@@ -62,6 +63,11 @@ export interface AnswerState {
+   cited?: number[];
+   /** The engine classified the question as health/safety (done.safety): literal passage, emergency note. */
+   safety?: boolean;
++  /**
++   * deps.groupSources (done.sourceGroups, the last tier's): one entry per page; cited and the final text's [n]
++   * then number these groups, not sources. Absent: the per-passage view (sources) as before.
++   */
++  sourceGroups?: SourceGroup[];
+ }
+ 
+ export function initialAnswer(answerId: string): AnswerState {
+@@ -133,6 +139,8 @@ export function answerReducer(state: AnswerState, event: AnswerEvent): AnswerSta
+ 
+     case "done":
+       if (event.safety) state = { ...state, safety: true };
++      if (event.sourceGroups && !(event.tier === "instant" ? state.instantDone : state[event.tier]?.outcome))
++        state = { ...state, sourceGroups: event.sourceGroups };
+       if (event.tier === "instant") {
+         if (state.instantDone) return state;
+         state = withCited(state, (event as { cited?: unknown }).cited);
+diff --git a/src/routing/events.ts b/src/routing/events.ts
+index 57422a4..8c7f6ea 100644
+--- a/src/routing/events.ts
++++ b/src/routing/events.ts
+@@ -17,6 +17,7 @@
+  * Pure types (no runtime deps) so UI code and tests can import it freely.
+  */
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import type { SourceGroup } from "./sourceGroups";
+ 
+ export type AnswerTier = "instant" | "fast" | "deep";
+ 
+@@ -194,6 +195,11 @@ export type AnswerEvent =
+        * chat shows no "Sources" card (at most a collapsed "Related in your library"; Prism CT-2).
+        */
+       cited?: number[];
++      /**
++       * deps.groupSources only: one entry per page, numbered as the final text's [n] and cited (which then index
++       * sourceGroups, not the sources event). Each group keeps its passages (sourceIndex = place in the sources event).
++       */
++      sourceGroups?: SourceGroup[];
+       /**
+        * A health, first-aid or disaster question (the engine's classifier): the chat
+        * shows the "Not a substitute for emergency services" line.
+@@ -286,6 +292,8 @@ export interface AnswerResult {
+   receipt: AnswerReceipt;
+   /** See the done event's cited. */
+   cited?: number[];
++  /** See the done event's sourceGroups (deps.groupSources). sources stays per passage (deepen() reuses it). */
++  sourceGroups?: SourceGroup[];
+ }
+ 
+ export interface AnswerHandle {
+diff --git a/src/routing/sourceGroups.test.ts b/src/routing/sourceGroups.test.ts
+new file mode 100644
+index 0000000..916a128
+--- /dev/null
++++ b/src/routing/sourceGroups.test.ts
+@@ -0,0 +1,78 @@
++import { describe, it, expect } from "vitest";
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { groupSources, pageKey } from "./sourceGroups";
++
++const src = (chunkId: string, title: string, url?: string, extra: Partial<RetrievedChunk & { relevance?: number }> = {}) => ({
++  chunkId,
++  docId: chunkId,
++  title,
++  body: `${title} passage ${chunkId}.`,
++  score: 1,
++  matchType: "hybrid" as const,
++  ...(url !== undefined ? { source: url ? `Wikivoyage — ${url}` : "Offline library" } : {}),
++  ...extra,
++});
++
++describe("groupSources (SOURCEGROUP)", () => {
++  it("merges passages of one URL into one group and keeps every passage with its place in the source list", () => {
++    const s = [
++      src("a1", "Wikivoyage: Rail travel in Japan", "https://en.wikivoyage.org/wiki/Rail_travel_in_Japan", { similarity: 0.6, relevance: 0.4 }),
++      src("b1", "Japan Rail Pass", "https://en.wikivoyage.org/wiki/Japan_Rail_Pass"),
++      src("a2", "Wikivoyage: Rail travel in Japan", "https://en.wikivoyage.org/wiki/Rail_travel_in_Japan", { similarity: 0.7, relevance: 0.2 }),
++    ];
++    const g = groupSources("A [1]. B [2]. C [3].", s);
++    expect(g.groups.map((x) => [x.n, x.title, x.passages.map((p) => [p.chunkId, p.sourceIndex])])).toEqual([
++      [1, "Wikivoyage: Rail travel in Japan", [["a1", 0], ["a2", 2]]],
++      [2, "Japan Rail Pass", [["b1", 1]]],
++    ]);
++    expect(g.groups[0].similarity).toBe(0.7);
++    expect(g.groups[0].relevance).toBe(0.4);
++    expect(g.text).toBe("A [1]. B [2]. C [1].");
++    expect(g.cited).toEqual([1, 2]);
++    expect([g.before, g.after]).toEqual([3, 2]);
++  });
++
++  it("same URL wins over different titles; different URLs with one title stay apart", () => {
++    const u = "https://travel.stackexchange.com/questions/66836";
++    expect(pageKey(src("x", "Q one", u))).toBe(pageKey(src("y", "Q one (answer 2)", u)));
++    expect(pageKey(src("x", "Paris", "https://en.wikipedia.org/wiki/Paris"))).not.toBe(pageKey(src("y", "Paris", "https://en.wikivoyage.org/wiki/Paris")));
++  });
++
++  it("falls back to the title (case and spaces ignored) when the source has no URL", () => {
++    const s = [src("c1", "Choking"), src("c2", "choking "), src("h1", "Heimlich manoeuvre", ""), src("c3", "Choking", "")];
++    const g = groupSources("Back blows [2]. Thrusts [3]. Call [4].", s);
++    expect(g.groups.map((x) => x.passages.length)).toEqual([3, 1]);
++    expect(g.groups[0].key).toBe("title:choking");
++    expect(g.text).toBe("Back blows [1]. Thrusts [2]. Call [1].");
++  });
++
++  it("renumbers markers to the groups: [1][3] -> [1][2], and [1][2] of one page -> [1]", () => {
++    const s = [src("a", "A", "https://x.org/A"), src("a2", "A", "https://x.org/A"), src("b", "B", "https://x.org/B")];
++    expect(groupSources("Both say so [1][3].", s).text).toBe("Both say so [1][2].");
++    expect(groupSources("One page [1][2].", s).text).toBe("One page [1].");
++    expect(groupSources("One page [1] [2]. Next [3].", s).text).toBe("One page [1]. Next [2].");
++    // Out-of-range markers are not the engine's to renumber.
++    expect(groupSources("Odd [7]. Fine [2].", s).text).toBe("Odd [7]. Fine [1].");
++  });
++
++  it("leaves an answer without citations untouched and keeps the text identical when no page repeats", () => {
++    const dup = [src("a", "A", "https://x.org/A"), src("a2", "A", "https://x.org/A")];
++    const none = groupSources("No marker here.", dup);
++    expect(none.text).toBe("No marker here.");
++    expect(none.cited).toEqual([]);
++    expect(none.groups).toHaveLength(1);
++    const distinct = [src("a", "A", "https://x.org/A"), src("b", "B", "https://x.org/B"), src("c", "C")];
++    const text = "C first [3]. A [1]. A again [1] [1].";
++    const same = groupSources(text, distinct);
++    expect(same.text).toBe(text);
++    expect(same.map).toEqual([0, 1, 2, 3]);
++    expect(same.groups.map((x) => x.passages.length)).toEqual([1, 1, 1]);
++    expect(groupSources("", [])).toMatchObject({ text: "", groups: [], cited: [], before: 0, after: 0 });
++  });
++
++  it("maps a citation that is not written in the text (the instant excerpt) to its group", () => {
++    const s = [src("a", "A", "https://x.org/A"), src("b", "B", "https://x.org/B"), src("a2", "A", "https://x.org/A")];
++    expect(groupSources("An excerpt.", s, [3]).cited).toEqual([1]);
++    expect(groupSources("An excerpt.", s, [2]).cited).toEqual([2]);
++  });
++});
+diff --git a/src/routing/sourceGroups.ts b/src/routing/sourceGroups.ts
+new file mode 100644
+index 0000000..7743a9d
+--- /dev/null
++++ b/src/routing/sourceGroups.ts
+@@ -0,0 +1,110 @@
++/**
++ * SOURCEGROUP: one entry per page in the final answer's source list.
++ *
++ * Retrieval numbers sources per passage, so a page that gave two or three passages shows up two or
++ * three times ("Choking" ×3, PHONEFAIL failure 4: 8/27 desktop traces, 15/37 phone rows). After the
++ * answer is final, groupSources() merges the passages of one page into a group, numbers the groups by
++ * the page's first appearance in the source list (rank order kept), and rewrites every [n] in the text
++ * to its group's number ([1][3] with 2 a passage of page 1 -> [1][2]; [1][2] of one page -> [1]).
++ * Nothing else in the text changes. Pure: no I/O, no model.
++ */
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { dedupeCitations } from "./citations";
++
++/** A passage of a grouped page: the source as the sources event sent it, plus its place there. */
++export type GroupedPassage = RetrievedChunk & {
++  relevance?: number;
++  /** 0-based index into the sources event list ("[sourceIndex + 1]" before grouping). */
++  sourceIndex: number;
++};
++
++export interface SourceGroup {
++  /** The number "[n]" in the final text uses for this page (1-based, = index + 1 in sourceGroups). */
++  n: number;
++  /** "url:<url>" when the source label carries one, else "title:<lowercased title>". */
++  key: string;
++  title: string;
++  source?: string;
++  docId: string;
++  /** Best of the passages' values (absent when none has one). */
++  similarity?: number;
++  relevance?: number;
++  /** The page's passages in source-list order (length ≥ 1): for renderers that keep a chip per passage. */
++  passages: GroupedPassage[];
++}
++
++export interface GroupedSources {
++  groups: SourceGroup[];
++  /** The text with every [n] (1 ≤ n ≤ sources.length) rewritten to its group's number; others left as they are. */
++  text: string;
++  /** Group numbers the text cites, ascending. */
++  cited: number[];
++  /** Passage number (1-based) -> group number. */
++  map: number[];
++  before: number;
++  after: number;
++}
++
++const URL_RE = /https?:\/\/[^\s)\]]+/;
++
++/** The page a source belongs to: its URL when the label has one, else its title (case- and space-insensitive). */
++export function pageKey(c: { title: string; source?: string }): string {
++  const url = c.source?.match(URL_RE)?.[0];
++  if (url) return `url:${url.replace(/[.,;]+$/, "")}`;
++  return `title:${(c.title ?? "").trim().replace(/\s+/g, " ").toLowerCase()}`;
++}
++
++const best = (xs: (number | undefined)[]): number | undefined => {
++  const v = xs.filter((x): x is number => typeof x === "number");
++  return v.length ? Math.max(...v) : undefined;
++};
++
++/**
++ * Groups `sources` by page and renumbers the [n] in `text`. citedPassages (1-based passage numbers) is
++ * for an answer whose citation is not written in the text (the instant excerpt): mapped to groups.
++ * No two sources of one page -> groups mirror sources one to one and the text is returned unchanged.
++ */
++export function groupSources(
++  text: string,
++  sources: (RetrievedChunk & { relevance?: number })[],
++  citedPassages?: number[]
++): GroupedSources {
++  const byKey = new Map<string, SourceGroup>();
++  const groups: SourceGroup[] = [];
++  const map: number[] = [0];
++  sources.forEach((c, i) => {
++    const key = pageKey(c);
++    let g = byKey.get(key);
++    if (!g) {
++      g = { n: groups.length + 1, key, title: c.title, ...(c.source !== undefined ? { source: c.source } : {}), docId: c.docId, passages: [] };
++      byKey.set(key, g);
++      groups.push(g);
++    }
++    g.passages.push({ ...c, sourceIndex: i });
++    map.push(g.n);
++  });
++  for (const g of groups) {
++    const s = best(g.passages.map((p) => p.similarity));
++    const r = best(g.passages.map((p) => p.relevance));
++    if (s !== undefined) g.similarity = s;
++    if (r !== undefined) g.relevance = r;
++  }
++  const merged = groups.length < sources.length;
++  let out = text;
++  if (merged) {
++    out = text.replace(/\[(\d+)\]/g, (whole, num: string) => {
++      const k = Number(num);
++      return k >= 1 && k <= sources.length ? `[${map[k]}]` : whole;
++    });
++    // Two passages of one page cited side by side now read "[1][1]": keep one.
++    let prev: string;
++    do {
++      prev = out;
++      out = dedupeCitations(out).replace(/\[(\d+)\](?:[ \t]*\[\1\])+/g, "[$1]");
++    } while (out !== prev);
++  }
++  const fromText = [...out.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])).filter((n) => n >= 1 && n <= groups.length);
++  const fromOverride = (citedPassages ?? []).filter((k) => k >= 1 && k <= sources.length).map((k) => map[k]);
++  const cited = [...new Set(citedPassages ? fromOverride : fromText)].sort((a, b) => a - b);
++  return { groups, text: out, cited, map, before: sources.length, after: groups.length };
++}

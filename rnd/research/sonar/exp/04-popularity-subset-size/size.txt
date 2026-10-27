@@ -1,0 +1,8 @@
+method: rank by the pack's own views inside the sample shard (1 of 15 random FineWiki shards, 403,973 enwiki articles); global top-N ~ sample top-N/15.16; pack bytes = 0.842 x text bytes (15 manifests: FTS index + zstd blocks + tables)
+sanity: whole sample text 1.45 GB x 15.16 = 21.9 GB vs manifests text 21.4 GB
+top    50,000 full: text ~ 2.03 GB -> pack ~ 1.71 GB (views >= 23,520, mean 40.6 kB/article)
+top   100,000 full: text ~ 3.49 GB -> pack ~ 2.94 GB (views >= 12,270, mean 34.9 kB/article)
+top   200,000 full: text ~ 6.26 GB -> pack ~ 5.27 GB (views >= 5,790, mean 31.3 kB/article)
+top   300,000 full: text ~ 8.61 GB -> pack ~ 7.25 GB (views >= 3,570, mean 28.7 kB/article)
+top   500,000 full: text ~12.04 GB -> pack ~10.14 GB (views >= 1,830, mean 24.1 kB/article)
+top 1,000,000 full: text ~18.05 GB -> pack ~15.20 GB (views >= 660, mean 18.0 kB/article)

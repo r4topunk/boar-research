@@ -1,0 +1,1766 @@
+{
+ "qwen2.5-1.5b": {
+  "meta": {
+   "model": "qwen2.5-1.5b",
+   "gguf": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+   "sha256": "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370",
+   "serverLoadS": 1.0,
+   "peakRssSampledBytes": 2261991424,
+   "maxRssBytes": 2261991424,
+   "peakFootprintBytes": 1988758144,
+   "threads": 4,
+   "server": "<runner>/spikes/bmoe/third_party/llama.cpp/build-cpu/bin/llama-server",
+   "sampling": {
+    "temperature": 0.7,
+    "top_k": 40,
+    "top_p": 0.95,
+    "min_p": 0.05,
+    "seed": 42
+   },
+   "noThink": true,
+   "cachePrompt": false,
+   "finishedAt": "2026-09-30 14:15:44"
+  },
+  "nLlm": 56,
+  "contaminatedFinal": 0,
+  "reruns": 0,
+  "promptTokensP50": 612.0,
+  "ttftP50": 2672.3,
+  "ttftP90": 4158.15,
+  "totalP50": 3550.2,
+  "totalP90": 5588.55,
+  "prefillTokSP50": 226.43469710930773,
+  "decodeTokSP50": 58.244893648009764,
+  "answerTokensP50": 49.5,
+  "inlineThink": 0,
+  "reasoningNonEmpty": 0,
+  "empty": 0,
+  "precheck": {
+   "all52": {
+    "n": 52,
+    "pass": 15,
+    "passRate": 0.28846153846153844,
+    "passCi": [
+     0.1832980234182869,
+     0.4227304571410092
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 6,
+    "cwRate": 0.11538461538461539,
+    "cwCi": [
+     0.05396895756082726,
+     0.22971918891062054
+    ]
+   },
+   "llmRouted": {
+    "n": 49,
+    "pass": 15,
+    "passRate": 0.30612244897959184,
+    "passCi": [
+     0.1951532349314748,
+     0.4452815740069374
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 6,
+    "cwRate": 0.12244897959183673,
+    "cwCi": [
+     0.057347477598098245,
+     0.2424466240188096
+    ]
+   },
+   "b1-competitor-app": {
+    "n": 27,
+    "pass": 11,
+    "passRate": 0.4074074074074074,
+    "passCi": [
+     0.24514513372857344,
+     0.5927361694463591
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 5,
+    "cwRate": 0.18518518518518517,
+    "cwCi": [
+     0.0818058657428532,
+     0.36699056505191746
+    ]
+   },
+   "b2-boar": {
+    "n": 25,
+    "pass": 4,
+    "passRate": 0.16,
+    "passCi": [
+     0.06403347608577989,
+     0.34654013980238163
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 1,
+    "cwRate": 0.04,
+    "cwCi": [
+     0.007096050386699165,
+     0.19544472405022525
+    ]
+   },
+   "byCategory": {
+    "comparison": {
+     "n": 7,
+     "pass": 2,
+     "passRate": 0.2857142857142857,
+     "passCi": [
+      0.0822171657090155,
+      0.6410709098517873
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 3,
+     "cwRate": 0.42857142857142855,
+     "cwCi": [
+      0.15821692226262685,
+      0.7495457695909742
+     ]
+    },
+    "crypto": {
+     "n": 7,
+     "pass": 1,
+     "passRate": 0.14285714285714285,
+     "passCi": [
+      0.02567895594897479,
+      0.51313450331903
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.35433884297520657
+     ]
+    },
+    "danger": {
+     "n": 2,
+     "pass": 0,
+     "passRate": 0.0,
+     "passCi": [
+      0,
+      0.6576280471103807
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.6576280471103807
+     ]
+    },
+    "explanation": {
+     "n": 11,
+     "pass": 3,
+     "passRate": 0.2727272727272727,
+     "passCi": [
+      0.09745880573921467,
+      0.5656502930102463
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "health": {
+     "n": 4,
+     "pass": 2,
+     "passRate": 0.5,
+     "passCi": [
+      0.15003570882017148,
+      0.8499642911798285
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.48990002040399916
+     ]
+    },
+    "honesty-refusal": {
+     "n": 6,
+     "pass": 1,
+     "passRate": 0.16666666666666666,
+     "passCi": [
+      0.03005258587173032,
+      0.563509436563646
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 3,
+     "cwRate": 0.5,
+     "cwCi": [
+      0.18761280689940868,
+      0.8123871931005913
+     ]
+    },
+    "reasoning": {
+     "n": 11,
+     "pass": 5,
+     "passRate": 0.45454545454545453,
+     "passCi": [
+      0.21270957543988045,
+      0.7199122443100118
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "synthesis": {
+     "n": 3,
+     "pass": 1,
+     "passRate": 0.3333333333333333,
+     "passCi": [
+      0.0614903152761605,
+      0.7923450448735121
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.5615060804490177
+     ]
+    },
+    "travel-local": {
+     "n": 1,
+     "pass": 0,
+     "passRate": 0.0,
+     "passCi": [
+      0,
+      0.7934567085261071
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.7934567085261071
+     ]
+    }
+   }
+  },
+  "precheckVerdicts": {
+   "vit-cry-001": [
+    "fail-missing",
+    "hard fork; stark",
+    false
+   ],
+   "vit-cry-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-003": [
+    "fail-missing",
+    "300",
+    false
+   ],
+   "vit-cry-004": [
+    "fail-missing",
+    "sampl; erasure",
+    false
+   ],
+   "vit-cry-005": [
+    "fail-missing",
+    "association set",
+    false
+   ],
+   "vit-cry-006": [
+    "fail-missing",
+    "square root; sybil",
+    false
+   ],
+   "vit-cry-007": [
+    "fail-missing",
+    "defens; decentraliz",
+    false
+   ],
+   "vit-cry-008": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-009": [
+    "fail-missing",
+    "312; 5 validators",
+    false
+   ],
+   "vit-cry-010": [
+    "fail-missing",
+    "reentran; ethereum classic",
+    false
+   ],
+   "vit-cry-011": [
+    "fail-missing",
+    "algorithmic; peg",
+    false
+   ],
+   "vit-fa-001": [
+    "fail-missing",
+    "must_k 0/2 (none)",
+    false
+   ],
+   "vit-fa-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-004": [
+    "confident-wrong",
+    "re:japan('s population)? (is|has) (larger|bigger|greater|more); re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-005": [
+    "confident-wrong",
+    "re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-006": [
+    "fail-missing",
+    "re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-007": [
+    "confident-wrong",
+    "re:\\b(?!france\\b)[a-z]+ won the (2018 )?(fifa )?world cup",
+    false
+   ],
+   "vit-fa-008": [
+    "fail-missing",
+    "fiber",
+    false
+   ],
+   "vit-fa-009": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-010": [
+    "fail-missing",
+    "measles",
+    false
+   ],
+   "vit-fa-011": [
+    "fail-missing",
+    "re:(allies|entente|france|britain|united kingdom)[^.]{0,80}(won|victor|prevail|defeated (germany|the central powers))",
+    false
+   ],
+   "vit-fa-012": [
+    "confident-wrong",
+    "re:^\\s*no\\b",
+    false
+   ],
+   "vit-fa-013": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-014": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-015": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-016": [
+    "fail-missing",
+    "re:\\b(39|40|41)(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-fa-017": [
+    "fail-missing",
+    "must_k 1/2 (re:second[- ]largest)",
+    false
+   ],
+   "vit-fa-018": [
+    "fail-missing",
+    "capital; france",
+    false
+   ],
+   "vit-fa-019": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-020": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-021": [
+    "fail-missing",
+    "re:tigers? (are|is) (heavier|bigger|larger)",
+    false
+   ],
+   "vit-fa-022": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-023": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-024": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-025": [
+    "fail-missing",
+    "1945",
+    false
+   ],
+   "vit-fa-026": [
+    "confident-wrong",
+    "re:\\b(?!france\\b)[a-z]+ won the (2018 )?(fifa )?world cup",
+    false
+   ],
+   "vit-fa-027": [
+    "fail-missing",
+    "taipei; re:\\b23(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-hlt-001": [
+    "fail-missing",
+    "re:vinegar[^.]{0,80}(30 seconds|at least|pour|rinse|douse|apply|flood|soak); 1669",
+    false
+   ],
+   "vit-hlt-002": [
+    "fail-missing",
+    "confusion",
+    false
+   ],
+   "vit-hlt-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-hum-001": [
+    "fail-missing",
+    "impartial; benefit",
+    false
+   ],
+   "vit-hum-002": [
+    "fail-missing",
+    "father; graded",
+    false
+   ],
+   "vit-hum-003": [
+    "fail-missing",
+    "benefit; reciproc",
+    false
+   ],
+   "vit-hum-004": [
+    "fail-missing",
+    "shire; throat",
+    false
+   ],
+   "vit-hum-005": [
+    "fail-missing",
+    "once",
+    false
+   ],
+   "vit-hum-006": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-sci-001": [
+    "fail-missing",
+    "222; ozone",
+    false
+   ],
+   "vit-sci-002": [
+    "confident-wrong",
+    "germany is more densely",
+    false
+   ],
+   "vit-sci-003": [
+    "fail-missing",
+    "83",
+    false
+   ],
+   "vit-trv-003": [
+    "fail-missing",
+    "minibus",
+    false
+   ],
+   "vit-trv-004": [
+    "fail-missing",
+    "2,7",
+    false
+   ]
+  },
+  "judgeV2": {
+   "n": 7,
+   "winScore": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "wins": 0,
+   "ties": 0,
+   "losses": 7,
+   "consistent": 7,
+   "qualityRatio": 0.429951690821256,
+   "pairs": [
+    {
+     "q": "cry-001",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.3333333333333333,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-005",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.3333333333333333,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-009",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.0,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-012",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-016",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 3.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-020",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.8333333333333335,
+     "ref": 4.833333333333334
+    },
+    {
+     "q": "trv-010",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.0,
+     "ref": 4.666666666666667
+    }
+   ]
+  }
+ },
+ "qwen3-4b": {
+  "meta": {
+   "model": "qwen3-4b",
+   "gguf": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+   "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+   "serverLoadS": 3.0,
+   "peakRssSampledBytes": 5230657536,
+   "maxRssBytes": 5272879104,
+   "peakFootprintBytes": 7355751888,
+   "threads": 4,
+   "server": "<runner>/spikes/bmoe/third_party/llama.cpp/build-cpu/bin/llama-server",
+   "sampling": {
+    "temperature": 0.7,
+    "top_k": 40,
+    "top_p": 0.95,
+    "min_p": 0.05,
+    "seed": 42
+   },
+   "noThink": true,
+   "cachePrompt": false,
+   "finishedAt": "2026-09-30 14:35:03"
+  },
+  "nLlm": 56,
+  "contaminatedFinal": 0,
+  "reruns": 0,
+  "promptTokensP50": 612.0,
+  "ttftP50": 7652.3,
+  "ttftP90": 11206.15,
+  "totalP50": 10506.25,
+  "totalP90": 15273.9,
+  "prefillTokSP50": 81.30022187665115,
+  "decodeTokSP50": 22.235080276302767,
+  "answerTokensP50": 70.0,
+  "inlineThink": 0,
+  "reasoningNonEmpty": 0,
+  "empty": 0,
+  "precheck": {
+   "all52": {
+    "n": 52,
+    "pass": 28,
+    "passRate": 0.5384615384615384,
+    "passCi": [
+     0.405033783976834,
+     0.6665974013760211
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 1,
+    "cwRate": 0.019230769230769232,
+    "cwCi": [
+     0.0034027204090655225,
+     0.10120746268024422
+    ]
+   },
+   "llmRouted": {
+    "n": 49,
+    "pass": 28,
+    "passRate": 0.5714285714285714,
+    "passCi": [
+     0.4327024751701555,
+     0.6997689110104294
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 1,
+    "cwRate": 0.02040816326530612,
+    "cwCi": [
+     0.003611579538530696,
+     0.10693768467754147
+    ]
+   },
+   "b1-competitor-app": {
+    "n": 27,
+    "pass": 20,
+    "passRate": 0.7407407407407407,
+    "passCi": [
+     0.553210695973843,
+     0.8682979157713322
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 1,
+    "cwRate": 0.037037037037037035,
+    "cwCi": [
+     0.006567976533097597,
+     0.1828385393415652
+    ]
+   },
+   "b2-boar": {
+    "n": 25,
+    "pass": 8,
+    "passRate": 0.32,
+    "passCi": [
+     0.17204987516891143,
+     0.5159008626542329
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 0,
+    "cwRate": 0.0,
+    "cwCi": [
+     0,
+     0.13319649395317873
+    ]
+   },
+   "byCategory": {
+    "comparison": {
+     "n": 7,
+     "pass": 5,
+     "passRate": 0.7142857142857143,
+     "passCi": [
+      0.35892909014821267,
+      0.9177828342909844
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 1,
+     "cwRate": 0.14285714285714285,
+     "cwCi": [
+      0.02567895594897479,
+      0.51313450331903
+     ]
+    },
+    "crypto": {
+     "n": 7,
+     "pass": 3,
+     "passRate": 0.42857142857142855,
+     "passCi": [
+      0.15821692226262685,
+      0.7495457695909742
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.35433884297520657
+     ]
+    },
+    "danger": {
+     "n": 2,
+     "pass": 0,
+     "passRate": 0.0,
+     "passCi": [
+      0,
+      0.6576280471103807
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.6576280471103807
+     ]
+    },
+    "explanation": {
+     "n": 11,
+     "pass": 6,
+     "passRate": 0.5454545454545454,
+     "passCi": [
+      0.28008775568998817,
+      0.7872904245601196
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "health": {
+     "n": 4,
+     "pass": 4,
+     "passRate": 1.0,
+     "passCi": [
+      0.5100999795960008,
+      1
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.48990002040399916
+     ]
+    },
+    "honesty-refusal": {
+     "n": 6,
+     "pass": 4,
+     "passRate": 0.6666666666666666,
+     "passCi": [
+      0.29998832134152864,
+      0.9032306674407831
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.3903430336530645
+     ]
+    },
+    "reasoning": {
+     "n": 11,
+     "pass": 5,
+     "passRate": 0.45454545454545453,
+     "passCi": [
+      0.21270957543988045,
+      0.7199122443100118
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "synthesis": {
+     "n": 3,
+     "pass": 1,
+     "passRate": 0.3333333333333333,
+     "passCi": [
+      0.0614903152761605,
+      0.7923450448735121
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.5615060804490177
+     ]
+    },
+    "travel-local": {
+     "n": 1,
+     "pass": 0,
+     "passRate": 0.0,
+     "passCi": [
+      0,
+      0.7934567085261071
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.7934567085261071
+     ]
+    }
+   }
+  },
+  "precheckVerdicts": {
+   "vit-cry-001": [
+    "fail-missing",
+    "hard fork; stark",
+    false
+   ],
+   "vit-cry-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-004": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-005": [
+    "fail-missing",
+    "association set",
+    false
+   ],
+   "vit-cry-006": [
+    "fail-missing",
+    "square root; sybil",
+    false
+   ],
+   "vit-cry-007": [
+    "fail-missing",
+    "defens; decentraliz",
+    false
+   ],
+   "vit-cry-008": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-009": [
+    "fail-missing",
+    "312; 5 validators",
+    false
+   ],
+   "vit-cry-010": [
+    "fail-missing",
+    "reentran; ethereum classic",
+    false
+   ],
+   "vit-cry-011": [
+    "fail-missing",
+    "algorithmic",
+    false
+   ],
+   "vit-fa-001": [
+    "fail-missing",
+    "must_k 0/2 (none)",
+    false
+   ],
+   "vit-fa-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-004": [
+    "confident-wrong",
+    "re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-005": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-006": [
+    "fail-missing",
+    "re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-007": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-008": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-009": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-010": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-011": [
+    "fail-missing",
+    "re:(allies|entente|france|britain|united kingdom)[^.]{0,80}(won|victor|prevail|defeated (germany|the central powers))",
+    false
+   ],
+   "vit-fa-012": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-013": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-014": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-015": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-016": [
+    "fail-missing",
+    "re:\\b(39|40|41)(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-fa-017": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-018": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-019": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-020": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-021": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-022": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-023": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-024": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-025": [
+    "fail-missing",
+    "1945",
+    false
+   ],
+   "vit-fa-026": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-027": [
+    "fail-missing",
+    "taipei; re:\\b23(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-hlt-001": [
+    "fail-missing",
+    "re:vinegar[^.]{0,80}(30 seconds|at least|pour|rinse|douse|apply|flood|soak); 1669",
+    false
+   ],
+   "vit-hlt-002": [
+    "fail-missing",
+    "descend; confusion",
+    false
+   ],
+   "vit-hlt-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-hum-001": [
+    "fail-missing",
+    "benefit",
+    false
+   ],
+   "vit-hum-002": [
+    "fail-missing",
+    "graded",
+    false
+   ],
+   "vit-hum-003": [
+    "fail-missing",
+    "reciproc",
+    false
+   ],
+   "vit-hum-004": [
+    "fail-missing",
+    "shire; throat",
+    false
+   ],
+   "vit-hum-005": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-hum-006": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-sci-001": [
+    "fail-missing",
+    "ozone",
+    false
+   ],
+   "vit-sci-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-sci-003": [
+    "fail-missing",
+    "83",
+    false
+   ],
+   "vit-trv-003": [
+    "fail-missing",
+    "minibus",
+    false
+   ],
+   "vit-trv-004": [
+    "fail-missing",
+    "2,7",
+    false
+   ]
+  },
+  "judgeV2": {
+   "n": 7,
+   "winScore": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "wins": 0,
+   "ties": 0,
+   "losses": 7,
+   "consistent": 7,
+   "qualityRatio": 0.5336538461538461,
+   "pairs": [
+    {
+     "q": "cry-001",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.0,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-005",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-009",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 3.0,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-012",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.833333333333333,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-016",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 3.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-020",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "trv-010",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.6666666666666667,
+     "ref": 4.666666666666667
+    }
+   ]
+  }
+ },
+ "ling-3.0-tiny": {
+  "meta": {
+   "model": "ling-3.0-tiny",
+   "gguf": "Ling-3.0-tiny-Q4_K_M.gguf",
+   "sha256": "246d67d45f5b0c7447ca0ce0bdb8b46b8a47b593c5068635dc16422c051d7be9",
+   "serverLoadS": 16.2,
+   "peakRssSampledBytes": 6084689920,
+   "maxRssBytes": 6084689920,
+   "peakFootprintBytes": 7723345184,
+   "threads": 4,
+   "server": "<runner>/spikes/bmoe/third_party/llama.cpp/build-cpu/bin/llama-server",
+   "sampling": {
+    "temperature": 0.7,
+    "top_k": 40,
+    "top_p": 0.95,
+    "min_p": 0.05,
+    "seed": 42
+   },
+   "noThink": true,
+   "cachePrompt": false,
+   "finishedAt": "2026-09-30 14:57:40"
+  },
+  "nLlm": 56,
+  "contaminatedFinal": 0,
+  "reruns": 0,
+  "promptTokensP50": 629.0,
+  "ttftP50": 4112.25,
+  "ttftP90": 5721.049999999999,
+  "totalP50": 4963.8,
+  "totalP90": 6772.299999999999,
+  "prefillTokSP50": 157.46770999304476,
+  "decodeTokSP50": 59.34094640487646,
+  "answerTokensP50": 57.0,
+  "inlineThink": 0,
+  "reasoningNonEmpty": 0,
+  "empty": 0,
+  "precheck": {
+   "all52": {
+    "n": 52,
+    "pass": 26,
+    "passRate": 0.5,
+    "passCi": [
+     0.3688563855796992,
+     0.6311436144203009
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 0,
+    "cwRate": 0.0,
+    "cwCi": [
+     0,
+     0.06879459041288215
+    ]
+   },
+   "llmRouted": {
+    "n": 49,
+    "pass": 26,
+    "passRate": 0.5306122448979592,
+    "passCi": [
+     0.39380627019919845,
+     0.6629671810210522
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 0,
+    "cwRate": 0.0,
+    "cwCi": [
+     0,
+     0.07270029673590504
+    ]
+   },
+   "b1-competitor-app": {
+    "n": 27,
+    "pass": 18,
+    "passRate": 0.6666666666666666,
+    "passCi": [
+     0.47824419872105484,
+     0.8135694555640665
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 0,
+    "cwRate": 0.0,
+    "cwCi": [
+     6.938893903907228e-18,
+     0.12455903714463581
+    ]
+   },
+   "b2-boar": {
+    "n": 25,
+    "pass": 8,
+    "passRate": 0.32,
+    "passCi": [
+     0.17204987516891143,
+     0.5159008626542329
+    ],
+    "refused": 0,
+    "refusedRate": 0.0,
+    "confidentWrong": 0,
+    "cwRate": 0.0,
+    "cwCi": [
+     0,
+     0.13319649395317873
+    ]
+   },
+   "byCategory": {
+    "comparison": {
+     "n": 7,
+     "pass": 5,
+     "passRate": 0.7142857142857143,
+     "passCi": [
+      0.35892909014821267,
+      0.9177828342909844
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.35433884297520657
+     ]
+    },
+    "crypto": {
+     "n": 7,
+     "pass": 3,
+     "passRate": 0.42857142857142855,
+     "passCi": [
+      0.15821692226262685,
+      0.7495457695909742
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.35433884297520657
+     ]
+    },
+    "danger": {
+     "n": 2,
+     "pass": 0,
+     "passRate": 0.0,
+     "passCi": [
+      0,
+      0.6576280471103807
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.6576280471103807
+     ]
+    },
+    "explanation": {
+     "n": 11,
+     "pass": 4,
+     "passRate": 0.36363636363636365,
+     "passCi": [
+      0.15166223614131383,
+      0.6462032231083628
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "health": {
+     "n": 4,
+     "pass": 3,
+     "passRate": 0.75,
+     "passCi": [
+      0.3006360524426366,
+      0.9544139373553637
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.48990002040399916
+     ]
+    },
+    "honesty-refusal": {
+     "n": 6,
+     "pass": 5,
+     "passRate": 0.8333333333333334,
+     "passCi": [
+      0.43649056343635395,
+      0.9699474141282697
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.3903430336530645
+     ]
+    },
+    "reasoning": {
+     "n": 11,
+     "pass": 4,
+     "passRate": 0.36363636363636365,
+     "passCi": [
+      0.15166223614131383,
+      0.6462032231083628
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      2.7755575615628914e-17,
+      0.2588400172488141
+     ]
+    },
+    "synthesis": {
+     "n": 3,
+     "pass": 1,
+     "passRate": 0.3333333333333333,
+     "passCi": [
+      0.0614903152761605,
+      0.7923450448735121
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.5615060804490177
+     ]
+    },
+    "travel-local": {
+     "n": 1,
+     "pass": 1,
+     "passRate": 1.0,
+     "passCi": [
+      0.20654329147389294,
+      1
+     ],
+     "refused": 0,
+     "refusedRate": 0.0,
+     "confidentWrong": 0,
+     "cwRate": 0.0,
+     "cwCi": [
+      0,
+      0.7934567085261071
+     ]
+    }
+   }
+  },
+  "precheckVerdicts": {
+   "vit-cry-001": [
+    "fail-missing",
+    "hard fork; stark",
+    false
+   ],
+   "vit-cry-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-004": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-005": [
+    "fail-missing",
+    "association set",
+    false
+   ],
+   "vit-cry-006": [
+    "fail-missing",
+    "square root; sybil",
+    false
+   ],
+   "vit-cry-007": [
+    "fail-missing",
+    "defens; decentraliz",
+    false
+   ],
+   "vit-cry-008": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-cry-009": [
+    "fail-missing",
+    "5 validators",
+    false
+   ],
+   "vit-cry-010": [
+    "fail-missing",
+    "reentran; ethereum classic",
+    false
+   ],
+   "vit-cry-011": [
+    "fail-missing",
+    "algorithmic",
+    false
+   ],
+   "vit-fa-001": [
+    "fail-missing",
+    "must_k 0/2 (none)",
+    false
+   ],
+   "vit-fa-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-004": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-005": [
+    "fail-missing",
+    "re:^\\s*no\\b",
+    false
+   ],
+   "vit-fa-006": [
+    "fail-missing",
+    "re:^\\s*yes\\b",
+    false
+   ],
+   "vit-fa-007": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-008": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-009": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-010": [
+    "fail-missing",
+    "measles",
+    false
+   ],
+   "vit-fa-011": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-012": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-013": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-014": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-015": [
+    "fail-missing",
+    "8.1",
+    false
+   ],
+   "vit-fa-016": [
+    "fail-missing",
+    "re:\\b(39|40|41)(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-fa-017": [
+    "fail-missing",
+    "must_k 1/2 (re:second[- ]largest)",
+    false
+   ],
+   "vit-fa-018": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-019": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-020": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-021": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-022": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-023": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-024": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-025": [
+    "fail-missing",
+    "1945",
+    false
+   ],
+   "vit-fa-026": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-fa-027": [
+    "fail-missing",
+    "taipei; re:\\b23(\\.\\d+)?\\s*million",
+    false
+   ],
+   "vit-hlt-001": [
+    "fail-missing",
+    "1669",
+    false
+   ],
+   "vit-hlt-002": [
+    "fail-missing",
+    "confusion",
+    false
+   ],
+   "vit-hlt-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-hum-001": [
+    "fail-missing",
+    "benefit",
+    false
+   ],
+   "vit-hum-002": [
+    "fail-missing",
+    "graded",
+    false
+   ],
+   "vit-hum-003": [
+    "fail-missing",
+    "benefit; reciproc",
+    false
+   ],
+   "vit-hum-004": [
+    "fail-missing",
+    "shire; throat",
+    false
+   ],
+   "vit-hum-005": [
+    "fail-missing",
+    "once",
+    false
+   ],
+   "vit-hum-006": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-sci-001": [
+    "fail-missing",
+    "ozone",
+    false
+   ],
+   "vit-sci-002": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-sci-003": [
+    "fail-missing",
+    "83",
+    false
+   ],
+   "vit-trv-003": [
+    "pass",
+    "",
+    true
+   ],
+   "vit-trv-004": [
+    "fail-missing",
+    "2,7",
+    false
+   ]
+  },
+  "judgeV2": {
+   "n": 7,
+   "winScore": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "wins": 0,
+   "ties": 0,
+   "losses": 7,
+   "consistent": 7,
+   "qualityRatio": 0.4780487804878048,
+   "pairs": [
+    {
+     "q": "cry-001",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.8333333333333335,
+     "ref": 4.833333333333334
+    },
+    {
+     "q": "cry-005",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.833333333333333,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-009",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.0,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-012",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.6666666666666665,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-016",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 2.3333333333333335,
+     "ref": 5.0
+    },
+    {
+     "q": "cry-020",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 3.0,
+     "ref": 4.666666666666667
+    },
+    {
+     "q": "trv-010",
+     "winner": "ref",
+     "consistent": true,
+     "boar": 1.6666666666666667,
+     "ref": 4.666666666666667
+    }
+   ]
+  }
+ }
+}

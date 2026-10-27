@@ -1,0 +1,60 @@
+traces 192 (expected 192)
+expected yes: 69  sources used 30  retrieval ran 67  decisions {'gate-SEARCH': 55, 'skip-rules': 13, 'gate-CONVERSATION': 1}
+expected no: 102  sources used 1  retrieval ran 3  decisions {'gate-CONVERSATION': 90, 'rules-no-gate': 8, 'gate-SEARCH': 4}
+expected either: 21  sources used 15  retrieval ran 19  decisions {'gate-SEARCH': 20, 'gate-CONVERSATION': 1}
+
+confusion (rows = expected, cols = sources used):
+  yes     used  30  not used  39
+  no      used   1  not used 101
+  either  used  15  not used   6
+
+G1 missed search 39/69 = 56.5% (bar <= 5%)  FAIL
+G2 false search  1/102 = 1.0% (bar <= 15%) PASS
+G3 empty 0, errors 0, expected-no answers containing a retrieved title 0  PASS
+
+failing items (id, kind, history turns, decision, p(SEARCH), tier):
+  G1 missed: cs-030 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: cs-032 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: cs-035 followup h2 gate-SEARCH p=1.0 tier=fast task=research
+  G1 missed: cs-036 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-039 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-040 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-042 mixed h0 gate-SEARCH p=1.0 tier=fast task=research
+  G1 missed: cs-044 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-045 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-047 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-048 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-049 research h0 skip-rules p=None tier=fast task=research
+  G1 missed: cs-051 research h0 skip-rules p=None tier=fast task=research
+  G1 missed: cs-052 research h0 skip-rules p=None tier=fast task=lookup
+  G1 missed: cs-055 research h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: cs-056 research h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v1-029 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v1-031 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v1-037 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v1-042 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v1-047 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v1-049 research h0 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v1-050 research h0 skip-rules p=None tier=fast task=research
+  G1 missed: v1-055 research h0 gate-CONVERSATION p=0.274 tier=fast task=conversation
+  G1 missed: v1-056 research h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-029 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v2-032 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v2-035 followup h2 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v2-037 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-038 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-039 followup h2 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-042 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-047 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-048 mixed h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G1 missed: v2-049 research h0 gate-SEARCH p=1.0 tier=fast task=lookup
+  G1 missed: v2-050 research h0 skip-rules p=None tier=fast task=lookup
+  G1 missed: v2-051 research h0 skip-rules p=None tier=fast task=lookup
+  G1 missed: v2-052 research h0 gate-SEARCH p=1.0 tier=instant task=lookup
+  G1 missed: v2-055 research h0 gate-SEARCH p=1.0 tier=fast task=chat
+  G2 false: cs-061 ambiguous h0 gate-SEARCH p=1.0 tier=fast task=chat
+
+gate calls 171, p(SEARCH) range 0.000-1.000
+all decisions: {'gate-CONVERSATION': 92, 'rules-no-gate': 8, 'gate-SEARCH': 79, 'skip-rules': 13}
+gate CONVERSATION by expected: {'no': 90, 'either': 1, 'yes': 1}
+answer tokens median 32 max 126; latency ms median 8042 p90 12672

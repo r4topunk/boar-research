@@ -1,0 +1,409 @@
+{
+ "ranked": [
+  {
+   "id": "C1-GAP-LEDGER",
+   "statement": "The page section 'Why the submitted app differs from our engine' (\u00a71, under the S00 headline) can be written as a 6-row cause ledger in which every row verifies (6/6) against a file:line in snapshot 5f8cc8f4 plus one device observation. Rows: (1) no Qwen3-1.7B in catalog.json (sha 18406c60; the RC1 request 'matches no installed model'). (2) Detailed/1024 default (DeviceEvalRunner.kt l.164 and l.203; personalities.json defaultId). (3) 0 packs and no offline import (logcat 'knowledge base + 0 packs'; no intent or content-URI route; RC1-PACKS). (4) No warning line (0 hits for the warning string in code and assets; 0/3 on RC1). (5) No deterministic layers measured on RC1 (pending H2a). (6) KB similarity cutoff 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73; retrieval fired 1/51). Each row is labelled 'our reading of the maintainer's pre-release snapshot, not of RC1' unless a device row confirms it.",
+   "why_now": "The S00 headline already says 'Detailed, built-in KB, no packs'. The page has no sourced list of why, and each cause sits in a different file (GOAL E1, RC1-PACKS, the runsheet facts, A2). If a reader has to take a cause on faith, a 0.14 row reads as either sandbagging the maintainer or hiding a weak app.",
+   "method": "Write ruler/tools/gap_ledger_check.py (0 LLM). It takes a frozen ledger JSON: {row, claim sentence, snapshot path:line, expected substring, device evidence file+sha}. It greps the snapshot at 5f8cc8f4 for each expected substring at the cited line (\u00b13), checks each device-evidence sha (rc-cv5-51-15b rows.jsonl df26ed79, the RC1-PACKS logcat excerpt, RC1-SPEED), and fails any row whose sentence uses ships/default/in-the-app for 1.7B, Succinct or packs (reuse the a2_state_check.py verb list). Negative control: one planted row with a wrong line number must fail. After row 0b on 10-22, add the catalog photo shas and re-run. Row 5 stays 'not measured' until H2a lands.",
+   "lane": "scripting",
+   "ids": "none (code and device-log facts). The retrieval clause uses the 51 CV5 v0.1 dev ids from rc-cv5-51-15b rows.jsonl.",
+   "cost": "About 45 min of scripting, 0 LLM, 0 judge, 0 phone (row 0b is already on the runsheet)",
+   "ceiling": "Six sourced sentences that explain the 0.14 row without any projection. This is the page's defence against 'you measured a broken install'.",
+   "mde_ok": true,
+   "feeds": "research-page",
+   "kill_criterion": "Written now. If runsheet row 0b shows an installed apk sha other than 2ef43258, or a Model Catalog that lists Qwen3-1.7B or any boar-packs entry, the ledger is rewritten for that RC (A2 state S10/S01/S11) and rows 1/3 are struck. Any row that fails its line check after one correction pass is cut from the page and replaced by 'not established'. If H2a shows \u2265 4/5 layer probes matching cut 7, row 5 becomes 'layers present' and leaves the ledger.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: what the page says about the gap between the engine research and the shipped app. Each item gets a sourced number or is cut. Ranked by (ceiling x probability) / cost. Already done and not repeated here: A1 (0.143 measured), S1 NO-GAIN, S2 Haiku NONINFERIOR, A2 state matrix, A3 two-claims review, A5 RC2 rerun. S3 NATIVE-PARITY is running Haiku-only. Its N-D (native exact, Detailed, KB-only, 0.7 gate) and N-S traces already exist: arms/native-parity/traces/native-N-{D,S}-v01-s42.traces.jsonl, 51/51 each. So the cheapest Opus attribution needs only judge calls, no generation. Opus total across the 5 items is 254, cap 300. UNKNOWN: whether the installed RC1 catalog matches snapshot 5f8cc8f4 (runsheet row 0b). Whether an RC2 exists by 10-24 12:00. Whether the S3 Haiku judge finishes before the Opus calls (the two do not depend on each other).",
+   "p": 0.7,
+   "value": 4,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It is a 0-LLM, mechanically checked, sourced cause list that stops the 0.14 from reading as either spin or sandbagging. Row 5 (layers) is unmeasured, so '6/6 verify' cannot pass as written and should be framed as 5 verified + 1 'not established'. Every row must keep the 'snapshot, not RC1' label until 0b.",
+    "0 LLM; it gives the page six sourced reasons for the 0.14 and defends against 'you measured a broken install'; rows 1/3/5 are re-checked after runsheet row 0b and H2a."
+   ],
+   "score": 2.8
+  },
+  {
+   "id": "LA5-WITHHOLD-ABSOLUTE",
+   "statement": "A section 0 that keeps the app's absolute U internal fails an independent Opus content review as a material omission (\u2265 1 'material omission' finding). That variant publishes only the engine rows, the RC1 configuration facts (1.5B, Detailed, KB only, 0 packs) and 'the submitted app scores below our engine on the same 51 questions (paired +0.21, Opus)'. Prediction: the option dies, and the 0.14 must be printed if any engine number is printed. Draft headline under test: \"Our engine (bench app) scored U 0.46 with Qwen3-4B (Claude Opus judge.v1, 51 v0.1 dev questions, one run, win 1/51); this is our engine's number, not a measurement of the submitted app, which ships Qwen2.5-1.5B with no knowledge packs and scored below our 1.7B engine on the same questions (paired +0.21, CI +0.13...+0.29).\"",
+   "why_now": "The section 0 rule 'native-app absolute numbers internal until r4to's word' still stands (README decision 4), so this is the current default path if r4to does nothing. It should be killed or validated with evidence before 10-24 18:00, not assumed. The bounty scores the submitted app, and a reader who later finds the 0.14 would read the omission as spin.",
+   "method": "Freeze LA5-criterion.md (sha): pass = 0 'material omission' or 'misleading by omission' findings and \u2264 2 required edits. Spawn one independent Opus reviewer (opus/high), separate from LA1's, with the RESEARCH-PAGE checklist plus Q: 'Does the text let a reader infer what the submitted app scores? Is anything the bounty judges on withheld?' Run it in the same pass as LA1, so the two variants are judged by one rubric. [r4to] decision: decision 4 (lift or keep the internal rule) is taken on the two review outputs.",
+   "lane": "writing",
+   "ids": "0 benchmark ids; text-only review of the withheld variant",
+   "cost": "1-2 Opus agent calls, 0 judge, 0 phone, about 20 min",
+   "ceiling": "Low as a claim: at best it preserves r4to's option to keep the app number internal. The decision value is high, because it settles decision 4 with evidence and protects against the worst day-one reading ('they hid their own app's score').",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before the run: the reviewer returns \u2265 1 material-omission finding (expected). Then the withheld variant is dropped, decision 4 goes to r4to with the review attached and the recommendation 'publish the A1 row', and LA1 is the section 0 base. If the reviewer passes it (0 findings, \u2264 2 edits), r4to may choose it, and the page must still carry the paired delta with its CI.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, claim strategy given 0.14. The submitted app (RC1 2.0.0-rc1 as installed: Qwen2.5-1.5B, Detailed, built-in KB, 0 packs) scores U floor-adj 0.143 (0.103-0.188), raw 0.316, win 0/51 (Opus judge.v1 + DECLINE2STAGE, 51 v0.1 dev, one run, Pixel 8a). Our engine sits at 0.351 (1.7B K0) and 0.460 (4B cut 7), and the bar is 0.50 floor-adj with win-rate vs the reference. Facts that shape the options: (a) the RC1 snapshot catalog (5f8cc8f4) lists qwen3-4b-instruct-2507-q4km (2.50 GB), so a \"configuration\" row needs no maintainer action, only an r4to Wi-Fi window (whether the installed RC1 matches is UNKNOWN until runsheet row 0b); (b) neither the 1.7B nor our packs can reach RC1 without NOTE-1 / NOTE-5; (c) Opus budget is 300, 102 already spent by A1, so at most two more 102-call arms; (d) A3-TWO-CLAIMS-REVIEW and A5-RC2-ADOPTED-RERUN already exist in round 6. H2 adds a misattribution test to A3, and H4 is A5 reframed as the claim decision; neither repeats them. Ranked by (ceiling x probability) / cost. r4to decisions are marked [r4to] in each method. UNKNOWN: whether the installed RC1 Model Catalog lists the 4B; whether the maintainer cuts an RC2 before 10-23; the Codex judge's behaviour on very low-scoring rows; the 4B Detailed answer time on a warm Pixel (prediction 55-95 s).",
+   "p": 0.85,
+   "value": 3,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It costs almost nothing in the same review pass as LA1 and settles decision 4 with evidence. The likely outcome is a material-omission finding, because the bounty scores the submitted app, so the withheld variant is mainly a foil that confirms the 0.14 must be printed.",
+    "One reviewer call in the same pass as LA1 settles README decision 4 with evidence; the expected material-omission finding kills the default 'keep internal' path cheaply."
+   ],
+   "score": 2.55
+  },
+  {
+   "id": "LA2-S-ROW-CODEX",
+   "statement": "Under the cross-family Codex judge (gpt-5.6-sol, judge.v1 bytes, same blinding and both orders) on the existing A1 traces, the submitted app as installed scores U floor-adj 0.18-0.30 (the Claude-to-Codex offset is about +0.10 on V-para/v0.2 and the ladder). Win stays at 2/51 or fewer. On the same 51 ids the paired Codex 1.7B K0 bench - RC1 is at least +0.12 with CI low > 0. So the claim can print the app row in two judge families, leading with the lower one, and the 'app below engine' sentence holds across families.",
+   "why_now": "Claim rules require leading with win-rate and the lower judge family, and naming the family next to every ratio. A1 has only a Claude number. The CV5 Codex ladder (DD2-CODEX-LADDER, deadline 10-23 18:00) already runs the 4 engine rungs on these 51 ids on r4to's [usage detail removed]. Adding the RC1 traces as a 5th rung costs 102 more Codex calls and 0 Claude calls, and closes the 'Claude judge is just strict' objection on the app row.",
+   "method": "Freeze LA2-criterion.md (sha) as an addendum to CV5-LADDER-CODEX (89f2b173), with the A1 traces as rung L4 'RC1 shipped'. Copy the 51 RC1 answers (handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl, sha df26ed79) into ruler/codex-ladder/in/ under the same blinding. r4to runs bash run.sh in the same session as the ladder: 102 calls = 51 ids x 2 orders, reasoning high, no tools. Coordinator: cv5_ladder_codex.py extended to 5 rungs, item-cluster bootstrap B 2000 rng 11, DECLINE2STAGE stage 1 reused from A1 (0 new). Report levels, win-rate and paired deltas vs the 1.7B and 4B Codex rows, plus the per-rung offset U_codex - U_opus. [r4to] runs it, on his [usage detail removed].",
+   "lane": "scripting",
+   "ids": "CV5 51 v0.1 dev ids (ruler/codex-ladder/in/ids51.txt = ruler/cv5-ladder/in/set.json RV2 primary), A1 traces rc-cv5-51-15b",
+   "cost": "102 Codex calls on r4to's [usage detail removed] (about +25 % on the 408-call ladder, about 20-30 min wall), 0 Claude, 0 paid, 0 phone, about 5 min of r4to attention",
+   "ceiling": "The app row in two judge families. Whatever the outcome, the page can say '0.14 Claude / {x} OpenAI, win 0-{k}/51'. That removes the judge-family objection on the most damaging number, and adds a 5th point to the offset-spread check.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before the run: Codex RC1 U floor-adj > 0.35 (the app would be within one engine rung under Codex), OR the paired Codex 1.7B - RC1 CI includes 0, OR the RC1 offset (Codex - Opus) differs from the ladder's mean offset by more than 0.08. Then the app row is printed as 'judge families disagree', with both numbers and no 'below our engine' sentence. Not run by 10-23 18:00 \u2192 the claim prints the Claude row only, labelled 'one judge family'.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, claim strategy given 0.14. The submitted app (RC1 2.0.0-rc1 as installed: Qwen2.5-1.5B, Detailed, built-in KB, 0 packs) scores U floor-adj 0.143 (0.103-0.188), raw 0.316, win 0/51 (Opus judge.v1 + DECLINE2STAGE, 51 v0.1 dev, one run, Pixel 8a). Our engine sits at 0.351 (1.7B K0) and 0.460 (4B cut 7), and the bar is 0.50 floor-adj with win-rate vs the reference. Facts that shape the options: (a) the RC1 snapshot catalog (5f8cc8f4) lists qwen3-4b-instruct-2507-q4km (2.50 GB), so a \"configuration\" row needs no maintainer action, only an r4to Wi-Fi window (whether the installed RC1 matches is UNKNOWN until runsheet row 0b); (b) neither the 1.7B nor our packs can reach RC1 without NOTE-1 / NOTE-5; (c) Opus budget is 300, 102 already spent by A1, so at most two more 102-call arms; (d) A3-TWO-CLAIMS-REVIEW and A5-RC2-ADOPTED-RERUN already exist in round 6. H2 adds a misattribution test to A3, and H4 is A5 reframed as the claim decision; neither repeats them. Ranked by (ceiling x probability) / cost. r4to decisions are marked [r4to] in each method. UNKNOWN: whether the installed RC1 Model Catalog lists the 4B; whether the maintainer cuts an RC2 before 10-23; the Codex judge's behaviour on very low-scoring rows; the 4B Detailed answer time on a warm Pixel (prediction 55-95 s).",
+   "p": 0.6,
+   "value": 4,
+   "costscore": 1,
+   "verdicts": [
+    "r4to-decision",
+    "r4to-decision"
+   ],
+   "reasons": [
+    "It costs 0 Claude calls and closes the judge-family objection on the most damaging number by riding on DD2, which r4to runs on his [usage detail removed]. The Codex offset on very low-scoring rows is unknown, so the kill rule tying the offset to the ladder mean \u00b10.08 is sensible and should stay frozen.",
+    "0 Claude calls and about 5 min of r4to piggybacking on the DD2 Codex ladder, which closes the judge-family objection on the most damaging row; put it in the README tonight as an add-on rung for him to run."
+   ],
+   "score": 2.4
+  },
+  {
+   "id": "LA1-TWO-CLAIMS-MISATTRIB",
+   "statement": "A section 0 written as two labelled claims (E = 'Our engine (bench app)', S = 'The submitted app (RC1 2.0.0-rc1, as installed)') is read correctly by 3 of 3 independent cold Opus reader agents. Each one answers 'what does the submitted app score?' with 0.14 (never 0.35, 0.46 or 0.26). The independent Opus content reviewer then returns 3 or fewer required edits and 0 findings of the type 'bench number readable as the app's'. Headline (variant B): \"Our engine (bench app) scored U 0.46 (CI 0.39-0.54) with Qwen3-4B and 0.35 (0.28-0.44) with Qwen3-1.7B, win 1/51 each (Claude Opus judge.v1, 51 v0.1 dev questions, one run); this is our engine's number, not a measurement of the submitted app. The submitted app as installed (RC1: Qwen2.5-1.5B, Detailed, built-in knowledge base, no packs) scored U 0.14 (CI 0.10-0.19), win 0/51, 2 correct and 69 confident errors per 100 (same judge, same 51 questions, one run, Pixel 8a); on the same questions our 1.7B engine is +0.21 (+0.13...+0.29) above it.\"",
+   "why_now": "This is the honest default: it publishes every measured number on its own system with the only allowed bridge, the paired delta on the same ids and judge. A3 tests the wording with a reviewer but not whether a cold reader mistakes E for S. With a 0.32 gap between the blocks, that mistake is the day-one failure. The claim v5 headline is due 10-24 18:00.",
+   "method": "Freeze LA1-criterion.md (sha) first. It holds the 3 reader questions, the pass rule '3/3 readers say 0.14 for the app, and 3/3 name the app's model as Qwen2.5-1.5B', and the reviewer rule. Draft the section 0 E/S blocks from RESEARCH-PAGE-OUTLINE state S00 (variant B), with every number carrying judge/set/n/run/phone. Spawn 3 cold Opus reader agents (opus/medium) that see only the section 0 text and answer 3 fixed questions: app score, app model, best engine score. Then spawn 1 Opus reviewer (opus/high) with the RESEARCH-PAGE checklist plus A3's Q1-Q3. Apply the edits and re-review once. [r4to] decisions: lift the 'native-app absolute numbers internal' rule (README decision 4) for the A1 row; headline variant B.",
+   "lane": "writing",
+   "ids": "0 benchmark ids; text-only test over the section 0 draft (numbers sourced from A1-RC1-SHIPPED-U.json 3116407c, CV5-LADDER-OPUS-2026-10-21.json a3c6fcb3)",
+   "cost": "5 Opus agent calls (3 readers + reviewer + re-review), 0 judge calls, 0 phone, about 1 h coordinator time",
+   "ceiling": "A publishable section 0 that cannot be misread as the app scoring 0.35-0.46. It removes the largest reputational risk of the 10-25 claim (Vitalik or a reader on day one: 'your headline is your engine; the thing you submitted scores 0.14'). The text states that up front.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before the run: any reader of 3 attributes an E number (0.35/0.46/0.26) to the submitted app, OR the reviewer returns more than 3 required edits or 1 or more 'bench readable as app' findings after one re-review. Then section 0 goes S-first (app row as the first sentence, engine second), and the test is re-run once. If r4to keeps the app number internal, this option is dead and LA5 applies.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, claim strategy given 0.14. The submitted app (RC1 2.0.0-rc1 as installed: Qwen2.5-1.5B, Detailed, built-in KB, 0 packs) scores U floor-adj 0.143 (0.103-0.188), raw 0.316, win 0/51 (Opus judge.v1 + DECLINE2STAGE, 51 v0.1 dev, one run, Pixel 8a). Our engine sits at 0.351 (1.7B K0) and 0.460 (4B cut 7), and the bar is 0.50 floor-adj with win-rate vs the reference. Facts that shape the options: (a) the RC1 snapshot catalog (5f8cc8f4) lists qwen3-4b-instruct-2507-q4km (2.50 GB), so a \"configuration\" row needs no maintainer action, only an r4to Wi-Fi window (whether the installed RC1 matches is UNKNOWN until runsheet row 0b); (b) neither the 1.7B nor our packs can reach RC1 without NOTE-1 / NOTE-5; (c) Opus budget is 300, 102 already spent by A1, so at most two more 102-call arms; (d) A3-TWO-CLAIMS-REVIEW and A5-RC2-ADOPTED-RERUN already exist in round 6. H2 adds a misattribution test to A3, and H4 is A5 reframed as the claim decision; neither repeats them. Ranked by (ceiling x probability) / cost. r4to decisions are marked [r4to] in each method. UNKNOWN: whether the installed RC1 Model Catalog lists the 4B; whether the maintainer cuts an RC2 before 10-23; the Codex judge's behaviour on very low-scoring rows; the 4B Detailed answer time on a warm Pixel (prediction 55-95 s).",
+   "p": 0.675,
+   "value": 5,
+   "costscore": 1.5,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "This is the cheapest test of the biggest day-one risk, and it does not repeat A3 because it adds the cold-reader misattribution check. Three readers from the same family is a thin sample, the '+0.21 above it' clause must say it is a cross-system paired delta (bench vs app, same ids and judge), and publishing still waits on r4to's decision 4.",
+    "About 5 Opus agent calls and 0 judge calls; it removes the day-one misreading risk (engine 0.35/0.46 read as the app's score), and its output is the evidence r4to needs for decision 4 tonight."
+   ],
+   "score": 2.25
+  },
+  {
+   "id": "B1-LAYER-SPLICE",
+   "statement": "Splicing our cut-7 deterministic-layer answers into the RC1 shipped rows on the 8 CV5 layer ids raises RC1's Opus U floor-adj from 0.143 to \u2265 0.183 (\u0394U \u2265 +0.04, item-bootstrap CI low > 0) and lowers CE per 100 by \u2265 8. This is a 0-call counterfactual that prices change (7), the layers port, on the shipped app. Ids: lan-cmp-001, lan-exp-006, lan-ref-001, lan-ref-004, lan-ref-005, lan-rsn-002, lan-rsn-007, trv-002.",
+   "why_now": "The X6 attribution shows the deterministic layers carry 56 % of the native gap (\u22120.050 of \u22120.089 raw on 11/57 items). NOTE-1 \u00a73 has to order its port list before r4to sends it. Every input already exists: RC1 Opus rows (A1) and the 4B cut-7 Pixel rung's Opus rows, whose layer texts are model-independent.",
+   "method": "0 LLM. (1) For each of the 8 ids, check that the cut-7 Pixel rung (CV5 L3) answered with 0 generated tokens, i.e. a deterministic layer, and take its Opus judge.v1 + D2S item scores from ruler/cv5-ladder/out. Drop any id where the layer did not fire and report the n. (2) Build the RC1' item vector: RC1 Opus item scores (arms/rc1-pixel/a1/judgments) with those ids replaced. (3) Run tools/cv5_ladder.py estimator: floor-adj U, \u0394U RC1'\u2212RC1, paired item bootstrap B 2000 seed 11, CE/correct per 100. (4) Repeat with the 1.5B closed-book desktop rung as base, as a sensitivity check. Freeze the criterion (sha) before reading the spliced numbers.",
+   "lane": "replay-0-llm",
+   "ids": "CV5 51 (arms/native-parity/cv5-51.ids); changed: the 8 layer ids above",
+   "cost": "0 Opus, 0 Haiku, 0 phone; about 30 min coordinator scripting",
+   "ceiling": "+0.06 U on the app for any model (upper bound: all 8 items at the cut-7 score); the port itself is post-freeze",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. If fewer than 5 of the 8 ids are deterministic in the L3 rows, or \u0394U < +0.02, NOTE-1 \u00a73 drops the 'largest measured lever' sentence for the shipped app and the port moves behind NOTE-1/NOTE-5 on the post-freeze list.",
+   "ships_before_freeze": false,
+   "lens": "Lens B: maintainer changes before 10-25, ranked by U gained on the shipped app (RC1 1.5B Detailed, KB only, 0 packs = U 0.143 Opus, CV5 51). Until something is measured in his pipeline, transfer is assumed at bench minus 0.09 raw (about minus 0.11 floor-adjusted, from DEVICE-X6 native vs bench). Per-change estimates:\n(1) 1.7B entry (NOTE-1): 12 JSON lines, plus about 10 Kotlin lines in DefaultModel.kt if it should be the 8 GB default. Not frozen yet (catalog JSON). Expected app U with Detailed is 0.20-0.26 (+0.06..+0.12). On the device it is measurable only if RC1's in-app HF model search (BoarServices addDiscovered) installs the GGUF so rc_eval resolves it. Otherwise it needs his catalog entry and a new APK.\n(2) Succinct for small models: about 3 lines (ChatViewModel.kt:480-486). DeviceEvalRunner.kt:164/203 reads personalities.json defaultId, so eval rows stay Detailed unless that one JSON line changes too. Expected +0.06..+0.09 on the 1.5B (STYLE15B Haiku +0.087; most of RC1's \u22120.119 gap to the closed-book rung looks like style), \u221227 s per answer, CE-shown about halved. Pre-freeze.\n(3) 4B as the 8 GB default: 0 lines (already in his catalog; DefaultModel picks 'default' above 4.5 GiB). Expected app U about 0.30-0.35 Succinct, lower with Detailed (4B within-item length slope under Opus \u22120.16 per doubling). Cost: predicted p50 55-95 s with Detailed, PSS about 4.9 GB, 1 LMK in the bench, and the Android 17 AnonSwap limiter. Device rows H3/H4 already planned.\n(4) Warning line (NOTE-2): about 0 U by construction, because a prefix does not change the rubric score. Its value is labelling about 69 CE per 100. UI copy plus about 10 Kotlin lines pre-freeze. The 5-rule port is post-freeze.\n(5) Catalog packs (NOTE-5): JSON only, pre-freeze. S1: +0.015 U (\u22120.036..+0.068) on the 1.5B. What packs do is coverage. In his pipeline, kept fact goes 0 \u2192 21/97 (NATIVE-PARITY his_kbpacks_0.7). In the X6 attribution, 6 vit-cry items had the fact only in our pipeline (mean dS \u22120.64). Self-tests: +0.042 Opus. So packs are a reach feature for Vitalik/crypto and in-pack questions, not a headline lever.\n(6) KB cutoff 0.7 \u2192 0.5: already dead from existing data, so not proposed. Kept 1 \u2192 77/97 items, but fact kept 0 \u2192 1/97, and 118/134 new chunks are off-topic, so expected \u0394U \u2264 0.\n(7) Deterministic layers port: the largest per-item lever. The X6 attribution puts \u22120.050 of the \u22120.089 native gap on 11/57 layer items (mean \u22121.2 points). 8 of the CV5 51 are layer items. Expected +0.04..+0.06 for any model. It is hundreds of Kotlin lines plus JSON assets (facts table, arithmetic, distance, cards), so post-freeze except possibly the facts table.\nRanking basis: 0-LLM counterfactuals first, then a desktop native-harness run (his exact prompt string, tools/harness on snapshot 5f8cc8f4, parity 9/9 with RC1). The phone is used only for the one run that settles the app-level 1.7B gap. Opus total across the 5: \u2264 204 (cap 300).\nUNKNOWN: whether RC1 equals snapshot 5f8cc8f4; whether RC1's HF model search exists and feeds rc_eval; why RC1 installed only the 1.5B when DefaultModel would pick the 4B on 8 GB (setup tier choice?).",
+   "p": 0.575,
+   "value": 3,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It costs 0 calls and orders NOTE-1's port list. It must be printed as a counterfactual ceiling: it assumes the app would route the same items to layers with identical texts, and n 8 gives a wide CI. The port is post-freeze, so it only shapes the note, never the claim.",
+    "A 0-call counterfactual from existing Opus rows that orders NOTE-1 section 3 before it is sent; the port itself is post-freeze, so this only sets wording and priority."
+   ],
+   "score": 1.7249999999999999
+  },
+  {
+   "id": "B3-WARN-UI-APPROX",
+   "statement": "His pre-freeze UI approximation of the warning line (flag = Done.sources empty OR no [n] marker in the text) fires on \u2265 90 % of RC1 shipped rows (retrieval 1/51), and its CE lift on RC1 is \u2264 1.1x the base rate. So with KB-only it carries no information. On rows where packs are in context (our 1.7B K1 MAIN 97 traces, and harness his_kbpacks_0.7 contexts when judged), it fires on \u2264 60 % with CE lift \u2265 1.4x. That makes NOTE-2 step 1 conditional on NOTE-5 (packs) or a model that cites.",
+   "why_now": "NOTE-2 v5 asks for the UI-only flag before the freeze, and its precision is listed as 'not measured; computable at no model cost'. RC1's 69 CE per 100 and the A1 Opus labels make this computable now, and the result changes what the note asks for.",
+   "method": "0 LLM. Apply the flag (regex '\\[\\d+\\]' and sources/retrievedTitles empty) to: (a) RC1 rc-cv5-51-15b rows with A1 Opus CE/correct labels; (b) the 1.7B K1 MAIN 97 control traces with their Opus/Haiku labels (WARN-OPUS frame); (c) the N-S/N-D harness traces with S3 Haiku labels once judged. Per set: fire rate, P(CE|fired), P(CE|not fired), lift with Wilson/bootstrap CI, and recall of CEs. Compare against the 5-rule line on (b) (precision 0.40, recall 0.65, Opus). Freeze the criterion before computing.",
+   "lane": "replay-0-llm",
+   "ids": "RC1 CV5 51 (rc-cv5-51-15b); MAIN 97 (1.7B K1 control); CV5 51 N-D/N-S harness traces",
+   "cost": "0 Opus, 0 Haiku new, 0 phone; about 45 min scripting",
+   "ceiling": "0 U; honesty: labels up to about 65 % of CEs with packs present, about 0 information without them",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. If on RC1 the flag fires on < 80 % OR lift \u2265 1.3x (CI low > 1), the 'no information in the shipped config' premise fails and NOTE-2 step 1 is sent unconditional. If on the K1 traces the lift is < 1.2x, the UI approximation is not recommended at all; only the post-freeze 5-rule port stays in NOTE-2.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: maintainer changes before 10-25, ranked by U gained on the shipped app (RC1 1.5B Detailed, KB only, 0 packs = U 0.143 Opus, CV5 51). Until something is measured in his pipeline, transfer is assumed at bench minus 0.09 raw (about minus 0.11 floor-adjusted, from DEVICE-X6 native vs bench). Per-change estimates:\n(1) 1.7B entry (NOTE-1): 12 JSON lines, plus about 10 Kotlin lines in DefaultModel.kt if it should be the 8 GB default. Not frozen yet (catalog JSON). Expected app U with Detailed is 0.20-0.26 (+0.06..+0.12). On the device it is measurable only if RC1's in-app HF model search (BoarServices addDiscovered) installs the GGUF so rc_eval resolves it. Otherwise it needs his catalog entry and a new APK.\n(2) Succinct for small models: about 3 lines (ChatViewModel.kt:480-486). DeviceEvalRunner.kt:164/203 reads personalities.json defaultId, so eval rows stay Detailed unless that one JSON line changes too. Expected +0.06..+0.09 on the 1.5B (STYLE15B Haiku +0.087; most of RC1's \u22120.119 gap to the closed-book rung looks like style), \u221227 s per answer, CE-shown about halved. Pre-freeze.\n(3) 4B as the 8 GB default: 0 lines (already in his catalog; DefaultModel picks 'default' above 4.5 GiB). Expected app U about 0.30-0.35 Succinct, lower with Detailed (4B within-item length slope under Opus \u22120.16 per doubling). Cost: predicted p50 55-95 s with Detailed, PSS about 4.9 GB, 1 LMK in the bench, and the Android 17 AnonSwap limiter. Device rows H3/H4 already planned.\n(4) Warning line (NOTE-2): about 0 U by construction, because a prefix does not change the rubric score. Its value is labelling about 69 CE per 100. UI copy plus about 10 Kotlin lines pre-freeze. The 5-rule port is post-freeze.\n(5) Catalog packs (NOTE-5): JSON only, pre-freeze. S1: +0.015 U (\u22120.036..+0.068) on the 1.5B. What packs do is coverage. In his pipeline, kept fact goes 0 \u2192 21/97 (NATIVE-PARITY his_kbpacks_0.7). In the X6 attribution, 6 vit-cry items had the fact only in our pipeline (mean dS \u22120.64). Self-tests: +0.042 Opus. So packs are a reach feature for Vitalik/crypto and in-pack questions, not a headline lever.\n(6) KB cutoff 0.7 \u2192 0.5: already dead from existing data, so not proposed. Kept 1 \u2192 77/97 items, but fact kept 0 \u2192 1/97, and 118/134 new chunks are off-topic, so expected \u0394U \u2264 0.\n(7) Deterministic layers port: the largest per-item lever. The X6 attribution puts \u22120.050 of the \u22120.089 native gap on 11/57 layer items (mean \u22121.2 points). 8 of the CV5 51 are layer items. Expected +0.04..+0.06 for any model. It is hundreds of Kotlin lines plus JSON assets (facts table, arithmetic, distance, cards), so post-freeze except possibly the facts table.\nRanking basis: 0-LLM counterfactuals first, then a desktop native-harness run (his exact prompt string, tools/harness on snapshot 5f8cc8f4, parity 9/9 with RC1). The phone is used only for the one run that settles the app-level 1.7B gap. Opus total across the 5: \u2264 204 (cap 300).\nUNKNOWN: whether RC1 equals snapshot 5f8cc8f4; whether RC1's HF model search exists and feeds rc_eval; why RC1 installed only the 1.5B when DefaultModel would pick the 4B on 8 GB (setup tier choice?).",
+   "p": 0.55,
+   "value": 3,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It is a 0-LLM, cheap check that decides whether NOTE-2 step 1 is sent unconditionally before the freeze. The RC1 half is near-certain (retrieval 1/51). The K1 half measures our engine's traces, not his pipeline, so the transfer must be stated or the N-S/N-D harness traces used as the primary set.",
+    "0 LLM on existing labels; it decides whether NOTE-2 step 1 goes unconditional or tied to packs/a citing model before the freeze, and it stops us from asking for a flag that carries no information on RC1."
+   ],
+   "score": 1.6500000000000001
+  },
+  {
+   "id": "C2-REPLICA-FIDELITY",
+   "statement": "On the desktop, the native-exact replica of RC1's default pipeline (S3 arm N-D: Qwen2.5-1.5B Q4_K_M, the harness prompt from snapshot 5f8cc8f4, Detailed, KB-only, 0.7 gate, native sampling, seed 42, Mac mini b11010) scores U floor-adjusted within \u00b10.05 of the phone's A1 value (0.143). The paired N-D \u2212 RC1 CI must include 0, and CE-shown per 100 must be \u2265 55 (RC1 68.6). This would make the 0.14 row a property of the shipped configuration, not of the Pixel, thermals or one bad run.",
+   "why_now": "The 0.14 row has three open caveats: one run, a hot phone (26 \u2192 37 \u00b0C, thermal status 1 after about 6 min), and a killed proxy (the closed-book 1.5B at 0.261 does not stand in). The N-D traces already exist, so 102 Opus calls settle whether the page may write 'reproduced off-device'. Today's 'untested reading' (long Detailed answers pile up wrong specifics) has no Opus test.",
+   "method": "Freeze C2-criterion.md (sha in QUEUE) before any call. Opus judge.v1, both orders, N 4 shards, on native-N-D-v01-s42.traces.jsonl (51 ids, 102 calls), then DECLINE2STAGE with the labels.is_decline stand-in, as A1 did. Use a1_analyze.py's estimator unchanged (item-cluster bootstrap B 2000 seed 11), paired against a1/judgments/rc1-shipped.opus.judgments.jsonl. Report U floor-adjusted, raw, win-rate, correct/CE/decline per 100, N-D \u2212 RC1 paired, and N-D tokens p50 next to RC1's 384. Cross-host by design (Pixel vs mini): label it 'replica', never 'same-host'.",
+   "lane": "opus-claim",
+   "ids": "The 51 CV5 v0.1 dev ids (arms/native-parity/cv5-51.ids = ruler/cv5-ladder/in/set.json)",
+   "cost": "102 Opus judge.v1 calls, 0 generation (traces exist), about 25 min wall, 0 phone, 0 paid",
+   "ceiling": "Supports one page sentence: 'a desktop replica of the app's default pipeline reproduces the phone's 0.14 (Opus, 51 dev, one run each), so the gap to our engine comes from configuration, not the device.' It also turns the one-run caveat into a two-host agreement.",
+   "mde_ok": true,
+   "feeds": "research-page",
+   "kill_criterion": "Written now. If |U(N-D) \u2212 0.143| > 0.05, or the paired CI excludes 0: KILLED. The page then keeps the 0.14 as 'one phone run, cause not reproduced off-device', drops every 'configuration explains the gap' sentence, and C3 gets no paired anchor. If runsheet row 0b shows an RC other than RC1, the replica sentence is scoped to 'RC1' only. Fewer than 49/51 non-empty N-D texts makes the item INVALID (S3's validity rule).",
+   "ships_before_freeze": true,
+   "lens": "Lens C: what the page says about the gap between the engine research and the shipped app. Each item gets a sourced number or is cut. Ranked by (ceiling x probability) / cost. Already done and not repeated here: A1 (0.143 measured), S1 NO-GAIN, S2 Haiku NONINFERIOR, A2 state matrix, A3 two-claims review, A5 RC2 rerun. S3 NATIVE-PARITY is running Haiku-only. Its N-D (native exact, Detailed, KB-only, 0.7 gate) and N-S traces already exist: arms/native-parity/traces/native-N-{D,S}-v01-s42.traces.jsonl, 51/51 each. So the cheapest Opus attribution needs only judge calls, no generation. Opus total across the 5 items is 254, cap 300. UNKNOWN: whether the installed RC1 catalog matches snapshot 5f8cc8f4 (runsheet row 0b). Whether an RC2 exists by 10-24 12:00. Whether the S3 Haiku judge finishes before the Opus calls (the two do not depend on each other).",
+   "p": 0.575,
+   "value": 4,
+   "costscore": 2,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It uses existing N-D traces with 0 generation and is the page's best defence against 'hot phone / one bad run / broken install'. The pass rule 'paired CI includes 0' is absence of evidence, so it should be a \u00b10.05 equivalence test (CI inside \u00b10.05), labelled cross-host replica. Its 102 Opus calls plus LA3's 102 plus A1's 102 = 306, which exceeds the 300 cap, so the coordinator must pick one or trim the plan.",
+    "Traces exist, 102 Opus and 0 generation; it decides whether the 0.14 can be called a configuration property, and it gives the Opus N-D anchor that C3 and B2 need, so it is the first Opus spend tonight."
+   ],
+   "score": 1.15
+  },
+  {
+   "id": "C4-INPACK-READING-1P5B",
+   "statement": "Statement under test: on the SHIP15B 51 items where the K1 packs put the item's key fact into the kept context (the FACTPRESENT oracle and lexical rules applied to arms/ship15b-packs traces), packs \u2212 closed-book Opus U for Qwen2.5-1.5B is \u2265 +0.05. Prediction frozen: it fails, with cell (a) dU in [\u22120.05, +0.04], n \u2248 8-12, matching FACTPRESENT's real-item null for the 1.7B (\u22120.010, n 10). The page's 'what the engine research established' box can then say, sourced: packs lift answers where the fact is in context on pack-written self-tests (+0.14 to +0.17, Haiku, 1.7B). On real dev questions neither small model turns a present fact into a better answer: reading binds.",
+   "why_now": "The engine-findings box needs four sourced claims that do not depend on the app: reading binds, packs on in-pack items, judge-family offsets, honesty gate. 'Packs help in-pack' is true only on self-tests, and SHIP15B (Opus, NO-GAIN +0.015) is the shipped model's only pack number. Without the stratified cell, NOTE-5 readers will assume packs fix the 0.14.",
+   "method": "0 LLM. Run ruler FACTPRESENT tooling (the oracle and lexical cell rules, unchanged) over arms/ship15b-packs traces (P) and the floor-anchors closed-book traces (C), with existing Opus judgments only (aggregates/ship15b.json sources: 94 new + 4 reused units). Freeze the cell rule and prediction band in C4-criterion.md before reading any cell number. Report cells (a)/(c) dU with item bootstrap B 2000 seed 11, n per cell, and CE-shown per cell. Same-host: both arms on the mini, same tree and binary, 13 h apart; state that.",
+   "lane": "replay-0-llm",
+   "ids": "The 51 CV5 v0.1 dev ids, split into cells by the FACTPRESENT rules (expected cell (a) n 8-12)",
+   "cost": "About 30 min of scripting, 0 LLM, 0 judge, 0 phone",
+   "ceiling": "One sourced engine-findings sentence that keeps NOTE-5 honest: packs make facts reachable, while the shipped 1.5B (and the 1.7B) do not turn a present fact into a better dev answer. That makes 'reading binds' an app-independent finding with three supports: FACTPRESENT, the lite reading gap \u22120.070 at identical contexts n 97, and this cell.",
+   "mde_ok": false,
+   "feeds": "research-page",
+   "kill_criterion": "Written now. If cell (a) dU \u2265 +0.05 with CI low > 0, the prediction is falsified: the page says the 1.5B does use in-context facts, and NOTE-5's quality rationale gains a sentence. Either way, n < 6 in cell (a) prints 'too few items to split' and the box keeps only the self-test and FACTPRESENT lines. Tie to device day: H5 (rc-vital9-15b) retrieving on \u2265 4/9 is reported as reach only, never as quality, whatever this cell shows. If NOTE-5 is adopted, the S01 sentence keeps 'not measured for quality on the app'.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: what the page says about the gap between the engine research and the shipped app. Each item gets a sourced number or is cut. Ranked by (ceiling x probability) / cost. Already done and not repeated here: A1 (0.143 measured), S1 NO-GAIN, S2 Haiku NONINFERIOR, A2 state matrix, A3 two-claims review, A5 RC2 rerun. S3 NATIVE-PARITY is running Haiku-only. Its N-D (native exact, Detailed, KB-only, 0.7 gate) and N-S traces already exist: arms/native-parity/traces/native-N-{D,S}-v01-s42.traces.jsonl, 51/51 each. So the cheapest Opus attribution needs only judge calls, no generation. Opus total across the 5 items is 254, cap 300. UNKNOWN: whether the installed RC1 catalog matches snapshot 5f8cc8f4 (runsheet row 0b). Whether an RC2 exists by 10-24 12:00. Whether the S3 Haiku judge finishes before the Opus calls (the two do not depend on each other).",
+   "p": 0.55,
+   "value": 2,
+   "costscore": 1,
+   "verdicts": [
+    "drop",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "With n 8-12, mde_ok false and a predicted null, it adds a third weak support to a 'reading binds' finding already backed by FACTPRESENT and the \u22120.070 identical-context gap. A null on that n cannot carry a page sentence.",
+    "0 LLM but underpowered (cell n 8-12, mde not ok), and 'reading binds' already has FACTPRESENT and the -0.070 lite gap behind it; it is a page nicety for 10-24, not a decision input."
+   ],
+   "score": 1.1
+  },
+  {
+   "id": "C3-SUCCINCT-ADOPTION-MEASURED",
+   "statement": "In the same native replica, switching only the persona to Succinct (S3 arm N-S, maxTokens 512) raises Opus U floor-adjusted by \u2265 +0.05 over N-D, with CI low > 0, and cuts CE-shown by \u2265 20 per 100. Prediction frozen before any call: N-S \u2212 N-D in [+0.05, +0.13] (S2's Haiku +0.087 on our engine, plus Opus's wider spread on the 1.5B), CE about 69 \u2192 30-40 per 100. The page then prints NOTE-1's style half as a measured replica number next to an unmeasured app projection: RC1 0.143 + (N-S \u2212 N-D).",
+   "why_now": "The 'what each note would change' item has only Haiku and our engine behind the Succinct ask (S2). The 11-id Opus addendum was on the 1.7B. N-S traces exist, so 102 Opus calls give the first Opus number for the change NOTE-1 asks of the maintainer's own pipeline. That is the number r4to would forward with NOTE-1.",
+   "method": "Freeze C3-criterion.md together with C2's (same file allowed, separate verdict lines) before any call, including the frozen prediction band. Opus judge.v1, both orders, N 4, on native-N-S-v01-s42.traces.jsonl (102 calls), DECLINE2STAGE stand-in, same estimator. Paired N-S \u2212 N-D: U, CE/100, correct/100, tokens p50. The phone-seconds saving is a projection: \u0394tokens p50 / 18.6 tok/s (cool RC1 decode, rc-speed9-15b), never the 12.3 tok/s A1 decode. Page row: 'measured on the desktop replica (Opus, 51 dev, one seed)' next to 'projected for the app (not measured)'.",
+   "lane": "opus-claim",
+   "ids": "The 51 CV5 v0.1 dev ids (arms/native-parity/cv5-51.ids)",
+   "cost": "102 Opus judge.v1 calls, 0 generation, about 25 min, 0 phone, 0 paid",
+   "ceiling": "Turns NOTE-1's Succinct bullet from Haiku-on-our-engine into Opus-on-his-pipeline. Possible page line: 'Succinct alone would lift the shipped model by +0.0x U and remove ~30 confident errors per 100 (replica).' It also gives A5 a frozen projection to check against if RC2 ships.",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written now. If N-S \u2212 N-D < +0.02, or its CI low \u2264 0: the quality clause leaves NOTE-1 and the page, and Succinct is argued on time only (\u2212496 tokens p50, which S2 projects as about 27 s per phone answer). If NOTE-1 is adopted and an RC2 row runs (A5, runsheet re-run on the new RC), a measured RC2 U outside the projection \u00b10.07 strikes the projection sentence and only the measured value prints. If no RC newer than RC1 exists by 10-24 12:00, the page prints the replica number labelled 'proposed, not in the submitted app' (A2 rule 2).",
+   "ships_before_freeze": true,
+   "lens": "Lens C: what the page says about the gap between the engine research and the shipped app. Each item gets a sourced number or is cut. Ranked by (ceiling x probability) / cost. Already done and not repeated here: A1 (0.143 measured), S1 NO-GAIN, S2 Haiku NONINFERIOR, A2 state matrix, A3 two-claims review, A5 RC2 rerun. S3 NATIVE-PARITY is running Haiku-only. Its N-D (native exact, Detailed, KB-only, 0.7 gate) and N-S traces already exist: arms/native-parity/traces/native-N-{D,S}-v01-s42.traces.jsonl, 51/51 each. So the cheapest Opus attribution needs only judge calls, no generation. Opus total across the 5 items is 254, cap 300. UNKNOWN: whether the installed RC1 catalog matches snapshot 5f8cc8f4 (runsheet row 0b). Whether an RC2 exists by 10-24 12:00. Whether the S3 Haiku judge finishes before the Opus calls (the two do not depend on each other).",
+   "p": 0.5,
+   "value": 3.5,
+   "costscore": 2.5,
+   "verdicts": [
+    "run-after-freeze",
+    "run-now"
+   ],
+   "reasons": [
+    "A paired N-S \u2212 N-D under Opus needs C2's 102 calls plus 102 more, which breaks the 300 cap together with LA3. S3's Haiku N-S \u2212 N-D already carries the Succinct ask for NOTE-1. The 'RC1 + \u0394replica' app projection must stay labelled unmeasured.",
+    "It is the only Opus-on-his-pipeline number r4to could forward with NOTE-1 before the 10-22 12:00 send window; run it right after C2 (together 204 Opus, over today's 150), so if budget binds, Haiku-screen N-S vs N-D first and send Opus only to the changed rows."
+   ],
+   "score": 0.7
+  },
+  {
+   "id": "C5-CE-NOISE-BAND",
+   "statement": "The page's measurement-rules box needs a judge test-retest band for the 0.14 row and its per-100 counts. Re-judging 25 of RC1's own 51 answers with Opus judge.v1 (identical texts, fresh calls, both orders) moves U floor-adjusted on those 25 by \u2264 0.03 and flips the CE label on \u2264 3/25 items (12 %). Combined with DIVERGENCE-MAP's judge floor (median per-item u range 0.064, 1 CE flip across 40 deterministic items) and its seed r 0.66, the box can state: on n 51, one run, CE-per-100 differences under about 12 and U differences under 0.03 are not reported as differences. Same-host rule: only same-binary, same-host pairs are 'paired'. Divergence-first: screens judge only the changed answers.",
+   "why_now": "The page prints 69 vs 2 per 100 and gaps of +0.209 and \u22120.119, and device day H2b compares warn counts on n 10. No Opus retest on an app-generated, long Detailed text exists. DIVERGENCE-MAP's floor came from short deterministic texts, and REFVAR's test-retest from 17 bench items. Detailed texts are where CE labels flip, as the Haiku vs Opus CE flips (11/85) show.",
+   "method": "Freeze C5-criterion.md (sample rule: 25 ids drawn with seed 2110 stratified by RC1 CE yes/no, about 17/8) before any call. 50 Opus judge.v1 calls on the existing rc-cv5-51-15b texts, same reference, same order seeds as A1's run (fresh sessions). Compare against a1/judgments/rc1-shipped.opus.judgments.jsonl: per-item u range, CE-label flips, dU on the 25 with bootstrap. Then 0 LLM: write the measurement-rules box from this result plus DIVERGENCE-MAP, REFVAR and CV5-LADDER-OPUS (Opus \u2212 Haiku offset +0.05 to +0.10). For the cross-family offset, quote XFAM's +0.10 (V-para and v0.2) unless the Codex ladder (row 0) lands by 10-23 18:00.",
+   "lane": "opus-claim",
+   "ids": "25 of the 51 CV5 v0.1 dev ids (RC1 texts), seed-2110 stratified draw",
+   "cost": "50 Opus judge.v1 calls, 0 generation, 0 phone, about 15 min + 30 min of writing",
+   "ceiling": "A single, measured noise band applied to every gap sentence on the page (the 0.14 row, the per-100 counts, device-day H2b warn counts). This blocks the most likely overclaim: reading a CE-per-100 difference of 5-10 on n 10-51 as real.",
+   "mde_ok": true,
+   "feeds": "research-page",
+   "kill_criterion": "Written now. If \u0394U > 0.03 or CE flips > 3/25: the band widens to the measured value. The 0.14 row prints with 'judge retest \u00b1 measured value', and C2 counts only if its |N-D \u2212 RC1| also beats twice the retest \u0394U. Per-100 comparisons on the page and in device-day H2b/H2a are then limited to differences \u2265 2\u00d7 the measured flip rate x 100. If the Codex ladder (runsheet row 0) has not landed by 10-23 18:00, the judge-family line names Claude Opus only, plus XFAM's dev-set offset.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: what the page says about the gap between the engine research and the shipped app. Each item gets a sourced number or is cut. Ranked by (ceiling x probability) / cost. Already done and not repeated here: A1 (0.143 measured), S1 NO-GAIN, S2 Haiku NONINFERIOR, A2 state matrix, A3 two-claims review, A5 RC2 rerun. S3 NATIVE-PARITY is running Haiku-only. Its N-D (native exact, Detailed, KB-only, 0.7 gate) and N-S traces already exist: arms/native-parity/traces/native-N-{D,S}-v01-s42.traces.jsonl, 51/51 each. So the cheapest Opus attribution needs only judge calls, no generation. Opus total across the 5 items is 254, cap 300. UNKNOWN: whether the installed RC1 catalog matches snapshot 5f8cc8f4 (runsheet row 0b). Whether an RC2 exists by 10-24 12:00. Whether the S3 Haiku judge finishes before the Opus calls (the two do not depend on each other).",
+   "p": 0.525,
+   "value": 2.5,
+   "costscore": 2,
+   "verdicts": [
+    "drop",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It spends 50 scarce Opus calls on a retest band the page can already source from DIVERGENCE-MAP, REFVAR and the Haiku CE retest (\u00b11.3/100). The rule 'differences under ~12 CE/100 not reported' can be written from the existing data with a caveat that long Detailed texts are untested.",
+    "50 Opus on a retest band competes with C2/C3 for a scarce budget; for now the page can quote DIVERGENCE-MAP/REFVAR, and this runs on 10-23/24 if Opus remains."
+   ],
+   "score": 0.65625
+  },
+  {
+   "id": "B2-HARNESS-17S",
+   "statement": "In his exact native pipeline (tools/harness at 5f8cc8f4: KB-only, 0.7 gate, his small-model prompts), Qwen3-1.7B with Succinct (maxTokens 512, enable_thinking false) scores Opus U floor-adj \u2265 0.25 on the CV5 51. That is \u0394U \u2265 +0.10 over RC1 as shipped (0.143), with CI low > 0 and CE per 100 \u2264 40 (RC1 69). The same harness at RC1 settings (N-D, 1.5B Detailed) reproduces RC1 within \u00b10.05 under Haiku. If both hold, NOTE-1 + Succinct is quantified as an app-level gain, not a bench-level one.",
+   "why_now": "The app-level gap 0.14 \u2192 ? is the one number NOTE-1 lacks. The 1.7B is not in RC1's catalog, so a phone run is blocked on him. The harness already exists, and S3 generated the N-D and N-S 1.5B traces, so only the 1.7B arm is new. A device confirm becomes possible if RC1's HF model search can install the GGUF.",
+   "method": "Freeze the criterion first. Stage A (mini, 0 phone): generate N-17S = harness Succinct prompt with the Qwen3-1.7B Q4_K_M GGUF (sha b139949c), chat template with enable_thinking false (as boar_jni.cpp:263), native Sampling defaults, seed 42, llama-server b11010 -t 2. Validity gate: \u2265 49/51 non-empty, 0 '<think>' content. Haiku judge.v1-low N 4 both orders on N-17S, plus RC1 Pixel texts (validity: |Haiku U(N-D harness) \u2212 Haiku U(RC1 Pixel)| \u2264 0.05). Then Opus judge.v1 + D2S on N-17S only (102 calls), paired against the existing RC1 Opus rows. Report the 1.7B-S\u2212N-S decomposition (model) vs N-S\u2212N-D (style) under Haiku. Stage B (device day, only if RC1 exposes the HF search): Wi-Fi window, search unsloth/Qwen3-1.7B-GGUF Q4_K_M, check sha, airplane on, run rc-cv5-51-17b with the eval runner (Detailed, since the runner reads defaultId) on the Pixel, about 30 min at \u2264 31 \u00b0C, Opus 102. If not exposed, the run needs his catalog entry and a new APK, logged as NOT RUNNABLE.",
+   "lane": "opus-claim",
+   "ids": "CV5 51 v0.1 dev (arms/native-parity/cv5-51.ids); baseline rows rc-cv5-51-15b (A1)",
+   "cost": "Stage A: about 25 min mini generation, 102 + 102 Haiku, 102 Opus. Stage B (optional): about 35 phone min + 102 Opus. Total Opus \u2264 204",
+   "ceiling": "+0.15 U on the app (1.7B Succinct bench 0.351 minus the residual pipeline/layers gap)",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. INVALID if the harness N-D vs RC1 Pixel Haiku gap is > 0.05 (the harness does not stand for the app; quote nothing). KILL the 'app gain' sentence if Opus \u0394U(N-17S \u2212 RC1) < +0.06 or CI low \u2264 0; NOTE-1 then keeps only the speed/RAM argument. If \u0394U \u2265 +0.10 but the N-S\u2212N-D style share is \u2265 2/3 of it, NOTE-1 leads with the Succinct ask, not the model.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: maintainer changes before 10-25, ranked by U gained on the shipped app (RC1 1.5B Detailed, KB only, 0 packs = U 0.143 Opus, CV5 51). Until something is measured in his pipeline, transfer is assumed at bench minus 0.09 raw (about minus 0.11 floor-adjusted, from DEVICE-X6 native vs bench). Per-change estimates:\n(1) 1.7B entry (NOTE-1): 12 JSON lines, plus about 10 Kotlin lines in DefaultModel.kt if it should be the 8 GB default. Not frozen yet (catalog JSON). Expected app U with Detailed is 0.20-0.26 (+0.06..+0.12). On the device it is measurable only if RC1's in-app HF model search (BoarServices addDiscovered) installs the GGUF so rc_eval resolves it. Otherwise it needs his catalog entry and a new APK.\n(2) Succinct for small models: about 3 lines (ChatViewModel.kt:480-486). DeviceEvalRunner.kt:164/203 reads personalities.json defaultId, so eval rows stay Detailed unless that one JSON line changes too. Expected +0.06..+0.09 on the 1.5B (STYLE15B Haiku +0.087; most of RC1's \u22120.119 gap to the closed-book rung looks like style), \u221227 s per answer, CE-shown about halved. Pre-freeze.\n(3) 4B as the 8 GB default: 0 lines (already in his catalog; DefaultModel picks 'default' above 4.5 GiB). Expected app U about 0.30-0.35 Succinct, lower with Detailed (4B within-item length slope under Opus \u22120.16 per doubling). Cost: predicted p50 55-95 s with Detailed, PSS about 4.9 GB, 1 LMK in the bench, and the Android 17 AnonSwap limiter. Device rows H3/H4 already planned.\n(4) Warning line (NOTE-2): about 0 U by construction, because a prefix does not change the rubric score. Its value is labelling about 69 CE per 100. UI copy plus about 10 Kotlin lines pre-freeze. The 5-rule port is post-freeze.\n(5) Catalog packs (NOTE-5): JSON only, pre-freeze. S1: +0.015 U (\u22120.036..+0.068) on the 1.5B. What packs do is coverage. In his pipeline, kept fact goes 0 \u2192 21/97 (NATIVE-PARITY his_kbpacks_0.7). In the X6 attribution, 6 vit-cry items had the fact only in our pipeline (mean dS \u22120.64). Self-tests: +0.042 Opus. So packs are a reach feature for Vitalik/crypto and in-pack questions, not a headline lever.\n(6) KB cutoff 0.7 \u2192 0.5: already dead from existing data, so not proposed. Kept 1 \u2192 77/97 items, but fact kept 0 \u2192 1/97, and 118/134 new chunks are off-topic, so expected \u0394U \u2264 0.\n(7) Deterministic layers port: the largest per-item lever. The X6 attribution puts \u22120.050 of the \u22120.089 native gap on 11/57 layer items (mean \u22121.2 points). 8 of the CV5 51 are layer items. Expected +0.04..+0.06 for any model. It is hundreds of Kotlin lines plus JSON assets (facts table, arithmetic, distance, cards), so post-freeze except possibly the facts table.\nRanking basis: 0-LLM counterfactuals first, then a desktop native-harness run (his exact prompt string, tools/harness on snapshot 5f8cc8f4, parity 9/9 with RC1). The phone is used only for the one run that settles the app-level 1.7B gap. Opus total across the 5: \u2264 204 (cap 300).\nUNKNOWN: whether RC1 equals snapshot 5f8cc8f4; whether RC1's HF model search exists and feeds rc_eval; why RC1 installed only the 1.5B when DefaultModel would pick the 4B on 8 GB (setup tier choice?).",
+   "p": 0.475,
+   "value": 4,
+   "costscore": 3,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "Stage A gives NOTE-1 its missing app-level 1.7B+Succinct number in his pipeline, with a sound validity gate (harness N-D vs RC1 within 0.05). Run Haiku first. Opus stage only if budget remains after C2/LA3, since all three cannot fit the 300 cap. Stage B depends on an unverified HF-search route and should be logged NOT RUNNABLE unless 0b shows it.",
+    "Start Stage A tonight (mini generation + Haiku N=4 with the N-D validity gate) because it fills NOTE-1's missing app-level number; Opus (102) goes only on Haiku GO and after C2/C3 within the cap, and Stage B joins the runsheet only if RC1 exposes HF search."
+   ],
+   "score": 0.6333333333333333
+  },
+  {
+   "id": "LA3-C4-CONFIG-4B",
+   "statement": "RC1 with the Qwen3-4B downloaded from its own Model Catalog (qwen3-4b-instruct-2507-q4km, app default Detailed/1024, built-in KB, 0 of our packs, no maintainer change) scores U floor-adj \u2265 0.28 on the CV5 51 under Opus judge.v1 + DECLINE2STAGE. Paired over A1's shipped 1.5B row: \u2265 +0.12 with CI low > 0, and CE per 100 \u2264 40 (vs 68.6). That justifies a 'configuration' claim sentence. Headline (variant B, after the fixed opening): \"In the submitted app (RC1), the default Qwen2.5-1.5B scores U 0.14 (0.10-0.19); downloading the Qwen3-4B listed in the app's own model catalog (2.5 GB, one network window) raises it to U {y} (CI) with {c} correct and {e} confident errors per 100, at {p50} s per answer p50 (Claude Opus judge.v1, 51 v0.1 dev questions, one run each, Pixel 8a, win {w}/51).\"",
+   "why_now": "It is the only route to a higher measured app number that needs no maintainer action before his ~10-23 freeze. The 4B is in RC1's catalog (snapshot 5f8cc8f4), and W1 already downloads it on the device day for H3/H2/H4. The engine 4B is 0.46 on these ids, so the app-side ceiling is large. The open question is the Detailed + KB-only penalty, which cost the 1.5B -0.12 against its closed-book rung (A1). LENGTH-SLOPE shows the 4B is penalized for length under Opus (-0.16 per doubling), so the outcome is genuinely uncertain.",
+   "method": "Freeze LA3-criterion.md (sha) and RC1-SHIPPED-4B-prediction.md before W1. The prediction is U 0.28-0.40, paired +0.12 to +0.26, CE 20-40/100, answer p50 55-95 s, 0 LMK. After W1 (download confirmed at 0b), run request rc-cv5-51-4b: warm-up + the same 51 ids, same CV5 frame as rc-cv5-51-15b, airplane on, ungated (quality row; temperature and thermal status recorded, speed not for the page unless status 0 throughout). Judge: tools a1_judge.sh with judge.v1, both orders, 102 Opus; DECLINE2STAGE stage 1 Haiku; a1_analyze.py paired vs A1 rows, item-cluster bootstrap B 2000 seed 11. [r4to] decisions: 70 phone min on 10-22, either by dropping H4 pressure (37 min) and keeping the day \u2264 180 min, or as a second session on 10-23; and whether the claim may name a catalog download as a 'configuration' (B31 'get the app running within a few minutes' + 'clearly document models').",
+   "lane": "pixel",
+   "ids": "CV5 51 v0.1 dev ids (same as A1, request rc-cv5-51-4b); prerequisite runsheet 0b + W1",
+   "cost": "about 70 phone min (52 x ~75 s Detailed 4B + cold load + margin; W1 download already budgeted), 102 Opus judge.v1 (running total 204/300), about 50 Haiku D2S stage 1, 0 paid",
+   "ceiling": "The app's best measured row moves from 0.14 to about 0.3-0.4, inside the engine ladder's range, on the submitted APK with no code change. It becomes the strongest honest 'app' sentence available before 10-25, and the speed number adds the 'usable speed' row for the 4B on an 8 GB phone.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before the run: the 4B is not listed at 0b (option void, 0 cost); OR paired 4B-RC1 - RC1-shipped < +0.12 or CI low \u2264 0; OR CE per 100 > 50; OR 2 or more LMK / app deaths in 52 rows; OR answer p50 > 120 s (the 'usable speed' requirement fails, and the row is printed as quality-only with time). Then the claim names only the S00 default row, and the 4B appears only as 'listed in the catalog, not recommended at Detailed'.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, claim strategy given 0.14. The submitted app (RC1 2.0.0-rc1 as installed: Qwen2.5-1.5B, Detailed, built-in KB, 0 packs) scores U floor-adj 0.143 (0.103-0.188), raw 0.316, win 0/51 (Opus judge.v1 + DECLINE2STAGE, 51 v0.1 dev, one run, Pixel 8a). Our engine sits at 0.351 (1.7B K0) and 0.460 (4B cut 7), and the bar is 0.50 floor-adj with win-rate vs the reference. Facts that shape the options: (a) the RC1 snapshot catalog (5f8cc8f4) lists qwen3-4b-instruct-2507-q4km (2.50 GB), so a \"configuration\" row needs no maintainer action, only an r4to Wi-Fi window (whether the installed RC1 matches is UNKNOWN until runsheet row 0b); (b) neither the 1.7B nor our packs can reach RC1 without NOTE-1 / NOTE-5; (c) Opus budget is 300, 102 already spent by A1, so at most two more 102-call arms; (d) A3-TWO-CLAIMS-REVIEW and A5-RC2-ADOPTED-RERUN already exist in round 6. H2 adds a misattribution test to A3, and H4 is A5 reframed as the claim decision; neither repeats them. Ranked by (ceiling x probability) / cost. r4to decisions are marked [r4to] in each method. UNKNOWN: whether the installed RC1 Model Catalog lists the 4B; whether the maintainer cuts an RC2 before 10-23; the Codex judge's behaviour on very low-scoring rows; the 4B Detailed answer time on a warm Pixel (prediction 55-95 s).",
+   "p": 0.4,
+   "value": 4.5,
+   "costscore": 4,
+   "verdicts": [
+    "device-day",
+    "device-day"
+   ],
+   "reasons": [
+    "It is the only route to a higher measured row on the submitted APK, but it is void if 0b does not list the 4B. Detailed + KB-only + the length penalty make \u2265+0.12 uncertain, and a hot Pixel can push p50 past 120 s. It needs an r4to phone-minute decision and competes with C2 for the last ~100 Opus calls. The claim must call it a user-performed catalog download, not the default.",
+    "It is the only route to a higher measured row on the submitted APK with no maintainer action, but it needs about 70 min of a hot Pixel, a 0b catalog confirmation and 102 Opus that compete with C2/C3; r4to must choose between it and H4 pressure, or a 10-23 session."
+   ],
+   "score": 0.45
+  },
+  {
+   "id": "B4-HARNESS-4B-DEFAULT",
+   "statement": "In his native pipeline, the catalog Qwen3-4B with Succinct scores Haiku U \u2265 the 1.7B Succinct (B2's N-17S) + 0.05 on the CV5 51 (CI low > 0). The 4B with Detailed (his RC default) writes \u2265 +300 tokens p50 more than with Succinct, which projects to a Pixel 8a answer p50 \u2265 60 s at 5-7 tok/s. So '4B default on 8 GB' beats '1.7B default' on U only with Succinct and at \u2265 3x the time, and NOTE-1 should present it as a time/RAM trade with numbers, not a quality loss.",
+   "why_now": "Change (3) costs him 0 lines because the 4B is in his catalog and DefaultModel already prefers it above 4.5 GiB, so he may simply keep it. Our 0.46 is the bench with kit and layers, and no number exists for the 4B in his pipeline. Device-day H3/H4 measure its speed and pressure but not its U.",
+   "method": "Freeze the criterion first. Mini, harness at 5f8cc8f4, Qwen3-4B-Instruct-2507 Q4_K_M (sha 3605803b), KB-only 0.7 gate, seed 42, native Sampling defaults. Arms 4B-S (maxTokens 512) and 4B-D (1024). Haiku judge.v1-low N 4 both orders on both arms (204 calls), paired against N-17S (B2) and N-S/N-D (S3) under Haiku. Output tokens p50 per arm; Pixel projection = tokens / decode tok/s, from H3 rc-speed9-4b if run, else 5-7 tok/s from the bench. 0 Opus unless 4B-S \u2212 N-17S lands within \u00b10.03 of the 0.05 threshold (then Opus on the 4B-S changed rows, \u2264 60 calls).",
+   "lane": "mini-gen+haiku",
+   "ids": "CV5 51 v0.1 dev",
+   "cost": "About 60-90 min mini generation (4B, 2 arms), 204 Haiku, \u2264 60 Opus conditional, 0 phone",
+   "ceiling": "+0.19 U on the app vs RC1 (4B Succinct about 0.33 Opus scale) at about 3x the 1.7B time and PSS about 4.9 GB",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. If 4B-S \u2212 N-17S < +0.03 under Haiku (CI includes 0), the note recommends the 1.7B as the 8 GB default outright (equal U, \u2265 3x faster) and drops the 4B-default option. If 4B-D \u2212 4B-S \u2265 +0.03, the Succinct ask is limited to models under SMALL_MODEL_BYTES, as drafted.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: maintainer changes before 10-25, ranked by U gained on the shipped app (RC1 1.5B Detailed, KB only, 0 packs = U 0.143 Opus, CV5 51). Until something is measured in his pipeline, transfer is assumed at bench minus 0.09 raw (about minus 0.11 floor-adjusted, from DEVICE-X6 native vs bench). Per-change estimates:\n(1) 1.7B entry (NOTE-1): 12 JSON lines, plus about 10 Kotlin lines in DefaultModel.kt if it should be the 8 GB default. Not frozen yet (catalog JSON). Expected app U with Detailed is 0.20-0.26 (+0.06..+0.12). On the device it is measurable only if RC1's in-app HF model search (BoarServices addDiscovered) installs the GGUF so rc_eval resolves it. Otherwise it needs his catalog entry and a new APK.\n(2) Succinct for small models: about 3 lines (ChatViewModel.kt:480-486). DeviceEvalRunner.kt:164/203 reads personalities.json defaultId, so eval rows stay Detailed unless that one JSON line changes too. Expected +0.06..+0.09 on the 1.5B (STYLE15B Haiku +0.087; most of RC1's \u22120.119 gap to the closed-book rung looks like style), \u221227 s per answer, CE-shown about halved. Pre-freeze.\n(3) 4B as the 8 GB default: 0 lines (already in his catalog; DefaultModel picks 'default' above 4.5 GiB). Expected app U about 0.30-0.35 Succinct, lower with Detailed (4B within-item length slope under Opus \u22120.16 per doubling). Cost: predicted p50 55-95 s with Detailed, PSS about 4.9 GB, 1 LMK in the bench, and the Android 17 AnonSwap limiter. Device rows H3/H4 already planned.\n(4) Warning line (NOTE-2): about 0 U by construction, because a prefix does not change the rubric score. Its value is labelling about 69 CE per 100. UI copy plus about 10 Kotlin lines pre-freeze. The 5-rule port is post-freeze.\n(5) Catalog packs (NOTE-5): JSON only, pre-freeze. S1: +0.015 U (\u22120.036..+0.068) on the 1.5B. What packs do is coverage. In his pipeline, kept fact goes 0 \u2192 21/97 (NATIVE-PARITY his_kbpacks_0.7). In the X6 attribution, 6 vit-cry items had the fact only in our pipeline (mean dS \u22120.64). Self-tests: +0.042 Opus. So packs are a reach feature for Vitalik/crypto and in-pack questions, not a headline lever.\n(6) KB cutoff 0.7 \u2192 0.5: already dead from existing data, so not proposed. Kept 1 \u2192 77/97 items, but fact kept 0 \u2192 1/97, and 118/134 new chunks are off-topic, so expected \u0394U \u2264 0.\n(7) Deterministic layers port: the largest per-item lever. The X6 attribution puts \u22120.050 of the \u22120.089 native gap on 11/57 layer items (mean \u22121.2 points). 8 of the CV5 51 are layer items. Expected +0.04..+0.06 for any model. It is hundreds of Kotlin lines plus JSON assets (facts table, arithmetic, distance, cards), so post-freeze except possibly the facts table.\nRanking basis: 0-LLM counterfactuals first, then a desktop native-harness run (his exact prompt string, tools/harness on snapshot 5f8cc8f4, parity 9/9 with RC1). The phone is used only for the one run that settles the app-level 1.7B gap. Opus total across the 5: \u2264 204 (cap 300).\nUNKNOWN: whether RC1 equals snapshot 5f8cc8f4; whether RC1's HF model search exists and feeds rc_eval; why RC1 installed only the 1.5B when DefaultModel would pick the 4B on 8 GB (setup tier choice?).",
+   "p": 0.45,
+   "value": 2.5,
+   "costscore": 3,
+   "verdicts": [
+    "drop",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "LA3 measures the real catalog 4B on the app itself. Haiku compresses gaps, so a +0.05 threshold on n 51 is near its MDE, and the maintainer already ships the 1.5B setup tier, so the 4B-default question is unlikely to change his pre-freeze choice.",
+    "204 Haiku and 60-90 min of mini time compete with B2 for today's Haiku budget; it is useful for NOTE-1's 4B-vs-1.7B trade, but LA3/H3 on the device give the shipped-app answer first, so it runs only if B2 finishes with Haiku to spare."
+   ],
+   "score": 0.375
+  },
+  {
+   "id": "B5-PACKS-WHERE",
+   "statement": "In his native pipeline with the 1.5B Succinct, adding catalog packs (his_kbpacks_0.7 stage: KB + crypto + wikivoyage + the A-union packs he would list) raises Haiku U on the 11 vit-cry ids by \u2265 +0.08. The CV5 51 overall moves by < +0.03, reproducing S1 in his pipeline. Kept-fact rises from 0 to \u2265 6 of the 11 crypto items. This sets what NOTE-5 may claim: Vitalik/crypto coverage, not overall usefulness.",
+   "why_now": "S1 found no overall gain on our engine. The X6 attribution puts \u22120.014 raw of the native gap on 6 vit-cry items where only our pipeline had the fact. NOTE-5 \u00a75 currently says only 'not a quality gain', and r4to decides whether to send it before the 10-23 freeze.",
+   "method": "Freeze the criterion first. Mini, harness at 5f8cc8f4 with packs mounted (the his_kbpacks_0.7 path already in NATIVE-PARITY: same packs as K1, d4ff5720 shas), 1.5B Succinct, seed 42. Generate only the ids whose kept context changes vs N-S (expect about 61/97 on MAIN, so most of the 51), and reuse N-S texts where the context is identical. Haiku judge.v1-low N 4 both orders on the changed answers only, paired vs N-S. Report the vit-cry slice (11) and the rest (40) separately, plus kept fact per slice from the factpresent rule. Repeat with N-17S as base if B2 ran (1.7B + packs), Haiku only.",
+   "lane": "mini-gen+haiku",
+   "ids": "CV5 51 v0.1 dev; slice vit-cry-001..011 (11 ids)",
+   "cost": "About 20 min mini generation, \u2264 102 Haiku (\u2264 204 with the 1.7B repeat), 0 Opus, 0 phone",
+   "ceiling": "About +0.10 on the 11 crypto items, about +0.02 overall U on the app",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. If the vit-cry slice \u0394U < +0.04 or kept fact < 4/11, NOTE-5 \u00a75 drops any coverage claim for the Vitalik/crypto questions and frames the packs as user-selected offline reference only. If the overall \u0394U \u2265 +0.03 with CI low > 0, S1's NO-GAIN is reported as engine-specific and NOTE-5 gains a quality sentence. (The slice n 11 has an MDE of about 0.10, so a null on the slice is reported as underpowered, not as no effect.)",
+   "ships_before_freeze": true,
+   "lens": "Lens B: maintainer changes before 10-25, ranked by U gained on the shipped app (RC1 1.5B Detailed, KB only, 0 packs = U 0.143 Opus, CV5 51). Until something is measured in his pipeline, transfer is assumed at bench minus 0.09 raw (about minus 0.11 floor-adjusted, from DEVICE-X6 native vs bench). Per-change estimates:\n(1) 1.7B entry (NOTE-1): 12 JSON lines, plus about 10 Kotlin lines in DefaultModel.kt if it should be the 8 GB default. Not frozen yet (catalog JSON). Expected app U with Detailed is 0.20-0.26 (+0.06..+0.12). On the device it is measurable only if RC1's in-app HF model search (BoarServices addDiscovered) installs the GGUF so rc_eval resolves it. Otherwise it needs his catalog entry and a new APK.\n(2) Succinct for small models: about 3 lines (ChatViewModel.kt:480-486). DeviceEvalRunner.kt:164/203 reads personalities.json defaultId, so eval rows stay Detailed unless that one JSON line changes too. Expected +0.06..+0.09 on the 1.5B (STYLE15B Haiku +0.087; most of RC1's \u22120.119 gap to the closed-book rung looks like style), \u221227 s per answer, CE-shown about halved. Pre-freeze.\n(3) 4B as the 8 GB default: 0 lines (already in his catalog; DefaultModel picks 'default' above 4.5 GiB). Expected app U about 0.30-0.35 Succinct, lower with Detailed (4B within-item length slope under Opus \u22120.16 per doubling). Cost: predicted p50 55-95 s with Detailed, PSS about 4.9 GB, 1 LMK in the bench, and the Android 17 AnonSwap limiter. Device rows H3/H4 already planned.\n(4) Warning line (NOTE-2): about 0 U by construction, because a prefix does not change the rubric score. Its value is labelling about 69 CE per 100. UI copy plus about 10 Kotlin lines pre-freeze. The 5-rule port is post-freeze.\n(5) Catalog packs (NOTE-5): JSON only, pre-freeze. S1: +0.015 U (\u22120.036..+0.068) on the 1.5B. What packs do is coverage. In his pipeline, kept fact goes 0 \u2192 21/97 (NATIVE-PARITY his_kbpacks_0.7). In the X6 attribution, 6 vit-cry items had the fact only in our pipeline (mean dS \u22120.64). Self-tests: +0.042 Opus. So packs are a reach feature for Vitalik/crypto and in-pack questions, not a headline lever.\n(6) KB cutoff 0.7 \u2192 0.5: already dead from existing data, so not proposed. Kept 1 \u2192 77/97 items, but fact kept 0 \u2192 1/97, and 118/134 new chunks are off-topic, so expected \u0394U \u2264 0.\n(7) Deterministic layers port: the largest per-item lever. The X6 attribution puts \u22120.050 of the \u22120.089 native gap on 11/57 layer items (mean \u22121.2 points). 8 of the CV5 51 are layer items. Expected +0.04..+0.06 for any model. It is hundreds of Kotlin lines plus JSON assets (facts table, arithmetic, distance, cards), so post-freeze except possibly the facts table.\nRanking basis: 0-LLM counterfactuals first, then a desktop native-harness run (his exact prompt string, tools/harness on snapshot 5f8cc8f4, parity 9/9 with RC1). The phone is used only for the one run that settles the app-level 1.7B gap. Opus total across the 5: \u2264 204 (cap 300).\nUNKNOWN: whether RC1 equals snapshot 5f8cc8f4; whether RC1's HF model search exists and feeds rc_eval; why RC1 installed only the 1.5B when DefaultModel would pick the 4B on 8 GB (setup tier choice?).",
+   "p": 0.35,
+   "value": 2,
+   "costscore": 2,
+   "verdicts": [
+    "drop",
+    "drop"
+   ],
+   "reasons": [
+    "The 11-item slice is underpowered (MDE about 0.10, mde_ok false). S1 NO-GAIN and NATIVE-PARITY kept-fact 21/97 already fix NOTE-5's framing as coverage, not quality, and packs cannot reach RC1 anyway.",
+    "S1 NO-GAIN plus NATIVE-PARITY's kept-fact 0 to 21/97 already frame NOTE-5 as coverage, and the 11-item slice cannot resolve +0.08 (mde not ok), so the Haiku is better spent on B2."
+   ],
+   "score": 0.35
+  },
+  {
+   "id": "LA4-CONDITIONAL-ADOPTION",
+   "statement": "If r4to sends NOTE-1 v3 (Qwen3-1.7B entry + Succinct default for models under 2 GB) and NOTE-5 (catalog entries for our packs) by 10-22 12:00, and the maintainer ships an RC2 listing the 1.7B before 10-24 12:00, then RC2's 1.7B at Succinct scores U floor-adj \u2265 0.30 on the CV5 51 (Opus), paired \u2265 +0.15 over A1's RC1 row with CI low > 0, and retrieval fires on \u2265 40 % of rows when the packs are listed. The claim then carries the conditional sentence as a measured row: \"A later release candidate (RC2, {sha}) adds Qwen3-1.7B with the Succinct style; on the same 51 v0.1 dev questions it scores U {y} (CI) vs 0.14 for RC1, win {w}/51 (Claude Opus judge.v1, one run each, Pixel 8a).\" Before the RC2 row exists, the text says \"proposed, not in the submitted app\".",
+   "why_now": "NOTE-1/NOTE-5 are what stands between 0.14 and the 0.35 rung (paired 1.7B bench - RC1 +0.209). The maintainer freezes around 10-23, so the send window is 10-22. The A5 rerun criterion exists, but the claim-strategy decision (send now, and print a conditional claim only if a measured RC2 row lands) is r4to's and is not yet taken. SHIP15B-PACKS says the packs alone give the 1.5B no gain (+0.015), so the 1.7B + Succinct entry is the quality ask, and NOTE-5 is a coverage ask.",
+   "method": "[r4to] decision 1: per-message OK to send NOTE-1 v3 and NOTE-5 v3 (after their Opus reviews) by 10-22 12:00. [maintainer] RC2 by 10-24 12:00. Measurement = A5-RC2-ADOPTED-RERUN, frozen now: runsheet 0b catalog read, Wi-Fi window for the 1.7B + listed packs, airplane on, request rc-cv5-51-rc2-17b on the same 51 ids with RC2's shipped default style. Opus judge.v1 both orders, paired vs A1. Opus budget: if LA3 ran (204/300), the RC2 1.7B arm runs a Haiku N=4 screen on all 51 first, and Opus only on the \u2264 48 rows that differ (cap 96). The claim text stays S00 + 'proposed' until the row lands. [r4to] decision 2: whether section 0 may name an RC2 that is not the submitted build (only if RC2 is what gets submitted on 10-25).",
+   "lane": "r4to-decision",
+   "ids": "CV5 51 v0.1 dev ids (request rc-cv5-51-rc2-17b; optional rc-cv5-51-rc2-15b-packs)",
+   "cost": "2 messages (r4to OK each), about 45 phone min on a second device session (download window + 52 x ~25 s Succinct 1.7B), 96-102 Opus judge.v1 (Haiku-screened if LA3 consumed budget), 0 paid",
+   "ceiling": "The highest possible honest app row before 10-25 (bench 1.7B 0.351, and Succinct is noninferior per STYLE15B), with the submitted build measured and not proposed. Probability is bounded by the maintainer's timing, which is outside our control.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before the run: r4to does not OK the sends by 10-22 12:00, OR no RC listing the 1.7B is installed on the Pixel by 10-24 12:00, OR the submitted 10-25 build is not that RC. Then the conditional sentence is dropped and the claim stays S00 + 'proposed'. If the RC2 row runs: paired < +0.10 or CI low \u2264 0, or CE per 100 > 40 \u2192 RC2 is printed as a measured row without the 'improvement' verb.",
+   "ships_before_freeze": false,
+   "lens": "Lens A, claim strategy given 0.14. The submitted app (RC1 2.0.0-rc1 as installed: Qwen2.5-1.5B, Detailed, built-in KB, 0 packs) scores U floor-adj 0.143 (0.103-0.188), raw 0.316, win 0/51 (Opus judge.v1 + DECLINE2STAGE, 51 v0.1 dev, one run, Pixel 8a). Our engine sits at 0.351 (1.7B K0) and 0.460 (4B cut 7), and the bar is 0.50 floor-adj with win-rate vs the reference. Facts that shape the options: (a) the RC1 snapshot catalog (5f8cc8f4) lists qwen3-4b-instruct-2507-q4km (2.50 GB), so a \"configuration\" row needs no maintainer action, only an r4to Wi-Fi window (whether the installed RC1 matches is UNKNOWN until runsheet row 0b); (b) neither the 1.7B nor our packs can reach RC1 without NOTE-1 / NOTE-5; (c) Opus budget is 300, 102 already spent by A1, so at most two more 102-call arms; (d) A3-TWO-CLAIMS-REVIEW and A5-RC2-ADOPTED-RERUN already exist in round 6. H2 adds a misattribution test to A3, and H4 is A5 reframed as the claim decision; neither repeats them. Ranked by (ceiling x probability) / cost. r4to decisions are marked [r4to] in each method. UNKNOWN: whether the installed RC1 Model Catalog lists the 4B; whether the maintainer cuts an RC2 before 10-23; the Codex judge's behaviour on very low-scoring rows; the 4B Detailed answer time on a warm Pixel (prediction 55-95 s).",
+   "p": 0.175,
+   "value": 4.5,
+   "costscore": 3,
+   "verdicts": [
+    "r4to-decision",
+    "r4to-decision"
+   ],
+   "reasons": [
+    "The send decision is r4to's and the RC2 timing is the maintainer's. The measurement already exists as A5, so this adds only the claim rule. That rule is correct: print a measured RC2 row only if RC2 is the submitted build, otherwise 'proposed, not in the submitted app'.",
+    "The value is the highest possible app row, but the outcome depends on r4to's per-message send OK by 10-22 12:00 and on the maintainer cutting an RC2 before 10-24; list it as README decisions 1/2 with A5 already frozen as the measurement."
+   ],
+   "score": 0.2625
+  }
+ ]
+}

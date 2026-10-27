@@ -1,0 +1,264 @@
+--- r1/src/rag/wikiPack.ts
++++ kiln-local/be-cut7-followup/src/rag/wikiPack.ts
+@@ -652,6 +652,29 @@
+     return Promise.all([leadHit(), ...picked.map((x) => this.hit(articleId, x.r.id, x.r.start, x.r.end, x.s, "title"))]);
+   }
+ 
++  /** FOLLOWUP r2 (deps.followupAnchor): ids of the articles titled `title` (case-insensitive, exact) whose rendered source is
++   *  `source` (an unknown source code renders as enwiki, as article() does), most-read first. */
++  async articlesTitled(title: string, source: PackSource): Promise<number[]> {
++    const rows = await this.db.getAllAsync<{ id: number; source: number }>(
++      "SELECT id, source FROM articles WHERE title = ? COLLATE NOCASE ORDER BY views DESC, id",
++      [title]
++    );
++    return rows.filter((r) => (SOURCES[r.source] ?? "enwiki") === source).map((r) => r.id);
++  }
++
++  /** FOLLOWUP r2: every chunk of an article with its passage score for `stems` (passageScore), best first (ties: earlier start). */
++  async scoredChunks(articleId: number, stems: Stem[]): Promise<Array<{ hit: PackHit; score: number }>> {
++    const a = await this.article(articleId);
++    const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>(
++      "SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start",
++      [articleId]
++    );
++    const scored = rows
++      .map((r) => ({ r, s: this.passageScore(a.text, r.start, r.end, stems) }))
++      .sort((x, y) => y.s - x.s || x.r.start - y.r.start);
++    return Promise.all(scored.map(async (x) => ({ hit: await this.hit(articleId, x.r.id, x.r.start, x.r.end, x.s, "title"), score: x.s })));
++  }
++
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+   async bm25(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+--- r1/src/rag/packs.ts
++++ kiln-local/be-cut7-followup/src/rag/packs.ts
+@@ -217,6 +217,60 @@
+     matchType: "lexical",
+     action: h.action,
+   };
++}
++
++/** FOLLOWUP r2 (deps.followupAnchor): anchored articles per follow-up and chunks appended. */
++export const ANCHOR_MAX_ARTICLES = 2;
++export const ANCHOR_N = 2;
++const LABEL_SOURCE = new Map<string, PackHit["source"]>(
++  (Object.entries(SOURCE_LABEL) as Array<[PackHit["source"], string]>).filter(([s]) => s !== "enwiki").map(([s, l]) => [l, s])
++);
++/** A source title as packHitToChunk renders it -> the article title and source it names ("Wikivoyage: Austria" -> enwikivoyage). */
++export function shownTitleKey(shown: string): { title: string; source: PackHit["source"] } {
++  const m = /^([^:]{2,40}):\s+(.+)$/.exec(shown);
++  const src = m ? LABEL_SOURCE.get(m[1]) : undefined;
++  return src ? { title: m![2], source: src } : { title: shown, source: "enwiki" };
++}
++
++/**
++ * FOLLOWUP r2 (deps.followupAnchor, default off): the previous answer's top source articles (the first ANCHOR_MAX_ARTICLES
++ * distinct shown titles, resolved strictly by title and rendered source in every installed format-2 pack), all their chunks
++ * scored against the bare follow-up `query` with the pack's passage score; returns how many chunks were fetched and the
++ * best `n` with a score above 0 whose chunkId is not in `exclude`, as retrieved pack passages.
++ */
++export async function packAnchorChunks(
++  query: string,
++  titles: string[],
++  exclude: Set<string>,
++  n = ANCHOR_N
++): Promise<{ fetched: number; chunks: RetrievedChunk[] }> {
++  const keys = [...new Set(titles.filter(Boolean))].slice(0, ANCHOR_MAX_ARTICLES).map(shownTitleKey);
++  const cands: Array<{ c: RetrievedChunk; s: number; t: number; o: number }> = [];
++  let fetched = 0;
++  if (!keys.length) return { fetched, chunks: [] };
++  for (const pack of await knowledgePacks()) {
++    try {
++      if (!(await openPack(pack))) continue;
++      const wp = wikiPacks.get(pack.id);
++      if (!wp) continue;
++      let stems: Stem[] | null = null;
++      for (const [t, k] of keys.entries()) {
++        const ids = await wp.articlesTitled(k.title, k.source);
++        if (!ids.length) continue;
++        stems ??= await wp.stems(query);
++        const scored = await wp.scoredChunks(ids[0], stems);
++        fetched += scored.length;
++        scored.forEach((x, o) => {
++          const c = packHitToChunk(pack.id, x.hit);
++          if (x.score > 0 && !exclude.has(c.chunkId)) cands.push({ c, s: x.score, t, o });
++        });
++      }
++    } catch (e: any) {
++      console.warn(`[packs] anchor failed in ${pack.id}:`, e?.message ?? e);
++    }
++  }
++  cands.sort((a, b) => b.s - a.s || a.t - b.t || a.o - b.o);
++  return { fetched, chunks: cands.slice(0, n).map((x) => x.c) };
+ }
+ 
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+--- r1/src/routing/answer.ts
++++ kiln-local/be-cut7-followup/src/routing/answer.ts
+@@ -79,7 +79,7 @@
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
+ import { numericGuard } from "./numguard";
+-import { followupExpansion } from "./followup";
++import { followupExpansion, followupAnchorTitles } from "./followup";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -261,6 +261,14 @@
+    */
+   followupContext?: boolean;
+   /**
++   * FOLLOWUP r2 (src/routing/followup.ts followupAnchorTitles, rag/packs.ts packAnchorChunks): a short or referring
++   * follow-up whose previous answer showed sources gets the best ANCHOR_N chunks of that answer's top article(s), scored
++   * against the bare follow-up, as pinned candidates before the keep step. Off by default (absent/false = unchanged).
++   */
++  followupAnchor?: boolean;
++  /** FOLLOWUP r2: the anchor fetch (tests); default = rag/packs.ts packAnchorChunks. */
++  anchorChunks?: (query: string, titles: string[], exclude: Set<string>) => Promise<{ fetched: number; chunks: RetrievedChunk[] }>;
++  /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+    * sources against them; without them a PT question never names an English title.
+@@ -1055,6 +1063,8 @@
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.
+       const searchQuery = withFollowup(english ? (ACTION_INTENT.test(req.query) ? `${english} what to do` : english) : req.query);
+       let raw: RetrievedChunk[] = req.reuseSources ?? [];
++      /** FOLLOWUP r2: chunkIds of the anchor chunks added to `raw` (empty when off). */
++      const anchorIds = new Set<string>();
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+       let retrievalMs: number | undefined;
+@@ -1082,6 +1092,19 @@
+             reasonCodes.push(`followup:title-boost-${first.length}`);
+           }
+         }
++        // FOLLOWUP r2: the previous answer's top article(s), its chunks scored on the bare follow-up; the best go in as
++        // candidates (pinned in compression, exempt from the grounding drops below). Search and match queries unchanged.
++        const anchorTitles = deps.followupAnchor === true && !pt && !history ? followupAnchorTitles(req.query, ctx.history) : null;
++        if (anchorTitles) {
++          const fetch = deps.anchorChunks ?? (async (q: string, t: string[], x: Set<string>) => (await import("../rag/packs")).packAnchorChunks(q, t, x));
++          const got = await fetch(req.query, anchorTitles, new Set(raw.map((c) => c.chunkId))).catch((e) => {
++            console.warn("[answer] follow-up anchor failed:", e?.message ?? e);
++            return { fetched: 0, chunks: [] as RetrievedChunk[] };
++          });
++          reasonCodes.push(`followup:anchor:${got.fetched}`);
++          for (const c of got.chunks) anchorIds.add(c.chunkId);
++          raw = [...raw, ...got.chunks];
++        }
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+ 
+@@ -1105,6 +1128,7 @@
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
++      for (const c of raw) if (anchorIds.has(c.chunkId)) pinned.add(c.chunkId);
+       const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
+@@ -1116,7 +1140,7 @@
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        const kept = sources.filter((c) => onSubject(c));
++        const kept = sources.filter((c) => anchorIds.has(c.chunkId) || onSubject(c));
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;
+@@ -1125,7 +1149,7 @@
+         reasonCodes.push("grounding:health-strict");
+         // Health: only sources whose title names the health topic (never a plant, a cave or a TV show).
+         const topic = healthTopicTerms(req.query, english);
+-        const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c) || gapSource(c));
++        const onTopicHealth = sources.filter((c) => anchorIds.has(c.chunkId) || onHealthTopic(topic, c) || gapSource(c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
+         sources = onTopicHealth;
+         // The best source to quote may have been cut by compression (relative relevance): a
+@@ -1139,6 +1163,7 @@
+           }
+         }
+       }
++      if (anchorIds.size && sources.some((c) => anchorIds.has(c.chunkId))) reasonCodes.push("followup:anchor-kept");
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }
+--- r1/src/routing/followup.ts
++++ kiln-local/be-cut7-followup/src/routing/followup.ts
+@@ -62,3 +62,27 @@
+   }
+   return { terms, titles };
+ }
++
++/** FOLLOWUP r2 (deps.followupAnchor): titles of the previous answer's top sources to anchor on. */
++export const ANCHOR_MAX_TITLES = 2;
++
++/**
++ * FOLLOWUP r2: when the current turn is a follow-up (an earlier user turn, and <= FOLLOWUP_MAX_WORDS words, a referring
++ * pronoun or an ellipsis opener: the same test as followupExpansion) and the assistant turn after that user turn carries
++ * `sources`, the first ANCHOR_MAX_TITLES distinct titles in their shown order; null otherwise.
++ */
++export function followupAnchorTitles(query: string, history: ConversationHistory | undefined): string[] | null {
++  const turns = history?.turns ?? [];
++  let u = -1;
++  for (let i = turns.length - 1; i >= 0; i--) if (turns[i].role === "user" && turns[i].text.trim()) { u = i; break; }
++  if (u < 0) return null;
++  if (!(words(query).length <= FOLLOWUP_MAX_WORDS || REFERS.test(query) || OPENER.test(query))) return null;
++  for (let i = turns.length - 1; i > u; i--) {
++    const t = turns[i];
++    if (t.role === "assistant" && t.sources?.length) {
++      const titles = [...new Set(t.sources.filter(Boolean))].slice(0, ANCHOR_MAX_TITLES);
++      return titles.length ? titles : null;
++    }
++  }
++  return null;
++}
+--- r1/src/routing/followup.test.ts
++++ kiln-local/be-cut7-followup/src/routing/followup.test.ts
+@@ -20,3 +20,13 @@
+     expect(followupExpansion("Could you tell me in more detail how long that usually takes for most people?", h(prev))?.terms).toHaveLength(12);
+   });
+ });
++
++describe("followupAnchorTitles (FOLLOWUP r2)", () => {
++  it("returns the previous answer's first two distinct source titles for a follow-up, null otherwise", async () => {
++    const { followupAnchorTitles } = await import("./followup");
++    expect(followupAnchorTitles("Why does it work with uints then?", h("CREATE2 breaks with addresses?", "A.", ["Create2", "Create2", "ABI", "Solidity"]))).toEqual(["Create2", "ABI"]);
++    expect(followupAnchorTitles("Why does it work with uints then?", h("CREATE2 breaks with addresses?", "A."))).toBeNull();
++    expect(followupAnchorTitles("Why?", undefined)).toBeNull();
++    expect(followupAnchorTitles("Which countries in South America have the largest coffee production by volume today?", h("Coffee?", "A.", ["Coffee"]))).toBeNull();
++  });
++});
+--- r1/src/routing/answer.test.ts
++++ kiln-local/be-cut7-followup/src/routing/answer.test.ts
+@@ -2410,5 +2410,31 @@
+     expect(result.text).toBe(noDoseAnswer(false));
+     expect(f.generations).toHaveLength(0);
+     f.deps.healthgap = undefined;
++  });
++});
++
++describe("answer(): FOLLOWUP r2 follow-up anchor (deps.followupAnchor)", () => {
++  const ROAM = chunk("pack:p:7", "Europe roaming", "Wholesale roaming: operators still pay each other a capped wholesale price for using the other network.");
++  const hist = { ...ctx, history: { summary: null, turns: [{ role: "user", text: "Can I use a Romanian SIM in Sweden permanently?" }, { role: "assistant", text: "Mostly yes.", sources: ["Europe roaming"] }] } };
++  it("adds the anchor chunk scored on the bare follow-up, pinned and kept, with its reason codes", async () => {
++    const calls: Array<[string, string[]]> = [];
++    f.deps.followupAnchor = true;
++    f.deps.anchorChunks = async (q, t) => (calls.push([q, t]), { fetched: 9, chunks: [ROAM] });
++    const { events, result } = await collect("Do operators still pay each other?", "fast", hist);
++    expect(calls).toEqual([["Do operators still pay each other?", ["Europe roaming"]]]);
++    const sources = (events.find((e) => e.type === "sources") as any).sources as RetrievedChunk[];
++    expect(sources.map((s) => s.chunkId)).toContain("pack:p:7");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["followup:anchor:9", "followup:anchor-kept"]));
+   });
++  it("is off by default and never fires without a sourced previous answer", async () => {
++    let n = 0;
++    f.deps.anchorChunks = async () => (n++, { fetched: 1, chunks: [ROAM] });
++    const off = await collect("Do operators still pay each other?", "fast", hist);
++    expect(n).toBe(0);
++    expect(off.result.receipt.reasonCodes.some((c) => c.startsWith("followup:"))).toBe(false);
++    f.deps.followupAnchor = true;
++    const single = await collect("Do operators still pay each other?", "fast");
++    expect(n).toBe(0);
++    expect(single.result.receipt.reasonCodes.some((c) => c.startsWith("followup:"))).toBe(false);
++  });
+ });

@@ -1,0 +1,39 @@
+diff -ruN be-0cfd4a77-tf1/src/routing/answer.ts be-0cfd4a77-tf2/src/routing/answer.ts
+--- be-0cfd4a77-tf1/src/routing/answer.ts	2026-10-03 19:14:08
++++ be-0cfd4a77-tf2/src/routing/answer.ts	2026-10-03 19:31:56
+@@ -68,6 +68,7 @@
+   onHealthTopic,
+   riskyHealthInstruction,
+   termCoverage,
++  tokenizeTerms,
+ } from "./context";
+ import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
+ import { englishNamesIn } from "../rag/ptLexicon";
+@@ -347,6 +348,8 @@
+ /** Crypto-pack sources (their source labels) and a crypto cue in the user's own words (PT/EN/ES). "gás/gas" is not a
+  *  cue: a gas leak is an emergency. Sonar exp-30 (health11). */
+ const CRYPTO_SOURCE = /^(Ethereum EIPs\/ERCs|Ethereum specs|ethereum\.org|Bitcoin BIPs)\b/;
++/** Coin tickers written in capitals ("Terra (UST/LUNA)"): a crypto cue only as written, never "luna" or "sol" in prose. */
++const CRYPTO_TICKER = /(?<![\p{L}\p{N}])(UST|LUNA|USDT|USDC|DAI|SOL|XRP|ADA|DOT|DOGE|BNB|AVAX|MATIC|ATOM|LTC|TRX|SHIB)(?![\p{L}\p{N}])/u;
+ const CRYPTO_CUE =
+   /(?<![\p{L}\p{N}])(ethereum|ether|eth|bitcoin|btc|blockchains?|cripto\p{L}*|crypto\p{L}*|tokens?|nfts?|erc-?\d*|eip-?\d*|bip-?\d*|carteiras?( digita\p{L}*| cripto\p{L}*)?|wallets?|billeteras?|staking|stake|validador\p{L}*|validator\p{L}*|rollups?|l2s?|layer ?2|camada ?2|capa ?2|defi|smart contracts?|contratos? inteligentes?|solidity|minera\p{L}*|mining|hash\p{L}*|merkle|zk\p{L}*|sharding|consenso|consensus|privacy pools?|tornado cash|stablecoins?|usdc|usdt|uniswap|airdrops?|chave privada|private keys?|seed phrase|frase semente|mempool|satoshis?|lightning network|proof of (stake|work)|prova de (participa\p{L}+|trabalho)|prueba de (participaci\p{L}+|trabajo)|vitalik|buterin|nakamoto|dapps?|web3)(?![\p{L}\p{N}])/iu;
+ 
+@@ -927,7 +930,17 @@
+       // Lexicon names are article titles: a source must be titled by one ("Season", not "Hurricane Season ...").
+       // Sonar exp-30: a translated PT question's English terms can be crypto words too ("queimadura… crianças" ->
+       // "burn child" matched ERC-7401/7891, which burn child tokens). Crypto-pack sources need a crypto cue in the question.
+-      const cryptoBlocked = (c: RetrievedChunk) => !!english && !history && CRYPTO_SOURCE.test(c.source ?? "") && !CRYPTO_CUE.test(req.query);
++      // Sonar exp-40: the crypto kit's own sources (EIPs, specs, ethereum.org, BIPs and its Wikipedia crypto articles) need a
++      // crypto cue in the question or a title that shares a word with it ("PeerDAS", "Terra", "Post-quantum cryptography"):
++      // "Tell me about Japan" got "Stablecoin > Legislation > Japan" from the crypto kit.
++      const qTerms = new Set(tokenizeTerms(req.query));
++      const fromCryptoKit = (c: RetrievedChunk) => CRYPTO_SOURCE.test(c.source ?? "") || /^pack:(?:local-)?boar-crypto:/.test(c.chunkId);
++      const cryptoBlocked = (c: RetrievedChunk) =>
++        !history &&
++        fromCryptoKit(c) &&
++        !CRYPTO_CUE.test(req.query) &&
++        !CRYPTO_TICKER.test(req.query) &&
++        (!!english || !tokenizeTerms(c.title.replace(/^[^:]+:\s*/, "")).some((t) => qTerms.has(t)));
+       const onSubject = (c: RetrievedChunk) =>
+         cryptoBlocked(c) ? false : history
+           ? history.isDateArticle(c.title)

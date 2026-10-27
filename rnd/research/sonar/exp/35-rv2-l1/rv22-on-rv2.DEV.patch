@@ -1,0 +1,57 @@
+diff -ruN -x *.orig be-0cfd4a77-rv2/src/rag/retrieve.ts be-0cfd4a77-rv22/src/rag/retrieve.ts
+--- be-0cfd4a77-rv2/src/rag/retrieve.ts	2026-10-03 18:09:34
++++ be-0cfd4a77-rv22/src/rag/retrieve.ts	2026-10-03 18:31:20
+@@ -249,19 +249,24 @@
+   const enwikiIds = new Set(enwiki.map((w) => `pack:${w.packId}:`));
+   const cands: RetrievedChunk[] = retrieved.filter((c) => ![...enwikiIds].some((p) => c.chunkId.startsWith(p)));
+   // Articles: the ones the question names (share >= 0.25), then the BM25 top articles, at most 8 across packs.
+-  const picked: Array<{ w: WikiPackResult; id: number }> = [];
++  const picked: Array<{ w: WikiPackResult; id: number; named?: boolean }> = [];
+   for (const w of enwiki) {
+     const named = (await w.pack.titlesInQuestion(query, w.stems)).filter((t) => t.share >= CLEAN_NAMED_SHARE).map((t) => t.id);
+-    for (const id of named) if (!picked.some((p) => p.w === w && p.id === id)) picked.push({ w, id });
++    for (const id of named) if (!picked.some((p) => p.w === w && p.id === id)) picked.push({ w, id, named: true });
+   }
+   for (const w of enwiki) {
+     const bm = [...new Set((await w.pack.bm25Candidates(w.stems)).map((c) => c.articleId))].slice(0, CLEAN_BM25_ARTICLES);
+     for (const id of bm) if (!picked.some((p) => p.w === w && p.id === id)) picked.push({ w, id });
+   }
+-  for (const { w, id } of picked.slice(0, CLEAN_MAX_ARTICLES)) {
++  const namedDocs = new Set<string>();
++  for (const { w, id, named } of picked.slice(0, CLEAN_MAX_ARTICLES)) {
+     // The article's lead chunk and its best chunk for the question's stems: both whole pack chunks.
+-    for (const h of await w.pack.articlePassages(id, w.stems, 1)) {
++    // rv2.2 (DEV): a NAMED article gives its lead + its top 3 chunks by the question's stems, any section (the plot
++    // chunk that answers "why does Gríma kill Saruman" is the 3rd of "The Lord of the Rings", but shares its section).
++    const hits = named ? await namedChunks(w, id, CLEAN_NAMED_CHUNKS) : await w.pack.articlePassages(id, w.stems, 1);
++    for (const h of hits) {
+       const c = packHitToChunk(w.packId, h);
++      if (named) namedDocs.add(c.docId);
+       if (!isDisambiguation(c)) cands.push(c);
+     }
+   }
+@@ -280,7 +285,23 @@
+     for (let i = 0; i < v.length; i++) dot += v[i] * queryVec[i];
+     c.similarity = dot / (qn * (Math.hypot(...v) || 1));
+   }
+-  return wins.filter((c) => (c.similarity ?? 0) >= CLEAN_FLOOR).sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
++  // rv2.2 (DEV): a window of an article the question names ranks ahead of an equally similar keyword-only one
++  // (Gríma: the film article's "murder … seen only in the Extended Edition" outranked the book's plot).
++  const rank = (c: RetrievedChunk) => (c.similarity ?? 0) + (namedDocs.has(c.docId) ? CLEAN_NAMED_BONUS : 0);
++  return wins.filter((c) => (c.similarity ?? 0) >= CLEAN_FLOOR).sort((a, b) => rank(b) - rank(a));
++}
++
++const CLEAN_NAMED_CHUNKS = 3;
++const CLEAN_NAMED_BONUS = 0.05;
++/** A named article's lead + its top-n chunks by the question's stems, whatever their section. */
++async function namedChunks(w: WikiPackResult, id: number, n: number) {
++  const pk = w.pack as any;
++  const a = await w.pack.article(id);
++  const rows = (await pk.db.getAllAsync("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY id", [id])) as Array<{ id: number; start: number; end: number }>;
++  if (!rows.length) return [];
++  const lead = a.text.startsWith("Key facts:", rows[0].start) && rows.length > 1 ? rows[1] : rows[0];
++  const top = rows.filter((r) => r !== lead).map((r) => ({ r, s: pk.passageScore(a.text, r.start, r.end, w.stems) as number })).sort((x, y) => y.s - x.s).slice(0, n);
++  return Promise.all([pk.hit(id, lead.id, lead.start, lead.end, 1, "title", true), ...top.map((x) => pk.hit(id, x.r.id, x.r.start, x.r.end, x.s, "title"))]);
+ }
+ 
+ export { assemblePrompt } from "./pure";

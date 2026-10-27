@@ -1,0 +1,3 @@
+SELECT ?item (MAX(?a) AS ?v) WHERE { ?item p:P2044/psn:P2044/wikibase:quantityAmount ?a . FILTER(?a > 6000)
+  ?item wdt:P31/wdt:P279? wd:Q8502 . }
+ GROUP BY ?item ORDER BY DESC(?v) LIMIT 1500

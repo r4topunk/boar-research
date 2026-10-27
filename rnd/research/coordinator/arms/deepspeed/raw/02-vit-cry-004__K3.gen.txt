@@ -1,0 +1,11 @@
+PeerDAS (EIP-7594) is a networking protocol that enables nodes to perform data availability sampling, ensuring blob data is accessible while downloading only a small subset [1]. It achieves this by dividing blobs into pieces and using cryptographic mechanisms for uniform random distribution, allowing each node to verify availability by checking just a few pieces rather than the entire dataset [3]. This approach scales blob throughput without increasing bandwidth or storage requirements for individual nodes [2].
+
+generation: 93 tokens, 0.117 s/token (8.528 tok/s)
+compute: 55.2% CPU occupancy (0.2588 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 650 tokens, 21.233 s (30.6 tok/s) | model load 9.021 s | TTFT 30.254 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 10700.8 MiB (115.06 MiB/token), decode 0.117 s/token (compute 0.053 + cache mgmt 0.003 + flash I/O 0.259 s/token, 444 MiB/s)
+moe-cache: 44.1% hit, resident 1499.5 MiB
+moe-cache: 23745 evictions, 17312 re-reads (186.2/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.061 s/token (flash reads overlapped with FFN compute)
+moe-prefetch: 98.5 MiB speculative, 27/88 experts useful (31%)

@@ -1,0 +1,69 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts rs-D/src/rag/retrieve.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts	2026-10-14 08:07:31
++++ rs-D/src/rag/retrieve.ts	2026-10-21 23:34:16
+@@ -237,9 +237,13 @@
+   // "extra" / "append": the dense list stays out of the fusion and is returned beside the result (retrieve appends it /
+   // attaches it).
+   const extra = opts.packDense2 === "extra" || opts.packDense2 === "append";
++  // RS_DIVERSITY (RETRIEVE-SWEEP arm D, bench-only env switch, default off = unchanged): each fusion input list keeps at most
++  // 2 chunks per article (docId) and 4 per source family (title past its library label, up to the first " — " or ":").
++  const rsDiv = (globalThis as any).process?.env?.RS_DIVERSITY === "1";
++  const cap = (list: RetrievedChunk[]) => (rsDiv ? rsDiversityCap(list) : list);
+   const fused = fuseRetrievalResults(
+-    [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
++    cap([...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical]),
++    cap([...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)]),
+     topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+@@ -268,6 +272,21 @@
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
+   return { chunks: result, dense: extra ? wikiSemantic : [], sidecar: wiki.some((w) => w.pack?.hasChunkVecs === true) };
++}
++
++/** RETRIEVE-SWEEP arm D: `list` in order, keeping at most 2 chunks per docId and 4 per source family. */
++const RS_LIBRARY = /^(Wikipedia|Wikibooks|Wikivoyage|US government|Appropedia|ethereum\.org|Ethereum EIPs\/ERCs|Ethereum specs|Bitcoin BIPs):\s*/;
++export function rsDiversityCap(list: RetrievedChunk[], perArticle = 2, perFamily = 4): RetrievedChunk[] {
++  const art = new Map<string, number>();
++  const fam = new Map<string, number>();
++  return list.filter((c) => {
++    const a = c.docId ?? c.chunkId;
++    const f = c.title.replace(RS_LIBRARY, "").split(/ — |:/)[0].trim().toLowerCase();
++    if ((art.get(a) ?? 0) >= perArticle || (fam.get(f) ?? 0) >= perFamily) return false;
++    art.set(a, (art.get(a) ?? 0) + 1);
++    fam.set(f, (fam.get(f) ?? 0) + 1);
++    return true;
++  });
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts rs-D/src/rag/wikiPack.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts	2026-10-14 08:06:52
++++ rs-D/src/rag/wikiPack.ts	2026-10-21 23:34:16
+@@ -437,6 +437,11 @@
+ // weight 8 and prior 2 cost 6 points of test recall@1 on these questions.
+ export const DEFAULT_TUNING: PackTuning = { weights: [2, 1, 1], prior: 0.5, namedMinShare: NAMED_MIN_SHARE, pool: 80, semanticWeight: 0 };
+ 
++/** RETRIEVE-SWEEP arm D: a title's source family, the title up to its first " — " or ":" (a pack title has no library label). */
++export function rsFamily(title: string): string {
++  return title.split(/ — |:/)[0].trim().toLowerCase();
++}
++
+ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+@@ -884,6 +889,12 @@
+         if (hits.length >= limit) break;
+         if (seen.has(c.chunkId)) continue;
+         const h = await this.materialize(c);
++        // RS_DIVERSITY (RETRIEVE-SWEEP arm D, bench-only env switch, default off = unchanged): at most 2 passages per article
++        // and 4 per source family (title up to its first " — " or ":") among the keyword hits; the next candidate takes the slot.
++        if ((globalThis as any).process?.env?.RS_DIVERSITY === "1") {
++          const fam = rsFamily(h.title);
++          if (hits.filter((x) => x.articleId === h.articleId).length >= 2 || hits.filter((x) => rsFamily(x.title) === fam).length >= 4) continue;
++        }
+         const relevant =
+           coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
+         // A what-to-do question: at most three passages per article, so a lay manual's steps (Wikibooks First Aid)

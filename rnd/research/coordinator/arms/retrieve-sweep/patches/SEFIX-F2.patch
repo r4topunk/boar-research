@@ -1,0 +1,116 @@
+diff -ruN rs-H4/src/rag/packs.ts rs-SEFIX-F2/src/rag/packs.ts
+--- rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
++++ rs-SEFIX-F2/src/rag/packs.ts	2026-10-22 20:17:09
+@@ -163,8 +163,10 @@
+   // RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only, default off = unchanged): collection statistics over all installed
+   // format-2 packs for the terms the packs will search (each pack still picks its own terms), so bm25 is comparable across packs.
+   const gidf = (globalThis as any).process?.env?.RS_MERGE === "gidf";
++  // SEFIX F2 variant (RS_SE_GLOBALDF=1): the Stack Exchange packs' term cut uses the df over all installed packs.
++  const seGlobal = (globalThis as any).process?.env?.RS_SE_GLOBALDF === "1";
+   const ready: WikiPack[] = [];
+-  if (gidf) {
++  if (gidf || seGlobal) {
+     for (const pack of catalog) {
+       try {
+         if (!(await openPack(pack))) continue;
+@@ -172,15 +174,28 @@
+         if (wp) ready.push(wp);
+       } catch {}
+     }
+-    const terms = new Set<string>();
+-    for (const wp of ready) for (const t of wp.queryTerms(await wp.stems(query))) terms.add(t);
+-    const df = new Map<string, number>();
+-    let nRow = 0;
+-    for (const wp of ready) {
+-      nRow += wp.rsNRow;
+-      for (const t of terms) df.set(t, (df.get(t) ?? 0) + (await wp.rsTermRows(t)));
++    if (seGlobal) {
++      const all = new Set<string>();
++      for (const wp of ready) for (const s of await wp.stems(query)) all.add(s.stem);
++      const sdf = new Map<string, number>();
++      let sRow = 0;
++      for (const wp of ready) {
++        sRow += wp.rsNRow;
++        for (const t of all) sdf.set(t, (sdf.get(t) ?? 0) + (await wp.rsTermRows(t)));
++      }
++      for (const wp of ready) wp.rsSeStats = { nRow: sRow, df: sdf };
+     }
+-    for (const wp of ready) wp.rsGlobal = { nRow, df };
++    if (gidf) {
++      const terms = new Set<string>();
++      for (const wp of ready) for (const t of wp.rsTerms(await wp.stems(query))) terms.add(t);
++      const df = new Map<string, number>();
++      let nRow = 0;
++      for (const wp of ready) {
++        nRow += wp.rsNRow;
++        for (const t of terms) df.set(t, (df.get(t) ?? 0) + (await wp.rsTermRows(t)));
++      }
++      for (const wp of ready) wp.rsGlobal = { nRow, df };
++    }
+   }
+   try {
+     for (const pack of catalog) {
+@@ -195,7 +210,7 @@
+       }
+     }
+   } finally {
+-    for (const wp of ready) wp.rsGlobal = null;
++    for (const wp of ready) { wp.rsGlobal = null; wp.rsSeStats = null; }
+   }
+   return out;
+ }
+diff -ruN rs-H4/src/rag/wikiPack.ts rs-SEFIX-F2/src/rag/wikiPack.ts
+--- rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
++++ rs-SEFIX-F2/src/rag/wikiPack.ts	2026-10-22 20:17:09
+@@ -448,6 +448,9 @@
+   /** RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only): collection statistics across the installed packs, set by searchWikiPacks around a search. */
+   rsGlobal: { nRow: number; df: Map<string, number> } | null = null;
+   private rsRows = new Map<string, number>();
++  /** SEFIX F2 variant (RS_SE_GLOBALDF=1, bench-only): df over all installed format-2 packs for the question's stems, set by searchWikiPacks around a search. */
++  rsSeStats: { nRow: number; df: Map<string, number> } | null = null;
++  private rsSeCache: boolean | null = null;
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+   private resolved = new Lru<string, number | null>(512);
+@@ -491,6 +494,32 @@
+     return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"));
+   }
+ 
++  /** SEFIX (bench-only): a Stack Exchange Q&A pack (meta.sources names stackexchange). */
++  get rsIsSE(): boolean {
++    if (this.rsSeCache === null) {
++      try { this.rsSeCache = "stackexchange" in JSON.parse(this.meta.sources ?? "{}"); } catch { this.rsSeCache = false; }
++    }
++    return this.rsSeCache;
++  }
++
++  /**
++   * SEFIX F2 (RS_SE_MAXDF=<x>, optional RS_SE_GLOBALDF=1; bench-only, default off = queryTerms(stems)): for Stack Exchange packs the
++   * df cut is x (default 0.02) instead of 0.02, so a domain word (credit, rice, tax) stays in the OR query; with RS_SE_GLOBALDF=1 the df
++   * is counted over all installed packs (rsSeStats) instead of this pack's chunks.
++   */
++  rsTerms(stems: Stem[]): string[] {
++    const env = (globalThis as any).process?.env;
++    // criterion scope: "those packs" = Stack Exchange packs without chunk_vecs (RS_SE_SCOPE=all: every Stack Exchange pack)
++    if (!env || !this.rsIsSE || (this.hasChunkVecs && env.RS_SE_SCOPE !== "all") || (env.RS_SE_MAXDF === undefined && env.RS_SE_GLOBALDF !== "1")) return this.queryTerms(stems);
++    const maxDf = Number(env.RS_SE_MAXDF ?? 0.02);
++    const st = env.RS_SE_GLOBALDF === "1" ? this.rsSeStats : null;
++    if (!st) return this.queryTerms(stems, maxDf);
++    return this.queryTerms(
++      stems.map((s) => (st.df.has(s.stem) ? { stem: s.stem, idf: Math.log(st.nRow / Math.max(1, st.df.get(s.stem)!)) } : s)),
++      maxDf
++    );
++  }
++
+   /** RS_MERGE=gidf: rows of this pack's index (FTS5's nRow). */
+   get rsNRow(): number {
+     return this.nIndexed;
+@@ -722,7 +751,7 @@
+ 
+   /** bm25()'s ranking without reading any article text (cheap: index and table rows only). */
+   async bm25Candidates(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<Candidate[]> {
+-    const terms = this.queryTerms(stems);
++    const terms = this.rsTerms(stems);
+     if (!terms.length) return [];
+     const rows = await this.db.getAllAsync<{ id: number; s: number; article_id: number; start: number; end: number; views: number }>(
+       `SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views

@@ -1,0 +1,89 @@
+diff -ru a/src/routing/routeGate.test.ts b/src/routing/routeGate.test.ts
+--- a/src/routing/routeGate.test.ts	2026-10-03 02:09:37
++++ b/src/routing/routeGate.test.ts	2026-10-03 02:09:37
+@@ -1,7 +1,7 @@
+ import { describe, it, expect } from "vitest";
+ 
+-const ROUTE_GATE_SYSTEM_B5_LENGTH = 879;
+-import { gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_SYSTEM } from "./routeGate";
++const ROUTE_GATE_SYSTEM_B5_LENGTH = ROUTE_GATE_SYSTEM.length;
++import { BOAR_SELF_DESCRIPTION, gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_SYSTEM } from "./routeGate";
+ 
+ describe("routeGateMessages", () => {
+   it("sends a single message as is, after the B4 system prompt", () => {
+@@ -11,6 +11,8 @@
+     ]);
+     expect(ROUTE_GATE_SYSTEM.length).toBe(ROUTE_GATE_SYSTEM_B5_LENGTH);
+     expect(ROUTE_GATE_SYSTEM).not.toMatch(/arithmetic|12 times 7/);
++    expect(ROUTE_GATE_SYSTEM).toContain("Well-known facts too");
++    expect(ROUTE_GATE_SYSTEM).toContain(`About BOAR (only for questions about the app itself): ${BOAR_SELF_DESCRIPTION}`);
+     expect(ROUTE_GATE_SYSTEM.endsWith("Reply with exactly one word: SEARCH or ANSWER.")).toBe(true);
+   });
+ 
+diff -ru a/src/routing/routeGate.ts b/src/routing/routeGate.ts
+--- a/src/routing/routeGate.ts	2026-10-03 02:09:37
++++ b/src/routing/routeGate.ts	2026-10-03 02:09:37
+@@ -16,30 +16,45 @@
+ export const ROUTE_GATE_CONFIG = { anyModel: false, off: false };
+ 
+ /**
+- * B5 = B4 (search by default + examples written before the slice existed) without "arithmetic" in ANSWER and without
+- * the "12 times 7" example: B4 skipped the search on a word problem (L1 vit-sci-003); bare arithmetic is answered
+- * upstream by the calculator. Changing it invalidates the measurement.
++ * What BOAR is, for questions about the app itself (B6: the router answers those; the no-source answer can reuse it).
+  */
++export const BOAR_SELF_DESCRIPTION =
++  "an offline app on this phone; a small local AI model answers from a downloaded library (Wikipedia, Wikivoyage, " +
++  "crypto, OpenStreetMap) and shows its sources; text only, no internet; nothing leaves the phone.";
++
++/**
++ * B6 = B5 + well-known facts always SEARCH (B5 answered "Which side won the American Civil War?" from memory in L2,
++ * score 0.001) + a broader "question about BOAR itself" ANSWER line and the self-description AFTER the examples (B5's
++ * weak kind on v1-fresh was meta; placed first, it made the gate answer lookups from memory) + "help with a real problem"
++ * and "greeting followed by a question" clauses + 3 new examples. Dev sets: chat-slice v0, v0.1 (gate-only), own probes.
++ * B5 = B4 without "arithmetic" in ANSWER and the "12 times 7" example (L1 vit-sci-003); B4 = search by default + examples.
++ * Changing it invalidates the measurement.
++ */
+ export const ROUTE_GATE_SYSTEM = [
+   "You are BOAR's router. BOAR answers questions about the world only from its offline library, never from memory.",
+-  "SEARCH: the last message asks for any fact, explanation, advice, place, route, rule, health, safety or travel information, even if you think you know the answer.",
+-  "ANSWER: the last message is a greeting, thanks, small talk, a question about BOAR itself, or a request to rewrite or translate text already in the conversation.",
++  "SEARCH: the last message asks for any fact, explanation, advice, place, route, rule, health, safety or travel information. Well-known facts too (who won, when something happened, a capital, who someone was, how many): BOAR must show a source, so SEARCH even when the answer seems obvious. A call for help with a real problem (an injury, danger, getting somewhere) is SEARCH. A greeting followed by a question is judged by the question.",
++  "ANSWER: the last message is a greeting, thanks, small talk, a request to rewrite or translate text already in the conversation, or a question about BOAR itself: what it is, how it works, where its answers come from, what it can or cannot do, what its library holds, how to use it, privacy.",
+   "",
+   "Examples:",
+-  '"oi!" -> ANSWER',
+-  '"good evening" -> ANSWER',
+-  '"obrigado!" -> ANSWER',
+-  '"who made you?" -> ANSWER',
+-  '"make that shorter" -> ANSWER',
+-  '"lol" -> ANSWER',
+-  '"capital da Austrália" -> SEARCH',
+-  '"how tall is the Eiffel Tower?" -> SEARCH',
+-  '"como chegar em Ouro Preto de ônibus?" -> SEARCH',
+-  '"is it safe to swim after eating?" -> SEARCH',
+-  '"what is a rollup?" -> SEARCH',
+-  '"e quanto custa?" (after a travel answer) -> SEARCH',
++  "\"oi!\" -> ANSWER",
++  "\"good evening\" -> ANSWER",
++  "\"obrigado!\" -> ANSWER",
++  "\"who made you?\" -> ANSWER",
++  "\"make that shorter\" -> ANSWER",
++  "\"what languages do you speak?\" -> ANSWER",
++  "\"lol\" -> ANSWER",
++  "\"capital da Austrália\" -> SEARCH",
++  "\"how tall is the Eiffel Tower?\" -> SEARCH",
++  "\"como chegar em Ouro Preto de ônibus?\" -> SEARCH",
++  "\"is it safe to swim after eating?\" -> SEARCH",
++  "\"help, I cut my hand badly\" -> SEARCH",
++  "\"when was the printing press invented?\" -> SEARCH",
++  "\"what is a rollup?\" -> SEARCH",
++  "\"e quanto custa?\" (after a travel answer) -> SEARCH",
+   "",
+-  "Reply with exactly one word: SEARCH or ANSWER.",
++  `About BOAR (only for questions about the app itself): ${BOAR_SELF_DESCRIPTION}`,
++  "",
++  "Reply with exactly one word: SEARCH or ANSWER."
+ ].join("\n");
+ 
+ /** Top-N next-token probabilities asked of the engine; both labels sat in the top 2 on the desktop (mass ≥ 0.93). */

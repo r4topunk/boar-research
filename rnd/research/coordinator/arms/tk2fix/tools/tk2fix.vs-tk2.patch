@@ -1,0 +1,23 @@
+diff -ruN be-0cfd4a77-cut7-tk2/src/rag/packs.ts be-0cfd4a77-cut7-tk2fix/src/rag/packs.ts
+--- a/src/rag/packs.ts	2026-10-13 21:06:29
++++ b/src/rag/packs.ts	2026-10-16 02:25:21
+@@ -212,13 +212,18 @@
+   return `https://${host}/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
+ }
+ 
++/** Sources added with T-K2 (codes 9-12): label in the citation only, bare title for retrieval and grounding (TK2-FIX). */
++const BARE_TITLE_SOURCES = new Set<PackHit["source"]>(["stackexchange", "medlineplus", "factbook", "simplewiki"]);
++
+ /** A format-2 pack hit in the shape the chat's retrieval uses. */
+ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+   const label = SOURCE_LABEL[h.source] ?? "Source";
+   return {
+     chunkId: `pack:${packId}:${h.chunkId}`,
+     docId: `pack:${packId}:a${h.articleId}`,
+-    title: h.source === "enwiki" ? h.title : `${label}: ${h.title}`,
++    // T-K2 v2: the sources added with T-K2 keep the bare title cut 7 read (it mapped their codes to enwiki), so
++    // onTopic, termCoverage, the keep step and the prompt's [n] line are unchanged; their label is in `source` only.
++    title: h.source === "enwiki" || BARE_TITLE_SOURCES.has(h.source) ? h.title : `${label}: ${h.title}`,
+     body: h.section ? `${h.section}: ${h.text}` : h.text,
+     // Per-row credit last (Stack Exchange's CC BY-SA asks for author, profile link and question link).
+     source: `${label} — ${articleUrl(h.title, h.source, h.url)}${h.license ? ` (${h.license})` : ""}${h.attribution ? ` — ${h.attribution}` : ""}`,

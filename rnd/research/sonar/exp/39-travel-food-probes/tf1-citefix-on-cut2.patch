@@ -1,0 +1,292 @@
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/answer.ts be-0cfd4a77-tf1/src/routing/answer.ts
+--- be-0cfd4a77-cut2norv2/src/routing/answer.ts	2026-10-03 18:50:51
++++ be-0cfd4a77-tf1/src/routing/answer.ts	2026-10-03 19:14:08
+@@ -471,8 +471,17 @@
+       let center: { lat: number; lon: number };
+       let area: Extract<AnswerEvent, { type: "places" }>["area"];
+       let deviceNow: { value: Awaited<ReturnType<GeoProviders["getLocation"]>> | null } | null = null;
++      let areaNote: string | undefined;
+       if (intent.near.kind === "place") {
+-        const place = await geo.resolvePlace(intent.near.name).catch(() => null);
++        let place = await geo.resolvePlace(intent.near.name).catch(() => null);
++        // "Alfama, Lisbon": an area the gazetteer doesn't know falls back to the city after the comma (Sonar exp-39).
++        if (!place && intent.near.within) {
++          place = await geo.resolvePlace(intent.near.within).catch(() => null);
++          if (place) {
++            reasonCodes.push("places:area-fallback");
++            areaNote = `I don't have ${intent.near.name} in the offline place index, so these are for ${place.name} as a whole.`;
++          }
++        }
+         if (!place) {
+           reasonCodes.push("places:unknown-place");
+           return finishPlaces(
+@@ -604,6 +613,7 @@
+         radiusM: found.radiusUsedM,
+         osmDate: attribution.find((a) => a.source === "osm")?.date,
+         nearCity: byDistance ? found.nearPlace ?? null : null,
++        ...(areaNote ? { areaNote } : {}),
+       });
+       const r = receipt(retrievalMs);
+       emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r });
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/citations.decimal.test.ts be-0cfd4a77-tf1/src/routing/citations.decimal.test.ts
+--- be-0cfd4a77-cut2norv2/src/routing/citations.decimal.test.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-tf1/src/routing/citations.decimal.test.ts	2026-10-03 19:08:51
+@@ -0,0 +1,18 @@
++import { describe, expect, it } from "vitest";
++import { attributeCitations } from "./citations";
++
++const src = (body: string) => ({ chunkId: "c1", docId: "d1", title: "Sahara", body, score: 1, matchType: "lexical" as const });
++
++describe("attributeCitations keeps a decimal number whole", () => {
++  it("cites after the sentence, never inside 9.4", () => {
++    const s = src("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres of North Africa.");
++    const out = attributeCitations("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres.", [s]);
++    expect(out.text).not.toMatch(/\d \[\d+\]\.\d/);
++    expect(out.text).toBe("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres [1].");
++  });
++  it("still treats a period before a new sentence as its end", () => {
++    const s = src("The Sahara covers about 9.4 million square kilometres. It spans eleven countries of North Africa.");
++    const out = attributeCitations("The Sahara covers about 9.4 million square kilometres. It spans eleven countries of North Africa.", [s]);
++    expect(out.text).toBe("The Sahara covers about 9.4 million square kilometres [1]. It spans eleven countries of North Africa [1].");
++  });
++});
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/citations.ts be-0cfd4a77-tf1/src/routing/citations.ts
+--- be-0cfd4a77-cut2norv2/src/routing/citations.ts	2026-10-01 17:51:39
++++ be-0cfd4a77-tf1/src/routing/citations.ts	2026-10-03 19:08:51
+@@ -118,7 +118,8 @@
+ export function attributeCitations(answer: string, sources: RetrievedChunk[]): AttributedCitations {
+   const added: number[] = [];
+   if (!sources.length) return { text: answer, added };
+-  const text = answer.replace(/[^.!?\n]+[.!?]*/g, (sentence: string, at: number) => {
++  // A "." between digits is a decimal point, not a sentence end: "9.4 million" got "9 [2].4 million" (Anvil, exp-35 traces).
++  const text = answer.replace(/(?:[^.!?\n]|(?<=\d)\.(?=\d))+[.!?]*/g, (sentence: string, at: number) => {
+     if (/\[\d+\]/.test(sentence)) return sentence;
+     // A citation right after the sentence's punctuation ("… Zone. [1]") is its own (Prism CIT-2: "[1]. [1]").
+     if (/^\s*\[\d+\]/.test(answer.slice(at + sentence.length))) return sentence;
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/geo.ts be-0cfd4a77-tf1/src/routing/geo.ts
+--- be-0cfd4a77-cut2norv2/src/routing/geo.ts	2026-10-03 18:50:51
++++ be-0cfd4a77-tf1/src/routing/geo.ts	2026-10-03 19:14:21
+@@ -84,8 +84,10 @@
+ }
+ 
+ export interface GeoIntent {
+-  near: { kind: "device" } | { kind: "place"; name: string };
++  near: { kind: "device" } | { kind: "place"; name: string; /** "Alfama, Lisbon": the city to fall back to. */ within?: string };
+   diet: Diet[];
++  /** "open now": the offline data has no opening hours, which the answer says. */
++  openNow?: boolean;
+   /** Free cuisine/dish terms for the POI text search ("ramen", "pizza"). */
+   text?: string;
+   wantsBest: boolean;
+@@ -99,8 +101,8 @@
+ }
+ 
+ const DIET_PATTERNS: [Diet, RegExp][] = [
+-  ["vegan", /\bvegan[oa]?s?\b/i],
+-  ["vegetarian", /\bvegetarian[oa]?s?\b/i],
++  ["vegan", /\bvegan[oa]?s?\b|\bplant[- ]based\b/i],
++  ["vegetarian", /\bvegetarian[oa]?s?\b|\bveggie\b/i],
+   ["gluten_free", /\bgluten[- ]?free\b|\bsem gl[uú]ten\b|\bcel[ií]ac/i],
+   ["halal", /\bhalal\b/i],
+   ["kosher", /\bkosher\b/i],
+@@ -179,17 +181,22 @@
+     // "best vegan places in Tokyo", "vegan spots": a diet plus a place noun.
+     (diet.length > 0 && DIET_PLACE_NOUN.test(q));
+   if (!isPlaces) return null;
++  // "Why are there so many vegan restaurants in Berlin?" asks for a reason, not a list (Sonar exp-39).
++  if (/^\s*(why|how come)\b/i.test(q)) return null;
+   // A question about customs at restaurants ("Is tipping expected in restaurants in Portugal?", Sextant trv-009)
+   // asks for knowledge, not for places; unless it also asks for a list or a recommendation.
+   if (CUSTOMS.test(q) && !LIST_REQUEST.test(q)) return null;
+ 
+-  const near: GeoIntent["near"] = namedPlace ? { kind: "place", name: capital! } : { kind: "device" };
++  // "in Alfama, Lisbon": the city after the comma is the fallback when the gazetteer doesn't know the area (exp-39).
++  const within = namedPlace ? q.match(new RegExp(`${capital!.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*,\\s*([A-ZÀ-Ý][\\p{L}'’.-]*(?:\\s+[A-ZÀ-Ý][\\p{L}'’.-]*)*)`, "u"))?.[1] : undefined;
++  const near: GeoIntent["near"] = namedPlace ? { kind: "place", name: capital!, ...(within ? { within } : {}) } : { kind: "device" };
+   const cuisine = [...new Set((q.match(CUISINE_TERMS) ?? []).map((t) => t.toLowerCase()))];
+   return {
+     near,
+     diet,
+     text: cuisine.length ? cuisine.join(" ") : undefined,
+     wantsBest: /\b(best|top|good|great|melhor(es)?|bons|boas)\b/i.test(q),
++    ...(/\bopen (now|right now|late|tonight|today)\b|\bstill open\b/i.test(q) ? { openNow: true } : {}),
+     lang: PT_HINT.test(q) ? "pt" : "en",
+     ...(candidates.length ? { placeCandidates: candidates } : {}),
+   };
+@@ -309,10 +316,12 @@
+   osmDate?: string;
+   /** Near the device: the gazetteer's city for the fix, named in the header ("near you in Tokyo, Japan"). */
+   nearCity?: { name: string; country?: string } | null;
++  /** Said before the list, e.g. "I don't have Alfama in the offline index, so here is Lisbon." */
++  areaNote?: string;
+ }
+ 
+ /** Text answer (also what screen readers and "copy" get). Every name comes from `places`. */
+-export function formatPlacesAnswer({ intent, places, areaLabel, byDistance, radiusM, osmDate, nearCity }: PlacesAnswerInput): string {
++export function formatPlacesAnswer({ intent, places, areaLabel, byDistance, radiusM, osmDate, nearCity, areaNote }: PlacesAnswerInput): string {
+   const pt = intent.lang === "pt";
+   const L = pt ? "pt" : "en";
+   const dietWords = intent.diet.map((d) => DIET_LABEL[L][d]).join(pt ? " e " : " and ");
+@@ -343,7 +352,9 @@
+       : pt
+         ? "na ordem do registro"
+         : "in record order";
+-  const lines: string[] = [`${what} ${where}, ${order}:`];
++  const lines: string[] = [`${areaNote ? `${areaNote} ` : ""}${what} ${where}, ${order}:`];
++  // "open now": the offline data has no reliable opening hours; say so instead of implying they are open (exp-39).
++  if (intent.openNow) lines.unshift(pt ? "Não consigo ver o horário de funcionamento offline; confirme se está aberto antes de ir." : "I can't check opening hours offline, so confirm a place is open before you go.");
+ 
+   listed.forEach((p, i) => {
+     const parts = [p.name];
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/travelDistance.ts be-0cfd4a77-tf1/src/routing/travelDistance.ts
+--- be-0cfd4a77-cut2norv2/src/routing/travelDistance.ts	2026-10-03 18:50:51
++++ be-0cfd4a77-tf1/src/routing/travelDistance.ts	2026-10-03 19:15:20
+@@ -41,6 +41,13 @@
+   drive: "drive", driving: "drive", car: "drive",
+ };
+ 
++/** Everyday names the GeoNames table spells otherwise ("New York" is "New York City" there; Sonar exp-39 probes). */
++const ALIAS: Record<string, string> = {
++  "new york": "new york city", nyc: "new york city", "washington dc": "washington", "washington, d.c.": "washington",
++  "washington d.c.": "washington", "st petersburg": "saint petersburg", "st. petersburg": "saint petersburg",
++  kiev: "kyiv", bombay: "mumbai", saigon: "ho chi minh city",
++};
++
+ let index: Map<string, City> | null = null;
+ function cities(): Map<string, City> {
+   if (index) return index;
+@@ -59,7 +66,8 @@
+ export function lookupCity(phrase: string): City | null {
+   const s = phrase.trim().replace(/^(?:the city of|downtown|central)\s+/i, "").replace(/[\s.?!,;:]+$/g, "");
+   const bare = s.replace(/\s*(?:,|\bin\b)\s*[\p{L} .'-]+$/u, "").trim();
+-  return cities().get(s.toLowerCase()) ?? cities().get(bare.toLowerCase()) ?? null;
++  const key = (k: string) => ALIAS[k.toLowerCase()] ?? k.toLowerCase();
++  return cities().get(key(s)) ?? cities().get(key(bare)) ?? null;
+ }
+ 
+ export function greatCircleKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
+@@ -80,9 +88,17 @@
+   new RegExp(`^\\s*how\\s+(?:long|many\\s+(?:days|hours|weeks))\\b(?:\\s+(?:does|would|will)\\s+it\\s+take(?:\\s+me)?)?\\s+to\\s+(${MODE_WORDS})\\s+from\\s+${PLACE}\\s+to\\s+${PLACE}${BACK}\\s*\\??\\s*$`, "iu"),
+   // "How far is Rome from Paris?", "how far away is Kyoto from Tokyo by car"
+   new RegExp(`^\\s*how\\s+far(?:\\s+away)?\\s+is\\s+${PLACE}\\s+from\\s+${PLACE}${BY}\\s*\\??\\s*$`, "iu"),
+-  // "What's the distance between Madrid and Barcelona?", "distance from Oslo to Bergen"
+-  new RegExp(`^\\s*(?:what(?:'s|\\s+is)\\s+the\\s+)?distance\\s+(?:between|from)\\s+${PLACE}\\s+(?:and|to)\\s+${PLACE}${BACK}\\s*\\??\\s*$`, "iu"),
++  // "What's the distance between Madrid and Barcelona?", "distance from Oslo to Bergen", "the driving distance from
++  // Berlin to Munich", "flight distance from New York to London" (Sonar exp-39 probes).
++  new RegExp(`^\\s*(?:what(?:'s|\\s+is)\\s+the\\s+)?(?:(driving|walking|cycling|biking|road|flight|flying|air)\\s+)?distance\\s+(?:between|from)\\s+${PLACE}\\s+(?:and|to)\\s+${PLACE}${BACK}\\s*\\??\\s*$`, "iu"),
++  // "Can I walk from London to Edinburgh in a week?" (Sonar exp-39): the days needed against the days given.
++  new RegExp(`^\\s*(?:can|could)\\s+(?:i|we|you|someone)\\s+(${MODE_WORDS})\\s+from\\s+${PLACE}\\s+to\\s+${PLACE}${BACK}\\s+in\\s+(a|one|two|three|four|five|six|seven|\\d+)\\s+(days?|weeks?|months?)\\s*\\??\\s*$`, "iu"),
+ ];
++const NUM: Record<string, number> = { a: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7 };
++const UNIT_DAYS: Record<string, number> = { day: 1, days: 1, week: 7, weeks: 7, month: 30, months: 30 };
++const ADJ_MODE: Record<string, Exclude<TravelMode, null> | "air" | null> = {
++  driving: "drive", road: "drive", walking: "walk", cycling: "cycle", biking: "cycle", flight: "air", flying: "air", air: "air",
++};
+ 
+ const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
+ const round10 = (n: number) => Math.round(n / 10) * 10;
+@@ -93,28 +109,52 @@
+     const m = query.match(re);
+     if (!m) continue;
+     let verb: string | undefined, by: string | undefined, a: string, b: string, back: string | undefined;
+-    let by2: string | undefined;
++    let by2: string | undefined, adj: string | undefined, n: string | undefined, unit: string | undefined;
+     if (i === 0) [, verb, by, a, b, by2, back] = m;
+     else if (i === 1) [, verb, a, b, back] = m;
+     else if (i === 2) [, b, a, by] = m; // "how far is X from Y": from Y to X
+-    else [, a, b, back] = m;
++    else if (i === 3) [, adj, a, b, back] = m;
++    else [, verb, a, b, back, n, unit] = m;
+     by = by ?? by2;
+     const from = lookupCity(a), to = lookupCity(b);
+     if (!from || !to || from === to) return null;
+     const km = greatCircleKm(from, to);
+     if (km < 1) return null;
+-    const modeKey = (verb ?? (by === "foot" ? "walk" : by))?.toLowerCase();
+-    const mode: TravelMode = modeKey ? VERB_MODE[modeKey] ?? null : null;
++    const adjMode = adj ? ADJ_MODE[adj.toLowerCase()] ?? null : null;
+     const roundTrip = !!back;
+-    const asksTime = i === 1;
+-    return { kind: "travel-distance", text: compose(from, to, km, mode, roundTrip, asksTime), from: from.name, to: to.name, straightKm: km, mode, roundTrip };
++    if (adjMode === "air") return { kind: "travel-distance", text: airText(from, to, km, roundTrip), from: from.name, to: to.name, straightKm: km, mode: null, roundTrip };
++    const modeKey = (verb ?? (by === "foot" ? "walk" : by))?.toLowerCase();
++    const mode: TravelMode = adjMode ?? (modeKey ? VERB_MODE[modeKey] ?? null : null);
++    const asksTime = i === 1 || i === 4;
++    let text = compose(from, to, km, mode, roundTrip, asksTime);
++    if (i === 4 && mode && mode !== "drive" && n && unit) {
++      const given = (NUM[n.toLowerCase()] ?? Number(n)) * UNIT_DAYS[unit.toLowerCase()];
++      const need = ((roundTrip ? 2 : 1) * km * MODE[mode].factor) / MODE[mode].perDayKm;
++      const verdict = need <= given * 0.9 ? "Yes, probably" : need <= given * 1.1 ? "Only just, if at all" : "No, not at a normal pace";
++      text = `${verdict}: it takes about ${fmt(need)} days at ${MODE[mode].perDayKm} km a day, and you have ${fmt(given)}. ${text}`;
++    }
++    return { kind: "travel-distance", text, from: from.name, to: to.name, straightKm: km, mode, roundTrip };
+   }
+   return null;
+ }
+ 
++/** "Flight distance": the great circle is close to what planes fly (routes add a few percent). */
++function airText(from: City, to: City, km: number, roundTrip: boolean): string {
++  return (
++    `${from.name} and ${to.name} are about ${fmt(km)} km (${fmt(km * 0.621)} miles) apart as the crow flies` +
++    (roundTrip ? `, about ${fmt(round10(2 * km))} km there and back` : "") +
++    `. Flights usually cover a few percent more than this great-circle distance. This is an estimate from the cities' coordinates.`
++  );
++}
++
+ function compose(from: City, to: City, km: number, mode: TravelMode, roundTrip: boolean, asksTime = false): string {
+   const line = `${from.name} and ${to.name} are about ${fmt(km)} km (${fmt(km * 0.621)} miles) apart in a straight line.`;
+   const caveat = "This is an estimate from the cities' coordinates, not a mapped route; the real route can differ.";
++  if (!mode && km > 3000) {
++    // Far apart (often across a sea): the straight line is about what a flight covers; a land route may not exist.
++    const total = roundTrip ? ` Twice that for the round trip: about ${fmt(round10(2 * km))} km.` : "";
++    return `${line}${total} A flight covers a few percent more than this; a land route, where one exists, is usually at least a quarter longer. ${caveat}`;
++  }
+   if (!mode) {
+     const road = km * 1.25;
+     const total = roundTrip ? ` Twice that for the round trip: about ${fmt(round10(2 * km))} km in a straight line.` : "";
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/travelFood.exp39.test.ts be-0cfd4a77-tf1/src/routing/travelFood.exp39.test.ts
+--- be-0cfd4a77-cut2norv2/src/routing/travelFood.exp39.test.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-tf1/src/routing/travelFood.exp39.test.ts	2026-10-03 19:15:58
+@@ -0,0 +1,42 @@
++import { describe, expect, it } from "vitest";
++import { travelDistanceAnswer } from "./travelDistance";
++import { detectGeoIntent, formatPlacesAnswer } from "./geo";
++
++describe("travel calculator phrasings (Sonar exp-39 probes)", () => {
++  it("driving distance → drive mode", () => {
++    const a = travelDistanceAnswer("What's the driving distance from Berlin to Munich?");
++    expect(a?.mode).toBe("drive");
++    expect(a?.text).toMatch(/Driving routes/);
++  });
++  it("flight distance → great circle, no road factor", () => {
++    const a = travelDistanceAnswer("flight distance from New York to London");
++    expect(a?.from).toBe("New York City");
++    expect(a?.text).toMatch(/as the crow flies/);
++    expect(a?.text).not.toMatch(/Roads and trails/);
++  });
++  it("'can I walk … in a week' gives a verdict against the days given", () => {
++    expect(travelDistanceAnswer("Can I walk from London to Edinburgh in a week?")?.text).toMatch(/^No, not at a normal pace: it takes about \d+ days/);
++    expect(travelDistanceAnswer("Can I walk from Amsterdam to Utrecht in three days?")?.text).toMatch(/^Yes, probably/);
++  });
++  it("far apart without a mode: no 'by land' route claim", () => {
++    expect(travelDistanceAnswer("distance from New York to London")?.text).not.toMatch(/by land/);
++  });
++});
++
++describe("places intent (Sonar exp-39 probes)", () => {
++  it("veggie → vegetarian, plant-based → vegan", () => {
++    expect(detectGeoIntent("veggie places near me")?.diet).toEqual(["vegetarian"]);
++    expect(detectGeoIntent("plant-based restaurants around here")?.diet).toEqual(["vegan"]);
++  });
++  it("a why-question about restaurants is not a list request", () => {
++    expect(detectGeoIntent("Why are there so many vegan restaurants in Berlin?")).toBeNull();
++  });
++  it("'Alfama, Lisbon' keeps the city as a fallback", () => {
++    expect(detectGeoIntent("Are there vegan restaurants in Alfama, Lisbon?")?.near).toEqual({ kind: "place", name: "Alfama", within: "Lisbon" });
++  });
++  it("'open now' is flagged and the answer says hours aren't known offline", () => {
++    const intent = detectGeoIntent("vegan restaurants open now near me")!;
++    expect(intent.openNow).toBe(true);
++    expect(formatPlacesAnswer({ intent, places: [], areaLabel: "near you", byDistance: true })).toMatch(/^I can't check opening hours offline/);
++  });
++});

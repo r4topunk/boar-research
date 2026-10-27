@@ -1,0 +1,100 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/packs.ts rs-C/src/rag/packs.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/packs.ts	2026-10-14 08:06:52
++++ rs-C/src/rag/packs.ts	2026-10-21 23:23:50
+@@ -221,6 +221,16 @@
+   };
+ }
+ 
++/** RETRIEVE-SWEEP arm C: the other chunks of a format-2 pack passage's article, as retrieved passages, with their int8 chunk
++ *  vectors when the pack has them; [] for a non-pack chunk or a pack that is not open. */
++export async function rsArticleChunks(chunkId: string): Promise<{ chunk: RetrievedChunk; vec: Uint8Array | null }[]> {
++  const m = /^pack:([^:]+):(\d+)$/.exec(chunkId);
++  if (!m) return [];
++  const wp = wikiPacks.get(m[1]);
++  if (!wp) return [];
++  return (await wp.articleChunksOf(Number(m[2]))).map(({ hit, vec }) => ({ chunk: packHitToChunk(m[1], hit), vec }));
++}
++
+ /** HEADPASS-ST: kit packs (shipped with the app) never get a head pass; only user-installed format-2 packs do. */
+ const HEADPASS_KIT = new Set(["boar-crypto", "boar-wikivoyage-en"]);
+ /** HEADPASS-ST (settings.packHeadPass "a2", default off): the first passage of `raw` from a user-installed (non-kit) format-2
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts rs-C/src/rag/wikiPack.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts	2026-10-14 08:06:52
++++ rs-C/src/rag/wikiPack.ts	2026-10-21 23:23:50
+@@ -682,6 +682,25 @@
+     return Promise.all(rows.slice(from, to + 1).map((r) => this.hit(row.article_id, r.id, r.start, r.end, 0, "bm25")));
+   }
+ 
++  /** RETRIEVE-SWEEP arm C: the chunks of the article holding `chunkId` (start order, at most `max`), each with its int8 chunk
++   *  vector when the pack carries a chunk_vecs sidecar (null otherwise). */
++  async articleChunksOf(chunkId: number, max = 60): Promise<{ hit: PackHit; vec: Uint8Array | null }[]> {
++    const row = await this.db.getFirstAsync<{ article_id: number }>("SELECT article_id FROM chunks WHERE id = ?", [chunkId]);
++    if (!row) return [];
++    const rows = (
++      await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [row.article_id])
++    ).slice(0, max);
++    const vecs = new Map<number, Uint8Array>();
++    if (this.hasChunkVecs && rows.length) {
++      const vr = await this.db.getAllAsync<{ chunk_id: number; vec: Uint8Array }>(
++        `SELECT chunk_id, vec FROM chunk_vecs WHERE chunk_id IN (${rows.map(() => "?").join(",")})`,
++        rows.map((r) => r.id)
++      );
++      for (const v of vr) vecs.set(v.chunk_id, new Uint8Array(v.vec));
++    }
++    return Promise.all(rows.map(async (r) => ({ hit: await this.hit(row.article_id, r.id, r.start, r.end, 0, "semantic"), vec: vecs.get(r.id) ?? null })));
++  }
++
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+   async bm25(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/answer.ts rs-C/src/routing/answer.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-C/src/routing/answer.ts	2026-10-21 23:23:50
+@@ -1167,6 +1167,47 @@
+           sources = [...sources, ...kept];
+         }
+       }
++      // RS_SIBLING (RETRIEVE-SWEEP arm C, bench-only env switch, default off = unchanged): for the first two pack articles
++      // among the grounded sources, append that article's best other chunk by dense similarity to the search query (int8
++      // chunk vector when the pack has a sidecar, else both embedded now; articles read up to 60 chunks), one per article,
++      // while the grounded sources plus the siblings stay within the compression work budget. Never on multi-pass.
++      if ((globalThis as any).process?.env?.RS_SIBLING === "1" && gen?.mode !== "multipass" && hpBefore > 0) {
++        const { rsArticleChunks } = await import("../rag/packs");
++        const { embeddingEngine } = await import("../rag/embed");
++        const { cosineSimilarity, cosineSimilarityInt8 } = await import("../rag/pure");
++        const { approxTokens } = await import("../rag/compress");
++        const grounded = sources.slice(0, hpBefore);
++        const arts: string[] = [];
++        for (const c of grounded) if (/^pack:[^:]+:\d+$/.test(c.chunkId) && c.docId && !arts.includes(c.docId)) arts.push(c.docId);
++        let used = grounded.reduce((a, c) => a + approxTokens(`${c.title}\n${c.body}`), 0);
++        let qv: Float32Array | null = null;
++        for (const doc of arts.slice(0, 2)) {
++          const first = grounded.find((c) => c.docId === doc)!;
++          const sibs = (await rsArticleChunks(first.chunkId)).filter((x) => !sources.some((y) => y.chunkId === x.chunk.chunkId));
++          if (!sibs.length) {
++            reasonCodes.push(`rs:sibling:none:${doc}`);
++            continue;
++          }
++          qv ??= await embeddingEngine.embed(searchQuery);
++          let best: RetrievedChunk | null = null;
++          let bestS = -2;
++          for (const x of sibs) {
++            const sim = x.vec
++              ? cosineSimilarityInt8(qv, x.vec)
++              : cosineSimilarity(qv, await embeddingEngine.embed(`${x.chunk.title}\n${x.chunk.body}`.slice(0, 1500)));
++            if (sim > bestS) (bestS = sim), (best = x.chunk);
++          }
++          if (!best) continue;
++          const t = approxTokens(`${best.title}\n${best.body}`);
++          if (used + t > budget) {
++            reasonCodes.push(`rs:sibling:budget:${best.chunkId}`);
++            continue;
++          }
++          used += t;
++          sources = [...sources, { ...best, similarity: bestS }];
++          reasonCodes.push(`rs:sibling:add:${best.chunkId}:${bestS.toFixed(3)}`);
++        }
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }

@@ -1,0 +1,90 @@
+diff -ruN a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-07 09:27:55
++++ b/src/routing/answer.ts	2026-10-15 20:12:02
+@@ -78,6 +78,7 @@
+ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
++import { numericGuard } from "./numguard";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -641,6 +642,13 @@
+         if (alone) learned = { p: Math.max(learned.p, alone.p), fire: learned.fire || alone.fire };
+       }
+       const detectorCodes: string[] = learned ? [`detector:p=${learned.p.toFixed(3)}`, ...(learned.fire ? ["detector:fire"] : [])] : [];
++      // NUMGUARD (coordinator arm, never committed): a plain numeric question with no health word keeps its answer when the
++      // detector fires; the detector's score stays in the codes and the rest of the turn sees "not fired".
++      const numguard = process.env.NUMGUARD === "1" && !!learned?.fire && numericGuard(req.query, isPortugueseQuestion(req.query));
++      if (numguard && learned) {
++        learned = { p: learned.p, fire: false };
++        detectorCodes.push("numguard:fired");
++      }
+ 
+       // Arithmetic (temperature, fuel economy, Naismith, currency at a given rate, battery Wh) is answered
+       // exactly, before anything else: "Minha conta do jantar deu 2.450 baht…" is a sum, not a restaurant
+@@ -686,7 +694,7 @@
+         const calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
+         if (calc) {
+           markVisible();
+-          const codes = [`answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
++          const codes = [...(numguard ? detectorCodes : []), `answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
+           const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: codes };
+           emit({ type: "token", answerId, tier: "instant", text: calc.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+@@ -710,7 +718,7 @@
+         const travel = learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : travelDistanceAnswer(req.query);
+         if (travel) {
+           markVisible();
+-          const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: ["answer:calculator-travel-distance"] };
++          const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: [...(numguard ? detectorCodes : []), "answer:calculator-travel-distance"] };
+           emit({ type: "token", answerId, tier: "instant", text: travel.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: travel.text, sources: [], receipt: r, cited: [] };
+diff -ruN a/src/routing/numguard.ts b/src/routing/numguard.ts
+--- a/src/routing/numguard.ts	1969-12-31 21:00:00
++++ b/src/routing/numguard.ts	2026-10-15 20:11:52
+@@ -0,0 +1,43 @@
++// NUMGUARD (coordinator arm, criterion arms/numguard 03587d67): a plain numeric question (a unit conversion, a clock time, an
++// arithmetic word problem) never takes the learned detector's health refusal. Used only with NUMGUARD=1 (answer.ts).
++import { calculate } from "./calculators";
++import { isHealthQuestion } from "./context";
++import { isCardEmergency } from "./conditionCards";
++
++// arithmetic.ts HEALTH + DANGER (verbatim): health, injury, medication or body words, and situations rather than word problems.
++const HEALTH =
++  /\b(?:heart|pulse|bpm|breath\w*|blood|dos(?:e|es|age|ing)|mg|mcg|ml|iv|drip|infusion|insulin|tablets?|pills?|fever|contractions?|labou?r|pain\w*|bleed\w*|injur\w*|symptoms?|medic\w*|drugs?|overdos\w*|poison\w*|bab(?:y|ies)|toddlers?|infants?|calories?|kcal|glucose|oxygen|sp[o0]2)\b/i;
++const DANGER =
++  /\b(?:trapped|stuck|rising|flood\w*|fire|smoke|drown\w*|sinking|emergency|leak\w*|gas|danger\w*|unsafe|collaps\w*|avalanche|hurricane|tornado|lost|dying|dead|unconscious|attack\w*|bitten|bite|stung|hypotherm\w*|frostbite|choking|suicid\w*|kill\w*)\b/i;
++// A short explicit list on top: people, care settings and symptoms the two lists above do not name.
++const PERSON_CARE =
++  /\b(?:pregnan\w*|child(?:ren)?|kids?|son|daughter|sick|ill|illness|hospital|doctor|nurse|vomit\w*|diarrh\w*|rash|cough\w*|headaches?|ache\w*|dizz\w*|nause\w*|thermometer|body temperature|my temperature|weigh(?:t|s)? loss|bmi|alcohol|drunk|safe(?:ly)?|hurt\w*|wound\w*|burn\w*|cpr)\b/i;
++
++const NUM = String.raw`\d[\d,]*(?:\.\d+)?`;
++// A number followed by a unit, a currency or a percent.
++const UNIT = new RegExp(
++  String.raw`(?:[$€£¥]\s?${NUM}|${NUM}\s?(?:%|°\s?[cf]?\b|degrees?\b|(?:k?m|cm|mm|km\/h|kph|mph|mi|miles?|ft|feet|foot|inch(?:es)?|yards?|metres?|meters?|kilomet(?:re|er)s?|kg|g|lbs?|pounds?|ounces?|oz|tons?|tonnes?|l|litres?|liters?|gallons?|gal|pints?|cups?|bar|psi|kpa|hpa|mah|wh|kwh|w|watts?|v|volts?|amps?|hz|ghz|mhz|gb|mb|kb|tb|tokens?|bytes?|bits?|sec(?:ond)?s?|min(?:ute)?s?|h|hrs?|hours?|days?|weeks?|dollars?|euros?|usd|eur|gbp|cents?|btc|eth|sats?|gwei|coins?|million|billion|thousand)\b))`,
++  "i"
++);
++const CLOCK = /\b\d{1,2}(?::\d{2}\s?(?:am|pm)?|\s?(?:am|pm))\b/i;
++const OPERATOR =
++  /(?:\d\s*[+\-×x*\/÷^]\s*\d|\b(?:plus|minus|times|multiplied|divided|percent(?:age)?|convert\w*|how many|how much|how long|how far|how fast|what time|in (?:fahrenheit|celsius|kelvin|psi|bar|mph|km\/h|feet|metres|meters|miles|kilometres|kilometers|pounds|kg|litres|liters|gallons|watt-hours|kwh|wh))\b)/i;
++
++/** True when the question names a health, injury, danger or person-care word: the detector's call stands. */
++export function numguardHealthLexicon(query: string): boolean {
++  return HEALTH.test(query) || DANGER.test(query) || PERSON_CARE.test(query) || isHealthQuestion(query) || isCardEmergency(query);
++}
++
++/** A number plus a unit, a clock time, a currency, a percent or an arithmetic / conversion operator. */
++export function numericIntent(query: string): boolean {
++  // Identifiers ("EIP-4444", "DS-160") and years or decades ("in 1900", "the 1600s", "mid-2012") are not quantities.
++  const q = query.replace(/\b[A-Za-z]+-\d+\b/g, " ").replace(/\b(?:1[5-9]\d\d|20\d\d)s?\b/g, " ");
++  if (!/\d/.test(q)) return false;
++  return UNIT.test(q) || CLOCK.test(q) || OPERATOR.test(q);
++}
++
++/** The guard: no health lexicon AND (a calculator match OR numeric intent). */
++export function numericGuard(query: string, pt: boolean): boolean {
++  if (numguardHealthLexicon(query)) return false;
++  return calculate(query, pt) !== null || numericIntent(query);
++}

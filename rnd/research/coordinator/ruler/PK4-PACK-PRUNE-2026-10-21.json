@@ -1,0 +1,5564 @@
+{
+ "method": "PK-4 PACK-PRUNE (2026-10-21; 0 LLM, 0 generation, 0 judge, 0 paid). Rule frozen in ruler/PK34-criterion.md (sha 0f78d13f...).\nUnder A-union (KA: crypto, wikivoyage, visa, factbook, medlineplus, firstaid), which packs ever reach the kept context on dev items?\nInput: pk4_replay.sh out dir with <ARM>-{V01,CM,ST}.traces.jsonl + .prompts.jsonl; ARM = KA (full) and KA-minus-<pack...> variants.\nPer item x pack: raw (fun:raw), dense (fun:dense), kept (retfloor:kept) chunk ids; fact contribution = a kept id equal to the item's gold\n(self-tests: oracle-facts fact_chunks; v0.1: gold-labels.tsv Y/P). Variant diff vs KA: kept titles (title+section, in order) and the dumped\nContext block bytes (union over the item's generation calls).",
+ "criterion_sha256": "0f78d13fd110c2ce4f52bc8ae3b3e8f8b67c9d5afbc9f66d44565fd34b50c7be",
+ "arms": [
+  "KA",
+  "KA-minus-boar-medlineplus-en",
+  "KA-minus-boar-visa-en"
+ ],
+ "n_items": 280,
+ "n_dev": 277,
+ "parity_vs_judged_KA": {
+  "n": 177,
+  "same": 177,
+  "differ": []
+ },
+ "per_pack": {
+  "boar-crypto": {
+   "n_dev": 277,
+   "raw_items": 52,
+   "dense_items": 0,
+   "kept_items": 33,
+   "kept_chunks": 67,
+   "fact_kept_items": 4,
+   "kept_items_by_set": {
+    "v0.1": 10,
+    "MAIN-cm": 0,
+    "selftest": 23
+   },
+   "fact_kept_by_set": {
+    "v0.1": 4,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 0,
+    "kept_items": 0,
+    "fact_kept": 0
+   },
+   "kept_item_ids": [
+    "st-boar-medlineplus-en-009",
+    "st-boar-simplewiki-en-020",
+    "st-qa-bitcoin-se-003",
+    "st-qa-bitcoin-se-004",
+    "st-qa-bitcoin-se-013",
+    "st-qa-bitcoin-se-014",
+    "st-qa-bitcoin-se-015",
+    "st-qa-bitcoin-se-016",
+    "st-qa-bitcoin-se-017",
+    "st-qa-bitcoin-se-018",
+    "st-qa-bitcoin-se-020",
+    "st-qa-ethereum-se-001",
+    "st-qa-ethereum-se-003",
+    "st-qa-ethereum-se-004",
+    "st-qa-ethereum-se-007",
+    "st-qa-ethereum-se-008",
+    "st-qa-ethereum-se-009",
+    "st-qa-ethereum-se-010",
+    "st-qa-ethereum-se-013",
+    "st-qa-ethereum-se-014",
+    "st-qa-ethereum-se-015",
+    "st-qa-ethereum-se-017",
+    "st-qa-ethereum-se-020",
+    "vit-cry-001",
+    "vit-cry-002",
+    "vit-cry-003",
+    "vit-cry-004",
+    "vit-cry-005",
+    "vit-cry-006",
+    "vit-cry-008",
+    "vit-cry-009",
+    "vit-cry-010",
+    "vit-cry-011"
+   ]
+  },
+  "boar-wikivoyage-en": {
+   "n_dev": 277,
+   "raw_items": 137,
+   "dense_items": 0,
+   "kept_items": 68,
+   "kept_chunks": 122,
+   "fact_kept_items": 0,
+   "kept_items_by_set": {
+    "v0.1": 22,
+    "MAIN-cm": 2,
+    "selftest": 44
+   },
+   "fact_kept_by_set": {
+    "v0.1": 0,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 0,
+    "kept_items": 0,
+    "fact_kept": 0
+   },
+   "kept_item_ids": [
+    "dng-002",
+    "dng-005",
+    "lan-cmp-002",
+    "lan-cmp-003",
+    "lan-cmp-004",
+    "lan-cmp-005",
+    "lan-exp-001",
+    "lan-exp-002",
+    "lan-exp-004",
+    "lan-exp-005",
+    "lan-exp-007",
+    "lan-hlt-003",
+    "lan-ref-002",
+    "lan-rsn-001",
+    "lan-rsn-003",
+    "lan-rsn-006",
+    "st-boar-factbook-001",
+    "st-boar-factbook-002",
+    "st-boar-factbook-003",
+    "st-boar-factbook-004",
+    "st-boar-factbook-005",
+    "st-boar-factbook-006",
+    "st-boar-factbook-007",
+    "st-boar-factbook-010",
+    "st-boar-factbook-011",
+    "st-boar-factbook-012",
+    "st-boar-factbook-014",
+    "st-boar-factbook-016",
+    "st-boar-factbook-017",
+    "st-boar-factbook-020",
+    "st-boar-firstaid-en-013",
+    "st-boar-firstaid-en-015",
+    "st-boar-firstaid-en-019",
+    "st-boar-medlineplus-en-007",
+    "st-boar-medlineplus-en-008",
+    "st-boar-medlineplus-en-010",
+    "st-boar-medlineplus-en-019",
+    "st-boar-simplewiki-en-005",
+    "st-boar-simplewiki-en-007",
+    "st-boar-simplewiki-en-011"
+   ]
+  },
+  "boar-visa-en": {
+   "n_dev": 277,
+   "raw_items": 25,
+   "dense_items": 0,
+   "kept_items": 18,
+   "kept_chunks": 37,
+   "fact_kept_items": 0,
+   "kept_items_by_set": {
+    "v0.1": 2,
+    "MAIN-cm": 3,
+    "selftest": 13
+   },
+   "fact_kept_by_set": {
+    "v0.1": 0,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 0,
+    "kept_items": 0,
+    "fact_kept": 0
+   },
+   "kept_item_ids": [
+    "lan-rsn-004",
+    "st-boar-factbook-009",
+    "st-boar-medlineplus-en-014",
+    "st-boar-simplewiki-en-004",
+    "st-qa-bitcoin-se-005",
+    "st-qa-bitcoin-se-007",
+    "st-qa-bitcoin-se-011",
+    "st-qa-bitcoin-se-013",
+    "st-qa-cooking-se-008",
+    "st-qa-cooking-se-012",
+    "st-qa-cooking-se-019",
+    "st-qa-ethereum-se-020",
+    "st-qa-health-se-003",
+    "st-qa-outdoors-se-005",
+    "st-qa-travel-se-002",
+    "st-qa-travel-se-004",
+    "st-qa-travel-se-020",
+    "vit-hum-001"
+   ]
+  },
+  "boar-factbook": {
+   "n_dev": 257,
+   "raw_items": 12,
+   "dense_items": 155,
+   "kept_items": 36,
+   "kept_chunks": 64,
+   "fact_kept_items": 4,
+   "kept_items_by_set": {
+    "v0.1": 16,
+    "MAIN-cm": 1,
+    "selftest": 19
+   },
+   "fact_kept_by_set": {
+    "v0.1": 4,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 20,
+    "kept_items": 18,
+    "fact_kept": 15
+   },
+   "kept_item_ids": [
+    "lan-cmp-003",
+    "lan-exp-001",
+    "lan-exp-002",
+    "lan-exp-003",
+    "lan-exp-004",
+    "lan-exp-005",
+    "lan-exp-007",
+    "lan-ref-002",
+    "lan-ref-003",
+    "lan-rsn-001",
+    "lan-rsn-004",
+    "lan-rsn-005",
+    "lan-rsn-006",
+    "st-boar-firstaid-en-017",
+    "st-boar-simplewiki-en-005",
+    "st-boar-simplewiki-en-007",
+    "st-boar-simplewiki-en-008",
+    "st-boar-simplewiki-en-009",
+    "st-boar-simplewiki-en-011",
+    "st-boar-simplewiki-en-014",
+    "st-boar-simplewiki-en-020",
+    "st-qa-bitcoin-se-003",
+    "st-qa-bitcoin-se-011",
+    "st-qa-ethereum-se-012",
+    "st-qa-health-se-013",
+    "st-qa-money-se-019",
+    "st-qa-travel-se-002",
+    "st-qa-travel-se-005",
+    "st-qa-travel-se-006",
+    "st-qa-travel-se-013",
+    "st-qa-travel-se-014",
+    "st-qa-travel-se-018",
+    "st-qa-travel-se-020",
+    "trv-004",
+    "vit-sci-002",
+    "vit-trv-003"
+   ]
+  },
+  "boar-medlineplus-en": {
+   "n_dev": 257,
+   "raw_items": 25,
+   "dense_items": 157,
+   "kept_items": 26,
+   "kept_chunks": 51,
+   "fact_kept_items": 2,
+   "kept_items_by_set": {
+    "v0.1": 6,
+    "MAIN-cm": 2,
+    "selftest": 18
+   },
+   "fact_kept_by_set": {
+    "v0.1": 2,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 20,
+    "kept_items": 14,
+    "fact_kept": 14
+   },
+   "kept_item_ids": [
+    "lan-cmp-004",
+    "lan-exp-005",
+    "lan-hlt-001",
+    "lan-hlt-002",
+    "st-boar-factbook-010",
+    "st-boar-simplewiki-en-001",
+    "st-boar-simplewiki-en-003",
+    "st-boar-simplewiki-en-012",
+    "st-boar-simplewiki-en-015",
+    "st-qa-bitcoin-se-010",
+    "st-qa-ethereum-se-005",
+    "st-qa-health-se-001",
+    "st-qa-health-se-002",
+    "st-qa-health-se-003",
+    "st-qa-health-se-004",
+    "st-qa-health-se-006",
+    "st-qa-health-se-008",
+    "st-qa-health-se-009",
+    "st-qa-health-se-010",
+    "st-qa-health-se-014",
+    "st-qa-health-se-016",
+    "st-qa-health-se-017",
+    "st-qa-money-se-001",
+    "st-qa-money-se-008",
+    "vit-hlt-003",
+    "vit-hum-004"
+   ]
+  },
+  "boar-firstaid-en": {
+   "n_dev": 257,
+   "raw_items": 38,
+   "dense_items": 233,
+   "kept_items": 108,
+   "kept_chunks": 228,
+   "fact_kept_items": 1,
+   "kept_items_by_set": {
+    "v0.1": 25,
+    "MAIN-cm": 14,
+    "selftest": 69
+   },
+   "fact_kept_by_set": {
+    "v0.1": 1,
+    "MAIN-cm": 0,
+    "selftest": 0
+   },
+   "own_selftests": {
+    "n": 20,
+    "kept_items": 11,
+    "fact_kept": 5
+   },
+   "kept_item_ids": [
+    "dng-002",
+    "dng-005",
+    "lan-cmp-002",
+    "lan-cmp-004",
+    "lan-hlt-001",
+    "lan-hlt-003",
+    "lan-ref-003",
+    "lan-rsn-003",
+    "lan-rsn-005",
+    "st-boar-factbook-014",
+    "st-boar-factbook-016",
+    "st-boar-medlineplus-en-001",
+    "st-boar-medlineplus-en-002",
+    "st-boar-medlineplus-en-009",
+    "st-boar-medlineplus-en-015",
+    "st-boar-medlineplus-en-016",
+    "st-boar-medlineplus-en-019",
+    "st-boar-simplewiki-en-001",
+    "st-boar-simplewiki-en-003",
+    "st-boar-simplewiki-en-006",
+    "st-boar-simplewiki-en-011",
+    "st-boar-simplewiki-en-012",
+    "st-boar-simplewiki-en-013",
+    "st-qa-bitcoin-se-004",
+    "st-qa-bitcoin-se-006",
+    "st-qa-bitcoin-se-009",
+    "st-qa-bitcoin-se-012",
+    "st-qa-bitcoin-se-013",
+    "st-qa-bitcoin-se-014",
+    "st-qa-bitcoin-se-015",
+    "st-qa-bitcoin-se-016",
+    "st-qa-bitcoin-se-017",
+    "st-qa-bitcoin-se-018",
+    "st-qa-bitcoin-se-020",
+    "st-qa-cooking-se-001",
+    "st-qa-cooking-se-004",
+    "st-qa-cooking-se-008",
+    "st-qa-cooking-se-011",
+    "st-qa-cooking-se-016",
+    "st-qa-cooking-se-019"
+   ]
+  }
+ },
+ "candidates_le2": [],
+ "zero_kept": [],
+ "latency_s_per_question_pixel": {
+  "boar-crypto": 0.226,
+  "boar-wikivoyage-en": 0.246,
+  "boar-visa-en": 0.147,
+  "boar-factbook": 0.166,
+  "boar-medlineplus-en": 0.151,
+  "boar-firstaid-en": 0.172
+ },
+ "phone_pack_hits_questions_aunion73": {
+  "boar-wikivoyage-en": 26,
+  "boar-factbook": 2,
+  "boar-firstaid-en": 7,
+  "boar-crypto": 10,
+  "(not in A-union packs: bundled corpus or other)": 1
+ },
+ "variants": {
+  "KA-minus-boar-medlineplus-en": {
+   "n": 280,
+   "titles_differ": 43,
+   "context_bytes_differ": 42,
+   "context_bytes_differ_pct": 15.0,
+   "dev_n": 277,
+   "dev_context_differ": 42,
+   "ids_context_differ": [
+    "lan-cmp-004",
+    "lan-exp-005",
+    "lan-hlt-001",
+    "lan-hlt-002",
+    "st-boar-factbook-010",
+    "st-boar-medlineplus-en-002",
+    "st-boar-medlineplus-en-003",
+    "st-boar-medlineplus-en-004",
+    "st-boar-medlineplus-en-005",
+    "st-boar-medlineplus-en-007",
+    "st-boar-medlineplus-en-008",
+    "st-boar-medlineplus-en-009",
+    "st-boar-medlineplus-en-012",
+    "st-boar-medlineplus-en-013",
+    "st-boar-medlineplus-en-014",
+    "st-boar-medlineplus-en-016",
+    "st-boar-medlineplus-en-018",
+    "st-boar-medlineplus-en-019",
+    "st-boar-simplewiki-en-001",
+    "st-boar-simplewiki-en-003",
+    "st-boar-simplewiki-en-006",
+    "st-boar-simplewiki-en-009",
+    "st-boar-simplewiki-en-012",
+    "st-boar-simplewiki-en-015",
+    "st-qa-bitcoin-se-005",
+    "st-qa-bitcoin-se-010",
+    "st-qa-ethereum-se-005",
+    "st-qa-health-se-001",
+    "st-qa-health-se-002",
+    "st-qa-health-se-003",
+    "st-qa-health-se-004",
+    "st-qa-health-se-006",
+    "st-qa-health-se-008",
+    "st-qa-health-se-009",
+    "st-qa-health-se-010",
+    "st-qa-health-se-014",
+    "st-qa-health-se-016",
+    "st-qa-health-se-017",
+    "st-qa-money-se-001",
+    "st-qa-money-se-008",
+    "vit-hlt-003",
+    "vit-hum-004"
+   ],
+   "answers_differ_note": "stub server: answers are not generated; the Context block is what the model would read"
+  },
+  "KA-minus-boar-visa-en": {
+   "n": 280,
+   "titles_differ": 18,
+   "context_bytes_differ": 18,
+   "context_bytes_differ_pct": 6.43,
+   "dev_n": 277,
+   "dev_context_differ": 18,
+   "ids_context_differ": [
+    "lan-rsn-004",
+    "st-boar-factbook-009",
+    "st-boar-medlineplus-en-014",
+    "st-boar-simplewiki-en-004",
+    "st-qa-bitcoin-se-005",
+    "st-qa-bitcoin-se-007",
+    "st-qa-bitcoin-se-011",
+    "st-qa-bitcoin-se-013",
+    "st-qa-cooking-se-008",
+    "st-qa-cooking-se-012",
+    "st-qa-cooking-se-019",
+    "st-qa-ethereum-se-020",
+    "st-qa-health-se-003",
+    "st-qa-outdoors-se-005",
+    "st-qa-travel-se-002",
+    "st-qa-travel-se-004",
+    "st-qa-travel-se-020",
+    "vit-hum-001"
+   ],
+   "answers_differ_note": "stub server: answers are not generated; the Context block is what the model would read"
+  }
+ },
+ "medlineplus_probe": {
+  "dng-001": {
+   "retrieve": false,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 0,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "dng-002": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "dng-005": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 3
+   },
+   "fact_kept": []
+  },
+  "lan-hlt-001": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 1,
+   "kept_packs": {
+    "boar-firstaid-en": 1,
+    "boar-medlineplus-en": 1
+   },
+   "fact_kept": []
+  },
+  "lan-hlt-002": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    1520
+   ],
+   "medl_gold_rank": [
+    3
+   ],
+   "raw": 1,
+   "dense": 12,
+   "kept": 3,
+   "kept_packs": {
+    "boar-medlineplus-en": 3
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "lan-hlt-003": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {
+    "boar-firstaid-en": 4,
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "vit-hlt-001": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "vit-hlt-002": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [],
+   "medl_gold_rank": [],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "vit-hlt-003": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    796
+   ],
+   "medl_gold_rank": [
+    1
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 2,
+   "kept_packs": {
+    "boar-wikivoyage-en": 3,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-001": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2290,
+    2291
+   ],
+   "medl_gold_rank": [
+    1,
+    null
+   ],
+   "raw": 1,
+   "dense": 11,
+   "kept": 3,
+   "kept_packs": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-002": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    1014
+   ],
+   "medl_gold_rank": [
+    3
+   ],
+   "raw": 3,
+   "dense": 10,
+   "kept": 3,
+   "kept_packs": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-003": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2967,
+    2968
+   ],
+   "medl_gold_rank": [
+    3,
+    12
+   ],
+   "raw": 3,
+   "dense": 10,
+   "kept": 5,
+   "kept_packs": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-004": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    948,
+    949
+   ],
+   "medl_gold_rank": [
+    4,
+    1
+   ],
+   "raw": 2,
+   "dense": 10,
+   "kept": 4,
+   "kept_packs": {
+    "boar-medlineplus-en": 4
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-005": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2365,
+    2366
+   ],
+   "medl_gold_rank": [
+    3,
+    1
+   ],
+   "raw": 4,
+   "dense": 9,
+   "kept": 5,
+   "kept_packs": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-006": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    783,
+    784
+   ],
+   "medl_gold_rank": [
+    null,
+    1
+   ],
+   "raw": 2,
+   "dense": 10,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-007": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    3041,
+    3042
+   ],
+   "medl_gold_rank": [
+    2,
+    1
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 2,
+   "kept_packs": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-008": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    1581
+   ],
+   "medl_gold_rank": [
+    null
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 2,
+   "kept_packs": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-009": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2403,
+    2404
+   ],
+   "medl_gold_rank": [
+    1,
+    3
+   ],
+   "raw": 2,
+   "dense": 10,
+   "kept": 1,
+   "kept_packs": {
+    "boar-crypto": 1,
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-010": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    401,
+    403
+   ],
+   "medl_gold_rank": [
+    2,
+    4
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-011": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2845,
+    2846
+   ],
+   "medl_gold_rank": [
+    3,
+    2
+   ],
+   "raw": 3,
+   "dense": 10,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-012": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2981,
+    2982
+   ],
+   "medl_gold_rank": [
+    1,
+    2
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 2,
+   "kept_packs": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-013": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    159,
+    161
+   ],
+   "medl_gold_rank": [
+    5,
+    null
+   ],
+   "raw": 3,
+   "dense": 10,
+   "kept": 4,
+   "kept_packs": {
+    "boar-medlineplus-en": 4
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-014": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    477,
+    478
+   ],
+   "medl_gold_rank": [
+    1,
+    4
+   ],
+   "raw": 1,
+   "dense": 11,
+   "kept": 1,
+   "kept_packs": {
+    "boar-medlineplus-en": 1,
+    "boar-visa-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-015": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    693,
+    695
+   ],
+   "medl_gold_rank": [
+    15,
+    5
+   ],
+   "raw": 1,
+   "dense": 11,
+   "kept": 0,
+   "kept_packs": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-016": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    1227
+   ],
+   "medl_gold_rank": [
+    1
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 2,
+   "kept_packs": {
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-017": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    1180,
+    1182
+   ],
+   "medl_gold_rank": [
+    null,
+    19
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-018": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2348
+   ],
+   "medl_gold_rank": [
+    3
+   ],
+   "raw": 3,
+   "dense": 9,
+   "kept": 5,
+   "kept_packs": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-019": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    3023
+   ],
+   "medl_gold_rank": [
+    2
+   ],
+   "raw": 1,
+   "dense": 11,
+   "kept": 3,
+   "kept_packs": {
+    "boar-medlineplus-en": 3,
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-020": {
+   "retrieve": true,
+   "medl_fts_top50": 50,
+   "medl_gold": [
+    2911,
+    2912,
+    2913
+   ],
+   "medl_gold_rank": [
+    1,
+    3,
+    25
+   ],
+   "raw": 0,
+   "dense": 12,
+   "kept": 0,
+   "kept_packs": {},
+   "fact_kept": []
+  }
+ },
+ "verdict": "KILL",
+ "saving_s": 0,
+ "items": {
+  "dng-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "dng-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "dng-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 3
+   },
+   "fact_kept": []
+  },
+  "food-001": {
+   "set": "other",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "food-002": {
+   "set": "other",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "food-006": {
+   "set": "other",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-cmp-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-cmp-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "lan-cmp-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 8
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-cmp-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "lan-cmp-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {},
+   "kept": {
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": []
+  },
+  "lan-exp-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "lan-exp-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 1,
+    "boar-crypto": 1
+   },
+   "dense": {
+    "boar-factbook": 11
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 3
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "lan-exp-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "lan-exp-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-exp-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1,
+    "null": 1,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "null": 1,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-exp-006": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-exp-007": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 2,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-factbook": 11,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 4,
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "lan-hlt-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 4
+   },
+   "kept": {
+    "boar-firstaid-en": 1,
+    "boar-medlineplus-en": 1
+   },
+   "fact_kept": []
+  },
+  "lan-hlt-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "lan-hlt-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 4
+   },
+   "kept": {
+    "boar-firstaid-en": 4,
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "lan-ref-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-ref-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-ref-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 5,
+    "boar-factbook": 11
+   },
+   "kept": {
+    "boar-firstaid-en": 1,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "lan-ref-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-ref-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-rsn-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 1,
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-rsn-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "lan-rsn-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "lan-rsn-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 11
+   },
+   "kept": {
+    "boar-visa-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-rsn-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 1,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "lan-rsn-006": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "lan-rsn-007": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-factbook-001": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "null": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-002": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 4
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-003": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 4,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-004": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-005": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-006": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-007": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 4
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-008": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-crypto": 1,
+    "boar-factbook": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-009": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 1,
+    "boar-visa-en": 1,
+    "boar-factbook": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-factbook": 3,
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-factbook-010": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-crypto": 2,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-factbook-011": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-factbook": 11,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 3,
+    "boar-wikivoyage-en": 3
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-012": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-013": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 3
+   },
+   "dense": {
+    "boar-factbook": 11,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 4
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-014": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-015": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-factbook": 11,
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 4
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-016": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-017": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": [
+    "boar-factbook"
+   ]
+  },
+  "st-boar-factbook-018": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-factbook-019": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-factbook": 11,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 10
+   },
+   "kept": {
+    "boar-factbook": 3
+   },
+   "fact_kept": []
+  },
+  "st-boar-factbook-020": {
+   "set": "selftest",
+   "own": "boar-factbook",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 4,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-001": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-002": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-003": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-004": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-005": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-006": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-007": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 3
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "st-boar-firstaid-en-008": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 4
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-009": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-010": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "st-boar-firstaid-en-011": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4,
+    "boar-visa-en": 1,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11,
+    "boar-factbook": 4
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-012": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-013": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-014": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 6
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-015": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 5,
+    "boar-wikivoyage-en": 2
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "st-boar-firstaid-en-016": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 8,
+    "boar-medlineplus-en": 8,
+    "boar-factbook": 3
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-017": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 9,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-factbook": 1,
+    "boar-firstaid-en": 3
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "st-boar-firstaid-en-018": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-firstaid-en-019": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 4
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-firstaid-en"
+   ]
+  },
+  "st-boar-firstaid-en-020": {
+   "set": "selftest",
+   "own": "boar-firstaid-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 7,
+    "boar-factbook": 8
+   },
+   "kept": {
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-001": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-002": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1,
+    "boar-medlineplus-en": 3
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-003": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-004": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-medlineplus-en": 4
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-005": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 9,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-006": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-007": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-008": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-009": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 1,
+    "boar-medlineplus-en": 2
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 9
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-010": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-011": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-012": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-013": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 3
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 4
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-014": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 2,
+    "boar-crypto": 1,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 11,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 1,
+    "boar-visa-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-015": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-016": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-017": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 11
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-medlineplus-en-018": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 9,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 5
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-019": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1,
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 11,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3,
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "st-boar-medlineplus-en-020": {
+   "set": "selftest",
+   "own": "boar-medlineplus-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-001": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 5,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-002": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-003": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-004": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 6
+   },
+   "kept": {
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-005": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-006": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2,
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-007": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-008": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-009": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 1,
+    "boar-crypto": 1,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 10
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-010": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-011": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 1,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-012": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-013": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-014": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-015": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-crypto": 1,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-016": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-017": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-018": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-019": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-boar-simplewiki-en-020": {
+   "set": "selftest",
+   "own": "boar-simplewiki-en",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 1,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-crypto": 1,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-001": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-002": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-003": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-004": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "null": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-005": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 7
+   },
+   "kept": {
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-006": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-007": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-008": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-009": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 8
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-010": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-011": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-visa-en": 1,
+    "boar-crypto": 1
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-visa-en": 2,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-012": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 7
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-013": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-visa-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-014": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 6,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-015": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-016": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-017": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-018": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 7,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-019": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 8
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-bitcoin-se-020": {
+   "set": "selftest",
+   "own": "qa-bitcoin-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-001": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-firstaid-en": 6
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-002": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-003": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-004": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 4,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-005": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 2
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-006": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-007": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 7
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-008": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-crypto": 1,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {
+    "boar-visa-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-009": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-010": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-011": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 9,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-012": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 2,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-013": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-014": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 9
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-015": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-016": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-017": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-018": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 7,
+    "boar-factbook": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-019": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-visa-en": 1,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-visa-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-cooking-se-020": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 7
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-001": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-002": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 10,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-003": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-004": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-005": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-medlineplus-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-006": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-007": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-008": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-009": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 11
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-010": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 3
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-011": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 6,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-012": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-013": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-014": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-015": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 1,
+    "null": 2,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-016": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-017": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 6
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-018": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-crypto": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-019": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-ethereum-se-020": {
+   "set": "selftest",
+   "own": "qa-ethereum-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 6,
+    "boar-medlineplus-en": 4
+   },
+   "kept": {
+    "boar-crypto": 1,
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-001": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {
+    "boar-medlineplus-en": 3
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-002": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-003": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 1,
+    "boar-medlineplus-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 10
+   },
+   "kept": {
+    "boar-medlineplus-en": 2,
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-004": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 8,
+    "boar-factbook": 4
+   },
+   "kept": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-005": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-health-se-006": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-007": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-health-se-008": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 10,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-009": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-010": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 2,
+    "boar-wikivoyage-en": 1,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 11,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-011": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-012": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-health-se-013": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 2,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-014": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-015": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-016": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2,
+    "boar-medlineplus-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-017": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 3
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-018": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 10
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-health-se-019": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "st-qa-health-se-020": {
+   "set": "selftest",
+   "own": "qa-health-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-001": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 2
+   },
+   "kept": {
+    "boar-medlineplus-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-002": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-003": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 6
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-004": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 5
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-005": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 6,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-006": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 5,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-007": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 7
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-008": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-medlineplus-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-009": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-010": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-011": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 5
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-012": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 9,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-013": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-014": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 8
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-015": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 5
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-016": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-017": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-018": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-money-se-019": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 10
+   },
+   "kept": {
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-money-se-020": {
+   "set": "MAIN-cm",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-001": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-002": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-003": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-004": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 8
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-005": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 11
+   },
+   "kept": {
+    "boar-visa-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-006": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1,
+    "boar-wikivoyage-en": 1,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-007": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-factbook": 8,
+    "boar-medlineplus-en": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-008": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {
+    "boar-firstaid-en": 5
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-009": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-010": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 4
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-011": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1,
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-012": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 3
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-013": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 2,
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-014": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 4
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-015": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-016": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-017": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 10
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-018": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 1,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-019": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 11,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-outdoors-se-020": {
+   "set": "selftest",
+   "own": "qa-outdoors-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 8,
+    "boar-medlineplus-en": 10
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-001": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-002": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-visa-en": 3,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-003": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-factbook": 4,
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-004": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-visa-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-005": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-factbook": 1,
+    "boar-wikivoyage-en": 2
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-006": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-007": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-008": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-009": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 5
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-010": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-011": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-012": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-013": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-014": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 1,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-015": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 9,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-016": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 11,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-017": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "st-qa-travel-se-018": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 2,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-019": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "st-qa-travel-se-020": {
+   "set": "selftest",
+   "own": "qa-travel-se",
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-visa-en": 2
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-visa-en": 2,
+    "boar-factbook": 1
+   },
+   "fact_kept": []
+  },
+  "trv-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "trv-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-wikivoyage-en": 4,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 4,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 4,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 1,
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-crypto": 4,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 3
+   },
+   "kept": {
+    "boar-crypto": 4,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-006": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-crypto"
+   ]
+  },
+  "vit-cry-007": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 3
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-008": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 4
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-crypto"
+   ]
+  },
+  "vit-cry-009": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 2,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-cry-010": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12
+   },
+   "kept": {
+    "boar-crypto": 2,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-crypto"
+   ]
+  },
+  "vit-cry-011": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {
+    "boar-crypto": 3,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": [
+    "boar-crypto"
+   ]
+  },
+  "vit-hlt-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "vit-hlt-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 3,
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 12
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "vit-hlt-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-medlineplus-en": 12,
+    "boar-firstaid-en": 12,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": [
+    "boar-medlineplus-en"
+   ]
+  },
+  "vit-hum-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-crypto": 3,
+    "boar-visa-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-medlineplus-en": 2
+   },
+   "kept": {
+    "boar-visa-en": 2,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "vit-hum-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 1
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-hum-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 1
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "vit-hum-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 2,
+    "boar-medlineplus-en": 1,
+    "boar-firstaid-en": 1
+   },
+   "dense": {
+    "boar-medlineplus-en": 1
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-medlineplus-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-hum-005": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 9,
+    "boar-factbook": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-hum-006": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 1
+   },
+   "dense": {
+    "boar-firstaid-en": 10,
+    "boar-factbook": 2
+   },
+   "kept": {
+    "boar-firstaid-en": 2
+   },
+   "fact_kept": []
+  },
+  "vit-sci-001": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {},
+   "dense": {
+    "boar-firstaid-en": 12,
+    "boar-medlineplus-en": 12,
+    "boar-factbook": 8
+   },
+   "kept": {},
+   "fact_kept": []
+  },
+  "vit-sci-002": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 3
+   },
+   "dense": {
+    "boar-factbook": 12,
+    "boar-firstaid-en": 8
+   },
+   "kept": {
+    "boar-wikivoyage-en": 1,
+    "boar-factbook": 2
+   },
+   "fact_kept": []
+  },
+  "vit-sci-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  },
+  "vit-trv-003": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": true,
+   "raw": {
+    "boar-wikivoyage-en": 4
+   },
+   "dense": {
+    "boar-factbook": 5,
+    "boar-firstaid-en": 3
+   },
+   "kept": {
+    "boar-wikivoyage-en": 3,
+    "boar-factbook": 1,
+    "boar-firstaid-en": 1
+   },
+   "fact_kept": []
+  },
+  "vit-trv-004": {
+   "set": "v0.1",
+   "own": null,
+   "retrieve": false,
+   "raw": {},
+   "dense": {},
+   "kept": {},
+   "fact_kept": []
+  }
+ },
+ "replay_files_sha256": {
+  "KA-CM.prompts.jsonl": "3d0b2b3a22251bd515db8459d1959a2e180c9e5f5ad4d2409c00d59c9163b5fd",
+  "KA-CM.traces.jsonl": "94d6d3f6b642ad010492758cfd39f2ee3c1bd4f5e171e4f5565e14c771c7b9f4",
+  "KA-ST.prompts.jsonl": "72a4454347f73dfad12444f2131b1e836584445854204cba93aac1a751430397",
+  "KA-ST.traces.jsonl": "00fed5890cca08fc579fccf705f2846c3e93e99e51bcbdddc1d35b7d1205e94b",
+  "KA-V01.prompts.jsonl": "968782618069edb872b98a86e1cd33ef98bb68f921f81bad30417040dcf150d9",
+  "KA-V01.traces.jsonl": "da4e167751a39dd7f31e2f19eb3336f06b9ea6ec8e375dddb1f4735289537c85",
+  "KA-minus-boar-medlineplus-en-CM.prompts.jsonl": "8d5674bd869f7fbfef7a2a1c3420e4c8baffada78d13d4a2838c3aeb2820bc8e",
+  "KA-minus-boar-medlineplus-en-CM.traces.jsonl": "a50a9ca4fd10225d68e7294d71d8270f6951876e38dfeb098f1eefeca60ca515",
+  "KA-minus-boar-medlineplus-en-ST.prompts.jsonl": "66b986af9962129b600dfcdc98dc3f4b610562da15fde81487cc0baee7ae6e15",
+  "KA-minus-boar-medlineplus-en-ST.traces.jsonl": "786f9f4084357875222aa22ef7318bda35db431bf62b96f3eef6e719f6ad192b",
+  "KA-minus-boar-medlineplus-en-V01.prompts.jsonl": "cb817cebcb85f41f8d7289c4d7def4aa762e0c08f705e7817cf5ed88c82faf3e",
+  "KA-minus-boar-medlineplus-en-V01.traces.jsonl": "37c3b5245993c70b10f83ff13963d8154d4dc4489e49c1786d4a809823172135",
+  "KA-minus-boar-visa-en-CM.prompts.jsonl": "a80ab8fbf0588ff92f2ed038e0b10e745a713629fba74411896f942daf8b774f",
+  "KA-minus-boar-visa-en-CM.traces.jsonl": "3e61e9250bd1ecccfb74e3dbef679aa0f8b40ee715601d90ca4db1ed1fc03ada",
+  "KA-minus-boar-visa-en-ST.prompts.jsonl": "63e9add2b5e63dd756672f4256e8b2c48450e2023492e706db5fb844128a7af6",
+  "KA-minus-boar-visa-en-ST.traces.jsonl": "3efdaa36acb270ee71a631398e38cf3c63051f4852ffce8d7071e46bfe222d43",
+  "KA-minus-boar-visa-en-V01.prompts.jsonl": "081df26c4c39552229771bd550095f27c295f7119b1c8ed933499a2b577fc4fc",
+  "KA-minus-boar-visa-en-V01.traces.jsonl": "7f6315735ae06397209e95552d21b519fabba22d80bfaaee5b93e164e9c5bc2a"
+ },
+ "script_sha256": "db053841cf429f5e7fdddf11cf45724b509f9dae5067f8ca33f520af6e48cf99"
+}

@@ -1,0 +1,14 @@
+--- a/src/routing/depth.ts	2026-10-08 16:02:10
++++ b/src/routing/depth.ts	2026-10-08 16:02:11
+@@ -241,9 +241,9 @@
+       retrieveK: DEEP_RETRIEVE_K,
+       contextTokens: DEEP_CONTEXT_TOKENS,
+       maxTokens: DEEP_MAX_TOKENS,
+-      thinking: false,
++      thinking: true, // DEEPTHINK arm: deep tier thinks (DEEP_THINKING_BUDGET); cut 6 = false
+     };
+-    reasonCodes.push(`generate:deep-model-${i.deepModel.id}`);
++    reasonCodes.push(`generate:deep-model-${i.deepModel.id}`, "generate:deep-thinking");
+   } else if (complete && i.fastModel) {
+     // No deep model: go deeper with the same model instead (several focused passes).
+     generation = {

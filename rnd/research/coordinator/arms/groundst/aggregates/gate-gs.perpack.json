@@ -1,0 +1,242 @@
+{
+ "criterion_sha256": "895d1ebbd29696af9ddb876b973bc338022764941ce6054cf590f46c39c93214",
+ "identity_180": {
+  "off_vs_st2ref": "180/180",
+  "off_vs_off2": "180/180",
+  "diag_agree_nonspecial": "163/163",
+  "off_vs_step0_off": "180/180"
+ },
+ "D0": {
+  "chunk_loss": {
+   "n": 24,
+   "by_stage": {
+    "compression": 2,
+    "grounding": 18,
+    "health-filter": 4
+   },
+   "recovered_perpack": {
+    "compression": 1,
+    "grounding": 10,
+    "health-filter": 0
+   }
+  },
+  "art_loss": {
+   "n": 39,
+   "by_stage": {
+    "compression": 3,
+    "grounding": 31,
+    "health-filter": 5
+   },
+   "recovered_perpack": {
+    "compression": 3,
+    "grounding": 24,
+    "health-filter": 0
+   }
+  }
+ },
+ "kit": {
+  "v01": {
+   "n_items": 60,
+   "gold_items": 39,
+   "ms_p50_off2": 103.2,
+   "keep_ms_p50_off2": 0.393,
+   "total_ms_p50_off2": 104.5,
+   "off": {
+    "gold_raw": 13,
+    "gold_kept": 12,
+    "empty_kept_off_retrieving": 11,
+    "kept_slots": 93,
+    "ms_p50": 121.3,
+    "keep_ms_p50": 0.435,
+    "total_ms_p50": 121.8
+   },
+   "perpack": {
+    "gold_raw": 13,
+    "gold_kept": 12,
+    "empty_kept_off_retrieving": 2,
+    "kept_slots": 111,
+    "ms_p50": 110.1,
+    "keep_ms_p50": 0.589,
+    "total_ms_p50": 110.8,
+    "lost_context": 0,
+    "lost_context_ids": [],
+    "off_kept_chunks_cut": 0,
+    "cut_code_sum": 0,
+    "kept_changed": 17,
+    "kept_changed_add_only": 17,
+    "kept_changed_other": 0,
+    "off_kept_chunk_dropped_items": 0,
+    "empty_filled": 9,
+    "raw_identical": 60,
+    "tokens_over_cap": 0,
+    "max_tokens_over_budget": -24,
+    "keep_codes": {
+     "packground:kept-1": 16,
+     "packground:kept-2": 1,
+     "packground:none": 33
+    }
+   },
+   "off_vs_off2_identical": "60/60",
+   "identity": {
+    "st2_off": "60/60",
+    "st_off": "60/60",
+    "step0_off": "60/60"
+   }
+  },
+  "v02_resolvable": {
+   "n_items": 110,
+   "gold_items": 9,
+   "ms_p50_off2": 143.7,
+   "keep_ms_p50_off2": 0.463,
+   "total_ms_p50_off2": 144.1,
+   "off": {
+    "gold_raw": 6,
+    "gold_kept": 4,
+    "empty_kept_off_retrieving": 28,
+    "kept_slots": 126,
+    "ms_p50": 138.2,
+    "keep_ms_p50": 0.484,
+    "total_ms_p50": 138.7
+   },
+   "perpack": {
+    "gold_raw": 6,
+    "gold_kept": 5,
+    "empty_kept_off_retrieving": 2,
+    "kept_slots": 185,
+    "ms_p50": 139.0,
+    "keep_ms_p50": 0.7,
+    "total_ms_p50": 139.4,
+    "lost_context": 0,
+    "lost_context_ids": "0 (blind: ids not printed)",
+    "off_kept_chunks_cut": 0,
+    "cut_code_sum": 0,
+    "kept_changed": 50,
+    "kept_changed_add_only": 50,
+    "kept_changed_other": 0,
+    "off_kept_chunk_dropped_items": 0,
+    "empty_filled": 26,
+    "raw_identical": 110,
+    "tokens_over_cap": 0,
+    "max_tokens_over_budget": -19,
+    "keep_codes": {
+     "packground:kept-1": 41,
+     "packground:kept-2": 9,
+     "packground:none": 53
+    }
+   },
+   "off_vs_off2_identical": "110/110",
+   "identity": {
+    "st2_off": "110/110",
+    "st_off": "110/110",
+    "step0_off": "110/110"
+   },
+   "ids": [
+    "v02-crypto-A01",
+    "v02-crypto-A06",
+    "v02-crypto-B01",
+    "v02-crypto-B03",
+    "v02-crypto-B05",
+    "v02-crypto-B07",
+    "v02-travel-local-A01",
+    "v02-travel-local-B01",
+    "v02-travel-practical-B01"
+   ]
+  },
+  "v02_all_gold_kept_descriptive": {
+   "off": 15,
+   "perpack": 16
+  }
+ },
+ "variants": {
+  "perpack": {
+   "G1": {
+    "chunk_raw6_off": 67,
+    "chunk_raw6": 67,
+    "raw_same_180": "180/180",
+    "chunk_kept_off": 43,
+    "chunk_kept": 54,
+    "need_chunk_kept": 55,
+    "art_kept_off": 68,
+    "art_kept": 95,
+    "need_art_kept": 85,
+    "empty_kept_off": 48,
+    "empty_kept": 7,
+    "enter_leave": {
+     "chunk_kept": {
+      "enter": 11,
+      "leave": 0
+     },
+     "art_kept": {
+      "enter": 27,
+      "leave": 0
+     }
+    },
+    "pass": false
+   },
+   "G2": {
+    "lost_context": 0,
+    "empty_kept_v01": 2,
+    "empty_kept_v01_off": 11,
+    "need_v01": 11,
+    "empty_kept_v02": 2,
+    "empty_kept_v02_off": 28,
+    "need_v02": 28,
+    "v01_gold_kept": 12,
+    "v01_gold_kept_off": 12,
+    "v02_res_gold_kept": 5,
+    "v02_res_gold_kept_off": 4,
+    "kit_changed_all": 67,
+    "kit_changed_add_only": 67,
+    "kit_changed_other": 0,
+    "kit_n": 170,
+    "kit_change_share_counted": 0.0,
+    "kit_change_share_all": 0.394,
+    "tokens_over_cap": 0,
+    "lost_context_ids_v01": [],
+    "off_kept_chunks_cut_kit": 0,
+    "off_kept_chunks_cut_180": 0,
+    "cut_code_sum_kit": 0,
+    "pass": true
+   },
+   "G3": {
+    "ms_p50_off": 167.8,
+    "ms_p50_off2": 155.1,
+    "ms_p50": 153.0,
+    "ratio_vs_off2": 0.99,
+    "ratio_vs_off": 0.91,
+    "kit_ratio_vs_off2": {
+     "v01": 1.07,
+     "v02": 0.97
+    },
+    "keep_ms_p50_off": 0.665,
+    "keep_ms_p50_off2": 0.518,
+    "keep_ms_p50": 0.891,
+    "keep_ratio_vs_off2": 1.72,
+    "total_ms_p50_off2": 156.1,
+    "total_ms_p50": 153.8,
+    "total_ratio_vs_off2": 0.99,
+    "kit_total_ratio_vs_off2": {
+     "v01": 1.06,
+     "v02": 0.97
+    },
+    "kit_keep_ms_p50": {
+     "v01": [
+      0.393,
+      0.589
+     ],
+     "v02": [
+      0.463,
+      0.7
+     ]
+    },
+    "pass": true
+   },
+   "pass": false
+  }
+ },
+ "verdict_step0": "FAIL at step 0",
+ "addendum": {
+  "sha256": "77eaf4ca4ad5e606c3ef724f6fecf5e7745a04ab0a035540302aad5ed957c907",
+  "variant": "perpack"
+ }
+}

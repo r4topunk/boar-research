@@ -1,0 +1,153 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf1..19e4de32 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -489,6 +489,8 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** DEEPCOVER arm (eval-only; the app never sets it): key-point coverage prompt + 300-token cap on the deep thinking generation. */
++  deepCover?: boolean;
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 35877fca..8edb16e7 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -263,6 +263,11 @@ export const PLACES_LIMIT = 10;
+ export const FAST_THINKING_BUDGET = 256;
+ // DT512 arm: half the deep thinking budget (DEEPTHINK measured 1024; DEEPTHINK-2 found no gain at 3072).
+ export const DEEP_THINKING_BUDGET = 512;
++// DEEPCOVER arm (settings.deepCover, default off = dt512): key-point coverage on the deep thinking generation.
++export const DEEP_COVER_MAX_TOKENS = 300;
++export const DEEP_COVER_INSTRUCTION =
++  "Before answering, list in your reasoning the 5–8 key facts, figures or steps a complete answer needs. " +
++  "Then answer in 120–200 words that state each of them explicitly, in plain prose.";
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
+@@ -1325,8 +1330,13 @@ export function createAnswerer(deps: AnswerDeps) {
+         } else {
+           stage("prefill", genTier, genLlm.id);
+           const useTemplate = deps.engine.hasEmbeddedChatTemplate();
++          const cover = !!settings.deepCover && genTier === "deep" && gen.thinking && gen.modelId === deepModel?.id && !health;
++          if (cover) reasonCodes.push("deepcover:on");
++          const systemPrompt = cover
++            ? `${ctx.systemPrompt?.trim() || "You are an offline research assistant."} ${DEEP_COVER_INSTRUCTION}`
++            : ctx.systemPrompt;
+           const common = {
+-            nPredict: Math.min(ctx.maxTokens, gen.maxTokens ?? Infinity),
++            nPredict: Math.min(ctx.maxTokens, cover ? DEEP_COVER_MAX_TOKENS : gen.maxTokens ?? Infinity),
+             // Reasoning models think before answering: bounded on the fast tier, off on the streaming MoE.
+             thinkingBudget: gen.thinking ? (genTier === "deep" ? DEEP_THINKING_BUDGET : FAST_THINKING_BUDGET) : undefined,
+             enableThinking: gen.thinking ? undefined : false,
+@@ -1340,11 +1350,11 @@ export function createAnswerer(deps: AnswerDeps) {
+               useTemplate
+                 ? {
+                     ...common,
+-                    messages: deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder),
++                    messages: deps.assembleChatMessages(req.query, sources, systemPrompt, ctx.history, styleReminder),
+                     // CUT5-SPEED: with no sources and no conversation summary the system message is static -> its own KV session file.
+                     ...(sources.length === 0 && !ctx.history?.summary?.trim() ? { staticSystem: true } : {}),
+                   }
+-                : { ...common, prompt: deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder) }
++                : { ...common, prompt: deps.assemblePrompt(req.query, sources, systemPrompt, ctx.history, styleReminder) }
+             )
+           );
+           if (health) {
+diff --git a/src/routing/deepCover.test.ts b/src/routing/deepCover.test.ts
+new file mode 100644
+index 00000000..232fdcff
+--- /dev/null
++++ b/src/routing/deepCover.test.ts
+@@ -0,0 +1,89 @@
++import { describe, it, expect } from "vitest";
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { assemblePrompt, assembleChatMessages } from "../rag/pure";
++import { AnswerDeps, createAnswerer, InstalledLlm, DEEP_COVER_INSTRUCTION, DEEP_COVER_MAX_TOKENS } from "./answer";
++import { DEEP_MAX_TOKENS } from "./depth";
++import type { GenerateOptions } from "../inference/LlamaEngine";
++
++const chunk = (chunkId: string, title: string, body: string): RetrievedChunk =>
++  ({ chunkId, docId: chunkId, title, body, score: 1, source: "wikipedia", matchType: "hybrid" }) as RetrievedChunk;
++const CANBERRA = chunk("c1", "Canberra",
++  "Canberra is the capital city of Australia. The site of Canberra was selected for the location of the nation's capital in 1908 " +
++  "as a compromise between Sydney and Melbourne. The city was designed after an international design contest.");
++const SNAKE = chunk("s1", "Snakebite",
++  "Snakebite first aid: keep the person still and calm, remove rings and tight items, keep the bitten limb at heart level, and get to a hospital quickly.");
++
++const GB = 1024 ** 3;
++const fast: InstalledLlm = { id: "fast4b", label: "Fast 4B", filename: "models/fast.gguf", sizeBytes: 2.5 * GB, roles: ["general", "fast"], isDefault: true };
++const deep: InstalledLlm = { id: "deep35", label: "Deep 35B", filename: "models/deep.gguf", sizeBytes: 12 * GB, roles: ["reasoning"] };
++const PERSONA = "You are Boar. Answer succinctly.";
++
++function makeDeps(settings: Record<string, unknown>) {
++  const gens: GenerateOptions[] = [];
++  let clock = 0;
++  let loaded: string | null = null;
++  const deps: AnswerDeps = {
++    now: () => (clock += 5),
++    engine: {
++      async load(filename) { loaded = filename; return { fit: null, warning: null }; },
++      async generate(o) { gens.push(o); o.onToken?.("Canberra was a compromise [1]."); return "Canberra was a compromise [1]."; },
++      async stop() {},
++      getModelInfo: () => (loaded ? { filename: loaded } : null),
++      hasEmbeddedChatTemplate: () => true,
++      async estimateFit() { return null; },
++    },
++    retrieve: async (q) => (/snake/i.test(q) ? [SNAKE] : [CANBERRA]),
++    getSettings: async () => ({ quickFirst: true, alwaysComplete: true, deepModelId: deep.id, ...settings }),
++    listInstalledLlms: async () => [fast, deep],
++    getActiveModelId: async () => fast.id,
++    runMultipass: async () => { throw new Error("no multipass"); },
++    assemblePrompt,
++    assembleChatMessages,
++  };
++  return { deps, gens };
++}
++
++async function run(settings: Record<string, unknown>, query: string) {
++  const t = makeDeps(settings);
++  const result = await createAnswerer(t.deps).answer({ query }, () => {}, { systemPrompt: PERSONA, maxTokens: 512 }).done;
++  const text = (g: GenerateOptions) => g.messages?.map((m) => m.content).join("\n") ?? g.prompt ?? "";
++  return { gens: t.gens, result, texts: t.gens.map(text) };
++}
++
++const Q = "Why was Canberra chosen as the capital of Australia?";
++const count = (s: string, sub: string) => s.split(sub).length - 1;
++
++describe("answer(): DEEPCOVER (settings.deepCover)", () => {
++  it("off (undefined or false): deep thinking generation = dt512 (cap 200, no instruction, no code)", async () => {
++    const a = await run({}, Q);
++    const b = await run({ deepCover: false }, Q);
++    expect(a.result.tier).toBe("deep");
++    expect(JSON.stringify(a.gens)).toBe(JSON.stringify(b.gens));
++    expect(a.gens.at(-1)!.nPredict).toBe(DEEP_MAX_TOKENS);
++    expect(a.texts.join("\n")).not.toContain(DEEP_COVER_INSTRUCTION);
++    expect(a.result.receipt.reasonCodes).not.toContain("deepcover:on");
++    expect(a.gens.at(-1)!.messages![0].content.startsWith(PERSONA)).toBe(true);
++  });
++
++  it("on: instruction once in the system message after the persona, cap 300, reason code", async () => {
++    const { gens, result, texts } = await run({ deepCover: true }, Q);
++    const g = gens.at(-1)!;
++    expect(g.thinkingBudget).toBeGreaterThan(0);
++    expect(g.nPredict).toBe(DEEP_COVER_MAX_TOKENS);
++    expect(count(texts.at(-1)!, DEEP_COVER_INSTRUCTION)).toBe(1);
++    expect(g.messages![0].content.startsWith(`${PERSONA} ${DEEP_COVER_INSTRUCTION}`)).toBe(true);
++    expect(result.receipt.reasonCodes).toContain("deepcover:on");
++  });
++
++  it("on: absent on the fast tier and on the health path", async () => {
++    const f = await run({ deepCover: true, alwaysComplete: false }, Q);
++    expect(f.result.tier).toBe("fast");
++    expect(f.texts.join("\n")).not.toContain(DEEP_COVER_INSTRUCTION);
++    expect(f.gens.every((g) => g.nPredict !== DEEP_COVER_MAX_TOKENS)).toBe(true);
++    expect(f.result.receipt.reasonCodes).not.toContain("deepcover:on");
++    const h = await run({ deepCover: true }, "How do I treat a snake bite?");
++    expect(h.result.receipt.reasonCodes).toContain("grounding:health-extractive");
++    expect(h.texts.join("\n")).not.toContain(DEEP_COVER_INSTRUCTION);
++    expect(h.result.receipt.reasonCodes).not.toContain("deepcover:on");
++  });
++});

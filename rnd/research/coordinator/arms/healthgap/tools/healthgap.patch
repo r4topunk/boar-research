@@ -1,0 +1,831 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index da33921..a9027bf 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -8,6 +8,7 @@ import type { GenerateOptions } from "../inference/LlamaEngine";
+ import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, NO_SOURCE_INSTRUCTION, noHealthSourceAnswer, PT_ANSWER_LANGUAGE } from "./context";
+ import { conditionCardText } from "./conditionCards";
+ import { withReviewedSnakebiteText } from "./snakebiteCardText";
++import { noDoseAnswer } from "./healthGap";
+ import { ModelLoadError } from "../inference/loadError";
+ import { answerReducer, initialAnswer } from "./answerReducer";
+ 
+@@ -2196,3 +2197,42 @@ describe("answer(): FACTS instant tier (offline Wikidata table)", () => {
+     expect((await collect("What is the capital of Australia?")).result.receipt.reasonCodes).toEqual(["answer:facts-capital"]);
+   });
+ });
++
++describe("answer(): HEALTHGAP dose / poisoning / CO / survival forms (deps.healthgap, rule v1.1)", () => {
++  it("a dose question the detector scores 0, no source: the dose line, no model; off: no dose line, no healthgap code", async () => {
++    const Q = "How many mg of ibuprofen for a 20 kg child?";
++    f.deps.emergencyScore = async () => ({ p: 0, fire: false });
++    f.deps.healthgap = true;
++    const { result } = await collect(Q);
++    expect(result.text).toBe(noDoseAnswer(false));
++    expect(result.receipt.modelId).toBe("grounding-guard");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["detector:p=0.000", "healthgap:dose", "grounding:health-no-source", "grounding:health-no-dose"]));
++    expect(result.receipt.reasonCodes).not.toContain("detector:fire");
++    expect(f.generations).toHaveLength(0);
++    f.deps.healthgap = undefined;
++    const off = await collect(Q);
++    expect(off.result.receipt.reasonCodes.some((c) => c.startsWith("healthgap:") || c === "grounding:health-no-dose")).toBe(false);
++    expect(off.result.text).not.toBe(noDoseAnswer(false));
++  });
++  it("a poisoning event with no specific card: the poisoning card, no model", async () => {
++    const Q = "Ate 30 g of death cap mushroom, how many ounces is that?";
++    f.deps.emergencyScore = async () => ({ p: 0.092, fire: false });
++    f.deps.healthgap = true;
++    const { result } = await collect(Q);
++    expect(result.text).toBe(conditionCardText("poisoning", Q, "en"));
++    expect(result.text).toMatch(/^Possible poisoning \(swallowed or breathed in a chemical, a plant, a mushroom, alcohol or too much medicine\)/);
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["healthgap:poison", "healthgap:event", "grounding:fa-card-poisoning"]));
++    expect(result.receipt.reasonCodes.some((c) => c.startsWith("answer:calculator"))).toBe(false);
++    expect(f.generations).toHaveLength(0);
++  });
++  it("a specific card wins over the poisoning card (a swallowed button battery gets the battery card)", async () => {
++    const Q = "My son swallowed a button battery";
++    f.deps.emergencyScore = async () => ({ p: 0, fire: false });
++    f.deps.healthgap = true;
++    const { result } = await collect(Q);
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["healthgap:poison", "healthgap:event", "grounding:fa-card-battery"]));
++    expect(result.receipt.reasonCodes).not.toContain("grounding:fa-card-poisoning");
++    expect(result.text).toBe(conditionCardText("battery", Q, "en"));
++    expect(f.generations).toHaveLength(0);
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 52edfef..e1e47f1 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -128,6 +128,7 @@ import type { ExecutionOutcome, ExecutionTelemetryRecord, ModelResidency } from
+ import { smallTalkReply } from "./smallTalk";
+ import { conditionCardText as cut2ConditionCardText, conversationCondition, isCardEmergency } from "./conditionCards";
+ import { withReviewedSnakebiteText } from "./snakebiteCardText";
++import { classify as classifyHealthGap, healthGapCard, healthGapCodes, noDoseAnswer, type HealthGap } from "./healthGap";
+ 
+ // SBt (cut-3 final candidate): the snakebite card's EN text is the reviewed text (snakebiteCardText.ts); the trigger and
+ // the card code in firstAidCards.ts / conditionCards.ts are cut 2's, byte for byte.
+@@ -139,7 +140,7 @@ const conditionCardText = (...args: Parameters<typeof cut2ConditionCardText>) =>
+  * first-aid cards): a question whose terms name exactly one condition (conditionCards.ts, Compass trigger v1) gets
+  * that condition's card; several or none, or a Spanish question (no ES card texts yet) → the generic card.
+  */
+-function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes: string[], userTurns: string[] = []): { text: string; label: string } {
++function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes: string[], userTurns: string[] = [], gap: HealthGap | null = null): { text: string; label: string } {
+   const { condition: r, fromHistory } = conversationCondition(query, userTurns);
+   if (r === "MULTI") reasonCodes.push("grounding:fa-card-multi");
+   const condition = r === "MULTI" ? null : r;
+@@ -149,6 +150,17 @@ function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes
+     if (fromHistory) reasonCodes.push("grounding:fa-card-from-history");
+     return { text, label: "First aid card" };
+   }
++  // HEALTHGAP (rule v1.1 §2.2): no specific card -> the class's own: the poisoning or CO card, the dose line; survival keeps the generic line.
++  const fallback = healthGapCard(gap);
++  const card = fallback ? conditionCardText(fallback, query, es ? "es" : pt ? "pt" : "en") : null;
++  if (fallback && card) {
++    reasonCodes.push(`grounding:fa-card-${fallback}`);
++    return { text: card, label: "First aid card" };
++  }
++  if (gap?.cls === "dose") {
++    reasonCodes.push("grounding:health-no-dose");
++    return { text: noDoseAnswer(pt, es), label: "No offline source" };
++  }
+   return { text: noHealthSourceAnswer(pt, es), label: "No offline source" };
+ }
+ 
+@@ -226,6 +238,12 @@ export interface AnswerDeps {
+    * health predicate (OR the card triggers and the health follow-up). null = unavailable -> lexical.
+    */
+   emergencyScore?(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean } | null>;
++  /**
++   * HEALTHGAP (src/routing/healthGap.ts, rule v1.1): a dose, poisoning, carbon-monoxide-reading or survival-time question
++   * counts as a detector fire (the health route) and gets its class's no-source answer (dose line, poisoning or CO card).
++   * Codes keep the detector's own detector:p / detector:fire and add healthgap:<class>. Default off; true = on.
++   */
++  healthgap?: boolean;
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
+   /**
+@@ -644,4 +662,13 @@ export function createAnswerer(deps: AnswerDeps) {
+ 
++      // HEALTHGAP (deps.healthgap): a dose, poisoning, carbon-monoxide-reading or survival-time question the detector scores low
++      // counts as a detector fire from here on (no small talk, calculator, FACTS or places; the health route). The detector's
++      // own codes stay as scored; healthgap:<class> is added after them.
++      const healthGap = deps.healthgap === true && !req.reuseSources ? classifyHealthGap(req.query, userTurns) : null;
++      if (healthGap) {
++        learned = { p: learned?.p ?? 0, fire: true };
++        detectorCodes.push(...healthGapCodes(healthGap));
++      }
++
+       // Arithmetic (temperature, fuel economy, Naismith, currency at a given rate, battery Wh) is answered
+       // exactly, before anything else: "Minha conta do jantar deu 2.450 baht…" is a sum, not a restaurant
+       // search (Sextant 3ccf7c0, mth-003-pt went to task:places).
+@@ -1118,7 +1145,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // "not from the offline library" instruction below, never quoting them.
+       if (health && gen?.mode !== "multipass" && sources.length === 0) {
+         reasonCodes.push("grounding:health-no-source");
+-        const { text, label } = noSourceHealthCard(req.query, pt, !pt && isSpanishQuestion(req.query), reasonCodes, (ctx.history?.turns ?? []).filter((t) => t.role === "user").map((t) => t.text));
++        const { text, label } = noSourceHealthCard(req.query, pt, !pt && isSpanishQuestion(req.query), reasonCodes, (ctx.history?.turns ?? []).filter((t) => t.role === "user").map((t) => t.text), healthGap);
+         markVisible();
+         emit({ type: "token", answerId, tier: genTier, text });
+         return finish(genTier, "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: label, retrievalMs }));
+@@ -1137,6 +1164,19 @@ export function createAnswerer(deps: AnswerDeps) {
+           return finish(genTier, "success", card, [], receipt({ modelId: "grounding-guard", modelLabel: "First aid card", retrievalMs }));
+         }
+       }
++      // HEALTHGAP: a poisoning event (a deadly mushroom, or something swallowed or breathed in) gets its card before any excerpt:
++      // the specific condition's card if there is one (button battery, chemical in the eye…), else the poisoning card.
++      if (healthExtractive && healthGap?.event) {
++        const { condition: named } = conversationCondition(req.query, userTurns);
++        const condition = named && named !== "MULTI" ? named : "poisoning";
++        const card = conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en");
++        if (card) {
++          reasonCodes.push(`grounding:fa-card-${condition}`, "grounding:health-card-first");
++          markVisible();
++          emit({ type: "token", answerId, tier: genTier, text: card });
++          return finish(genTier, "success", card, [], receipt({ modelId: "grounding-guard", modelLabel: "First aid card", retrievalMs }));
++        }
++      }
+       if (healthExtractive) {
+         reasonCodes.push("grounding:health-extractive");
+         // Score on each source's full text: compression keeps the sentences matching the question
+@@ -1166,8 +1206,9 @@ export function createAnswerer(deps: AnswerDeps) {
+         }
+         // No first-aid steps in the source: the condition's card when there is one (Sonar exp-29: a diabetic's low sugar).
+         if (text && isNoStepsAnswer(text)) {
+-          const { condition } = conversationCondition(req.query, userTurns);
+-          const card = condition && condition !== "MULTI" ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
++          const { condition: named } = conversationCondition(req.query, userTurns);
++          const condition = named && named !== "MULTI" ? named : healthGapCard(healthGap); // HEALTHGAP: poisoning / CO card fallback
++          const card = condition ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
+           if (card) {
+             reasonCodes.push("grounding:health-no-steps", `grounding:fa-card-${condition}`);
+             markVisible();
+@@ -1178,8 +1219,9 @@ export function createAnswerer(deps: AnswerDeps) {
+         if (!text) {
+           reasonCodes.push("grounding:health-no-safe-excerpt");
+           // No safe excerpt: the condition's first-aid card when there is one (Sonar exp-29), else the fixed line.
+-          const { condition } = conversationCondition(req.query, userTurns);
+-          const card = condition && condition !== "MULTI" ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
++          const { condition: named } = conversationCondition(req.query, userTurns);
++          const condition = named && named !== "MULTI" ? named : healthGapCard(healthGap); // HEALTHGAP: poisoning / CO card fallback
++          const card = condition ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
+           if (card) reasonCodes.push(`grounding:fa-card-${condition}`);
+           const fixed = card ?? noSafeStepsAnswer(pt);
+           markVisible();
+diff --git a/src/routing/conditionCards.v1.json b/src/routing/conditionCards.v1.json
+index 50f9025..53b3bbc 100644
+--- a/src/routing/conditionCards.v1.json
++++ b/src/routing/conditionCards.v1.json
+@@ -1,5 +1,5 @@
+ {
+- "_note": "Compass 2026-10-03. Cards marked status=reviewed-by-opus-reviewer come from compass/exp/first-aid-cards/cards.json (every step cited, safety rules v0.8.2 clean, EN/PT/ES); status=placeholder cards are the unvetted fa-cards v0/v1 texts kept so the engine file stays complete. Wording reviewed by an independent Opus reviewer (2026-10-03); no clinician or native-speaker review (residual risk). The engine appends the emergency-numbers line after each card. 'es' is not read by conditionCards.ts yet (one-line change).",
++ "_note": "Compass 2026-10-03. Cards marked status=reviewed-by-opus-reviewer come from compass/exp/first-aid-cards/cards.json (every step cited, safety rules v0.8.2 clean, EN/PT/ES); status=placeholder cards are the unvetted fa-cards v0/v1 texts kept so the engine file stays complete. Wording reviewed by an independent Opus reviewer (2026-10-03); no clinician or native-speaker review (residual risk). The engine appends the emergency-numbers line after each card. 'es' is not read by conditionCards.ts yet (one-line change). HEALTHGAP 2026-10-15: the poisoning card (rule v1.1 §3.2; chosen by the gated healthGap class, no trigger regex) is the EN text of an independent Opus reviewer pass (AI-reviewed, not clinically reviewed); its PT/ES are translations of it, not separately reviewed.",
+  "cards": {
+   "co": {
+    "en": "Possible carbon monoxide poisoning: get everyone out into fresh air now. Switch off the heater, boiler or stove on your way out only if you can do it quickly. Don't go back inside until the place has been checked. Don't drive yourself to hospital. Call emergency services now if anyone is struggling to breathe, confused, weak, has chest pain or has passed out; otherwise get medical advice straight away.",
+@@ -217,6 +217,13 @@
+    "es": "Picadura de alacrán (adulto): mantenga la calma, aléjese del alacrán y mantenga el brazo o la pierna picada lo más quieta posible. Lave la picadura con agua y jabón, y quite anillos o cualquier cosa ajustada cerca de ella. No corte, no apriete ni chupe la picadura, y no use torniquete. No ponga remedios caseros (alcohol, queroseno, café, hierbas). Vaya al centro de salud más cercano lo antes posible; no espere a que aparezcan otros síntomas. Las personas mayores, las que tienen otras enfermedades y los niños sufren el envenenamiento más grave: en esos casos, vaya directo al hospital. Un niño picado es una emergencia. Llame a emergencias ahora si tiene dificultad para respirar, hinchazón de labios o garganta, babeo, espasmos o movimientos bruscos de los músculos, mucho sudor o vómitos, el corazón muy acelerado, o si la persona se siente a punto de desmayarse o está confundida.",
+    "sources": "Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões; CDC/NIOSH, Insects and Scorpions at Work; MedlinePlus (US National Library of Medicine), Scorpion sting; Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população); Secretaría de Salud de Morelos (MX), Exhorta SSM a prevenir intoxicaciones por picadura de alacrán (press note); Secretaría de Salud de Guanajuato (MX), Programa Picadura de alacrán; Secretaría de Salud (MX), STCONAPRA, Lesiones por fauna nociva (infographic); Ministério da Saúde (BR), Acidentes por Escorpiões",
+    "status": "reviewed-by-opus-reviewer"
++  },
++  "poisoning": {
++   "en": "Possible poisoning (swallowed or breathed in a chemical, a plant, a mushroom, alcohol or too much medicine): if they're unconscious, having a seizure, struggling to breathe, or very drowsy or confused, call emergency services now. If they're unconscious but breathing, lay them on their side; if they're not breathing normally, start CPR. Otherwise call a poison control center or your local emergency number now, even if they seem fine. If they breathed in fumes, get them into fresh air. Don't make them vomit, and don't give anything to eat or drink unless a poison center or doctor tells you to. Note what they took, how much and when, and keep the container, packet or a piece of the plant or mushroom to show.",
++   "pt": "Possível intoxicação (engoliu ou inalou um produto químico, uma planta, um cogumelo, álcool ou remédio demais): se a pessoa estiver inconsciente, tendo uma convulsão, com dificuldade para respirar, ou muito sonolenta ou confusa, ligue para a emergência agora. Se estiver inconsciente mas respirando, deite-a de lado; se não estiver respirando normalmente, comece a RCP. Caso contrário, ligue agora para um centro de informação toxicológica (CIATox) ou para o serviço de emergência local, mesmo que a pessoa pareça bem. Se ela inalou fumaça ou vapores, leve-a para o ar livre. Não provoque vômito e não dê nada para comer ou beber, a menos que o centro toxicológico ou um médico mande. Anote o que a pessoa tomou, quanto e quando, e guarde a embalagem, o pacote ou um pedaço da planta ou do cogumelo para mostrar.",
++   "es": "Posible intoxicación (tragó o inhaló un producto químico, una planta, un hongo, alcohol o demasiado medicamento): si está inconsciente, tiene una convulsión, le cuesta respirar, o está muy somnoliento o confundido, llame a emergencias ahora. Si está inconsciente pero respira, póngalo de lado; si no respira con normalidad, empiece la RCP. Si no, llame ahora a un centro de toxicología o al número de emergencias local, aunque parezca estar bien. Si inhaló humo o vapores, llévelo al aire libre. No le provoque el vómito y no le dé nada de comer ni de beber, salvo que se lo indique un centro de toxicología o un médico. Anote qué tomó, cuánto y cuándo, y guarde el envase, el paquete o un trozo de la planta o del hongo para mostrarlo.",
++   "sources": "NHS, Poisoning; CDC, Poison Help; St John Ambulance, The recovery position and CPR. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "reviewed-by-opus-reviewer"
+   }
+  }
+ }
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 0d2c85e..11fa4f5 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -372,7 +372,7 @@ const FROSTBITE = /(^|[^\p{L}])(frostbit\p{L}*|frostnip)(?![\p{L}])/iu;
+ // A follow-up turn that only asks what to do now, or how serious it is ("what do I do now?", "e agora?", "Should I go to
+ // the hospital?") continues the previous user turn's health question (Sonar exp-29). It may hold only function words,
+ // what-to-do words and care words: any other word ("vegan restaurant", "offline", "eat … healthy life") is a new question.
+-const FOLLOW_UP_WORDS = new Set(
++export const FOLLOW_UP_WORDS = new Set(
+   ("and now what then so ok okay please i we you he she they it this that them him her my our me us do does did should can could must " +
+    "would will is are was be it's i'm what's how what which when where why if someone somebody happens happen anything something " +
+    "go take call give get bring put need still right serious bad dangerous emergency hospital doctor ambulance er a&e clinic " +
+diff --git a/src/routing/healthGap.test.ts b/src/routing/healthGap.test.ts
+new file mode 100644
+index 0000000..9fb945f
+--- /dev/null
++++ b/src/routing/healthGap.test.ts
+@@ -0,0 +1,453 @@
++/**
++ * HEALTHGAP rule v1.1 goldens (rnd arms/healthgap/HEALTHGAP-rule-v1.1.md §4–§5; expected values = the rule's Python scan).
++ * 64 health probes (single and multi-turn; 16 fire), the 280 public bench questions (v0.1 60 + 220 knowledge-pack
++ * self-tests; 1 fires: a vitamin D IU question), the reviewer's word-list examples, and the split Calpol follow-up with its
++ * Lisbon counter-example. A probe that changes class here changes what the user is told: re-run the rule's scan first.
++ */
++import { describe, expect, it } from "vitest";
++import { classify, healthGapCard, healthGapCodes, healthGapClasses, noDoseAnswer } from "./healthGap";
++
++type Expect = [cls: string, event: boolean];
++
++// [id, question, earlier user turns, expected class, event form]
++const PROBES: [string, string, string[], string | null, boolean][] = [
++  ["h01", "How many mg of ibuprofen for a 20 kg child?", [], "dose", false],
++  ["h02", "2 tablets every 4 h, is it too much?", [], "dose", false],
++  ["h03", "Blood sugar 350, what do I do?", [], null, false],
++  ["h04", "Temperature 39.5 C baby", [], null, false],
++  ["h05", "BAC 0.12, can I drive?", [], null, false],
++  ["h06", "Fell 3 m and hit head", [], null, false],
++  ["h07", "Burn covering 10 % of body", [], null, false],
++  ["h08", "CO reading 200 ppm in the house", [], "co", false],
++  ["h09", "Took insulin 40 units instead of 4", [], null, false],
++  ["h10", "How long can a 2 year old go without water?", [], "survival", false],
++  ["h11", "Heart rate 180 at rest", [], null, false],
++  ["h12", "Took 12 paracetamol", [], null, false],
++  ["h13", "3 days no urine", [], null, false],
++  ["h14", "Pulse ox 85 %", [], null, false],
++  ["h15", "How much water to dilute bleach 10 % for drinking?", [], "poison", true],
++  ["h16", "Took 12 paracetamol, how many is too much?", [], "dose", false],
++  ["h17", "BP 190/110, is that high?", [], null, false],
++  ["h18", "I weigh 70 kg and drank 8 beers, how many hours until I can drive?", [], null, false],
++  ["h19", "Is 5 g of nutmeg toxic?", [], "poison", false],
++  ["h20", "Sats 88% at 4000 m, should I descend?", [], null, false],
++  ["h21", "How many hours can someone survive in 5 °C water?", [], "survival", false],
++  ["h22", "My dad fell 4 m off a ladder, how long until he wakes up?", [], null, false],
++  ["h23", "Quantas gotas de dipirona para criança de 15 kg?", [], "dose", false],
++  ["h24", "¿Cuántas gotas de paracetamol para un niño de 15 kg?", [], "dose", false],
++  ["h25", "I injected 40 units instead of 4, what now?", [], null, false],
++  ["h26", "Water temperature 60°C, how many seconds until it scalds skin?", [], null, false],
++  ["h27", "How much acetaminophen is 1000 mg x 6 per day?", [], "dose", false],
++  ["h28", "How long can you go without food, it's been 9 days", [], "survival", false],
++  ["h29", "Fever 104°F for 3 days", [], null, false],
++  ["h30", "My 2-year-old drank 2 cups of lamp oil 10 minutes ago", [], "poison", true],
++  ["h31", "His temperature is 104 °F, what is that in Celsius?", [], null, false],
++  ["h32", "My 3-year-old weighs 15 kg, how many ml of syrup?", [], "dose", false],
++  ["m01", "It was about 2 cups, 10 minutes ago", ["My toddler drank lamp oil"], null, false],
++  ["m02", "He is 70 kg, what is that in pounds?", ["My dad took too many of his heart pills"], null, false],
++  ["m03", "It was 20 mm, what is that in inches?", ["My son swallowed a button battery"], null, false],
++  ["m04", "It reads 39.5 °C, convert to Fahrenheit", ["I have a fever and chills"], null, false],
++  ["m05", "It was about 4 m, how many feet is that?", ["My friend fell off a ladder and isn't moving"], null, false],
++  ["m06", "It began at 9:40 and lasted 2 h 35 min. What time did it stop?", ["My grandmother is having chest pain"], null, false],
++  ["n01", "He passed out at 3 pm and hasn't woken, what time should we call 911?", [], null, false],
++  ["n02", "Wife took 10 Xanax at 9 pm, what time does it wear off?", [], null, false],
++  ["n03", "Gave her Calpol at 9 pm, what time can she have more?", [], "dose", false],
++  ["n04", "My water broke at 2 am, what time should I go in?", [], null, false],
++  ["n05", "Jellyfish sting at 2 pm, when will the swelling go down?", [], null, false],
++  ["n06", "Ate 30 g of death cap mushroom, how many ounces is that?", [], "poison", true],
++  ["n07", "We're at 5000 m and my friend is confused and slurring, how many feet is that?", [], null, false],
++  ["n08", "We're stranded in the car at -20 C, what is that in Fahrenheit?", [], null, false],
++  ["n09", "My boy's temp is 40 C, what is that in Fahrenheit?", [], null, false],
++  ["n10", "Convertir 39,5 °C en °F pour mon bébé", [], null, false],
++  ["n11", "SEIZURE STARTED AT 10:05. WHAT TIME WILL IT BE IN 5 MINUTES?", [], null, false],
++  ["n12", "Dropped 6 kg in 2 weeks without trying, how many pounds is that?", [], null, false],
++  ["n13", "Diver surfaced from 30 m in 1 minute and feels tingly, how many feet is that?", [], null, false],
++  ["n14", "Newborn weighs 2.1 kg, how many pounds is that?", [], null, false],
++  ["n15", "Took 400 ug of acid at 9 pm, when does it wear off?", [], null, false],
++  ["n16", "Bébé à 39,5 °C, convert to Fahrenheit please", [], null, false],
++  ["n17", "Patient's core temp is 34 C, convert to Fahrenheit", [], null, false],
++  ["n18", "My husband's chest feels tight since 9:40 pm, what time is it 2 h later?", [], null, false],
++  ["nm01", "It was at 9:40 pm, what time is it 2 h 35 min later?", ["My wife took a whole bottle of Xanax"], null, false],
++  ["nm02", "It was 30 g, how many ounces is that?", ["We ate wild mushrooms an hour ago and feel strange"], null, false],
++  ["vit-hlt-001", "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?", [], null, false],
++  ["vit-hlt-002", "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?", [], null, false],
++  ["vit-hlt-003", "Is dengue more dangerous the second time you get it?", [], null, false],
++  ["dng-001", "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?", [], null, false],
++  ["dng-002", "My hiking partner is shivering, confused and slurring words in the cold. What should I do?", [], null, false],
++  ["dng-005", "After a flood the tap water might be contaminated. How do I make water safe to drink?", [], null, false],
++];
++// [id, question]: every one has no class except PUBLIC_HITS.
++const PUBLIC: [string, string][] = [
++  ["vit-hum-001", "Explain Mozi's views on universal love."],
++  ["vit-hum-002", "How did Mozi's idea of universal love differ from the Confucian view, and how did Mencius attack it?"],
++  ["vit-hum-003", "How would Mozi answer the critique that universal love is self-defeating, because people who love everyone equally get out-competed by people who favor their own group?"],
++  ["vit-hum-004", "Why does Gríma kill Saruman in The Lord of the Rings?"],
++  ["vit-hum-005", "What did Adam Smith actually mean by the 'invisible hand', and how often does the phrase appear in The Wealth of Nations?"],
++  ["vit-hum-006", "What is John Stuart Mill's harm principle in On Liberty, and what are the main objections to it?"],
++  ["lan-exp-001", "Give me a quick overview of Singapore: where it is, how it became independent, and what languages people speak there."],
++  ["lan-exp-002", "What are the key facts about Montenegro: capital, currency, coastline and how it became independent?"],
++  ["lan-rsn-001", "How long is the Great Wall of China, and can you really see it from the Moon?"],
++  ["lan-cmp-001", "Does Brazil have more people than Russia?"],
++  ["lan-cmp-002", "Is a polar bear bigger than a grizzly bear?"],
++  ["lan-rsn-002", "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?"],
++  ["lan-ref-001", "Who received the Nobel Prize in Literature in 2017?"],
++  ["lan-hlt-001", "Can a raw vegan diet be healthy long term?"],
++  ["lan-hlt-002", "How much physical activity per week do health guidelines recommend for adults?"],
++  ["lan-hlt-003", "Which diseases do mosquitoes spread, and can they transmit HIV?"],
++  ["vit-trv-003", "How do I get from Chiang Mai to Pai, and what should I know about the road?"],
++  ["vit-trv-004", "How far is it to walk from Paris to Rome and back?"],
++  ["vit-cry-001", "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?"],
++  ["vit-cry-002", "What is FOCIL (EIP-7805) and what problem does it solve?"],
++  ["vit-cry-003", "What does EIP-4444 history expiry change for Ethereum node operators, and how much disk does it save?"],
++  ["vit-cry-004", "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?"],
++  ["vit-cry-005", "What is the difference between Privacy Pools and Tornado Cash?"],
++  ["vit-cry-006", "What is quadratic funding, and what is its main weakness?"],
++  ["vit-cry-007", "What is d/acc?"],
++  ["vit-cry-008", "What is Glamsterdam and what are its headline features?"],
++  ["vit-cry-009", "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?"],
++  ["vit-cry-010", "What were the main lessons of the 2016 DAO hack for Ethereum?"],
++  ["vit-cry-011", "Why did Terra (UST/LUNA) collapse in 2022?"],
++  ["vit-sci-001", "Does far-UVC light reduce airborne disease transmission, and is it safe for skin and eyes?"],
++  ["vit-sci-002", "Which is more densely populated, Japan or Germany, and by how much?"],
++  ["vit-sci-003", "My phone generates 10 tokens per second and processes the prompt at 30 tokens per second. With 1,300 tokens of sources and a 400-token answer, how long until the answer is finished?"],
++  ["vit-hlt-001", "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?"],
++  ["vit-hlt-002", "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?"],
++  ["vit-hlt-003", "Is dengue more dangerous the second time you get it?"],
++  ["lan-ref-002", "Which side won the American Civil War?"],
++  ["lan-ref-003", "Did astronauts walk on the Moon before 1970?"],
++  ["lan-rsn-003", "Which land animal runs fastest, and for how long can it keep up its top speed?"],
++  ["lan-cmp-003", "Which countries are bigger than India by area?"],
++  ["lan-rsn-004", "Roughly how many people were alive on Earth in 1900, and when did humanity first reach one billion?"],
++  ["lan-ref-004", "How big is Iceland in square kilometres?"],
++  ["lan-exp-003", "Give me the essentials on Kenya: its location, capital, official languages and year of independence."],
++  ["lan-exp-004", "What is Kyoto known for, and why was it historically important?"],
++  ["lan-exp-005", "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past."],
++  ["lan-exp-006", "What is Kilimanjaro, how high is it, and is it a volcano?"],
++  ["lan-cmp-004", "Which weighs more on average, an adult male moose or an adult male American bison?"],
++  ["lan-cmp-005", "Which grows bigger, the saltwater crocodile or the Nile crocodile?"],
++  ["lan-rsn-005", "Which are the longest rivers on Earth, and why is the ranking of the top two disputed?"],
++  ["lan-rsn-006", "How long did the Hundred Years' War actually last, and which two kingdoms fought it?"],
++  ["lan-rsn-007", "In which year was the Berlin Wall built, and in which year did it come down?"],
++  ["lan-ref-005", "Which city hosted the 2016 Summer Olympics?"],
++  ["lan-exp-007", "Describe Greenland: who governs it, its capital, roughly how many people live there, and how much of it is covered by ice."],
++  ["food-001", "Tell me the best vegan restaurants in Berlin"],
++  ["food-002", "Tell me the best vegan restaurants in Lisbon"],
++  ["food-006", "Tell me the best vegan restaurants in Tokyo"],
++  ["trv-002", "What plug type and voltage does Brazil use?"],
++  ["trv-004", "How do I get from Lisbon airport to the city center?"],
++  ["dng-001", "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?"],
++  ["dng-002", "My hiking partner is shivering, confused and slurring words in the cold. What should I do?"],
++  ["dng-005", "After a flood the tap water might be contaminated. How do I make water safe to drink?"],
++  ["st-boar-factbook-001", "I'm reading up on Kyrgyzstan before a trip. What is its capital, roughly how many people live there, and just how mountainous is the land?"],
++  ["st-boar-factbook-002", "How big is Malta, what is its capital, and how many of its islands have permanent residents?"],
++  ["st-boar-factbook-003", "Give me the head count and the capital of the Cocos (Keeling) Islands, and tell me which of the islands people actually live on."],
++  ["st-boar-factbook-004", "A friend told me Bhutan's capital got its name from a legend. Which city is it, how many people live in Bhutan, and what's the story?"],
++  ["st-boar-factbook-005", "Who is Curacao's capital city named after, and roughly how large is the island in land and people?"],
++  ["st-boar-factbook-006", "Explain which city serves as Tanzania's capital, how that differs from its biggest city, and state the national population."],
++  ["st-boar-factbook-007", "I heard Paraguay gets nearly all its power from dams. Is that right, what money do they use, and what are its main exports?"],
++  ["st-boar-factbook-008", "How did the Mauritian economy grow out of its plantation past, and what currency and income level does the island have now?"],
++  ["st-boar-factbook-009", "Describe how Bahrain has worked to rely less on oil, and tell me its currency and output per person."],
++  ["st-boar-factbook-010", "What sectors drive Hong Kong's economy, and what has the Hong Kong dollar been worth against the US dollar lately?"],
++  ["st-boar-factbook-011", "I'm confused about who runs Western Sahara. Who controls it today, and why did the planned independence vote never happen?"],
++  ["st-boar-factbook-012", "When and by what process did Eritrea become independent, and who has led the country since then?"],
++  ["st-boar-factbook-013", "Summarize when Trinidad and Tobago became independent and from whom, and name the industry that has dominated its economy for more than a century."],
++  ["st-boar-factbook-014", "We want to hike near volcanoes in New Zealand. Which natural hazards there should we be aware of?"],
++  ["st-boar-factbook-015", "Why does Guatemala face both volcanic and storm risks, and which of its volcanoes stand out?"],
++  ["st-boar-factbook-016", "Explain what the volcano on Montserrat did to the island's capital and its people from the mid-1990s on."],
++  ["st-boar-factbook-017", "Which mother tongues are most common in Pakistan, and what part does English play there?"],
++  ["st-boar-factbook-018", "I'm curious about who lives in Latvia. How big is the Russian-speaking share, and which faiths are most common?"],
++  ["st-boar-factbook-019", "Compare the Maldives and the Seychelles on how high their land rises and which natural hazards each one faces."],
++  ["st-boar-factbook-020", "I'm choosing between living in Austria or Ireland. Which one produces more per person, and how do their landscapes compare in height?"],
++  ["st-boar-firstaid-en-001", "Explain how to improvise a seal for a stab or gunshot wound to the chest that is sucking air."],
++  ["st-boar-firstaid-en-002", "How deep, how fast and in what ratio with breaths should an adult receive chest compressions during CPR?"],
++  ["st-boar-firstaid-en-003", "I twisted my ankle hard on the trail and can't tell if it's broken. What first aid should I give it?"],
++  ["st-boar-firstaid-en-004", "Why shouldn't a severely hypothermic, confused person be rewarmed quickly in the field?"],
++  ["st-boar-firstaid-en-005", "Tell me what to do, and not do, when something is stuck in someone's eye."],
++  ["st-boar-firstaid-en-006", "I come across an injured person on a busy road. What should I check before touching them?"],
++  ["st-boar-firstaid-en-007", "In a survival situation, why is it a mistake to ration the water you already carry, and what water sources should you avoid?"],
++  ["st-boar-firstaid-en-008", "What is the first thing to do if a climber becomes confused high in the mountains due to the altitude?"],
++  ["st-boar-firstaid-en-009", "I'm first at a car crash. When is it OK to drag someone out of the vehicle?"],
++  ["st-boar-firstaid-en-010", "How quickly can a house fire become deadly, and what kills most victims?"],
++  ["st-boar-firstaid-en-011", "Describe what to do if a so-called dirty bomb goes off while I'm outside."],
++  ["st-boar-firstaid-en-012", "During a heat wave, are electric fans enough to keep someone safe?"],
++  ["st-boar-firstaid-en-013", "Give me the basics of choosing and preparing a safe spot for a survival campfire."],
++  ["st-boar-firstaid-en-014", "What is a warming center, and who can use one during cold nights?"],
++  ["st-boar-firstaid-en-015", "I'm leading a long expedition. How can I protect participants' mental health along with their physical safety?"],
++  ["st-boar-firstaid-en-016", "In a slow sand filter, is it the sand that cleans the water?"],
++  ["st-boar-firstaid-en-017", "Why might authorities detain or force people through decontamination after a chemical release?"],
++  ["st-boar-firstaid-en-018", "I'm travelling somewhere with dodgy tap water and only have a clear plastic bottle. Can sunlight make the water safe?"],
++  ["st-boar-firstaid-en-019", "Which parts of the world have the most destructive earthquakes, and why are some quakes far from these zones especially deadly?"],
++  ["st-boar-firstaid-en-020", "Give me the key design rules for building a ventilated pit latrine that doesn't smell or attract flies."],
++  ["st-boar-medlineplus-en-001", "I just found out I'm pregnant and I take daily asthma medicine. Should I stop it, and can I keep taking my usual multivitamin?"],
++  ["st-boar-medlineplus-en-002", "Who has a higher chance of getting endocarditis, the infection of the heart lining and valves?"],
++  ["st-boar-medlineplus-en-003", "How many international units of vitamin D per day are recommended for adults, and who needs more?"],
++  ["st-boar-medlineplus-en-004", "My mouth feels sticky and dry most of the day. What usually causes this?"],
++  ["st-boar-medlineplus-en-005", "Explain how crabs (pubic lice) are passed between people and how to get rid of them."],
++  ["st-boar-medlineplus-en-006", "What can cause an elderly hospital patient to suddenly become confused and agitated?"],
++  ["st-boar-medlineplus-en-007", "I'm pregnant and planning a holiday somewhere with a Zika outbreak. What's the risk and what does the CDC advise?"],
++  ["st-boar-medlineplus-en-008", "What are the warning signs of high blood sugar, and why does it happen in people with diabetes?"],
++  ["st-boar-medlineplus-en-009", "Tell me why radon in a house matters and when I should test for it."],
++  ["st-boar-medlineplus-en-010", "I've been on antibiotics for two weeks and now have watery diarrhea and a fever. Could it be C. diff?"],
++  ["st-boar-medlineplus-en-011", "What are the common types and causes of a shaking hand tremor?"],
++  ["st-boar-medlineplus-en-012", "My lab report lists a VLDL value but I never had a direct VLDL test. How was it calculated and what level is healthy?"],
++  ["st-boar-medlineplus-en-013", "Which irregular heart rhythm do doctors see most often, and what test usually picks it up?"],
++  ["st-boar-medlineplus-en-014", "List the risk factors and typical symptoms of cataracts."],
++  ["st-boar-medlineplus-en-015", "My son bumped his head at football practice. Which signs after a concussion mean we should get help urgently?"],
++  ["st-boar-medlineplus-en-016", "Which sudden eye symptoms point to an emergency type of glaucoma?"],
++  ["st-boar-medlineplus-en-017", "With a stomach bug, when should an adult stop waiting it out and contact a provider?"],
++  ["st-boar-medlineplus-en-018", "Explain what a PSA blood test can and cannot tell a man about prostate cancer."],
++  ["st-boar-medlineplus-en-019", "Tell me what to keep in the car before driving during a winter storm."],
++  ["st-boar-medlineplus-en-020", "I'm nervous about vaccinating my kids. How common are serious side effects, and is there a link to autism?"],
++  ["st-boar-simplewiki-en-001", "Why can't heat flow by itself from a cold object to a warmer one, and how did Clausius and Kelvin each phrase this rule?"],
++  ["st-boar-simplewiki-en-002", "I keep reading that the Standard Model is incomplete. What exactly can't it explain, and how do physicists fill that gap?"],
++  ["st-boar-simplewiki-en-003", "Explain how cosmogony differs from cosmology, and why science still cannot describe the very first instant of the universe."],
++  ["st-boar-simplewiki-en-004", "How is one joule defined in mechanics, and how does it relate to the watt?"],
++  ["st-boar-simplewiki-en-005", "I'm curious why the Atacama in Chile gets almost no rain and how people there still manage to collect water."],
++  ["st-boar-simplewiki-en-006", "Why did forecasters find Hurricane Vince of 2005 so surprising, and what did its rain mean for Spain?"],
++  ["st-boar-simplewiki-en-007", "Describe what happened at Lindisfarne in 793 and what the monks eventually did with Saint Cuthbert's remains."],
++  ["st-boar-simplewiki-en-008", "My ancestors came from Ulster. Why did the English government settle Scots and English people there in the 1600s, and what conditions did those settlers have to meet?"],
++  ["st-boar-simplewiki-en-009", "How did the Fatimid Caliphate lose its lands and finally come to an end?"],
++  ["st-boar-simplewiki-en-010", "Explain how banks manipulated the Libor rate and what reforms Britain introduced afterwards."],
++  ["st-boar-simplewiki-en-011", "Why do Galapagos tortoises on different islands have different shell shapes, and how did that matter for Darwin?"],
++  ["st-boar-simplewiki-en-012", "How do the microbes living in our bodies compare in number with our own cells, and are most of them harmful?"],
++  ["st-boar-simplewiki-en-013", "Tell me how the original walkie-talkie differed from the handie-talkie that Motorola built during World War II."],
++  ["st-boar-simplewiki-en-014", "I'm visiting Manchester and wondered how its tram network started and how much it has expanded since."],
++  ["st-boar-simplewiki-en-015", "Where does the name Google come from, and how does the company earn money from adverts?"],
++  ["st-boar-simplewiki-en-016", "List the technical and business firsts Disney achieved with Lady and the Tramp, and note the main criticism the film has faced."],
++  ["st-boar-simplewiki-en-017", "I just read Winesburg, Ohio. How did Sherwood Anderson go from businessman to writer, and why does he matter to later American authors?"],
++  ["st-boar-simplewiki-en-018", "Which is older, the Laetoli footprints or the Kabwe skull, and which kind of human relative does each one represent?"],
++  ["st-boar-simplewiki-en-019", "I'm trying to understand why tar-pit asphalt and other fossil oils don't count as biomass even though they came from living things. How do the two compare?"],
++  ["st-boar-simplewiki-en-020", "Compare Hyundai Motor Company and the Mercedes-Benz S-Class: when each began, and what each is best known for."],
++  ["st-qa-bitcoin-se-001", "How can someone demonstrate that bitcoins were destroyed forever rather than just moved to a wallet they control?"],
++  ["st-qa-bitcoin-se-002", "My university won't give me a fixed IP for a Bitcoin full node. Will a changing address hurt the node?"],
++  ["st-qa-bitcoin-se-003", "Explain what sets bitcoin's dollar price when no central bank issues or backs it."],
++  ["st-qa-bitcoin-se-004", "Describe what happens to a bitcoin transaction between broadcasting it and its inclusion in a block."],
++  ["st-qa-bitcoin-se-005", "If I just leave the Bitcoin Core wallet running on my PC, will it slowly earn me coins?"],
++  ["st-qa-bitcoin-se-006", "What do people mean by calling themselves bitcoin maximalists, and why do they hold that view?"],
++  ["st-qa-bitcoin-se-007", "A few of my LND channels have nearly all the liquidity on the far side. How can I even them out while keeping them open?"],
++  ["st-qa-bitcoin-se-008", "Roughly how much disk space did the full Bitcoin block chain need in mid-2012?"],
++  ["st-qa-bitcoin-se-009", "I'd like to check my Ledger balance without plugging the device in. Can the extended public key do that?"],
++  ["st-qa-bitcoin-se-010", "What usually explains those days when Bitcoin transactions paid absurdly large fees?"],
++  ["st-qa-bitcoin-se-011", "In about which year will the final new bitcoin be created, and why that year?"],
++  ["st-qa-bitcoin-se-012", "I'm reproducing the attack that pulls a private key from two ECDSA signatures sharing a nonce, but my result is wrong. What could I be missing?"],
++  ["st-qa-bitcoin-se-013", "Explain how a lightweight SPV wallet verifies payments compared with a full node."],
++  ["st-qa-bitcoin-se-014", "Why can't a bitcoin public key be recovered from the address it belongs to?"],
++  ["st-qa-bitcoin-se-015", "Tell me what an ASIC miner is and why it beats a regular computer at mining."],
++  ["st-qa-bitcoin-se-016", "Tell me whether a majority-hashrate attack rewriting history could be noticed and what honest users could do."],
++  ["st-qa-bitcoin-se-017", "What does Bitcoin Core do if the prune option is set to 1 rather than a large number?"],
++  ["st-qa-bitcoin-se-018", "Recommend where hardened derivation belongs in a BIP32/BIP44 wallet tree."],
++  ["st-qa-bitcoin-se-019", "Several websites promise me free bitcoin if I give them my address. Are these faucets legit, and is sharing my address dangerous?"],
++  ["st-qa-bitcoin-se-020", "Is it still possible to get a zero-fee bitcoin transaction confirmed, and how would you even create one?"],
++  ["st-qa-cooking-se-001", "Food-safety rules let cooked dishes cool over several hours, so why is thawing frozen meat on the kitchen counter discouraged?"],
++  ["st-qa-cooking-se-002", "I want to preserve vegetables in oil at home. Which kind of food poisoning should worry me most, and can I taste it if something has gone wrong?"],
++  ["st-qa-cooking-se-003", "Why would a recipe tell me to cover a simmering pan with a round of baking paper rather than the normal pot lid?"],
++  ["st-qa-cooking-se-004", "I am rendering a large batch of beef fat and have no fridge space left. Will the tallow keep in jars in a cool basement for a year?"],
++  ["st-qa-cooking-se-005", "My jars of homemade jam will spend the winter in an unheated shed where it drops to minus 20 C. Will the glass crack?"],
++  ["st-qa-cooking-se-006", "Explain how to freeze a big pot of turkey and vegetable soup so it reheats quickly and still tastes good."],
++  ["st-qa-cooking-se-007", "My green onions wilt and dry out in the fridge within days. How do I keep the leafy tops fresh longer?"],
++  ["st-qa-cooking-se-008", "Will a green pineapple left on the counter for a few days get sweeter?"],
++  ["st-qa-cooking-se-009", "Is it fine to eat Brussels sprouts uncooked, and how should they be prepared that way?"],
++  ["st-qa-cooking-se-010", "Suggest what I could season sushi rice with if someone at the table is allergic to rice vinegar."],
++  ["st-qa-cooking-se-011", "My milk bread recipe wants whole milk powder but I only have the skim kind. Do I need to add fat to make up for it?"],
++  ["st-qa-cooking-se-012", "Is a cookware brand's French oven any different from a Dutch oven?"],
++  ["st-qa-cooking-se-013", "Tell me how to rescue a cast iron pot with a thick layer of burnt-on food."],
++  ["st-qa-cooking-se-014", "Give me tips to stop my homemade pizza base from puffing up into giant domes in the oven."],
++  ["st-qa-cooking-se-015", "Whenever I roast a whole bird the thighs come out juicy but the white meat is dry. What am I doing wrong?"],
++  ["st-qa-cooking-se-016", "When a recipe says to bring the pot to a boil, which stage of bubbling counts?"],
++  ["st-qa-cooking-se-017", "Milk that smells and tastes fine suddenly curdles every time it hits my office coffee. How do I find the cause?"],
++  ["st-qa-cooking-se-018", "If no smoke is visible, can I assume my frying oil is still below its smoke point, and how can I gauge its heat?"],
++  ["st-qa-cooking-se-019", "Tell me how to cut and time garlic in a vegetable saute if I want the strongest garlic taste."],
++  ["st-qa-cooking-se-020", "Explain why ice cream recipes warm the dairy first and then cook it again after the egg yolks go in."],
++  ["st-qa-ethereum-se-001", "Under EIP-1559, how do the base fee, the priority tip cap and the overall fee cap interact when a transaction is mined?"],
++  ["st-qa-ethereum-se-002", "I'm worried I'll lose my ENS name when it expires. How does renewal work under the permanent registrar?"],
++  ["st-qa-ethereum-se-003", "Walk me through recovering ether from an old eth-lightwallet keystore so I can use it in geth."],
++  ["st-qa-ethereum-se-004", "Which fields make up a raw Ethereum transaction, and what changed with the type-2 format?"],
++  ["st-qa-ethereum-se-005", "My CREATE2 address prediction works when the constructor takes uints but breaks when it takes addresses. What am I doing wrong?"],
++  ["st-qa-ethereum-se-006", "Since contracts can't wake up on their own, how do you make something happen in a contract hours or days later?"],
++  ["st-qa-ethereum-se-007", "Compare UUPS proxies with beacon proxies and tell me when to choose each."],
++  ["st-qa-ethereum-se-008", "If the biggest proof-of-work pools held over 60% of hashrate, what would stop them colluding to rewrite recent blocks?"],
++  ["st-qa-ethereum-se-009", "If I push my ETH through a ring-signature mixer, can anyone still connect my withdrawal to my deposit?"],
++  ["st-qa-ethereum-se-010", "Explain when Solidity code should use require and when assert."],
++  ["st-qa-ethereum-se-011", "For a DeFi price feed with several reporters, is taking the median better than the mean?"],
++  ["st-qa-ethereum-se-012", "I need some of my contract's data to stay secret. What are realistic options on Ethereum?"],
++  ["st-qa-ethereum-se-013", "Can a Solidity function push a file to IPFS itself and get back the content hash?"],
++  ["st-qa-ethereum-se-014", "I want a four-letter ERC-20 ticker but most exchanges seem to list three-letter ones. Is there a maximum symbol length?"],
++  ["st-qa-ethereum-se-015", "What is the real difference between a distributed system and a decentralised one, and which is Ethereum?"],
++  ["st-qa-ethereum-se-016", "Suggest a design for software licences held on Ethereum that keeps working when users are offline for weeks."],
++  ["st-qa-ethereum-se-017", "Why did the ERC-721 authors keep a plain transferFrom next to safeTransferFrom?"],
++  ["st-qa-ethereum-se-018", "If I selfdestruct my contract, is its stored data actually gone from the chain?"],
++  ["st-qa-ethereum-se-019", "Does relying on MetaMask's default remote node undermine trustless use of Ethereum dapps?"],
++  ["st-qa-ethereum-se-020", "Show why contracts should let payees pull funds instead of pushing ether to them."],
++  ["st-qa-health-se-001", "Are vitamin pills made in a lab worse for you than the vitamins in food?"],
++  ["st-qa-health-se-002", "Is there a known death rate for the common cold like the ones quoted for flu and COVID-19?"],
++  ["st-qa-health-se-003", "I get hiccups that won't quit. What actually works to stop them, and when should I worry?"],
++  ["st-qa-health-se-004", "Explain in plain words what the two numbers in a reading like 120 over 80 mean."],
++  ["st-qa-health-se-005", "When I smoked, my finger oxygen reading was always 100%. Shouldn't smokers show low saturation?"],
++  ["st-qa-health-se-006", "How much coffee per day is considered safe for a healthy grown-up?"],
++  ["st-qa-health-se-007", "What condition could make someone unable to judge the distance of a ball flying at them, while still seeing depth normally for still objects?"],
++  ["st-qa-health-se-008", "My doctor wants me to have several MRI scans a year. Could that many be bad for me?"],
++  ["st-qa-health-se-009", "Does ibuprofen ease pain only by calming inflammation, or does it block pain directly as well?"],
++  ["st-qa-health-se-010", "Give me the physiological reasons long hours at a desk are bad for health, and what to do about them."],
++  ["st-qa-health-se-011", "What criteria do doctors use to be sure a patient is really dead before pronouncing it?"],
++  ["st-qa-health-se-012", "I found a small fuzzy spot on a slice of bread. Can I just tear it off and eat the rest?"],
++  ["st-qa-health-se-013", "Do carrots really sharpen your vision, or is it a myth?"],
++  ["st-qa-health-se-014", "Describe how drinking while pregnant can harm the baby."],
++  ["st-qa-health-se-015", "Tell me the right first-aid steps after someone is bitten by a snake, and the things to avoid."],
++  ["st-qa-health-se-016", "I've been eating very little for months. Can my basal metabolic rate actually slow down because of it?"],
++  ["st-qa-health-se-017", "Can a blood antibody test show a past herpes type 2 infection in someone who never had symptoms, and how reliable is a positive?"],
++  ["st-qa-health-se-018", "One of my blisters burst. Should I put antibiotic ointment like Neosporin on it, or something else?"],
++  ["st-qa-health-se-019", "Is ice still recommended for minor burns, and what is the current first aid?"],
++  ["st-qa-health-se-020", "Tell me whether a grinding or popping noise when I turn my head, with no pain, is anything to worry about."],
++  ["st-qa-money-se-001", "Does a lender looking at my credit report lower my score?"],
++  ["st-qa-money-se-002", "I always settle my credit card statement the day it arrives instead of waiting for the due date. Am I losing anything?"],
++  ["st-qa-money-se-003", "To build credit, is it better to be added to a family member's premium card as an authorized user, or to open a secured card myself?"],
++  ["st-qa-money-se-004", "A stranger online offered to put $1,000 into my PayPal if I return $500 to him, and wants my phone number and address. What is going on?"],
++  ["st-qa-money-se-005", "Tell me how to get a refund check payable to me and my former roommate deposited when we now live in different cities."],
++  ["st-qa-money-se-006", "Why do ordinary US bank transfers and direct deposits take a business day or more to clear?"],
++  ["st-qa-money-se-007", "What stops American credit unions from accepting any customer who walks in?"],
++  ["st-qa-money-se-008", "I am moving a pre-tax 401(k) from an old job. Can it go into a Roth IRA, and which destination makes more sense?"],
++  ["st-qa-money-se-009", "Since 401(k) withdrawals are taxed as ordinary income rather than at the lower capital-gains rate, is a regular brokerage account the better deal?"],
++  ["st-qa-money-se-010", "My high-deductible plan and HSA both started on January 1. Can I still put money in for the prior tax year before the April filing deadline?"],
++  ["st-qa-money-se-011", "Walk me through how vested restricted stock units are taxed, including what happens when I later sell the shares."],
++  ["st-qa-money-se-012", "In the UK, does earning a couple of pounds over the higher-rate threshold double my total income tax bill?"],
++  ["st-qa-money-se-013", "When a target-date fund holds only other mutual funds, is its stated expense ratio charged on top of the underlying funds' ratios?"],
++  ["st-qa-money-se-014", "Explain whether a basket ETF rises when one of its stocks jumps 10%, even with nobody buying the ETF itself."],
++  ["st-qa-money-se-015", "I got a $5,000 windfall and owe on a big card at 14%, a store card with deferred interest ending soon at 24%, and a few small zero-interest cards. Tell me how to split it."],
++  ["st-qa-money-se-016", "I am 65 with large savings and a sales rep is pushing a whole life policy paying 1.7% that I would fund with $400k up front plus $75k a year. Is that wise?"],
++  ["st-qa-money-se-017", "List the cash I should have ready beyond a 20% down payment when buying my first home."],
++  ["st-qa-money-se-018", "For someone who would pay cash and values convenience over savings, does leasing a car or buying it outright make more sense?"],
++  ["st-qa-money-se-019", "My bank looks financially shaky, but my balance is within the FDIC limit. Should I move my money out?"],
++  ["st-qa-money-se-020", "Explain why the Series I savings bond rate fell while the Federal Reserve was raising interest rates."],
++  ["st-qa-outdoors-se-001", "I sail about once a month and recently got badly seasick in rough water. What can I do to keep it from happening again?"],
++  ["st-qa-outdoors-se-002", "What is the best way to avoid putting on frozen boots on a cold winter camping morning?"],
++  ["st-qa-outdoors-se-003", "On a steep climb to about 2,100 m I felt wiped out and breathless. How can I tell if that was altitude sickness or just fatigue?"],
++  ["st-qa-outdoors-se-004", "Describe a method for wading a knee-deep creek in winter and getting your feet warm and dry afterwards."],
++  ["st-qa-outdoors-se-005", "In a survival situation, can drinkable liquor like whiskey or vodka be used to clean a wound?"],
++  ["st-qa-outdoors-se-006", "Teach me how to interpret the contour lines and elevation numbers on a hiking topo map."],
++  ["st-qa-outdoors-se-007", "In orienteering, what does it mean to 'contour' around a hill, and when is it useful?"],
++  ["st-qa-outdoors-se-008", "Why is it called a nor'easter when the storm itself travels from the southwest up the coast?"],
++  ["st-qa-outdoors-se-009", "Apart from lead climbing, when should you choose a static rope over a dynamic one?"],
++  ["st-qa-outdoors-se-010", "We often camp where wild pigs roam. If a group of them charges, what should I do?"],
++  ["st-qa-outdoors-se-011", "Tell me how to use up the last bit of gas in my camp stove canisters and how to throw them away properly."],
++  ["st-qa-outdoors-se-012", "Is there real evidence that hiking poles help your knees and legs?"],
++  ["st-qa-outdoors-se-013", "I'm backpacking in Yosemite. Which animals are an actual risk, and can I bring bear spray?"],
++  ["st-qa-outdoors-se-014", "Is a triangular head a reliable way to tell whether a snake is venomous?"],
++  ["st-qa-outdoors-se-015", "Give me ways to spot boggy, dangerous ground while hiking after heavy rain."],
++  ["st-qa-outdoors-se-016", "Can moss on tree trunks really tell you which way is north?"],
++  ["st-qa-outdoors-se-017", "If I'm out with no pots or pans, how can I cook a piece of meat over a fire?"],
++  ["st-qa-outdoors-se-018", "I scraped my leg on a hike and forgot my first-aid kit. How should I take care of it?"],
++  ["st-qa-outdoors-se-019", "Does regular cold-water swimming protect you from the cold shock response?"],
++  ["st-qa-outdoors-se-020", "Explain the rules for sleeping out under the stars, without a tent, in the Austrian mountains."],
++  ["st-qa-travel-se-001", "My Thai tourist extension runs out one day before my flight home. What actually happens at the airport if I leave a single day late?"],
++  ["st-qa-travel-se-002", "Does a one-year Hungarian residence card let an Indian citizen fly home and return, even though the visa sticker in the passport says single entry?"],
++  ["st-qa-travel-se-003", "I'm helping my father with his US DS-160 and he has had dozens of school jobs over 25 years. Does he need to enter every one?"],
++  ["st-qa-travel-se-004", "List what an American visiting France for about three weeks should carry at the border besides the passport."],
++  ["st-qa-travel-se-005", "Is there an airside connection between JFK terminals for passengers changing between two domestic flights?"],
++  ["st-qa-travel-se-006", "Give me the easiest public transport route from London Gatwick to Paddington station with luggage."],
++  ["st-qa-travel-se-007", "Where does the London Oyster card stop working when you take a train out of Paddington?"],
++  ["st-qa-travel-se-008", "A European airline asked for volunteers to give up seats on my oversold flight. What am I entitled to if I raise my hand?"],
++  ["st-qa-travel-se-009", "I'd like to bring cream-filled semla buns in my hand luggage from Stockholm Arlanda. Will the 100 ml liquids rule get them confiscated?"],
++  ["st-qa-travel-se-010", "Suggest ways to turn euro notes into a pile of coins for parking meters in Italy."],
++  ["st-qa-travel-se-011", "How much should a tourist leave as a tip after eating at Thai restaurants and street stalls?"],
++  ["st-qa-travel-se-012", "I live in Ireland and will leave Europe in three months. Can I get the VAT back on electronics I order from Amazon UK?"],
++  ["st-qa-travel-se-013", "How many Cuban cigars can a departing tourist take without paperwork, and are they sold at Havana and Varadero airports?"],
++  ["st-qa-travel-se-014", "I'm a New Zealander planning Israel plus Egypt, Jordan and Turkey. Could Israeli marks in my passport cause trouble at those borders?"],
++  ["st-qa-travel-se-015", "Give me safety tips for carrying a pricey DSLR and lenses around Peru, Chile and Ecuador."],
++  ["st-qa-travel-se-016", "My overnight flight from Seoul to Beirut via the Gulf leaves after midnight. How should I handle sleep and jet lag on the way?"],
++  ["st-qa-travel-se-017", "Will Swedish border control accept a travel insurance policy shown on a phone screen instead of a paper copy?"],
++  ["st-qa-travel-se-018", "Since EU roam-like-at-home started, can someone in Sweden just use a cheap Romanian SIM card permanently?"],
++  ["st-qa-travel-se-019", "Explain the US road rules a British driver doing Route 66 is most likely to get wrong."],
++  ["st-qa-travel-se-020", "I'm a US-German dual national who came into Schengen on my American passport. Will I be penalised for overstaying if I exit after six months with my German passport?"],
++];
++const PUBLIC_HITS: Record<string, Expect> = {
++  "st-boar-medlineplus-en-003": ["dose", false],
++};
++// The reviewer's examples (REVIEW-healthgap.md word-list edits): [text, earlier user turns, expected class].
++const REVIEW: [string, string[], string | null][] = [
++  ["What dose of amoxicillin for a 10 kg child?", [], "dose"],
++  ["Ibuprofen dose for my 4 year old", [], "dose"],
++  ["My son took two doses of Calpol by mistake", [], "dose"],
++  ["She took her warfarin twice today", [], "dose"],
++  ["How many teaspoons of baking soda for 2 cups of flour?", [], null],
++  ["How many ml in 3 cups?", [], null],
++  ["How many drops of bleach per 1 liter of water to purify it?", [], null],
++  ["How much weed killer should I mix per liter?", [], null],
++  ["Best rat poison for the attic?", [], null],
++  ["Drain cleaner for a clogged sink?", [], null],
++  ["Is the paint thinner smell bad?", [], null],
++  ["Is there pesticide on strawberries?", [], null],
++  ["My toddler drank some wine", [], "poison"],
++  ["My kid got into my weed edibles", [], "poison"],
++  ["My son swallowed a dishwasher tablet", [], "poison"],
++  ["Mi hijo tomó lejía", [], "poison"],
++  ["Meu filho bebeu água sanitária", [], "poison"],
++  ["What's the lethal dose of caffeine?", [], "poison"],
++  ["Dad took 10 of his heart pills by mistake", [], "poison"],
++  ["Took 2 Tylenol PM and a beer, too much?", [], "poison"],
++  ["Carbon monoxide alarm by the pool heater is beeping", [], "co"],
++  ["Is the misleading CO reading on my monitor real?", [], "co"],
++  ["Moving to CO next month, how is the market in the house segment?", [], null],
++  ["Denver, CO in the house market", [], null],
++  ["How long can a car battery last in the cold?", [], null],
++  ["How long can a cactus go without water?", [], null],
++  ["Can a person survive 5 days without water?", [], "survival"],
++  ["Can you die of thirst in a day?", [], "survival"],
++  ["poison ivy rash on my arm", [], null],
++  ["Are there poison weeds in the garden?", [], null],
++  ["What exposure dose for night photography?", [], null],
++  ["What is the CO population of Colorado?", [], null],
++  ["Can a startup survive without funding?", [], null],
++  ["when can she have more?", ["I gave her Calpol at 9."], "dose"],
++  ["when can I visit Lisbon again?", ["I gave her Calpol at 9."], null],
++];
++
++describe("healthGap.classify: rule v1.1 goldens", () => {
++  it("the 64 health probes: 16 fire, each with its class and form", () => {
++    expect(PROBES).toHaveLength(64);
++    for (const [id, q, turns, cls, event] of PROBES) {
++      const g = classify(q, turns);
++      expect(g?.cls ?? null, id).toBe(cls);
++      expect(g?.event ?? false, id).toBe(event);
++      expect(g?.prevTurn ?? false, id).toBe(false);
++    }
++    expect(PROBES.filter(([, q, t]) => classify(q, t)).map(([id]) => id)).toEqual(
++      ["h01", "h02", "h08", "h10", "h15", "h16", "h19", "h21", "h23", "h24", "h27", "h28", "h30", "h32", "n03", "n06"]
++    );
++  });
++  it("the 280 public bench questions: only the vitamin D IU self-test fires (dose)", () => {
++    expect(PUBLIC).toHaveLength(280);
++    const fired = PUBLIC.filter(([, q]) => classify(q)).map(([id]) => id);
++    expect(fired).toEqual(Object.keys(PUBLIC_HITS));
++    for (const [id, q] of PUBLIC) {
++      const want = PUBLIC_HITS[id];
++      const g = classify(q);
++      expect(g ? [g.cls, g.event] : null, id).toEqual(want ? [want[0], want[1] ?? false] : null);
++    }
++  });
++  it("the reviewer's word-list examples", () => {
++    for (const [q, turns, cls] of REVIEW) expect(classify(q, turns)?.cls ?? null, q).toBe(cls);
++  });
++  it("a split dose question: the previous turn joins a follow-up-only turn, never a new question", () => {
++    expect(classify("I gave her Calpol at 9.")).toBeNull();
++    expect(classify("when can she have more?", ["I gave her Calpol at 9."])).toEqual({ cls: "dose", event: false, prevTurn: true });
++    expect(classify("when can I visit Lisbon again?", ["I gave her Calpol at 9."])).toBeNull();
++    // the current turn's own class wins over the join
++    expect(classify("Is 5 g of nutmeg toxic?", ["I gave her Calpol at 9."])).toEqual({ cls: "poison", event: false, prevTurn: false });
++  });
++  it("precedence: poison-event > co > dose > poison-info > survival", () => {
++    expect(healthGapClasses("Dad took 10 of his heart pills by mistake")).toEqual(["poison-event", "dose"]);
++    expect(classify("Took 2 Tylenol PM and a beer, too much?")).toEqual({ cls: "poison", event: true, prevTurn: false });
++    expect(classify("What's the lethal dose of caffeine?")).toEqual({ cls: "poison", event: false, prevTurn: false });
++  });
++  it("codes, card fallback and the dose line", () => {
++    expect(healthGapCodes({ cls: "poison", event: true, prevTurn: true })).toEqual(["healthgap:poison", "healthgap:event", "healthgap:prev-turn"]);
++    expect(healthGapCodes({ cls: "dose", event: false, prevTurn: false })).toEqual(["healthgap:dose"]);
++    expect(healthGapCard({ cls: "poison", event: false, prevTurn: false })).toBe("poisoning");
++    expect(healthGapCard({ cls: "co", event: false, prevTurn: false })).toBe("co");
++    expect(healthGapCard({ cls: "dose", event: false, prevTurn: false })).toBeNull();
++    expect(healthGapCard(null)).toBeNull();
++    expect(noDoseAnswer(false)).toMatch(/^I don't have a reliable offline source on this, so I won't give medication doses from memory\. .* even if they seem fine\.$/);
++    expect(noDoseAnswer(true)).toMatch(/192 SAMU ou 193 Bombeiros/);
++    expect(noDoseAnswer(false, true)).toMatch(/^No tengo una fuente offline confiable/);
++  });
++});
+diff --git a/src/routing/healthGap.ts b/src/routing/healthGap.ts
+new file mode 100644
+index 0000000..b3ecef7
+--- /dev/null
++++ b/src/routing/healthGap.ts
+@@ -0,0 +1,154 @@
++/**
++ * HEALTHGAP (rule v1.1, rnd arms/healthgap/HEALTHGAP-rule-v1.1.md): the planning/information forms of four health themes
++ * that the learned emergency detector scores low and no lexical layer sees: a medicine dose ("How many mg of ibuprofen
++ * for a 20 kg child?"), a poisoning ("Is 5 g of nutmeg toxic?", "Ate 30 g of death cap"), a carbon monoxide reading
++ * ("CO reading 200 ppm in the house") and a survival time ("How long can a 2 year old go without water?").
++ *
++ * classify() is the predicate; answer.ts treats a hit as a detector fire (deps.healthgap only) and picks the no-source
++ * answer by class. The term lists are normative (the native port copies them); the Python scan in the rule is their
++ * source and the tests below pin both against the same goldens. Pure.
++ */
++import { FOLLOW_UP_WORDS } from "./context";
++
++export type HealthGapClass = "dose" | "poison" | "co" | "survival";
++export interface HealthGap {
++  cls: HealthGapClass;
++  /** poison only: the event form (a deadly mushroom named, or an ingestion verb + a substance): the card goes first. */
++  event: boolean;
++  /** The class came from the previous user turn joined with a follow-up-only current turn. */
++  prevTurn: boolean;
++}
++
++const B = String.raw`(?<![\p{L}\p{N}_])`;
++const E = String.raw`(?![\p{L}\p{N}_])`;
++const W = String.raw`[\p{L}\p{N}_]`;
++const bw = (alts: string) => new RegExp(`${B}(?:${alts})${E}`, "iu");
++
++// ---- dose
++const DRUG = bw(
++  String.raw`ibuprofen|ibuprofeno|acetaminophen|paracetamol|tylenol|advil|calpol|nurofen|motrin|aspirin|aspirina|dipirona|metamizol|novalgina|amoxicillin|amoxicilina|azithromycin|antibiotics?|antibi[óo]tico|melatonin|benadryl|diphenhydramine|loratadine|cetirizine|antihistamine|loperamide|imodium|omeprazole|ondansetron|dramamine|insulin|insulina|codeine|tramadol|morphine|oxycodone|diazepam|lorazepam|xanax|valium|zolpidem|prednisone|dexamethasone|metformin|warfarin|iron tablets?|vitamin [a-k]\d?|painkillers?|analg[ée]sic[oa]?|rem[ée]dio|medicine|medication|medicamento|medicina`
++);
++const DOSE_WORD = bw(String.raw`dose|doses|dosage|dosagem|dosis|tablets?|pills?|capsules?|drops|gotas|gotitas|comprimidos?|pastillas?|cucharadas?|colheres?|teaspoons?|spoonfuls?|ml|mg|mcg|µg`);
++const DOSE_INTENT = bw(
++  String.raw`how (?:many|much)|quant[ao]s|cu[áa]nt[ao]s|too (?:much|many)|demais|is it (?:safe|ok|okay|too)|max(?:imum)?|m[áa]xim[oa]|can (?:i|she|he|we|they|my ${W}+) (?:have|take|give)|(?:what time|when) can|again|more|(?:every|per|each|a cada|cada) \d+ ?(?:h|hr|hrs|hours?|horas?|days?|dias?|d[íi]as?)` +
++    String.raw`|what dose|dose of|twice|double|by mistake|accidentally|extra|missed|next (?:one|dose)|together`
++);
++const PATIENT = bw(String.raw`\d+ ?(?:kg|kilos?|lbs?|pounds?|months?|years?|yo|anos|meses|años)|child|kid|baby|toddler|infant|son|daughter|filh[oa]|criança|bebê|hij[oa]|niñ[oa]|bebé`);
++const COOKING = bw(String.raw`recipe|bake|baking|flour|sugar|butter|dough|batter|yeast|cups?|oven|cooking`);
++const DIGIT = /\d/u;
++const WATER_PURIFY = new RegExp(
++  String.raw`(?:purif${W}*|disinfect${W}*|treat${W}*|sanitiz${W}*|make .{0,20}safe to drink|safe to drink|potable|contaminated).{0,60}water|water.{0,60}(?:purif${W}*|disinfect${W}*|treat${W}*|safe to drink|potable|contaminated)`,
++  "isu"
++);
++function isDose(q: string): boolean {
++  if (DRUG.test(q)) return DOSE_INTENT.test(q) || DOSE_WORD.test(q) || PATIENT.test(q);
++  return DOSE_WORD.test(q) && DIGIT.test(q) && DOSE_INTENT.test(q) && !COOKING.test(q) && !WATER_PURIFY.test(q);
++}
++
++// ---- poison
++const HAZARD = bw(String.raw`death cap|destroying angel|amanita|cogumelo venenoso|hongo venenoso`);
++const INGEST = bw(
++  String.raw`ate|eaten|eat|drank|drunk|drink(?:ing)?|swallow${W}*|ingest${W}*|licked|chewed|took|taken|sniffed|inhal${W}*|engoli${W}*|bebeu|comeu|tom(?:ou|ei)|trag[óo]|bebi[óo]|comi[óo]` +
++    String.raw`|got into|chewing|sucked|tomó|ingirió`
++);
++const SUBSTANCE = bw(
++  String.raw`bleach|detergent|dish soap|laundry pods?|cleaner|cleaning (?:fluid|product)|disinfectant|hand sanitizer|sanitizer|mouthwash|kerosene|petrol|gasoline|diesel|paint|glue|solvent|mushrooms?|wild berries|berries|lily|oleander|foxglove|nutmeg|pills|tablets|medicine|medication|cigarettes?|nicotine|vape (?:juice|liquid)|e-?liquid|alcohol|battery|magnet|coin|silica gel|moth ?balls?|cannabis|edibles?|gummies|cogumelo|alvejante|cloro|lavandina|lej[íi]a|hongos?|setas?` +
++    String.raw`|antifreeze|ethylene glycol|rat poison|pesticide|insecticide|weed ?killer|paraquat|lamp oil|lighter fluid|paint thinner|turpentine|drain cleaner|oven cleaner|button battery` +
++    String.raw`|wine|beer|vodka|liquor|spirits|whiske?y|rum|gin|weed|gumm(?:y|ies)|pill|tablet|dishwasher (?:tablet|pod)s?|toilet cleaner|paraffin|white spirit|methanol|rubbing alcohol|isopropyl${W}*|nail polish remover|acetone|ammonia|lye|caustic soda|rodenticide|fertili[sz]er|slug pellets|ant bait|essential oils?|eucalyptus oil|tea tree oil|button cell|coin cell|água sanitária|soda cáustica|querosene|gasolina|chumbinho|raticida`
++);
++const POISON_WORD = bw(String.raw`poison(?:ed|ing|ous)?|toxic|toxicity|overdos${W}*|lethal dose|deadly dose|envenen${W}*|intoxica${W}*|veneno|venenos[oa]|t[óo]xic[oa]`);
++const QUANTITY = bw(String.raw`\d+(?:[.,]\d+)? ?(?:g|mg|ml|grams?|gramas?|cups?|tablets?|pills?|drops?|bottles?|spoons?|teaspoons?|capsules?|comprimidos?|copos?|x[íi]caras?)`);
++const IS_THIS = bw(String.raw`(?:is|are) (?:it|that|this|\d)|how (?:much|many)`);
++const FOOD_POISONING = /food poisoning/iu;
++const LETHAL_AMOUNT = bw(String.raw`(?:lethal|deadly|toxic|fatal) (?:dose|amount)`);
++function poisonForm(q: string): "event" | "info" | null {
++  if (WATER_PURIFY.test(q)) return null;
++  if (HAZARD.test(q) || (INGEST.test(q) && SUBSTANCE.test(q))) return "event";
++  if ((POISON_WORD.test(q) && (INGEST.test(q) || QUANTITY.test(q) || IS_THIS.test(q)) && !FOOD_POISONING.test(q)) || LETHAL_AMOUNT.test(q)) return "info";
++  return null;
++}
++
++// ---- carbon monoxide (the token CO is case-sensitive: "co" is a word in PT/ES)
++const CARBON_MONOXIDE = /carbon monoxide|mon[óo]xido de carbono/iu;
++const PPM_HOME = new RegExp(String.raw`${B}\d+ ?ppm${E}(?=.{0,80}(?:house|home|room|cabin|garage|basement|rv|boat|tent|indoors|inside|bedroom|apartment|flat))`, "isu");
++const CO_CS = new RegExp(
++  String.raw`${B}CO(?![\p{L}\p{N}_])(?=.{0,40}(?:ppm|alarm|detector|reading|level|monitor|poison|leak|exposure))|${B}(?:ppm|alarm|detector|reading|level|monitor)s?${E}.{0,30}${B}CO(?![\p{L}\p{N}_])`,
++  "su"
++);
++const CO_EXCLUDE = bw(String.raw`co2|carbon dioxide|chlorine|tds|nitrates?|fluoride|lead|radon|pm ?2[.,]5|particulates?|humidity|colorado`);
++const CO_CITY = new RegExp(String.raw`,\s*CO${E}`, "u");
++function isCo(q: string): boolean {
++  if (CARBON_MONOXIDE.test(q)) return true;
++  return (PPM_HOME.test(q) || CO_CS.test(q)) && !CO_EXCLUDE.test(q) && !CO_CITY.test(q);
++}
++
++// ---- survival time
++const SURVIVAL = new RegExp(
++  String.raw`how (?:long|many (?:hours|days|minutes)) (?:can|could|does|do|will|would) (?:a |an |the |some)?[\p{L}\p{N}_' -]{0,40}?(?:survive|go|last|live|stay alive|hold out)[^?]{0,40}?(?:without (?:water|food|eating|drinking|sleep|oxygen|air|insulin|dialysis)|in (?:cold|freezing|icy|the cold|the snow|the heat|the sun|the desert|\d+ ?°? ?[cf] water|\d+ ?degree))|(?:it'?s|it has|has) been \d+ (?:days|hours) (?:without|since (?:i|she|he|they|we) (?:ate|drank|had|slept))|without (?:water|food) for \d+ (?:days|hours)` +
++    String.raw`|survive \d+ (?:days|hours) without|die (?:of|from) (?:thirst|dehydration|starvation|hunger)`,
++  "isu"
++);
++const SURVIVAL_EXCLUDE = bw(String.raw`plants?|cactus|cacti|succulents?|trees?|seedlings?|lawn|grass|batter(?:y|ies)|phones?|laptops?|cars?|engines?|startups?|business(?:es)?|compan(?:y|ies)`);
++const isSurvival = (q: string) => SURVIVAL.test(q) && !SURVIVAL_EXCLUDE.test(q);
++
++/** Every class that fires on one text, in precedence order: poison-event > co > dose > poison-info > survival. */
++export function healthGapClasses(q: string): string[] {
++  const p = poisonForm(q);
++  const out: string[] = [];
++  if (p === "event") out.push("poison-event");
++  if (isCo(q)) out.push("co");
++  if (isDose(q)) out.push("dose");
++  if (p === "info") out.push("poison-info");
++  if (isSurvival(q)) out.push("survival");
++  return out;
++}
++
++function classifyOne(q: string): Omit<HealthGap, "prevTurn"> | null {
++  const top = healthGapClasses(q)[0];
++  if (!top) return null;
++  return { cls: (top.startsWith("poison") ? "poison" : top) as HealthGapClass, event: top === "poison-event" };
++}
++
++/** Follow-up-only words a split dose question uses ("when can she have more?") beyond isHealthFollowUp's list. */
++const FOLLOW_UP_EXTRA = new Set(["more", "have", "another", "again", "dose", "doses", "much", "many", "too", "safe", "next", "one"]);
++function followUpOnly(query: string): boolean {
++  const words = query.toLowerCase().replace(/[¿¡?!.,;:]/g, " ").split(/\s+/).filter(Boolean);
++  return words.length > 0 && words.length <= 12 && words.every((w) => FOLLOW_UP_WORDS.has(w) || FOLLOW_UP_EXTRA.has(w));
++}
++
++/**
++ * The current turn's class; if it has none and it is a follow-up-only turn (≤ 12 words, all in the follow-up lists),
++ * the class of the previous user turn joined with it ("I gave her Calpol at 9." + "when can she have more?" → dose).
++ * The word guard keeps a new question out ("when can I visit Lisbon again?").
++ */
++export function classify(query: string, userTurns: string[] = []): HealthGap | null {
++  const now = classifyOne(query);
++  if (now) return { ...now, prevTurn: false };
++  const last = userTurns[userTurns.length - 1];
++  if (!last || !followUpOnly(query)) return null;
++  const joined = classifyOne(`${last}. ${query}`);
++  return joined ? { ...joined, prevTurn: true } : null;
++}
++
++/** Receipt codes for a gap turn (after the detector's own codes). */
++export function healthGapCodes(gap: HealthGap): string[] {
++  return [`healthgap:${gap.cls}`, ...(gap.event ? ["healthgap:event"] : []), ...(gap.prevTurn ? ["healthgap:prev-turn"] : [])];
++}
++
++/** The card a gap turn falls back to when no specific condition card applies: poisoning or CO; null for dose and survival. */
++export function healthGapCard(gap: HealthGap | null): "poisoning" | "co" | null {
++  return gap?.cls === "poison" ? "poisoning" : gap?.cls === "co" ? "co" : null;
++}
++
++/**
++ * The no-source answer for a dose question (rule v1.1 §3.1): no medication dose from memory, the label and a pharmacist,
++ * and the overdose line. Text reviewed by an independent Opus reviewer (HEALTHGAP review, 2026-10-15): AI-reviewed, not
++ * clinically reviewed. PT/ES are translations of the reviewed EN text.
++ */
++export function noDoseAnswer(pt: boolean, es = false): string {
++  if (es && !pt)
++    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar dosis de medicamentos de memoria. Usa la dosis y el tiempo entre dosis impresos en el envase, o pregunta a un farmacéutico o a un médico. Para un niño, usa la dosis para su edad o su peso que indica la etiqueta y el dosificador que viene con el medicamento; si la etiqueta no indica su edad o su peso, pregunta antes a un farmacéutico o a un médico. Si alguien pudo haber tomado más del máximo de la etiqueta, o el mismo componente de dos productos distintos, llama ahora a un centro de toxicología o al número de emergencias local (911 en gran parte de América, 112 en Europa), aunque parezca estar bien.";
++  return pt
++    ? "Não tenho uma fonte offline confiável sobre isso, então não vou indicar doses de medicamentos de memória. Use a dose e o intervalo entre as doses impressos na embalagem, ou pergunte a um farmacêutico ou médico. Para uma criança, use a dose para a idade ou o peso dela indicada no rótulo e o medidor que vem com o remédio; se o rótulo não trouxer a idade ou o peso dela, pergunte antes a um farmacêutico ou médico. Se alguém pode ter tomado mais do que o máximo do rótulo, ou o mesmo princípio ativo de dois produtos diferentes, ligue agora para um centro de informação toxicológica (CIATox) ou para o serviço de emergência (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA), mesmo que a pessoa pareça bem."
++    : "I don't have a reliable offline source on this, so I won't give medication doses from memory. Use the dose and the time between doses printed on the package, or ask a pharmacist or doctor. For a child, use the dose for their age or weight on the label and the measuring device that comes with the medicine; if the label doesn't list their age or weight, ask a pharmacist or doctor first. If someone may have taken more than the label's maximum, or the same ingredient from two different products, call a poison control center or your local emergency number now (911 in the US, 112 in Europe), even if they seem fine.";
++}

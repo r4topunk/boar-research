@@ -1,0 +1,11 @@
+--- a/runner/adapter.ts
++++ b/runner/adapter.ts
+@@ -800,6 +800,8 @@
+     recordExecution: async (r: any) => { records.push(r); },
+     memoryBytes: () => process.memoryUsage().rss,
+     ...(emergencyScore ? { emergencyScore } : {}),
++    // NUMGUARD (engine deps.numguard, src/routing/numguard.ts): the eval-side switch; the engine reads deps only.
++    ...(process.env.NUMGUARD === "1" ? { numguard: true } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 

@@ -1,0 +1,97 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-20 19:44:16
++++ b/be/adapter-litedecline.ts	2026-10-20 19:44:34
+@@ -45,6 +45,7 @@
+   type TraceEvent,
+ } from "./trace";
+ import { gateEnabled, gateTop, renderChatML, topProbs } from "./gate";
++import type { StreamState } from "./server";
+ import { applyData, budgetExceeded, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, rssSampler, serverVersion, sseData } from "./server";
+ 
+ const HERE = dirname(fileURLToPath(import.meta.url));
+@@ -481,6 +482,8 @@
+     hasEmbeddedChatTemplate: () => hasTemplate,
+     async estimateFit() { return null; },
+     setAnswerPrefix() { /* not emulated (cache_prompt false = fresh prefill per answer, as the node path) */ },
++    /** LOGPROB arm: the last generate's per-token logprobs. */
++    lastLogprobs: [] as StreamState["logprobs"],
+     async generate(o: any): Promise<string> {
+       const { path, body } = requestFor(hasTemplate ? o : { ...o, messages: undefined }, temp, seed);
+       const temperature = body.temperature as number;
+@@ -522,6 +525,7 @@
+         hidden: { startedAt: start, reasoningTokens: st.reasoningTokens, firstReasoningMs: st.firstReasoningMs, visibleText: st.firstTextMs !== null,
+                   budgetExceeded: budgetExceeded(st.reasoningTokens, o.thinkingBudget, o.enableThinking), peakRssBytes },
+       };
++      engine.lastLogprobs = st.logprobs;
+       onGeneration(g);
+       o.onTimings?.({ promptTokens: g.promptTokens, promptMs: g.promptMs, predictedTokens: g.predictedTokens, predictedMs: g.predictedMs, cachedTokens: 0 });
+       return st.content;
+@@ -694,7 +698,11 @@
+       if (cli.dumpPrompts)
+         appendFileSync(cli.dumpPrompts, JSON.stringify({ itemId: currentItem, ...(o.messages ? { messages: o.messages } : { prompt: o.prompt }),
+                                                          nPredict: o.nPredict ?? null, enableThinking: o.enableThinking ?? null }) + "\n");
+-      return gen0(o);
++      const out = await gen0(o);
++      // LOGPROB arm: one row per generate next to the traces (<out>.logprobs.jsonl); read-only side output.
++      if (server) appendFileSync(cli.out!.replace(/\.jsonl$/, "") + ".logprobs.jsonl",
++                                 JSON.stringify({ itemId: currentItem, nPredict: o.nPredict ?? null, content: out, logprobs: (engine as any).lastLogprobs ?? [] }) + "\n");
++      return out;
+     };
+   }
+   // Sonar exp-30 (health11): learned emergency detector. Desktop stand-in for llama.rn: a llama-server built from
+diff -ru a/be/server.ts b/be/server.ts
+--- a/be/server.ts	2026-10-20 19:44:16
++++ b/be/server.ts	2026-10-20 19:44:34
+@@ -41,6 +41,9 @@
+   return out;
+ }
+ 
++/** LOGPROB arm: top-k alternatives requested per generated token. */
++export const LOGPROB_TOP = 20;
++
+ /** POST /v1/chat/completions body (o.messages) or POST /completion body (o.prompt). */
+ export function requestFor(o: GenOpts, temp: number | undefined, seed: number): { path: string; body: Record<string, unknown> } {
+   const sampler = samplerFor(o, temp, seed);
+@@ -54,6 +57,8 @@
+         max_tokens: maxTokensFor(o),
+         ...sampler,
+         cache_prompt: false,
++        // LOGPROB arm: per-token logprobs (top 20) in every streamed chunk; read-only, the sampler chain is unchanged.
++        logprobs: true, top_logprobs: LOGPROB_TOP,
+         ...(o.stop ? { stop: o.stop } : {}),
+         // b11010 enforces this per request (server-common.cpp: thinking_budget_tokens -> reasoning budget sampler) when
+         // the template exposes thinking tags, forcing the end tag like llama.rn does. Otherwise only the flag catches it.
+@@ -67,7 +72,7 @@
+   }
+   return {
+     path: "/completion",
+-    body: { prompt: o.prompt ?? "", stream: true, n_predict: maxTokensFor(o), ...sampler, cache_prompt: false,
++    body: { prompt: o.prompt ?? "", stream: true, n_predict: maxTokensFor(o), ...sampler, cache_prompt: false, n_probs: LOGPROB_TOP,
+             stop: o.stop ?? ["\nUser:", "\nQuestion:"] },
+   };
+ }
+@@ -97,10 +102,12 @@
+   timings: ServerTimings | null;
+   finishReason: string | null;
+   done: boolean;
++  /** LOGPROB arm: per visible-content token {token, logprob, top: [[token, logprob]...]} (reasoning tokens excluded). */
++  logprobs: { token: string; logprob: number; top: [string, number][] }[];
+ }
+ 
+ export const newStreamState = (): StreamState => ({
+-  content: "", reasoning: "", reasoningTokens: 0, firstReasoningMs: null, firstTextMs: null, timings: null, finishReason: null, done: false,
++  content: "", reasoning: "", reasoningTokens: 0, firstReasoningMs: null, firstTextMs: null, timings: null, finishReason: null, done: false, logprobs: [],
+ });
+ 
+ /**
+@@ -132,6 +139,10 @@
+     st.content += content;
+     onText?.(content);
+   }
++  // LOGPROB arm: chat chunks carry choices[0].logprobs.content, /completion chunks completion_probabilities.
++  const lps: any[] | undefined = choice ? choice.logprobs?.content ?? undefined : Array.isArray(j.completion_probabilities) ? j.completion_probabilities : undefined;
++  if (lps && !reasoning) for (const p of lps)
++    st.logprobs.push({ token: p.token, logprob: p.logprob, top: (p.top_logprobs ?? []).map((t: any) => [t.token, t.logprob] as [string, number]) });
+   if (choice?.finish_reason) st.finishReason = choice.finish_reason;
+   if (j.stop === true) st.done = true;
+   const t = j.timings;

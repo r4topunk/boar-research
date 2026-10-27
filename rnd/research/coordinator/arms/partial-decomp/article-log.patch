@@ -1,0 +1,10 @@
+--- <scratch>	2026-10-21 14:04:19
++++ <scratch>	2026-10-21 15:09:59
+@@ -666,6 +666,7 @@
+       a = { title: r.title, source: r.source, views: r.views, block_id: r.block_id, off: r.off, len: r.len, meta: meta ?? null };
+       this.rows.put(id, a);
+     }
++    bcLog(JSON.stringify({ e: "art", pack: (this as any).__packId ?? null, article: id, block: a.block_id, off: a.off, len: a.len }));
+     const block = await this.block(a.block_id);
+     const text = utf8(block.subarray(a.off, a.off + a.len));
+     const m = a.meta;

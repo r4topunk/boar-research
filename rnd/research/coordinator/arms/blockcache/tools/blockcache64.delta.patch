@@ -1,0 +1,11 @@
+--- a/src/rag/wikiPack.ts	2026-10-21 14:10:55
++++ b/src/rag/wikiPack.ts	2026-10-21 14:10:55
+@@ -249,7 +249,7 @@
+ );
+ 
+ const HEADING = /^(#{1,6})\s+(.*)$/gm;
+-const BLOCK_CACHE = 16;
++const BLOCK_CACHE = 64;
+ const ARTICLE_CACHE = 16;
+ // Batched lookups (BATCHRET): on the phone every SQL call is a JS<->native round trip (7-9 ms for a one-row read on a
+ // Pixel 8a, LITELAT), so per-term, per-title and per-article lookups are fetched with one IN (...) query each and kept

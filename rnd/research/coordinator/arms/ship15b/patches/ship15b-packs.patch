@@ -1,0 +1,22 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-21 17:53:03
++++ b/be/adapter-litedecline.ts	2026-10-21 17:53:03
+@@ -163,7 +163,8 @@
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+-  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
++  // SHIP15B (2026-10-21), model-only swap as FLOOR-ANCHORS: the 1.7B id loads Qwen2.5-1.5B-Instruct Q4_K_M (RC1 ship model); prompts/tier unchanged.
++  "qwen3-1.7b-q4km": { file: "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", sha256: "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -790,6 +791,8 @@
+       }
+     },
+     knowledgeReady: async () => {},
++    // SHIP15B: FACTS instant tier off (as the FLOOR closed-book control), so packs are the only difference.
++    facts: false,
+     englishNames: (q: string) => PL.englishNamesIn(q, PLA.ptLexicon()),
+     getSettings: async () => ({ quickFirst: true, alwaysComplete: false, largeModelConfirmedIds: [], loadCrashedIds: [], ...answerSettings }),
+     listInstalledLlms: async () =>

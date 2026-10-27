@@ -1,0 +1,6 @@
+{"name":"compass danger detector v2 (embedding + LLM band)",
+ "stage1":{"head":"../health-embed-v1/health-lr.v1.json","embed":"bge-small-en-v1.5-q8_0.gguf, no prefix, L2-normalized (as ../health-embed-v1/embed.mjs)"},
+ "rule":"p = sigmoid(w.x+b); p >= 0.80 -> danger; p <= 0.25 -> not danger; 0.25 < p < 0.80 -> ask the resident chat model",
+ "stage2":{"prompt_file":"llm-prompt.txt","user_turn":"Message: <question>","grammar":"root ::= \"yes\" | \"no\"","temperature":0,"max_tokens":2,
+   "model_by_tier":{"iphone-4gb":"Qwen2.5-1.5B-Instruct-Q4_K_M.gguf","android-12gb":"Qwen3-4B-Instruct-2507-Q4_K_M.gguf"},"danger_if":"yes"},
+ "chosen":"band and prompt fixed in this cycle after seeing results on Compass eval + pt-mirror (in-sample); prompt written once, not iterated. hm-fresh2/3 never opened."}

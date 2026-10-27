@@ -1,0 +1,23 @@
+diff -ruN a/src/constants/personalities.ts b/src/constants/personalities.ts
+--- a/src/constants/personalities.ts	2026-10-18 07:40:07
++++ b/src/constants/personalities.ts	2026-10-18 07:40:07
+@@ -43,7 +43,7 @@
+       "sentences or a brief paragraph, no preamble. Do not default to a bulleted list " +
+       "or a single takeaway sentence followed by three bullet points — use bullets only " +
+       "when the content is genuinely a list of distinct items.",
+-    styleReminder: "Keep it short: 2-3 sentences. No lists unless the question asks for one.",
++    styleReminder: "Keep it short: 2-3 sentences, unless the user asks for code, an example, a table or a translation. No lists unless the question asks for one.",
+   },
+   {
+     // Deliberately not called "Deep Research" or using 🔬 — that name/icon
+diff -ruN a/src/rag/pure.ts b/src/rag/pure.ts
+--- a/src/rag/pure.ts	2026-10-18 07:40:07
++++ b/src/rag/pure.ts	2026-10-18 07:40:07
+@@ -438,4 +438,6 @@
+   "lights, thermostats, timers, or any other device or system. You can only respond with text. " +
+   "Treat greetings and casual small talk conversationally and briefly, not as a command or task. " +
+   "Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you " +
+-  "don't actually have the ability to do.";
++  "don't actually have the ability to do. " +
++  // CHATFAIL L1: "You can only respond with text" was read by small models as "I can't write code".
++  "You can write text, code and examples: writing is not a physical action.";

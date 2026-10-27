@@ -1,0 +1,237 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -1222,6 +1222,28 @@
+         }
+       }
+ 
++      // DECODE-GROUND (eval arm patch, arms/decode-ground): the adapter sets globalThis.__boarDG when DG_ARM is set; unset =
++      // byte-identical engine. Runs after the instant snippet (deterministic layers keep the baseline's sources), never for
++      // health, multi-pass or the deep tier. SELECT (arms S/SC/SB): the model picks one sentence of the raw candidates under a
++      // grammar; sources = that sentence's whole chunk, or [] on NO_EVIDENCE (the engine's own closed-book path follows).
++      const DG: any = (globalThis as any).__boarDG;
++      let dgOn = false;
++      if (DG && !health && gen?.mode !== "multipass" && genTier !== "deep") {
++        if (DG.select) {
++          const seen = new Set<string>();
++          const cands = [...raw, ...sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c)]
++            .filter((c) => (seen.has(c.chunkId) ? false : (seen.add(c.chunkId), true)))
++            .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
++            .slice(0, DG.maxChunks ?? 12);
++          if (cands.length) {
++            const pick: RetrievedChunk | null = await DG.select(req.query, cands, sources);
++            sources = pick ? [pick] : [];
++            reasonCodes.push(pick ? `dg:select:${pick.chunkId}` : "dg:no-evidence");
++            emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
++          }
++        }
++        dgOn = sources.length > 0;
++      }
+       // No good source: never an answer from memory (health: point to emergency services).
+       // Off-topic sources only = no source (Boar, RT-1): the model answers with the
+       // "not from the offline library" instruction below, never quoting them.
+@@ -1474,6 +1496,10 @@
+                 ? {
+                     ...common,
+                     messages: deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder),
++                    // DECODE-GROUND: the same prompt without the sources block (CAD), the question-free template and the evidence text (copy-bias).
++                    ...(dgOn ? { dg: { noCtxMessages: deps.assembleChatMessages(req.query, [], ctx.systemPrompt, ctx.history, styleReminder),
++                                       tplMessages: deps.assembleChatMessages("", [], ctx.systemPrompt, ctx.history, styleReminder),
++                                       evidence: sources.map((c) => `${c.title}\n${c.body}`).join("\n") } } : {}),
+                     // CUT5-SPEED: with no sources and no conversation summary the system message is static -> its own KV session file.
+                     ...(sources.length === 0 && !ctx.history?.summary?.trim() ? { staticSystem: true } : {}),
+                   }
+--- a/be/adapter-litedecline.ts
++++ b/be/adapter-litedecline.ts
+@@ -45,7 +45,7 @@
+   type TraceEvent,
+ } from "./trace";
+ import { gateEnabled, gateTop, renderChatML, topProbs } from "./gate";
+-import { applyData, budgetExceeded, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, rssSampler, serverVersion, sseData } from "./server";
++import { applyData, budgetExceeded, maxTokensFor, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, rssSampler, serverVersion, sseData } from "./server";
+ 
+ const HERE = dirname(fileURLToPath(import.meta.url));
+ const ROOT = join(HERE, "..");
+@@ -404,6 +404,139 @@
+   return engine;
+ }
+ 
++// ---------------------------------------------------------------- DECODE-GROUND (eval arm patch, arms/decode-ground)
++// DG_ARM = S | C1 | SC | SB (unset = byte-identical adapter). S/SC/SB: SELECT one sentence of the raw candidates under a GBNF
++// grammar (greedy, NO_EVIDENCE alternative) -> the engine's prompt with sources = that sentence's chunk, or its closed-book path.
++// C1/SC: context-aware decoding (CAD, arXiv 2305.14739), greedy on (1+a)*logp(y|ctx) - a*logp(y|no ctx) over the union of both
++// top-40 sets, two slots with cache_prompt, token ids in. SB: logit_bias +b on the evidence's content tokens, engine sampling.
++const DG_ARM = process.env.DG_ARM ?? "";
++if (DG_ARM && !["S", "C1", "SC", "SB"].includes(DG_ARM)) throw new Error(`DG_ARM must be S, C1, SC or SB, got ${DG_ARM}`);
++const DG_SETTINGS = {
++  arm: DG_ARM, alpha: Number(process.env.DG_ALPHA ?? "1"), bias: Number(process.env.DG_BIAS ?? "2"),
++  missingLogprob: Number(process.env.DG_MISSING ?? "-30"), plausibility: Number(process.env.DG_PLAUS ?? "0"),
++  topN: 40, maxChunks: 12, maxSentences: 30, perChunk: 3, minChars: 40, maxChars: 300, selectGreedy: true,
++};
++let dgItem: any = null;
++const DG_STOP = new Set(("a an the and or but if then else of to in on at by for with from into onto over under about as is are was were be been being " +
++  "it its this that these those there here which who whom whose what when where why how not no nor so than too very can could will would shall should may " +
++  "might must do does did done have has had having i you he she we they me him her us them my your his our their mine yours also just only such each " +
++  "both all any some more most other same own up down out off again further once s t don").split(" "));
++async function dgPost(base: string, path: string, body: unknown): Promise<any> {
++  const r = await fetch(base + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
++  if (!r.ok) throw new Error(`dg ${path} HTTP ${r.status}: ${(await r.text().catch(() => "")).slice(0, 300)}`);
++  return r.json();
++}
++const dgKw = (o: any) => (o.enableThinking === false ? { chat_template_kwargs: { enable_thinking: false } } : {});
++/** The chat endpoint's prompt as token ids (apply-template + tokenize with specials = what /v1/chat/completions feeds; STAGE0 c2). */
++async function dgIds(base: string, messages: unknown, o: any): Promise<number[]> {
++  const t = await dgPost(base, "/apply-template", { messages, ...dgKw(o) });
++  return (await dgPost(base, "/tokenize", { content: t.prompt, add_special: false, parse_special: true })).tokens;
++}
++const dgTerms = (s: string) => new Set((s.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((w) => w.length >= 3 && !DG_STOP.has(w)));
++/** Sentences of a chunk: lines, then sentence ends; >= minChars; long ones cut at a word boundary; the perChunk with most question terms, in order. */
++export function dgSentences(body: string, qTerms: Set<string>): string[] {
++  const all = body.split(/\n+/).flatMap((line) => line.replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+(?=["'“(\[]?[A-Z0-9])/))
++    .map((x) => x.trim()).filter((x) => x.length >= DG_SETTINGS.minChars)
++    .map((x) => (x.length > DG_SETTINGS.maxChars ? x.slice(0, Math.max(DG_SETTINGS.minChars, x.lastIndexOf(" ", DG_SETTINGS.maxChars))) : x));
++  const scored = all.map((x, i) => ({ x, i, n: [...dgTerms(x)].filter((w) => qTerms.has(w)).length }));
++  return scored.sort((a, b) => b.n - a.n || a.i - b.i).slice(0, DG_SETTINGS.perChunk).sort((a, b) => a.i - b.i).map((e) => e.x);
++}
++const gbnfLit = (s: string) => `"${s.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
++async function dgSelect(base: string, q: string, cands: any[], kept: any[], seed: number) {
++  const t0 = performance.now();
++  const qT = dgTerms(q);
++  const alts: { text: string; chunk: any }[] = [];
++  const seen = new Set<string>();
++  for (const c of cands) for (const x of dgSentences(String(c.body ?? ""), qT)) {
++    const k = x.toLowerCase().replace(/\W+/g, " ").trim();
++    if (seen.has(k) || alts.length >= DG_SETTINGS.maxSentences) continue;
++    seen.add(k); alts.push({ text: x, chunk: c });
++  }
++  const rec: any = { candidates: cands.length, sentences: alts.length, choice: 0, chunkId: null, title: null, section: null, inKept: null, inDropped: null };
++  dgItem = { ...(dgItem ?? {}), select: rec };
++  if (!alts.length) { rec.ms = Math.round(performance.now() - t0); rec.noSentences = true; return null; }
++  const grammar = "root ::= " + [...alts.map((a) => gbnfLit(a.text)), gbnfLit("NO_EVIDENCE")].join(" | ");
++  const content = `Question: ${q}\n\nSentences from the offline library:\n${alts.map((a, i) => `${i + 1}. ${a.text}`).join("\n")}\n\n` +
++    "Copy exactly the one sentence that best answers the question. If no sentence answers it, write NO_EVIDENCE.";
++  const r = await dgPost(base, "/v1/chat/completions", { messages: [{ role: "user", content }], max_tokens: 160, temperature: 0, top_k: 1, seed, grammar,
++                                                         cache_prompt: false, chat_template_kwargs: { enable_thinking: false } });
++  const out = String(r.choices?.[0]?.message?.content ?? "").trim();
++  const i = alts.findIndex((a) => a.text === out);
++  Object.assign(rec, { ms: Math.round(performance.now() - t0), promptTokens: r.usage?.prompt_tokens ?? null, outTokens: r.usage?.completion_tokens ?? null,
++                       finish: r.choices?.[0]?.finish_reason ?? null, unmapped: out !== "NO_EVIDENCE" && i < 0 ? out.slice(0, 120) : undefined });
++  if (i < 0) return null;
++  const c = alts[i].chunk;
++  const inKept = kept.some((k: any) => k.chunkId === c.chunkId);
++  Object.assign(rec, { choice: i + 1, sentence: alts[i].text.slice(0, 200), chunkId: c.chunkId, title: c.title ?? null, section: c.section ?? null, inKept, inDropped: !inKept });
++  return c;
++}
++/** SB: [[id, +bias]] for the evidence's content tokens (no whitespace/punctuation/stopword pieces, none of the question-free template's ids). */
++async function dgBiasList(base: string, o: any): Promise<[number, number][]> {
++  const ev: any[] = (await dgPost(base, "/tokenize", { content: o.dg.evidence, add_special: false, with_pieces: true })).tokens;
++  const tpl = new Set(await dgIds(base, o.dg.tplMessages, o));
++  const ids = new Set<number>();
++  for (const t of ev) {
++    const piece = typeof t.piece === "string" ? t.piece : "";
++    const w = piece.trim().toLowerCase();
++    if (!/[a-z0-9]/i.test(w) || DG_STOP.has(w) || tpl.has(t.id)) continue;
++    ids.add(t.id);
++  }
++  dgItem = { ...(dgItem ?? {}), bias: { tokens: ids.size, evidenceTokens: ev.length } };
++  return [...ids].map((id) => [id, DG_SETTINGS.bias]);
++}
++/** C1/SC: token-by-token CAD over two slots (0 = with sources, 1 = without), greedy on the combined score. */
++async function dgCad(base: string, o: any, seed: number, rss: { start(): void; stop(): Promise<number | null> }, onGeneration: (g: Generation) => void) {
++  const { alpha, missingLogprob: miss, plausibility: beta, topN } = DG_SETTINGS;
++  const start = performance.now();
++  rss.start();
++  const ctxIds = await dgIds(base, o.messages, o), noIds = await dgIds(base, o.dg.noCtxMessages, o);
++  const eog = new Set<number>((await dgPost(base, "/tokenize", { content: "<|im_end|><|endoftext|>", add_special: false, parse_special: true })).tokens);
++  const max = maxTokensFor(o), timeout = o.timeoutMs ?? cli.timeoutMs;
++  const step = (ids: number[], slot: number) => dgPost(base, "/completion", { prompt: ids, n_predict: 1, n_probs: topN, temperature: 0, top_k: 1, seed,
++                                                                            cache_prompt: true, id_slot: slot });
++  const gen: number[] = [];
++  const dec = new TextDecoder();
++  let text = "", firstStep: number | null = null, firstText: number | null = null, flips = 0, timedOut = false, stopHit = false, reprocessed = 0;
++  for (let i = 0; i < max; i++) {
++    if (performance.now() - start > timeout) { timedOut = true; break; }
++    const [a, b] = await Promise.all([step([...ctxIds, ...gen], 0), step([...noIds, ...gen], 1)]);
++    if (firstStep === null) firstStep = performance.now() - start;
++    else reprocessed += Math.max(0, (a.timings?.prompt_n ?? 1) - 1) + Math.max(0, (b.timings?.prompt_n ?? 1) - 1);
++    const la = new Map<number, any>(a.completion_probabilities[0].top_logprobs.map((x: any) => [x.id, x]));
++    const lb = new Map<number, any>(b.completion_probabilities[0].top_logprobs.map((x: any) => [x.id, x]));
++    const top = Math.max(...[...la.values()].map((x: any) => x.logprob));
++    let best = -1, bs = -Infinity;
++    for (const id of new Set([...la.keys(), ...lb.keys()])) {
++      const lc = la.get(id)?.logprob ?? miss, ln = lb.get(id)?.logprob ?? miss;
++      if (beta > 0 && lc < top + Math.log(beta)) continue;
++      const sc = (1 + alpha) * lc - alpha * ln;
++      if (sc > bs) { bs = sc; best = id; }
++    }
++    if (best !== a.completion_probabilities[0].top_logprobs[0].id) flips++;
++    if (eog.has(best)) break;
++    gen.push(best);
++    const piece = dec.decode(Uint8Array.from((la.get(best) ?? lb.get(best)).bytes ?? []), { stream: true });
++    if (piece) {
++      text += piece;
++      if (firstText === null && piece.trim()) firstText = performance.now() - start;
++      o.onToken?.(piece);
++    }
++    if (o.stop?.some((s: string) => text.includes(s))) { stopHit = true; break; }
++  }
++  let out = gen.length ? (await dgPost(base, "/detokenize", { tokens: gen })).content as string : "";
++  if (stopHit) for (const s of o.stop) { const k = out.indexOf(s); if (k >= 0) out = out.slice(0, k); }
++  const peakRssBytes = await rss.stop();
++  const end = performance.now() - start;
++  const fs = firstStep ?? end;
++  dgItem = { ...(dgItem ?? {}), cad: { steps: gen.length, flips, ctxPromptTokens: ctxIds.length, noCtxPromptTokens: noIds.length, firstStepMs: Math.round(fs),
++                                       msPerStep: gen.length > 1 ? +((end - fs) / (gen.length - 1)).toFixed(1) : null, reprocessedTokens: reprocessed, timedOut, stopHit } };
++  const g: Generation = { promptTokens: ctxIds.length, promptMs: fs, predictedTokens: gen.length, predictedMs: end - fs, firstTextMs: firstText ?? end, timedOut,
++                          temperature: 0, hidden: { startedAt: start, reasoningTokens: 0, firstReasoningMs: null, visibleText: firstText !== null, budgetExceeded: false, peakRssBytes } };
++  onGeneration(g);
++  o.onTimings?.({ promptTokens: g.promptTokens, promptMs: g.promptMs, predictedTokens: g.predictedTokens, predictedMs: g.predictedMs, cachedTokens: 0 });
++  return out;
++}
++
+ // ---------------------------------------------------------------- AnswerEngine on llama-server (--backend server)
+ const freePort = () => new Promise<number>((res, rej) => {
+   const s = createServer();
+@@ -481,8 +614,13 @@
+     hasEmbeddedChatTemplate: () => hasTemplate,
+     async estimateFit() { return null; },
+     setAnswerPrefix() { /* not emulated (cache_prompt false = fresh prefill per answer, as the node path) */ },
++    dgBase: base,
+     async generate(o: any): Promise<string> {
++      // DECODE-GROUND: CAD (C1/SC) replaces the single completion; copy-bias (SB) adds logit_bias to it. Unset DG_ARM = unchanged.
++      if (o.dg && hasTemplate && (DG_ARM === "C1" || DG_ARM === "SC")) return dgCad(base, o, seed, rss, onGeneration);
++      const dgBias = o.dg && hasTemplate && DG_ARM === "SB" ? await dgBiasList(base, o) : null;
+       const { path, body } = requestFor(hasTemplate ? o : { ...o, messages: undefined }, temp, seed);
++      if (dgBias) body.logit_bias = dgBias;
+       const temperature = body.temperature as number;
+       abort = new AbortController();
+       const timer = setTimeout(() => abort?.abort(), o.timeoutMs ?? cli.timeoutMs);
+@@ -671,6 +809,11 @@
+     ? (await makeMultiEngine(installedEntries.map((e) => ({ id: e.id, filename: e.filename, path: join(SHARED_MODELS, MODELS[e.id].file) })),
+                              R0.seed, R0.temperature, onGeneration, (id) => (currentModelId = id))) as any
+     : await (server ? makeServerEngine : makeEngine)(genPath, (deepEntry ?? entry).filename, R0.seed, R0.temperature, onGeneration);
++  if (DG_ARM) {
++    if (!(engine as any).dgBase || cli.installed || deepEntry) fail("DG_ARM needs --backend server with one model");
++    (globalThis as any).__boarDG = { arm: DG_ARM, maxChunks: DG_SETTINGS.maxChunks,
++      ...(["S", "SC", "SB"].includes(DG_ARM) ? { select: (q: string, cands: any[], kept: any[]) => dgSelect((engine as any).dgBase, q, cands, kept, R0.seed) } : {}) };
++  }
+   const llm = { id: entry.id, label: entry.label, filename: entry.filename, sizeBytes: entry.sizeBytes ?? 0,
+                 roles: deepEntry ? ["fast"] : entry.capabilities?.roles ?? ["fast"], isDefault: true, answerTier: entry.answerTier };
+   // --deep-model (card deep-tier-streamed-moe §6b): two installed LLMs, the fast one active (never loaded: the backend
+@@ -852,6 +995,7 @@
+     events = [];
+     raw = [];
+     gens = [];
++    dgItem = null;
+     multipassRuns = 0;
+     retrieveCalls = 0;
+     extraRetrieveMs = [];
+@@ -944,6 +1088,9 @@
+     };
+     const parsed = EvalTrace.safeParse(trace);
+     if (!parsed.success) fail(`${q.id}: trace does not parse: ${parsed.error.issues.map((x) => `${x.path.join(".")}: ${x.message}`).join("; ")}`);
++    // DECODE-GROUND: settings and the item's selection/decoding record (outside the protocol schema, added after the parse).
++    if (DG_ARM) Object.assign(parsed.data as any, { config: { ...parsed.data.config, settings: { ...parsed.data.config.settings, dg: DG_SETTINGS } },
++                                                    retrieval: { ...parsed.data.retrieval, dg: dgItem } });
+     appendFileSync(cli.out!, JSON.stringify(parsed.data) + "\n");
+     if (err) errors++;
+     const t = parsed.data;

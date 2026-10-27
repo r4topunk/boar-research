@@ -1,0 +1,12 @@
+--- a/src/routing/depth.ts
++++ b/src/routing/depth.ts
+@@ -101,5 +101,7 @@
+  */
+ export const DEEP_RETRIEVE_K = 6;
+-export const DEEP_CONTEXT_TOKENS = 400;
+-export const DEEP_MAX_TOKENS = 200;
++// DEEPFULL arm: the deep tier reads as much context as the fast tier (1200) and may answer up to 400 tokens;
++// the 60 s contract above was already void once thinking was enabled (DEEPTHINK).
++export const DEEP_CONTEXT_TOKENS = 1200;
++export const DEEP_MAX_TOKENS = 400;
+ 

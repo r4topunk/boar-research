@@ -1,0 +1,249 @@
+6 2
+
+## evaluation-methodology
+GAP: No paper found that scores an offline small model as a percentage of a frontier model with web access, nor one that uses held-out items written by a different model family to avoid contamination; both gaps look real for this search, though the search was limited to 8 queries. Position-bias and judge-calibration work (2406.07791, 2306.05685, 2410.15393) is well covered and verified, but no source gives a frozen, pre-registered protocol for paired win-rate CIs on small n. Confidence is limited by abstract-only reading of most sources and by Semantic Scholar not being directly reachable through search.
+ -   VER | Judging the Judges: A Systematic Study of Position Bias in LLM-as-a-Judge | AACL-IJCNLP 2025 (arXiv 2406.07791, first sub | https://arxiv.org/abs/2406.07791
+     15 LLM judges, 22 tasks on MTBench and DevBench, about 40 solution models, over 150k evaluation instances; position bias is systematic (not random), varies by judge and task, and is driven mainly by the quality gap betwe
+    ~ (a) partial: judges are large/frontier, not small; (b) no; (c) no; (d) yes, directly addresses pairwise verdict stability, which is the failure mode of our judge. Supports swap-and
+ -   VER | Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena | NeurIPS 2023 Datasets and Benchmarks (arXiv 2 | https://arxiv.org/abs/2306.05685
+     Strong judges (GPT-4) reach over 80% agreement with human preferences, matching human-human agreement; biases studied are position, verbosity, self-enhancement and limited reasoning, with mitigations proposed for some. S
+    ~ (d) closest canonical reference for pairwise LLM judging; not about offline or small models. Our own judge is a Haiku/Opus judge, so self-enhancement bias (judge family = answer fa
+ -   VER | CalibraEval: Calibrating Prediction Distribution to Mitigate Selection Bias | arXiv 2410.15393 (Oct 2024, no peer-reviewed  | https://arxiv.org/abs/2410.15393
+     Verdicts flip when response positions or ID labels are swapped; proposes a label-free, inference-time, non-parametric order-preserving recalibration of the judge's prediction distribution.
+    ~ (d) pairwise judging stability; method-level only. Could be an alternative to strict swap-agreement if a judge is too costly to run twice.
+ -   VER | FaithJudge: benchmarking LLM faithfulness in RAG with evolving leaderboards | EMNLP 2025 Industry Track, pp. 799-811 (ACL A | https://aclanthology.org/2025.emnlp-industry.54/
+     LLM-as-judge for RAG hallucination/faithfulness that uses a pool of diverse human-annotated hallucination examples to improve automated evaluation; evolving leaderboards across QA, summarization and data-to-text.
+    ~ (c) partial: RAG over heterogeneous context, judged faithfulness; (d) partial: human-example-calibrated judge rather than a frozen criterion. Relevant to our faithfulness rubric an
+ -   VER | CLAPNQ: Cohesive Long-form Answers from Passages in Natural Questions for R | TACL 2025 (arXiv 2404.02103) | https://arxiv.org/abs/2404.02103
+     Long-form RAG benchmark with grounded gold passages covering retrieval, generation and end-to-end stages; answers are grounded in a single passage and the authors report significant room for improvement in grounded RAG.
+    ~ (c) partial: one corpus, not heterogeneous; (d) partial: gold passages allow a grounding-based scorer. Relevant as a model for a faithfulness-first rubric. Cohere link not confirme
+ -   VER | C2LEVA: Toward Comprehensive and Contamination-Free Language Model Evaluati | Findings of ACL 2025 (arXiv 2412.04947) | https://arxiv.org/abs/2412.04947
+     22-task bilingual benchmark whose contamination prevention fully automates test-data renewal and keeps released data protected.
+    ~ (d) partial: frozen/renewed held-out design. Does not say who writes items, so it does not cover cross-family authorship of held-out items.
+ -   VER | MobiBench: Benchmarking LLMs for On-Device Performance | arXiv 2609.13159 (2026; listed dates inconsis | https://arxiv.org/abs/2609.13159
+     llama.cpp-based benchmark over edge hardware measuring speed (prefill, decode, TTFT), memory and battery, plus task-specific accuracy on summarization and QA.
+    ~ (b) yes: on-device, llama.cpp; (a) small models; (d) partial: accuracy metric unspecified in abstract. Does not measure a win-rate against a frontier-with-web reference.
+ -   VER | The Hitchhiker's Guide to Testing Statistical Significance in Natural Langu | ACL 2018 (P18-1128), pp. 1383-1392 | https://aclanthology.org/P18-1128/
+     Survey of ACL/TACL 2017 papers finds significance testing often ignored or misused; proposes a protocol for choosing a test for NLP comparisons. The abstract does not confirm paired bootstrap specifically.
+    ~ (d) general: relevant to small-n paired CIs on our items; check the full text for the bootstrap recommendation before citing it for that.
+ -   UNV | Replicability Analysis for Natural Language Processing: Testing Significanc | TACL 2017 (Q17-1033) | https://aclanthology.org/Q17-1033/
+     Replicability analysis framework for multiple comparisons between NLP algorithms across datasets (from search snippet and cross-reference; not read in full).
+    ~ (d) relevant to comparing systems over several item sets (our v0.2, V-para, and future v0.3).
+ -   UNV | MMLU-CF: contamination-free multi-task language understanding benchmark | ACL 2025 (from search snippet only) | https://arxiv.org/abs/2412.15194
+     Keeps the test split closed and publishes the validation split; the gap between splits is used to estimate public-split contamination. Questions are drawn from a web corpus with decontamination rules.
+    ~ (d) partial: closed held-out split pattern similar to our blind sets; not a RAG or offline benchmark.
+ -   UNV | MobileLLM: Optimizing Sub-billion Parameter Language Models for On-Device U | ICML 2024 (arXiv 2402.14905, from search snip | https://arxiv.org/pdf/2402.14905
+     Reports a 48.2% win rate of a 350M model against a GPT-3 (text-davinci-001) baseline in AlpacaEval-style judging; baseline self-win rate is 50%.
+    ~ (a) yes: small on-device-oriented model; (d) yes: win-rate against a fixed reference, but a GPT-3 reference and no corpora or web arm. Useful as an example of a win-rate reference,
+
+## reader-vs-knowledge
+GAP: The closest work (Pandey 2603.11513) measures the oracle-utilization ceiling for sub-8B readers on general QA with a single retriever pair, but it names no datasets in its abstract page, uses no multi-corpus packs, and gives no frozen paired criterion; I found no paper that jointly measures reach, keep (packing/selection) and reader faithfulness on a small on-device reader with heterogeneous local corpora, nor one covering the 25-35B MoE tier with a thinking budget. The reader-size-vs-faithfulness picture rests on one 2026 preprint plus a 2024 canonical result, and most distractor/noise numbers are from search snippets only (UNVERIFIED). Confidence in the gap claim: moderate.
+ - * VER | Can Small Language Models Use What They Retrieve? An Empirical Study of Ret | arXiv 2603.11513, 2026 | https://arxiv.org/abs/2603.11513
+     Five models 360M-8B (SmolLM2, Qwen2.5, Llama 3.1) under none/BM25/E5/oracle retrieval: even with oracle passages, models <=7B fail on questions they cannot answer alone 85-100% of the time; added context overturns 42-100
+    ~ (a) yes, 0.36-8B dense models; (b) not stated; (c) no, general-domain QA only; (d) oracle and no-retrieval conditions give a ceiling and a parametric split, but no frozen criterion
+ - * VER | Recall Is Not Enough: A Reader-Context Diagnostic for Budget-Constrained Re | arXiv 2607.00725, 2026 (v2 Aug 2026) | https://arxiv.org/abs/2607.00725
+     Proposes answer-in-context (does the gold answer survive packing) as the target instead of recall@k; adds Delta R^2 0.17-0.27 over recall on three multi-hop sets; conditioned on full gold retrieval, answer survival separ
+    ~ (a) partial, reader sizes not given on the abstract page; (b) no; (c) partial, multi-hop datasets; (d) yes, paired budgets and interventions. Directly measures the reach vs keep sp
+ -   VER | Noesis: Deterministic-First Retrieval with Two-Tier Context Hydration for F | arXiv 2609.07663, 2026 | https://arxiv.org/abs/2609.07663
+     Claims a 2B model reaches parity with a 35B model on factual integrity (zero confabulated numbers on absent-entity traps); structured retrieval beats flat RAG by +11.4 points at 2B; skeleton-only context keeps quantitati
+    ~ (a) yes, 2B vs 35B; (b) local small models, not stated as on-device; (c) no, single structured domain; (d) author-reported ablations, no public benchmark named on the abstract page
+ -   VER | OCC-RAG: Optimal Cognitive Core for Faithful Question Answering | arXiv 2606.00683, 2026 | https://arxiv.org/abs/2606.00683
+     Trains 0.6B and 1.7B SLMs on a 3M-example multi-hop, context-faithfulness, abstention corpus with cited literal quotes; claims they match or exceed models 2-6x larger on HotpotQA, MuSiQue, TAT-QA, ConFiQA (faithfulness) 
+    ~ (a) yes, 0.6-1.7B; (b) not stated; (c) no, single synthetic corpus; (d) benchmarks named, numbers not on abstract page. Shows faithfulness in small readers is a training-format lev
+ -   VER | Lost in the Middle: How Language Models Use Long Contexts | TACL 2024 (arXiv 2307.03172, 2023) | https://arxiv.org/abs/2307.03172
+     Performance is highest when the relevant passage is at the start or end of the context and drops when it sits in the middle (U-shape), including in long-context models; tested on multi-document QA and key-value retrieval
+    ~ (a) no, large models; (b) no; (c) partial, multi-document QA mimics RAG packing; (d) yes, controlled position sweeps. Canonical reason to control passage position when packing 4-8 
+ -   VER | RAGGED: Towards Informed Design of Scalable and Stable RAG Systems | arXiv 2403.09040, 2024 (ICML 2025) | https://arxiv.org/abs/2403.09040
+     Reader robustness to noise is the key determinant of RAG stability and scalability; some readers gain from deeper retrieval and others degrade on distracting content; retriever, reranker and prompt choices do not change 
+    ~ (a) unknown, reader sizes not on abstract page; (b) no; (c) partial, multiple benchmarks; (d) yes, controlled sweeps over retriever and reader. Strong support for our reader-first 
+ -   UNV | Beyond Black-Box Interventions: Latent Probing for Faithful Retrieval-Augme | arXiv 2510.12460, 2025 | https://arxiv.org/pdf/2510.12460
+     Open-source readers lose more than 10% accuracy when irrelevant context is added; models favour parametric memory over retrieved evidence; proposes latent probing to steer faithfulness.
+    ~ (a) partial, sizes not confirmed in snippet; (b) no; (c) no; (d) partial. Supports the reader-faithfulness failure mode; numbers from a search snippet only.
+ -   UNV | Lost in the Noise: How Test-Time Reasoning Fails with Contextual Distractor | arXiv 2601.07226, 2026 | https://arxiv.org/abs/2601.07226v1
+     Tests 11 datasets with random documents, irrelevant chat history and hard-negative distractors; reports up to 80% drop for state-of-the-art models with contextual distractors; more test-time computation can hurt in noisy
+    ~ (a) no, frontier-class models; (b) no; (c) partial, distractor types map to our mixed packs; (d) yes, controlled noise sweeps. Relevant to the thinking-budget finding: extra reason
+ -   UNV | PrismRAG: distractor-aware fine-tuning for open-book RAG | arXiv 2507.18857, 2025 | https://arxiv.org/html/2507.18857v1
+     Training on QA pairs mixing gold evidence with subtle distractor passages gives a reported 5.4% average factuality gain across 12 open-book RAG benchmarks.
+    ~ (a) partial, sizes not confirmed; (b) no; (c) partial, benchmarks; (d) yes, averaged benchmark gains. A fine-tune lever; our line closed fine-tuning as a data route, so relevant on
+ -   UNV | Little Brains, Big Feats: Small quantized LMs for Russian RAG generation | arXiv 2606.30062, 2026 | https://www.developersdigest.tech/papers/little-brains-big-feats-exploring-compact-language-models
+     Benchmarks 16 quantized SLMs from 1.5B to 8B on Russian RAG generation, scoring correctness, answer relevance and faithfulness with an LLM judge, with and without context.
+    ~ (a) yes, 1.5-8B quantized; (b) quantization relevant, on-device not stated; (c) no, single language; (d) partial, LLM-judge scoring. Closest in model range and quantized readers, b
+ -   UNV | Random documents can improve accuracy: distractor study | CEUR-WS 2024 | https://ceur-ws.org/Vol-3802/paper23.pdf
+     Strategically placed random documents raised accuracy by up to 35%, while topically related distractors that lack the answer degraded performance.
+    ~ (a) unknown; (b) no; (c) partial; (d) partial. Shows distractor type matters more than distractor presence; supports the keep-stage concern, from a search snippet only.
+ -   UNV | FaithEval: benchmark of unanswerable, inconsistent and counterfactual conte | arXiv 2410.03727, 2024 | https://arxiv.org/abs/2410.03727v1
+     4.9K problems testing reader faithfulness under unanswerable, inconsistent and counterfactual contexts.
+    ~ (a) not stated; (b) no; (c) no, synthetic and single-context; (d) yes, frozen benchmark. Usable as a reusable faithfulness probe for a small reader.
+
+## build-time-preprocessing: document expansion, contextual chunk headers
+GAP: No retrieved work measures build-time expansion or contextualization with a <=9B or offline generator over multiple heterogeneous local corpora under a frozen paired criterion. The Anthropic result uses an API model (Claude 3 Haiku) and the proposition, HyPE and RAPTOR papers use large generators, so none is a direct match. The closest partial coverage is Reconstructing Context (possibly a ~3.8B contextualizer, unconfirmed) and GOLFer (small-LM hallucination filtering, but at query time). Confidence in this gap is moderate: the search covered 10 queries and 6 page fetches, but the arXiv listing and ACL Anthology were not searched directly, and the HyPE record has a date anomaly.
+ -   VER | Doc2Query--: When Less is More | ECIR 2023 (arXiv preprint 2301.03266), 2023 | https://arxiv.org/abs/2301.03266
+     Build-time doc expansion with generated queries hurts when the generator hallucinates; a relevance-model filter that keeps only the top proportion of generated queries gives up to +16% effectiveness, -33% index size, -23
+    ~ (a) no: seq2seq generator, no small-LLM test. (b) no. (c) no: single collections. (d) partial: paired effectiveness and efficiency numbers, but not our frozen-criterion setup. Stro
+ -   VER | Introducing Contextual Retrieval | Anthropic blog, Sept 2024 | https://www.anthropic.com/news/contextual-retrieval
+     An LLM sees the full document and one chunk and writes a 50-100 token situating context that is prepended before embedding and BM25 indexing. Top-20 retrieval failure falls 5.7% to 3.7% (embeddings only), 2.9% (+contextu
+    ~ (a) no: API model, not <=9B local. (b) no: needs a remote LLM at build time. (c) not tested on heterogeneous corpora. (d) vendor-reported, internal eval, no public frozen criterion
+ -   VER | GOLFer: Smaller LM-Generated Documents Hallucination Filter & Combiner for  | ACL Findings 2025 (arXiv 2506.04762; page lis | https://arxiv.org/abs/2506.04762
+     Smaller open LMs produce non-factual or inconsistent generated text; a hallucination filter removes unreliable sentences and a combiner weights the rest against the query. Claimed to beat other small-LM expansion methods
+    ~ (a) yes: small open LMs are the focus. (b) partial: no on-device test. (c) datasets are BEIR-style, not multi-corpus packs. (d) claimed, datasets unnamed on the abstract page. Quer
+ -   VER | Reconstructing Context: Evaluating Advanced Chunking Strategies for Retriev | arXiv 2504.19754 (ECIR 2025 KnowRAG workshop  | https://arxiv.org/abs/2504.19754
+     Compares late chunking with contextual retrieval (LLM summary per chunk prepended before embedding). Contextual retrieval keeps semantic coherence better but costs more compute; late chunking is cheaper but gives up some
+    ~ (a) partial: search snippet says the contextualizer is Phi-3.5-mini-instruct (~3.8B), which would be in scope, but not confirmed from the abstract page. (b) no. (c) partial: severa
+ -   VER | Bridging the Question-Answer Gap in Retrieval-Augmented Generation: Hypothe | arXiv 2607.29402 (submitted 31 Jul 2026); lis | https://arxiv.org/abs/2607.29402
+     Build-time: generate several hypothetical questions per chunk, embed them, and return the whole chunk at query time, making retrieval question-to-question matching with no query-time LLM. Claims up to +42 pp context prec
+    ~ (a) no small models named on the abstract page. (b) none. (c) six unnamed datasets. (d) claimed, abstract only. Directly the build-time question-index pattern, but the cost is one 
+ -   VER | Dense X Retrieval: What Retrieval Granularity Should We Use? | arXiv 2312.06648 (v3 Oct 2024; EMNLP 2024 per | https://arxiv.org/abs/2312.06648
+     Indexing text as propositions (atomic, self-contained factoids) instead of 100-word passages or sentences significantly improves dense passage retrieval and retrieval-augmented QA under a fixed reader budget. Proposition
+    ~ (a) no: the proposition generator is a large LLM. (b) no. (c) Wikipedia only. (d) yes, paired retrieval and QA comparisons. Granularity result is useful for our chunk-size design; 
+ -   VER | Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Mod | arXiv 2409.04701 (Günther et al., Jina AI and | https://arxiv.org/abs/2409.04701
+     Embed the full document with a long-context embedder first, then mean-pool token embeddings per chunk. No extra training and no LLM at build time. A third-party summary reports +2.7 to 3.6 nDCG@10 on BEIR; not checked ag
+    ~ (b) yes: no LLM and cheap offline build. (c) BEIR, not multi-corpus packs. (a) embedder is long-context, not an LLM. Good no-LLM baseline for a bge-small pack build, but bge-small 
+ -   UNV | RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval | arXiv 2401.18059 (Sarthi, Abdullah, Tuli, Kha | https://arxiv.org/abs/2401.18059
+     Build-time recursive clustering and LLM summarization of chunks into a tree; retrieval over all levels. With GPT-4 it improves QuALITY accuracy by about 20 absolute points.
+    ~ (a) no: GPT-4 summarizer. (b) no. (c) long single documents, not heterogeneous corpora. (d) yes, but on QuALITY. Build-time summary layer that could feed a small reader, but not te
+ -   UNV | Precise Zero-Shot Dense Retrieval without Relevance Labels (HyDE) | arXiv 2212.10496 (Gao, Ma, Lin, Callan), Dec  | https://arxiv.org/abs/2212.10496
+     Query-time: an instruction LLM writes a hypothetical document and a contrastive encoder (Contriever) embeds it, so the dense bottleneck filters out false details. Outperforms Contriever zero-shot on web search, QA and fa
+    ~ (a) no: InstructGPT-scale generator at query time. (b) no: query-time LLM call, which is the cost we want to avoid on-device. (c) partial. (d) yes, paired benchmarks. Useful as the
+ -   UNV | Document Expansion by Query Prediction | arXiv 1904.08375 (Nogueira, Yang, Lin, Cho),  | https://arxiv.org/abs/1904.08375
+     Original doc2query: a seq2seq model predicts queries for each document and appends them to the document before indexing; in a latency-critical regime retrieval alone approaches the effectiveness of neural re-rankers at a
+    ~ (a) no: T5-scale, not small LLM. (b) no. (c) MS MARCO and a second retrieval task. (d) yes. Canonical background only, since Doc2Query-- covers the same method with filtering.
+
+## domain-vs-general: small curated domain corpus vs general corpus (Wiki
+GAP: No measured study found that compares a small curated domain corpus (MedlinePlus, Stack Exchange, first-aid, Factbook) against a Wikipedia corpus for the same small reader on a paired frozen criterion, nor a study of crowding across heterogeneous local packs on a sub-9B model. Zero-RAG and The Distracting Effect show Wikipedia redundancy and distractor harm, and Pocket RAG and Little Brains show on-device small-model RAG, but none combines these with multi-corpus displacement. Confidence is moderate: searches were 8 standard queries plus targeted fetches, and I saw abstracts only, not full results tables.
+ -   VER | Little Brains, Big Feats: Exploring Compact Language Models | arXiv 2606.30062 (2026; no venue given) | https://huggingface.co/papers/2606.30062
+     Abstract: a RAG system with small LMs can run fully on-device without a GPU in reasonable time. Body: 17 candidates of ~1B-8B on CPU (16 GB RAM); five Russian QA sets plus a proprietary 5,000-lecture-deck knowledge base;
+    ~ (a) yes, 4B-8B; (b) yes, CPU on-device; (c) partial: multiple QA sets but not Wikipedia-vs-domain; (d) yes, averaged judged metrics, no frozen pass/fail criterion reported. Languag
+ -   VER | Pocket RAG: On-Device RAG for First Aid Guidance in Offline Mobile Environm | arXiv 2602.13229 (Jan 2026) | https://arxiv.org/abs/2602.13229
+     Offline Android first-aid RAG with a small LM: 94.5% physical and 97.0% psychological first-aid accuracy; response time 14.2 s to 3.7 s. Corpus and model size not given in the abstract.
+    ~ (a) SLM, size unstated; (b) yes, Android offline; (c) unknown, corpus not named; (d) accuracy only, no paired baseline in abstract. Closest match to our first-aid pack on device.
+ -   VER | Zero-RAG: Towards Retrieval-Augmented Generation with Zero Redundant Knowle | arXiv 2511.00505 (Nov 2025); Frontiers of Com | https://arxiv.org/abs/2511.00505
+     Redundancy between an LLM's parametric knowledge and the retrieval corpus hurts RAG and costs indexing. A Mastery-Score prunes redundant Wikipedia passages (30% pruned, retrieval 22% faster) with no RAG loss; adds a quer
+    ~ Directly on the 'less is more' Wikipedia axis, closest to our crowding question. (a) model size not stated; (b) no; (c) single corpus (Wikipedia); (d) reported gains with paired nu
+ -   VER | The Power of Noise: Redefining Retrieval for RAG Systems | arXiv 2401.14887 (v4 May 2024; SIGIR 2024 per | https://arxiv.org/abs/2401.14887
+     Top-retrieved passages that do not answer the query hurt the LLM; adding random documents to the prompt raises accuracy by up to 35%. Retrieval relevance is not monotone in answer quality.
+    ~ Directly on crowding/displacement: it shows what extra non-answering passages do to the reader. (a) model sizes not checked; (b) no; (c) not multi-corpus; (d) paired accuracy compa
+ -   VER | The Distracting Effect: Understanding Irrelevant Passages in RAG | arXiv 2505.06914 (May 2025) | https://arxiv.org/abs/2505.06914
+     Defines a per-passage distracting-effect measure relative to a query and LLM that holds across LLMs; fine-tuning on hard distracting passages gives up to +7.5% answer accuracy over conventional RAG fine-tuning.
+    ~ Explains why a second corpus can displace good passages (distractor effect). (a) LLM sizes not named in abstract; (b) no; (c) not multi-corpus; (d) yes, paired accuracy.
+ -   VER | Less LLM, More Documents: Searching for Improved RAG | arXiv 2510.02657 (Oct 2025); ECIR 2026 (per p | https://arxiv.org/abs/2510.02657
+     Enlarging the retrieval corpus strengthens RAG across open-domain QA and can match the gain of a larger generator; small and mid-size generators with larger corpora rival bigger models with smaller corpora; gains come fr
+    ~ Directly on corpus size vs model size for small generators (a: yes; b: no; c: single-corpus scaling, not heterogeneous; d: yes). Argues for bigger corpora, the opposite side of the
+ -   VER | BM25 Wins at Scale: A Scaling Study of Retrieval-Augmented Generation Parad | arXiv 2607.26497 (Jul 2026, preprint) | https://arxiv.org/abs/2607.26497
+     Across 28 nested corpus tiers (~450x range) BM25 overtakes a file-system agent near 10M tokens and leads at larger tiers by up to ~20 points; dense retrieval is efficient but less accurate. Reader size not stated.
+    ~ Directly relevant to our BM25-plus-bge hybrid and corpus size scaling (c: multi-source enterprise data in its own setup; a: reader unspecified; d: paired with a fixed relevant and 
+ -   VER | Benchmarking Retrieval-Augmented Generation for Medicine (MIRAGE / MedRAG) | arXiv 2402.13178 (Feb 2024; ACL Findings 2024 | https://arxiv.org/abs/2402.13178
+     MIRAGE: 7,663 questions from five medical QA sets; 41 corpus x retriever x LLM combinations; the best setups combine several medical corpora; MedRAG raises six LLMs up to 18% over CoT; lost-in-the-middle effects in medic
+    ~ Measures corpus choice in medicine with paired evaluation, the nearest measured version of domain-corpus-combination vs general. (a) mostly large LLMs (GPT-3.5, Mixtral), not small
+ -   VER | Knowledge-Augmented Reasoning Distillation for Small Language Models in Kno | arXiv 2305.18395 (May 2023; NeurIPS 2023 per  | https://arxiv.org/abs/2305.18395
+     Small LMs fine-tuned on rationales generated from retrieval-augmented LLMs; a 250M T5 beats fine-tuned 3B models on MedQA-USMLE and StrategyQA. Knowledge base not named in the abstract.
+    ~ (a) yes, 250M T5 (small); (b) no; (c) unknown knowledge base; (d) yes. Small-model knowledge tasks with retrieval, but distillation, not RAG at inference, and corpus not named.
+ -   VER | FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Techn | arXiv 2504.13128 (Apr 2025, v2 Jun 2025; no p | https://arxiv.org/abs/2504.13128
+     Automatic benchmark construction from community Q&A (nuggets) over technical documentation corpora across five niche topics; off-the-shelf retrievers significantly underperform oracle on all five; rerankers do not help f
+    ~ Closest public work to Stack Exchange as a RAG corpus (c: community Q&A plus docs; d: nugget-based paired eval). Corpus is code/technical docs, not Stack Exchange per se; LLMs are 
+ -   UNV | Learning to Route: A Rule-Driven Agent Framework for Hybrid-Source Retrieva | arXiv 2510.02388 (Oct 2025) | https://arxiv.org/pdf/2510.02388
+     Routes each query between sparse and dense retrieval and between data sources (document collections vs knowledge bases) with rule-driven agents.
+    ~ Multi-corpus routing (c: yes); small models and offline not addressed in the snippet; paired criterion not seen. Snippet only.
+ -   UNV | UniversalRAG: Retrieval-Augmented Generation over Corpora of Diverse Modali | arXiv 2504.20734 (Apr 2025, KAIST) | https://arxiv.org/abs/2504.20734
+     Routes a query to a modality- and granularity-specific corpus; reports that one combined corpus suffers a modality gap favouring same-modality items. Based on search snippet only.
+    ~ Relevant to multi-corpus routing and crowding (c: yes); text-only comparison of domain corpora not the focus; (a),(b),(d) not checked.
+
+## routing
+GAP: No located work routes among local text corpora with a small (<=9B) LLM router, on-device, and reports paired accuracy under a frozen criterion. Closest are RAGRoute (classifier over stores, measured on cost and matched accuracy), Adaptive-RAG (small-LM router, but over complexity not corpora) and UniversalRAG (per-corpus routing, no numbers in the abstract). Most abstracts here give no numbers, so effect sizes are unverified, and Semantic Scholar returned nothing; I am fairly confident no paper here measures our setup, but coverage is limited to about 20 queries.
+ -   VER | Efficient Federated Search for Retrieval-Augmented Generation using Lightwe | arXiv 2502.19280, 2025 (v2 2026) | https://arxiv.org/abs/2502.19280
+     A lightweight neural classifier picks which data sources (several vector stores) to query per query; up to 80.65% less communication and 52.50% less latency than querying all sources, with accuracy matched on three bench
+    ~ c: multiple heterogeneous stores, yes (strongest match). d: partial, compares against query-all-sources, not a frozen small-LLM criterion. a: classifier, not an LLM router. b: not 
+ -   VER | Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models t | NAACL 2024 (arXiv 2403.14403) | https://arxiv.org/abs/2403.14403
+     A smaller LM classifies question complexity and routes each query to no retrieval, single-step retrieval, or iterative multi-step retrieval; labels are derived automatically from model outcomes and dataset biases.
+    ~ a: smaller LM as the router, yes. d: paired efficiency/accuracy vs baselines, yes. c: no, routes by complexity not by corpus. b: no. Relevant to the 'when to retrieve' half of rout
+ -   VER | RAGRouter: Learning to Route Queries to Multiple Retrieval-Augmented Langua | NeurIPS 2025 (arXiv 2505.23052) | https://arxiv.org/abs/2505.23052
+     Routes each query to the best of several RAG-enabled LLMs using document embeddings and RAG-capability embeddings trained contrastively; score-threshold variant for low-latency trade-offs. Authors report gains over best 
+    ~ a: routes among LLMs (open and closed), partial. d: yes, own benchmarks with frozen comparisons. c: no, routes models not corpora. Useful as a design template for a small-LLM route
+ -   VER | RouterRetriever: Routing over a Mixture of Expert Embedding Models | AAAI 2025 (arXiv 2409.02685, Sep 2024) | https://arxiv.org/abs/2409.02685
+     One shared base retriever plus domain LoRA experts; a query is routed to the expert with highest average similarity to that domain's pilot embeddings. +2.1 nDCG@10 over MSMARCO-trained model and +3.2 over multi-task on B
+    ~ c: domain-specific indices, yes. d: yes (BEIR nDCG@10 paired). a: embedding router, not an LLM; b: not stated. Strong template for a training-free, add-a-pack-without-retraining ro
+ -   VER | Learning to Route: A Rule-Driven Agent Framework for Hybrid-Source Retrieva | arXiv 2510.02388, 2025 (v2 Feb 2026) | https://arxiv.org/abs/2510.02388
+     Routing agent scores candidate augmentation paths using explicit rules refined from QA feedback by a rule-making agent, with a path-level meta-cache reusing routing decisions for similar queries; targets DB vs document s
+    ~ c: heterogeneous sources, yes. a: LLM-agent size not stated. d: three QA benchmarks, no numbers in the abstract. Rule-based routing with a cache is a cheap, inspectable alternative
+ -   VER | Learning to Route Queries across Knowledge Bases for Step-wise Retrieval-Au | arXiv 2505.22095, 2025 | https://arxiv.org/abs/2505.22095
+     Decides when and which knowledge base to query at each reasoning step, generating follow-up queries routed to the most suitable KB; the fetched v2 page reports gains over competitive baselines of over 7% average. Multimo
+    ~ c: multiple KBs, yes. a: base model not confirmed in the abstract. d: partial. Note the arXiv ID has two titles across versions; the search snippet and the fetched page disagree, s
+ -   VER | RealRoute: Dynamic Query Routing System via Retrieve-then-Verify Paradigm | arXiv 2604.20860, 2026 | https://arxiv.org/abs/2604.20860
+     Argues LLM-as-a-Router fails when source boundaries are ambiguous; runs parallel source-agnostic retrieval then a dynamic verifier cross-checks evidence. No numbers in the abstract.
+    ~ c: heterogeneous sources, yes. a: LLM not stated. d: no figures in the abstract. Directly challenges per-query source selection, which matters if our packs overlap.
+ -   VER | UniversalRAG: Retrieval-Augmented Generation over Corpora of Diverse Modali | arXiv 2504.20734, 2025 (v5 June 2026) | https://arxiv.org/abs/2504.20734
+     Routes each query to a modality-specific corpus and granularity level so retrieval searches only the relevant store; claims gains over unified-index baselines across 10 benchmarks. No numbers in the abstract.
+    ~ c: multiple corpora, yes. a: router size not stated. d: 10 benchmarks, names not in abstract. Supports the claim that per-corpus routing beats one combined index, the hypothesis be
+ -   VER | ReSLLM: Large Language Models are Strong Resource Selectors for Federated S | arXiv 2401.17645, 2024 (Wang, Zhuang, Koopman | https://arxiv.org/abs/2401.17645
+     Uses LLMs for zero-shot resource (search engine) selection from name and description; SLAT, a tuning method using LLM-predicted relevance labels, improves selection further. Abstract gives no numbers.
+    ~ a: LLM as selector, size unstated. c: multiple resources, yes. b: no. d: abstract has no benchmark. Canonical LLM-as-resource-selector reference; the LLM is the selector, as in our
+ -   UNV | Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflect | ICLR 2024 (arXiv 2310.11511) | https://arxiv.org/abs/2310.11511
+     A single LM (7B/13B) emits retrieval tokens to decide on-demand whether to retrieve, then critiques its own outputs with reflection tokens; reported to beat stronger LLMs and RAG baselines on diverse tasks.
+    ~ a: 7B, yes. d: yes, paired baselines. c: no, single retriever. b: no. Canonical adaptive-retrieval reference; I did not fetch the abs page, only search snippets.
+ -   UNV | R3AG: Retriever Routing for Retrieval-Augmented Generation (ACL 2026 long) | ACL 2026 (aclanthology 2026.acl-long.939) | https://aclanthology.org/2026.acl-long.939.pdf
+     Routes each query to one of several retrievers, scoring retrieval quality and generation utility, trained on document assessments and downstream answer correctness; claims beats best single retriever and static routers. 
+    ~ c: several retrievers, yes. a: LLM size unknown. d: claimed, numbers unread. Closest to a mixture-of-retrievers router that uses answer correctness as the signal.
+ -   UNV | Self-Routing RAG: Binding Selective Retrieval with Knowledge Verbalization  | arXiv 2504.01018, 2025 | https://arxiv.org/html/2504.01018
+     Treats retrieval as source selection between external sources (e.g. Wikipedia, PubMed) and the model's own verbalized knowledge, using hidden states and a nearest-neighbour policy.
+    ~ c: partial (two external sources). a: unclear. d: unclear. Relevant if we route between packs and parametric knowledge, which the 4B already does implicitly.
+
+## on-device: on-device / offline / mobile RAG systems and evaluations (A
+GAP: No retrieved work measures what BOAR measures: a <=9B model on an 8 GB phone, several heterogeneous offline packs, and a paired evaluation with a frozen criterion. Pocket RAG is the closest in domain (offline first aid on Android) but uses a single corpus and reports no memory; MoRAGBench is the closest harness but reports no 4B results. Commercial apps: no evidence found that Kiwix or other offline-Wikipedia apps ship published on-device LLM evaluations. I am fairly confident about the arXiv abstracts I read, less about the full papers, which I did not open, so numbers beyond the abstracts are not established. Search coverage was about 10 queries, not exhaustive; Semantic Scholar was not reachable through search.
+ -   VER | MoRAGBench: A Benchmarking Framework for RAG Pipelines on Mobile Devices (r | GitHub repo + Paderborn University master's t | https://github.com/upb-cn/MoRAGBench
+     Open-source (Apache-2.0) Android benchmark for chunking, embedding, FAISS-style ANN indexing, augmentation and LLM generation, with an ANN mode (recall, latency, QPS, memory) and an end-to-end QA mode (HotpotQA, SQuAD, T
+    ~ (a) partial: model sizes are configurable, no 4B-on-8GB result. (b) yes: runs on Android phones. (c) partial: knowledge is .txt files in app assets; QA sets are public benchmarks, 
+ -   VER | Pocket RAG: On-Device RAG for First Aid Guidance in Offline Mobile Environm | arXiv:2602.13229 (cs.NI), Kang, Lee, Cha, Cho | https://arxiv.org/abs/2602.13229
+     Android on-device RAG for small LMs in offline first aid, combining hybrid RAG, selective context compression, batched prompt decoding and KV-cache quantization. Reports 94.5% accuracy (physical first aid), 97.0% (psycho
+    ~ (b) yes: offline Android. (a) partial: SLM unnamed in the abstract. (c) no: a single first-aid corpus (WHO-derived). (d) weak: the search snippet says multiple-choice questions and
+ -   VER | SmartRAG: Native Graph-Based RAG for Mobile Device | arXiv:2607.14661 (cs.AI), Jiang et al.; v1 20 | https://arxiv.org/abs/2607.14661
+     Fully on-device assistant (Perception/Memory/Focus/Thinking) with a provenance-preserving three-layer knowledge graph and hybrid graph+lexical+dense retrieval. Claims a quantized 1.7B backbone competitive with models up 
+    ~ (a) yes: 1.7B quantized. (b) yes: smartphones. (c) partial: one graph built from user sources. (d) partial: four QA sets, protocol not on the abstract page. A search snippet report
+ -   VER | MiniRAG: Towards Extremely Simple Retrieval-Augmented Generation | arXiv:2501.06713 (cs.AI), Fan, Wang, Ren, Hua | https://arxiv.org/abs/2501.06713
+     Heterogeneous chunk+entity graph index and a topology-enhanced retrieval designed so that SLMs can run RAG; claims results comparable to LLM-based methods with about 25% of the storage. Also releases an on-device benchma
+    ~ (a) yes: SLM-focused. (b) yes in design: on-device scenarios. (c) yes: heterogeneous personal local sources. (d) partial: benchmark exists, abstract gives no latency or accuracy nu
+ -   VER | MobileRAG: A Fast, Memory-Efficient, and Energy-Efficient Method for On-Dev | arXiv:2507.01079 (cs.DB), Park, Lee, Kim (KAI | https://arxiv.org/abs/2507.01079
+     Fully on-device RAG combining EcoVector (partitioned, partially loaded vector index for low memory and CPU) with Selective Content Reduction (filters irrelevant text to shrink LLM input). Claims lower latency, memory and
+    ~ (b) yes: resource-limited mobile. (a) no model-size variation mentioned. (c) no. (d) weak: no numbers on the abstract page. Directly relevant to the memory budget of the retrieval 
+ -   VER | Little Brains, Big Feats: Exploring Compact Language Models | arXiv:2606.30062 (cs.CL), Baturova, Bruches,  | https://arxiv.org/abs/2606.30062
+     Benchmarks 17 compact models (1B-8B) as generators in RAG over open and proprietary datasets, using local GGUF quantized models (Q4_K_M, Q5_K_M) on CPU without GPU, with multi-judge LLM scoring (correctness, relevance, f
+    ~ (a) yes: 1-8B GGUF. (b) partial: claims on-device without GPU; device not stated. (c) partial: mixed datasets, Russian. (d) yes in method: multi-judge LLM scoring across several cr
+ -   VER | Energy-Efficient On-Device RAG on a Mobile NPU: System Design and Benchmark | arXiv:2606.11257, Cheng and Lai; 2026-06-09 | https://arxiv.org/abs/2606.11257
+     First end-to-end RAG pipeline (embedding, reranking, LLM) on the Hexagon NPU. On a Dell XPS 13 laptop (not a phone): embedding throughput 9.1x and energy 12.3x better at indexing; query prefill 18.1x faster, end-to-end l
+    ~ (a) partial: model sizes not stated on the page. (b) partial: laptop NPU, not a phone. (c) no: one Wikipedia passage set. (d) partial: an LLM judge with no paired frozen criterion.
+ -   VER | EdgeRAG: Online-Indexed RAG for Edge Devices | arXiv:2412.21023 (cs.LG), Seemakhupt, Liu, Kh | https://arxiv.org/abs/2412.21023
+     Memory-limited RAG by pruning in-cluster embeddings and generating them on demand, pre-computing tail-cluster embeddings to avoid latency, and caching the rest. Reports significant latency reduction over a baseline IVF i
+    ~ (b) partial: edge devices, not phones. (c) no. (d) weak. Gives the design trade-off between index memory and query-time compute that applies to our retrieval budget on 8 GB phones.
+ -   UNV | Margelo: Fitting RAG in Your Pocket: Local Retrieval in React Native | Engineering blog, 2026 (exact date not verifi | https://margelo.com/blog/fitting-RAG-in-your-pocket
+     Fully local pipeline: local embeddings, nitro-sqlite with sqlite-vec for vector search, and generation with Qwen2.5-0.5B-Instruct Q4 GGUF via llama.cpp (about 469 MB). A tutorial, with no measured evaluation seen in the 
+    ~ (b) yes: on-device mobile stack with SQLite vectors. (a) partial: 0.5B model. (c) no. (d) no evaluation. Closest stack-level reference for the vector store choice, but not an evalu
+ -   UNV | Efficiency Improvement of RAG based SLM for Edge Devices (ISI MTech dissert | Indian Statistical Institute dissertation, 20 | https://dspace.isical.ac.in/items/0628a78b-fd62-4ab5-9cc3-97fab6d6beb5
+     Trains an MLP router to set retrieval depth by query complexity for a small LM on edge devices; tested on HotpotQA and SQuAD 2.0; reports lower compute at similar answer quality vs static top-k. Seen only in a search sni
+    ~ (a) yes: SLM. (b) partial: edge devices, not phone-measured in the snippet. (c) no. (d) partial: compares against a static baseline. Adaptive-retrieval-depth idea is related to our
+ -   UNV | Kiwix ZIM as retrieval substrate for a 4B model (Lemmy community thread; bo | Community post, undated, not a publication | https://lemmy.manganiello.tech/post/371347
+     Proposes Wikipedia ZIMs as a local retrieval base for a 4B model without fine-tuning, with bounded evidence units (title, lead, headings, one section, paragraph window) instead of full articles, exact-title lookup before
+    ~ (c) yes: Wikipedia/Kiwix as one local corpus. (a) yes: 4B. (b) yes: offline. (d) none. No evaluation, so it is a design lead, not evidence.
+
+#### VERIFY
+PARTIAL CITE prim | Can Small Language Models Use What They Retrieve? An Empirical Study of Ret | https://arxiv.org/abs/2603.11513
+     Sanchit Pandey (BITS Pilani), arXiv v1, 12 Mar 2026. The comment says it is headed for ARR in March 2026. It is not peer-reviewed. Five models (SmolLM2-360M, Qwen2.5-1.5B/3B/7B, Llama-3.1-8B) answer 500 NQ-Open and 500 HotpotQA questions under four conditions:
+    why: It overlaps BOAR's oracle fact-chunk ceiling (4) and with-pack vs without-pack (1) for a ~4B reader. Its Known/Unknown split and gold-passage oracle map directly onto our parametric-vs-reader decomposition, and its paired McNemar test is comparable to our pair
+ADDITIONAL:
+  + Mallen et al., 'When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories', ACL 2023, https://arxiv.org/abs/2212.10511. Canonical with/without-retrieval split by entity popularity (PopQA); retrieval hurts on popul
+  + Shi et al., 'Large Language Models Can Be Easily Distracted by Irrelevant Context', ICML 2023, https://arxiv.org/abs/2302.00093. Distraction from irrelevant context (GSM-IC). Relevant to crowding (2). Cited by 2603.11513. UNVERIFIED in this pass.
+  + Yoran et al., 'Making Retrieval-Augmented Language Models Robust to Irrelevant Context', ICLR 2024, https://arxiv.org/abs/2310.01558. Retrieval with irrelevant passages hurts; an NLI filter and fine-tuning fix it. Relevant to the keep stage (3) and crowding (2
+  + Liu et al., 'Lost in the Middle: How Language Models Use Long Contexts', TACL 2024, https://arxiv.org/abs/2307.03172. Position sensitivity of gold passages. Relevant to slot ordering in the reader (3). Cited by 2603.11513. UNVERIFIED in this pass.
+  + Longpre et al., 'Entity-Based Knowledge Conflicts in Question Answering', EMNLP 2021, https://arxiv.org/abs/2109.05052. Context vs parametric conflicts. Cited by 2603.11513. UNVERIFIED in this pass.
+  + Zhang et al., 'RAFT: Adapting Language Model to Domain Specific RAG', 2024, https://arxiv.org/abs/2403.10131. Domain RAG fine-tuning with distractor documents; small (7B) reader. Relevant to domain packs (1). Cited by 2603.11513. UNVERIFIED in this pass.
+  + Asai et al., 'Self-RAG', ICLR 2024, https://arxiv.org/abs/2310.11511. Retrieve-on-demand and critique. Cited by 2603.11513. UNVERIFIED in this pass.
+PARTIAL CITE prim | Recall Is Not Enough: A Reader-Context Diagnostic for Budget-Constrained Re | https://arxiv.org/abs/2607.00725
+     Single author (Ananto Nayan Bala). v1 1 Jul 2026, v2 5 Aug 2026, under review at EACL 2027. Read the abstract and HTML full text. The paper defines answer-in-context: a normalized verbatim-span check of whether the gold answer survives packing into a fixed rea
+    why: Strong partial overlap on BOAR measurement (3), the reach/keep/reader funnel. Answer-in-context is exactly BOAR's 'keep' check (did the fact chunk survive into the reader context), separated from retrieval recall ('reach'). It also uses a 3-4B reader and the s
+ADDITIONAL:
+  + Sufficient Context: A New Lens on Retrieval Augmented Generation Systems (Joren, Zhang, Ferng, Juan, Taly, Rashtchian; ICLR 2025; arXiv 2411.06037). Sufficient-context autorater separates retrieval failure from reader failure. The 2607.00725 paper does not cit
+  + Lost in the Middle: How Language Models Use Long Contexts (Liu et al., TACL 2024). Cited by 2607.00725. Position of evidence in the context affects reader accuracy, which is relevant to how chunks are ordered in BOAR's dense extra slots. UNVERIFIED in this pas
+  + RECOMP: Improving Retrieval-Augmented LMs with Context Compression and Selective Augmentation (Xu, Shi, Choi; ICLR 2024). Cited by 2607.00725. Compressing or skipping retrieved context for small readers; related to the keep stage. UNVERIFIED.
+  + Learning to Filter Context for Retrieval-Augmented Generation (FILCO; Wang et al., 2023, arXiv 2311.08377). Cited by 2607.00725. Context filtering before the reader; related to the keep stage. UNVERIFIED.
+  + Making Retrieval-Augmented Language Models Robust to Irrelevant Context (Yoran et al., ICLR 2024). Cited by 2607.00725. Distractor passages hurt the reader, which relates to BOAR's crowding when 9 packs are peers. UNVERIFIED.
+  + LLMLingua-2: Data Distillation for Efficient and Faithful Task-Agnostic Prompt Compression (Pan et al., ACL Findings 2024). The compression baseline in 2607.00725. UNVERIFIED.
+  + When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories (Mallen et al., ACL 2023). Cited by 2607.00725. Shows when retrieval helps versus parametric knowledge, relevant to BOAR's with/without-pack lift by entity
+  + RAGBench: Explainable Benchmark for Retrieval-Augmented Generation Systems (Friel et al., 2024). Source of the CovidQA and ExpertQA subsets in 2607.00725; context-utilization metrics. UNVERIFIED.
+  + Lin & Bilmes, Multi-document summarization via budgeted maximization of submodular functions (NAACL-HLT 2010). The basis of the submodular packer; canonical prior if BOAR adopts budgeted chunk selection. UNVERIFIED.

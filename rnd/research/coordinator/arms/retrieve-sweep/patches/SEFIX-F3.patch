@@ -1,0 +1,73 @@
+diff -ruN rs-H4/src/routing/answer.ts rs-SEFIX-F3/src/routing/answer.ts
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-SEFIX-F3/src/routing/answer.ts	2026-10-22 20:17:10
+@@ -1076,10 +1076,13 @@
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;
+       }
++      // SEFIX F3 (RS_HEALTH_NOSOURCE_FALLBACK=1 / =2 appends also filtered by onSubject; bench-only, default off): 0 = not used.
++      let healthFallback = 0;
+       if (health) {
+         reasonCodes.push("grounding:health-strict");
+         // Health: only sources whose title names the health topic (never a plant, a cave or a TV show).
+         const topic = healthTopicTerms(req.query, english);
++        const compressedSources = sources;
+         const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
+         sources = onTopicHealth;
+@@ -1093,6 +1096,16 @@
+             reasonCodes.push("grounding:health-best-restored");
+           }
+         }
++        // SEFIX F3: health-strict left nothing and no first-aid card applies: ground the compressed sources like a normal question.
++        const fb = (globalThis as any).process?.env?.RS_HEALTH_NOSOURCE_FALLBACK;
++        if (fb && !sources.length && compressedSources.length && !healthFollowUp && !cardEmergency && !isCardEmergency(req.query) && !conversationCondition(req.query, userTurns).condition) {
++          const back = compressedSources.filter((c) => onSubject(c));
++          if (back.length) {
++            sources = back;
++            healthFallback = fb === "2" ? 2 : 1;
++            reasonCodes.push("grounding:health-fallback-subject");
++          }
++        }
+       }
+       // HEADPASS-ST (settings.packHeadPass "a2", experimental, default off): append, after grounding, the chunks at positions
+       // 1-2 (by start) of the article of the first raw passage from a user-installed (non-kit) format-2 pack, skipping
+@@ -1118,12 +1131,12 @@
+           else {
+             let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
+             if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
+-            if (health) {
++            if (health && !healthFallback) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
+               add = ok;
+-            }
++            } else if (healthFallback === 2) add = add.filter((c) => onSubject(c));
+             if (budgeted) pendX1 = add;
+             else {
+               for (const c of add) reasonCodes.push(`headpass:add:${c.chunkId}`);
+@@ -1137,12 +1150,12 @@
+           else {
+             let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+-            if (health && add.length) {
++            if (health && !healthFallback && add.length) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:dense:health-dropped-${add.length - ok.length}`);
+               add = ok;
+-            }
++            } else if (healthFallback === 2) add = add.filter((c) => onSubject(c));
+             if (budgeted) pendDense = add;
+             else {
+               for (const c of add) reasonCodes.push(`headpass:dense:add:${c.chunkId}`);
+@@ -1174,7 +1187,7 @@
+       // 2. Instant snippet (no LLM): only a sentence that covers the question. Not for an extractive
+       // health answer: its snippet is the excerpt below (EQ-2: the preview quoted "Do not run during
+       // the quake!" by word overlap, before the Drop, Cover and Hold On excerpt).
+-      const healthExtractive = health && sources.length > 0 && req.tier !== "deep";
++      const healthExtractive = health && !healthFallback && sources.length > 0 && req.tier !== "deep";
+       // Never for health/danger (a single sentence is never a first-aid answer, and with no source the guard below
+       // answers), and never when the sources were matched against a translation instead of the question (a PT
+       // question's pt-en terms or lexicon names): coverage of "child" or "India" alone let an off-topic pack line

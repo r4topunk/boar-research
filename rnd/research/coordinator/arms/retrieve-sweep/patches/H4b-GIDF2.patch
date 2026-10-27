@@ -1,0 +1,136 @@
+diff -ruN rs-H4/src/rag/packs.ts rs-H4b/src/rag/packs.ts
+--- rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
++++ rs-H4b/src/rag/packs.ts	2026-10-22 18:32:33
+@@ -162,7 +162,10 @@
+   const catalog = await knowledgePacks();
+   // RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only, default off = unchanged): collection statistics over all installed
+   // format-2 packs for the terms the packs will search (each pack still picks its own terms), so bm25 is comparable across packs.
+-  const gidf = (globalThis as any).process?.env?.RS_MERGE === "gidf";
++  // RS_MERGE=gidf2 (RETRIEVE-SWEEP arm H4b) = gidf + one global average passage length (all installed packs) in BM25's length term.
++  const mergeMode = (globalThis as any).process?.env?.RS_MERGE;
++  const gidf = mergeMode === "gidf" || mergeMode === "gidf2";
++  const gidf2 = mergeMode === "gidf2";
+   const ready: WikiPack[] = [];
+   if (gidf) {
+     for (const pack of catalog) {
+@@ -176,11 +179,19 @@
+     for (const wp of ready) for (const t of wp.queryTerms(await wp.stems(query))) terms.add(t);
+     const df = new Map<string, number>();
+     let nRow = 0;
++    let nFtsRow = 0;
++    let nTok = 0;
+     for (const wp of ready) {
+       nRow += wp.rsNRow;
++      if (gidf2) {
++        const st = await wp.rsFtsStats();
++        nFtsRow += st.nRow;
++        nTok += st.nTok;
++      }
+       for (const t of terms) df.set(t, (df.get(t) ?? 0) + (await wp.rsTermRows(t)));
+     }
+-    for (const wp of ready) wp.rsGlobal = { nRow, df };
++    const avgdl = gidf2 && nFtsRow ? nTok / nFtsRow : null;
++    for (const wp of ready) wp.rsGlobal = { nRow, df, avgdl };
+   }
+   try {
+     for (const pack of catalog) {
+diff -ruN rs-H4/src/rag/wikiPack.ts rs-H4b/src/rag/wikiPack.ts
+--- rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
++++ rs-H4b/src/rag/wikiPack.ts	2026-10-22 18:32:46
+@@ -443,11 +443,32 @@
+   return v > 0 ? v : 1e-6;
+ }
+ 
++/** FTS5 varints (1-9 bytes, big-endian 7-bit groups, high bit = more; a 9th byte carries 8 bits). Values here stay below 2^53. */
++export function rsVarints(b: Uint8Array): number[] {
++  const out: number[] = [];
++  for (let i = 0; i < b.length; ) {
++    let v = 0;
++    for (let k = 0; k < 9 && i < b.length; k++) {
++      const c = b[i++];
++      if (k === 8) { v = v * 256 + c; break; }
++      v = v * 128 + (c & 0x7f);
++      if (!(c & 0x80)) break;
++    }
++    out.push(v);
++  }
++  return out;
++}
++
++/** BM25 saturation of FTS5 (fts5_aux.c, k1 = 1.2, b = 0.75). */
++const RS_K1 = 1.2;
++const RS_B = 0.75;
++
+ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
+   /** RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only): collection statistics across the installed packs, set by searchWikiPacks around a search. */
+-  rsGlobal: { nRow: number; df: Map<string, number> } | null = null;
++  rsGlobal: { nRow: number; df: Map<string, number>; avgdl: number | null } | null = null;
+   private rsRows = new Map<string, number>();
++  private rsStats: { nRow: number; nTok: number } | null = null;
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+   private resolved = new Lru<string, number | null>(512);
+@@ -496,6 +517,18 @@
+     return this.nIndexed;
+   }
+ 
++  /**
++   * RS_MERGE=gidf2: FTS5's own collection statistics for this pack, read from the averages record (fts_data id 1:
++   * varint rows, then one varint token total per column; same numbers bm25() takes its avgdl from).
++   */
++  async rsFtsStats(): Promise<{ nRow: number; nTok: number }> {
++    if (this.rsStats) return this.rsStats;
++    const r = await this.db.getFirstAsync<{ block: Uint8Array }>("SELECT block FROM fts_data WHERE id = 1", []);
++    const v = rsVarints(r?.block ?? new Uint8Array());
++    this.rsStats = { nRow: v[0] ?? 0, nTok: v.slice(1).reduce((a, b) => a + b, 0) };
++    return this.rsStats;
++  }
++
+   /** RS_MERGE=gidf: rows of this pack's index that match the FTS term of `stem` (FTS5's nHit: exact term from df / the vocab view, a prefix term counted). */
+   async rsTermRows(stem: string): Promise<number> {
+     const hit = this.rsRows.get(stem);
+@@ -739,6 +772,16 @@
+       const g = this.rsGlobal;
+       const ids = rows.map((r) => Number(r.id)).join(",");
+       rescored = new Map();
++      // gidf2: passage lengths (tokens over all columns) from fts_docsize, this pack's avgdl from its averages record
++      let rsDl: Map<number, number> | null = null;
++      let rsAvg: { local: number } | null = null;
++      if (g.avgdl !== null) {
++        const st = await this.rsFtsStats();
++        rsAvg = { local: st.nTok / st.nRow };
++        rsDl = new Map();
++        for (const d of await this.db.getAllAsync<{ id: number; sz: Uint8Array }>(`SELECT id, sz FROM fts_docsize WHERE id IN (${ids})`, []))
++          rsDl.set(d.id, rsVarints(d.sz).reduce((a, b) => a + b, 0));
++      }
+       for (const t of terms) {
+         const nl = await this.rsTermRows(t);
+         const ratio = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) / rsFts5Idf(this.nIndexed, nl);
+@@ -746,7 +789,25 @@
+           `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
+           [matchTerm(t)]
+         );
+-        for (const r of part) rescored.set(r.id, (rescored.get(r.id) ?? 0) + -r.s * ratio);
++        for (const r of part) {
++          let s = -r.s * ratio;
++          if (rsAvg && rsDl) {
++            // gidf2: fts5's one-term score is idf_local x f, f = tf(k1+1)/(tf + k1 K), K = 1 - b + b D/avgdl. Recover tf (weighted term
++            // frequency) from f and the pack's own K, then rebuild f with the global avgdl; idf stays the global one (ratio).
++            const D = rsDl.get(r.id) ?? 0;
++            const f = -r.s / rsFts5Idf(this.nIndexed, nl);
++            const K = 1 - RS_B + (RS_B * D) / rsAvg.local;
++            const tf = (f * RS_K1 * K) / (RS_K1 + 1 - f);
++            const K2 = 1 - RS_B + (RS_B * D) / (g.avgdl as number);
++            s = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) * ((tf * (RS_K1 + 1)) / (tf + RS_K1 * K2));
++            if ((globalThis as any).process?.env?.RS_MERGE_CHECK === "2") {
++              // dev check: with the pack's own avgdl the rebuilt score must equal the gidf score (ratio x one-term bm25)
++              const back = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) * ((tf * (RS_K1 + 1)) / (tf + RS_K1 * K));
++              console.error(`[rs-merge-check2] |rebuilt(local avgdl) - gidf| = ${Math.abs(back - -r.s * ratio)}`);
++            }
++          }
++          rescored.set(r.id, (rescored.get(r.id) ?? 0) + s);
++        }
+       }
+       if ((globalThis as any).process?.env?.RS_MERGE_CHECK === "1") {
+         // dev check: the unscaled sum of the one-term scores must equal the query's bm25 (done for the first pass only)

@@ -1,0 +1,2 @@
+SELECT ?item (MAX(?a) AS ?v) WHERE { ?item wdt:P31/wdt:P279* wd:Q23397 ; p:P2046/psn:P2046/wikibase:quantityAmount ?a . }
+ GROUP BY ?item ORDER BY DESC(?v) LIMIT 140

@@ -1,0 +1,7 @@
+# P3-NLI-0: separate small grounding checker, offline probe (Compass, 2026-10-02): FAIL
+- Protocol frozen before any run: `protocol.md` (sha256 2fe0ffd5…e8c0, sent to the coordinator 17:40). Runner: `run_p3nli.py`. Output: `runs.p3nli-0.jsonl`.
+- **Result (frozen rule, threshold 0.90):** hits **0/7** (need ≥ 4), false flags **0/20** (max 2), excluded 0 → **FAIL**. The exploratory sweep at 0.7 and 0.5 is also 0/7, 0/20. Max P(contradiction) on target sentences 0.03–0.35.
+- **Cost (reported):** model 339 MB int8 ONNX; desktop M1, 4 threads: **0.57 s p50, 1.2 s max** per answer (6 passage windows p50). That's within budget on a phone at ~2–3× slower, an estimate, not measured.
+- **Artifact quality (diagnostic, after the run):** the frozen int8 file gets 5/8 textbook NLI pairs right. It misses factual contradictions ("capital of France is Berlin", "water boils at 50 °C") and calls India "no country bigger" vs "seventh-largest" *entailment* 0.87. Not checked with fp32: the file is 1.1 GB (above the download limit), and the ceiling below makes it moot.
+- **Ceiling (`ceiling.md`, hand-read):** 0/7 targets are contradicted by a passage in the prompt. 2/7 (India ×2) are contradicted by the answer's own next sentence. No passage-vs-sentence checker can reach the 4/7 bar on this set, at any model quality.
+- Not committed anywhere: `model/` and `.venv/` are local only (rm -rf to reclaim ~360 MB).

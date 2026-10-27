@@ -1,0 +1,11 @@
+--- a/src/rag/retrieve.ts	2026-10-21 18:08:09
++++ b/src/rag/retrieve.ts	2026-10-21 18:08:09
+@@ -118,6 +118,8 @@
+   topK = 6,
+   opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
+ ): Promise<RetrievedChunk[]> {
++  // CB17 (closed-book 1.7B arm): no added knowledge. Every retrieval returns no source (packs, bundled corpus, user documents).
++  if (query !== undefined) return [];
+   // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
+   // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
+   const extra = opts.packDense2 === "extra";

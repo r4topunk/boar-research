@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UPSTREAM_REPO/boar-app/rnd/bench/device/device-metrics.schema.json",
+  "title": "Offline Research Bench v0: device metrics",
+  "description": "Speed, memory, sustained-use and offline-proof metrics of ONE system configuration (app build + model + device) on ONE question set. Latency definitions follow MLPerf Client v2.0 (https://mlcommons.org/benchmarks/client/): TTFT = 'the wait time in seconds before the system produces the first token in response to each prompt'; TPS = 'the average rate to produce all of the rest of the tokens in the response, excluding the first one'. Unmeasured values are null and MUST carry a reason in `notes`; never 0.",
+  "type": "object",
+  "required": ["schema_version", "system", "measurement", "device", "workload", "latency", "memory", "sustained", "offline_proof", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+
+    "system": {
+      "type": "object",
+      "description": "What was measured: the app, its build, the model and the runtime.",
+      "required": ["app", "build", "model", "runtime"],
+      "additionalProperties": false,
+      "properties": {
+        "app": { "type": "string", "description": "e.g. 'BOAR', 'a competitor team', 'a competitor team', or 'BOAR harness (llama-server proxy)'." },
+        "app_version": { "type": ["string", "null"] },
+        "build": { "type": ["string", "null"], "description": "Commit sha / version code of the exact build." },
+        "apk_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "model": {
+          "type": "object",
+          "required": ["name", "file", "sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "file": { "type": ["string", "null"] },
+            "sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+            "quant": { "type": ["string", "null"] },
+            "params_total_b": { "type": ["number", "null"] },
+            "params_active_b": { "type": ["number", "null"] },
+            "file_bytes": { "type": ["integer", "null"] }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "required": ["engine"],
+          "additionalProperties": false,
+          "properties": {
+            "engine": { "type": "string", "description": "e.g. 'llama.rn 0.13.0-rc.4 (llama.cpp b11010)', 'llama-server 0e8c83e', 'BigMoeOnEdge 74ba18f'." },
+            "backend": { "type": ["string", "null"], "description": "cpu / metal / vulkan / opencl / npu." },
+            "threads": { "type": ["integer", "null"] },
+            "n_ctx": { "type": ["integer", "null"] },
+            "weight_repack": { "type": ["boolean", "null"] },
+            "thinking": { "enum": ["off", "on", "always", "budgeted", null] },
+            "sampling": { "type": ["object", "null"] }
+          }
+        }
+      }
+    },
+
+    "measurement": {
+      "type": "object",
+      "required": ["kind", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["device", "proxy"], "description": "'proxy' = NOT the target phone (e.g. a Mac mini CPU standing in for Android). Proxy numbers are upper bounds for speed and are never ranked against device numbers." },
+        "method": { "enum": ["in-app-benchmark", "harness-llama-server", "adb-logcat", "app-export", "screen-recording", "manual"] },
+        "date": { "type": ["string", "null"], "format": "date-time" },
+        "operator": { "type": ["string", "null"] },
+        "conditions": { "type": ["string", "null"], "description": "Foreground, airplane mode, charger, ambient temperature, background load (e.g. 1-min loadavg range on a shared host)." },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "device": {
+      "type": "object",
+      "required": ["class", "model", "soc", "ram_bytes", "os"],
+      "additionalProperties": false,
+      "properties": {
+        "class": { "enum": ["phone", "tablet", "laptop", "desktop"] },
+        "model": { "type": ["string", "null"], "description": "e.g. 'iPhone 13', 'Xiaomi 2311DRK48G', 'Mac mini (M4)'. Android: ro.product.model." },
+        "soc": { "type": ["string", "null"], "description": "Android: ro.soc.model (e.g. 'MT6897' Dimensity 8300)." },
+        "cpu": { "type": ["string", "null"] },
+        "ram_bytes": { "type": ["integer", "null"], "description": "OS-reported physical RAM (Android: MemTotal)." },
+        "os": { "type": ["string", "null"], "description": "e.g. 'iOS 26.0', 'Android 15 (API 35)', 'GrapheneOS …', 'macOS 26.0'." },
+        "build_fingerprint": { "type": ["string", "null"], "description": "Android: ro.build.fingerprint." }
+      }
+    },
+
+    "workload": {
+      "type": "object",
+      "required": ["question_set", "n_questions", "n_llm_answers", "context_tokens"],
+      "additionalProperties": false,
+      "properties": {
+        "question_set": { "type": "string", "description": "Id of the question set (e.g. 'vitalik-lantern-52', 'bench-v0-public')." },
+        "question_set_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "n_questions": { "type": "integer" },
+        "n_llm_answers": { "type": "integer", "description": "Answers that reached the model. Answers served without the LLM (calculator, snippet, places) are excluded from every latency statistic below." },
+        "context_tokens": { "$ref": "#/$defs/stat", "description": "Prompt tokens actually sent to the model per answer (RAG context + system + question). Latency is only comparable at similar context length." },
+        "corpus": { "type": ["string", "null"], "description": "Installed packs / corpus manifest id." }
+      }
+    },
+
+    "latency": {
+      "type": "object",
+      "description": "MLPerf Client v2.0 definitions. All times in ms, rates in tokens/s.",
+      "required": ["ttft_model_ms", "ttft_e2e_ms", "tps", "prefill_tps", "total_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "ttft_model_ms": { "$ref": "#/$defs/stat", "description": "MLPerf TTFT at engine level: prompt submitted to the engine -> first generated token of ANY kind (a reasoning token counts). Excludes model load and retrieval." },
+        "ttft_answer_ms": { "$ref": "#/$defs/stat", "description": "Prompt submitted -> first token of the visible ANSWER (reasoning excluded). Equals ttft_model_ms for non-reasoning runs." },
+        "ttft_e2e_ms": { "$ref": "#/$defs/stat", "description": "User-perceived: question sent in the app -> first visible answer text. Includes retrieval, routing and prefill; excludes a cold model load unless `includes_model_load` is true." },
+        "includes_model_load": { "type": ["boolean", "null"], "description": "True if the reported TTFTs include loading the model (a competitor team's ttftS does). Such values are not MLPerf TTFT." },
+        "tps": { "$ref": "#/$defs/stat", "description": "MLPerf TPS: (generated tokens - 1) / (time of last token - time of first token), per answer." },
+        "tps_engine_reported": { "$ref": "#/$defs/stat", "description": "The engine's own decode rate (e.g. llama.cpp predicted_per_second, app tokPerSec), kept for traceability." },
+        "prefill_tps": { "$ref": "#/$defs/stat", "description": "Prompt tokens processed / prompt processing time, per answer." },
+        "reasoning_ms": { "$ref": "#/$defs/stat", "description": "ttft_answer_ms - ttft_model_ms, reasoning models only." },
+        "total_ms": { "$ref": "#/$defs/stat", "description": "Prompt submitted (or question sent, see total_scope) -> last token." },
+        "total_scope": { "enum": ["model", "e2e"] },
+        "retrieval_ms": { "$ref": "#/$defs/stat" },
+        "model_load_ms": { "type": ["number", "null"], "description": "Cold load of the model, once per session." },
+        "empty_answers": { "type": ["integer", "null"], "description": "Answers with no visible text (e.g. reasoning used the whole work budget)." }
+      }
+    },
+
+    "memory": {
+      "type": "object",
+      "required": ["peak_rss_bytes", "peak_anon_bytes", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "peak_rss_bytes": { "type": ["integer", "null"], "description": "Peak resident set, INCLUDING clean mmap'd model pages." },
+        "peak_anon_bytes": { "type": ["integer", "null"], "description": "Peak anonymous memory: what the low-memory killer / jetsam counts. macOS: 'peak memory footprint' (/usr/bin/time -l); Android: Private Dirty from dumpsys meminfo (or PSS as an upper bound); iOS: phys_footprint." },
+        "peak_pss_bytes": { "type": ["integer", "null"], "description": "Android: TOTAL PSS peak (dumpsys meminfo <pkg>, polled)." },
+        "method": { "type": ["string", "null"] },
+        "valid": { "type": ["boolean", "null"], "description": "False if a known artifact inflates it (e.g. llama-server --cache-ram prompt cache left on)." },
+        "low_memory_kills": { "type": ["integer", "null"] }
+      }
+    },
+
+    "sustained": {
+      "type": "object",
+      "description": "Thermal/throttling after N consecutive questions in one session (bench v0 asks for >= 20).",
+      "required": ["n_queries_in_session", "tps_first5", "tps_last5", "tps_ratio_last_first"],
+      "additionalProperties": false,
+      "properties": {
+        "n_queries_in_session": { "type": ["integer", "null"] },
+        "session_minutes": { "type": ["number", "null"] },
+        "tps_first5": { "type": ["number", "null"], "description": "Median TPS of the first 5 LLM answers in session order." },
+        "tps_last5": { "type": ["number", "null"] },
+        "tps_ratio_last_first": { "type": ["number", "null"], "description": "tps_last5 / tps_first5. < 0.8 = throttling suspected." },
+        "ttft_ratio_last_first": { "type": ["number", "null"] },
+        "thermal_status_start": { "type": ["string", "null"], "description": "Android: dumpsys thermalservice 'Thermal Status'; iOS: ProcessInfo.thermalState." },
+        "thermal_status_end": { "type": ["string", "null"] },
+        "battery_temp_c_start": { "type": ["number", "null"] },
+        "battery_temp_c_end": { "type": ["number", "null"] },
+        "battery_pct_drop": { "type": ["number", "null"] }
+      }
+    },
+
+    "offline_proof": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["NO-NETWORK-BY-CONSTRUCTION", "NETWORK-CAPABLE", "not-run", "not-applicable"] },
+        "tool": { "type": ["string", "null"], "description": "e.g. 'boar-app scripts/audit-apk.py (PR #42)'." },
+        "report_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "runtime_traffic": {
+          "type": ["object", "null"],
+          "description": "Kernel per-UID counters during the session (PR #42 scripts/netstats-uid.sh).",
+          "additionalProperties": false,
+          "properties": {
+            "rx_bytes": { "type": ["integer", "null"] },
+            "tx_bytes": { "type": ["integer", "null"] },
+            "radio_state": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+
+    "per_query": {
+      "type": "array",
+      "description": "Optional per-answer rows (same definitions as above) so a scorer can re-aggregate.",
+      "items": {
+        "type": "object",
+        "required": ["query_id"],
+        "properties": {
+          "query_id": { "type": "string" },
+          "route": { "type": ["string", "null"] },
+          "context_tokens": { "type": ["integer", "null"] },
+          "ttft_model_ms": { "type": ["number", "null"] },
+          "ttft_answer_ms": { "type": ["number", "null"] },
+          "ttft_e2e_ms": { "type": ["number", "null"] },
+          "tps": { "type": ["number", "null"] },
+          "prefill_tps": { "type": ["number", "null"] },
+          "total_ms": { "type": ["number", "null"] },
+          "generated_tokens": { "type": ["integer", "null"] },
+          "flagged": { "type": ["boolean", "null"], "description": "e.g. host load above the gate during this answer." }
+        }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "required": ["sources", "converter"],
+      "additionalProperties": false,
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "sha256"],
+            "additionalProperties": false,
+            "properties": { "path": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+          }
+        },
+        "converter": { "type": "string" },
+        "generated_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  },
+
+  "$defs": {
+    "stat": {
+      "type": "object",
+      "required": ["n", "p50", "p95"],
+      "additionalProperties": false,
+      "properties": {
+        "n": { "type": "integer", "minimum": 0 },
+        "p50": { "type": ["number", "null"] },
+        "p95": { "type": ["number", "null"] },
+        "mean": { "type": ["number", "null"] },
+        "min": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] }
+      }
+    }
+  }
+}

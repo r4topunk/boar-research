@@ -1,0 +1,92 @@
+{
+ "setting": "packGround",
+ "tree": "wt/packcond",
+ "replay": "arms/packcond/tools/replay-pg.ts --deep --gate rules --k 6 --pool 20 --tasks-from H traces",
+ "H32": {
+  "n": 32,
+  "default_off_identical_to_prepatch": true,
+  "kept_changed": [
+   "v02-comparison-A03",
+   "v02-crypto-A01",
+   "v02-crypto-A06",
+   "v02-crypto-B05",
+   "v02-crypto-B06",
+   "v02-explanation-A08",
+   "v02-explanation-B08",
+   "v02-honesty-refusal-A06",
+   "v02-reasoning-A09",
+   "v02-synthesis-B03",
+   "v02-travel-local-A01",
+   "v02-travel-practical-B01",
+   "v02-travel-practical-B02"
+  ],
+  "packground_codes_on": {
+   "packground:none": 14,
+   "packground:kept-N": 13,
+   "-": 5
+  },
+  "kept_slots_off": 48,
+  "kept_slots_on": 63,
+  "pack_share_off": 0.833,
+  "pack_share_on": 0.81,
+  "empty_kept_off": 11,
+  "empty_kept_on": 6,
+  "kept_changed_n": 13,
+  "f0_kept_off": 11,
+  "f0_kept_on": 14,
+  "f0_enters": [
+   "v02-crypto-B05",
+   "v02-travel-practical-B01",
+   "v02-travel-practical-B02"
+  ],
+  "f0_leaves": []
+ },
+ "R20": {
+  "n": 20,
+  "default_off_identical_to_prepatch": true,
+  "kept_changed": [
+   "v02-comparison-A03",
+   "v02-crypto-B05",
+   "v02-health-A04",
+   "v02-honesty-refusal-B01",
+   "v02-reasoning-B04",
+   "v02-synthesis-B02"
+  ],
+  "packground_codes_on": {
+   "packground:none": 10,
+   "-": 4,
+   "packground:kept-N": 6
+  },
+  "kept_slots_off": 17,
+  "kept_slots_on": 25,
+  "pack_share_off": 0.824,
+  "pack_share_on": 0.84,
+  "empty_kept_off": 10,
+  "empty_kept_on": 5,
+  "kept_changed_n": 6
+ },
+ "v01": {
+  "n": 60,
+  "gold_items": 39,
+  "gold_kept_off": 13,
+  "gold_kept_on": 14,
+  "gold_enters": [
+   "lan-exp-004"
+  ],
+  "gold_leaves": [],
+  "kept_changed_n": 27,
+  "packground_codes_on": {
+   "packground:kept-N": 28,
+   "packground:none": 22,
+   "-": 10
+  },
+  "empty_kept_off": 15,
+  "empty_kept_on": 7
+ },
+ "gate": {
+  "rule": "f0_kept_on >= 16/32 and R20 kept_changed <= 4/20",
+  "f0_kept_on": 14,
+  "r20_changed": 6,
+  "pass": false
+ }
+}

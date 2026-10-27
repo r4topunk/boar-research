@@ -1,0 +1,7 @@
+Retrieval-only replay (Sonar exp-34 method: real engine + packs kit A (crypto + wikivoyage), stub LLM on :18500, NO learned
+detector in the replay adapter), 2026-10-04. Items: v0.1 EN public 60 + the 4 probe files (185) = 245.
+Trees: cut 2 (285df041 = 7931b9a8 applied) vs cut3dev stack (81d946fb).
+- identical answer text + reason codes: 146/245
+- v0.1 items changed: vit-sci-003 (answer:calculator-rate-time), dng-001 (snakebite card text), dng-005 (answer:safety-fact-water); the other 57 v0.1 items byte-identical
+- probe changes = fires: water card 39, rate-time 37, ceil-division 20 (probe sets include positives; negatives scored in the L0 results)
+Caveat: the stub answer ("Stub answer [1].") never trips VG, so VG items cannot change in a replay; VG byte identity on unflagged answers holds by construction (null = untouched) and is unit-tested.

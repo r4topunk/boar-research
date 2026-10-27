@@ -1,0 +1,208 @@
+--- rs-W78/src/rag/wikiPack.ts	2026-10-23 10:28:51
++++ rs-W78C/src/rag/wikiPack.ts	2026-10-23 10:29:30
+@@ -595,6 +595,8 @@
+   }
+ 
+   private rsLeadBits: { ids: Int32Array; words: Uint32Array; n: number; fileBytes: number } | null = null;
++  private rsLeadQ: Record<number, { ids: Int32Array; factor: Float32Array; codes: Uint8Array; n: number; fileBytes: number } | null> = {};
++  private rsIvf: { ids: Int32Array; cents: Float32Array; start: Uint32Array; rows: Uint32Array; n: number; k: number; fileBytes: number } | null | undefined = undefined;
+ 
+   /**
+    * W78-BINARY: the F1 thread pick through a 1-bit sidecar (<RS_SE_LEAD_BIN_DIR>/<manifestSha256[:16]>.leadbits, w78/tools/build_leadbits.py):
+@@ -1232,6 +1234,15 @@
+     const denseBinN = Number((globalThis as any).process?.env?.RS_DENSE_BIN ?? 0);
+     let binStage: { top: Array<{ id: number; s: number }>; scanMs: number; hamMs: number; loadMs: number; scanBytes: number; residentBytes: number; rows: number; rescoreRows: number } | null = null;
+     if (denseBinN > 0) binStage = await this.rsDenseStage1Bin(queryVec, m, denseBinN);
++    // W78C-DENSE (bench-only, default off): RS_DENSE_Q=<4|2> + RS_DENSE_QN=<N> quantised sidecar + exact rescore; RS_DENSE_IVF=<nprobe> IVF-256 over int8.
++    const w78cEnv = (globalThis as any).process?.env ?? {};
++    const denseQ = Number(w78cEnv.RS_DENSE_Q ?? 0);
++    const denseIvf = Number(w78cEnv.RS_DENSE_IVF ?? 0);
++    let stageMode = `bin${denseBinN}`;
++    if (!binStage && denseQ > 0) {
++      binStage = await this.rsDenseStage1Q(queryVec, m, denseQ, Number(w78cEnv.RS_DENSE_QN ?? 64));
++      stageMode = `q${denseQ}n${w78cEnv.RS_DENSE_QN ?? 64}`;
++    }
+     if (!binStage && !this.leadMatrix) {
+       const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []);
+       const dims = queryVec.length;
+@@ -1249,6 +1260,10 @@
+       this.leadMatrix = { ids, vecs, norms };
+       loadMs = Date.now() - t0;
+     }
++    if (!binStage && denseIvf > 0) {
++      binStage = await this.rsDenseStage1Ivf(queryVec, m, denseIvf);
++      if (binStage) (binStage.loadMs += loadMs), (stageMode = `ivf${denseIvf}`);
++    }
+     const t1 = Date.now();
+     const { ids, vecs, norms } = binStage ? { ids: new Int32Array(0), vecs: new Int8Array(0), norms: new Float32Array(0) } : this.leadMatrix!;
+     const dims = queryVec.length;
+@@ -1271,7 +1286,7 @@
+     }
+     const t2 = Date.now();
+     await this.rsDenseLog(binStage
+-      ? { mode: `bin${denseBinN}`, ...binStage, leadMs: t2 - t1 }
++      ? { mode: stageMode, ...binStage, leadMs: t2 - t1 }
+       : { mode: "int8", rows: ids.length, scanMs: t2 - t1, hamMs: 0, loadMs, scanBytes: ids.length * dims, residentBytes: vecs.byteLength + norms.byteLength + ids.byteLength, rescoreRows: 0, top });
+     const art = top.map((t) => t.id);
+     const rows = art.length
+@@ -1386,6 +1401,160 @@
+     return { top, scanMs: Date.now() - tScan, hamMs: tHam - tScan, loadMs: ld.loadMs, scanBytes: n * W * 4 + rows.length * dims, residentBytes: this.rsLeadBits!.fileBytes, rows: n, rescoreRows: rows.length };
+   }
+ 
++  /**
++   * W78C-DENSE: stage 1 through a per-row-scaled 4-bit or 2-bit sidecar (<manifest16>.lead4 / .lead2 in RS_DENSE_Q_DIR, tools/build_leadq.py): approximate
++   * score of every row by a per-query lookup table, the `qn` best (ties: lower row), exact int8 cosine of only those rows in row order, top min(m, qn).
++   * Returns null when the pack has no sidecar (the caller then runs the exact scan).
++   */
++  private async rsDenseStage1Q(queryVec: Float32Array, m: number, bits: number, qn: number) {
++    const dims = queryVec.length;
++    const env = (globalThis as any).process?.env;
++    let loadMs = 0;
++    if (!(bits in this.rsLeadQ)) {
++      const fs = await import("node:fs");
++      const path = `${env?.RS_DENSE_Q_DIR ?? "."}/${String(this.meta.manifestSha256 ?? "").slice(0, 16)}.lead${bits}`;
++      if (!fs.existsSync(path)) this.rsLeadQ[bits] = null;
++      else {
++        const t = Date.now();
++        const buf = fs.readFileSync(path);
++        const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
++        const hdr = new DataView(ab, 8, 8);
++        const n = hdr.getUint32(0, true);
++        if (hdr.getUint32(4, true) !== dims) throw new Error(`W78C: ${path} dims mismatch`);
++        this.rsLeadQ[bits] = { ids: new Int32Array(ab, 16, n), factor: new Float32Array(ab, 16 + 4 * n, n), codes: new Uint8Array(ab, 16 + 8 * n, (n * dims * bits) / 8), n, fileBytes: buf.byteLength };
++        loadMs = Date.now() - t;
++      }
++    }
++    const sc = this.rsLeadQ[bits];
++    if (!sc) return null;
++    const tScan = Date.now();
++    const per = 8 / bits; // dims per byte
++    const P = dims / per; // bytes per row
++    const lut = new Float32Array(P * 256);
++    for (let p = 0; p < P; p++)
++      for (let b = 0; b < 256; b++) {
++        let v = 0;
++        if (bits === 4) v = queryVec[2 * p] * ((b & 15) - 8) + queryVec[2 * p + 1] * ((b >> 4) - 8);
++        else for (let j = 0; j < 4; j++) v += queryVec[4 * p + j] * (2 * ((b >> (2 * j)) & 3) - 3);
++        lut[p * 256 + b] = v;
++      }
++    const { ids, factor, codes, n } = sc;
++    const want = Math.min(qn, n);
++    const best: Array<{ i: number; s: number }> = [];
++    for (let i = 0; i < n; i++) {
++      let a = 0;
++      const o = i * P;
++      for (let p = 0; p < P; p++) a += lut[(p << 8) | codes[o + p]];
++      const s = a * factor[i];
++      if (best.length < want || s > best[best.length - 1].s) {
++        let j = best.length < want ? best.length : best.length - 1;
++        if (best.length < want) best.push({ i, s });
++        while (j > 0 && best[j - 1].s < s) (best[j] = best[j - 1]), j--;
++        best[j] = { i, s };
++      }
++    }
++    const tApprox = Date.now();
++    const candIds = best.map((x) => x.i).sort((x, y) => x - y).map((i) => ids[i]);
++    const top = await this.rsExactRescore(queryVec, candIds, Math.min(m, qn));
++    return { top: top.top, scanMs: Date.now() - tScan, hamMs: tApprox - tScan, loadMs, scanBytes: n * (P + 4) + top.rows * dims, residentBytes: sc.fileBytes, rows: n, rescoreRows: top.rows };
++  }
++
++  /** W78C: exact int8 cosine (same arithmetic as the exact scan and W78B) of the given article ids, visited in the given order; top `keep` (ties: visit order). */
++  private async rsExactRescore(queryVec: Float32Array, candIds: number[], keep: number) {
++    const dims = queryVec.length;
++    const rows = candIds.length
++      ? await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>(`SELECT article_id, vec FROM lead_vecs WHERE article_id IN (${candIds.map(() => "?").join(",")})`, candIds)
++      : [];
++    const byId = new Map(rows.map((r) => [r.article_id, r.vec]));
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const top: Array<{ id: number; s: number }> = [];
++    for (const id of candIds) {
++      const raw = byId.get(id);
++      if (!raw) continue;
++      const vv = new Int8Array(raw.buffer, raw.byteOffset, dims);
++      let nn = 0;
++      for (let d = 0; d < dims; d++) nn += vv[d] * vv[d];
++      const norm = Math.fround(Math.sqrt(nn));
++      let dot = 0;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vv[d];
++      const s = norm ? dot / (qn * norm) : 0;
++      if (top.length < keep || s > top[top.length - 1].s) {
++        let j = top.length < keep ? top.length : top.length - 1;
++        if (top.length < keep) top.push({ id, s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id, s };
++      }
++    }
++    return { top, rows: rows.length };
++  }
++
++  /**
++   * W78C-DENSE: IVF-256 stage 1 over the int8 lead matrix (<manifest16>.ivf256 in RS_DENSE_Q_DIR, tools/build_ivf.py): cosine of the query to the k centroids,
++   * the `nprobe` best lists (ties: lower list), exact int8 cosine of their member rows in ascending row order from the resident matrix, top m. Null: no sidecar.
++   */
++  private async rsDenseStage1Ivf(queryVec: Float32Array, m: number, nprobe: number) {
++    const dims = queryVec.length;
++    let loadMs = 0;
++    if (this.rsIvf === undefined) {
++      const fs = await import("node:fs");
++      const env = (globalThis as any).process?.env;
++      const path = `${env?.RS_DENSE_Q_DIR ?? "."}/${String(this.meta.manifestSha256 ?? "").slice(0, 16)}.ivf256`;
++      if (!fs.existsSync(path)) this.rsIvf = null;
++      else {
++        const t = Date.now();
++        const buf = fs.readFileSync(path);
++        const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
++        const hdr = new DataView(ab, 8, 12);
++        const n = hdr.getUint32(0, true), k = hdr.getUint32(8, true);
++        if (hdr.getUint32(4, true) !== dims) throw new Error(`W78C: ${path} dims mismatch`);
++        let o = 20;
++        const ids = new Int32Array(ab, o, n); o += 4 * n;
++        const cents = new Float32Array(ab, o, k * dims); o += 4 * k * dims;
++        const start = new Uint32Array(ab, o, k + 1); o += 4 * (k + 1);
++        const rows = new Uint32Array(ab, o, n);
++        const lm = this.leadMatrix!;
++        if (lm.ids.length !== n || lm.ids.some((v, i) => v !== ids[i])) throw new Error(`W78C: ${path} ids differ from lead_vecs`);
++        this.rsIvf = { ids, cents, start, rows, n, k, fileBytes: buf.byteLength };
++        loadMs = Date.now() - t;
++      }
++    }
++    const iv = this.rsIvf;
++    if (!iv) return null;
++    const tScan = Date.now();
++    const cs: Array<{ j: number; s: number }> = [];
++    for (let j = 0; j < iv.k; j++) {
++      let dot = 0;
++      const o = j * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * iv.cents[o + d];
++      cs.push({ j, s: dot });
++    }
++    cs.sort((a, b) => b.s - a.s || a.j - b.j);
++    const members: number[] = [];
++    for (const { j } of cs.slice(0, nprobe)) for (let r = iv.start[j]; r < iv.start[j + 1]; r++) members.push(iv.rows[r]);
++    members.sort((a, b) => a - b);
++    const tCent = Date.now();
++    const { ids, vecs, norms } = this.leadMatrix!;
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const top: Array<{ id: number; s: number }> = [];
++    for (const i of members) {
++      let dot = 0;
++      const o = i * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vecs[o + d];
++      const s = norms[i] ? dot / (qn * norms[i]) : 0;
++      if (top.length < m || s > top[top.length - 1].s) {
++        let j = top.length < m ? top.length : top.length - 1;
++        if (top.length < m) top.push({ id: ids[i], s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id: ids[i], s };
++      }
++    }
++    return { top, scanMs: Date.now() - tScan, hamMs: tCent - tScan, loadMs, scanBytes: iv.k * dims * 4 + members.length * dims, residentBytes: iv.fileBytes, rows: iv.n, rescoreRows: members.length };
++  }
++
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {
+     const perTitle: PackHit[][] = [];
+     for (const id of ids) perTitle.push(await this.articlePassages(id, stems, 2, action, !action && explain));

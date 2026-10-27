@@ -1,0 +1,1145 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-004": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "Why does Gr\u00edma kill Saruman in The Lord of the Rings?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:68816",
+       "title": "Middle-earth characters",
+       "share": 1.0,
+       "anchor": 0.846,
+       "bm25_rank": 3,
+       "text": "Saruman the White is a character in the book The Lord of the Rings. In the Third Age Saruman came to Middle-earth as one of the Istari. Saruman is also known as Curumo, Sharkey, Curun\u00edr, Saruman of Many Colours, The White Wizard and Saruman the Wise by Gandalf the Grey. Saruman was the leader of the wizards and the White Council that opposed the Dark Lord Sauron. Saruman allied Isengard with Mordo"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:29285",
+       "title": "The Lord of the Rings",
+       "share": 0.5,
+       "anchor": 0.846,
+       "bm25_rank": 6,
+       "text": "The four hobbits and Gandalf leave Rivendell, to travel back to the Shire. Gandalf leaves the hobbits after Bree. The four hobbits come to the Shire, but Saruman with his men has taken over the land. Frodo, Sam, Merry and Pippin lead the other hobbits in the fight against them, and they free themselves and the Shire. After a battle, the four hobbits find Saruman and Gr\u00edma at Bag End. Frodo wants t"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:68844",
+       "title": "Middle-earth characters",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 0,
+       "text": "Gr\u00edma, son of Galmod, called Wormtongue, was at first servant of King Th\u00e9oden. But then he secretly worked for Saruman. Gr\u00edma became Th\u00e9oden's advisor, and worked to weaken him. When Gandalf made the King better, Gr\u00edma fled to Isengard. In the end, he goes with Saruman to the Shire. After the hobbit uprising, Gr\u00edma kills Saruman; Gr\u00edma is killed by hobbit archers.\n\nIn The Lord of the Rings movie s"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 25,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:603829",
+       "title": "The Scouring of the Shire",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 4,
+       "text": "The 1981 BBC The Lord of the Rings radio play covers \"The Scouring of the Shire\", including the original showdown and ending in which Saruman dies by Wormtongue's knife and Wormtongue is killed by arrows in the Shire.\nThe events of \"The Scouring of the Shire\" are retold in the Finnish miniseries Hobitit.\nThe chapter has been left out of the Lord of the Rings film trilogy, except as a brief flash-f"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:603808",
+       "title": "The Scouring of the Shire",
+       "share": 1.0,
+       "anchor": 0.569,
+       "bm25_rank": 53,
+       "text": "There they meet \"Sharkey\", alias the Wizard Saruman; he is accompanied by his servant Wormtongue. He has lost his Wizard's power, except for his deceptive voice; he tells them he has deliberately harmed their home in revenge. Frodo tells him to leave the Shire; Saruman in reply tries to stab Frodo, but the knife snaps on Frodo's hidden coat of chain-mail. Frodo asks the other hobbits not to kill S"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2776068",
+       "title": "The Lord of the Rings",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 29,
+       "text": "His sister \u00c9owyn is engaged to Faramir, now Steward of Gondor and Prince of Ithilien. Galadriel, Celeborn, and Gandalf say farewell to Treebeard, and to Aragorn. The four hobbits travel home, only to find it has been taken over by Saruman's men. Merry raises a rebellion and scours the Shire. Saruman reveals crimes that Wormtongue has done, causing Wormtongue to turn on Saruman and kill him in fron"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 6,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1263384",
+       "title": "The Lord of the Rings: The Fellowship of the Ring",
+       "share": 0.5,
+       "anchor": 0.846,
+       "bm25_rank": 1,
+       "text": "Gandalf investigates the Ring, learns its true nature, and discovers that Gollum revealed two words during interrogation: \"Shire\" and \"Baggins.\" Gandalf warns Frodo to leave the Shire. As Frodo departs with his gardener friend, Samwise Gamgee, Gandalf heads to Isengard to seek counsel from his friend, the powerful wizard Saruman. Saruman reveals Sauron has dispatched his nine Nazg\u00fbl servants to re"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:730348",
+       "title": "Environmentalism in The Lord of the Rings",
+       "share": 0.5,
+       "anchor": 0.846,
+       "bm25_rank": 3,
+       "text": "The shafts ran down by many slopes and spiral stairs to caverns far under; there Saruman had treasuries, store-houses, armouries, smithies, and great furnaces. Iron wheels revolved there endlessly, and hammers thudded. At night plumes of vapour steamed from the vents, lit from beneath with red light, or blue, or venomous green.\nSaruman thus stands for the exact opposite of the sympathetic stewards"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:730341",
+       "title": "Environmentalism in The Lord of the Rings",
+       "share": 0.5,
+       "anchor": 0.846,
+       "bm25_rank": 13,
+       "text": "The theme of environmentalism in The Lord of the Rings has been remarked upon by critics since the 1970s. The Hobbits' visions of Saruman's industrial hell of Isengard and Sauron's desolate polluted land of Mordor have been interpreted as comments on modern society, while the destruction of Isengard by the tree-giant Ents, and \"The Scouring of the Shire\" by the Hobbits, have a strong theme of rest"
+      }
+     ]
+    }
+   }
+  },
+  "lan-cmp-001": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Does Brazil have more people than Russia?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:558",
+       "title": "Brazil",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 1,
+       "text": "Brazil, officially the Federative Republic of Brazil, is a country in South America. It is the world's fifth-largest country by area, behind Russia, Canada, the United States, and China, with a total area of . It is also the world's seventh-largest country by population, with about 212 million people. Brazil's capital city is Bras\u00edlia; its most populous city is S\u00e3o Paulo. Brazil was named after br"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:563",
+       "title": "Brazil",
+       "share": 0.5,
+       "anchor": 0.604,
+       "bm25_rank": 35,
+       "text": "The official language of Brazil is Portuguese. Brazil is the only country in South America that speaks Portuguese but more people in South America speak Portuguese than Spanish because the population of Brazil is larger than the combined population of all the Spanish-speaking countries in South America.\n\nSome people in Brazil speak German dialects. That came from German immigrants. 2% of Brazilian"
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:9551",
+       "title": "Brazil",
+       "share": 0.5,
+       "anchor": 0.604,
+       "bm25_rank": 79,
+       "text": "Population distribution: the vast majority of people live along or near the Atlantic coast in the east; the population core is in the southeast, anchored by the cities of S\u00e3o Paolo, Bras\u00edlia, and Rio de Janeiro\n\nUrbanization (urban population): 87.8% of total population (2023)\nUrbanization (rate of urbanization): 0.87% annual rate of change (2020-25 est.)\n\nMajor urban areas - population: 22.620 mi"
+      }
+     ]
+    },
+    "qa-bitcoin-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-bitcoin-se:40382",
+       "title": "Can my internet provider see I'm using bitcoin core (Russia)",
+       "share": 0.5,
+       "anchor": 0.586,
+       "bm25_rank": 22,
+       "text": "Yes, they can. It is quite easy to detect an ordinary Bitcoin client; it sends unencrypted messages of a standard and unique format to well-known TCP ports. Moreover, if they monitor all your traffic, it would not be too hard for them to link you with the transactions you send; Bitcoin tries to \"cloak\" your transactions by sending them out along with other people's relayed transactions. But if the"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:98611",
+       "title": "Leaving food on a plate in Russia",
+       "share": 0.5,
+       "anchor": 0.586,
+       "bm25_rank": 38,
+       "text": "I'm answering this as a Russian person.\n\nAs the title said, is it customary to leave food on a plate in Russia?\n\nYes, its generally fine. While some people would ask why you didn't finish your meal, a simple \"I'm full\" comment should be sufficient. Unless you're visiting a survivor of the Siege of Leningrad, your host shouldn't be particularly offended.\n\nif you start drinking vodka with people in "
+      },
+      {
+       "chunk": "pack:qa-travel-se:116313",
+       "title": "How long does a hotel visa registration last?",
+       "share": 0.5,
+       "anchor": 0.586,
+       "bm25_rank": 195,
+       "text": "Yes, it is possible and actually very normal to do. Many tourists in Russia will first get a cheap \"sponsor\" to provide a letter of invitation. A cheap sponsor could be a tourist company or a hotel. It is normal for people to get their visa granted, and then totally change their hotel plans after it is issued. You do not need to enter Russia to change your hotel plans.\n\nYou must register at any ho"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:793014",
+       "title": "Demographics of Brazil",
+       "share": 0.5,
+       "anchor": 0.604,
+       "bm25_rank": 31,
+       "text": "Brazil had an official resident population of 203 million in 2022, according to the Brazilian Institute of Geography and Statistics (IBGE). Brazil is the seventh most populous country in the world and the second most populous in the Americas and Western Hemisphere.\nBrazilians are mainly concentrated in the eastern part of the country, which comprises the Southeast, South, and Northeast. But it als"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:1542",
+       "title": "Brazil",
+       "share": 0.5,
+       "anchor": 0.604,
+       "bm25_rank": 6,
+       "text": "Brazil, officially the Federative Republic of Brazil, is the largest country in South America. It is also the world's fifth-largest country by area and the seventh-largest by population, with over 214 million people. Brazil is a federation composed of 26 states and a Federal District, which hosts the capital, Bras\u00edlia. Its most populous city is S\u00e3o Paulo, followed by Rio de Janeiro. Brazil has the"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:148904",
+       "title": "Digital marketing in Brazil",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 15,
+       "text": "Brazil\u2019s population exceeds 200 million people and is the world's fifth-largest country. Although considered a third world country, in 2022 Brazil ranked 10th on the List of countries by GDP (nominal), in front of Russia, Spain, and Australia.\nThe Brazilian economy had been extremely busy from 2010 to 2014 when it started to slow down after the 2014 FIFA World Cup which brought a lot of temporary "
+      }
+     ]
+    }
+   }
+  },
+  "lan-hlt-003": {
+   "set": "v0.1",
+   "tag": "health",
+   "question": "Which diseases do mosquitoes spread, and can they transmit HIV?",
+   "K1": "S5",
+   "K3": "S5",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 5,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:346874",
+       "title": "Infectious diseases",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 7,
+       "text": "However, there can be outbreaks of this disease increasing risk. A vaccine is available for Japanese encephalitis. Management of infected people is supportive care of their symptoms.\n- Filariasis - a parasitic infection caused by long thread-like worms spread through the bite of a variety of Anopholes, Aedes, and Culex mosquitoes. Causes symptoms including fevers, lymph node inflammation, lung dis"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:346872",
+       "title": "Infectious diseases",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 8,
+       "text": "- Chikungunya (CHIKV) \u2014 also known as epidemic polyarthritis and rash, and buggy creek virus. A febrile virus transmitted, like dengue, by an infective A. aegypti or A. africanus mosquito. After 3-12 days flu-like symptoms develop including severe headaches, chills, fever, joint pain, nausea and vomiting - no vaccine is available. Historically present in Africa and Asia, since 2005 there have been"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:86727",
+       "title": "Dengue fever",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 25,
+       "text": "Dengue is not infectious between people. It is spread to humans mainly by the Aedes aegypti mosquito, which is found in tropical regions of the world. The Aedes albopictus mosquito can also carry it; that one tolerates cold better and has been involved in the spread of the disease to Europe and North America. These mosquitoes also carry the similar viruses that cause Yellow fever, Zika fever, Chik"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 7,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:59699",
+       "title": "Mosquito",
+       "share": 0.5,
+       "anchor": 0.783,
+       "bm25_rank": 0,
+       "text": "Mosquitoes are a vector (carrier) which carries disease-causing viruses and parasites from person to person. The principal mosquito borne diseases are the viral diseases yellow fever, dengue fever malaria Morbius, HIV, Covid-19, Covid-23, and Covid 24 carried by the genera Anopheles and Culex. Mosquitoes spread disease to over 700 million people every year across Asia, Africa, South America and Ce"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:59694",
+       "title": "Mosquito",
+       "share": 0.5,
+       "anchor": 0.606,
+       "bm25_rank": 11,
+       "text": "The females are ectoparasites: they land on warm-blooded animals, pierce a capillary, and inject saliva to stop the blood coagulating. Then they suck up and eat the blood. Deadly microscopic parasites often live in the saliva. The mosquito's saliva is transferred to the host during the bite. It can cause a histamine reaction exhibited by an itchy rash.\n\nIn addition, many species can transmit patho"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:174935",
+       "title": "Asian tiger mosquito",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 22,
+       "text": "The Asian Tiger Mosquito, or forest day mosquito is a kind of mosquito that is native to tropical and subtropical South-East Asia. It has black and white striped legs, and small black and white striped body. The Asian Tiger Mosquito is about 2 to 10 mm long. The males are about 20% smaller than the females.\n\nIn the last few decades, the species has spread to many other countries, mainly through th"
+      }
+     ]
+    },
+    "boar-medlineplus-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-medlineplus-en:1935",
+       "title": "Mosquito Bites",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 53,
+       "text": "- Chikungunya, a viral infection that causes symptoms such as fever and severe joint pain. The symptoms usually last about a week, but for some, the joint pain may last for months. Most cases of chikungunya in the United States are in people who traveled to other countries. There have been a few cases where it has spread in the United States.\n- Dengue, a viral infection that causes a high fever, h"
+      },
+      {
+       "chunk": "pack:boar-medlineplus-en:530",
+       "title": "Chikungunya",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 8,
+       "text": "Chikungunya is a virus that spread by the same kinds of mosquitoes that spread dengue and Zika virus. Rarely, the virus can spread from the pregnant parent to their newborn around the time of birth. It may also spread through contact with infected blood. There have been outbreaks of chikungunya virus in Africa, Asia, Europe, the Indian and Pacific Oceans, the Caribbean, and Central and South Ameri"
+      }
+     ]
+    },
+    "boar-firstaid-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-firstaid-en:5004",
+       "title": "GEM mosquito control/FAQ",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 2,
+       "text": "Ans. (a) No, mosquito does not spread HIV-AIDS. They can survive & multiply in blood only. Blood containing AIDS virus goes into the stomach of mosquito and gets digested there. If the virus reaches our stomach, then also it will be digested. It will neither survive nor multiply \u2013 unless they are lucky enough to enter our blood stream through some micro cracks.\n(b)When God created mosquito (or for"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:4970",
+       "title": "GEM mosquito control",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 13,
+       "text": "- Zika fever, confirmed by W H O in Delhi 2 years ago (in 2016). It is awaiting the next fever season here (Keralam)!\n- Malaria, Chikun Guniya, Dengue fever etc. have played havoc in Delhi and then here (Keralam) earlier. Then there is no reason why Zika fever will not follow suit.\n- Zika confirmed in Keralam (India) July 2021 and toll nearing 20 in two weeks.\n- Contrary to earlier mosquito-born d"
+      }
+     ]
+    },
+    "qa-health-se": {
+     "n_qualifying": 5,
+     "top": [
+      {
+       "chunk": "pack:qa-health-se:5344",
+       "title": "Can a mosquito bite transmit STD's?",
+       "share": 0.5,
+       "anchor": 0.839,
+       "bm25_rank": 1,
+       "text": "Tags: sti, mosquito, syphilis\n\nSTDs include just about every kind of infection. Bacterial STDs include chlamydia, gonorrhea, and syphilis. Viral STDs include HIV, genital herpes, genital warts (HPV), and hepatitis B. Trichomoniasis is caused by a parasite. The germs that cause STDs hide in semen, blood, vaginal secretions, and sometimes saliva. source\n\nMosquitoes can of course transmit malaria, ye"
+      },
+      {
+       "chunk": "pack:qa-health-se:3992",
+       "title": "Can ingesting a mosquito make you sick?",
+       "share": 0.5,
+       "anchor": 0.783,
+       "bm25_rank": 3,
+       "text": "Positively, no.\n\nHIV is not spread by mosquitoes.\n\nYou cannot contract any disease from swallowing a mosquito.\n\nHere, is a very large list of all the things that you could have caught :) If you were bitten."
+      },
+      {
+       "chunk": "pack:qa-health-se:3682",
+       "title": "What diseases can be spread by mosquitos?",
+       "share": 0.5,
+       "anchor": 0.767,
+       "bm25_rank": 4,
+       "text": "Mosquitos transmit the pathogens that cause malaria, filariasis, dengue, yellow fever, West Nile fever, Rift Valley fever, and dozens of other infectious diseases of humans, domestic animals, and wildlife\n\nRoss, Macdonald, and a Theory for the Dynamics and Control of Mosquito-Transmitted Pathogens\n\nYou already mentioned malaria and West Nile. The others mentioned are:\n\nFilariasis\n\nLymphatic filari"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:55410",
+       "title": "How to avoid the contact with the mosquito that carries Zika Virus in Tropical countries",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 4,
+       "text": "The same precautions to prevent malaria apply for preventing Zika. On top of that, the current and future spread of Zika is fairly well documented, so you could choose to avoid particular areas.\n\nThat said, though there are obvious risks, there are much more likely challenges to worry about (malaria, dengue, food poisoning, etc.)\n\nAs you can see in the comments, you're more likely to contract a tr"
+      },
+      {
+       "chunk": "pack:qa-travel-se:70557",
+       "title": "Thailand Zika Travel and Pregnant?",
+       "share": 0.5,
+       "anchor": 0.606,
+       "bm25_rank": 1,
+       "text": "Let's start with the bad news ...\n\nZika has been found in SE Asia since the 1960s (the disease was first identified in the late 50s) but only recently has become the darling pandemic of the news media.\n\nCases of Zika caused Microcephaly have been reported in Thailand in recent months.\n\nClusters of Zika infections have been recorded in parts of Thailand in recent months.\n\nLet's add in a dose of rea"
+      }
+     ]
+    },
+    "boar-preparedness-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-preparedness-en:19247",
+       "title": "GEM mosquito control/FAQ",
+       "share": 1.0,
+       "anchor": 0.549,
+       "bm25_rank": 2,
+       "text": "Ans. (a) No, mosquito does not spread HIV-AIDS. They can survive & multiply in blood only. Blood containing AIDS virus goes into the stomach of mosquito and gets digested there. If the virus reaches our stomach, then also it will be digested. It will neither survive nor multiply \u2013 unless they are lucky enough to enter our blood stream through some micro cracks.\n(b)When God created mosquito (or for"
+      },
+      {
+       "chunk": "pack:boar-preparedness-en:19213",
+       "title": "GEM mosquito control",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 13,
+       "text": "- Zika fever, confirmed by W H O in Delhi 2 years ago (in 2016). It is awaiting the next fever season here (Keralam)!\n- Malaria, Chikun Guniya, Dengue fever etc. have played havoc in Delhi and then here (Keralam) earlier. Then there is no reason why Zika fever will not follow suit.\n- Zika confirmed in Keralam (India) July 2021 and toll nearing 20 in two weeks.\n- Contrary to earlier mosquito-born d"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 17,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1633061",
+       "title": "Mosquito",
+       "share": 0.5,
+       "anchor": 0.606,
+       "bm25_rank": 31,
+       "text": "Eggs are laid on the water surface; they hatch into motile larvae that feed on aquatic algae and organic material. These larvae are important food sources for many freshwater animals, such as dragonfly nymphs, many fish, and some birds. Adult females of many species have mouthparts adapted to pierce the skin of a host and feed on blood of a wide range of vertebrate hosts, and some invertebrates, p"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1633124",
+       "title": "Mosquito",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 0,
+       "text": "Mosquitoes are vectors for many disease-causing microorganisms including bacteria, viruses, and protozoan parasites. Nearly 700 million people acquire a mosquito-borne illness each year, resulting in over one million deaths. Common mosquito-borne viral diseases include yellow fever, chikungunya and dengue fever, both transmitted mostly by Aedes aegypti. Parasitic diseases transmitted by mosquitoes"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3145037",
+       "title": "Aedes albopictus",
+       "share": 0.5,
+       "anchor": 0.839,
+       "bm25_rank": 6,
+       "text": "Ae. albopictus is known to transmit pathogens and viruses, such as the yellow fever, dengue fever, Chikungunya fever, and Usutu virus. There is some evidence supporting the role of Ae.\u00a0albopictus in the transmission of Zika virus, which is primarily transmitted by the related Ae.\u00a0aegypti.\nThe Asian tiger mosquito was responsible for the Chikungunya epidemic on the French Island La R\u00e9union in 2005\u2013"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:90612",
+       "title": "Aedes aegypti",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 112,
+       "text": "Aedes aegypti (; US: ; from Ancient Greek \u03b1\u03b7\u03b4\u03ae\u03c2 (a\u0113d\u1e17s) 'unpleasant' and Latin aegypt\u012b 'Egyptian') \u2013 sometimes called the Egyptian mosquito, dengue mosquito, or yellow fever mosquito \u2013 is a mosquito that spreads diseases such as dengue fever, yellow fever, and chikungunya. The mosquito can be recognized by black and white markings on its legs and a marking in the form of a lyre on the upper surfac"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 12,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2260762",
+       "title": "Infectious diseases",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 7,
+       "text": "However, there can be outbreaks of this disease increasing risk. A vaccine is available for Japanese encephalitis. Management of infected people is supportive care of their symptoms.\n- Filariasis - a parasitic infection caused by long thread-like worms spread through the bite of a variety of Anopholes, Aedes, and Culex mosquitoes. Causes symptoms including fevers, lymph node inflammation, lung dis"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2260760",
+       "title": "Infectious diseases",
+       "share": 0.5,
+       "anchor": 0.549,
+       "bm25_rank": 9,
+       "text": "- Chikungunya (CHIKV) \u2014 also known as epidemic polyarthritis and rash, and buggy creek virus. A febrile virus transmitted, like dengue, by an infective A. aegypti or A. africanus mosquito. After 3-12 days flu-like symptoms develop including severe headaches, chills, fever, joint pain, nausea and vomiting - no vaccine is available. Historically present in Africa and Asia, since 2005 there have been"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:160152",
+       "title": "Walter Reed Army Institute of Research",
+       "share": 0.5,
+       "anchor": 0.622,
+       "bm25_rank": 94,
+       "text": "The Walter Reed Army Institute of Research (WRAIR) is the largest biomedical research facility administered by the U.S. Department of Defense (DoD). The institute is centered at the Forest Glen Annex, in the Forest Glen Park part of the unincorporated Silver Spring urban area in Maryland just north of Washington, DC, but it is a subordinate unit of the U.S. Army Medical Research and Development Co"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-004": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 24,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:16592",
+       "title": "EIP-7594: PeerDAS - Peer Data Availability Sampling",
+       "share": 1.0,
+       "anchor": 0.693,
+       "bm25_rank": 9,
+       "text": "Note that, while `cell_proofs` contain the proofs for all cells, including the extension cells, the blobs themselves are sent without being extended (`CELLS_PER_EXT_BLOB / 2` cells per blob). This is to avoid sending redundant data, which can quickly be computed by the receiving node.\nIn other words, `cell_proofs[i * CELLS_PER_EXT_BLOB + j]` is the proof for cell `j` of `compute_cells(blobs[i])`, "
+      },
+      {
+       "chunk": "pack:boar-crypto:27042",
+       "title": "EIP-8256: Blob Streaming",
+       "share": 1.0,
+       "anchor": 0.62,
+       "bm25_rank": 11,
+       "text": "Ethereum's current blob data availability design, introduced in EIP-4844 and extended with PeerDAS (EIP-7594), hinges on blob data propagation on the critical path. While pre-propagation of blob data through the EL blobpool is possible, it comes with no upper bounds on the load being handled and as such can lead to inconsistent local node views - which in turn translates to vulnerability to DOS at"
+      },
+      {
+       "chunk": "pack:boar-crypto:16588",
+       "title": "EIP-7594: PeerDAS - Peer Data Availability Sampling",
+       "share": 1.0,
+       "anchor": 0.62,
+       "bm25_rank": 36,
+       "text": "We extend the blobs introduced in EIP-4844 using a one-dimensional erasure coding extension. Each row consists of the blob data combined with its erasure code. It is subdivided into cells, which are the smallest units that can be authenticated with their respective blob's KZG commitments. Each column, associated with a specific gossip subnet, consists of the cells from all rows for a specific inde"
+      }
+     ]
+    },
+    "boar-vitalik-blog-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-vitalik-blog-en:284",
+       "title": "Ethereum has blobs. Where do we go from here?",
+       "share": 1.0,
+       "anchor": 0.733,
+       "bm25_rank": 0,
+       "text": "The next stage is likely to be a simplified version of DAS called PeerDAS. In PeerDAS, each node stores a significant fraction (eg. 1/8) of all blob data, and nodes maintain connections to many peers in the p2p network. When a node needs to sample for a particular piece of data, it asks one of the peers that it knows is responsible for storing that piece.\n\nIf each node needs to download and store "
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-010": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What were the main lessons of the 2016 DAO hack for Ethereum?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 15,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:40957",
+       "title": "Timeline of all Ethereum forks (2014 to present)",
+       "share": 1.0,
+       "anchor": 0.755,
+       "bm25_rank": 0,
+       "text": "The DAO fork was in response to the 2016 DAO attack where an insecure DAO contract was drained of over 3.6 million ETH in a hack. The fork moved the funds from the faulty contract to a new contract with a single function: withdraw. Anyone who lost funds could withdraw 1 ETH for every 100 DAO tokens in their wallets.\n\nThis course of action was voted on by the Ethereum community. Any ETH holder was "
+      },
+      {
+       "chunk": "pack:boar-crypto:46733",
+       "title": "Ethereum Classic",
+       "share": 1.0,
+       "anchor": 0.755,
+       "bm25_rank": 5,
+       "text": "Ethereum Classic maintains the original, unaltered history of the Ethereum network. The Ethereum project's mainnet was initially released via Frontier on 30 July 2015. However, due to a hack of a third-party project, The DAO, the Ethereum Foundation created a new version of the Ethereum mainnet on 20 July 2016 with an irregular state change implemented that erased the DAO theft from the Ethereum b"
+      },
+      {
+       "chunk": "pack:boar-crypto:41009",
+       "title": "Introduction to Ethereum governance",
+       "share": 1.0,
+       "anchor": 0.671,
+       "bm25_rank": 8,
+       "text": "A subset of the community refused to fork, largely because they felt the DAO incident wasn't a defect in the protocol. They went on to form Ethereum Classic.\n\nToday, the Ethereum community has adopted a policy of non-intervention in cases of contract bugs or lost funds to maintain the credible neutrality of the system.\n\nWatch more on the DAO hack:"
+      }
+     ]
+    },
+    "qa-bitcoin-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-bitcoin-se:33691",
+       "title": "Does bitcoin have the potential to be subject to a hard fork where miners are forced to choose which fork they will accept, like Etherum?",
+       "share": 1.0,
+       "anchor": 0.671,
+       "bm25_rank": 4,
+       "text": "Then it got hacked, when someone started siphoning money out of the DAO. By the end, the hacker, who has said that he was simply taking advantage of a technical loophole in the DAO, had amassed $50 million in ether, based on current exchange rates at the time. While the core developers who designed and run Ethereum didn\u2019t really have anything to do with the DAO, they were left to deal with the mes"
+      },
+      {
+       "chunk": "pack:qa-bitcoin-se:62690",
+       "title": "Can a blockchain's transactions be reversed?",
+       "share": 1.0,
+       "anchor": 0.671,
+       "bm25_rank": 7,
+       "text": "Tags: security, blockchain-fork, consensus\n\nBlockchains are often described as 'immutable' (meaning the history cannot be rewritten after the fact), but is this really true? How easy is it to change the history?\n\nI have read about the Ethereum DAO hack and how the blockchain has been hard forked to reverse a transaction by the hacker. This is very disappointing. I thought cryptos by design were ir"
+      },
+      {
+       "chunk": "pack:qa-bitcoin-se:9541",
+       "title": "Is it possible for the miners to collude to blackmail a single wealthy address?",
+       "share": 1.0,
+       "anchor": 0.671,
+       "bm25_rank": 12,
+       "text": "As a result, a hard fork was proposed. In other words all of the miners colluded to prevent any money from being removed from that account exactly as proposed in this Question. It's actually slightly more complicated and extreme than that: essentially all blocks after the hack were invalidated via collusion between the miners.\n\nObviously this Question was about Bitcoin, not Ethereum, but it is a r"
+      }
+     ]
+    },
+    "qa-ethereum-se": {
+     "n_qualifying": 39,
+     "top": [
+      {
+       "chunk": "pack:qa-ethereum-se:71097",
+       "title": "How come Blockchain Voting is decentralised and secure if it's controlled by ethereum network?",
+       "share": 1.0,
+       "anchor": 0.755,
+       "bm25_rank": 8,
+       "text": "Ethereum is a decentralized blockchain. It's not controlled by anyone and it's run by client nodes. Anyone is free to run their own node which participates in upkeeping the blockchain and nobody can be banned from connecting their node. There is no company called Ethereum.\n\nSo you can't hack Ethereum per se. In theory you can hack the protocols which are used to communicate various things around t"
+      },
+      {
+       "chunk": "pack:qa-ethereum-se:7320",
+       "title": "TheDAO hack FAQ: How did the attack happen on 17 June 2016?",
+       "share": 1.0,
+       "anchor": 0.755,
+       "bm25_rank": 137,
+       "text": "When and how is a hard fork possible? A hard fork would require longer discussion and consensus finding. To execute a hard fork miners are less important. More important are exchanges and key player in the ecosystem. (Ethereum foundation, core developers, leading companies in the ecosystem). If all those players agree to a hard fork even a small minority of miners would be enough but more importan"
+      },
+      {
+       "chunk": "pack:qa-ethereum-se:59356",
+       "title": "If the hackers of the DAO converted the funds to bitcoin, would it have been possible to return the funds to the investors?",
+       "share": 1.0,
+       "anchor": 0.671,
+       "bm25_rank": 15,
+       "text": "Tags: bitcoin, dao\n\nMy understanding of the DAO hack is that Ethereum was hard forked so that those who lost funds could have them retrieved. If the hacked funds were immediately converted to bitcoin, would this still have been possible?"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1230627",
+       "title": "Ethereum",
+       "share": 1.0,
+       "anchor": 0.57,
+       "bm25_rank": 0,
+       "text": "In 2016, a decentralized autonomous organization called The DAO\u2014a set of smart contracts developed on the platform\u2014raised a record US$150 million in a crowd sale to fund the project. Emin G\u00fcn Sirer, Vlad Zamfir and Dino Mark had written a paper called A Call for a Temporary Moratorium on The DAO in which they described in which way the DAO might be vunerable to attacks. The DAO was exploited in Ju"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:101506",
+       "title": "Blockchain",
+       "share": 1.0,
+       "anchor": 0.57,
+       "bm25_rank": 2,
+       "text": "A hard fork is a change to the blockchain protocol that is not backward compatible and requires all users to upgrade their software in order to continue participating in the network. In a hard fork, the network splits into two separate versions: one that follows the new rules and one that follows the old rules.\nFor example, Ethereum was hard forked in 2016 to \"make whole\" the investors in The DAO,"
+      }
+     ]
+    }
+   }
+  },
+  "vit-hlt-002": {
+   "set": "v0.1",
+   "tag": "firstaid",
+   "question": "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 8,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:7446",
+       "title": "Altitude sickness",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 26,
+       "text": "Assume AMS first: it happens to healthy strong people, and if it turns out you are indeed sick with something else, descending to a lower altitude will make it easier for your body to heal anyway. No matter what, safety always comes first.\n\nIn particular, if you\u2019ve recently ascended, and you have a headache and any other symptom, you have AMS. The other signs of AMS vary for different people, but "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:44048",
+       "title": "Brisbane",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 4,
+       "text": "If you are planning a long day outdoors, always cover up with sunscreen, loose clothing, a hat and sunglasses to protect yourself. Limit your outdoor physical activity in the summer until you are used to the heat. Immediately seek shade or an air-conditioned area and drink plenty of water if you are feeling the effects of heat exhaustion, including headache, nausea, dizziness, fatigue, confusion o"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:436548",
+       "title": "Arid region safety",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 12,
+       "text": "- The amount of water you need to drink is dependent on a number of factors such as how much you are exerting yourself or sweating. There are no strict rules and generally if you are otherwise healthy you can let your body guide you.\n- Watch for symptoms of heat stress, such as confusion, dizziness, nausea or headache. If you or fellow travellers have these, it's time to get in the shade, drink so"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 10,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:609217",
+       "title": "Hantavirus infection",
+       "share": 0.5,
+       "anchor": 0.755,
+       "bm25_rank": 9,
+       "text": "Key facts: synonym: Hantavirus disease; field: Infectious disease; symptoms: HFRS: Headache, abdominal pain, fever, nausea, bleeding, kidney failure, HPS: Tiredness, fever, muscle pain, cough, shortness of breath; onset: 1 to 8 weeks after being near the virus; types: Hemorrhagic fever with renal syndrome (HFRS), Hantavirus pulmonary syndrome (HPS); causes: orthohantaviruses spread by rodents; dia"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:70575",
+       "title": "Vitamin E",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 5,
+       "text": "Vitamin E excess in the body is usually caused by supplements. High doses of vitamin E may cause:\n\n- Bleeding (from the gums or nose, called nosebleeds)\n- Bruising easier\n- Bleeding in the brain (causing a brain hemorrhage)\n- Problems with the heart\n- Swelling (bloating), fast weight gain, and feeling short of breath\n- Heart attack\n- Nausea (which might be a sign of a heart attack)\n\nMore commonly,"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:71052",
+       "title": "Meningitis",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 7,
+       "text": "Some signs of meningitis can be: high fever, sometimes with chills; very strong headache; nauseas and vomiting; drowsiness or confusion; twitching; sleepiness; sore throat; delirium (especially in children); seizures; and stiff neck (in less than 50% of the cases, but may be a telltale sign)."
+      }
+     ]
+    },
+    "boar-medlineplus-en": {
+     "n_qualifying": 8,
+     "top": [
+      {
+       "chunk": "pack:boar-medlineplus-en:693",
+       "title": "Concussion",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "Symptoms of a concussion may not start right away; they may start days or weeks after the injury. Symptoms may include a headache or neck pain. You may also have nausea, ringing in your ears, dizziness, or tiredness. You may feel dazed or not your normal self for several days or weeks after the injury. Consult your health care professional if any of your symptoms get worse, or if you have more ser"
+      },
+      {
+       "chunk": "pack:boar-medlineplus-en:1276",
+       "title": "Head Injuries",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 7,
+       "text": "- A headache that gets worse or does not go away\n- Repeated vomiting or nausea\n- Convulsions or seizures\n- An inability to wake up\n- Dilated (enlarged) pupil in one or both eyes\n- Slurred speech\n- Weakness or numbness in the arms or legs\n- Loss of coordination\n- Increased confusion, restlessness, or agitation\n\nDoctors use a neurologic exam and imaging tests to make a diagnosis. Treatment depends o"
+      },
+      {
+       "chunk": "pack:boar-medlineplus-en:1752",
+       "title": "Legionnaires' Disease",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 9,
+       "text": "The symptoms usually show up 2 to 14 days after you were exposed to Legionella bacteria. Most of the symptoms are similar to those of other types of pneumonia. But Legionnaires' disease may also cause gastrointestinal symptoms and mental changes.\n\nThe symptoms of Legionnaires' disease may include:\n\n- Cough\n- High fever\n- Chills\n- Headache\n- Chest pain\n- Shortness of breath\n- Fatigue\n- Nausea and v"
+      }
+     ]
+    },
+    "boar-firstaid-en": {
+     "n_qualifying": 19,
+     "top": [
+      {
+       "chunk": "pack:boar-firstaid-en:9139",
+       "title": "Heat exhaustion",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "Sources:\n- Elevated heart rate\n- Lowered blood pressure\n- Elevated core body temperature (not exceeding 40&nbsp;\u00b0C or 104&nbsp;\u00b0F)\n- Elevated respiratory rate (i.e., faster breathing)\n- Profuse sweating\n- Dehydration\n- Serum electrolyte depletion\n- Weakness and fatigue\n- Persistent muscle cramps\n- Skin tingling\n- Nausea and vomiting\n- Dizziness and light-headedness\n- Irritability\n- Headache"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:22105",
+       "title": "ATP 4-02.11 \u2014 Chapter 11 Head Injury: Overview Of Head Injuries",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 4,
+       "text": "An intense and persistent headache is common following an open head injury.\n- Nausea and vomiting. Feelings of nausea and vomiting may be present after an open head injury.\n- Confusion and disorientation. The Service member may exhibit confusion, memory loss, difficulty\nconcentrating, or may appear disoriented.\n- Seizures. Seizures can occur after an open head injury, especially if the brain is di"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:8914",
+       "title": "Hyponatremia",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 5,
+       "text": "Signs and symptoms of hyponatremia include nausea and vomiting, headache, short-term memory loss, confusion, lethargy, fatigue, loss of appetite, irritability, muscle weakness, spasms or cramps, seizures, and decreased consciousness or coma. Lower levels of plasma sodium are associated with more severe symptoms. However, mild hyponatremia (plasma sodium levels at 131\u2013135&nbsp;mmol/L) may be associ"
+      }
+     ]
+    },
+    "qa-health-se": {
+     "n_qualifying": 12,
+     "top": [
+      {
+       "chunk": "pack:qa-health-se:6494",
+       "title": "Is it normal to experience headache while quitting smoking",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 20,
+       "text": "Yes, it is normal, since Nicotine is a drug which not only affect many parts of your body\u201a but it also affect your brain. Withdrawal feelings usually are the strongest in the first few weeks after quitting and many people start smoking again to feel better. See: Understanding Nicotine Withdrawal.\n\nDuring the quitting process the following physical symptoms may occur:\n\n- Tingling in the hands and f"
+      },
+      {
+       "chunk": "pack:qa-health-se:9330",
+       "title": "Does taking medication lose hyperfocus on ADHD?",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 22,
+       "text": "In this study, they were observing side effects of lisdexamfetamine dimesylate for several weeks in 6-12 years old children; in one group they were \"stimulant-naive\" (not previously treated with stimulants) and in another \"previous-exposure subjects\".\n\nThe stimulant-na\u00efve group reported more trouble sleeping, stomach pain, and hyperfocus...\n\nThe hyperfocus was considered a side effect.\n\nRxList and"
+      },
+      {
+       "chunk": "pack:qa-health-se:5452",
+       "title": "How to deal with overhydration?",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 25,
+       "text": "Treatment is usually fluid restriction, treating underlying problem and diuretics or other medication for fluid and electrolyte imbalance, so you could do a fluid restriction at home. However, the causes of overhydration usually are renal, heart or liver problems, hormonal disorders and increased fluid intake. So you can't just treat all that, when your unsure of the diagnosis. That said it is als"
+      }
+     ]
+    },
+    "qa-outdoors-se": {
+     "n_qualifying": 11,
+     "top": [
+      {
+       "chunk": "pack:qa-outdoors-se:11864",
+       "title": "How do you diagnose severe altitude illness?",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 8,
+       "text": "As a general rule: Assume acute mountain sickness (AMS) unless proven otherwise. AMS is potentially life threatening, so if you have symptoms related to AMS, do not ascend any further. If they do not get better, descend.\n\nLow altitude is not an indication against AMS which can occur above 2000m already. So the assessment should rely on your symptoms. Early symptoms of AMS are [1]\n\n- Difficulty sle"
+      },
+      {
+       "chunk": "pack:qa-outdoors-se:577",
+       "title": "What would be a safe ascent rate when mountaineering?",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 19,
+       "text": "If the following symptoms occur, you are climbing too quickly and should descend. They are symptoms of Acute Mountain Sickness \"AMS\" and could lead to High Altitude Cerebral Edema \"HACE\", or High Altitude Pulmonary Edema \"HAPE\", if left unchecked.\n\n1. Difficulty sleeping\n2. Dizziness or light-headedness\n3. Fatigue\n4. Headache\n5. Loss of appetite\n6. Nausea or vomiting\n7. Rapid pulse (heart rate)\n8."
+      },
+      {
+       "chunk": "pack:qa-outdoors-se:7691",
+       "title": "How can I tell if I am dehydrated or have low electrolytes (need salt, etc.)?",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "Sodium is the annoying one as you can have both low sodium because you sweat it out and high sodium due to lack of free water. Symptoms of low sodium include headache, nausea, vomiting, confusion and fatigue. High sodium can cause increased thirst, confusion, lethargy and muscle twitches.\n\nSo, my original list of symptoms of dehydration are actually symptoms of electrolyte imbalance, but for the f"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:50196",
+       "title": "Swimming in the Dead Sea",
+       "share": 0.5,
+       "anchor": 0.533,
+       "bm25_rank": 42,
+       "text": "I stupidly brought my knees up to my chest while floating on my back in the Dead Sea, resulting in a backward somersault underwater. I had to work to resurface and also to start breathing again. This was, to say the least, scary and dangerous. I'm pretty sure I got more water in my sinuses than anywhere else but it took a few showers and a few hours of sipping about two litres of fresh water befor"
+      },
+      {
+       "chunk": "pack:qa-travel-se:98804",
+       "title": "ESTA Upload passport (first name confusion)",
+       "share": 0.5,
+       "anchor": 0.533,
+       "bm25_rank": 50,
+       "text": "Then it is their system's headache to ensure that the uploaded information confirms to their format, if it doesn't it should generate an error.\n\nI'm not saying you go ahead and argue with them about it but that if this specific thing creates any issue at the port of entry you can explain that you used the feature as suggested by the website and did not make any changes to the personal information "
+      },
+      {
+       "chunk": "pack:qa-travel-se:123598",
+       "title": "Preventing the ears from getting clogged on descent to Barcelona",
+       "share": 0.5,
+       "anchor": 0.533,
+       "bm25_rank": 74,
+       "text": "Tags: air-travel, health, barcelona\n\nI've been having an terrible experience when ever I'm descending to Barcelona. My ears would clog so bad that it would even hurt for a couple of seconds. That it self doesn't cause a problem. The thing that irritates me is that it takes a couple of days to regain my original hearing level, which is often followed with a headache (I don't have any hearing proble"
+      }
+     ]
+    },
+    "boar-preparedness-en": {
+     "n_qualifying": 8,
+     "top": [
+      {
+       "chunk": "pack:boar-preparedness-en:1223",
+       "title": "Heat exhaustion",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "Sources:\n- Elevated heart rate\n- Lowered blood pressure\n- Elevated core body temperature (not exceeding 40&nbsp;\u00b0C or 104&nbsp;\u00b0F)\n- Elevated respiratory rate (i.e., faster breathing)\n- Profuse sweating\n- Dehydration\n- Serum electrolyte depletion\n- Weakness and fatigue\n- Persistent muscle cramps\n- Skin tingling\n- Nausea and vomiting\n- Dizziness and light-headedness\n- Irritability\n- Headache"
+      },
+      {
+       "chunk": "pack:boar-preparedness-en:998",
+       "title": "Hyponatremia",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 4,
+       "text": "Signs and symptoms of hyponatremia include nausea and vomiting, headache, short-term memory loss, confusion, lethargy, fatigue, loss of appetite, irritability, muscle weakness, spasms or cramps, seizures, and decreased consciousness or coma. Lower levels of plasma sodium are associated with more severe symptoms. However, mild hyponatremia (plasma sodium levels at 131\u2013135&nbsp;mmol/L) may be associ"
+      },
+      {
+       "chunk": "pack:boar-preparedness-en:13224",
+       "title": "Carbon monoxide poisoning",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 8,
+       "text": "The main manifestations of carbon monoxide poisoning develop in the organ systems most dependent on oxygen use, the central nervous system and the heart. The initial symptoms of acute carbon monoxide poisoning include headache, nausea, malaise, and fatigue. These symptoms are often mistaken for a virus such as influenza or other illnesses such as food poisoning or gastroenteritis. Headache is the "
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 62,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2944706",
+       "title": "Mountaineering",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 53,
+       "text": "Rapid ascent can lead to altitude sickness. The best treatment is to descend immediately. The climber's motto at high altitude is \"climb high, sleep low\", referring to the regimen of climbing higher to acclimatise but returning to lower elevation to sleep. In the Andes, the chewing of coca leaves has been traditionally used to treat altitude sickness symptoms.\nCommon symptoms of altitude sickness "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3262357",
+       "title": "Altitude sickness",
+       "share": 1.0,
+       "anchor": 0.755,
+       "bm25_rank": 83,
+       "text": "Diagnosis is based on symptoms and is supported for those who have more than a minor reduction in activities. It is recommended that at high altitude any symptoms of headache, nausea, shortness of breath, or vomiting be assumed to be altitude sickness.\nSickness is prevented by gradually increasing elevation by no more than 300 metres (1,000\u00a0ft) per day.  Generally, descent and sufficient fluid int"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:955468",
+       "title": "Cluster headache",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 45,
+       "text": "The typical symptoms of cluster headache include grouped occurrence and recurrence (cluster) of headache attack, severe unilateral orbital, supraorbital and/or temporal pain. If left untreated, attack frequency may range from one attack every two days to eight attacks per day. Cluster headache attack is accompanied by at least one of the following autonomic symptoms: drooping eyelid, pupil constri"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:107489",
+       "title": "Meningitis",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 6,
+       "text": "Meningitis (pl. meningitides) is acute or chronic inflammation of the protective membranes covering the brain and spinal cord, collectively called the meninges. The most common symptoms are fever, intense headache, vomiting, neck stiffness, and occasionally photophobia. Other symptoms include confusion or altered consciousness, nausea, and an inability to tolerate loud noises. Young children often"
+      },
+      {
+       "chunk": "pack:wiki-vital5:68570",
+       "title": "Hypotension",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 10,
+       "text": "A systolic blood pressure of less than 90 millimeters of mercury (mmHg) or diastolic of less than 60 mmHg is generally considered to be hypotension. Different numbers apply to children. However, in practice, blood pressure is considered too low only if noticeable symptoms are present. Symptoms may include dizziness, lightheadedness, confusion, feeling tired, weakness, headache, blurred vision, nau"
+      },
+      {
+       "chunk": "pack:wiki-vital5:69485",
+       "title": "Primary amoebic meningoencephalitis",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 11,
+       "text": "Primary amoebic meningoencephalitis (PAM), also known as naegleriasis, is an almost invariably fatal infection of the brain by the free-living protozoan Naegleria fowleri. Symptoms include headache, fever, nausea, vomiting, a stiff neck, confusion, hallucinations and seizures. Symptoms progress rapidly over around five days with characteristics of both meningitis and encephalitis; becoming a type "
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 29,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1921037",
+       "title": "Altitude sickness",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 140,
+       "text": "Assume AMS first: it happens to healthy strong people, and if it turns out you are indeed sick with something else, descending to a lower altitude will make it easier for your body to heal anyway. No matter what, safety always comes first.\n\nIn particular, if you\u2019ve recently ascended, and you have a headache and any other symptom, you have AMS. The other signs of AMS vary for different people, but "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1567764",
+       "title": "Epidemic typhus",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 10,
+       "text": "Symptoms of this disease typically begin within 2 weeks of contact with the causative organism. Signs/symptoms may include:\n- Fever\n- Chills\n- Headache\n- Confusion\n- Cough\n- Rapid breathing\n- Body/muscle aches\n- Rash\n- Nausea\n- Vomiting"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:773301",
+       "title": "Cysteamine",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 13,
+       "text": "The label for oral formulations of cysteamine carries warnings about symptoms similar to Ehlers-Danlos syndrome, severe skin rashes, ulcers or bleeding in the stomach and intestines, central nervous symptoms including  seizures, lethargy, somnolence, depression, and encephalopathy, low white blood cell levels, elevated alkaline phosphatase, and idiopathic intracranial hypertension that can cause  "
+      }
+     ]
+    }
+   }
+  },
+  "lan-rsn-004": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "Roughly how many people were alive on Earth in 1900, and when did humanity first reach one billion?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:184755",
+       "title": "Human overpopulation",
+       "share": 0.5,
+       "anchor": 0.551,
+       "bm25_rank": 0,
+       "text": "The recent rapid increase in human population over the past two centuries has raised concerns that humans are beginning to overpopulate the Earth. The planet may not be able to sustain larger numbers of people. The population has been growing since the end of the Black Death, around the year 1400. At the beginning of the 19th century, it had reached roughly 1,000,000,000 (one billion). Rapid popul"
+      }
+     ]
+    }
+   }
+  },
+  "lan-cmp-004": {
+   "set": "v0.1",
+   "tag": "nature",
+   "question": "Which weighs more on average, an adult male moose or an adult male American bison?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3965581",
+       "title": "European bison",
+       "share": 1.0,
+       "anchor": 0.581,
+       "bm25_rank": 13,
+       "text": "The European bison is a herd animal, which lives in both mixed and solely male groups. Mixed groups consist of adult females, calves, young aged 2\u20133 years, and young adult bulls. The average herd size is dependent on environmental factors, though on average, they number eight to 13 animals per herd. Herds consisting solely of bulls are smaller than mixed ones, containing two individuals on average"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3204331",
+       "title": "Bison",
+       "share": 1.0,
+       "anchor": 0.55,
+       "bm25_rank": 1,
+       "text": "The American bison and the European bison (wisent) are the largest surviving terrestrial animals in North America and Europe. They are typical artiodactyl (cloven hooved) ungulates, and are similar in appearance to other bovines such as cattle and true buffalo. They are broad and muscular with shaggy coats of long hair. Adults grow up to 2 metres (6\u00a0feet 7\u00a0inches) in height and 3.5\u00a0m (11\u00a0ft 6\u00a0in) "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1087628",
+       "title": "American bison",
+       "share": 1.0,
+       "anchor": 0.52,
+       "bm25_rank": 18,
+       "text": "Although they are superficially similar, the American and European bison exhibit a number of physical and behavioral differences. Adult American bison are slightly heavier on average because of their less rangy build and have shorter legs, which render them slightly shorter at the shoulder. American bison tend to graze more and browse less than their European relatives because their necks are set "
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-007": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Describe Greenland: who governs it, its capital, roughly how many people live there, and how much of it is covered by ice.",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2672871",
+       "title": "Inuit",
+       "share": 0.75,
+       "anchor": 0.548,
+       "bm25_rank": 0,
+       "text": "In 1953, Denmark put an end to the colonial status of Greenland and granted home rule in 1979 and in 2008 a self-government referendum was passed with 75 per cent approval. Although still a part of the Kingdom of Denmark (along with Denmark proper and the Faroe Islands), Greenland, known as Kalaallit Nunaat in the Greenlandic language, maintains much autonomy today. Of a population of 56,000, 80 p"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-006": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Explain how to freeze a big pot of turkey and vegetable soup so it reheats quickly and still tastes good.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-012": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Is a cookware brand's French oven any different from a Dutch oven?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-cooking-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:70559",
+       "title": "How long should I wait for my gas oven to heat up?",
+       "share": 0.5,
+       "anchor": 0.513,
+       "bm25_rank": 19,
+       "text": "Tags: oven\n\nMy cheap rental apartment comes with a (presumably cheap) gas oven. Although this oven has a temperature control, it lacks any sort of indicator to tell me when it has reached the desired temperature. I have reason to believe this oven is relatively new, but I do not know the model or brand.\n\nUnderstanding that every oven is different, what is the longest reasonable amount of time I sh"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-018": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "If no smoke is visible, can I assume my frying oil is still below its smoke point, and how can I gauge its heat?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-004": {
+   "set": "cm",
+   "tag": "money",
+   "question": "A stranger online offered to put $1,000 into my PayPal if I return $500 to him, and wants my phone number and address. What is going on?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-010": {
+   "set": "cm",
+   "tag": "money",
+   "question": "My high-deductible plan and HSA both started on January 1. Can I still put money in for the prior tax year before the April filing deadline?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:124074",
+       "title": "New HSA contribution deadline for previous tax year",
+       "share": 0.5,
+       "anchor": 0.51,
+       "bm25_rank": 18,
+       "text": "Because you did not become an HSA eligible individual until 2021, you cannot make any HSA contributions for 2020.\n\nIf you had been HSA-eligible in 2020 and had simply waited to open your HSA until 2021, then yes, you could have made prior year contributions.\n\nBut if you try to determine your 2020 contribution limit, you will see that your prorated limit calculates to $0, and that you are not eligi"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-016": {
+   "set": "cm",
+   "tag": "money",
+   "question": "I am 65 with large savings and a sales rep is pushing a whole life policy paying 1.7% that I would fund with $400k up front plus $75k a year. Is that wise?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

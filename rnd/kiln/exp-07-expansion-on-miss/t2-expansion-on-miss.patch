@@ -1,0 +1,110 @@
+# exp-07 T2 'expansion on a miss' against boar-app 14de1074 (build/model-ab-rc6-eval). LOCAL BRANCH ONLY (rule 0): no PR, no push.
+# Off unless AnswerSettings.expandOnMiss === true. Apply from the boar-app root: git apply t2-expansion-on-miss.patch
+
+diff -ruN t2-a/src/models/settings.ts t2-b/src/models/settings.ts
+--- a/src/models/settings.ts	2026-09-30 04:59:20
++++ b/src/models/settings.ts	2026-10-01 03:28:31
+@@ -484,6 +484,8 @@
+   alwaysComplete: boolean;
+   /** Sampling temperature for source-grounded answers (experiment knob, set by device evaluation requests). */
+   groundedTemperature?: number;
++  /** T2 (exp-07, local branch): one short model turn proposes search terms when retrieval finds nothing usable. */
++  expandOnMiss?: boolean;
+   deepModelId: string | null | undefined;
+   /** Models the user confirmed for a low-RAM phone; anything else above the compact size is never chosen there. */
+   largeModelConfirmedIds?: string[];
+diff -ruN t2-a/src/routing/answer.ts t2-b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-09-30 04:59:20
++++ b/src/routing/answer.ts	2026-10-01 03:30:01
+@@ -68,6 +68,7 @@
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+ import { attributeCitations, checkCitations } from "./citations";
++import { EXPANSION_MAX_TOKENS, EXPANSION_SYSTEM, parseExpansionTerms, termOccurs } from "./expansion";
+ import { calculate } from "./calculators";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard } from "./firstAidCards";
+@@ -835,6 +836,43 @@
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;
++      }
++      // T2 (exp-07, local branch): expansion on a miss. Retrieval found nothing usable for a knowledge question: one
++      // model turn (<= 48 tokens, its own system prompt) proposes search terms, terms absent from the index are
++      // dropped, and the search runs once more. Not for health (stricter filter below) or a reused-sources answer;
++      // calculators, emergency numbers, first-aid cards and places returned before retrieval.
++      if (settings.expandOnMiss && guarded && !health && !sources.length && plan.retrieve && genLlm && !req.reuseSources?.length &&
++          ["lookup", "research", "compare", "extract"].includes(taskType) && !stopRequested) {
++        const xs = deps.now();
++        if (deps.engine.getModelInfo()?.filename !== genLlm.filename) {
++          await deps.engine.load(genLlm.filename, { meta: { modelId: genLlm.id, label: genLlm.label } }).catch(() => null);
++        }
++        const line = await deps.engine
++          .generate({ messages: [{ role: "system", content: EXPANSION_SYSTEM }, { role: "user", content: req.query }],
++                      nPredict: EXPANSION_MAX_TOKENS, temperature: 0, enableThinking: false })
++          .catch(() => "");
++        const terms = parseExpansionTerms(line, req.query);
++        const known: string[] = [];
++        for (const t of terms) {
++          const hits = await deps.retrieve(t, 3).catch(() => [] as RetrievedChunk[]);
++          if (hits.some((c) => termOccurs(t, `${c.title} ${c.body}`))) known.push(t);
++        }
++        reasonCodes.push(`expansion:terms-${terms.length}`, `expansion:kept-${known.length}`, `expansion:t=${terms.map((t) => t.replace(/[\s,]+/g, "_")).join("|")}`);
++        let found = 0;
++        if (known.length) {
++          const raw2 = (await deps.retrieve(known.join(" "), gen?.retrieveK ?? 6).catch(() => [] as RetrievedChunk[])).filter(isSubstantive);
++          const c2 = compressContext(`${matchQuery} ${known.join(" ")}`, raw2, { tokenBudget: budget, pinned: new Set<string>() });
++          // An expanded source must be ABOUT a proposed term (its title names it: "Giraffe" for "tallest animal") or pass
++          // the question's own gate; a term that only appears in a passage's text is not enough (smoke test: "Frequent flyer
++          // programs" for Mozi).
++          const on = c2.chunks.filter((c) => onSubject(c) || known.some((t) => termOccurs(t, c.title)));
++          if (on.length) {
++            sources = on;
++            raw = raw2;
++            found = on.length;
++          }
++        }
++        reasonCodes.push(found ? `expansion:hit-${found}` : "expansion:miss", `expansion:ms-${Math.round(deps.now() - xs)}`);
+       }
+       if (health) {
+         reasonCodes.push("grounding:health-strict");
+diff -ruN t2-a/src/routing/expansion.ts t2-b/src/routing/expansion.ts
+--- a/src/routing/expansion.ts	1969-12-31 21:00:00
++++ b/src/routing/expansion.ts	2026-10-01 03:28:31
+@@ -0,0 +1,36 @@
++/**
++ * T2 (exp-07, local branch only): query expansion on a miss, after a competitor team (QueryExpansion.kt,
++ * ResearchOrchestrator.kt:72-113). When retrieval returns nothing or the relevance gate drops every source, one short
++ * model turn proposes search terms — synonyms, the vocabulary the answering document would use, and NAMES OF
++ * CANDIDATE ENTITIES ("tallest animal" -> species names) — terms absent from the index are discarded, and the search
++ * runs once more. Never on health, calculators, geo or the fixed routes (they return before retrieval).
++ */
++export const EXPANSION_MAX_TOKENS = 48;
++
++export const EXPANSION_SYSTEM =
++  "You help an offline encyclopedia search. Reply with ONE line only: 4 to 6 search terms separated by commas, " +
++  "for the user's question. Use synonyms, words the answering article would use, and the names of specific " +
++  "candidate entities (for 'tallest animal': giraffe; for 'largest country': Russia). No explanations, no numbering.";
++
++/** The terms from the model's line: first non-empty line, comma/semicolon separated, cleaned, deduplicated, at most 6. */
++export function parseExpansionTerms(text: string, query: string): string[] {
++  const line = (text ?? "").split("\n").map((l) => l.trim()).find((l) => l.length) ?? "";
++  const q = query.toLowerCase();
++  const out: string[] = [];
++  for (let t of line.replace(/^(search )?terms?\s*:\s*/i, "").split(/[,;]/)) {
++    t = t.replace(/^[\s"'`*\-\d.)]+|[\s"'`*.]+$/g, "").trim();
++    if (t.length < 2 || t.length > 40) continue;
++    const words = t.toLowerCase().split(/\s+/).filter((w) => w.length >= 3);
++    if (!words.length || words.every((w) => q.includes(w))) continue; // adds nothing to the question
++    if (!out.some((o) => o.toLowerCase() === t.toLowerCase())) out.push(t);
++    if (out.length === 6) break;
++  }
++  return out;
++}
++
++/** Whether a term occurs in a text (every word of 3+ letters, as a word prefix): the index's frequency is not 0. */
++export function termOccurs(term: string, text: string): boolean {
++  const hay = ` ${text.toLowerCase().replace(/[^a-z0-9À-ɏ]+/g, " ")} `;
++  const words = term.toLowerCase().replace(/[^a-z0-9À-ɏ]+/g, " ").split(" ").filter((w) => w.length >= 3);
++  return words.length > 0 && words.every((w) => hay.includes(` ${w}`));
++}

@@ -1,0 +1,914 @@
+diff --git a/scripts/build-wiki-pack.mjs b/scripts/build-wiki-pack.mjs
+index f56c58d1..18994d9e 100644
+--- a/scripts/build-wiki-pack.mjs
++++ b/scripts/build-wiki-pack.mjs
+@@ -19,7 +19,8 @@
+ //   redirects(title, article_id)           alternative titles → article
+ //   df(term, doc)                          document counts of common index terms (query-time idf)
+ //   lead_vecs(article_id, scale, vec)      int8 embedding of the article's lead chunk
+-//   article_meta(article_id, url, license) optional: per-article source URL and license (multi-source packs)
++//   article_meta(article_id, url, license[, attribution]) optional: per-article source URL and license (multi-source
++//                                          packs); `attribution` (per-row author credit) only when some row has one
+ //
+ // The approach (tiering by pageviews, contentless index over compressed blocks,
+ // redirect table) follows a competitor team's scripts/build_corpus.py and
+@@ -42,7 +43,11 @@ const USAGE = `usage: node scripts/build-wiki-pack.mjs --out FILE --shards A.par
+ 
+   --out FILE              pack to write (replaced if it exists)
+   --shards FILES...       FineWiki parquet shards (data/enwiki/*.parquet), processed in order;
+-                          a .jsonl file with {page_id, title, text} per line also works (test fixtures)
++                          a .jsonl file with {page_id, title, text} per line also works (topic packs, fixtures);
++                          optional JSONL fields: source (enwiki, enwikivoyage, enwikibooks, appropedia, usgov,
++                          eips, ethspecs, ethereumorg, bips, stackexchange, medlineplus, factbook, simplewiki),
++                          url, license, attribution (free-text credit shown with the citation, e.g. a Stack
++                          Exchange post's "<author> (<profile url>), <question url>"), aliases[], views
+   --pageviews TSV         page_id<TAB>views; ranks articles for --full-top and the popularity signal
+   --pageview-days N       days the pageviews TSV covers (views are scaled to a month), default 30
+   --full-top N            articles kept in full, by views (others keep their lead), default 1000000
+@@ -71,7 +76,11 @@ const USAGE = `usage: node scripts/build-wiki-pack.mjs --out FILE --shards A.par
+ 
+ const log = (msg) => console.log(`[${new Date().toISOString().slice(11, 19)}] ${msg}`);
+ // Source codes stored in articles.source (the app maps them back in src/rag/wikiPack.ts).
+-const SOURCE = { enwiki: 0, enwikivoyage: 1, enwikibooks: 2, appropedia: 3, usgov: 4, eips: 5, ethspecs: 6, ethereumorg: 7, bips: 8 };
++// Append only: ids are stored in shipped packs.
++const SOURCE = {
++  enwiki: 0, enwikivoyage: 1, enwikibooks: 2, appropedia: 3, usgov: 4, eips: 5, ethspecs: 6, ethereumorg: 7, bips: 8,
++  stackexchange: 9, medlineplus: 10, factbook: 11, simplewiki: 12,
++};
+ const DF_MIN = 2000; // terms in fewer chunks are counted from their (short) posting lists at query time
+ 
+ function options() {
+@@ -190,13 +199,22 @@ class PackWriter {
+     this.db.exec("BEGIN");
+   }
+ 
+-  /** Per-article URL and license, for packs mixing sources (table created on first use). */
+-  addMeta(id, url, license) {
++  /**
++   * Per-article URL and license, for packs mixing sources (table created on first use). The `attribution`
++   * column is added only once a row carries one, so packs without attribution keep the 3-column schema.
++   */
++  addMeta(id, url, license, attribution = null) {
+     if (!this.insMeta) {
+       this.db.exec("CREATE TABLE article_meta (article_id INTEGER PRIMARY KEY, url TEXT, license TEXT)");
+       this.insMeta = this.db.prepare("INSERT INTO article_meta VALUES (?, ?, ?)");
+     }
+-    this.insMeta.run(id, url ? normalizeUrl(url) : url, license);
++    if (attribution && !this.metaAttribution) {
++      this.db.exec("ALTER TABLE article_meta ADD COLUMN attribution TEXT");
++      this.insMeta = this.db.prepare("INSERT INTO article_meta (article_id, url, license, attribution) VALUES (?, ?, ?, ?)");
++      this.metaAttribution = true;
++    }
++    const row = [id, url ? normalizeUrl(url) : url, license];
++    this.insMeta.run(...(this.metaAttribution ? [...row, attribution || null] : row));
+   }
+ 
+   flushBlock() {
+@@ -275,11 +293,11 @@ async function addWikipedia(w, opts, views, fullIds) {
+     // "# Title" heading first, then infobox facts, then the body without its own title heading
+     const withoutTitle = body.replace(/^# [^\n]*\n+/, "");
+     const text = `# ${r.title}\n\n${box ? `${box}\n\n` : ""}${withoutTitle}`;
+-    // JSONL rows may name another source and carry their own URL and license (manifest-listed packs).
++    // JSONL rows may name another source and carry their own URL, license and attribution (manifest-listed packs).
+     const source = r.source ? SOURCE[r.source] : SOURCE.enwiki;
+     if (source === undefined) throw new Error(`unknown source "${r.source}" for "${r.title}"`);
+     const id = w.add(source, pid, r.title, views?.get(pid) ?? r.views ?? 0, text);
+-    if (id !== null && (r.url || r.license)) w.addMeta(id, r.url ?? null, r.license ?? null);
++    if (id !== null && (r.url || r.license || r.attribution)) w.addMeta(id, r.url ?? null, r.license ?? null, r.attribution ?? null);
+     // Alternative names ("ERC-20", "EIP-4844") land in the redirects table like Wikipedia redirects.
+     if (id !== null) for (const a of r.aliases ?? []) w.aliases.push([a, id]);
+     if (id !== null && full) w.stats.full++;
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf1..3492c50b 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -44,6 +44,8 @@ interface Settings {
+   placeTileNames?: Record<string, string>;
+   /** CR-2: models whose last load killed the app (cleared by a successful load). */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST: chunk-vector two-stage search in packs that carry chunk_vecs (default off); "extra" = DENSECHUNK-ST2 appended slots. */
++  packDense2?: boolean | "extra";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -489,6 +491,9 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST (default off): a pack's chunk-vector sidecar adds a two-stage semantic list to its search (true: fused;
++   *  "extra": DENSECHUNK-ST2, its best hits appended after the list). */
++  packDense2?: boolean | "extra";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -500,6 +505,7 @@ export async function getAnswerSettings(): Promise<AnswerSettings> {
+     deepModelId: s.deepModelId,
+     largeModelConfirmedIds: s.largeModelConfirmedIds ?? [],
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
++    ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..53e6b44f 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -152,6 +152,8 @@ export interface WikiPackResult {
+   pack: WikiPack;
+   hits: PackHit[];
+   stems: Stem[];
++  /** packDense2: the pack's two-stage chunk-vector hits (absent when off or the pack has no chunk_vecs). */
++  semantic?: PackHit[];
+ }
+ 
+ /** Searches every installed format-2 pack (a failing pack is skipped). */
+@@ -162,8 +164,8 @@ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {
+       if (!(await openPack(pack))) continue;
+       const wp = wikiPacks.get(pack.id);
+       if (!wp) continue;
+-      const { hits, stems } = await wp.searchDetailed(query, opts);
+-      out.push({ packId: pack.id, pack: wp, hits, stems });
++      const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
++      out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
+     } catch (e: any) {
+       console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+     }
+@@ -181,6 +183,10 @@ const SOURCE_LABEL: Record<PackHit["source"], string> = {
+   ethspecs: "Ethereum specs",
+   ethereumorg: "ethereum.org",
+   bips: "Bitcoin BIPs",
++  stackexchange: "Stack Exchange",
++  medlineplus: "MedlinePlus",
++  factbook: "CIA World Factbook (archive)",
++  simplewiki: "Simple English Wikipedia",
+ };
+ 
+ /** URL of a pack article: its recorded URL, else the Wikipedia/Wikivoyage/Wikibooks page for its title. */
+@@ -200,7 +206,11 @@ export function normalizeUrl(url: string): string {
+ 
+ export function articleUrl(title: string, source: PackHit["source"], url?: string): string {
+   if (url) return normalizeUrl(url);
+-  const host = source === "enwikivoyage" ? "en.wikivoyage.org" : source === "enwikibooks" ? "en.wikibooks.org" : "en.wikipedia.org";
++  const host =
++    source === "enwikivoyage" ? "en.wikivoyage.org"
++    : source === "enwikibooks" ? "en.wikibooks.org"
++    : source === "simplewiki" ? "simple.wikipedia.org"
++    : "en.wikipedia.org";
+   return `https://${host}/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
+ }
+ 
+@@ -212,7 +222,8 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+     docId: `pack:${packId}:a${h.articleId}`,
+     title: h.source === "enwiki" ? h.title : `${label}: ${h.title}`,
+     body: h.section ? `${h.section}: ${h.text}` : h.text,
+-    source: `${label} — ${articleUrl(h.title, h.source, h.url)}${h.license ? ` (${h.license})` : ""}`,
++    // Per-row credit last (Stack Exchange's CC BY-SA asks for author, profile link and question link).
++    source: `${label} — ${articleUrl(h.title, h.source, h.url)}${h.license ? ` (${h.license})` : ""}${h.attribution ? ` — ${h.attribution}` : ""}`,
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
+diff --git a/src/rag/passages.ts b/src/rag/passages.ts
+index cf4fd5c7..ba48ca73 100644
+--- a/src/rag/passages.ts
++++ b/src/rag/passages.ts
+@@ -58,6 +58,7 @@ export async function retrievePassages(query: string, opts: PassageOptions = {})
+           url: articleUrl(h.title, h.source, h.url),
+           kind: h.source,
+           ...(h.license ? { license: h.license } : {}),
++          ...(h.attribution ? { attribution: h.attribution } : {}),
+         },
+         views: h.views,
+         via: h.via,
+diff --git a/src/rag/passages.types.ts b/src/rag/passages.types.ts
+index 553b001d..cf8a9155 100644
+--- a/src/rag/passages.types.ts
++++ b/src/rag/passages.types.ts
+@@ -3,7 +3,9 @@
+  * native imports so pure code and tests can use the types.
+  */
+ 
+-export type PassageSourceKind = "enwiki" | "enwikivoyage" | "enwikibooks" | "appropedia" | "usgov" | "eips" | "ethspecs" | "ethereumorg" | "bips" | "builtin" | "user";
++export type PassageSourceKind =
++  | "enwiki" | "enwikivoyage" | "enwikibooks" | "appropedia" | "usgov" | "eips" | "ethspecs" | "ethereumorg" | "bips"
++  | "stackexchange" | "medlineplus" | "factbook" | "simplewiki" | "builtin" | "user";
+ 
+ export interface PassageSentence {
+   text: string;
+@@ -23,7 +25,7 @@ export interface Passage {
+   /** 0..1 relevance of the passage (its best sentence, plus a bonus for an article the question names). */
+   score: number;
+   /** `license` is set when the pack records it per page (show it with the link: CC BY-SA requires attribution). */
+-  source: { title: string; section: string; url: string; kind: PassageSourceKind; license?: string };
++  source: { title: string; section: string; url: string; kind: PassageSourceKind; license?: string; attribution?: string };
+   /** Monthly pageviews of the article, 0 when unknown. */
+   views: number;
+   via: "title" | "bm25" | "semantic";
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..d63013d8 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -115,25 +115,31 @@ async function semanticSearch(queryVec: Float32Array, limit: number): Promise<Re
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
+ ): Promise<RetrievedChunk[]> {
+-  const main = await retrieveOne(query, topK, opts);
++  // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
++  // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
++  const extra = opts.packDense2 === "extra";
++  const mainR = await retrieveOneDetailed(query, topK, opts);
++  const main = mainR.chunks;
+   // A Portuguese question against English sources: search again with the English names it mentions
+   // (Wikipedia's own interlanguage links, src/rag/ptLexicon.ts), and put those results first. The English
+   // embedder and keyword index barely match Portuguese words, so the first search alone finds noise.
+-  if (!looksPortuguese(query)) return main;
++  if (!looksPortuguese(query)) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // A standard's number in the question (EIP-1559, ERC-20, BIP-32) names its page exactly: it goes before any
+   // lexicon name, which for these questions is often only the generic "Ethereum".
+   const ids = identifiersIn(query);
+   const names = [...ids, ...englishNamesIn(query, opts.lexicon ?? ptLexicon()).filter((n) => !ids.includes(n))];
+-  if (!names.length) return main;
++  if (!names.length) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // The names alone ("Earthquake") don't say the question asks what to do; the question does.
+-  const found = await retrieveOne(names.join(" "), topK, {
++  const foundR = await retrieveOneDetailed(names.join(" "), topK, {
+     includeWikiPacks: opts.includeWikiPacks,
+     titles: names,
+     action: ACTION_INTENT.test(query),
+     explain: EXPLAIN_INTENT.test(query),
++    ...(opts.packDense2 ? { packDense2: opts.packDense2 } : {}),
+   });
++  const found = foundR.chunks;
+   // Sources without a title boost (bundled corpus, format-1 packs): the article whose title is one of the names first.
+   const named = new Set(names.map((n) => n.toLowerCase()));
+   // A what-to-do question: passages from a section that says what to do (the preparedness pack's Treatment,
+@@ -150,7 +156,30 @@ export async function retrieve(
+   );
+   // The page of a standard the question names by number first, from either search.
+   const byId = (c: RetrievedChunk) => ids.some((id) => titleHasIdentifier(c.title, id));
+-  return dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
++  const out = dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
++  return extra ? appendDenseExtra(out, [...mainR.dense, ...foundR.dense]) : out;
++}
++
++/** packDense2: off (absent/false), true = the dense chunk hits join the fusion (DENSECHUNK-ST), "extra" = appended slots (DENSECHUNK-ST2). */
++export type PackDense2Mode = boolean | "extra";
++/** packDense2 "extra": at most this many dense chunk hits are appended after the retrieved list. */
++export const DENSE2_EXTRA = 2;
++
++/**
++ * packDense2 "extra": appends to `list` the best `max` dense chunk hits (similarity order, ties in the given order) whose
++ * chunkId is not already in it. The hits are already at cosine >= MIN_SEMANTIC_SIMILARITY (WikiPack.denseChunks).
++ * Nothing in `list` moves or is dropped.
++ */
++export function appendDenseExtra(list: RetrievedChunk[], dense: RetrievedChunk[], max = DENSE2_EXTRA): RetrievedChunk[] {
++  if (!dense.length || max <= 0) return list;
++  const seen = new Set(list.map((c) => c.chunkId));
++  const add = dense
++    .map((c, i) => ({ c, i }))
++    .sort((a, b) => (b.c.similarity ?? 0) - (a.c.similarity ?? 0) || a.i - b.i)
++    .map((x) => x.c)
++    .filter((c) => !seen.has(c.chunkId) && (seen.add(c.chunkId), true))
++    .slice(0, max);
++  return add.length ? [...list, ...add] : list;
+ }
+ 
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+@@ -158,11 +187,11 @@ export function isDisambiguation(c: { title: string; body: string }): boolean {
+   return /\(disambiguation\)$/i.test(c.title) || /\bmay (also )?refer to\b/i.test(c.body.slice(0, 300));
+ }
+ 
+-async function retrieveOne(
++async function retrieveOneDetailed(
+   query: string,
+   topK: number,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean }
+-): Promise<RetrievedChunk[]> {
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean; packDense2?: PackDense2Mode }
++): Promise<{ chunks: RetrievedChunk[]; dense: RetrievedChunk[] }> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+@@ -177,6 +206,7 @@ async function retrieveOne(
+           ...(titles ? { titles } : {}),
+           ...(opts.action !== undefined ? { action: opts.action } : {}),
+           ...(opts.explain !== undefined ? { explain: opts.explain } : {}),
++          ...(opts.packDense2 ? { dense2: true } : {}),
+         }).catch(() => [])
+       : Promise.resolve([]),
+   ]);
+@@ -192,9 +222,16 @@ async function retrieveOne(
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+   // take the top-K or per-article slots before the gate sees the rest. Large-pack hits have their
+   // own ranking and no similarity, so they aren't gated here.
++  // packDense2: a large pack's chunk-vector hits (already at cosine >= MIN_SEMANTIC_SIMILARITY) join the semantic list,
++  // so a passage found by both its words and its meaning adds up (fuseRetrievalResults); off: the list is empty.
++  const wikiSemantic = wiki.flatMap((w) =>
++    (w.semantic ?? []).map((h) => ({ ...packHitToChunk(w.packId, h), matchType: "semantic" as const, similarity: h.score }))
++  );
++  // "extra": the dense list stays out of the fusion and is returned beside the result (retrieve appends it).
++  const extra = opts.packDense2 === "extra";
+   const fused = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    gateByRelevance([...semantic, ...packs.semantic]),
++    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
+     topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+@@ -222,7 +259,7 @@ async function retrieveOne(
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
+-  return result;
++  return { chunks: result, dense: extra ? wikiSemantic : [] };
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff --git a/src/rag/wikiPack.attribution.test.ts b/src/rag/wikiPack.attribution.test.ts
+new file mode 100644
+index 00000000..6e0690ba
+--- /dev/null
++++ b/src/rag/wikiPack.attribution.test.ts
+@@ -0,0 +1,132 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll, vi } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { decompress } from "fzstd";
++
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++vi.mock("./embed", () => ({ embeddingEngine: {} }));
++
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { SOURCES, WikiPack, type PackHit } from "./wikiPack";
++import { articleUrl, packHitToChunk } from "./packs";
++
++// New source families (T-K2) and per-row attribution, end to end: JSONL -> builder -> pack -> WikiPack -> citation.
++// Made-up, test-only documents and people.
++const filler = (topic: string) =>
++  Array.from({ length: 6 }, (_, i) => `${topic} filler sentence number ${i} about unrelated matters.`).join(" ");
++const SE_CREDIT = "Jane Example (https://outdoors.stackexchange.com/users/1/jane-example), https://outdoors.stackexchange.com/q/42";
++const rows = [
++  // First row has url/license only: article_meta starts with 3 columns and gains `attribution` later.
++  {
++    page_id: 11e9 + 1, title: "Freedonia", source: "factbook", url: "https://example.org/factbook/freedonia", license: "Public domain",
++    text: `# Freedonia\n\nFreedonia is a small landlocked country whose capital is Marxville. ${filler("Country")}`,
++  },
++  {
++    page_id: 9e9 + 42, title: "How do I purify stream water without boiling it?", source: "stackexchange",
++    url: "https://outdoors.stackexchange.com/q/42", license: "CC BY-SA 4.0", attribution: SE_CREDIT,
++    text: `# How do I purify stream water without boiling it?\n\nUse a ceramic filter, then chlorine dioxide tablets and wait thirty minutes. ${filler("Purify")}`,
++  },
++  {
++    page_id: 10e9 + 7, title: "Heat illness", source: "medlineplus", url: "https://medlineplus.gov/heatillness.html", license: "Public domain",
++    text: `# Heat illness\n\nHeat exhaustion causes heavy sweating; move to a cool place and sip water. ${filler("Heat")}`,
++  },
++  {
++    page_id: 12e9 + 5, title: "Glacier", source: "simplewiki",
++    text: `# Glacier\n\nA glacier is a large body of ice that moves slowly down a valley. ${filler("Ice")}`,
++  },
++];
++
++const build = (dir: string, name: string, docs: object[]) => {
++  const shard = join(dir, `${name}.jsonl`);
++  writeFileSync(shard, docs.map((r) => JSON.stringify(r)).join("\n") + "\n");
++  const out = join(dir, `${name}.sqlite`);
++  execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", out, "--shards", shard, "--no-embed"], { stdio: "pipe" });
++  return out;
++};
++const metaColumns = (path: string) =>
++  (new DatabaseSync(path, { readOnly: true }).prepare("PRAGMA table_info(article_meta)").all() as Array<{ name: string }>).map((c) => c.name);
++
++let withAttr: WikiPack, withoutAttr: WikiPack, pathWith: string, pathWithout: string;
++beforeAll(async () => {
++  const dir = mkdtempSync(join(tmpdir(), "boar-pack-attr-"));
++  pathWith = build(dir, "with", rows);
++  pathWithout = build(dir, "without", rows.map(({ attribution: _, ...r }: any) => r));
++  withAttr = await WikiPack.open(nodeSqliteDatabase(pathWith), decompress);
++  withoutAttr = await WikiPack.open(nodeSqliteDatabase(pathWithout), decompress);
++}, 60000);
++
++describe("new pack source codes", () => {
++  it("keeps the shipped ids and appends the new ones", () => {
++    expect(SOURCES.slice(0, 9)).toEqual(["enwiki", "enwikivoyage", "enwikibooks", "appropedia", "usgov", "eips", "ethspecs", "ethereumorg", "bips"]);
++    expect(SOURCES.slice(9)).toEqual(["stackexchange", "medlineplus", "factbook", "simplewiki"]);
++  });
++
++  it("builds title URLs for Simple English Wikipedia and keeps recorded URLs", () => {
++    expect(articleUrl("Glacier", "simplewiki")).toBe("https://simple.wikipedia.org/wiki/Glacier");
++    expect(articleUrl("Heat illness", "medlineplus", "https://medlineplus.gov/heatillness.html")).toBe("https://medlineplus.gov/heatillness.html");
++    expect(articleUrl("Freedonia", "factbook", "https://example.org/factbook/freedonia")).toBe("https://example.org/factbook/freedonia");
++    expect(articleUrl("Q", "stackexchange", "https://outdoors.stackexchange.com/q/42")).toBe("https://outdoors.stackexchange.com/q/42");
++  });
++
++  it("labels the new sources in citations", () => {
++    const base: PackHit = { articleId: 1, chunkId: 2, title: "T", section: "", text: "x", start: 0, end: 1, score: 1, via: "bm25", source: "enwiki", views: 0, lead: true, action: false };
++    const label = (source: PackHit["source"]) => packHitToChunk("p", { ...base, source, url: "https://e.org/t" }).source?.split(" — ")[0];
++    expect(label("stackexchange")).toBe("Stack Exchange");
++    expect(label("medlineplus")).toBe("MedlinePlus");
++    expect(label("factbook")).toBe("CIA World Factbook (archive)");
++    expect(label("simplewiki")).toBe("Simple English Wikipedia");
++  });
++
++  it("round-trips the source codes and counts entity-named sources (not Stack Exchange) as names", async () => {
++    const sources = await Promise.all([1, 2, 3, 4].map(async (id) => (await withAttr.article(id)).source));
++    expect(sources).toEqual(["factbook", "stackexchange", "medlineplus", "simplewiki"]);
++    expect([...(withAttr as any).topicSources].sort()).toEqual(["factbook", "medlineplus", "simplewiki"]);
++  });
++});
++
++describe("per-row attribution", () => {
++  const hit: PackHit = {
++    articleId: 1, chunkId: 2, title: "Burn", section: "Management", text: "Cool the burn.", start: 0, end: 14, score: 1,
++    via: "title", source: "appropedia", views: 0, lead: false, action: true, url: "https://www.appropedia.org/Burn", license: "CC BY-SA 4.0",
++  };
++
++  it("leaves the citation byte-identical without attribution", () => {
++    expect(packHitToChunk("prep", hit).source).toBe("Appropedia — https://www.appropedia.org/Burn (CC BY-SA 4.0)");
++    expect(packHitToChunk("prep", { ...hit, license: undefined, url: undefined, source: "enwiki" }).source).toBe("Wikipedia — https://en.wikipedia.org/wiki/Burn");
++  });
++
++  it("appends the credit after URL and license", () => {
++    expect(packHitToChunk("prep", { ...hit, attribution: "A. Author" }).source).toBe(
++      "Appropedia — https://www.appropedia.org/Burn (CC BY-SA 4.0) — A. Author"
++    );
++  });
++
++  it("adds the attribution column only when a row has one", () => {
++    expect(metaColumns(pathWith)).toEqual(["article_id", "url", "license", "attribution"]);
++    expect(metaColumns(pathWithout)).toEqual(["article_id", "url", "license"]);
++  });
++
++  it("carries the attribution from the pack to the hit and the citation", async () => {
++    const hits = await withAttr.search("How do I purify stream water without boiling it?");
++    const se = hits.find((h) => h.source === "stackexchange");
++    expect(se?.attribution).toBe(SE_CREDIT);
++    expect(packHitToChunk("p", se!).source).toBe(
++      `Stack Exchange — https://outdoors.stackexchange.com/q/42 (CC BY-SA 4.0) — ${SE_CREDIT}`
++    );
++    // Rows without a credit in the same pack carry none.
++    expect((await withAttr.article(1)).attribution).toBeUndefined();
++  });
++
++  it("reads a pack without the column (no attribution, same hits otherwise)", async () => {
++    const q = "How do I purify stream water without boiling it?";
++    const a = await withAttr.search(q);
++    const b = await withoutAttr.search(q);
++    expect(b.every((h) => h.attribution === undefined)).toBe(true);
++    expect(b).toEqual(a.map(({ attribution: _, ...h }) => h));
++  });
++});
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..0d65d895 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -15,7 +15,7 @@
+  * that's only used when the keyword search comes back thin.
+  */
+ 
+-import { cosineSimilarityInt8 } from "./pure";
++import { cosineSimilarityInt8, MIN_SEMANTIC_SIMILARITY } from "./pure";
+ import { EXPLAIN_INTENT } from "./explain";
+ 
+ export interface PackSql {
+@@ -32,7 +32,9 @@ export interface Stem {
+   idf: number;
+ }
+ 
+-export type PackSource = "enwiki" | "enwikivoyage" | "enwikibooks" | "appropedia" | "usgov" | "eips" | "ethspecs" | "ethereumorg" | "bips";
++export type PackSource =
++  | "enwiki" | "enwikivoyage" | "enwikibooks" | "appropedia" | "usgov" | "eips" | "ethspecs" | "ethereumorg" | "bips"
++  | "stackexchange" | "medlineplus" | "factbook" | "simplewiki";
+ 
+ /** A ranked BM25 chunk before its text is read. */
+ export interface Candidate {
+@@ -52,6 +54,8 @@ export interface Article {
+   /** Page URL and license, when the pack records them per article (multi-source packs). */
+   url?: string;
+   license?: string;
++  /** Per-row credit (a Stack Exchange post's author, profile and question links), when the pack records it. */
++  attribution?: string;
+ }
+ 
+ export interface PackHit {
+@@ -64,8 +68,11 @@ export interface PackHit {
+   start: number;
+   end: number;
+   score: number;
+-  /** "title": the article was named by the question or the planner; "bm25": whole-index keyword hit. */
+-  via: "title" | "bm25";
++  /**
++   * "title": the article was named by the question or the planner; "bm25": whole-index keyword hit; "semantic": a
++   * chunk-vector hit of the two-stage dense path (packDense2; `score` is then its cosine to the question).
++   */
++  via: "title" | "bm25" | "semantic";
+   source: PackSource;
+   /** Monthly pageviews of the article (0 when unknown). */
+   views: number;
+@@ -75,6 +82,8 @@ export interface PackHit {
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** Per-row credit shown with the citation (article_meta.attribution), when the pack records it. */
++  attribution?: string;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -102,10 +111,37 @@ export interface PackSearchOptions {
+    * (>= SEMANTIC_KEEP) is kept.
+    */
+   queryVec?: Float32Array;
++  /**
++   * packDense2 (DENSECHUNK-ST, default off): with `queryVec` and a pack that carries `chunk_vecs`, also return the
++   * two-stage semantic list (denseChunks): lead top-DENSE2_ARTICLES articles, then their chunks' cosine.
++   */
++  dense2?: boolean;
+ }
+ 
+-// Index = articles.source code written by scripts/build-wiki-pack.mjs.
+-const SOURCES: PackSource[] = ["enwiki", "enwikivoyage", "enwikibooks", "appropedia", "usgov", "eips", "ethspecs", "ethereumorg", "bips"];
++/** Two-stage dense path (packDense2): articles kept by lead cosine, chunks returned, cosine floor. */
++export const DENSE2_ARTICLES = 50;
++export const DENSE2_K = 12;
++export const DENSE2_FLOOR = MIN_SEMANTIC_SIMILARITY;
++
++/** Timing of the last dense scans (newest last, at most 32): instrumentation for replays, read-only. */
++export interface DenseScan { leadMs: number; chunkMs: number; ms: number; leads: number; candidates: number; kept: number; loadMs: number }
++export const denseScans: DenseScan[] = [];
++
++// Index = articles.source code written by scripts/build-wiki-pack.mjs (append only: shipped packs store these ids).
++export const SOURCES: PackSource[] = [
++  "enwiki", "enwikivoyage", "enwikibooks", "appropedia", "usgov", "eips", "ethspecs", "ethereumorg", "bips",
++  "stackexchange", "medlineplus", "factbook", "simplewiki",
++];
++
++/**
++ * Sources whose titles never count as names in titlesInQuestion. Wikipedia and Wikivoyage are always searched
++ * there already. A Stack Exchange title is a question sentence ("How do I purify water without boiling it?"),
++ * not an entity name: matching the user's words against it as a name would mark side words as the subject and
++ * pull the post in as "primary". Its posts are still found by the keyword search. Factbook country entries,
++ * MedlinePlus topics ("Heat Illness") and Simple English Wikipedia articles are named like encyclopedia titles,
++ * so they count.
++ */
++const NOT_NAME_SOURCES = new Set<PackSource>(["enwiki", "enwikivoyage", "stackexchange"]);
+ 
+ /** Share of the question's term weight a name in it must carry to be treated as the question's subject. */
+ export const NAMED_MIN_SHARE = 0.5;
+@@ -435,8 +471,14 @@ export class WikiPack {
+     private hasDf: boolean,
+     private hasMeta: boolean,
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+-    private topicSources: PackSource[] = []
++    private topicSources: PackSource[] = [],
++    /** article_meta has the `attribution` column (checked once at open). */
++    private hasAttribution = false,
++    /** The pack carries a chunk_vecs sidecar (int8 bge-small vector per chunk): the packDense2 path can run. */
++    readonly hasChunkVecs = false
+   ) {}
++  /** All lead vectors in memory (loaded on the first dense query): stage 1 of denseChunks. */
++  private leadMatrix: { ids: Int32Array; vecs: Int8Array; norms: Float32Array } | null = null;
+ 
+   static async open(db: PackSql, decompress: Decompress): Promise<WikiPack> {
+     const rows = await db.getAllAsync<{ key: string; value: string }>("SELECT key, value FROM meta", []);
+@@ -456,9 +498,13 @@ export class WikiPack {
+     const topicSources = has("article_meta")
+       ? (await db.getAllAsync<{ source: number }>("SELECT DISTINCT source FROM articles", []))
+           .map((r) => SOURCES[r.source])
+-          .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
++          .filter((x): x is PackSource => !!x && !NOT_NAME_SOURCES.has(x))
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources);
++    // Packs built before per-row attribution have a 3-column article_meta.
++    const hasAttribution =
++      has("article_meta") &&
++      (await db.getAllAsync<{ name: string }>("PRAGMA table_info(article_meta)", [])).some((c) => c.name === "attribution");
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, hasAttribution, has("chunk_vecs"));
+   }
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+@@ -505,7 +551,10 @@ export class WikiPack {
+     const block = await this.block(a.block_id);
+     const text = utf8(block.subarray(a.off, a.off + a.len));
+     const m = this.hasMeta
+-      ? await this.db.getFirstAsync<{ url: string | null; license: string | null }>("SELECT url, license FROM article_meta WHERE article_id = ?", [id])
++      ? await this.db.getFirstAsync<{ url: string | null; license: string | null; attribution?: string | null }>(
++          `SELECT url, license${this.hasAttribution ? ", attribution" : ""} FROM article_meta WHERE article_id = ?`,
++          [id]
++        )
+       : null;
+     return this.articles.put(id, {
+       id,
+@@ -515,6 +564,7 @@ export class WikiPack {
+       text,
+       ...(m?.url ? { url: m.url } : {}),
+       ...(m?.license ? { license: m.license } : {}),
++      ...(m?.attribution ? { attribution: m.attribution } : {}),
+     });
+   }
+ 
+@@ -593,6 +643,7 @@ export class WikiPack {
+       action: !lead && isActionPassage(sectionAt(a.text, start), a.text.slice(start, end)),
+       ...(a.url ? { url: a.url } : {}),
+       ...(a.license ? { license: a.license } : {}),
++      ...(a.attribution ? { attribution: a.attribution } : {}),
+     };
+   }
+ 
+@@ -820,7 +871,7 @@ export class WikiPack {
+   }
+ 
+   /** search(), plus the question's stems (for scoring sentences with the same term weights). */
+-  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[] }> {
++  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[]; semantic?: PackHit[] }> {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
+     const stems = await this.stems(query);
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+@@ -923,9 +974,78 @@ export class WikiPack {
+         hits = [...hits, ...more.filter((h) => !seen.has(h.chunkId))];
+       }
+     }
++    // packDense2: the chunk-vector list, fused with the keyword hits by retrieve.ts (off or no sidecar: not computed).
++    if (opts.dense2 && queryVec && this.hasChunkVecs) return { hits: hits.slice(0, limit + lay), stems, semantic: await this.denseChunks(queryVec) };
+     return { hits: hits.slice(0, limit + lay), stems };
+   }
+ 
++  /**
++   * Two-stage chunk-level semantic search (packDense2, DENSECHUNK-ST): stage 1 ranks every article by its lead
++   * vector's cosine to the question and keeps the top `m`; stage 2 scores only those articles' chunk vectors
++   * (chunk_vecs) and returns the best `k` at cosine >= `floor`, as "semantic" hits whose score is the cosine.
++   */
++  async denseChunks(queryVec: Float32Array, m = DENSE2_ARTICLES, k = DENSE2_K, floor = DENSE2_FLOOR): Promise<PackHit[]> {
++    const t0 = Date.now();
++    let loadMs = 0;
++    if (!this.leadMatrix) {
++      const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []);
++      const dims = queryVec.length;
++      const ids = new Int32Array(rows.length);
++      const vecs = new Int8Array(rows.length * dims);
++      const norms = new Float32Array(rows.length);
++      rows.forEach((r, i) => {
++        ids[i] = r.article_id;
++        const v = new Int8Array(r.vec.buffer, r.vec.byteOffset, dims);
++        vecs.set(v, i * dims);
++        let n = 0;
++        for (let d = 0; d < dims; d++) n += v[d] * v[d];
++        norms[i] = Math.sqrt(n);
++      });
++      this.leadMatrix = { ids, vecs, norms };
++      loadMs = Date.now() - t0;
++    }
++    const t1 = Date.now();
++    const { ids, vecs, norms } = this.leadMatrix;
++    const dims = queryVec.length;
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    // Top-m by lead cosine (ties: lower article id first, the scan order).
++    const top: Array<{ id: number; s: number }> = [];
++    for (let i = 0; i < ids.length; i++) {
++      let dot = 0;
++      const o = i * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vecs[o + d];
++      const s = norms[i] ? dot / (qn * norms[i]) : 0;
++      if (top.length < m || s > top[top.length - 1].s) {
++        let j = top.length < m ? top.length : top.length - 1;
++        if (top.length < m) top.push({ id: ids[i], s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id: ids[i], s };
++      }
++    }
++    const t2 = Date.now();
++    const art = top.map((t) => t.id);
++    const rows = art.length
++      ? await this.db.getAllAsync<{ id: number; article_id: number; start: number; end: number; vec: Uint8Array }>(
++          `SELECT c.id, c.article_id, c.start, c.end, v.vec FROM chunks c JOIN chunk_vecs v ON v.chunk_id = c.id
++           WHERE c.article_id IN (${art.map(() => "?").join(",")})`,
++          art
++        )
++      : [];
++    const scored = rows
++      .map((r) => ({ r, s: cosineSimilarityInt8(queryVec, new Uint8Array(r.vec)) }))
++      .filter((x) => x.s >= floor)
++      .sort((a, b) => b.s - a.s || a.r.id - b.r.id)
++      .slice(0, k);
++    const t3 = Date.now();
++    const hits: PackHit[] = [];
++    for (const { r, s } of scored) hits.push({ ...(await this.hit(r.article_id, r.id, r.start, r.end, s, "semantic")), score: s });
++    denseScans.push({ leadMs: t2 - t1, chunkMs: t3 - t2, ms: Date.now() - t0, leads: ids.length, candidates: rows.length, kept: hits.length, loadMs });
++    if (denseScans.length > 32) denseScans.shift();
++    return hits;
++  }
++
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {
+     const perTitle: PackHit[][] = [];
+     for (const id of ids) perTitle.push(await this.articlePassages(id, stems, 2, action, !action && explain));
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 35877fca..f462b971 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -184,7 +184,8 @@ export interface AnswerEngine {
+ 
+ export interface AnswerDeps {
+   engine: AnswerEngine;
+-  retrieve(query: string, k: number): Promise<RetrievedChunk[]>;
++  /** `opts.packDense2`: settings.packDense2 (DENSECHUNK-ST true / ST2 "extra"), passed only when on. */
++  retrieve(query: string, k: number, opts?: { packDense2?: boolean | "extra" }): Promise<RetrievedChunk[]>;
+   getSettings(): Promise<AnswerSettings>;
+   listInstalledLlms(): Promise<InstalledLlm[]>;
+   getActiveModelId(): Promise<string | null>;
+@@ -980,7 +981,10 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await deps.retrieve(searchQuery, gen?.retrieveK ?? 6).catch((e) => {
++        raw = await (settings.packDense2 === true || settings.packDense2 === "extra"
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 })
++          : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
++        ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
+diff --git a/src/routing/answerService.ts b/src/routing/answerService.ts
+index 2b278e17..e44a0da4 100644
+--- a/src/routing/answerService.ts
++++ b/src/routing/answerService.ts
+@@ -75,7 +75,7 @@ function knowledgeReady(): Promise<void> {
+ 
+ export const { answer, deepen, effectiveModel: effectiveAnswerModel } = createAnswerer({
+   engine: llamaEngine,
+-  retrieve: (q, k) => retrieve(q, k),
++  retrieve: (q, k, o) => retrieve(q, k, o),
+   knowledgeReady,
+   englishNames: (query) => englishNamesIn(query, ptLexicon()),
+   getSettings: getAnswerSettings,
+diff --git a/src/rag/wikiPack.dense2.test.ts b/src/rag/wikiPack.dense2.test.ts
+new file mode 100644
+index 00000000..33c08cb9
+--- /dev/null
++++ b/src/rag/wikiPack.dense2.test.ts
+@@ -0,0 +1,96 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll, vi } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { decompress } from "fzstd";
++
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++vi.mock("./embed", () => ({ embeddingEngine: {} }));
++
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { WikiPack, denseScans } from "./wikiPack";
++
++// DENSECHUNK-ST packDense2: the two-stage chunk-vector path. Synthetic 384-d vectors: article i's lead points
++// along axis i, chunk j of article i along axis 10 * (i + 1) + j. Made-up, test-only documents.
++const filler = (t: string) => Array.from({ length: 30 }, (_, i) => `${t} filler sentence number ${i} about unrelated matters.`).join(" ");
++const docs = ["Alpha", "Beta", "Gamma", "Delta"].map((t, i) => ({
++  page_id: 1000 + i, title: t, source: "simplewiki",
++  text: `# ${t}\n\n${t} is a test article. ${filler(t)}\n\n## Details\n\n${filler(t + " detail")}\n\n## More\n\n${filler(t + " more")}`,
++}));
++const axis = (k: number, w = 1) => { const v = new Int8Array(384); v[k] = 127 * w; return v; };
++
++let dense: WikiPack, plain: WikiPack, chunkOf: (title: string, j: number) => number;
++beforeAll(async () => {
++  const dir = mkdtempSync(join(tmpdir(), "boar-pack-dense2-"));
++  const shard = join(dir, "d.jsonl");
++  writeFileSync(shard, docs.map((r) => JSON.stringify(r)).join("\n") + "\n");
++  const build = (name: string) => {
++    const out = join(dir, `${name}.sqlite`);
++    execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", out, "--shards", shard, "--no-embed"], { stdio: "pipe" });
++    return out;
++  };
++  const pDense = build("dense"), pPlain = build("plain");
++  for (const [p, withChunks] of [[pDense, true], [pPlain, false]] as const) {
++    const db = new DatabaseSync(p);
++    db.exec("CREATE TABLE IF NOT EXISTS lead_vecs (article_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++    const arts = db.prepare("SELECT id, title FROM articles ORDER BY id").all() as Array<{ id: number; title: string }>;
++    for (const a of arts) {
++      const i = docs.findIndex((d) => d.title === a.title);
++      db.prepare("INSERT OR REPLACE INTO lead_vecs VALUES (?, 1, ?)").run(a.id, new Uint8Array(axis(i).buffer));
++    }
++    if (withChunks) {
++      db.exec("CREATE TABLE chunk_vecs (chunk_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++      for (const a of arts) {
++        const i = docs.findIndex((d) => d.title === a.title);
++        const ch = db.prepare("SELECT id FROM chunks WHERE article_id = ? ORDER BY start").all(a.id) as Array<{ id: number }>;
++        ch.forEach((c, j) => db.prepare("INSERT INTO chunk_vecs VALUES (?, 1, ?)").run(c.id, new Uint8Array(axis(10 * (i + 1) + j).buffer)));
++      }
++    }
++    db.close();
++  }
++  const ro = new DatabaseSync(pDense, { readOnly: true });
++  chunkOf = (title, j) =>
++    (ro.prepare("SELECT c.id FROM chunks c JOIN articles a ON a.id = c.article_id WHERE a.title = ? ORDER BY c.start").all(title) as any[])[j].id;
++  dense = await WikiPack.open(nodeSqliteDatabase(pDense), decompress);
++  plain = await WikiPack.open(nodeSqliteDatabase(pPlain), decompress);
++}, 60000);
++
++/** A query vector: mostly toward Gamma's lead (axis 2) and its chunk 1 (axis 31), a little toward Beta's chunk 1. */
++const q = () => { const v = new Float32Array(384); v[2] = 0.6; v[31] = 0.75; v[21] = 0.2; return v; };
++
++describe("packDense2 two-stage chunk vectors", () => {
++  it("detects the sidecar at open", () => {
++    expect(dense.hasChunkVecs).toBe(true);
++    expect(plain.hasChunkVecs).toBe(false);
++  });
++
++  it("stage 2 only scores the stage-1 articles and applies the cosine floor", async () => {
++    const top1 = await dense.denseChunks(q(), 1, 12, 0.5);
++    expect(top1.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1)]);
++    expect(top1[0].via).toBe("semantic");
++    expect(top1[0].title).toBe("Gamma");
++    expect(top1[0].score).toBeCloseTo(0.75 / Math.hypot(0.6, 0.75, 0.2), 4);
++    // With the floor at 0, every Gamma chunk comes back (cos 0 for the others), still Gamma only.
++    const all = await dense.denseChunks(q(), 1, 12, 0);
++    expect(new Set(all.map((h) => h.title))).toEqual(new Set(["Gamma"]));
++    // Two articles in stage 1 (Gamma, then Alpha/Beta/Delta tie at 0 -> scan order): Beta's chunk 1 is not reachable
++    // unless Beta is among them; with m = 4 it is, below Gamma's.
++    const m4 = await dense.denseChunks(q(), 4, 12, 0.1);
++    expect(m4.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1), chunkOf("Beta", 1)]);
++    expect(denseScans.at(-1)!.leads).toBe(4);
++  });
++
++  it("searchDetailed: off, or no sidecar, returns no semantic list (identical hits)", async () => {
++    const off = await dense.searchDetailed("Gamma test article", { queryVec: q() });
++    const plainOn = await plain.searchDetailed("Gamma test article", { queryVec: q(), dense2: true });
++    const on = await dense.searchDetailed("Gamma test article", { queryVec: q(), dense2: true });
++    expect("semantic" in off).toBe(false);
++    expect("semantic" in plainOn).toBe(false);
++    expect(on.hits).toEqual(off.hits);
++    expect(on.semantic!.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1)]);
++  });
++});
+diff --git a/src/rag/retrieve.dense2extra.test.ts b/src/rag/retrieve.dense2extra.test.ts
+new file mode 100644
+index 00000000..c2d667a7
+--- /dev/null
++++ b/src/rag/retrieve.dense2extra.test.ts
+@@ -0,0 +1,57 @@
++import { describe, it, expect, vi } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++
++const { hit } = vi.hoisted(() => ({
++  hit: (chunkId: number, title: string, score: number, via: string) => ({
++    articleId: chunkId, chunkId, title, section: "", text: `${title} text.`, start: 0, end: 10, score, via, source: "simplewiki", views: 0, lead: false, action: false,
++  }),
++}));
++// One large pack: 8 keyword hits; with dense2 also a semantic list (chunk 3 is already a keyword hit).
++vi.mock("./packs", async (importOriginal) => {
++  const actual: any = await importOriginal();
++  return {
++    packHitToChunk: actual.packHitToChunk,
++    searchPacks: async () => ({ lexical: [], semantic: [] }),
++    searchWikiPacks: async (_q: string, o: any) => [
++      {
++        packId: "p",
++        hits: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => hit(i, `Lex ${i}`, 10 - i, "bm25")),
++        ...(o.dense2 ? { semantic: [hit(3, "Lex 3", 0.9, "semantic"), hit(20, "Dense A", 0.7, "semantic"), hit(21, "Dense B", 0.8, "semantic"), hit(22, "Dense C", 0.6, "semantic")] } : {}),
++      },
++    ],
++  };
++});
++
++import { retrieve, appendDenseExtra } from "./retrieve";
++
++const ids = (cs: { chunkId: string }[]) => cs.map((c) => c.chunkId);
++
++describe("packDense2 extra (DENSECHUNK-ST2)", () => {
++  it("off and false give the same list; extra keeps that list and appends the 2 best new dense chunks", async () => {
++    const off = await retrieve("lex question", 6);
++    expect(ids(await retrieve("lex question", 6, { packDense2: false }))).toEqual(ids(off));
++    expect(off).toHaveLength(6);
++    const extra = await retrieve("lex question", 6, { packDense2: "extra" });
++    expect(ids(extra.slice(0, 6))).toEqual(ids(off));
++    // chunk 3 is already in the list; then similarity order: Dense B (0.8), Dense A (0.7); Dense C not taken.
++    expect(ids(extra.slice(6))).toEqual(["pack:p:21", "pack:p:20"]);
++    expect(extra[6].similarity).toBe(0.8);
++  });
++
++  it("fusion mode (true) is a different path: the dense hits compete inside the top-k", async () => {
++    const fused = await retrieve("lex question", 6, { packDense2: true });
++    expect(fused.length).toBeLessThanOrEqual(6);
++  });
++
++  it("appendDenseExtra: no dense or max 0 returns the same array", () => {
++    const l = [{ chunkId: "a" } as any];
++    expect(appendDenseExtra(l, [])).toBe(l);
++    expect(appendDenseExtra(l, [{ chunkId: "b", similarity: 0.6 } as any], 0)).toBe(l);
++    expect(ids(appendDenseExtra(l, [{ chunkId: "a", similarity: 0.9 } as any, { chunkId: "b", similarity: 0.6 } as any]))).toEqual(["a", "b"]);
++  });
++});

@@ -1,0 +1,1398 @@
+{
+ "set": "v02",
+ "stage": "A0 shard07 (one of 15; NOT a REOPEN verdict)",
+ "threshold": 0.7,
+ "topk_per_query": 20,
+ "cap_chunks": 40,
+ "model": "typesafe-ai/jev",
+ "requests_uncached": 2778,
+ "runtime_s": 164,
+ "summary": {
+  "ALL": {
+   "n": 78,
+   "ge06": 19,
+   "ge07": 11,
+   "ge08": 6,
+   "verified_ge07": 9,
+   "table_hit_ge07": 0,
+   "outside_top100k_ge07": 5,
+   "verified_outside_top100k": 4,
+   "verified_table": 0
+  },
+  "on_topic": {
+   "n": 30,
+   "ge06": 10,
+   "ge07": 7,
+   "ge08": 3,
+   "verified_ge07": 6,
+   "table_hit_ge07": 0,
+   "outside_top100k_ge07": 4,
+   "verified_outside_top100k": 3,
+   "verified_table": 0
+  },
+  "off_topic_kept": {
+   "n": 14,
+   "ge06": 5,
+   "ge07": 2,
+   "ge08": 2,
+   "verified_ge07": 1,
+   "table_hit_ge07": 0,
+   "outside_top100k_ge07": 0,
+   "verified_outside_top100k": 0,
+   "verified_table": 0
+  },
+  "no_kept": {
+   "n": 34,
+   "ge06": 4,
+   "ge07": 2,
+   "ge08": 1,
+   "verified_ge07": 2,
+   "table_hit_ge07": 0,
+   "outside_top100k_ge07": 1,
+   "verified_outside_top100k": 1,
+   "verified_table": 0
+  }
+ },
+ "items": [
+  {
+   "id": "v02-comparison-A01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Australia"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 2,
+   "max_p": 0.25,
+   "best_title": "Division of Durack",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-A03",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 31,
+   "n_table_candidates": 11,
+   "max_p": 0.54,
+   "best_title": "Orthornavirae",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-A04",
+   "group": "on_topic",
+   "kept_titles": [
+    "Mont Blanc",
+    "Mount Fuji"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 17,
+   "max_p": 0.29,
+   "best_title": "Mont Blanc de Courmayeur",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-A05",
+   "group": "on_topic",
+   "kept_titles": [
+    "Prussia",
+    "Roman Empire",
+    "Holy Roman Empire"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 99,
+   "max_p": 0.6,
+   "best_title": "List of Roman emperors",
+   "hits": [
+    {
+     "chunk": 1414217,
+     "article": 292662,
+     "title": "List of Roman emperors",
+     "p": 0.6,
+     "table": true,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-comparison-A06",
+   "group": "on_topic",
+   "kept_titles": [
+    "Nuclear tourism",
+    "Nuclear fusion"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 3,
+   "max_p": 0.66,
+   "best_title": "Fusor",
+   "hits": [
+    {
+     "chunk": 483873,
+     "article": 173086,
+     "title": "Fusor",
+     "p": 0.66,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-comparison-A07",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Bangladesh",
+    "Kyrgyzstan"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 8,
+   "max_p": 0.52,
+   "best_title": "Executive Yuan",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-B01",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Architecture"
+   ],
+   "n_chunks": 37,
+   "n_table_candidates": 0,
+   "max_p": 0.66,
+   "best_title": "Gatun Dam",
+   "hits": [
+    {
+     "chunk": 1811195,
+     "article": 350755,
+     "title": "Gatun Dam",
+     "p": 0.66,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-comparison-B02",
+   "group": "on_topic",
+   "kept_titles": [
+    "Islam",
+    "Iraq"
+   ],
+   "n_chunks": 37,
+   "n_table_candidates": 5,
+   "max_p": 0.4,
+   "best_title": "Imam",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-B03",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Nubra Valley"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 14,
+   "max_p": 0.87,
+   "best_title": "Dromedary",
+   "hits": [
+    {
+     "chunk": 1341361,
+     "article": 287628,
+     "title": "Dromedary",
+     "p": 0.87,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.51,
+     "verified": false
+    },
+    {
+     "chunk": 1341339,
+     "article": 287628,
+     "title": "Dromedary",
+     "p": 0.79,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.31,
+     "verified": false
+    },
+    {
+     "chunk": 1341362,
+     "article": 287628,
+     "title": "Dromedary",
+     "p": 0.63,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-comparison-B04",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Mount Everest"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 11,
+   "max_p": 0.22,
+   "best_title": "Earth radius",
+   "hits": []
+  },
+  {
+   "id": "v02-comparison-B06",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 25,
+   "n_table_candidates": 5,
+   "max_p": 0.04,
+   "best_title": "Lewis White Beck",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Bitcoin scalability",
+    "Lightning Network"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 11,
+   "max_p": 0.5,
+   "best_title": "Proof of work",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 36,
+   "n_table_candidates": 16,
+   "max_p": 0.08,
+   "best_title": "Gas Plant Stadium",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A03",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 22,
+   "n_table_candidates": 2,
+   "max_p": 0.04,
+   "best_title": "BLAKE (hash function)",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A04",
+   "group": "on_topic",
+   "kept_titles": [
+    "Ethereum EIPs/ERCs: EIP-1559: Fee market change for ETH 1.0 chain"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 4,
+   "max_p": 0.15,
+   "best_title": "List of most expensive non-fungible tokens",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A05",
+   "group": "on_topic",
+   "kept_titles": [
+    "ethereum.org: Zero-knowledge rollups",
+    "ethereum.org: Optimistic Rollups"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 41,
+   "max_p": 0.07,
+   "best_title": "Privacy-enhancing technologies",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-A06",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.36,
+   "best_title": "Cryptocurrency",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-B01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Bitcoin"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 71,
+   "max_p": 0.43,
+   "best_title": "Satoshi Nakamoto",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-B02",
+   "group": "on_topic",
+   "kept_titles": [
+    "ethereum.org: Proof-of-work (PoW)",
+    "ethereum.org: Proof-of-stake (PoS)",
+    "Proof of stake"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 28,
+   "max_p": 0.41,
+   "best_title": "Cryptocurrency",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-B05",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Proof of work"
+   ],
+   "n_chunks": 32,
+   "n_table_candidates": 0,
+   "max_p": 0.27,
+   "best_title": "Proof of work",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-B06",
+   "group": "on_topic",
+   "kept_titles": [
+    "Bitcoin"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 19,
+   "max_p": 0.21,
+   "best_title": "Proof of work",
+   "hits": []
+  },
+  {
+   "id": "v02-crypto-B07",
+   "group": "on_topic",
+   "kept_titles": [
+    "ethereum.org: Merkle proofs for offline data integrity",
+    "Ethereum EIPs/ERCs: ERC-7585: MixHash and Public Data Storage Proofs",
+    "Merkle tree",
+    "Merkle signature scheme"
+   ],
+   "n_chunks": 36,
+   "n_table_candidates": 0,
+   "max_p": 0.3,
+   "best_title": "Khufu and Khafre",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-A01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 68,
+   "max_p": 0.38,
+   "best_title": "Undertow (water waves)",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-A02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.18,
+   "best_title": "Speaker Knockerz",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-A03",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 25,
+   "max_p": 0.11,
+   "best_title": "Lil Peep",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-A04",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 158,
+   "max_p": 0.31,
+   "best_title": "Airway management",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-B01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 30,
+   "n_table_candidates": 10,
+   "max_p": 0.09,
+   "best_title": "List of tsunamis affecting New Zealand",
+   "hits": []
+  },
+  {
+   "id": "v02-danger-B02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.33,
+   "best_title": "Rabies immunoglobulin",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-A01",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Orange City (Florida)"
+   ],
+   "n_chunks": 35,
+   "n_table_candidates": 1,
+   "max_p": 0.65,
+   "best_title": "Crepuscular rays",
+   "hits": [
+    {
+     "chunk": 720196,
+     "article": 224054,
+     "title": "Crepuscular rays",
+     "p": 0.65,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-A04",
+   "group": "on_topic",
+   "kept_titles": [
+    "Dead Sea (Jordan)"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 5,
+   "max_p": 0.33,
+   "best_title": "Jezreel Valley",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-A05",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.16,
+   "best_title": "Personification",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-A06",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 185,
+   "max_p": 0.62,
+   "best_title": "Geography of Bhutan",
+   "hits": [
+    {
+     "chunk": 240231,
+     "article": 108538,
+     "title": "Geography of Bhutan",
+     "p": 0.62,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-A07",
+   "group": "on_topic",
+   "kept_titles": [
+    "Earthquake safety"
+   ],
+   "n_chunks": 24,
+   "n_table_candidates": 0,
+   "max_p": 0.41,
+   "best_title": "1714 Bhutan earthquake",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-A09",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Hot weather"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 21,
+   "max_p": 0.85,
+   "best_title": "Season",
+   "hits": [
+    {
+     "chunk": 1227504,
+     "article": 278353,
+     "title": "Season",
+     "p": 0.85,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.89,
+     "verified": true
+    },
+    {
+     "chunk": 1227519,
+     "article": 278353,
+     "title": "Season",
+     "p": 0.63,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-A10",
+   "group": "on_topic",
+   "kept_titles": [
+    "Medieval Britain and Ireland"
+   ],
+   "n_chunks": 38,
+   "n_table_candidates": 0,
+   "max_p": 0.54,
+   "best_title": "Robert Fitzwalter",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-A11",
+   "group": "on_topic",
+   "kept_titles": [
+    "Rosetta",
+    "British Empire",
+    "Non-fungible token"
+   ],
+   "n_chunks": 28,
+   "n_table_candidates": 0,
+   "max_p": 0.11,
+   "best_title": "Indus script",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-B02",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "On the trail of Marco Polo"
+   ],
+   "n_chunks": 39,
+   "n_table_candidates": 0,
+   "max_p": 0.38,
+   "best_title": "Six Dynasties",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-B03",
+   "group": "on_topic",
+   "kept_titles": [
+    "Inflation"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 53,
+   "max_p": 0.74,
+   "best_title": "Inflation targeting",
+   "hits": [
+    {
+     "chunk": 964915,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.74,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.88,
+     "verified": true
+    },
+    {
+     "chunk": 964923,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.61,
+     "table": false,
+     "outside_top100k": true
+    },
+    {
+     "chunk": 964940,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.62,
+     "table": false,
+     "outside_top100k": true
+    },
+    {
+     "chunk": 964924,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.65,
+     "table": false,
+     "outside_top100k": true
+    },
+    {
+     "chunk": 964922,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.72,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.77,
+     "verified": true
+    },
+    {
+     "chunk": 964916,
+     "article": 253733,
+     "title": "Inflation targeting",
+     "p": 0.74,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.87,
+     "verified": true
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-B04",
+   "group": "on_topic",
+   "kept_titles": [
+    "Northern Sulawesi",
+    "Northern Lights",
+    "Finland"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 3,
+   "max_p": 0.21,
+   "best_title": "Atmosphere of Jupiter",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-B05",
+   "group": "on_topic",
+   "kept_titles": [
+    "Religion and spirituality",
+    "Buddhism"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 13,
+   "max_p": 0.29,
+   "best_title": "Virtue",
+   "hits": []
+  },
+  {
+   "id": "v02-explanation-B06",
+   "group": "on_topic",
+   "kept_titles": [
+    "Geocaching",
+    "GPS navigation"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 10,
+   "max_p": 0.92,
+   "best_title": "Global Positioning System",
+   "hits": [
+    {
+     "chunk": 1698560,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.74,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.51,
+     "verified": false
+    },
+    {
+     "chunk": 1698567,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.79,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.6,
+     "verified": false
+    },
+    {
+     "chunk": 1698517,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.61,
+     "table": false,
+     "outside_top100k": false
+    },
+    {
+     "chunk": 1698514,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.68,
+     "table": false,
+     "outside_top100k": false
+    },
+    {
+     "chunk": 1698512,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.92,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.8,
+     "verified": true
+    },
+    {
+     "chunk": 1698561,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.78,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.65,
+     "verified": false
+    },
+    {
+     "chunk": 1698515,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.64,
+     "table": false,
+     "outside_top100k": false
+    },
+    {
+     "chunk": 1698513,
+     "article": 308926,
+     "title": "Global Positioning System",
+     "p": 0.69,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-B07",
+   "group": "on_topic",
+   "kept_titles": [
+    "Halloween",
+    "Day of the Dead",
+    "Oaxaca (city)"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 0,
+   "max_p": 0.74,
+   "best_title": "Skull mexican make-up",
+   "hits": [
+    {
+     "chunk": 115842,
+     "article": 67702,
+     "title": "Skull mexican make-up",
+     "p": 0.74,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.51,
+     "verified": false
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-B09",
+   "group": "on_topic",
+   "kept_titles": [
+    "Sites of Japan's Meiji Industrial Revolution",
+    "Pre-modern Japan",
+    "Western food in Asia",
+    "Japanese colonial empire"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 57,
+   "max_p": 0.76,
+   "best_title": "Emperor Meiji",
+   "hits": [
+    {
+     "chunk": 1460035,
+     "article": 295455,
+     "title": "Emperor Meiji",
+     "p": 0.76,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.77,
+     "verified": true
+    }
+   ]
+  },
+  {
+   "id": "v02-explanation-B10",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "El Puig",
+    "Rhine"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 50,
+   "max_p": 0.58,
+   "best_title": "Mass production",
+   "hits": []
+  },
+  {
+   "id": "v02-health-A02",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Soltau",
+    "Fordingbridge"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 58,
+   "max_p": 0.16,
+   "best_title": "Narcolepsy",
+   "hits": []
+  },
+  {
+   "id": "v02-health-A03",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 29,
+   "n_table_candidates": 9,
+   "max_p": 0.54,
+   "best_title": "Energy drink",
+   "hits": []
+  },
+  {
+   "id": "v02-health-A04",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 30,
+   "max_p": 0.2,
+   "best_title": "Delayed sleep phase disorder",
+   "hits": []
+  },
+  {
+   "id": "v02-health-B01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 42,
+   "max_p": 0.1,
+   "best_title": "Sex differences in crime",
+   "hits": []
+  },
+  {
+   "id": "v02-health-B04",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Packing for beach travel"
+   ],
+   "n_chunks": 29,
+   "n_table_candidates": 1,
+   "max_p": 0.05,
+   "best_title": "Vitamin D",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-A02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 25,
+   "n_table_candidates": 5,
+   "max_p": 0.04,
+   "best_title": "Bronze Age Europe",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-A03",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.51,
+   "best_title": "Timeline of prehistory",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-A04",
+   "group": "on_topic",
+   "kept_titles": [
+    "San Francisco",
+    "San Diego"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 1,
+   "max_p": 0.25,
+   "best_title": "2021 Guerrero earthquake",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-A05",
+   "group": "on_topic",
+   "kept_titles": [
+    "Accra",
+    "United Kingdom"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 18,
+   "max_p": 0.18,
+   "best_title": "September 2022 United Kingdom mini-budget",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-A06",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Dubai",
+    "Architecture",
+    "Blanchard"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 49,
+   "max_p": 0.43,
+   "best_title": "Twin Towers 2",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-B01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 22,
+   "n_table_candidates": 2,
+   "max_p": 0.43,
+   "best_title": "Einstein's thought experiments",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-B02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 22,
+   "max_p": 0.18,
+   "best_title": "Mortier de 12 Gribeauval",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-B03",
+   "group": "on_topic",
+   "kept_titles": [
+    "Kazakhstan"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 16,
+   "max_p": 0.83,
+   "best_title": "Astana",
+   "hits": [
+    {
+     "chunk": 1103937,
+     "article": 267996,
+     "title": "Astana",
+     "p": 0.8,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.81,
+     "verified": true
+    },
+    {
+     "chunk": 1103931,
+     "article": 267996,
+     "title": "Astana",
+     "p": 0.83,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.88,
+     "verified": true
+    },
+    {
+     "chunk": 1103927,
+     "article": 267996,
+     "title": "Astana",
+     "p": 0.68,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-honesty-refusal-B04",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 23,
+   "max_p": 0.23,
+   "best_title": "Ripper (video game)",
+   "hits": []
+  },
+  {
+   "id": "v02-honesty-refusal-B06",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.32,
+   "best_title": "Susana Malcorra",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-A04",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 21,
+   "max_p": 0.08,
+   "best_title": "IPLEDGE program",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-A05",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 24,
+   "max_p": 0.08,
+   "best_title": "San Juan, Puerto Rico",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-A09",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.2,
+   "best_title": "Holocene calendar",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-A10",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 23,
+   "max_p": 0.06,
+   "best_title": "(458732) 2011 MD5",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-B04",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 29,
+   "n_table_candidates": 9,
+   "max_p": 0.24,
+   "best_title": "Education in Russia",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-B05",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 31,
+   "max_p": 0.06,
+   "best_title": "Meter Point Administration Number",
+   "hits": []
+  },
+  {
+   "id": "v02-reasoning-B06",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Rome (New York)",
+    "Rome/North"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 6,
+   "max_p": 0.63,
+   "best_title": "Geography of Norway",
+   "hits": [
+    {
+     "chunk": 1674396,
+     "article": 307715,
+     "title": "Geography of Norway",
+     "p": 0.63,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-reasoning-B08",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 30,
+   "n_table_candidates": 10,
+   "max_p": 0.88,
+   "best_title": "Leap year",
+   "hits": [
+    {
+     "chunk": 1421202,
+     "article": 293198,
+     "title": "Leap year",
+     "p": 0.83,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.82,
+     "verified": true
+    },
+    {
+     "chunk": 1421201,
+     "article": 293198,
+     "title": "Leap year",
+     "p": 0.88,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.85,
+     "verified": true
+    },
+    {
+     "chunk": 1421200,
+     "article": 293198,
+     "title": "Leap year",
+     "p": 0.65,
+     "table": false,
+     "outside_top100k": false
+    },
+    {
+     "chunk": 1421197,
+     "article": 293198,
+     "title": "Leap year",
+     "p": 0.64,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-reasoning-B10",
+   "group": "on_topic",
+   "kept_titles": [
+    "Monarchy of the United Kingdom",
+    "Australia"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 39,
+   "max_p": 0.6,
+   "best_title": "Glock",
+   "hits": [
+    {
+     "chunk": 1564407,
+     "article": 301888,
+     "title": "Glock",
+     "p": 0.6,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-synthesis-A01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 23,
+   "n_table_candidates": 3,
+   "max_p": 0.14,
+   "best_title": "Geography of Kazakhstan",
+   "hits": []
+  },
+  {
+   "id": "v02-synthesis-A03",
+   "group": "off_topic_kept",
+   "kept_titles": [
+    "Northern Lowlands (Guatemala)"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 127,
+   "max_p": 0.3,
+   "best_title": "David A. Hodell",
+   "hits": []
+  },
+  {
+   "id": "v02-synthesis-B01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Fall of the Western Roman Empire",
+    "Byzantine Empire",
+    "Roman Empire"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 92,
+   "max_p": 0.75,
+   "best_title": "History of the Roman Empire",
+   "hits": [
+    {
+     "chunk": 280491,
+     "article": 118775,
+     "title": "History of the Roman Empire",
+     "p": 0.75,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.85,
+     "verified": true
+    },
+    {
+     "chunk": 1414207,
+     "article": 292662,
+     "title": "List of Roman emperors",
+     "p": 0.6,
+     "table": false,
+     "outside_top100k": false
+    }
+   ]
+  },
+  {
+   "id": "v02-synthesis-B02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 20,
+   "n_table_candidates": 0,
+   "max_p": 0.68,
+   "best_title": "1815",
+   "hits": [
+    {
+     "chunk": 592075,
+     "article": 203414,
+     "title": "1815",
+     "p": 0.68,
+     "table": false,
+     "outside_top100k": true
+    }
+   ]
+  },
+  {
+   "id": "v02-synthesis-B03",
+   "group": "on_topic",
+   "kept_titles": [
+    "Industrial Revolution",
+    "Manchester"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 9,
+   "max_p": 0.86,
+   "best_title": "History of Liverpool",
+   "hits": [
+    {
+     "chunk": 261063,
+     "article": 113962,
+     "title": "Cottonopolis",
+     "p": 0.78,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.86,
+     "verified": true
+    },
+    {
+     "chunk": 261062,
+     "article": 113962,
+     "title": "Cottonopolis",
+     "p": 0.74,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.7,
+     "verified": true
+    },
+    {
+     "chunk": 403423,
+     "article": 158690,
+     "title": "History of Liverpool",
+     "p": 0.86,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.9,
+     "verified": true
+    },
+    {
+     "chunk": 1390311,
+     "article": 291270,
+     "title": "Salford",
+     "p": 0.63,
+     "table": false,
+     "outside_top100k": false
+    },
+    {
+     "chunk": 1390278,
+     "article": 291270,
+     "title": "Salford",
+     "p": 0.84,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.84,
+     "verified": true
+    },
+    {
+     "chunk": 1271064,
+     "article": 281923,
+     "title": "Lancashire",
+     "p": 0.7,
+     "table": false,
+     "outside_top100k": false,
+     "quote_p": 0.66,
+     "verified": false
+    },
+    {
+     "chunk": 1221882,
+     "article": 277795,
+     "title": "Warehouse",
+     "p": 0.76,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.83,
+     "verified": true
+    }
+   ]
+  },
+  {
+   "id": "v02-travel-local-B01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Venice",
+    "Venice/Castello"
+   ],
+   "n_chunks": 40,
+   "n_table_candidates": 32,
+   "max_p": 0.5,
+   "best_title": "Arnside",
+   "hits": []
+  },
+  {
+   "id": "v02-travel-practical-A01",
+   "group": "on_topic",
+   "kept_titles": [
+    "Driving in Italy",
+    "Italy"
+   ],
+   "n_chunks": 37,
+   "n_table_candidates": 2,
+   "max_p": 0.17,
+   "best_title": "Driving in the United Kingdom",
+   "hits": []
+  },
+  {
+   "id": "v02-travel-practical-A02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 57,
+   "max_p": 0.26,
+   "best_title": "Visa requirements for Saint Kitts and Nevis citizens",
+   "hits": []
+  },
+  {
+   "id": "v02-travel-practical-B01",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 55,
+   "max_p": 0.7,
+   "best_title": "Nikon D200",
+   "hits": [
+    {
+     "chunk": 72344,
+     "article": 43423,
+     "title": "Nikon D200",
+     "p": 0.7,
+     "table": false,
+     "outside_top100k": true,
+     "quote_p": 0.76,
+     "verified": true
+    }
+   ]
+  },
+  {
+   "id": "v02-travel-practical-B02",
+   "group": "no_kept",
+   "kept_titles": [],
+   "n_chunks": 40,
+   "n_table_candidates": 136,
+   "max_p": 0.36,
+   "best_title": "European driving licence",
+   "hits": []
+  }
+ ]
+}

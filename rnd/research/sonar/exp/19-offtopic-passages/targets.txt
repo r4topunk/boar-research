@@ -1,0 +1,20 @@
+--- drop if passCos < 0.6, never empty
+         lan-cmp-001: drop [('Wikivoyage: Russia', 0.562, 'same-subject-unhelpful')]
+         lan-ref-002: drop [('Wikivoyage: American Civil War', 0.592, 'same-subject-unhelpful')]
+         lan-rsn-007: drop [('Wikivoyage: Berlin Wall', 0.583, 'same-subject-unhelpful')]
+         trv-004: drop [('Wikivoyage: Lisbon Airport', 0.527, 'same-subject-unhelpful')]
+  TARGET vit-trv-003: drop [('Wikivoyage: Chiang Mai', 0.597, 'same-subject-unhelpful')]
+--- drop if passCos < 0.65, never empty
+         lan-cmp-001: drop [('Wikivoyage: Russia', 0.562, 'same-subject-unhelpful')]
+         lan-exp-006: drop [('Wikivoyage: Volcanoes', 0.61, 'helpful')]
+         lan-ref-002: drop [('Wikivoyage: American Civil War', 0.592, 'same-subject-unhelpful')]
+         lan-rsn-001: drop [('Wikivoyage: Beijing/Xicheng', 0.629, 'off-topic')]
+         lan-rsn-007: drop [('Wikivoyage: Berlin Wall', 0.607, 'same-subject-unhelpful'), ('Wikivoyage: Berlin Wall', 0.583, 'same-subject-unhelpful')]
+         trv-004: drop [('Wikivoyage: Lisbon Airport', 0.625, 'same-subject-unhelpful'), ('Wikivoyage: Lisbon Airport', 0.527, 'same-subject-unhelpful')]
+  TARGET vit-trv-003: drop [('Wikivoyage: Chiang Mai', 0.597, 'same-subject-unhelpful')]
+--- Compass target items: all passages
+  lan-cmp-003 Wikivoyage: India passCos 0.703 same-subject-unhelpful
+  lan-exp-002 Wikivoyage: Montenegro passCos 0.743 helpful
+  vit-cry-002 Ethereum EIPs/ERCs: EIP-8369: VOPS Profiles for FOCIL Eligibility passCos 0.631 same-subject-unhelpful
+  vit-trv-003 Wikivoyage: Chiang Mai passCos 0.667 same-subject-unhelpful
+  vit-trv-003 Wikivoyage: Chiang Mai passCos 0.597 same-subject-unhelpful

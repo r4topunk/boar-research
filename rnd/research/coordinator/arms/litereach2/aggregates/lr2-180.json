@@ -1,0 +1,2204 @@
+{
+ "criterion_sha256": "0f51560601e309a76f06e87371461e868bf3a38c95d0f8e27988ad0aad4f012c",
+ "estimator": "l2_agg.py per-item bootstrap ratio-of-sums diff, B 2000, seed 11, paired on queryId",
+ "judge": "claude-haiku-5-5 effort low, N=4 shards, both orders",
+ "groups": {
+  "pooled": {
+   "n": 180,
+   "stats": {
+    "B20": {
+     "n": 180,
+     "raw": 0.491,
+     "raw_ci": [
+      0.471,
+      0.513
+     ],
+     "above_min": 0.348,
+     "above_min_ci": [
+      0.322,
+      0.376
+     ],
+     "win_tie_loss": [
+      0,
+      2,
+      178
+     ],
+     "pos_consistency": 0.989
+    },
+    "ON": {
+     "n": 180,
+     "raw": 0.486,
+     "raw_ci": [
+      0.466,
+      0.505
+     ],
+     "above_min": 0.342,
+     "above_min_ci": [
+      0.317,
+      0.368
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      180
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 180,
+     "raw": 0.415,
+     "raw_ci": [
+      0.394,
+      0.436
+     ],
+     "above_min": 0.251,
+     "above_min_ci": [
+      0.225,
+      0.278
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      180
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 180,
+     "raw": 0.493,
+     "raw_ci": [
+      0.47,
+      0.516
+     ],
+     "above_min": 0.351,
+     "above_min_ci": [
+      0.322,
+      0.38
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      180
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 180,
+     "raw": 0.549,
+     "raw_ci": [
+      0.526,
+      0.57
+     ],
+     "above_min": 0.421,
+     "above_min_ci": [
+      0.392,
+      0.448
+     ],
+     "win_tie_loss": [
+      0,
+      2,
+      178
+     ],
+     "pos_consistency": 0.989
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 180,
+     "d_raw": 0.005,
+     "d_raw_ci": [
+      -0.014,
+      0.025
+     ],
+     "d_above_min": 0.005,
+     "d_above_min_ci": [
+      -0.02,
+      0.03
+     ],
+     "items_better_worse": [
+      78,
+      62
+     ]
+    },
+    "B20-OFF": {
+     "n": 180,
+     "d_raw": 0.076,
+     "d_raw_ci": [
+      0.051,
+      0.101
+     ],
+     "d_above_min": 0.097,
+     "d_above_min_ci": [
+      0.065,
+      0.128
+     ],
+     "items_better_worse": [
+      101,
+      45
+     ]
+    },
+    "B20-C4B": {
+     "n": 180,
+     "d_raw": -0.001,
+     "d_raw_ci": [
+      -0.025,
+      0.022
+     ],
+     "d_above_min": -0.003,
+     "d_above_min_ci": [
+      -0.033,
+      0.026
+     ],
+     "items_better_worse": [
+      67,
+      88
+     ]
+    },
+    "B20-X4B": {
+     "n": 180,
+     "d_raw": -0.057,
+     "d_raw_ci": [
+      -0.08,
+      -0.035
+     ],
+     "d_above_min": -0.073,
+     "d_above_min_ci": [
+      -0.102,
+      -0.045
+     ],
+     "items_better_worse": [
+      45,
+      106
+     ]
+    },
+    "ON-OFF": {
+     "n": 180,
+     "d_raw": 0.071,
+     "d_raw_ci": [
+      0.048,
+      0.094
+     ],
+     "d_above_min": 0.091,
+     "d_above_min_ci": [
+      0.062,
+      0.121
+     ],
+     "items_better_worse": [
+      92,
+      51
+     ]
+    }
+   }
+  },
+  "SE": {
+   "n": 100,
+   "stats": {
+    "B20": {
+     "n": 100,
+     "raw": 0.486,
+     "raw_ci": [
+      0.46,
+      0.511
+     ],
+     "above_min": 0.34,
+     "above_min_ci": [
+      0.307,
+      0.371
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      100
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 100,
+     "raw": 0.483,
+     "raw_ci": [
+      0.458,
+      0.507
+     ],
+     "above_min": 0.337,
+     "above_min_ci": [
+      0.305,
+      0.367
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      100
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 100,
+     "raw": 0.414,
+     "raw_ci": [
+      0.385,
+      0.441
+     ],
+     "above_min": 0.246,
+     "above_min_ci": [
+      0.211,
+      0.281
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      100
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 100,
+     "raw": 0.49,
+     "raw_ci": [
+      0.459,
+      0.52
+     ],
+     "above_min": 0.345,
+     "above_min_ci": [
+      0.306,
+      0.384
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      100
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 100,
+     "raw": 0.55,
+     "raw_ci": [
+      0.522,
+      0.578
+     ],
+     "above_min": 0.422,
+     "above_min_ci": [
+      0.387,
+      0.457
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      100
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 100,
+     "d_raw": 0.003,
+     "d_raw_ci": [
+      -0.018,
+      0.024
+     ],
+     "d_above_min": 0.003,
+     "d_above_min_ci": [
+      -0.026,
+      0.03
+     ],
+     "items_better_worse": [
+      43,
+      34
+     ]
+    },
+    "B20-OFF": {
+     "n": 100,
+     "d_raw": 0.073,
+     "d_raw_ci": [
+      0.042,
+      0.104
+     ],
+     "d_above_min": 0.094,
+     "d_above_min_ci": [
+      0.054,
+      0.133
+     ],
+     "items_better_worse": [
+      54,
+      26
+     ]
+    },
+    "B20-C4B": {
+     "n": 100,
+     "d_raw": -0.004,
+     "d_raw_ci": [
+      -0.035,
+      0.026
+     ],
+     "d_above_min": -0.005,
+     "d_above_min_ci": [
+      -0.045,
+      0.033
+     ],
+     "items_better_worse": [
+      38,
+      51
+     ]
+    },
+    "B20-X4B": {
+     "n": 100,
+     "d_raw": -0.064,
+     "d_raw_ci": [
+      -0.092,
+      -0.038
+     ],
+     "d_above_min": -0.082,
+     "d_above_min_ci": [
+      -0.119,
+      -0.049
+     ],
+     "items_better_worse": [
+      24,
+      64
+     ]
+    },
+    "ON-OFF": {
+     "n": 100,
+     "d_raw": 0.069,
+     "d_raw_ci": [
+      0.038,
+      0.1
+     ],
+     "d_above_min": 0.091,
+     "d_above_min_ci": [
+      0.052,
+      0.131
+     ],
+     "items_better_worse": [
+      52,
+      27
+     ]
+    }
+   }
+  },
+  "topic": {
+   "n": 80,
+   "stats": {
+    "B20": {
+     "n": 80,
+     "raw": 0.497,
+     "raw_ci": [
+      0.46,
+      0.534
+     ],
+     "above_min": 0.358,
+     "above_min_ci": [
+      0.311,
+      0.403
+     ],
+     "win_tie_loss": [
+      0,
+      2,
+      78
+     ],
+     "pos_consistency": 0.975
+    },
+    "ON": {
+     "n": 80,
+     "raw": 0.489,
+     "raw_ci": [
+      0.455,
+      0.521
+     ],
+     "above_min": 0.349,
+     "above_min_ci": [
+      0.306,
+      0.391
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      80
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 80,
+     "raw": 0.416,
+     "raw_ci": [
+      0.384,
+      0.449
+     ],
+     "above_min": 0.257,
+     "above_min_ci": [
+      0.217,
+      0.299
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      80
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 80,
+     "raw": 0.496,
+     "raw_ci": [
+      0.459,
+      0.533
+     ],
+     "above_min": 0.358,
+     "above_min_ci": [
+      0.311,
+      0.406
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      80
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 80,
+     "raw": 0.547,
+     "raw_ci": [
+      0.509,
+      0.583
+     ],
+     "above_min": 0.42,
+     "above_min_ci": [
+      0.372,
+      0.466
+     ],
+     "win_tie_loss": [
+      0,
+      2,
+      78
+     ],
+     "pos_consistency": 0.975
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 80,
+     "d_raw": 0.008,
+     "d_raw_ci": [
+      -0.027,
+      0.043
+     ],
+     "d_above_min": 0.009,
+     "d_above_min_ci": [
+      -0.036,
+      0.052
+     ],
+     "items_better_worse": [
+      35,
+      28
+     ]
+    },
+    "B20-OFF": {
+     "n": 80,
+     "d_raw": 0.081,
+     "d_raw_ci": [
+      0.04,
+      0.121
+     ],
+     "d_above_min": 0.101,
+     "d_above_min_ci": [
+      0.049,
+      0.151
+     ],
+     "items_better_worse": [
+      47,
+      19
+     ]
+    },
+    "B20-C4B": {
+     "n": 80,
+     "d_raw": 0.002,
+     "d_raw_ci": [
+      -0.034,
+      0.038
+     ],
+     "d_above_min": -0.0,
+     "d_above_min_ci": [
+      -0.045,
+      0.046
+     ],
+     "items_better_worse": [
+      29,
+      37
+     ]
+    },
+    "B20-X4B": {
+     "n": 80,
+     "d_raw": -0.049,
+     "d_raw_ci": [
+      -0.089,
+      -0.013
+     ],
+     "d_above_min": -0.062,
+     "d_above_min_ci": [
+      -0.111,
+      -0.017
+     ],
+     "items_better_worse": [
+      21,
+      42
+     ]
+    },
+    "ON-OFF": {
+     "n": 80,
+     "d_raw": 0.073,
+     "d_raw_ci": [
+      0.039,
+      0.106
+     ],
+     "d_above_min": 0.092,
+     "d_above_min_ci": [
+      0.05,
+      0.134
+     ],
+     "items_better_worse": [
+      40,
+      24
+     ]
+    }
+   }
+  },
+  "split:gained": {
+   "n": 22,
+   "stats": {
+    "B20": {
+     "n": 22,
+     "raw": 0.513,
+     "raw_ci": [
+      0.455,
+      0.574
+     ],
+     "above_min": 0.373,
+     "above_min_ci": [
+      0.299,
+      0.45
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      21
+     ],
+     "pos_consistency": 0.955
+    },
+    "ON": {
+     "n": 22,
+     "raw": 0.457,
+     "raw_ci": [
+      0.401,
+      0.514
+     ],
+     "above_min": 0.305,
+     "above_min_ci": [
+      0.234,
+      0.376
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      22
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 22,
+     "raw": 0.409,
+     "raw_ci": [
+      0.356,
+      0.46
+     ],
+     "above_min": 0.243,
+     "above_min_ci": [
+      0.177,
+      0.307
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      22
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 22,
+     "raw": 0.524,
+     "raw_ci": [
+      0.465,
+      0.586
+     ],
+     "above_min": 0.389,
+     "above_min_ci": [
+      0.312,
+      0.465
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      22
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 22,
+     "raw": 0.535,
+     "raw_ci": [
+      0.479,
+      0.589
+     ],
+     "above_min": 0.4,
+     "above_min_ci": [
+      0.333,
+      0.467
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      21
+     ],
+     "pos_consistency": 0.955
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 22,
+     "d_raw": 0.056,
+     "d_raw_ci": [
+      -0.004,
+      0.108
+     ],
+     "d_above_min": 0.068,
+     "d_above_min_ci": [
+      -0.008,
+      0.135
+     ],
+     "items_better_worse": [
+      14,
+      4
+     ]
+    },
+    "B20-OFF": {
+     "n": 22,
+     "d_raw": 0.104,
+     "d_raw_ci": [
+      0.048,
+      0.171
+     ],
+     "d_above_min": 0.131,
+     "d_above_min_ci": [
+      0.061,
+      0.214
+     ],
+     "items_better_worse": [
+      15,
+      2
+     ]
+    },
+    "B20-C4B": {
+     "n": 22,
+     "d_raw": -0.012,
+     "d_raw_ci": [
+      -0.062,
+      0.043
+     ],
+     "d_above_min": -0.016,
+     "d_above_min_ci": [
+      -0.08,
+      0.054
+     ],
+     "items_better_worse": [
+      7,
+      12
+     ]
+    },
+    "B20-X4B": {
+     "n": 22,
+     "d_raw": -0.022,
+     "d_raw_ci": [
+      -0.07,
+      0.026
+     ],
+     "d_above_min": -0.027,
+     "d_above_min_ci": [
+      -0.089,
+      0.032
+     ],
+     "items_better_worse": [
+      8,
+      11
+     ]
+    },
+    "ON-OFF": {
+     "n": 22,
+     "d_raw": 0.048,
+     "d_raw_ci": [
+      -0.026,
+      0.132
+     ],
+     "d_above_min": 0.063,
+     "d_above_min_ci": [
+      -0.032,
+      0.165
+     ],
+     "items_better_worse": [
+      10,
+      8
+     ]
+    }
+   }
+  },
+  "split:rest": {
+   "n": 158,
+   "stats": {
+    "B20": {
+     "n": 158,
+     "raw": 0.488,
+     "raw_ci": [
+      0.465,
+      0.512
+     ],
+     "above_min": 0.344,
+     "above_min_ci": [
+      0.315,
+      0.374
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      157
+     ],
+     "pos_consistency": 0.994
+    },
+    "ON": {
+     "n": 158,
+     "raw": 0.49,
+     "raw_ci": [
+      0.468,
+      0.511
+     ],
+     "above_min": 0.348,
+     "above_min_ci": [
+      0.32,
+      0.374
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      158
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 158,
+     "raw": 0.416,
+     "raw_ci": [
+      0.394,
+      0.439
+     ],
+     "above_min": 0.252,
+     "above_min_ci": [
+      0.225,
+      0.281
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      158
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 158,
+     "raw": 0.488,
+     "raw_ci": [
+      0.464,
+      0.513
+     ],
+     "above_min": 0.345,
+     "above_min_ci": [
+      0.315,
+      0.377
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      158
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 158,
+     "raw": 0.55,
+     "raw_ci": [
+      0.527,
+      0.574
+     ],
+     "above_min": 0.424,
+     "above_min_ci": [
+      0.394,
+      0.454
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      157
+     ],
+     "pos_consistency": 0.994
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 158,
+     "d_raw": -0.001,
+     "d_raw_ci": [
+      -0.021,
+      0.019
+     ],
+     "d_above_min": -0.003,
+     "d_above_min_ci": [
+      -0.028,
+      0.023
+     ],
+     "items_better_worse": [
+      64,
+      58
+     ]
+    },
+    "B20-OFF": {
+     "n": 158,
+     "d_raw": 0.073,
+     "d_raw_ci": [
+      0.046,
+      0.1
+     ],
+     "d_above_min": 0.092,
+     "d_above_min_ci": [
+      0.058,
+      0.127
+     ],
+     "items_better_worse": [
+      86,
+      43
+     ]
+    },
+    "B20-C4B": {
+     "n": 158,
+     "d_raw": 0.0,
+     "d_raw_ci": [
+      -0.026,
+      0.025
+     ],
+     "d_above_min": -0.001,
+     "d_above_min_ci": [
+      -0.035,
+      0.031
+     ],
+     "items_better_worse": [
+      60,
+      76
+     ]
+    },
+    "B20-X4B": {
+     "n": 158,
+     "d_raw": -0.062,
+     "d_raw_ci": [
+      -0.087,
+      -0.039
+     ],
+     "d_above_min": -0.08,
+     "d_above_min_ci": [
+      -0.111,
+      -0.051
+     ],
+     "items_better_worse": [
+      37,
+      95
+     ]
+    },
+    "ON-OFF": {
+     "n": 158,
+     "d_raw": 0.074,
+     "d_raw_ci": [
+      0.052,
+      0.097
+     ],
+     "d_above_min": 0.095,
+     "d_above_min_ci": [
+      0.068,
+      0.124
+     ],
+     "items_better_worse": [
+      82,
+      43
+     ]
+    }
+   }
+  },
+  "pack:qa-travel-se": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.458,
+     "raw_ci": [
+      0.406,
+      0.505
+     ],
+     "above_min": 0.306,
+     "above_min_ci": [
+      0.242,
+      0.364
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.49,
+     "raw_ci": [
+      0.434,
+      0.544
+     ],
+     "above_min": 0.347,
+     "above_min_ci": [
+      0.277,
+      0.416
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.371,
+     "raw_ci": [
+      0.324,
+      0.418
+     ],
+     "above_min": 0.189,
+     "above_min_ci": [
+      0.132,
+      0.249
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.423,
+     "raw_ci": [
+      0.36,
+      0.484
+     ],
+     "above_min": 0.262,
+     "above_min_ci": [
+      0.182,
+      0.341
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.567,
+     "raw_ci": [
+      0.502,
+      0.63
+     ],
+     "above_min": 0.438,
+     "above_min_ci": [
+      0.356,
+      0.518
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": -0.032,
+     "d_raw_ci": [
+      -0.079,
+      0.011
+     ],
+     "d_above_min": -0.041,
+     "d_above_min_ci": [
+      -0.103,
+      0.014
+     ],
+     "items_better_worse": [
+      8,
+      10
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.119,
+     "d_raw_ci": [
+      0.055,
+      0.187
+     ],
+     "d_above_min": 0.158,
+     "d_above_min_ci": [
+      0.077,
+      0.242
+     ],
+     "items_better_worse": [
+      16,
+      4
+     ]
+    }
+   }
+  },
+  "pack:qa-ethereum-se": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.465,
+     "raw_ci": [
+      0.405,
+      0.522
+     ],
+     "above_min": 0.305,
+     "above_min_ci": [
+      0.227,
+      0.378
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.487,
+     "raw_ci": [
+      0.422,
+      0.544
+     ],
+     "above_min": 0.337,
+     "above_min_ci": [
+      0.252,
+      0.41
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.409,
+     "raw_ci": [
+      0.341,
+      0.472
+     ],
+     "above_min": 0.233,
+     "above_min_ci": [
+      0.145,
+      0.315
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.516,
+     "raw_ci": [
+      0.454,
+      0.577
+     ],
+     "above_min": 0.375,
+     "above_min_ci": [
+      0.295,
+      0.452
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.588,
+     "raw_ci": [
+      0.529,
+      0.645
+     ],
+     "above_min": 0.47,
+     "above_min_ci": [
+      0.393,
+      0.544
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": -0.021,
+     "d_raw_ci": [
+      -0.086,
+      0.042
+     ],
+     "d_above_min": -0.032,
+     "d_above_min_ci": [
+      -0.117,
+      0.053
+     ],
+     "items_better_worse": [
+      5,
+      8
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.078,
+     "d_raw_ci": [
+      0.014,
+      0.145
+     ],
+     "d_above_min": 0.103,
+     "d_above_min_ci": [
+      0.022,
+      0.188
+     ],
+     "items_better_worse": [
+      12,
+      4
+     ]
+    }
+   }
+  },
+  "pack:qa-bitcoin-se": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.515,
+     "raw_ci": [
+      0.457,
+      0.57
+     ],
+     "above_min": 0.377,
+     "above_min_ci": [
+      0.305,
+      0.447
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.481,
+     "raw_ci": [
+      0.42,
+      0.536
+     ],
+     "above_min": 0.333,
+     "above_min_ci": [
+      0.255,
+      0.403
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.392,
+     "raw_ci": [
+      0.328,
+      0.463
+     ],
+     "above_min": 0.22,
+     "above_min_ci": [
+      0.14,
+      0.308
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.469,
+     "raw_ci": [
+      0.382,
+      0.556
+     ],
+     "above_min": 0.318,
+     "above_min_ci": [
+      0.209,
+      0.429
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.513,
+     "raw_ci": [
+      0.438,
+      0.588
+     ],
+     "above_min": 0.374,
+     "above_min_ci": [
+      0.276,
+      0.471
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": 0.034,
+     "d_raw_ci": [
+      -0.011,
+      0.084
+     ],
+     "d_above_min": 0.044,
+     "d_above_min_ci": [
+      -0.012,
+      0.108
+     ],
+     "items_better_worse": [
+      8,
+      5
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.088,
+     "d_raw_ci": [
+      0.017,
+      0.166
+     ],
+     "d_above_min": 0.113,
+     "d_above_min_ci": [
+      0.022,
+      0.208
+     ],
+     "items_better_worse": [
+      9,
+      5
+     ]
+    }
+   }
+  },
+  "pack:qa-health-se": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.518,
+     "raw_ci": [
+      0.458,
+      0.572
+     ],
+     "above_min": 0.38,
+     "above_min_ci": [
+      0.305,
+      0.451
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.515,
+     "raw_ci": [
+      0.459,
+      0.565
+     ],
+     "above_min": 0.379,
+     "above_min_ci": [
+      0.308,
+      0.442
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.429,
+     "raw_ci": [
+      0.377,
+      0.483
+     ],
+     "above_min": 0.27,
+     "above_min_ci": [
+      0.206,
+      0.336
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.525,
+     "raw_ci": [
+      0.463,
+      0.586
+     ],
+     "above_min": 0.39,
+     "above_min_ci": [
+      0.312,
+      0.467
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.57,
+     "raw_ci": [
+      0.511,
+      0.623
+     ],
+     "above_min": 0.448,
+     "above_min_ci": [
+      0.372,
+      0.516
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": 0.003,
+     "d_raw_ci": [
+      -0.041,
+      0.042
+     ],
+     "d_above_min": 0.002,
+     "d_above_min_ci": [
+      -0.057,
+      0.051
+     ],
+     "items_better_worse": [
+      12,
+      6
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.086,
+     "d_raw_ci": [
+      0.024,
+      0.154
+     ],
+     "d_above_min": 0.109,
+     "d_above_min_ci": [
+      0.029,
+      0.197
+     ],
+     "items_better_worse": [
+      9,
+      5
+     ]
+    }
+   }
+  },
+  "pack:qa-outdoors-se": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.476,
+     "raw_ci": [
+      0.426,
+      0.527
+     ],
+     "above_min": 0.33,
+     "above_min_ci": [
+      0.266,
+      0.396
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.444,
+     "raw_ci": [
+      0.399,
+      0.493
+     ],
+     "above_min": 0.29,
+     "above_min_ci": [
+      0.234,
+      0.351
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.467,
+     "raw_ci": [
+      0.416,
+      0.519
+     ],
+     "above_min": 0.316,
+     "above_min_ci": [
+      0.251,
+      0.383
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.518,
+     "raw_ci": [
+      0.464,
+      0.575
+     ],
+     "above_min": 0.383,
+     "above_min_ci": [
+      0.313,
+      0.453
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.515,
+     "raw_ci": [
+      0.466,
+      0.564
+     ],
+     "above_min": 0.384,
+     "above_min_ci": [
+      0.321,
+      0.447
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": 0.032,
+     "d_raw_ci": [
+      -0.001,
+      0.065
+     ],
+     "d_above_min": 0.04,
+     "d_above_min_ci": [
+      -0.004,
+      0.084
+     ],
+     "items_better_worse": [
+      10,
+      5
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": -0.023,
+     "d_raw_ci": [
+      -0.067,
+      0.03
+     ],
+     "d_above_min": -0.026,
+     "d_above_min_ci": [
+      -0.082,
+      0.041
+     ],
+     "items_better_worse": [
+      6,
+      9
+     ]
+    }
+   }
+  },
+  "pack:boar-firstaid-en": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.483,
+     "raw_ci": [
+      0.424,
+      0.547
+     ],
+     "above_min": 0.333,
+     "above_min_ci": [
+      0.26,
+      0.413
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      19
+     ],
+     "pos_consistency": 0.95
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.45,
+     "raw_ci": [
+      0.405,
+      0.497
+     ],
+     "above_min": 0.294,
+     "above_min_ci": [
+      0.238,
+      0.352
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.42,
+     "raw_ci": [
+      0.377,
+      0.467
+     ],
+     "above_min": 0.255,
+     "above_min_ci": [
+      0.201,
+      0.312
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.471,
+     "raw_ci": [
+      0.414,
+      0.529
+     ],
+     "above_min": 0.322,
+     "above_min_ci": [
+      0.248,
+      0.394
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.482,
+     "raw_ci": [
+      0.42,
+      0.551
+     ],
+     "above_min": 0.333,
+     "above_min_ci": [
+      0.255,
+      0.418
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      19
+     ],
+     "pos_consistency": 0.95
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": 0.033,
+     "d_raw_ci": [
+      0.006,
+      0.061
+     ],
+     "d_above_min": 0.039,
+     "d_above_min_ci": [
+      0.007,
+      0.073
+     ],
+     "items_better_worse": [
+      10,
+      3
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.03,
+     "d_raw_ci": [
+      -0.006,
+      0.067
+     ],
+     "d_above_min": 0.039,
+     "d_above_min_ci": [
+      -0.006,
+      0.085
+     ],
+     "items_better_worse": [
+      10,
+      6
+     ]
+    }
+   }
+  },
+  "pack:boar-medlineplus-en": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.516,
+     "raw_ci": [
+      0.466,
+      0.562
+     ],
+     "above_min": 0.388,
+     "above_min_ci": [
+      0.323,
+      0.447
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.525,
+     "raw_ci": [
+      0.471,
+      0.578
+     ],
+     "above_min": 0.4,
+     "above_min_ci": [
+      0.33,
+      0.469
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.436,
+     "raw_ci": [
+      0.378,
+      0.494
+     ],
+     "above_min": 0.286,
+     "above_min_ci": [
+      0.212,
+      0.362
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.508,
+     "raw_ci": [
+      0.442,
+      0.574
+     ],
+     "above_min": 0.378,
+     "above_min_ci": [
+      0.292,
+      0.463
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.549,
+     "raw_ci": [
+      0.491,
+      0.606
+     ],
+     "above_min": 0.428,
+     "above_min_ci": [
+      0.352,
+      0.5
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": -0.009,
+     "d_raw_ci": [
+      -0.043,
+      0.024
+     ],
+     "d_above_min": -0.013,
+     "d_above_min_ci": [
+      -0.054,
+      0.029
+     ],
+     "items_better_worse": [
+      6,
+      12
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.09,
+     "d_raw_ci": [
+      0.033,
+      0.147
+     ],
+     "d_above_min": 0.114,
+     "d_above_min_ci": [
+      0.043,
+      0.186
+     ],
+     "items_better_worse": [
+      12,
+      5
+     ]
+    }
+   }
+  },
+  "pack:boar-factbook": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.476,
+     "raw_ci": [
+      0.38,
+      0.579
+     ],
+     "above_min": 0.331,
+     "above_min_ci": [
+      0.214,
+      0.459
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      19
+     ],
+     "pos_consistency": 0.95
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.484,
+     "raw_ci": [
+      0.394,
+      0.577
+     ],
+     "above_min": 0.342,
+     "above_min_ci": [
+      0.23,
+      0.461
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.367,
+     "raw_ci": [
+      0.309,
+      0.428
+     ],
+     "above_min": 0.198,
+     "above_min_ci": [
+      0.126,
+      0.272
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.438,
+     "raw_ci": [
+      0.378,
+      0.501
+     ],
+     "above_min": 0.287,
+     "above_min_ci": [
+      0.212,
+      0.364
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.565,
+     "raw_ci": [
+      0.487,
+      0.652
+     ],
+     "above_min": 0.442,
+     "above_min_ci": [
+      0.345,
+      0.55
+     ],
+     "win_tie_loss": [
+      0,
+      1,
+      19
+     ],
+     "pos_consistency": 0.95
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": -0.008,
+     "d_raw_ci": [
+      -0.13,
+      0.108
+     ],
+     "d_above_min": -0.011,
+     "d_above_min_ci": [
+      -0.163,
+      0.134
+     ],
+     "items_better_worse": [
+      9,
+      8
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.117,
+     "d_raw_ci": [
+      0.025,
+      0.218
+     ],
+     "d_above_min": 0.144,
+     "d_above_min_ci": [
+      0.031,
+      0.269
+     ],
+     "items_better_worse": [
+      11,
+      6
+     ]
+    }
+   }
+  },
+  "pack:boar-simplewiki-en": {
+   "n": 20,
+   "stats": {
+    "B20": {
+     "n": 20,
+     "raw": 0.514,
+     "raw_ci": [
+      0.441,
+      0.581
+     ],
+     "above_min": 0.376,
+     "above_min_ci": [
+      0.284,
+      0.462
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "ON": {
+     "n": 20,
+     "raw": 0.495,
+     "raw_ci": [
+      0.43,
+      0.555
+     ],
+     "above_min": 0.356,
+     "above_min_ci": [
+      0.274,
+      0.432
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "OFF": {
+     "n": 20,
+     "raw": 0.443,
+     "raw_ci": [
+      0.362,
+      0.523
+     ],
+     "above_min": 0.289,
+     "above_min_ci": [
+      0.188,
+      0.39
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "C4B": {
+     "n": 20,
+     "raw": 0.566,
+     "raw_ci": [
+      0.483,
+      0.64
+     ],
+     "above_min": 0.445,
+     "above_min_ci": [
+      0.337,
+      0.539
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    },
+    "X4B": {
+     "n": 20,
+     "raw": 0.588,
+     "raw_ci": [
+      0.514,
+      0.653
+     ],
+     "above_min": 0.473,
+     "above_min_ci": [
+      0.38,
+      0.556
+     ],
+     "win_tie_loss": [
+      0,
+      0,
+      20
+     ],
+     "pos_consistency": 1.0
+    }
+   },
+   "paired": {
+    "B20-ON": {
+     "n": 20,
+     "d_raw": 0.019,
+     "d_raw_ci": [
+      -0.036,
+      0.068
+     ],
+     "d_above_min": 0.021,
+     "d_above_min_ci": [
+      -0.047,
+      0.081
+     ],
+     "items_better_worse": [
+      10,
+      5
+     ]
+    },
+    "ON-OFF": {
+     "n": 20,
+     "d_raw": 0.052,
+     "d_raw_ci": [
+      -0.007,
+      0.115
+     ],
+     "d_above_min": 0.067,
+     "d_above_min_ci": [
+      -0.008,
+      0.146
+     ],
+     "items_better_worse": [
+      7,
+      7
+     ]
+    }
+   }
+  }
+ },
+ "verdict": "NO (Haiku, dev 180)",
+ "cost": {
+  "n_llm_pairs": 152,
+  "promptTokens": {
+   "B20": 1303.5,
+   "ON": 876.0,
+   "paired_p50": 437.5
+  },
+  "ttftMs": {
+   "B20": 8910.4,
+   "ON": 5991.5,
+   "paired_p50": 2860.0
+  },
+  "totalMs": {
+   "B20": 10351.2,
+   "ON": 7398.1,
+   "paired_p50": 3122.5
+  },
+  "decodeTokPerSec": {
+   "B20": 33.3,
+   "ON": 39.4,
+   "paired_p50": -6.9
+  },
+  "outputTokens": {
+   "B20": 47.5,
+   "ON": 46.0,
+   "paired_p50": 2.0
+  },
+  "words": {
+   "B20": 37.0,
+   "ON": 34.5
+  }
+ },
+ "same_host_anchor_r20": {
+  "n": 20,
+  "answer_identical": 20,
+  "promptTokens_identical": 20
+ }
+}

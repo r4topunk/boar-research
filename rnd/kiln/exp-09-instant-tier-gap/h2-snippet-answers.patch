@@ -1,0 +1,90 @@
+# exp-09 O-H2 'an instant snippet must ANSWER' — applies ON TOP of h1-subject-check.patch (boar-app 611a4b92). LOCAL ONLY (rule 0).
+# Off unless EXPO_PUBLIC_H2_ANSWERS=1 (independent of EXPO_PUBLIC_H1_SUBJECT).
+
+diff -ruN h2-a/src/routing/answer.ts h2-b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-01 07:01:39
++++ b/src/routing/answer.ts	2026-10-01 07:01:39
+@@ -75,6 +75,7 @@
+ import { DepthModel, planAnswer, resolveDeepModel, AnswerPlan, deepAutoIneligibility } from "./depth";
+ import { isCompactModel, pickDefaultAnswerModel, tooBigForLowRam } from "./defaultModel";
+ import { namedEntities, o2Decide, o2Enabled, o2Message, titleCovers } from "./o2WeakSupport";
++import { h2Answers } from "./h2Answers";
+ import { buildVerificationInput, parseVerificationVerdict, VERIFICATION_INSTRUCTION } from "./verify";
+ import { taskRequest } from "../inference/format";
+ import {
+@@ -776,6 +777,11 @@
+         ? (isHealthQuestion(req.query) ? [...healthTopicTerms(req.query, english)] : pt ? (deps.englishNames ?? defaultEnglishNames)(req.query) : namedEntities(req.query)).filter((t) => t && t.length > 2)
+         : [];
+       const h1About = (title: string) => !h1On || !h1Terms.length || h1Terms.some((t) => titleCovers(t, title));
++      // exp-09 O-H2 (local, measurement): an instant snippet must ANSWER the question's shape (a number for "how many",
++      // both sides for a comparison…). Off unless EXPO_PUBLIC_H2_ANSWERS=1. Not for health (its excerpt is the answer).
++      const h2On = process.env.EXPO_PUBLIC_H2_ANSWERS === "1";
++      const h2Sides = h2On ? (pt ? (deps.englishNames ?? defaultEnglishNames)(req.query) : namedEntities(req.query)) : [];
++      const h2Ok = (title: string, text: string) => !h2On || h2Answers(req.query, h2Sides, title, text).ok;
+       /** What the sources are matched against: the English words for a translated PT question. */
+       // Identifiers the question names ("EIP-7251") stay in what sources are matched against (Sextant dddd8a8:
+       // with names ["Ethereum"] only, the EIP page lost to the Ethereum articles).
+@@ -892,7 +898,8 @@
+           termCoverage(matchQuery, `${pool[snip.sourceIndex].title} ${snip.text}`) >= MIN_TERM_COVERAGE &&
+           // The sentence itself names the subject, not only its page's title (Sextant q7, EN and PT).
+           sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text) &&
+-          (h1About(pool[snip.sourceIndex].title) || (reasonCodes.push("instant:h1-not-about-subject"), false));
++          (h1About(pool[snip.sourceIndex].title) || (reasonCodes.push("instant:h1-not-about-subject"), false)) &&
++          (h2Ok(pool[snip.sourceIndex].title, snip.text) || (reasonCodes.push("instant:h2-not-an-answer"), false));
+         if (snip && sourceIndex >= 0 && !covers) reasonCodes.push("instant:off-topic");
+         if (snip && sourceIndex >= 0 && covers) {
+           markVisible();
+diff -ruN h2-a/src/routing/h2Answers.ts h2-b/src/routing/h2Answers.ts
+--- a/src/routing/h2Answers.ts	1969-12-31 21:00:00
++++ b/src/routing/h2Answers.ts	2026-10-01 07:02:23
+@@ -0,0 +1,50 @@
++/**
++ * exp-09 O-H2 (local branch, measurement only): an instant snippet is served only if it ANSWERS the question's shape.
++ * A sentence from the right page that doesn't answer ("Brazilians are not Hispanic" for "the largest state of Brazil?")
++ * is not served: the model answers instead. Pure, no model. Fails open on any other shape.
++ *   numeric     ("how many", "population", "quantos", "altura"…) -> the snippet holds a number (a year for "when/what year")
++ *   comparative (two named sides)                                -> the snippet or its page title names both sides
++ *   superlative ("largest", "o maior"…)                          -> the snippet states a superlative or a number
++ */
++import { o2Kind } from "./o2WeakSupport";
++
++const NUMERIC_Q =
++  /\b(how (many|much|long|tall|high|far|deep|old|big|heavy|fast|wide)|population|area|elevation|height|length|depth|temperature|frequency|speed|distance|boiling point|melting point|quantos|quantas|quanto|altura|área|populaç[aã]o|frequ[eê]ncia|velocidade|temperatura|dist[aâ]ncia|profundidade|extens[aã]o|comprimento|habitantes)\b/iu;
++const YEAR_Q = /\b(what year|which year|when (did|was|were|is)|em que ano|quando)\b/iu;
++const SUPERLATIVE_TEXT =
++  /\b(largest|biggest|highest|tallest|longest|deepest|most|least|smallest|lowest|oldest|fastest|heaviest|greatest|first|second|third|maior|menor|mais)\b|\w+est\b/iu;
++const NUM = /\d/;
++const YEAR = /\b(1\d{3}|20\d{2})\b/;
++
++const norm = (s: string) =>
++  s.normalize("NFKD").replace(/[^\x00-\x7f]/g, "").toLowerCase().replace(/'s\b/g, "").replace(/[^a-z0-9]+/g, " ").trim();
++const names = (side: string, hay: string) => {
++  const w = norm(side).split(" ").filter((x) => x.length > 2 && !["the", "and", "river", "lake", "mount"].includes(x));
++  return w.length > 0 && w.every((x) => ` ${hay} `.includes(` ${x}`));
++};
++
++export type H2Shape = "numeric" | "year" | "comparative" | "superlative" | null;
++
++export function h2Shape(question: string, sides: string[]): H2Shape {
++  const k = o2Kind(question);
++  // Two named sides and "or/than/ou/vs": a comparison first, even with "and by how much" (Baikal or Tanganyika).
++  if (sides.length >= 2 && (k === "comparative" || /\b(or|than|ou|que|vs\.?|versus)\b/iu.test(question))) return "comparative";
++  if (YEAR_Q.test(question)) return "year";
++  if (k === "superlative" || k === "list") return "superlative";
++  if (NUMERIC_Q.test(question) || k === "numeric") return "numeric";
++  return null;
++}
++
++/** Whether a snippet (with its page title) answers the question's shape; `sides` = the question's named subjects. */
++export function h2Answers(question: string, sides: string[], title: string, text: string): { ok: boolean; shape: H2Shape } {
++  const shape = h2Shape(question, sides);
++  const t = text.replace(/\[\d+\]/g, "");
++  if (shape === "numeric") return { ok: NUM.test(t), shape };
++  if (shape === "year") return { ok: YEAR.test(t), shape };
++  if (shape === "superlative") return { ok: SUPERLATIVE_TEXT.test(t) || NUM.test(t), shape };
++  if (shape === "comparative") {
++    const hay = norm(`${title} ${t}`);
++    return { ok: sides.slice(0, 2).every((s) => names(s, hay)), shape };
++  }
++  return { ok: true, shape };
++}

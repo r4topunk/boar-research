@@ -1,16 +1,24 @@
-BOAR research record
-Copyright 2026 BOAR R&D
+BOAR research record (full open record, v1.0)
+Copyright 2026 r4to, independent researcher
 
 Licences by part
 
 | Part | Licence |
 |---|---|
-| Code and scripts (arms/*/tools/, *.py, *.mjs, *.mts, *.ts, *.sh) | Apache-2.0 (LICENSE) |
-| Reports, method docs, arm reports and criteria, aggregates, pack cards (*.md, *.json, *.txt, *.log) | CC BY 4.0 (LICENSE-DOCS) |
-| Engine patches (arms/*/*.patch) | MIT, like upstream boar-app (LICENSE-MIT, arms/NOTICE.md) |
-| Wikidata-derived fact tables embedded in arms/facts/*.patch | CC0 1.0 (Wikidata) |
+| Code and scripts (*.py, *.mjs, *.mts, *.ts, *.js, *.sh, *.fish, *.kt) | MIT (LICENSE-MIT) |
+| Reports, method documents, arm reports and criteria, aggregates, data cards, pack cards, data/*.json (*.md, *.json, *.txt) | CC BY 4.0 (LICENSE-DOCS) |
+| Engine patches (*.patch) | MIT, like upstream boar-app (LICENSE-MIT carries the upstream copyright line and ours for the additions) |
+| Wikidata-derived fact tables embedded in the facts patches | CC0 1.0 (Wikidata) |
 | GeoNames-derived place data embedded in engine patches and the places kit | CC BY 4.0, (c) GeoNames |
-| Short excerpts of pack text quoted in packs/ and arm reports (Wikipedia, Simple English Wikipedia, Wikivoyage, Stack Exchange) | CC BY-SA 4.0 (Stack Exchange: CC BY-SA 2.5/3.0/4.0 per post); share-alike applies to the excerpt (packs/NOTICE.md) |
-| OpenStreetMap venue names quoted in pack cards | ODbL 1.0, (c) OpenStreetMap contributors |
+| Passages, titles and excerpts of Wikipedia, Simple English Wikipedia, Wikivoyage and Wikibooks that appear inside traces, replays, prompts, fulltext samples, pack cards and reports | CC BY-SA 4.0; share-alike applies to the excerpt |
+| Stack Exchange posts that appear inside traces, replays, prompts and pack cards | CC BY-SA 2.5 / 3.0 / 4.0 per post (share-alike); attribution lines to the posts are kept inside the quoted text |
+| Appropedia excerpts | CC BY-SA |
+| MedlinePlus (NLM), US Army field manuals, US federal works (including the CIA World Factbook archive text, factbook.json, CC0 1.0) | US public domain / CC0, with credit lines where a card asks for one |
+| OpenStreetMap-derived venue names, places and gold lists | ODbL 1.0, (c) OpenStreetMap contributors |
+| NHS and other Open Government Licence items, where a card records them | OGL v3.0 as recorded in the card |
+| Blog posts and other web text quoted with a link (for example the post that inspired the bounty) | quotation with attribution; the original licence applies |
 
-Not released: held-out and burnt evaluation sets (aggregates and ids only), raw traces and judge rationales, and the emergency-detector model (its base-model licence is unknown).
+Rule of thumb: our own text and numbers are CC BY 4.0; anything that is a passage retrieved from a third-party corpus keeps that corpus's licence. Folders with such passages are marked in DATA-CARD.md.
+
+Not released: held-out and burnt evaluation sets (aggregates, ids and hashes only), raw third-party web snapshots, traces that embed withheld items, the app maintainer's data, and model weights (BOM.md links them).
+Health material is AI-reviewed, not clinically reviewed.

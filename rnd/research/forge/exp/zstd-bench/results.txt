@@ -1,0 +1,9 @@
+# Same 5,565 block decompressions (1,878 unique blocks, 57 MB compressed) the app did over 68 g75 retrievals; per question best of 5; MacBook M1 Pro (shared, loaded).
+libzstd 1.5.7: 68 questions, total 436.3 ms
+libzstd C        p50    6.69  p90   15.33  total    561.6   (c.txt, first run; rerun total 436 ms)
+js-node-jit      p50   38.99  p90   82.82  total   3214.3  x vs C (sum)    5.7
+js-hermes-hbc    p50  554.00  p90 1189.00  total  44643.0  x vs C (sum)   79.5
+js-node-jitless  p50  816.35  p90 1753.04  total  65985.7  x vs C (sum)  117.5
+
+zstd-crate: per question p50 5.25 ms p90 11.07 ms total 435.0 ms
+ruzstd: per question p50 21.68 ms p90 44.70 ms total 1770.8 ms

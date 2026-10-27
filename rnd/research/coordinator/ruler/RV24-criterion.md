@@ -1,0 +1,40 @@
+# RV24 criterion: RV2-SEP-LADDER + RV4-CITY-BOUND (frozen 2026-10-21, before any number below is computed)
+
+0 LLM, 0 judge, 0 generation, 0 paid. Inputs are existing judge.v1 (Haiku 5.5-low, both orders) rows on v0.1 dev ids and tag-level fields of bench/v0.4 (ids, family/type/health_safety/has_location/anchor_vexact via INPACK-STRATUM-2026-10-21.json). No question text, checklist, reference or city value of v0.4 is read. No blind/, no rnd/veil.
+
+## RV2-SEP-LADDER (verbatim from hypotheses-round2-2026-10-21.json)
+
+Statement: The ruler can tell tiers apart; the 1.7B simply sits close to a closed-book 1.5B. On the v0.1 57 dev ids, with the 6 deterministic-layer items removed, 4B - 1.5B closed-book is >= +0.08 U with a CI low > +0.03, while 1.7B - 1.5B stays < 0.05. The 1.7B - 1.5B gap sits on items where the 1.7B kept a source: covered-minus-uncovered DiD > 0. Planned framing on the page: 'the 1B row is a level anchor; separability is a coverage property'. Without this check the page would report a failed separability gate.
+
+Method: 0-LLM. Freeze a criterion first. Use existing Haiku 5.5-low judge.v1 rows on the same 57 ids and the same references: 1.5B closed-book (FLOOR), 1.7B K0 control s42/s43, Gemma 4 E2B phone and the Pixel 4B cut 7 (GEMMA4-PHONE-JUDGE), and the 1.7B phone. Drop deterministic-v01.ids. Compute paired gaps vs the 1.5B with a cluster bootstrap, and split by kept_X from each arm's trace (covered vs uncovered) to get the DiD. Repeat under U_CU if RV1 passes, and under v1.1 for the 1.7B/1.5B pair, which already exists. Compute the analytic MDE at n 75 from the observed item SD for the R2 spec.
+
+Kill criterion: If the CI low of 4B - 1.5B is <= 0, the ruler lacks tier resolution at n about 57. In that case: the section 8 separability check becomes 'reported, not a gate' in the R2 spec, every R4 row prints the MDE (0.05 at n 50, 0.03 at n 97), and the page makes no 'decline < 1B < app' statement. If the covered-subset 1.7B - 1.5B is <= 0.05 or the DiD CI includes 0, drop the 'coverage explains the level' sentence and report the 1.7B as 'level with a closed-book 1.5B on dev, both judges'.
+
+## RV4-CITY-BOUND (verbatim from hypotheses-round2-2026-10-21.json)
+
+Statement: How the 7/75 device-location (current-city) v0.4 items are handled cannot change the verdict. Their reference-mass share times the largest plausible app-U swing is <= 0.03 of U-total. The swing runs from 0 (the submitted APK has no places path, so it refuses or answers from memory) to the tile-path level measured on dev (VENUEGPS-2, v0.1 food/vx items with location + area tile). So the R2 spec can pre-register: scored as given in the headline (no exclusion), plus one labelled sensitivity row 'with device location + area tile (desktop runner, not the submitted APK)'.
+
+Method: 0-LLM. Freeze a criterion first. From INPACK-STRATUM (already exposed fields only: 7 items with lat/lon keys) and the v0.1 dev proxies (food-001/002/006, vx-003/4/5): (1) reference s share of the location items under the existing v1 references; (2) app U on those ids for three variants: the claim kit without location, kit-vgps2 with location + tile (VENUEGPS-2 rows), and a bare refusal (0 under the R4 rule). Project the swing in U-total at the v0.4 share (7/75, weighted by the dev reference-mass ratio), with a bootstrap over the dev ids. Do not read v0.4 question text, checklists or city values.
+
+Kill criterion: If the projected swing CI high is > 0.03 of U-total, the current-city items become a separate pre-registered stratum. U-total is printed both with and without them, the verdict uses the 'with' version (scored as given, APK has no places path), and the claim text states in the headline row that the submitted app cannot answer current-city questions. If <= 0.03, they stay in the headline as given, with one sensitivity row.
+
+## Operational rules fixed here (RV2)
+
+- Items: the 57 v0.1 dev ids (arms/gemma4-e2b/phone/judge/v01-57.ids) minus the 6 deterministic-layer items of FLOOR (aggregates/floor.json nonmodel_path_items: vit-trv-004, vit-sci-003, vit-hlt-001, vit-hlt-002, dng-001, dng-002) = 51 ids (primary). Sensitivity (no rule): minus ruler/ids/deterministic-v01.ids intersected with the 57 (15 ids) = 42 ids; and all 57.
+- Rungs (primary): L0 = Qwen2.5-1.5B closed-book (FLOOR run, unjudged byte-identical answers reuse control rows as in floor_agg.py); L1 = 1.7B K0 desktop control, per-item mean of s42 and c43; L2 = Gemma 4 E2B desktop, per-item mean of s42 and g43 (same K0 litepacks engine as L0/L1); L3 = Qwen3-4B cut 7 on the Pixel 8a (P_4, the only 4B run judged on these 57 besides the desktop cut 7 stack-off s42). Sensitivity rows (no rule): phone Gemma P_G for L2 (config-matched to P_4), desktop 4B cut 7 s42 for L3, 1.7B s42 alone.
+- Metric: U = sum(s-1)/sum(r-1) (judge.v1 floor-adjusted ratio-of-sums, s and r = mean of the 3 dimensions averaged over both orders). Decline-floor version U_net = (U - 0.058)/(1 - 0.058) (FLOOR decline (a) bare refusal); a paired gap scales by 1/0.942.
+- CI: item-cluster bootstrap (resample item ids with replacement; the two seeds of a rung stay together inside the item), B 2000, numpy default_rng(11), 2.5/97.5 percentiles; all pairs paired on the same draws.
+- Adjacent-pair separability (L1-L0, L2-L1, L3-L2): SEPARABLE iff dU >= 0.05 and CI low > 0 (FLOOR rule 2 threshold); otherwise NOT SEPARABLE. Same rule on the U_net scale.
+- Hypothesis rules: H-a 4B - 1.5B >= +0.08 with CI low > +0.03; H-b 1.7B - 1.5B < 0.05 (point); H-c DiD = (L1 - L0 gap on items where the 1.7B s42 trace kept >= 1 source) - (gap on items with 0 kept) > 0 with CI low > 0, item bootstrap within strata. Kill clauses applied verbatim. U_CU (RV1) is not computed here (RV1 not run); v1.1 1.7B/1.5B is quoted from JUDGE-V1_1.md.
+- MDE at n 75: 2.8 x bootstrap SE of the paired gap scaled by sqrt(51/75) (80 % power, two-sided 0.05).
+- Page sentence: chosen mechanically from the separability results: 'the ruler separates <highest separable pair>; the 1.7B sits within noise of a closed-book 1.5B on this set' when L1-L0 is NOT SEPARABLE and some pair involving L3 vs L0/L1 is SEPARABLE.
+
+## Operational rules fixed here (RV4)
+
+- Location items: the 7 v0.4 ids with tags.has_location = true in INPACK-STRATUM-2026-10-21.json; all are in H (anchor_vexact false), weight w = 1 each (health_safety false). Sum_H w = 65.5 (60 x 1 + 11 x 0.5), 71 items.
+- Point score s in [0,1] (spec 3.1); U-total = sum_H w s_X / sum_H w s_ref. Location share phi = sum_loc s_ref / sum_H w s_ref. Nominal phi0 = 7/65.5 (equal reference mass).
+- Reference-mass proxy: dev judge.v1 reference scores (r-1) on the travel-family proxies available with judge rows on the v0.1 57 (category travel + ids trv-*/vit-trv-*), relative to the mean over the 57: rho = mean_travel(r-1)/mean_all(r-1); phi = 7 rho / (7 rho + 58.5); bootstrap over dev ids (B 2000, seed 11). The venue-list proxies food-001/002/006 have no judge.v1 rows (judge.mjs skips venue-list items) and vx-003/4/5 are blind: neither is read; this is recorded as a deviation.
+- Swings: (i) maximum = all 7 at s 0 vs all at s 1: 7/D; with every s_ref <= 1, D <= 65.5, so the swing is >= 7/65.5 regardless of reference values; (ii) plausible = phi x app level, with app level from 0 (bare refusal, R4 rule) to 1.0 x reference (tile-path ceiling; VENUEGPS-2 measured plumbing 7/7, not U) and a middle value = the 4B / 1.7B dev travel+place U under judge.v1 (memory answers); (iii) exclusion vs scored-as-0: U_excl - U_with0 = phi x U_excl.
+- Band move: report the U-total window inside which (ii) or (iii) crosses the 0.50 band line (spec 8).
+- Decision: kill clause verbatim (CI high of the projected swing > 0.03 -> separate pre-registered stratum, U-total printed with and without, verdict on 'with' scored as given, headline row states the APK cannot answer current-city questions; else headline as given + one sensitivity row). The spec's own rule (RULER-SPEC-v1 1.2/3.3: U-total never dropped, a refusal scores 0) fixes 'scored as given' as the headline whichever way the bound comes out.
+

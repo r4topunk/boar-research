@@ -1,0 +1,5 @@
+SELECT ?item (MAX(?pop) AS ?p) WHERE {
+  ?item wdt:P1082 ?pop . FILTER(?pop >= 300000)
+  ?item wdt:P31/wdt:P279? ?t . VALUES ?t { wd:Q515 wd:Q1549591 wd:Q1637706 wd:Q5119 wd:Q200250 wd:Q22865 wd:Q1093829 wd:Q748149 wd:Q15284 wd:Q1066984 }
+  FILTER NOT EXISTS { ?item wdt:P576 ?end }
+} GROUP BY ?item ORDER BY DESC(?p) LIMIT 20000

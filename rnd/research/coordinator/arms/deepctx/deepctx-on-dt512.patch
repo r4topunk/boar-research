@@ -1,0 +1,12 @@
+--- a/src/routing/depth.ts	2026-10-08 16:03:20
++++ a/src/routing/depth.ts	2026-10-10 10:39:16
+@@ -100,7 +100,8 @@
+  * tokens, <= 200 answer tokens and no thinking block.
+  */
+ export const DEEP_RETRIEVE_K = 6;
+-export const DEEP_CONTEXT_TOKENS = 400;
++// DEEPCTX arm: the deep tier reads as much context as the fast tier (1200); persona and the 200 cap unchanged (DEEPFULL bundled it with the persona).
++export const DEEP_CONTEXT_TOKENS = 1200;
+ export const DEEP_MAX_TOKENS = 200;
+ 
+ /**

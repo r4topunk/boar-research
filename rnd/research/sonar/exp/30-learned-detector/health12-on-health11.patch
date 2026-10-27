@@ -1,0 +1,55 @@
+diff -ruN be-0cfd4a77-health11/src/routing/answer.ts be-0cfd4a77-health12/src/routing/answer.ts
+--- be-0cfd4a77-health11/src/routing/answer.ts	2026-10-03 12:45:42
++++ be-0cfd4a77-health12/src/routing/answer.ts	2026-10-03 12:46:46
+@@ -622,7 +622,8 @@
+       if (!req.reuseSources && req.tier !== "deep") {
+         // Snakebite first aid: a fixed card from the WHO text, never a pack passage (Boar, after 3ffd7e0).
+         if (isSnakebiteFirstAid(req.query)) {
+-          const card = snakebiteFirstAidCard(req.query, isPortugueseQuestion(req.query));
++          const esQ = isSpanishQuestion(req.query);
++          const card = snakebiteFirstAidCard(req.query, !esQ && isPortugueseQuestion(req.query), esQ);
+           markVisible();
+           const r: AnswerReceipt = { modelId: "grounding-guard", modelLabel: "First aid (WHO)", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: ["answer:first-aid-card-snakebite"] };
+           emit({ type: "token", answerId, tier: "instant", text: card });
+diff -ruN be-0cfd4a77-health11/src/routing/conditionCards.ts be-0cfd4a77-health12/src/routing/conditionCards.ts
+--- be-0cfd4a77-health11/src/routing/conditionCards.ts	2026-10-03 03:32:46
++++ be-0cfd4a77-health12/src/routing/conditionCards.ts	2026-10-03 12:46:46
+@@ -36,7 +36,7 @@
+   nosebleed: /(?<![\p{L}\p{N}_])(nose ?bleed|nose (is |started )?bleeding|bleeding from (my|the|his|her) nose|sangr[\p{L}\p{N}_]* (pelo|no|do) nariz|nariz (sangrando|sangra))/iu,
+   earthquake: /(?<![\p{L}\p{N}_])(earthquake|ground is shaking|building is shaking|terremoto|tremor de terra|pr[ée]dio (est[áa] )?tremendo)/iu,
+   drowning: /(?<![\p{L}\p{N}_])(drown|pulled .{0,20}out of the (water|pool|sea)|afog|tiramos .{0,20}(da|do) (piscina|mar|[áa]gua))/iu,
+-  snakebite: /(?<![\p{L}\p{N}_])(snake ?bit|bitten by a (snake|viper|rattlesnake)|snake (just )?bit|cobra (me )?(picou|mordeu)|picad[\p{L}\p{N}_]* (por|de) (uma )?(cobra|jararaca|cascavel))/iu,
++  snakebite: /(?<![\p{L}\p{N}_])(snake ?bit|bitten by a (snake|viper|rattlesnake)|snake (just )?bit|cobra (me )?(picou|mordeu)|picad[\p{L}\p{N}_]* (por|de) (uma )?(cobra|jararaca|cascavel)|mordid[oa] por (una )?(serpiente|culebra|v[íi]bora|cascabel)|(serpiente|culebra|v[íi]bora|cascabel) (me |le |lo |la |nos )?(mordi[óo]|pic[óo])|mordedura de (serpiente|culebra|v[íi]bora|cascabel)|mordi[óo] una (serpiente|culebra|v[íi]bora|cascabel))/iu,
+   // v1 long tail (Compass terms_v1.py NEW, FROZEN.v1 e407c676…), ported mechanically by Sonar exp-29 (parity-tested).
+   hypoglycemia: /^(?!.*(?<![\p{L}\p{N}_])(high blood sugar|hyperglyc|a[çc][úu]car alto|hiperglic))(?:.*(low (blood )?sugar|hypoglyc|hipoglic|glicose baixa|a[çc][úu]car (no sangue )?baixo)|(?=.*(diabet|diab[ée]tic|insulin))(?=.*(?<![\p{L}\p{N}_])(shak[\p{L}\p{N}_]*|sweat[\p{L}\p{N}_]*|confus[\p{L}\p{N}_]*|faint[\p{L}\p{N}_]*|dizzy|pale|drows[\p{L}\p{N}_]*|tremend[\p{L}\p{N}_]*|suad[\p{L}\p{N}_]*|suando|confus[\p{L}\p{N}_]*|desmai[\p{L}\p{N}_]*|tont[\p{L}\p{N}_]*)))/ius,
+   altitude: /(?<![\p{L}\p{N}_])(altitude sickness|mountain sickness|(?<![\p{L}\p{N}_])ams(?![\p{L}\p{N}_])|hace(?![\p{L}\p{N}_])|hape(?![\p{L}\p{N}_])|at [0-9][0-9.,]{2,} ?m(?![\p{L}\p{N}_])|high altitude|soroche|mal de altitude|doen[çc]a da altitude)/iu,
+diff -ruN be-0cfd4a77-health11/src/routing/firstAidCards.ts be-0cfd4a77-health12/src/routing/firstAidCards.ts
+--- be-0cfd4a77-health11/src/routing/firstAidCards.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-health12/src/routing/firstAidCards.ts	2026-10-03 12:46:46
+@@ -12,17 +12,22 @@
+ import { emergencyLine } from "./context";
+ import { emergencyNumbersLine } from "./emergencyNumbers";
+ 
+-const SNAKE = /(?<![\p{L}])(snakes?|vipers?|rattlesnakes?|cobras?|serpentes?|jararacas?|cascav[ée]is|cascavel|surucucus?)(?![\p{L}])/iu;
+-const BITE = /(?<![\p{L}])(bit|bitten|bite|bites|biting|snakebite|picad[oa]s?|picou|mordid[oa]s?|mordeu|mordida|picada)(?![\p{L}])/iu;
++const SNAKE = /(?<![\p{L}])(snakes?|vipers?|rattlesnakes?|cobras?|serpentes?|jararacas?|cascav[ée]is|cascavel|surucucus?|serpientes?|culebras?|v[íi]boras?|cascabel(?:es)?|nauyacas?|yarar[áa]s?|mapanares?)(?![\p{L}])/iu;
++const BITE = /(?<![\p{L}])(bit|bitten|bite|bites|biting|snakebite|picad[oa]s?|picou|mordid[oa]s?|mordeu|mordida|picada|mordi[óo]|mordedura|picó|(?<=(?:me|te|le|lo|la|nos|les) )pico|picadura)(?![\p{L}])/iu; // not "Pico de Orizaba"
+ const AID =
+-  /\b(what (do|should|can) (i|we|he|she|they) do|what to do|first aid|help|now)\b|(?<![\p{L}])(o que (eu )?(fa[çc]o|fazer|devo fazer)|como (agir|socorrer)|primeiros socorros|socorro|ajuda|agora)(?![\p{L}])/iu;
++  /\b(what (do|should|can) (i|we|he|she|they) do|what to do|first aid|help|now)\b|(?<![\p{L}])(o que (eu )?(fa[çc]o|fazer|devo fazer)|como (agir|socorrer)|primeiros socorros|socorro|ajuda|agora|qu[ée] (hago|hacer|hacemos|debo hacer)|c[óo]mo (lo |la )?(ayudo|ayudar|actuar)|primeros auxilios|auxilio|ayuda|ahora)(?![\p{L}])/iu;
+ 
+ /** A snakebite first-aid question ("fui picado por uma cobra, o que faço?"), not a question about snakes. */
+ export function isSnakebiteFirstAid(query: string): boolean {
+   return SNAKE.test(query) && BITE.test(query) && AID.test(query);
+ }
+ 
+-export function snakebiteFirstAidCard(query: string, pt: boolean): string {
++export function snakebiteFirstAidCard(query: string, pt: boolean, es = false): string {
++  // ES (health12, Compass 2026-10-03): a translation of the EN/PT text above, same WHO source; needs native review.
++  if (es)
++    return "Mordedura de serpiente, primeros auxilios: aléjate de la serpiente y no intentes atraparla ni matarla. Mantén a la persona quieta y tranquila, sin que se mueva en absoluto; si puedes, llévala en una camilla improvisada y llévala a atención médica sin demora. NO uses un torniquete apretado, NO cortes la herida y NO chupes el veneno ni pongas productos químicos.\n\n" +
++      "Fuente: OMS, preguntas y respuestas sobre el envenenamiento por mordedura de serpiente (2019).\n\n" +
++      "En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
+   const emergency = emergencyNumbersLine(query, pt) ?? emergencyLine(pt);
+   return pt
+     ? "Picada de cobra, primeiros socorros: afaste-se da cobra e não tente pegá-la nem matá-la. Mantenha a pessoa parada e calma, sem se mexer; se der, carregue-a numa maca improvisada e leve-a ao atendimento médico sem demora. NÃO use torniquete apertado, NÃO corte o local e NÃO chupe o veneno nem passe produtos químicos.\n\n" +

@@ -1,0 +1,30 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -1167,6 +1167,27 @@
+           sources = [...sources, ...kept];
+         }
+       }
++      // SHORTCTX (arm): the model receives at most 2 sources and about 350 context tokens (approx 4 chars/token). Top-ranked order kept;
++      // the cut falls on a sentence boundary when one lies in the last half of the allowance. Not for health (extractive) or multi-pass.
++      if (!health && gen?.mode !== "multipass" && sources.length) {
++        const SC_MAX_CHUNKS = 2, SC_MAX_CHARS = 350 * 4;
++        let left = SC_MAX_CHARS;
++        const out: RetrievedChunk[] = [];
++        for (const c of sources.slice(0, SC_MAX_CHUNKS)) {
++          const room = left - c.title.length;
++          if (room < 240 && out.length) break; // under ~60 tokens of body: not worth a second source
++          let body = c.body;
++          if (body.length > room) {
++            const cut = body.slice(0, Math.max(room, 0));
++            const m = [...cut.matchAll(/[.!?](?=\s|$)/g)].pop();
++            body = m && m.index! + 1 >= room / 2 ? cut.slice(0, m.index! + 1) : cut.trimEnd();
++          }
++          out.push(body === c.body ? c : { ...c, body });
++          left -= c.title.length + body.length;
++        }
++        if (out.length < sources.length || out.some((c, i) => c !== sources[i])) reasonCodes.push(`shortctx:${sources.length}->${out.length}`);
++        sources = out;
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }

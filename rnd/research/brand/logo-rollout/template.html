@@ -1,0 +1,271 @@
+<title>BoarLite Logo Rollout</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; each section = mono eyebrow + one exhibit. Dark-first, in the app's own terminal palette. */
+:root {
+  --bg: #17110D; --surface: #221913; --raised: #2A1F17; --line: #4A3526;
+  --fg: #F5E9DC; --muted: #B3A596; --accent: #FF7A3D; --accent-text: #FF9461;
+  --amber: #FFC15E; --ok: #8CCB9B;
+  --gh-bg: #0D1117; --gh-line: #30363D; --gh-fg: #E6EDF3; --gh-muted: #9198A1;
+  --display: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #FFF8F4; --surface: #F5ECE4; --raised: #EFE6DE; --line: #D4C4B5;
+  --fg: #201B15; --muted: #5C5044; --accent: #FF7A3D; --accent-text: #A8461A;
+  --amber: #8A5A00; --ok: #2F6B3E;
+  --gh-bg: #FFFFFF; --gh-line: #D1D9E0; --gh-fg: #1F2328; --gh-muted: #59636E;
+  color-scheme: light } }
+:root[data-theme="light"] {
+  --bg: #FFF8F4; --surface: #F5ECE4; --raised: #EFE6DE; --line: #D4C4B5;
+  --fg: #201B15; --muted: #5C5044; --accent: #FF7A3D; --accent-text: #A8461A;
+  --amber: #8A5A00; --ok: #2F6B3E;
+  --gh-bg: #FFFFFF; --gh-line: #D1D9E0; --gh-fg: #1F2328; --gh-muted: #59636E;
+  color-scheme: light }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--display); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 56px 96px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 72px; }
+h1, h2 { text-wrap: balance; margin: 0; letter-spacing: -0.02em }
+h1 { font-size: clamp(34px, 6vw, 52px); font-weight: 700; line-height: 1.05 }
+h2 { font-size: 26px; font-weight: 600; line-height: 1.2 }
+p { margin: 0; max-width: 64ch }
+code, .mono { font-family: var(--mono); font-size: 0.86em }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text) }
+.muted { color: var(--muted) }
+section { display: flex; flex-direction: column; gap: 20px }
+
+/* header */
+.hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: center }
+.hero-mark { width: 132px; height: 132px; border-radius: 30px; background: #17110D; display: grid; place-items: center; box-shadow: 0 0 0 1px var(--line) }
+.hero-copy { display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.chips { display: flex; flex-wrap: wrap; gap: 8px }
+.chip { font: 500 12px/1 var(--mono); padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap }
+.chip.draft { color: var(--amber); border-color: currentColor }
+.chip a { color: inherit }
+
+/* where table */
+.map { width: 100%; border-collapse: collapse; font-size: 15px }
+.map th { text-align: left; font: 500 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 16px 12px 0; border-bottom: 1px solid var(--line) }
+.map td { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--line); vertical-align: top }
+.map td:first-child { font-weight: 600; white-space: nowrap }
+.map code { color: var(--fg); background: var(--surface); padding: 1px 6px; border-radius: 4px; display: inline-block; margin: 0 4px 4px 0 }
+.state { font: 500 12px/1 var(--mono); white-space: nowrap }
+.state.pr { color: var(--amber) } .state.open { color: var(--muted) }
+.scroll { overflow-x: auto }
+
+/* compare */
+.compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px }
+.panel { display: flex; flex-direction: column; gap: 10px; min-width: 0 }
+.tag { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted) }
+.tag.after { color: var(--accent-text) }
+.gh { background: var(--gh-bg); border: 1px solid var(--gh-line); border-radius: 8px; overflow: hidden; color: var(--gh-fg) }
+.gh-bar { display: flex; gap: 8px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--gh-line); font: 13px/1 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--gh-muted) }
+.gh-bar b { color: var(--gh-fg); font-weight: 600 }
+.gh-body { padding: 28px 20px 26px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif }
+.gh-body .t { font-size: 30px; font-weight: 600; padding-bottom: 6px; border-bottom: 1px solid var(--gh-line); align-self: stretch }
+.gh-body .s { font-size: 14px; color: var(--gh-fg); max-width: 36ch }
+.gh-body .s b { font-weight: 600 }
+.gh-img { width: 112px; height: 112px; display: grid; place-items: center }
+.gh-img img { width: 112px; height: 112px; object-fit: contain }
+
+/* icons */
+.icons { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr); gap: 20px }
+.tray { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px 20px 22px; display: flex; flex-wrap: wrap; justify-content: center; gap: 28px 26px }
+.app { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px }
+.app span { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.3 }
+.ic { width: 72px; height: 72px; overflow: hidden; display: block }
+.ic svg { width: 100%; height: 100%; display: block }
+.circle { border-radius: 50% } .squircle { border-radius: 32% } .rsq { border-radius: 20% }
+.drop { border-radius: 50% 50% 50% 14% }
+.caption { font-size: 14px; color: var(--muted) }
+
+/* anatomy */
+.anatomy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: center }
+.big { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; place-items: center }
+.big svg { width: 100%; max-width: 360px; height: auto }
+.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0 }
+.legend li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line) }
+.legend li:first-child { border-top: 1px solid var(--line) }
+.legend b { font-weight: 600 }
+
+/* palette */
+.swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px }
+.sw { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column }
+.sw .c { height: 96px; display: grid; place-items: center }
+.sw .c svg { width: 52px; height: 52px }
+.sw .d { padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; background: var(--surface); font-size: 14px }
+.sw .d b { font-weight: 600; font-size: 15px }
+.sw .d code { font-variant-numeric: tabular-nums }
+
+/* next */
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start }
+.steps li::before { content: counter(s); font: 500 14px/34px var(--mono); text-align: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); color: var(--accent-text) }
+.steps .body { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-top: 5px }
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0 }
+.cmd pre { margin: 0; flex: 1; min-width: 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font: 13px/1.5 var(--mono); color: var(--fg) }
+.cmd button { font: 500 12px/1 var(--mono); background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 0 12px; cursor: pointer }
+.cmd button:hover { color: var(--fg); border-color: var(--muted) }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+a { color: var(--accent-text) }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr }
+  .compare, .icons, .anatomy { grid-template-columns: 1fr }
+  .swatches { grid-template-columns: 1fr }
+  .legend li { grid-template-columns: 96px minmax(0, 1fr) }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="m2" fill-rule="evenodd" d="M14 6L41 15L29 35Z M106 6L79 15L91 35Z M46 18H74L86 38L72 62H48L34 38Z M46 68H74L84 84L74 100H46L36 84Z M48.5 80a3 3 0 0 1 6 0v8a3 3 0 0 1-6 0Z M65.5 80a3 3 0 0 1 6 0v8a3 3 0 0 1-6 0Z M79 103L89 87L102 62L98 90Z M41 103L31 87L18 62L22 90Z"/>
+    <symbol id="icon-new" viewBox="18 18 72 72"><rect width="108" height="108" fill="#17110D"/><g transform="translate(24 26.75) scale(0.5)"><use href="#m2" fill="#FF7A3D"/></g></symbol>
+    <symbol id="icon-themed" viewBox="18 18 72 72"><rect width="108" height="108" fill="#D8E2FF"/><g transform="translate(24 26.75) scale(0.5)"><use href="#m2" fill="#26395C"/></g></symbol>
+    <symbol id="icon-old" viewBox="18 18 72 72"><rect width="108" height="108" fill="#091815"/><image href="__OLD_ICON__" x="0" y="0" width="108" height="108"/></symbol>
+  </defs>
+</svg>
+
+<main class="wrap">
+
+<header class="hero">
+  <div class="hero-mark"><svg viewBox="7.5 2 105 105" width="92" height="92" role="img" aria-label="BoarLite mark"><use href="#m2" fill="#FF7A3D"/></svg></div>
+  <div class="hero-copy">
+    <span class="eyebrow">r4to/boar-lite · brand</span>
+    <h1>BoarLite logo rollout</h1>
+    <p class="muted">The M2 mark (ears, forehead, snout and tusks as separate plates) now stands for BoarLite in the repo and on the phone. This page shows where it went, what it replaced, and what is still open.</p>
+    <div class="chips">
+      <span class="chip draft"><a href="https://github.com/r4topunk/boar-lite/pull/1">PR #1 · draft</a></span>
+      <span class="chip">branch boarlite/logo</span>
+      <span class="chip">commit 948c3864</span>
+      <span class="chip">base main @ 6aa7508a</span>
+    </div>
+  </div>
+</header>
+
+<section aria-labelledby="where">
+  <span class="eyebrow">Where it lives</span>
+  <h2 id="where">Four touchpoints in one commit</h2>
+  <div class="scroll">
+  <table class="map">
+    <thead><tr><th>Touchpoint</th><th>Files</th><th>What changed</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td>README header</td><td><code>README.md</code><code>assets/brand/boarlite-mark.svg</code></td><td>The inherited BOAR mascot is replaced by the orange mark, same 112 px slot.</td><td><span class="state pr">in PR</span></td></tr>
+      <tr><td>Launcher icon</td><td><code>res/drawable/ic_launcher_foreground.xml</code><code>mipmap-anydpi-v26/ic_launcher.xml</code><code>ic_launcher_round.xml</code><code>values/ic_launcher_background.xml</code></td><td>Vector adaptive icon: mark at 0.5 scale on <code>#17110D</code> (was <code>#091815</code> + PNG mascot). 15 legacy PNG mipmaps removed; minSdk 26 never reads them.</td><td><span class="state pr">in PR · compiles</span></td></tr>
+      <tr><td>Themed icon</td><td><code>&lt;monochrome&gt;</code> in both adaptive XMLs</td><td>New. Android 13+ tints the mark to the wallpaper palette when themed icons are on.</td><td><span class="state pr">in PR</span></td></tr>
+      <tr><td>Brand sources</td><td><code>assets/brand/</code></td><td>Mark in orange, ink and cream; 1024 app icon SVG; 512 PNG for a store listing.</td><td><span class="state pr">in PR</span></td></tr>
+      <tr><td>Not touched</td><td><code>assets/boar.png</code> in app screens</td><td>Onboarding, drawer and About still show the old mascot. README title still reads “BOAR”.</td><td><span class="state open">open</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section aria-labelledby="readme">
+  <span class="eyebrow">README.md · lines 1–5</span>
+  <h2 id="readme">The repo front page</h2>
+  <div class="compare">
+    <div class="panel">
+      <span class="tag">Before · main</span>
+      <div class="gh">
+        <div class="gh-bar">r4to / <b>boar-lite</b></div>
+        <div class="gh-body">
+          <div class="gh-img"><img src="__OLD_MASCOT__" alt="Old BOAR mascot"></div>
+          <div class="t">BOAR</div>
+          <div class="s"><b>AI that works when the internet doesn't.</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <span class="tag after">After · boarlite/logo</span>
+      <div class="gh">
+        <div class="gh-bar">r4to / <b>boar-lite</b></div>
+        <div class="gh-body">
+          <div class="gh-img"><svg viewBox="7.5 2 105 105" width="112" height="112" role="img" aria-label="BoarLite mark"><use href="#m2" fill="#FF7A3D"/></svg></div>
+          <div class="t">BOAR</div>
+          <div class="s"><b>AI that works when the internet doesn't.</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">The SVG keeps one orange that reads on both GitHub themes. The title line is unchanged on purpose: renaming it to BoarLite is a separate call.</p>
+</section>
+
+<section aria-labelledby="launcher">
+  <span class="eyebrow">Android launcher · adaptive icon, 108 dp canvas</span>
+  <h2 id="launcher">On the home screen</h2>
+  <div class="icons">
+    <div class="panel">
+      <span class="tag">Before</span>
+      <div class="tray">
+        <div class="app"><svg class="ic circle" aria-label="Old launcher icon"><use href="#icon-old"/></svg><span>BoarLite</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <span class="tag after">After · same vector under four launcher masks</span>
+      <div class="tray">
+        <div class="app"><svg class="ic circle" aria-label="New icon, circle mask"><use href="#icon-new"/></svg><span>Circle<br>Pixel</span></div>
+        <div class="app"><svg class="ic squircle" aria-label="New icon, squircle mask"><use href="#icon-new"/></svg><span>Squircle<br>Samsung</span></div>
+        <div class="app"><svg class="ic drop" aria-label="New icon, teardrop mask"><use href="#icon-new"/></svg><span>Teardrop<br>some launchers</span></div>
+        <div class="app"><svg class="ic circle" aria-label="Themed monochrome icon example"><use href="#icon-themed"/></svg><span>Themed<br>example tint</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">Previews draw the exact vector from the PR: path scaled 0.5, moved 24 / 26.75 dp, cropped to the 72 dp visible area. The ear tips sit 33.4 dp from centre, on the edge of the 33 dp safe zone and inside every mask. The themed tint is an example; the phone picks it from the wallpaper.</p>
+</section>
+
+<section aria-labelledby="mark">
+  <span class="eyebrow">The mark · 120-unit grid</span>
+  <h2 id="mark">What is in it</h2>
+  <div class="anatomy">
+    <div class="big"><svg viewBox="7.5 2 105 105" role="img" aria-label="BoarLite mark, large"><use href="#m2" fill="#FF7A3D"/></svg></div>
+    <ul class="legend">
+      <li><b>Ears</b><span>Two triangles, offset 6 units from the forehead edge.</span></li>
+      <li><b>Forehead</b><span>Hexagon, the largest plate; it carries the visual weight.</span></li>
+      <li><b>Snout</b><span>Flat hexagon with two nostril slots cut through, so the background shows.</span></li>
+      <li><b>Tusks</b><span>Shards that follow the snout's lower edges at the same 6-unit gutter, tips up and out.</span></li>
+      <li><b>Gutter</b><span>Every gap is negative space of one width. No outlines, no gradients, one colour.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="palette">
+  <span class="eyebrow">Colour · taken from the app theme</span>
+  <h2 id="palette">Three colours, all already in BoarLite</h2>
+  <div class="swatches">
+    <div class="sw"><div class="c" style="background:#17110D"><svg viewBox="7.5 2 105 105" aria-hidden="true"><use href="#m2" fill="#FF7A3D"/></svg></div><div class="d"><b>Accent</b><code>#FF7A3D</code><span class="muted">Mark colour. The app's focus and accent token.</span></div></div>
+    <div class="sw"><div class="c" style="background:#17110D"><svg viewBox="7.5 2 105 105" aria-hidden="true"><use href="#m2" fill="#F5E9DC"/></svg></div><div class="d"><b>Terminal</b><code>#17110D</code><span class="muted">Icon background. <code>bgTerminal</code> in ThemeTokens.</span></div></div>
+    <div class="sw"><div class="c" style="background:#F5E9DC"><svg viewBox="7.5 2 105 105" aria-hidden="true"><use href="#m2" fill="#17110D"/></svg></div><div class="d"><b>Bone</b><code>#F5E9DC</code><span class="muted">Cream variant. <code>textPrimary</code> in ThemeTokens.</span></div></div>
+  </div>
+</section>
+
+<section aria-labelledby="next">
+  <span class="eyebrow">What is left</span>
+  <h2 id="next">From draft PR to the phone</h2>
+  <ol class="steps">
+    <li><div class="body"><span>Mark the PR ready and merge it into <code>main</code>.</span>
+      <div class="cmd"><pre id="c1">gh pr ready 1 --repo r4to/boar-lite &amp;&amp; gh pr merge 1 --repo r4to/boar-lite</pre><button type="button" data-copy="c1">Copy</button></div></div></li>
+    <li><div class="body"><span>Rebuild the release APK. The current candidate <code>b4ef94f3</code> was built before the logo, so it still ships the old icon.</span></div></li>
+    <li><div class="body"><span>Install on a phone and look at the icon in the launcher, in the app drawer, and with themed icons switched on.</span></div></li>
+    <li><div class="body"><span>Decide the two open items: README title “BOAR” vs “BoarLite”, and the old mascot inside the app screens.</span></div></li>
+  </ol>
+</section>
+
+</main>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(text).then(done, select); } catch (e) { select(); }
+  });
+});
+</script>

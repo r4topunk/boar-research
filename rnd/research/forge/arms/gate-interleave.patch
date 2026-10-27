@@ -1,0 +1,78 @@
+diff --git a/src/eval/answerEval.pure.ts b/src/eval/answerEval.pure.ts
+index 4586fe5..a26d847 100644
+--- a/src/eval/answerEval.pure.ts
++++ b/src/eval/answerEval.pure.ts
+@@ -19,6 +19,8 @@ export interface EvalQuestion {
+   category?: string;
+   /** Earlier turns of the conversation, oldest first (multi-turn items: the chat-routing gate probe). None by default. */
+   history?: ConversationTurn[];
++  /** Gate probe only (gate-interleave.patch, on top of the B5 gate): the route gate on or off for this question. */
++  gate?: "on" | "off";
+ }
+ 
+ /** A history turn as { role, text } or as a [role, text] pair (the chat-slice files' form). */
+@@ -184,7 +186,8 @@ function isQuestion(v: unknown): v is EvalQuestion {
+     typeof q.query === "string" &&
+     q.query.trim() !== "" &&
+     (q.category === undefined || typeof q.category === "string") &&
+-    (q.history === undefined || (Array.isArray(q.history) && q.history.every((t) => toTurn(t) !== null)))
++    (q.history === undefined || (Array.isArray(q.history) && q.history.every((t) => toTurn(t) !== null))) &&
++    (q.gate === undefined || q.gate === "on" || q.gate === "off")
+   );
+ }
+ 
+@@ -200,6 +203,7 @@ export function parseQuestions(value: unknown): EvalQuestion[] | undefined {
+     query: q.query.trim(),
+     category: q.category,
+     ...(q.history?.length ? { history: q.history.map((t) => toTurn(t)!) } : {}),
++    ...(q.gate ? { gate: q.gate } : {}),
+   }));
+   // Unique after trimming: "a" and "a " would otherwise share one result key on resume and in the report.
+   if (new Set(questions.map((q) => q.id)).size !== questions.length) throw new Error('"questions" ids must be unique');
+diff --git a/src/eval/answerEval.ts b/src/eval/answerEval.ts
+index 81d1595..854d0ce 100644
+--- a/src/eval/answerEval.ts
++++ b/src/eval/answerEval.ts
+@@ -29,6 +29,7 @@ import { EVAL_RESULTS_DIR, EvalProgress } from "./evalHarness";
+ import { EvalConfig, evalRowsToJsonl, newEvalRunId } from "./evalHarness.pure";
+ import type { EvalCategory } from "./evalSet";
+ import { AnswerEvalRow, buildAnswerEvalRow, EvalQuestion, oldestRestorePoint, parseResultRows, RestorePoint, resultKey, resumableRows, TimedEvent } from "./answerEval.pure";
++import { ROUTE_GATE_CONFIG } from "../routing/routeGate";
+ 
+ export const ANSWER_TIMEOUT_MS = 240_000;
+ /** Pause between questions: lets the engine's idle prefix refill run, as between two questions in the chat. */
+@@ -246,7 +247,15 @@ export async function runAnswerEvaluation({
+           maxTokens: DEFAULT_MAX_TOKENS,
+           answerSettings,
+         };
+-        const first = await askOnce(q.query, false, shouldStop, q.history);
++        // Gate probe: per-question gate on/off, so ON and OFF interleave item by item in one run (no Metro edit).
++        const gateBefore = ROUTE_GATE_CONFIG.off;
++        if (q.gate) ROUTE_GATE_CONFIG.off = q.gate === "off";
++        let first: Awaited<ReturnType<typeof askOnce>>;
++        try {
++          first = await askOnce(q.query, false, shouldStop, q.history);
++        } finally {
++          ROUTE_GATE_CONFIG.off = gateBefore;
++        }
+         const row = buildAnswerEvalRow(q, first.events, first.result, first.wallMs, { ...meta, answeredAnyway: false, createdAt: Date.now() }, first.error);
+         rows.push(row);
+         onRow?.(row);
+diff --git a/src/rag/perfArms.test.ts b/src/rag/perfArms.test.ts
+index b74f7a8..0717dcb 100644
+--- a/src/rag/perfArms.test.ts
++++ b/src/rag/perfArms.test.ts
+@@ -95,3 +95,13 @@ describe("device eval questions with history (gate probe multi-turn items)", ()
+     expect(() => parseEvalRequest(q([["system", "x"]]))).toThrow(/questions/);
+   });
+ });
++
++describe("device eval questions with a per-question gate (gate-interleave.patch)", () => {
++  it("accepts gate on/off and rejects anything else", () => {
++    const q = (g: unknown) => JSON.stringify({ requestId: "r", pipeline: "answer", questions: [{ id: "cs-001-on", query: "boa noite", gate: g }] });
++    expect(parseEvalRequest(q("on")).questions![0].gate).toBe("on");
++    expect(parseEvalRequest(q("off")).questions![0].gate).toBe("off");
++    expect(parseEvalRequest(q(undefined)).questions![0].gate).toBeUndefined();
++    expect(() => parseEvalRequest(q("maybe"))).toThrow(/questions/);
++  });
++});

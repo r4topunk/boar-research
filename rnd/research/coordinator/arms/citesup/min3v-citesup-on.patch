@@ -1,0 +1,271 @@
+diff -ruN a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-21 01:20:34
++++ b/be/adapter-litedecline.ts	2026-10-21 01:20:34
+@@ -142,8 +142,15 @@
+ 
+ process.env.BOAR_EVAL_RAM_BYTES = String(Math.round(config.device.ramGb * 1024 ** 3));
+ process.env.BOAR_EVAL_PLATFORM = config.device.platform;
++// CITESUP arm: log mode by default in this tree (cosines logged, CT-1 unchanged); the on-candidate patch sets "on" + tau. Log next to the traces.
++process.env.BOAR_CITESUP ??= "on"; process.env.BOAR_CITESUP_TAU ??= "0.701";
++if (cli.out) process.env.BOAR_CITESUP_LOG ??= `${cli.out}.citesup.jsonl`;
+ process.env.BOAR_APP_GPU = cli.gpu ? "1" : process.env.BOAR_APP_GPU ?? "1"; // embeddings: Metal is fine (not timed)
+ 
++// MINISTRAL3-3B arm V: mistralai card "Recommended Settings": "Use a temperature below 0.1 for daily-driver and production environments"; no other
++// sampler is named, so top_k/top_p/min_p are neutralised (vLLM defaults). Temperature 0.1 is the default in be/server.ts samplerFor (patched),
++// not in this override, so the engine's per-item health temperature 0 still wins.
++process.env.BOAR_SAMPLER_JSON ??= '{"top_k":0,"top_p":1,"min_p":0}';
+ // ---------------------------------------------------------------- models (sha256 = HF LFS oid)
+ const MODELS: Record<string, { file: string; sha256: string }> = {
+   "qwen2.5-1.5b-instruct-q4km": { file: "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", sha256: "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370" },
+@@ -163,7 +170,9 @@
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+-  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
++  // MINISTRAL3-3B arm, vendor-sampling variant V (2026-10-20): the 1.7B id loads mistralai/Ministral-3-3B-Instruct-2512-GGUF @ eb599d40 Q4_K_M (official, Apache-2.0;
++  // text model only, no mmproj); vendor sampling (card: temperature below 0.1; T 0.1, other samplers neutral). The trace's versions["model.sha256"] identifies the weights.
++  "qwen3-1.7b-q4km": { file: "lite/Ministral-3-3B-Instruct-2512-Q4_K_M.gguf", sha256: "9ed150d4367e68df0ac8e1540f6ddc65b42d0ee26378329d1ecbca60f93fc5f8" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -181,7 +190,9 @@
+ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+-    id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
++    id: "qwen3-1.7b-q4km", kind: "llm", label: "Ministral-3-3B-Instruct-2512 (Q4_K_M) [MINISTRAL3-3B arm]",
++    // MINISTRAL3-3B: catalog size held at the 1.7B's value (real file 2147023008 B > LOW_RAM_MAX_MODEL_BYTES 1.6e9) so isCompactModel, declines,
++    // prompts and routing stay byte-identical to the control; only the weights differ.
+     filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
+@@ -861,6 +872,7 @@
+     let res: any;
+     started = performance.now();
+     currentItem = q.id;
++    (globalThis as any).__boarCurrentItem = q.id; // CITESUP log records
+     if (q.history) events.push({ tMs: 0, type: "other", kind: "history", origin: "adapter", turns: q.history.turns.length });
+     const injected = !env.point.current ? ITEM_LOCATIONS?.get(q.id) : undefined;
+     if (injected) {
+diff -ruN a/be/server.ts b/be/server.ts
+--- a/be/server.ts	2026-10-21 01:20:34
++++ b/be/server.ts	2026-10-21 01:20:34
+@@ -24,7 +24,7 @@
+ 
+ /** Sampler identical to the node path: request override, else the engine's, else 0.7; top_k 40, top_p 0.95, min_p 0.05. */
+ export function samplerFor(o: GenOpts, temp: number | undefined, seed: number) {
+-  return { temperature: temp ?? o.temperature ?? 0.7, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
++  return { temperature: temp ?? o.temperature ?? 0.1 /* MINISTRAL3-3B arm V: vendor T (card: below 0.1) */, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
+ }
+ /**
+  * DEEPSAMP: BOAR_SAMPLER_JSON='{"temperature":1,"top_k":20,"min_p":0,"presence_penalty":1.5}' overrides sampler fields on
+diff -ruN a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-21 01:20:34
++++ b/src/routing/answer.ts	2026-10-21 01:20:34
+@@ -74,6 +74,7 @@
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+ import { attributeCitations, checkCitations } from "./citations";
++import { citesupLogRaw, citesupRescue } from "./citationSemantic";
+ import { calculate } from "./calculators";
+ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+@@ -1527,11 +1528,15 @@
+       // would shadow the full chunk whenever the synthesis cites the same one again.
+       const fullOf = (c: RetrievedChunk) =>
+         fullCited.find((r) => r.chunkId === c.chunkId) ?? raw.find((r) => r.chunkId === c.chunkId) ?? c;
++      await citesupLogRaw(text, sources);
+       // CT-1: a [n] stays only where source n supports its sentence.
+       let allCitationsRemoved = false;
+       if (/\[\d+\]/.test(text)) {
+         const cited = sources.map((c) => fullOf(c));
+-        const checked = checkCitations(text, cited);
++        // CITESUP arm (eval env only, off by default): a [n] the key-word rule drops stays when the bge-small cosine of its sentence and source reaches tau.
++        const rescued = await citesupRescue(text, cited);
++        if (rescued?.size) reasonCodes.push(`citations:citesup-kept-${[...rescued].join("-")}`);
++        const checked = checkCitations(text, cited, rescued);
+         if (checked.removed.length) {
+           reasonCodes.push(`citations:removed-${checked.removed.join("-")}`);
+           text = checked.text;
+diff -ruN a/src/routing/citationSemantic.ts b/src/routing/citationSemantic.ts
+--- a/src/routing/citationSemantic.ts	1969-12-31 21:00:00
++++ b/src/routing/citationSemantic.ts	2026-10-21 01:20:34
+@@ -0,0 +1,120 @@
++/**
++ * CITESUP arm (coordinator arms/citesup): a paraphrase-tolerant second test for CT-1. A [n] that the key-word rule
++ * (citations.ts, half the sentence's key words in the source) would remove stays when the bge-small-en-v1.5 cosine
++ * between its sentence and source n reaches tau. Same embedder and normalisation as retrieval: embeddingEngine.embed
++ * (no query instruction: the engine embeds questions as plain text, see retrieve.ts), passages as `${title}\n${body}`
++ * (seedCorpus.ts / documentImporter.ts), cosineSimilarity (rag/pure.ts). A long passage is cut into windows that
++ * fit the embedder's 512-token context; the best window counts.
++ *
++ * Env (eval only; unset = off, zero cost): BOAR_CITESUP = "log" (compute and log, never keep) | "on" (keep when
++ * cos >= BOAR_CITESUP_TAU); BOAR_CITESUP_LOG = JSONL file for one record per answer with a citation check.
++ * Any embedder failure keeps the key-word decision (fail safe: never a kept citation without a cosine).
++ */
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { cosineSimilarity } from "../rag/pure";
++import { unsupportedCitations } from "./citations";
++
++/** Window size and step (characters) for a passage longer than WINDOW_CHARS + 200 (bge-small context 512 tokens). */
++export const WINDOW_CHARS = 1000;
++const WINDOW_STEP = 800;
++
++export function passageWindows(source: RetrievedChunk): string[] {
++  const body = source.body ?? "";
++  if (body.length <= WINDOW_CHARS + 200) return [`${source.title}\n${body}`];
++  const out: string[] = [];
++  for (let start = 0; start < body.length; start += WINDOW_STEP) {
++    let s = start;
++    if (s > 0) {
++      const sp = body.indexOf(" ", s);
++      if (sp > 0 && sp - s < 40) s = sp + 1;
++    }
++    out.push(`${source.title}\n${body.slice(s, start + WINDOW_CHARS)}`);
++    if (start + WINDOW_CHARS >= body.length) break;
++  }
++  return out;
++}
++
++const env = (k: string): string | undefined => (typeof process !== "undefined" ? process.env?.[k] || undefined : undefined);
++
++export function citesupMode(): "log" | "on" | null {
++  const m = env("BOAR_CITESUP");
++  return m === "log" || m === "on" ? m : null;
++}
++
++export interface CitesupDecision {
++  k: number;
++  n: number;
++  sentence: string;
++  cos: number | null;
++  rescued: boolean;
++  window?: string;
++  error?: string;
++}
++
++async function log(rec: Record<string, unknown>): Promise<void> {
++  const file = env("BOAR_CITESUP_LOG");
++  if (!file) return;
++  const fs = await import("node:fs");
++  fs.appendFileSync(file, JSON.stringify({ item: (globalThis as any).__boarCurrentItem ?? null, ...rec }) + "\n");
++}
++
++/** Logs what the model wrote (CITESUP replay input), when BOAR_CITESUP is set. */
++export async function citesupLogRaw(text: string, sources: RetrievedChunk[]): Promise<void> {
++  if (!citesupMode()) return;
++  await log({ kind: "raw", text, sources: sources.map((s) => s.title) });
++}
++
++/**
++ * The [n] indexes (checkCitations' `rescued`) to keep. Undefined when CITESUP is off. In "log" mode the set is
++ * always empty: the cosines are computed and logged only.
++ */
++export async function citesupRescue(answer: string, sources: RetrievedChunk[]): Promise<Set<number> | undefined> {
++  const mode = citesupMode();
++  if (!mode) return undefined;
++  const tau = Number(env("BOAR_CITESUP_TAU") ?? "NaN");
++  const rescued = new Set<number>();
++  const pending = unsupportedCitations(answer, sources);
++  if (!pending.length) return rescued;
++  const decisions: CitesupDecision[] = [];
++  let embed: ((t: string) => Promise<Float32Array>) | null = null;
++  let loadError: string | undefined;
++  try {
++    const { embeddingEngine } = await import("../rag/embed");
++    embed = (t) => embeddingEngine.embed(t);
++  } catch (e: any) {
++    loadError = String(e?.message ?? e);
++  }
++  const windowVecs = new Map<number, { text: string; vec: Float32Array }[]>();
++  for (const p of pending) {
++    const d: CitesupDecision = { k: p.k, n: p.n, sentence: p.sentence, cos: null, rescued: false };
++    try {
++      if (!embed) throw new Error(loadError ?? "no embedder");
++      if (!p.sentence.trim()) throw new Error("empty sentence");
++      if (!windowVecs.has(p.n)) {
++        const ws = passageWindows(sources[p.n - 1]);
++        const vecs: { text: string; vec: Float32Array }[] = [];
++        for (const w of ws) vecs.push({ text: w, vec: await embed(w) });
++        windowVecs.set(p.n, vecs);
++      }
++      const sv = await embed(p.sentence);
++      let best = -2;
++      let bestText = "";
++      for (const w of windowVecs.get(p.n)!) {
++        const c = cosineSimilarity(sv, w.vec);
++        if (c > best) {
++          best = c;
++          bestText = w.text;
++        }
++      }
++      d.cos = Math.round(best * 1e6) / 1e6;
++      d.window = bestText.slice(0, 1200);
++      d.rescued = mode === "on" && Number.isFinite(tau) && best >= tau;
++      if (d.rescued) rescued.add(p.k);
++    } catch (e: any) {
++      d.error = String(e?.message ?? e);
++    }
++    decisions.push(d);
++  }
++  await log({ kind: "check", mode, tau: Number.isFinite(tau) ? tau : null, answer, decisions });
++  return rescued;
++}
+diff -ruN a/src/routing/citations.ts b/src/routing/citations.ts
+--- a/src/routing/citations.ts	2026-10-21 01:20:34
++++ b/src/routing/citations.ts	2026-10-21 01:20:34
+@@ -76,17 +76,46 @@
+   return (span.match(/[.!?](\s|$)/g) ?? []).length > 1 || /[.!?]\s+\S/.test(span.trim()) ? span : null;
+ }
+ 
+-export function checkCitations(answer: string, sources: RetrievedChunk[]): CheckedCitations {
++/** The key-word decision for one [n] (CT-1): kept when source n contains half its sentence's key words (or a closing paragraph clears the higher bar). */
++function lexicalKeep(answer: string, whole: string, n: number, at: number, sources: RetrievedChunk[]): boolean {
++  const source = sources[n - 1];
++  const bracket = at + whole.indexOf("[");
++  const paragraph = source ? paragraphBefore(answer, bracket, at + whole.length) : null;
++  return (
++    !!source &&
++    (citationSupport(sentenceBefore(answer, bracket), source) >= CITATION_MIN_SUPPORT ||
++      (paragraph !== null && citationSupport(paragraph, source) >= ATTRIBUTION_MIN_SUPPORT))
++  );
++}
++
++/**
++ * CITESUP arm: the [n] that the key-word rule would remove although source n exists (a paraphrase can cite the right
++ * source with other words), in order of appearance: k = index among all [n] in the answer, the cited sentence
++ * (citation brackets removed). A [n] past the sources is not listed: it is always dropped.
++ */
++export function unsupportedCitations(answer: string, sources: RetrievedChunk[]): { k: number; n: number; sentence: string }[] {
++  const out: { k: number; n: number; sentence: string }[] = [];
++  let k = -1;
++  answer.replace(/\s?\[(\d+)\]/g, (whole, num: string, at: number) => {
++    k++;
++    const n = Number(num);
++    if (sources[n - 1] && !lexicalKeep(answer, whole, n, at, sources)) {
++      const sentence = sentenceBefore(answer, at + whole.indexOf("[")).replace(/\s?\[\d+\]/g, "").trim();
++      out.push({ k, n, sentence });
++    }
++    return whole;
++  });
++  return out;
++}
++
++/** `rescued`: indexes k (unsupportedCitations) of [n] kept although the key-word rule fails (CITESUP); default none = CT-1 unchanged. */
++export function checkCitations(answer: string, sources: RetrievedChunk[], rescued?: ReadonlySet<number>): CheckedCitations {
+   const removed: number[] = [];
++  let k = -1;
+   const text = answer.replace(/\s?\[(\d+)\]/g, (whole, num: string, at: number) => {
++    k++;
+     const n = Number(num);
+-    const source = sources[n - 1];
+-    const bracket = at + whole.indexOf("[");
+-    const paragraph = source ? paragraphBefore(answer, bracket, at + whole.length) : null;
+-    const keep =
+-      !!source &&
+-      (citationSupport(sentenceBefore(answer, bracket), source) >= CITATION_MIN_SUPPORT ||
+-        (paragraph !== null && citationSupport(paragraph, source) >= ATTRIBUTION_MIN_SUPPORT));
++    const keep = lexicalKeep(answer, whole, n, at, sources) || (!!sources[n - 1] && !!rescued?.has(k));
+     if (keep) return whole;
+     removed.push(n);
+     return "";

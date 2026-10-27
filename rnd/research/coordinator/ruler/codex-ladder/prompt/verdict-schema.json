@@ -1,0 +1,75 @@
+{
+ "type": "object",
+ "properties": {
+  "scores_A": {
+   "type": "object",
+   "properties": {
+    "correctness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "completeness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "usefulness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    }
+   },
+   "required": [
+    "correctness",
+    "completeness",
+    "usefulness"
+   ],
+   "additionalProperties": false
+  },
+  "scores_B": {
+   "type": "object",
+   "properties": {
+    "correctness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "completeness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "usefulness": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    }
+   },
+   "required": [
+    "correctness",
+    "completeness",
+    "usefulness"
+   ],
+   "additionalProperties": false
+  },
+  "winner": {
+   "type": "string",
+   "enum": [
+    "A",
+    "B",
+    "tie"
+   ]
+  },
+  "rationale": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "scores_A",
+  "scores_B",
+  "winner",
+  "rationale"
+ ],
+ "additionalProperties": false
+}

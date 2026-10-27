@@ -1,0 +1,21 @@
+--- a/be/adapter.ts	2026-10-13 21:28:35
++++ b/be/adapter.ts	2026-10-13 21:28:35
+@@ -421,7 +421,8 @@
+   const base = external ?? `http://127.0.0.1:${port}`;
+   const args = ["-m", modelPath, "-t", String(cli.threads), "-tb", String(cli.threads), "-c", process.env.BOAR_SERVER_CTX ?? "4096", "-ngl", "0", "-np", "1", "--jinja",
+                 "--no-webui", "--cache-ram", "0", "--reasoning-format", "deepseek", "--host", "127.0.0.1", "--port", String(port),
+-                ...(process.env.BOAR_KV_TYPE ? ["--cache-type-k", process.env.BOAR_KV_TYPE, "--cache-type-v", process.env.BOAR_KV_TYPE] : [])]; // KVQ8 arm: KV cache type (unset = llama-server default f16)
++                ...(process.env.BOAR_KV_TYPE ? ["--cache-type-k", process.env.BOAR_KV_TYPE, "--cache-type-v", process.env.BOAR_KV_TYPE] : []), // KVQ8 arm: KV cache type (unset = llama-server default f16)
++                ...(process.env.BOAR_SERVER_LORA ? ["--lora", resolve(process.env.BOAR_SERVER_LORA)] : [])]; // SFT4B arm: runtime GGUF LoRA on top of the unchanged claim GGUF
+   const logPath = `${cli.out!.replace(/\.jsonl$/, "")}.server.log`;
+   mkdirSync(dirname(logPath), { recursive: true });
+   writeFileSync(logPath, `${bin} ${args.join(" ")}\n`);
+@@ -821,6 +822,8 @@
+     persona: persona.id,
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
++    ...(process.env.BOAR_SERVER_LORA ? { "lora.file": process.env.BOAR_SERVER_LORA.split("/").pop()!, "lora.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_SERVER_LORA)).digest("hex"),
++                                         "model.variant": "qwen3-4b-instruct-2507-q4km-sft4b" } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),

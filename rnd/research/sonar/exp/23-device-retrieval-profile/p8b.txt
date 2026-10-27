@@ -1,0 +1,12 @@
+  64.1/q  SELECT title, source, views, block_id, off, len FROM articles WHERE id
+  60.6/q  SELECT zdata FROM blocks WHERE id = ?
+  37.7/q  SELECT url, license FROM article_meta WHERE article_id = ?
+  26.1/q  SELECT doc FROM df WHERE term = ?
+  16.7/q  DELETE FROM temp.qtok
+  16.7/q  INSERT INTO temp.qtok (x) VALUES (?)
+  16.7/q  SELECT term FROM temp.qtok_v
+  15.0/q  SELECT doc FROM temp.fts_v WHERE term = ?
+   2.0/q  SELECT id, title, source, views FROM articles WHERE title COLLATE NOCA
+   2.0/q  SELECT r.title, r.article_id, a.source, a.views FROM redirects r JOIN 
+   1.8/q  SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views FROM 
+   0.8/q  SELECT title FROM articles WHERE id = ?

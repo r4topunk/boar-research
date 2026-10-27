@@ -1,0 +1,98 @@
+diff --git a/src/models/manifest.test.ts b/src/models/manifest.test.ts
+index 175faf4..a66bdf2 100644
+--- a/src/models/manifest.test.ts
++++ b/src/models/manifest.test.ts
+@@ -27,9 +27,10 @@ describe("totalManifestBytes", () => {
+ });
+ 
+ describe("answer models and the setup set", () => {
+-  it("has exactly one default (Qwen3-4B-2507) and one compact (Qwen2.5-1.5B) answer model, neither required", () => {
++  it("has the default (Qwen3-4B-2507) first, the lite 1.7B as a second default-tier entry and one compact (Qwen2.5-1.5B) answer model, none required", () => {
+     expect(ANSWER_MODELS.map((m) => [m.id, m.answerTier])).toEqual([
+       ["qwen3-4b-instruct-2507-q4km", "default"],
++      ["qwen3-1.7b-q4km", "default"],
+       ["qwen2.5-1.5b-instruct-q4km", "compact"],
+     ]);
+     for (const m of ANSWER_MODELS) {
+@@ -40,6 +41,18 @@ describe("answer models and the setup set", () => {
+     expect(COMPACT_ANSWER_MODEL.sizeBytes).toBeLessThan(DEFAULT_ANSWER_MODEL.sizeBytes);
+   });
+ 
++  it("catalogues Qwen3-1.7B Q4_K_M (lite line) with the measured file, tier default, and leaves the 4B as DEFAULT_ANSWER_MODEL", () => {
++    const m = MODEL_CATALOG.find((x) => x.id === "qwen3-1.7b-q4km")!;
++    expect(m).toBeDefined();
++    expect(m.sizeBytes).toBe(1107409472);
++    expect(m.sha256).toBe("b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897");
++    expect(m.answerTier).toBe("default");
++    expect(m.required).toBe(false);
++    expect(m.capabilities?.roles).toEqual(["general", "fast"]);
++    expect(DEFAULT_ANSWER_MODEL.id).toBe("qwen3-4b-instruct-2507-q4km");
++    expect(REQUIRED_MODELS.some((x) => x.id === m.id)).toBe(false);
++  });
++
+   it("requires only the embedding model; the default setup set adds the default answer model (~2.5GB total)", () => {
+     expect(MODEL_CATALOG.filter((m) => m.required).map((m) => m.kind)).toEqual(["embedding"]);
+     expect(REQUIRED_MODELS.map((m) => m.kind).sort()).toEqual(["embedding", "llm"]);
+diff --git a/src/models/manifest.ts b/src/models/manifest.ts
+index f4493f3..610cd47 100644
+--- a/src/models/manifest.ts
++++ b/src/models/manifest.ts
+@@ -156,6 +156,28 @@ export const MODEL_CATALOG: CatalogModel[] = [
+     answerTier: "default",
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
++  {
++    // Lite line (LITE2..LITE7, X2b + 1.7B): measured as answerTier "default" with the engine's non-compact rules, so it is
++    // catalogued the same way. Consequences, on purpose and unmeasured otherwise: isCompactModel() is false (no compact
++    // declines), and on a phone with <= 4.5 GB it is a "default"-tier model, so tooBigForAutoPick/tooBigForLowRam hold it
++    // back like the 4B (the auto-pick cap AUTO_PICK_MAX_MODEL_BYTES = 1.1e9 B is also just under this file's 1.107e9 B).
++    // A separate "lite" tier (own pick rule by device RAM) may be needed later. It comes after the 4B on purpose:
++    // DEFAULT_ANSWER_MODEL is the first "default" entry. Needs `--reasoning off` on llama.cpp (hybrid-thinking model).
++    id: "qwen3-1.7b-q4km",
++    kind: "llm",
++    label: "Qwen3-1.7B (Q4_K_M)",
++    displayName: "Qwen3 1.7B",
++    filename: "models/qwen3-1.7b-q4km.gguf",
++    sizeBytes: 1107409472,
++    sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897",
++    sourceUrl:
++      "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/d7f544eead698dbd1f15126ef60b45a1e1933222/Qwen3-1.7B-Q4_K_M.gguf",
++    license: "Apache-2.0",
++    description: "1.7B dense, about 2.5x faster than the 4B (56 tok/s on a desktop) and ~1.1GB, but weaker: -0.09 to -0.11 vs the 4B in our benchmark. Lite profile.",
++    required: false,
++    answerTier: "default",
++    capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
++  },
+   {
+     id: "qwen2.5-1.5b-instruct-q4km",
+     kind: "llm",
+diff --git a/src/routing/defaultModel.test.ts b/src/routing/defaultModel.test.ts
+index 0d72065..1d2c4b3 100644
+--- a/src/routing/defaultModel.test.ts
++++ b/src/routing/defaultModel.test.ts
+@@ -1,5 +1,6 @@
+ import { describe, it, expect } from "vitest";
+ import { AUTO_PICK_MAX_MODEL_BYTES, isCompactModel, LOW_RAM_MAX_MODEL_BYTES, pickDefaultAnswerModel, rankAnswerModels, tooBigForAutoPick, tooBigForLowRam } from "./defaultModel";
++import { MODEL_CATALOG } from "../models/manifest";
+ import { contextSizeForRam, estimateMemoryFit, parseGgufShape, toGb } from "../inference/memoryFit";
+ 
+ const GiB = 1024 ** 3;
+@@ -176,3 +177,18 @@ describe("CR-1: nothing above the compact model on a low-RAM phone", () => {
+     expect(isCompactModel({ sizeBytes: 2.4 * GB })).toBe(false);
+   });
+ });
++
++describe("the lite 1.7B catalog entry (qwen3-1.7b-q4km)", () => {
++  const entry = MODEL_CATALOG.find((m) => m.id === "qwen3-1.7b-q4km")!;
++  it("a 1.11 GB model with that entry is not a compact model (no compact declines)", () => {
++    expect(entry.sizeBytes).toBe(1107409472);
++    expect(entry.sizeBytes).toBeLessThanOrEqual(LOW_RAM_MAX_MODEL_BYTES);
++    expect(isCompactModel({ answerTier: entry.answerTier, sizeBytes: entry.sizeBytes })).toBe(false);
++    // The same bytes without the tier would be compact: the entry is what changes the behaviour.
++    expect(isCompactModel({ sizeBytes: entry.sizeBytes })).toBe(true);
++  });
++  it("on a 4 GB phone it is held back like the 4B (default tier); open: a separate lite tier", () => {
++    expect(tooBigForAutoPick({ answerTier: entry.answerTier, sizeBytes: entry.sizeBytes }, 3.7 * 1024 ** 3)).toBe(true);
++    expect(tooBigForAutoPick({ answerTier: entry.answerTier, sizeBytes: entry.sizeBytes }, 8 * 1024 ** 3)).toBe(false);
++  });
++});

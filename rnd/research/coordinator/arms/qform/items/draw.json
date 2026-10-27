@@ -1,0 +1,171 @@
+{
+ "seed": 42,
+ "selftest": {
+  "method": "random.Random(42).sample(sorted(ids), 8) per pack",
+  "draw": {
+   "boar-factbook": [
+    "st-boar-factbook-004",
+    "st-boar-factbook-001",
+    "st-boar-factbook-009",
+    "st-boar-factbook-008",
+    "st-boar-factbook-017",
+    "st-boar-factbook-003",
+    "st-boar-factbook-012",
+    "st-boar-factbook-002"
+   ],
+   "boar-firstaid-en": [
+    "st-boar-firstaid-en-004",
+    "st-boar-firstaid-en-001",
+    "st-boar-firstaid-en-009",
+    "st-boar-firstaid-en-008",
+    "st-boar-firstaid-en-017",
+    "st-boar-firstaid-en-003",
+    "st-boar-firstaid-en-012",
+    "st-boar-firstaid-en-002"
+   ],
+   "boar-medlineplus-en": [
+    "st-boar-medlineplus-en-004",
+    "st-boar-medlineplus-en-001",
+    "st-boar-medlineplus-en-009",
+    "st-boar-medlineplus-en-008",
+    "st-boar-medlineplus-en-017",
+    "st-boar-medlineplus-en-003",
+    "st-boar-medlineplus-en-012",
+    "st-boar-medlineplus-en-002"
+   ]
+  }
+ },
+ "authored": {
+  "boar-crypto": {
+   "method": "eligible = articles whose chunk 0 has >= 300 chars (end-start in UTF-16 units), sorted by id; random.Random(42).sample(eligible, 24), taken in draw order, first 8 with a usable concrete fact",
+   "eligible_n": 1450,
+   "draw24": [
+    2982,
+    1731,
+    1460,
+    2122,
+    2051,
+    2002,
+    1801,
+    1698,
+    3067,
+    2760,
+    1644,
+    2872,
+    2463,
+    1485,
+    1480,
+    1672,
+    1991,
+    2025,
+    2660,
+    2898,
+    1468,
+    2804,
+    1943,
+    3008
+   ],
+   "used_in_order": [
+    2982,
+    2122,
+    2051,
+    2002,
+    1801,
+    1698,
+    3067,
+    2760
+   ],
+   "skipped": {
+    "1731": "overview prose, no single checkable number/date/name in the lead chunks",
+    "1460": "spec table of contents chunk"
+   }
+  },
+  "boar-wikivoyage-en": {
+   "method": "eligible = articles whose chunk 0 has >= 300 chars (end-start in UTF-16 units), sorted by id; random.Random(42).sample(eligible, 24), taken in draw order, first 8 with a usable concrete fact",
+   "eligible_n": 10430,
+   "draw24": [
+    5639,
+    1225,
+    13781,
+    12174,
+    11101,
+    6986,
+    5158,
+    29109,
+    4359,
+    31779,
+    21110,
+    1557,
+    1435,
+    4656,
+    10867,
+    11565,
+    26154,
+    32252,
+    1285,
+    30126,
+    9919,
+    29087,
+    20972,
+    10961
+   ],
+   "used_in_order": [
+    5639,
+    13781,
+    11101,
+    6986,
+    5158,
+    29109,
+    4359,
+    31779
+   ],
+   "skipped": {
+    "1225": "disambiguation page",
+    "12174": "only place-lookup facts (region location), gazetteer out of scope"
+   }
+  },
+  "boar-visa-en": {
+   "method": "eligible = articles whose chunk 0 has >= 300 chars (end-start in UTF-16 units), sorted by id; random.Random(42).sample(eligible, 24), taken in draw order, first 8 with a usable concrete fact",
+   "eligible_n": 283,
+   "draw24": [
+    123,
+    21,
+    238,
+    223,
+    212,
+    150,
+    111,
+    384,
+    98,
+    315,
+    26,
+    24,
+    101,
+    209,
+    217,
+    360,
+    22,
+    199,
+    313,
+    210,
+    329,
+    240,
+    8,
+    174
+   ],
+   "used_in_order": [
+    123,
+    21,
+    238,
+    223,
+    212,
+    150,
+    111,
+    98
+   ],
+   "skipped": {
+    "384": "third article with the identical Henley-rank sentence (East Timorese, British already used); replaced by the next draw (Namibia 98)"
+   }
+  }
+ }
+}

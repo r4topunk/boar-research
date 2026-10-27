@@ -1,0 +1,19 @@
+# VITALPACK-ADD — one Vital-Articles intro appended after grounding on the deep thinking tier (2026-10-12; criterion `VITALADD-criterion.md` sha 7c9f7e65…, smoke addendum 1)
+
+**Verdict: NO at the slice; full set not detected at MDE 0.025 (110, 1 seed, Haiku vs the TV twin).** Mechanism confirmed in the traces (vital intro appended on 60/110 v0.2 and 22/51 V-para items; empty-kept items 54 → 37 and 29 → 15; v0.2 gold article in kept 16/86 → ≈ 45/86), but the judge does not reward it.
+
+| stage | n | judge | A | control | Δ (CI) | h2h | cost |
+|---|---|---|---|---|---|---|---|
+| smoke (3 v0.1) | 3 | — | PASS (infra, addendum 1) | | | | mini 4 min |
+| slice random20-v02 s42 | 20 | Haiku N=4 | 0.590 | H 0.571 | +0.019 (−0.007…+0.047) | 9/5/6 | 40 Haiku |
+| same 20 ids | 20 | Opus N=4 | 0.639 (0.545–0.720) | H 0.649 | **−0.011 (−0.039…+0.018)** | 6/8/6 | 40 Opus |
+| full v0.2 s42 (labelled post-hoc; no H Haiku full rows exist, so the control is TV = deep + thinking 1024, Haiku 110, DT512-V02: TV ≈ H −0.005) | 110 | Haiku N=4 | 0.546 (0.517–0.575) | TV 0.534 | **+0.011 (−0.007…+0.029)** | 44/28/38 | 220 Haiku |
+Per dimension: Opus slice correctness 0.778 vs 0.818, completeness 0.551 vs 0.572; Haiku full correctness 0.738 vs 0.721, completeness 0.448 vs 0.439, usefulness 0.452 vs 0.444.
+
+Reading: the appended intro is on-subject (title level) but rarely carries the specific fact the rubric wants (LOSSMAP: the judge names specific missing content); a general-encyclopedia lead section answers "what is X" questions, while the v0.2/V-para questions ask for mechanisms, numbers and comparisons. The +0.011 full-set Haiku Δ is below the one-seed v0.2 MDE (0.025) and below the LEVER threshold; a gain ≥ +0.03 is excluded by the Opus slice CI and by the Haiku full CI. Pre-generated V-para s42 (`va-A-vpara-s42`, 58) left unjudged.
+Cheapest powered test if reopened: Opus N=4 on the existing full 110 traces vs L2-H-1seed (220 Opus, 0 generation) → parked list.
+Method: mini tree `be-0cfd4a77-vitaladd` = dt512 + `vitaladd.vs-dt512.patch` (f7a1f394…; default-off byte-identical to dt512 60/60 on replay); adapter boar-eval 684235f; `settings.addPack {wiki-vital5, k 1, pool 6}`; wiki-vital5 d3b87d… in the kit. Exposure: v0.2 smoke 3 + slice 20 + full 110 generations; V-para 58 generation; Haiku 40 + 220; Opus 40.
+
+## Addendum 2026-10-13 20:5x — stage 3 at L2 (Opus judge.v1 N = 4, v0.2 full 110 s42; a parallel session)
+**Result: Δ raw +0.0012 (−0.0120…+0.0147) vs L2-H-1seed; above_min +0.0017 (−0.0147…+0.0188); h2h A better/same/worse 35/45/30; wins vs gold 0/0.** A raw 0.6091 (0.5768–0.6413) vs H 0.6079 (matches `arms/dt512v02/aggregates/L2-H-1seed.opus.json` exactly). Haiku L1 beside it (vs TV, the only full-set Haiku control): +0.011 (−0.007…+0.029). Opus rows `blind/bench-v02/runs-vitaladd/va-A-v02-s42.judgments.opus.jsonl` (220 ok, 0 429, 0 exit-3, wall 360 s with another N = 4 Opus pass in flight); aggregate `aggregates/vitaladd-v02-s42.opus-vs-L2-H-1seed.json` (paired_gap.py B 2000 seed 11; paired.mjs agrees +0.0012 (−0.0117…+0.0140)); driver `tools/l2-full-s42.sh`, log `logs/l2-full-s42-opus.log`.
+**Rule reading:** stage 3 says CONTINUE if Opus Δ > 0 **or** CI low > −0.01: the first clause is met by +0.001, the second is not (−0.012). **Coordinator decision:** H6 stays **not detected at L2 on v0.2** (CI excludes ≥ +0.015; one-seed MDE 0.025); stage 4 (V-para s42 + s43, 204 Opus) is **not run**: the s43 A traces were never generated (only `va-A-vpara-s43.requests.jsonl` exists; generation would need the parked mini), and a one-seed V-para deep Δ < 0.03 is seed noise (SEEDVAR). If a seed-43 A trace is ever generated, stage 4 costs 204 Opus and 0 further work. The §3 parked row's "cheapest powered test" is now spent: the mechanism fills the empty-kept items but the judge does not reward it at either tier of judge.

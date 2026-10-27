@@ -1,0 +1,615 @@
+diff --git a/src/rag/wikiPack.batch.test.ts b/src/rag/wikiPack.batch.test.ts
+new file mode 100644
+index 00000000..21d39e19
+--- /dev/null
++++ b/src/rag/wikiPack.batch.test.ts
+@@ -0,0 +1,217 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { decompress } from "fzstd";
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { WikiPack, titleCandidates, type PackSource, type PackSql } from "./wikiPack";
++
++// Batched lookups (BATCHRET): every batched path must return exactly what the one-row queries it replaces return.
++// The one-row queries below are the ones wikiPack.ts made before batching, kept here as the reference.
++
++type Db = ReturnType<typeof nodeSqliteDatabase>;
++
++/** A PackSql that counts its calls. */
++function counted(db: Db): PackSql & { calls: number } {
++  const c = {
++    calls: 0,
++    getAllAsync: (sql: string, p: any[]) => (c.calls++, db.getAllAsync<any>(sql, p)),
++    getFirstAsync: (sql: string, p: any[]) => (c.calls++, db.getFirstAsync<any>(sql, p)),
++    execAsync: (sql: string) => (c.calls++, db.execAsync(sql)),
++    runAsync: (sql: string, p: any[]) => (c.calls++, db.runAsync(sql, p)),
++  };
++  return c as any;
++}
++
++const STOP = new Set("the of a is what how do does and in to why was".split(" "));
++
++/** The pre-batching stems(): one tokenizer pass per text, one df (then fts_v) query per term. */
++async function refStems(db: Db, text: string, nIndexed: number, hasDf: boolean, stop: (w: string) => boolean) {
++  const words = (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter((w) => w.length > 1 && !stop(w));
++  if (!words.length) return [];
++  await db.execAsync("DELETE FROM temp.qtok");
++  await db.runAsync("INSERT INTO temp.qtok (x) VALUES (?)", [words.join(" ")]);
++  const terms = await db.getAllAsync<{ term: string }>("SELECT term FROM temp.qtok_v", []);
++  const out: Array<{ stem: string; idf: number }> = [];
++  for (const { term } of terms) {
++    const row =
++      (hasDf ? await db.getFirstAsync<{ doc: number }>("SELECT doc FROM df WHERE term = ?", [term]) : null) ??
++      (await db.getFirstAsync<{ doc: number }>("SELECT doc FROM temp.fts_v WHERE term = ?", [term]));
++    if (row && row.doc > 0) out.push({ stem: term, idf: Math.log(nIndexed / row.doc) });
++  }
++  return out;
++}
++
++/**
++ * A hand-built format-2 pack (blocks stored uncompressed: identity decompress) with the cases batching must not
++ * change: two articles with the same title (case aside) and the same views (a tie), redirects that tie, titles that
++ * differ only in case, a non-ASCII title (NOCASE folds ASCII only), url/license rows for some articles only, and a
++ * df table that holds only some terms. `redirectNocase` false builds the redirects table with a binary title.
++ */
++function synthPack(redirectNocase: boolean): Db {
++  const db = nodeSqliteDatabase(":memory:");
++  const raw = db.raw;
++  raw.exec(`
++    CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
++    CREATE TABLE blocks (id INTEGER PRIMARY KEY, zdata BLOB NOT NULL);
++    CREATE TABLE articles (id INTEGER PRIMARY KEY, source INTEGER NOT NULL, page_id INTEGER NOT NULL, title TEXT NOT NULL,
++                           views INTEGER NOT NULL, block_id INTEGER NOT NULL, off INTEGER NOT NULL, len INTEGER NOT NULL);
++    CREATE INDEX articles_title ON articles (title COLLATE NOCASE);
++    CREATE TABLE chunks (id INTEGER PRIMARY KEY, article_id INTEGER NOT NULL, start INTEGER NOT NULL, end INTEGER NOT NULL);
++    CREATE INDEX chunks_article ON chunks (article_id);
++    CREATE VIRTUAL TABLE fts USING fts5(title, section, body, content='', detail=full, tokenize='porter unicode61 remove_diacritics 2');
++    CREATE TABLE redirects (title TEXT NOT NULL ${redirectNocase ? "COLLATE NOCASE" : ""}, article_id INTEGER NOT NULL, PRIMARY KEY (title, article_id)) WITHOUT ROWID;
++    CREATE TABLE df (term TEXT PRIMARY KEY, doc INTEGER NOT NULL) WITHOUT ROWID;
++    CREATE TABLE article_meta (article_id INTEGER PRIMARY KEY, url TEXT, license TEXT);
++  `);
++  const arts: Array<[number, number, string, number]> = [
++    // id, source (0 enwiki, 1 enwikivoyage, 5 eips), title, views
++    [1, 0, "Georgia", 10],
++    [2, 0, "georgia", 10],
++    [3, 1, "Paris", 5],
++    [4, 1, "PARIS", 9],
++    [5, 0, "New York City", 7],
++    [6, 1, "New York City", 3],
++    [7, 0, "Éire", 4],
++    [8, 0, "éire", 2],
++    [9, 5, "ERC-20: Token Standard", 0],
++    [10, 0, "Georgia (disambiguation)", 1],
++  ];
++  const ins = raw.prepare("INSERT INTO articles VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
++  const enc = new TextEncoder();
++  const blocks = new Map<number, string>();
++  for (const [id, source, title, views] of arts) {
++    const block = Math.ceil(id / 3);
++    const prev = blocks.get(block) ?? "";
++    const text = `# ${title}\n\n${title} is a test article number ${id} about places and tokens.`;
++    ins.run(id, source, 100 + id, title, views, block, enc.encode(prev).length, enc.encode(text).length);
++    blocks.set(block, prev + text);
++    raw.prepare("INSERT INTO chunks VALUES (?, ?, 0, ?)").run(id, id, text.length);
++    raw.prepare("INSERT INTO fts (rowid, title, section, body) VALUES (?, ?, '', ?)").run(id, title, text);
++  }
++  for (const [b, text] of blocks) raw.prepare("INSERT INTO blocks VALUES (?, ?)").run(b, enc.encode(text));
++  for (const [t, a] of [["Big Apple", 5], ["Big Apple", 6], ["Lutetia", 3], ["Lutetia", 4], ["Sakartvelo", 1], ["Sakartvelo", 2], ["ERC20", 9], ["sakartvelo2", 1]] as const)
++    raw.prepare("INSERT INTO redirects VALUES (?, ?)").run(t, a);
++  raw.prepare("INSERT INTO article_meta VALUES (9, 'https://eips.ethereum.org/EIPS/eip-20', 'CC0-1.0')").run();
++  raw.prepare("INSERT INTO article_meta VALUES (3, NULL, 'CC BY-SA 4.0')").run();
++  raw.prepare("INSERT INTO df VALUES ('test', 10), ('articl', 10), ('zero', 0)").run();
++  for (const [k, v] of [["format", "boar-knowledge-pack"], ["formatVersion", "2"], ["indexedChunks", "10"]])
++    raw.prepare("INSERT INTO meta VALUES (?, ?)").run(k, v);
++  return db;
++}
++
++const TITLES = [
++  "Georgia", "GEORGIA", "georgia", "Paris", "paris", "PARIS", "Big Apple", "BIG APPLE", "big apple", "Lutetia", "lutetia",
++  "Sakartvelo", "SAKARTVELO", "sakartvelo2", "Sakartvelo2", "New York City", "new york city", "Éire", "éire", "ÉIRE",
++  "ERC20", "erc20", "ERC-20: Token Standard", "Nowhere", "",
++];
++const SOURCES: PackSource[] = ["enwiki", "enwikivoyage", "eips", "bips"];
++
++describe.each([true, false])("batched title, article and stem lookups (redirects NOCASE: %s)", (nocase) => {
++  it("prefetchTitles + resolveTitle returns what resolveTitle's own queries return, ties and case included", async () => {
++    const ref = await WikiPack.open(synthPack(nocase), (d) => d);
++    const db = counted(synthPack(nocase));
++    const pack = await WikiPack.open(db, (d) => d);
++    await pack.prefetchTitles(TITLES, SOURCES);
++    const before = db.calls;
++    let fallbacks = 0;
++    for (const t of TITLES)
++      for (const source of SOURCES) {
++        const n = db.calls;
++        expect(await pack.resolveTitle(t, { fuzzy: false, source }), `${t} @ ${source}`).toBe(await ref.resolveTitle(t, { fuzzy: false, source }));
++        if (db.calls > n) fallbacks++;
++      }
++    // Only the ties go back to the one-row query: Georgia/georgia (3 spellings), Sakartvelo (2 spellings, nocase only).
++    expect(fallbacks).toBe(nocase ? 5 : 4);
++    expect(db.calls - before).toBeGreaterThan(0);
++  });
++
++  it("prefetchArticles + article returns the same article (text, url, license) and still fails on a missing id", async () => {
++    const ref = await WikiPack.open(synthPack(nocase), (d) => d);
++    const db = counted(synthPack(nocase));
++    const pack = await WikiPack.open(db, (d) => d);
++    const ids = [9, 3, 1, 2, 4, 5, 6, 7, 8, 10];
++    const n0 = db.calls;
++    await pack.prefetchArticles([...ids, 404]);
++    for (const id of ids) expect(await pack.article(id)).toEqual(await ref.article(id));
++    // One query for the rows, one for url/license, then blocks in windows (4 blocks here: one query).
++    expect(db.calls - n0).toBe(3);
++    await expect(pack.article(404)).rejects.toThrow("pack article 404 missing");
++    await expect(ref.article(404)).rejects.toThrow("pack article 404 missing");
++  });
++
++  it("stemsMany returns, per text, what one stems() pass per text returned (df first, then the index's count)", async () => {
++    const rdb = synthPack(nocase);
++    const ref = await WikiPack.open(rdb, (d) => d);
++    const db = counted(synthPack(nocase));
++    const pack = await WikiPack.open(db, (d) => d);
++    const texts = ["Test articles about places", "the of and", "", "Éire tokens tokens zero", "PLACES", "test", "articles about places test"];
++    const stop = (w: string) => ["the", "of", "and", "about"].includes(w);
++    const n0 = db.calls;
++    const got = await pack.stemsMany(texts);
++    // DELETE + INSERT + one vocabulary read + df + fts_v for the terms df doesn't hold.
++    expect(db.calls - n0).toBe(5);
++    for (let i = 0; i < texts.length; i++) expect(got[i], texts[i]).toEqual(await refStems(rdb, texts[i], 10, true, stop));
++    // Second time: no SQL at all.
++    const n1 = db.calls;
++    expect(await pack.stemsMany(texts)).toEqual(got);
++    expect(await pack.stems(texts[0])).toEqual(got[0]);
++    expect(db.calls).toBe(n1);
++    void ref;
++  });
++});
++
++describe("batched search on a real built pack", () => {
++  let path: string;
++  beforeAll(() => {
++    path = join(mkdtempSync(join(tmpdir(), "boar-pack-batch-")), "mini.sqlite");
++    execFileSync(process.execPath, [
++      "scripts/build-wiki-pack.mjs", "--out", path, "--shards", "src/rag/testing/fixtures/mini-wiki.jsonl", "--no-embed", "--chunk-chars", "300",
++    ], { stdio: "pipe" });
++  }, 60000);
++
++  const QUESTIONS = [
++    "What is a black hole?",
++    "What is a black hole and how does one form?",
++    "Compare the French Revolution and the Industrial Revolution.",
++    "How do vaccines train the immune system?",
++    "Why was Kuala Kubu Bharu rebuilt?",
++    "Which financial crisis and debt problems led to the revolution, not the Black Sea trade?",
++    "How do I treat a burn?",
++  ];
++
++  it("stems of the question and of every title n-gram match the one-pass-per-text stems", async () => {
++    const rdb = nodeSqliteDatabase(path);
++    const ref = await WikiPack.open(rdb, decompress);
++    const pack = await WikiPack.open(nodeSqliteDatabase(path), decompress);
++    const n = Number(ref.meta.indexedChunks) || 1;
++    const hasDf = !!(await rdb.getFirstAsync("SELECT name FROM sqlite_master WHERE name = 'df'", []));
++    // The engine's STOPWORDS decide which words are stemmed: compare through stems() on a fresh instance per text.
++    for (const q of QUESTIONS) {
++      const texts = [q, ...titleCandidates(q)];
++      const got = await pack.stemsMany(texts);
++      for (let i = 0; i < texts.length; i++) {
++        const fresh = await WikiPack.open(nodeSqliteDatabase(path), decompress);
++        expect(got[i], texts[i]).toEqual(await fresh.stems(texts[i]));
++      }
++    }
++    // And the single-text path equals the pre-batching algorithm on a text without engine stopwords.
++    expect(await pack.stems("photons spacetime gravity")).toEqual(await refStems(rdb, "photons spacetime gravity", n, hasDf, (w) => STOP.has(w)));
++  });
++
++  it("gives the same hits cold and warm, in far fewer SQL calls than one per term, title and article", async () => {
++    for (const q of QUESTIONS) {
++      const db = counted(nodeSqliteDatabase(path));
++      const cold = await WikiPack.open(db, decompress);
++      const n0 = db.calls;
++      const first = await cold.searchDetailed(q);
++      const calls = db.calls - n0;
++      expect(calls, q).toBeLessThanOrEqual(20);
++      // Warm caches (same instance, after other questions) change nothing.
++      for (const other of QUESTIONS) await cold.search(other);
++      expect(await cold.searchDetailed(q)).toEqual(first);
++    }
++  });
++});
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..0e35a23f 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -251,6 +251,34 @@ const STOPWORDS = new Set(
+ const HEADING = /^(#{1,6})\s+(.*)$/gm;
+ const BLOCK_CACHE = 16;
+ const ARTICLE_CACHE = 16;
++// Batched lookups (BATCHRET): on the phone every SQL call is a JS<->native round trip (7-9 ms for a one-row read on a
++// Pixel 8a, LITELAT), so per-term, per-title and per-article lookups are fetched with one IN (...) query each and kept
++// in small caches. Every cached value is what the one-row query returns (the pack is read-only), so results don't change.
++/** Stemmed terms per question text, df per term, article rows per id (no text), article titles per id. */
++const STEM_CACHE = 512;
++const DF_CACHE = 8192;
++const ROW_CACHE = 2048;
++const TITLE_CACHE = 8192;
++const RESOLVED_CACHE = 8192;
++/** Compressed blocks fetched per round trip: the block asked for plus the next ones the ranked candidates will read. */
++const BLOCK_WINDOW = 8;
++/** Bound parameters per IN (...) query (SQLite's limit is 32766 since 3.32; older builds 999). */
++const IN_CHUNK = 500;
++
++/** The content words of a text that stems() tokenizes, joined (the key of the stem cache). */
++function stemWords(text: string): string {
++  return (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter((w) => w.length > 1 && !STOPWORDS.has(w)).join(" ");
++}
++
++interface ArticleRow {
++  title: string;
++  source: number;
++  views: number;
++  block_id: number;
++  off: number;
++  len: number;
++  meta: { url: string | null; license: string | null } | null;
++}
+ 
+ /** Heading path in force at UTF-16 offset `start` of an article's text (chunks store offsets only). */
+ export function sectionAt(text: string, start: number): string {
+@@ -424,7 +452,14 @@ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+-  private resolved = new Lru<string, number | null>(512);
++  private resolved = new Lru<string, number | null>(RESOLVED_CACHE);
++  private stemCache = new Lru<string, string[]>(STEM_CACHE);
++  private dfCache = new Lru<string, number | null>(DF_CACHE);
++  private rows = new Lru<number, ArticleRow>(ROW_CACHE);
++  private titlesById = new Lru<number, string>(TITLE_CACHE);
++  /** Compressed blocks fetched ahead for the current search, and the order its candidates will read them in. */
++  private zblocks = new Map<number, Uint8Array>();
++  private blockPlan: number[] = [];
+ 
+   private constructor(
+     private db: PackSql,
+@@ -449,6 +484,7 @@ export class WikiPack {
+       CREATE VIRTUAL TABLE IF NOT EXISTS temp.fts_v USING fts5vocab(main, fts, row);
+       CREATE VIRTUAL TABLE IF NOT EXISTS temp.qtok USING fts5(x, tokenize='porter unicode61 remove_diacritics 2');
+       CREATE VIRTUAL TABLE IF NOT EXISTS temp.qtok_v USING fts5vocab(temp, qtok, row);
++      CREATE VIRTUAL TABLE IF NOT EXISTS temp.qtok_i USING fts5vocab(temp, qtok, instance);
+     `);
+     const tables = await db.getAllAsync<{ name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'", []);
+     const has = (n: string) => tables.some((t) => t.name === n);
+@@ -463,18 +499,71 @@ export class WikiPack {
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+   async stems(text: string): Promise<Stem[]> {
+-    const words = (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter((w) => w.length > 1 && !STOPWORDS.has(w));
+-    if (!words.length) return [];
+-    await this.db.execAsync("DELETE FROM temp.qtok");
+-    await this.db.runAsync("INSERT INTO temp.qtok (x) VALUES (?)", [words.join(" ")]);
+-    const terms = await this.db.getAllAsync<{ term: string }>("SELECT term FROM temp.qtok_v", []);
+-    const out: Stem[] = [];
+-    for (const { term } of terms) {
+-      // A common term's count is precomputed in df; a rarer one's posting list is short enough to count.
+-      const row =
+-        (this.hasDf ? await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM df WHERE term = ?", [term]) : null) ??
+-        (await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM temp.fts_v WHERE term = ?", [term]));
+-      if (row && row.doc > 0) out.push({ stem: term, idf: Math.log(this.nIndexed / row.doc) });
++    return (await this.stemsMany([text]))[0];
++  }
++
++  /**
++   * stems() of several texts with one tokenizer pass (one row per text, read back through the instance vocabulary in
++   * the row vocabulary's term order) and one df query for all their terms. Texts seen before cost no SQL.
++   */
++  async stemsMany(texts: string[]): Promise<Stem[][]> {
++    const keys = texts.map(stemWords);
++    const terms = new Map<string, string[]>();
++    const todo: string[] = [];
++    for (const k of keys) {
++      if (!k || terms.has(k)) continue;
++      const hit = this.stemCache.get(k);
++      if (hit) terms.set(k, hit);
++      else if (!todo.includes(k)) todo.push(k);
++    }
++    for (let i = 0; i < todo.length; i += IN_CHUNK / 2) {
++      const part = todo.slice(i, i + IN_CHUNK / 2);
++      await this.db.execAsync("DELETE FROM temp.qtok");
++      await this.db.runAsync(`INSERT INTO temp.qtok (rowid, x) VALUES ${part.map(() => "(?, ?)").join(", ")}`, part.flatMap((k, j) => [j + 1, k]));
++      const rows = await this.db.getAllAsync<{ doc: number; term: string }>("SELECT DISTINCT doc, term FROM temp.qtok_i ORDER BY doc, term", []);
++      const per = part.map(() => [] as string[]);
++      for (const r of rows) per[r.doc - 1].push(r.term);
++      part.forEach((k, j) => (terms.set(k, per[j]), this.stemCache.put(k, per[j])));
++    }
++    const df = await this.docFreqs([...new Set([...terms.values()].flat())]);
++    return keys.map((k) => {
++      const out: Stem[] = [];
++      for (const term of k ? terms.get(k)! : []) {
++        const doc = df.get(term);
++        if (doc != null && doc > 0) out.push({ stem: term, idf: Math.log(this.nIndexed / doc) });
++      }
++      return out;
++    });
++  }
++
++  /** Document count per term: the df table's when it has the term, else the index's own (null when neither has it). */
++  private async docFreqs(terms: string[]): Promise<Map<string, number | null>> {
++    const out = new Map<string, number | null>();
++    const need: string[] = [];
++    for (const t of terms) {
++      if (this.dfCache.has(t)) out.set(t, this.dfCache.get(t)!);
++      else need.push(t);
++    }
++    if (!need.length) return out;
++    const found = new Map<string, number>();
++    // A common term's count is precomputed in df; a rarer one's posting list is short enough to count.
++    if (this.hasDf) for (const r of await this.inQuery<{ term: string; doc: number }>("SELECT term, doc FROM df WHERE term IN", need)) found.set(r.term, r.doc);
++    const rest = need.filter((t) => !found.has(t));
++    if (rest.length) for (const r of await this.inQuery<{ term: string; doc: number }>("SELECT term, doc FROM temp.fts_v WHERE term IN", rest)) found.set(r.term, r.doc);
++    for (const t of need) {
++      const doc = found.get(t) ?? null;
++      this.dfCache.put(t, doc);
++      out.set(t, doc);
++    }
++    return out;
++  }
++
++  /** `sql` ending in "IN" (optionally followed by `tail`), run over `values` in chunks of IN_CHUNK. */
++  private async inQuery<T>(sql: string, values: Array<string | number>, tail = "", tailParams: Array<string | number> = []): Promise<T[]> {
++    const out: T[] = [];
++    for (let i = 0; i < values.length; i += IN_CHUNK) {
++      const part = values.slice(i, i + IN_CHUNK);
++      out.push(...(await this.db.getAllAsync<T>(`${sql} (${part.map(() => "?").join(",")})${tail}`, [...part, ...tailParams])));
+     }
+     return out;
+   }
+@@ -489,24 +578,82 @@ export class WikiPack {
+   private async block(id: number): Promise<Uint8Array> {
+     const hit = this.blocks.get(id);
+     if (hit) return hit;
+-    const row = await this.db.getFirstAsync<{ zdata: Uint8Array }>("SELECT zdata FROM blocks WHERE id = ?", [id]);
+-    if (!row) throw new Error(`pack block ${id} missing`);
+-    return this.blocks.put(id, this.decompress(new Uint8Array(row.zdata)));
++    if (!this.zblocks.has(id)) await this.fetchBlocks(id);
++    const z = this.zblocks.get(id);
++    if (!z) throw new Error(`pack block ${id} missing`);
++    return this.blocks.put(id, this.decompress(new Uint8Array(z)));
++  }
++
++  /** Block `id` (compressed) and, in one query, the next BLOCK_WINDOW - 1 the current search's candidates will read. */
++  private async fetchBlocks(id: number): Promise<void> {
++    const want = [id];
++    const at = this.blockPlan.indexOf(id);
++    if (at >= 0) {
++      for (const b of this.blockPlan.slice(at + 1)) {
++        if (want.length >= BLOCK_WINDOW) break;
++        if (!this.blocks.has(b) && !this.zblocks.has(b) && !want.includes(b)) want.push(b);
++      }
++    }
++    for (const r of await this.inQuery<{ id: number; zdata: Uint8Array }>("SELECT id, zdata FROM blocks WHERE id IN", want)) this.zblocks.set(r.id, r.zdata);
++  }
++
++  /**
++   * Rows (no text) of these articles, in one query (plus one for their url/license), for article() to read; their
++   * blocks go on the plan in this order, so a block fetch also brings the ones read next. Unknown ids are left out
++   * (article() then fails as it always did).
++   */
++  async prefetchArticles(ids: number[]): Promise<void> {
++    const order = [...new Set(ids)];
++    const need = order.filter((id) => !this.articles.has(id) && !this.rows.has(id));
++    if (need.length) {
++      const rows = await this.inQuery<{ id: number; title: string; source: number; views: number; block_id: number; off: number; len: number }>(
++        "SELECT id, title, source, views, block_id, off, len FROM articles WHERE id IN",
++        need
++      );
++      const metas = new Map<number, { url: string | null; license: string | null }>();
++      if (this.hasMeta && rows.length) {
++        const m = await this.inQuery<{ article_id: number; url: string | null; license: string | null }>(
++          "SELECT article_id, url, license FROM article_meta WHERE article_id IN",
++          rows.map((r) => r.id)
++        );
++        for (const r of m) metas.set(r.article_id, { url: r.url, license: r.license });
++      }
++      for (const r of rows) {
++        this.rows.put(r.id, { title: r.title, source: r.source, views: r.views, block_id: r.block_id, off: r.off, len: r.len, meta: metas.get(r.id) ?? null });
++        this.titlesById.put(r.id, r.title);
++      }
++    }
++    for (const id of order) {
++      const r = this.rows.get(id);
++      if (r && !this.blockPlan.includes(r.block_id)) this.blockPlan.push(r.block_id);
++    }
++  }
++
++  /** Forgets what was fetched ahead for one search (compressed blocks and their read order). */
++  private clearPrefetch(): void {
++    this.zblocks.clear();
++    this.blockPlan = [];
+   }
+ 
+   async article(id: number): Promise<Article> {
+     const hit = this.articles.get(id);
+     if (hit) return hit;
+-    const a = await this.db.getFirstAsync<{ title: string; source: number; views: number; block_id: number; off: number; len: number }>(
+-      "SELECT title, source, views, block_id, off, len FROM articles WHERE id = ?",
+-      [id]
+-    );
+-    if (!a) throw new Error(`pack article ${id} missing`);
++    let a = this.rows.get(id);
++    if (!a) {
++      const r = await this.db.getFirstAsync<{ title: string; source: number; views: number; block_id: number; off: number; len: number }>(
++        "SELECT title, source, views, block_id, off, len FROM articles WHERE id = ?",
++        [id]
++      );
++      if (!r) throw new Error(`pack article ${id} missing`);
++      const meta = this.hasMeta
++        ? await this.db.getFirstAsync<{ url: string | null; license: string | null }>("SELECT url, license FROM article_meta WHERE article_id = ?", [id])
++        : null;
++      a = { title: r.title, source: r.source, views: r.views, block_id: r.block_id, off: r.off, len: r.len, meta: meta ?? null };
++      this.rows.put(id, a);
++    }
+     const block = await this.block(a.block_id);
+     const text = utf8(block.subarray(a.off, a.off + a.len));
+-    const m = this.hasMeta
+-      ? await this.db.getFirstAsync<{ url: string | null; license: string | null }>("SELECT url, license FROM article_meta WHERE article_id = ?", [id])
+-      : null;
++    const m = a.meta;
+     return this.articles.put(id, {
+       id,
+       title: a.title,
+@@ -561,6 +708,61 @@ export class WikiPack {
+     return id;
+   }
+ 
++  /**
++   * resolveTitle(title, { fuzzy: false, source }) for every title and source, in one query on articles and one on
++   * redirects, each matching the titles with the same comparison as resolveTitle's own query (the titles are joined
++   * as a VALUES list, so a column's collation applies exactly as with a bound parameter). A title whose best match is
++   * a tie (two articles with the same views) is left to resolveTitle's own query.
++   */
++  async prefetchTitles(titles: string[], sources: PackSource[]): Promise<void> {
++    const srcs = [...new Set(sources)].map((s) => [s, SOURCES.indexOf(s)] as const);
++    const list = [...new Set(titles)].filter((t) => srcs.some(([s]) => !this.resolved.has(`x:${s}:${t}`)));
++    if (!list.length) return;
++    type Best = { id: number; views: number; tie: boolean };
++    const pick = (m: Map<string, Best>, key: string, id: number, views: number) => {
++      const b = m.get(key);
++      if (!b || views > b.views) m.set(key, { id, views, tie: false });
++      else if (views === b.views && id !== b.id) b.tie = true;
++    };
++    const srcParams = srcs.map(([, i]) => i);
++    const srcIn = `(${srcParams.map(() => "?").join(",")})`;
++    const exact = new Map<string, Best>();
++    const redirect = new Map<string, Best>();
++    for (let i = 0; i < list.length; i += IN_CHUNK) {
++      const part = list.slice(i, i + IN_CHUNK);
++      const q = `WITH q(t) AS (VALUES ${part.map(() => "(?)").join(", ")})`;
++      for (const r of await this.db.getAllAsync<{ t: string; id: number; title: string; source: number; views: number }>(
++        `${q} SELECT q.t AS t, a.id, a.title, a.source, a.views FROM q JOIN articles a ON a.title = q.t COLLATE NOCASE WHERE a.source IN ${srcIn}`,
++        [...part, ...srcParams]
++      )) {
++        pick(exact, `${r.source}\u0000${r.t}`, r.id, r.views);
++        this.titlesById.put(r.id, r.title);
++      }
++      if (!this.hasRedirects) continue;
++      for (const r of await this.db.getAllAsync<{ t: string; id: number; title: string; source: number; views: number }>(
++        `${q} SELECT q.t AS t, r.article_id AS id, a.title, a.source, a.views FROM q JOIN redirects r ON r.title = q.t JOIN articles a ON a.id = r.article_id WHERE a.source IN ${srcIn}`,
++        [...part, ...srcParams]
++      )) {
++        pick(redirect, `${r.source}\u0000${r.t}`, r.id, r.views);
++        this.titlesById.put(r.id, r.title);
++      }
++    }
++    for (const t of list) {
++      for (const [s, i] of srcs) {
++        const key = `x:${s}:${t}`;
++        if (this.resolved.has(key)) continue;
++        const e = exact.get(`${i}\u0000${t}`);
++        if (e) {
++          if (!e.tie) this.resolved.put(key, e.id);
++          continue;
++        }
++        const r = this.hasRedirects ? redirect.get(`${i}\u0000${t}`) : undefined;
++        if (r?.tie) continue;
++        this.resolved.put(key, r ? r.id : null);
++      }
++    }
++  }
++
+   /** BM25-like score of a passage for the question, 0..1; question terms in the heading count double. */
+   private passageScore(text: string, start: number, end: number, stems: Stem[]): number {
+     const body = text.slice(start, end).toLowerCase();
+@@ -655,7 +857,9 @@ export class WikiPack {
+   /** Whole-index BM25 (column weights and popularity prior from `tuning`); at most `perArticle` per article. */
+   async bm25(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+-    for (const c of await this.bm25Candidates(stems, pool, prior, perArticle)) out.push(await this.materialize(c));
++    const cands = await this.bm25Candidates(stems, pool, prior, perArticle);
++    await this.prefetchArticles(cands.map((c) => c.articleId));
++    for (const c of cands) out.push(await this.materialize(c));
+     return out;
+   }
+ 
+@@ -685,7 +889,10 @@ export class WikiPack {
+   }
+ 
+   private async isDisambiguationPage(id: number): Promise<boolean> {
++    const known = this.titlesById.get(id);
++    if (known !== undefined) return /\(disambiguation\)$/i.test(known);
+     const row = await this.db.getFirstAsync<{ title: string }>("SELECT title FROM articles WHERE id = ?", [id]);
++    if (row) this.titlesById.put(id, row.title);
+     return !!row && /\(disambiguation\)$/i.test(row.title);
+   }
+ 
+@@ -708,6 +915,13 @@ export class WikiPack {
+       ...(TRAVEL_INTENT.test(query) ? ["enwikivoyage", "enwiki"] as const : ["enwiki", "enwikivoyage"] as const),
+       ...this.topicSources,
+     ];
++    // Every title probe and stem lookup below, fetched up front in a few queries (the loop then reads the caches).
++    const cands = titleCandidates(query);
++    await this.prefetchTitles(
++      cands.flatMap((c) => (singularTitle(c) ? [c, singularTitle(c)!] : [c])),
++      [...sources, "enwikivoyage"]
++    );
++    await this.stemsMany(cands);
+     const found: Array<{ id: number; share: number }> = [];
+     const used: string[] = [];
+     // A destination only counts in a travel question (#34: "When did Darwin publish…" -> Darwin, Australia), and
+@@ -720,7 +934,7 @@ export class WikiPack {
+     // A travel question's destination goes first even though its name is common across the guides (low idf):
+     // "plug type in Brazil", "ride-hailing in Bangkok". One per question, chosen by its role (destinationOf).
+     const destination = travel ? await this.destinationOf(query, opening) : null;
+-    for (const cand of titleCandidates(query)) {
++    for (const cand of cands) {
+       if (used.length >= max) break;
+       const lower = cand.toLowerCase();
+       if (used.some((u) => u.includes(lower))) continue; // inside a longer title already found
+@@ -821,8 +1035,18 @@ export class WikiPack {
+ 
+   /** search(), plus the question's stems (for scoring sentences with the same term weights). */
+   async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[] }> {
++    this.clearPrefetch();
++    try {
++      return await this.searchBatched(query, opts);
++    } finally {
++      this.clearPrefetch();
++    }
++  }
++
++  private async searchBatched(query: string, opts: PackSearchOptions): Promise<{ hits: PackHit[]; stems: Stem[] }> {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
+-    const stems = await this.stems(query);
++    // The question's stems and every title n-gram's, in one tokenizer pass and one df query (titlesInQuestion reads them).
++    const stems = (await this.stemsMany([query, ...titleCandidates(query)]))[0];
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+     const ids = (await this.titlesInQuestion(query, stems)).filter((t) => t.share >= this.tuning.namedMinShare).map((t) => t.id);
+     for (const t of titles) {
+@@ -831,6 +1055,7 @@ export class WikiPack {
+     }
+     const action = opts.action ?? ACTION_INTENT.test(query);
+     let lay = 0;
++    await this.prefetchArticles(ids);
+     let hits = await this.titleHits(ids, stems, 5, action, opts.explain ?? EXPLAIN_INTENT.test(query));
+     const limit = Math.max(k, ids.length * 2);
+     const topic = titles.length ? await this.stems(titles.join(" ")) : stems;
+@@ -838,6 +1063,7 @@ export class WikiPack {
+     let keyword: Candidate[] | null = null;
+     if (hits.length < limit) {
+       keyword = await this.bm25Candidates(stems);
++      await this.prefetchArticles(keyword.map((c) => c.articleId));
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {
+@@ -884,6 +1110,7 @@ export class WikiPack {
+     if (action) {
+       // The keyword candidates, also when the named articles filled the passages and the keyword search didn't run.
+       const pool = keyword ?? (await this.bm25Candidates(stems));
++      if (!keyword) await this.prefetchArticles(pool.map((c) => c.articleId));
+       // A what-to-do question: official guidance (a government page's steps: Ready.gov "Protect Yourself During
+       // Earthquakes") ranks above other sources' sections on the same topic, so it's among the first passages even
+       // when other articles repeat the question's words more. Its best what-to-do sections go right after the first hit.

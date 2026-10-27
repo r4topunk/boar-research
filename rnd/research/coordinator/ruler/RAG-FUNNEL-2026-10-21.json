@@ -1,0 +1,6185 @@
+{
+ "method": "RAG-FUNNEL (2026-10-21; 0 LLM, 0 generation, 0 judge, 0 paid). Where is the key fact of a real dev item lost, per pack set (K0, K1, K3)?\n\nItems: MAIN 97 (= v0.1 57 + qa-cooking/qa-money self-tests 40), keyed under FACTPRESENT's lexical rule (92: v0.1 52 + cm 40).\nStages, first failing stage wins (per item x pack set):\n  S1 not in any installed pack   : no chunk of the arm's installed packs (pool search below) holds the fact, and neither S2-S5 holds.\n  S2 in a pack, not retrieved    : a pack chunk holds it, but no retrieved candidate does. S2r = the router ran no retrieval (route has no\n                                   retrieve:yes); S2s = retrieval ran (lexical + dense search missed it).\n  S3 retrieved, dropped at keep  : the union of candidates (retrieve() list + the two-stage dense candidates + the X1/dense pending appends)\n                                   holds it, the kept context does not. Sub-split by where the fact chunk left: compress (not in the compressed\n                                   list), grounding (compressed, not kept, not an append), budget/append (only in dense/x1 candidates).\n  S4 kept, answer wrong/unsupported : FACTPRESENT PRESENT in the kept context, judge correctness (Haiku 5.5-low, mean of both orders) < 3.5,\n                                   or declined. S4ce = correctness <= 1.5 (confident-error band).\n  S5 kept and used correctly     : PRESENT in the kept context and correctness >= 3.5.\nFact rule = FACTPRESENT's (tools/factpresent.py): v0.1 grading must_any/must_k with the vendored precheck semantics, share >= 0.5;\nself-tests in_pack_facts (quote substring, or >= 80 % of quote tokens (>= 4) / fact tokens (>= 3) in one block), share >= 0.5.\nCandidate presence: the same rule over the union of candidate chunk texts (full chunk text read from the pack file by chunk id).\nPack presence (pool search): per installed pack, FTS5 bm25 top 200 for OR(question content tokens) and top 200 for OR(question tokens +\nplain grading terms / fact-statement tokens); a pool chunk holds the fact when the rule on that chunk ALONE gives share >= 0.5 AND its topic\nanchor >= 0.5, anchor = idf-weighted share of the question's content tokens found in the chunk (title + text; crude plural stemming; idf =\nlog(N/df) on the simplewiki kit pack's FTS, the same reference for every pack). Rule v2: v1 (anchor = >= min(2, n) question tokens) failed the\n10-gold read (4/10 real fact chunks: generic grading terms + 2 generic question words, e.g. 'World Bank' for 'countries bigger than India');\nv2 was written after that read and before any other number was looked at. Pool search is a generous retriever, not exhaustive, so S1 is an\nupper bound on 'absent' and S2 a lower bound on 'present'.\nGold chunk (ORACLE-REAL input): among the K3 packs' qualifying pool chunks, max share, then title hit (a question token with idf >= 2 in the\nchunk's title; v3, added after the v2 10-gold read gave 6/10), then max anchor, then best bm25 rank. Every gold chunk is then read and labelled\nY/P/N by hand (arms/oracle-real/gold-labels.tsv); only Y/P items enter ORACLE-REAL.",
+ "replay_dir": "<scratch>",
+ "n_keyed": 92,
+ "parity": {
+  "K0": {
+   "n": 97,
+   "same": 97,
+   "differ": []
+  },
+  "K1": {
+   "n": 97,
+   "same": 97,
+   "differ": []
+  },
+  "K3": {
+   "n": 97,
+   "same": 97,
+   "differ": []
+  }
+ },
+ "funnel": {
+  "K0": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 60,
+     "S2": 11,
+     "S3": 8,
+     "S4": 11,
+     "S5": 2
+    },
+    "sub": {
+     "S2:router": 4,
+     "S2:search": 7,
+     "S3:compress": 2,
+     "S3:grounding": 5,
+     "S3:union-only": 1,
+     "S4:ce": 5
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 20,
+     "S2": 11,
+     "S3": 8,
+     "S4": 11,
+     "S5": 2
+    },
+    "sub": {
+     "S2:router": 4,
+     "S2:search": 7,
+     "S3:compress": 2,
+     "S3:grounding": 5,
+     "S3:union-only": 1,
+     "S4:ce": 5
+    }
+   },
+   "cm 40": {
+    "n": 40,
+    "stages": {
+     "S1": 40,
+     "S2": 0,
+     "S3": 0,
+     "S4": 0,
+     "S5": 0
+    },
+    "sub": {}
+   }
+  },
+  "K1": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 45,
+     "S2": 8,
+     "S3": 17,
+     "S4": 17,
+     "S5": 5
+    },
+    "sub": {
+     "S2:router": 7,
+     "S2:search": 1,
+     "S3:append-budget": 2,
+     "S3:compress": 1,
+     "S3:dense-rank": 10,
+     "S3:grounding": 3,
+     "S3:union-only": 1,
+     "S4:ce": 7
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 6,
+     "S2": 8,
+     "S3": 16,
+     "S4": 17,
+     "S5": 5
+    },
+    "sub": {
+     "S2:router": 7,
+     "S2:search": 1,
+     "S3:append-budget": 2,
+     "S3:compress": 1,
+     "S3:dense-rank": 9,
+     "S3:grounding": 3,
+     "S3:union-only": 1,
+     "S4:ce": 7
+    }
+   },
+   "cm 40": {
+    "n": 40,
+    "stages": {
+     "S1": 39,
+     "S2": 0,
+     "S3": 1,
+     "S4": 0,
+     "S5": 0
+    },
+    "sub": {
+     "S3:dense-rank": 1
+    }
+   }
+  },
+  "K3": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 45,
+     "S2": 7,
+     "S3": 17,
+     "S4": 15,
+     "S5": 8
+    },
+    "sub": {
+     "S2:router": 7,
+     "S3:append-budget": 2,
+     "S3:compress": 1,
+     "S3:dense-rank": 11,
+     "S3:grounding": 3,
+     "S4:ce": 5
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 6,
+     "S2": 7,
+     "S3": 16,
+     "S4": 15,
+     "S5": 8
+    },
+    "sub": {
+     "S2:router": 7,
+     "S3:append-budget": 2,
+     "S3:compress": 1,
+     "S3:dense-rank": 10,
+     "S3:grounding": 3,
+     "S4:ce": 5
+    }
+   },
+   "cm 40": {
+    "n": 40,
+    "stages": {
+     "S1": 39,
+     "S2": 0,
+     "S3": 1,
+     "S4": 0,
+     "S5": 0
+    },
+    "sub": {
+     "S3:dense-rank": 1
+    }
+   }
+  }
+ },
+ "gold_K3": {
+  "n": 39,
+  "v01": 39,
+  "cm": 0,
+  "ids": [
+   "vit-hum-004",
+   "lan-exp-001",
+   "lan-exp-002",
+   "lan-rsn-001",
+   "lan-cmp-001",
+   "lan-cmp-002",
+   "lan-ref-001",
+   "lan-hlt-001",
+   "lan-hlt-002",
+   "lan-hlt-003",
+   "vit-trv-003",
+   "vit-trv-004",
+   "vit-cry-001",
+   "vit-cry-002",
+   "vit-cry-003",
+   "vit-cry-004",
+   "vit-cry-006",
+   "vit-cry-007",
+   "vit-cry-008",
+   "vit-cry-009",
+   "vit-cry-010",
+   "vit-cry-011",
+   "vit-hlt-001",
+   "vit-hlt-002",
+   "vit-hlt-003",
+   "lan-ref-002",
+   "lan-ref-003",
+   "lan-rsn-003",
+   "lan-cmp-003",
+   "lan-rsn-004",
+   "lan-ref-004",
+   "lan-exp-003",
+   "lan-exp-004",
+   "lan-exp-005",
+   "lan-exp-006",
+   "lan-cmp-005",
+   "lan-rsn-006",
+   "lan-rsn-007",
+   "lan-ref-005"
+  ],
+  "by_stage_K3": {
+   "S1": 0,
+   "S2": 7,
+   "S3": 10,
+   "S4": 14,
+   "S5": 8
+  }
+ },
+ "funnel_verified": {
+  "K0": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 68,
+     "S2": 3,
+     "S3": 8,
+     "S4": 11,
+     "S5": 2
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 28,
+     "S2": 3,
+     "S3": 8,
+     "S4": 11,
+     "S5": 2
+    }
+   }
+  },
+  "K1": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 45,
+     "S2": 8,
+     "S3": 17,
+     "S4": 17,
+     "S5": 5
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 6,
+     "S2": 8,
+     "S3": 16,
+     "S4": 17,
+     "S5": 5
+    }
+   }
+  },
+  "K3": {
+   "MAIN keyed 92": {
+    "n": 92,
+    "stages": {
+     "S1": 44,
+     "S2": 8,
+     "S3": 17,
+     "S4": 15,
+     "S5": 8
+    }
+   },
+   "v0.1 keyed 52": {
+    "n": 52,
+    "stages": {
+     "S1": 5,
+     "S2": 8,
+     "S3": 16,
+     "S4": 15,
+     "S5": 8
+    }
+   }
+  }
+ },
+ "ceilings": {
+  "note": "dU on MAIN 97 (ratio-of-sums U) if every item of the stage moved one stage down the funnel: perfect_fix = items reach the reference score; selftest_prior = each item gains FACTPRESENT's self-test cell-(a) +0.139 (relative to its reference score); real_prior = the real-item cell-(a) -0.010.",
+  "by_arm": {
+   "K0": {
+    "stage:S1": {
+     "n": 60,
+     "perfect_fix_dU": 0.391,
+     "selftest_prior_dU": 0.086,
+     "real_prior_dU": -0.006
+    },
+    "stage:S2": {
+     "n": 11,
+     "perfect_fix_dU": 0.05,
+     "selftest_prior_dU": 0.015,
+     "real_prior_dU": -0.001
+    },
+    "stage:S3": {
+     "n": 8,
+     "perfect_fix_dU": 0.041,
+     "selftest_prior_dU": 0.012,
+     "real_prior_dU": -0.001
+    },
+    "stage:S4": {
+     "n": 11,
+     "perfect_fix_dU": 0.078,
+     "selftest_prior_dU": 0.016,
+     "real_prior_dU": -0.001
+    },
+    "vstage:S1": {
+     "n": 68,
+     "perfect_fix_dU": 0.422,
+     "selftest_prior_dU": 0.097,
+     "real_prior_dU": -0.007
+    },
+    "vstage:S2": {
+     "n": 3,
+     "perfect_fix_dU": 0.02,
+     "selftest_prior_dU": 0.004,
+     "real_prior_dU": -0.0
+    },
+    "vstage:S3": {
+     "n": 8,
+     "perfect_fix_dU": 0.041,
+     "selftest_prior_dU": 0.012,
+     "real_prior_dU": -0.001
+    },
+    "vstage:S4": {
+     "n": 11,
+     "perfect_fix_dU": 0.078,
+     "selftest_prior_dU": 0.016,
+     "real_prior_dU": -0.001
+    }
+   },
+   "K1": {
+    "stage:S1": {
+     "n": 45,
+     "perfect_fix_dU": 0.295,
+     "selftest_prior_dU": 0.064,
+     "real_prior_dU": -0.005
+    },
+    "stage:S2": {
+     "n": 8,
+     "perfect_fix_dU": 0.032,
+     "selftest_prior_dU": 0.011,
+     "real_prior_dU": -0.001
+    },
+    "stage:S3": {
+     "n": 17,
+     "perfect_fix_dU": 0.112,
+     "selftest_prior_dU": 0.024,
+     "real_prior_dU": -0.002
+    },
+    "stage:S4": {
+     "n": 17,
+     "perfect_fix_dU": 0.117,
+     "selftest_prior_dU": 0.025,
+     "real_prior_dU": -0.002
+    },
+    "vstage:S1": {
+     "n": 45,
+     "perfect_fix_dU": 0.288,
+     "selftest_prior_dU": 0.063,
+     "real_prior_dU": -0.005
+    },
+    "vstage:S2": {
+     "n": 8,
+     "perfect_fix_dU": 0.039,
+     "selftest_prior_dU": 0.012,
+     "real_prior_dU": -0.001
+    },
+    "vstage:S3": {
+     "n": 17,
+     "perfect_fix_dU": 0.112,
+     "selftest_prior_dU": 0.024,
+     "real_prior_dU": -0.002
+    },
+    "vstage:S4": {
+     "n": 17,
+     "perfect_fix_dU": 0.117,
+     "selftest_prior_dU": 0.025,
+     "real_prior_dU": -0.002
+    }
+   },
+   "K3": {
+    "stage:S1": {
+     "n": 45,
+     "perfect_fix_dU": 0.3,
+     "selftest_prior_dU": 0.063,
+     "real_prior_dU": -0.005
+    },
+    "stage:S2": {
+     "n": 7,
+     "perfect_fix_dU": 0.023,
+     "selftest_prior_dU": 0.01,
+     "real_prior_dU": -0.001
+    },
+    "stage:S3": {
+     "n": 17,
+     "perfect_fix_dU": 0.115,
+     "selftest_prior_dU": 0.025,
+     "real_prior_dU": -0.002
+    },
+    "stage:S4": {
+     "n": 15,
+     "perfect_fix_dU": 0.103,
+     "selftest_prior_dU": 0.022,
+     "real_prior_dU": -0.002
+    },
+    "vstage:S1": {
+     "n": 44,
+     "perfect_fix_dU": 0.288,
+     "selftest_prior_dU": 0.062,
+     "real_prior_dU": -0.004
+    },
+    "vstage:S2": {
+     "n": 8,
+     "perfect_fix_dU": 0.035,
+     "selftest_prior_dU": 0.012,
+     "real_prior_dU": -0.001
+    },
+    "vstage:S3": {
+     "n": 17,
+     "perfect_fix_dU": 0.115,
+     "selftest_prior_dU": 0.025,
+     "real_prior_dU": -0.002
+    },
+    "vstage:S4": {
+     "n": 15,
+     "perfect_fix_dU": 0.103,
+     "selftest_prior_dU": 0.022,
+     "real_prior_dU": -0.002
+    }
+   }
+  }
+ },
+ "items": {
+  "vit-hum-001": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 17,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 29,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "vit-hum-002": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:31732"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 17,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:31732"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   }
+  },
+  "vit-hum-003": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:157997",
+     "pack:local-boar-simplewiki-en:393556",
+     "pack:local-boar-simplewiki-en:157992"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:157997",
+     "pack:local-boar-simplewiki-en:393556",
+     "pack:local-boar-simplewiki-en:157992"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   }
+  },
+  "vit-hum-004": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 2,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 7,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:68844",
+     "pack:local-boar-simplewiki-en:29285"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:68816"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 7,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:68844",
+     "pack:local-boar-simplewiki-en:29285"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:68816"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:68816",
+    "title": "Middle-earth characters",
+    "share": 1.0,
+    "anchor": 0.846,
+    "bm25_rank": 3
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:68816",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "vit-hum-005": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 7,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:99119"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 26,
+    "n_kept": 7,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:99119"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   }
+  },
+  "vit-hum-006": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 26,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "lan-exp-001": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:310020",
+     "pack:local-boar-wikivoyage-en:310001"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:55432"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 17,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:310020",
+     "pack:local-boar-wikivoyage-en:310001",
+     "pack:local-boar-simplewiki-en:13055",
+     "pack:local-boar-simplewiki-en:13058",
+     "pack:local-boar-simplewiki-en:13078"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:55432"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 42,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:310020",
+     "pack:local-boar-wikivoyage-en:310001",
+     "pack:local-boar-simplewiki-en:13055",
+     "pack:local-boar-simplewiki-en:13058",
+     "pack:local-boar-simplewiki-en:13078"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:55432"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:55432",
+    "title": "Cantonese phrasebook",
+    "share": 1.0,
+    "anchor": 0.509,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-factbook:5753",
+    "label": "Y",
+    "source": "manual"
+   }
+  },
+  "lan-exp-002": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:218990",
+     "pack:local-boar-wikivoyage-en:218994"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 7,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:218990",
+     "pack:local-boar-wikivoyage-en:218994",
+     "pack:local-boar-simplewiki-en:48192",
+     "pack:local-boar-simplewiki-en:48190",
+     "pack:local-boar-simplewiki-en:48189"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 26,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:218990",
+     "pack:local-boar-wikivoyage-en:218994",
+     "pack:local-boar-simplewiki-en:48192",
+     "pack:local-boar-simplewiki-en:48190",
+     "pack:local-boar-factbook:7481"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-factbook": "pack:boar-factbook:7481"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-factbook:7481",
+    "title": "Montenegro",
+    "share": 1.0,
+    "anchor": 0.597,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-factbook:7481",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-rsn-001": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 7,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:19275",
+     "pack:local-boar-simplewiki-en:19268",
+     "pack:local-boar-simplewiki-en:19271"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:19275"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 28,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:19275",
+     "pack:local-boar-factbook:10495",
+     "pack:local-boar-simplewiki-en:19268",
+     "pack:local-boar-simplewiki-en:19271"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:19275"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:19275",
+    "title": "Great Wall of China",
+    "share": 0.5,
+    "anchor": 0.713,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:19275",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-cmp-001": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:558"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:558",
+     "boar-factbook": "pack:boar-factbook:9551"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:558",
+    "title": "Brazil",
+    "share": 0.5,
+    "anchor": 1.0,
+    "bm25_rank": 1
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:558",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-cmp-002": {
+   "set": "v0.1",
+   "tag": "nature",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:307613"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:426770"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:307613"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 38,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:426770"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:307613"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:307613",
+    "title": "Shiretoko National Park",
+    "share": 1.0,
+    "anchor": 0.519,
+    "bm25_rank": 190
+   }
+  },
+  "lan-rsn-002": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S2"
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:40991",
+    "label": "P",
+    "source": "manual"
+   }
+  },
+  "lan-ref-001": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:234015"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:234015"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:234015",
+    "title": "List of Nobel laureates by country",
+    "share": 1.0,
+    "anchor": 0.617,
+    "bm25_rank": 39
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:234015",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-hlt-001": {
+   "set": "v0.1",
+   "tag": "health",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:384046"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:2822",
+     "pack:local-boar-simplewiki-en:15581",
+     "pack:local-boar-simplewiki-en:46143",
+     "pack:local-boar-simplewiki-en:7604",
+     "pack:local-boar-simplewiki-en:46144"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:384046",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:15581"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 42,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:2822",
+     "pack:local-boar-simplewiki-en:15581",
+     "pack:local-boar-simplewiki-en:46143",
+     "pack:local-boar-medlineplus-en:1312",
+     "pack:local-boar-firstaid-en:21618"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:384046",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:15581"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:15581",
+    "title": "Vegetarianism",
+    "share": 1.0,
+    "anchor": 0.625,
+    "bm25_rank": 6
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:15581",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-hlt-002": {
+   "set": "v0.1",
+   "tag": "health",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 4,
+    "cand_share": 0.667,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.333,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "union-only",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 54,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-medlineplus-en:1520",
+     "pack:local-boar-medlineplus-en:3004",
+     "pack:local-boar-medlineplus-en:1523",
+     "pack:local-boar-medlineplus-en:1521",
+     "pack:local-boar-medlineplus-en:1524"
+    ],
+    "kept_present": true,
+    "kept_share": 0.667,
+    "pack_hits": {
+     "boar-medlineplus-en": "pack:boar-medlineplus-en:1520"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-medlineplus-en:1520",
+    "title": "How Much Exercise Do I Need?",
+    "share": 0.667,
+    "anchor": 0.578,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-medlineplus-en:1520",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-hlt-003": {
+   "set": "v0.1",
+   "tag": "health",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 1,
+    "cand_share": 0.5,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:346874"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "union-only",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:56266",
+     "pack:local-boar-simplewiki-en:59699",
+     "pack:local-boar-simplewiki-en:199912",
+     "pack:local-boar-simplewiki-en:59694"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:346874",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:59699"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 44,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:56266",
+     "pack:local-boar-simplewiki-en:59699",
+     "pack:local-boar-firstaid-en:5004",
+     "pack:local-boar-simplewiki-en:199912",
+     "pack:local-boar-simplewiki-en:59694"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:346874",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:59699",
+     "boar-medlineplus-en": "pack:boar-medlineplus-en:1935",
+     "boar-firstaid-en": "pack:boar-firstaid-en:5004"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-firstaid-en:5004",
+    "title": "GEM mosquito control/FAQ",
+    "share": 1.0,
+    "anchor": 0.549,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-firstaid-en:5004",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-trv-003": {
+   "set": "v0.1",
+   "tag": "travel",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:65981",
+     "pack:local-boar-wikivoyage-en:66075",
+     "pack:local-boar-wikivoyage-en:199739"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:252078"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:65981",
+     "pack:local-boar-wikivoyage-en:66075",
+     "pack:local-boar-wikivoyage-en:199739",
+     "pack:local-boar-simplewiki-en:301955",
+     "pack:local-boar-simplewiki-en:528998"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:252078"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 24,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:65981",
+     "pack:local-boar-wikivoyage-en:66075",
+     "pack:local-boar-wikivoyage-en:199739",
+     "pack:local-boar-simplewiki-en:301955",
+     "pack:local-boar-simplewiki-en:528998"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:252078"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:252078",
+    "title": "Pai",
+    "share": 1.0,
+    "anchor": 1.0,
+    "bm25_rank": 13
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-wikivoyage-en:252078",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-trv-004": {
+   "set": "v0.1",
+   "tag": "travel",
+   "K0": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:284550"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:284550"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:284550"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:284550",
+    "title": "Rome/Old Rome",
+    "share": 1.0,
+    "anchor": 0.601,
+    "bm25_rank": 114
+   }
+  },
+  "vit-cry-001": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 4,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:15674",
+     "pack:local-boar-crypto:41493"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41493"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 6,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:15674",
+     "pack:local-boar-crypto:41493"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41493"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 29,
+    "n_kept": 6,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:15674",
+     "pack:local-boar-crypto:41493"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41493"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:41493",
+    "title": "Post-quantum cryptography on Ethereum",
+    "share": 0.5,
+    "anchor": 0.807,
+    "bm25_rank": 0
+   }
+  },
+  "vit-cry-002": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:19607",
+     "pack:local-boar-crypto:19581"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:19607"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:19607",
+     "pack:local-boar-crypto:19581"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:19607"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 27,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:19607",
+     "pack:local-boar-crypto:19581"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:19607"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:19607",
+    "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)",
+    "share": 1.0,
+    "anchor": 0.718,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:19578",
+    "label": "Y",
+    "source": "manual"
+   }
+  },
+  "vit-cry-003": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:8873",
+     "pack:local-boar-crypto:8875"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41530"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:8873",
+     "pack:local-boar-crypto:8875"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41530"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 41,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:8873",
+     "pack:local-boar-crypto:8875"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41530"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:41530",
+    "title": "Statelessness, state expiry and history expiry",
+    "share": 1.0,
+    "anchor": 0.566,
+    "bm25_rank": 7
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:41530",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "vit-cry-004": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41257",
+     "pack:local-boar-crypto:41259",
+     "pack:local-boar-crypto:16586"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:16592"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 17,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41257",
+     "pack:local-boar-crypto:41259",
+     "pack:local-boar-simplewiki-en:93653",
+     "pack:local-boar-simplewiki-en:514528"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:16592"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 31,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41257",
+     "pack:local-boar-crypto:41259",
+     "pack:local-boar-simplewiki-en:93653",
+     "pack:local-boar-firstaid-en:1299",
+     "pack:local-boar-simplewiki-en:514528"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:16592"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:16592",
+    "title": "EIP-7594: PeerDAS - Peer Data Availability Sampling",
+    "share": 1.0,
+    "anchor": 0.693,
+    "bm25_rank": 9
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:16592",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "vit-cry-005": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S2"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 6,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 31,
+    "n_kept": 6,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S2"
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:27321",
+    "label": "P",
+    "source": "manual"
+   }
+  },
+  "vit-cry-006": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 3,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:41922"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41922"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 5,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:41922"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41922"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 5,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-crypto:41922"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41922"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:41922",
+    "title": "What are zero-knowledge proofs?",
+    "share": 0.5,
+    "anchor": 0.609,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:41922",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "vit-cry-007": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:211346"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:214093"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 30,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:211346",
+     "pack:local-boar-firstaid-en:8354"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:214093",
+     "boar-factbook": "pack:boar-factbook:9516"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:214093",
+    "title": "Peter Boulware",
+    "share": 0.5,
+    "anchor": 1.0,
+    "bm25_rank": 0
+   }
+  },
+  "vit-cry-008": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41305",
+     "pack:local-boar-crypto:41274"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41305"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41305",
+     "pack:local-boar-crypto:41274"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41305"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 19,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:41305",
+     "pack:local-boar-crypto:41274"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:41305"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:41305",
+    "title": "Glamsterdam",
+    "share": 1.0,
+    "anchor": 0.843,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:41305",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-cry-009": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:23775"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S2"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:23775"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 42,
+    "n_kept": 5,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-medlineplus-en:589",
+     "pack:local-boar-medlineplus-en:1738",
+     "pack:local-boar-factbook:4961",
+     "pack:local-boar-factbook:6803",
+     "pack:local-boar-factbook:2822"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:23775"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:23775",
+    "title": "EIP-8062: Add sweep withdrawal fee for 0x01 validators",
+    "share": 0.5,
+    "anchor": 0.539,
+    "bm25_rank": 12
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:14404",
+    "label": "P",
+    "source": "manual"
+   }
+  },
+  "vit-cry-010": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:40957",
+     "pack:local-boar-crypto:46640"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:40957"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:40957",
+     "pack:local-boar-simplewiki-en:325660"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:40957"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 25,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:40957",
+     "pack:local-boar-simplewiki-en:325660"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:40957"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:40957",
+    "title": "Timeline of all Ethereum forks (2014 to present)",
+    "share": 1.0,
+    "anchor": 0.755,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:40957",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-cry-011": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:47583",
+     "pack:local-boar-crypto:47245",
+     "pack:local-boar-crypto:47608"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:47608"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:47583",
+     "pack:local-boar-crypto:47245",
+     "pack:local-boar-crypto:47608"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:47608"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 40,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-crypto:47583",
+     "pack:local-boar-crypto:47245",
+     "pack:local-boar-crypto:47608"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-crypto": "pack:boar-crypto:47608"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-crypto:47608",
+    "title": "Stablecoin",
+    "share": 1.0,
+    "anchor": 0.826,
+    "bm25_rank": 3
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-crypto:47608",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "vit-sci-001": {
+   "set": "v0.1",
+   "tag": "science-tech",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:30885",
+     "pack:local-boar-simplewiki-en:30886",
+     "pack:local-boar-simplewiki-en:135621",
+     "pack:local-boar-simplewiki-en:436827"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 44,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:30885",
+     "pack:local-boar-simplewiki-en:30886",
+     "pack:local-boar-medlineplus-en:2715",
+     "pack:local-boar-medlineplus-en:2731",
+     "pack:local-boar-medlineplus-en:1070"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   }
+  },
+  "vit-sci-002": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 35,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "vit-sci-003": {
+   "set": "v0.1",
+   "tag": "science-tech",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "vit-hlt-001": {
+   "set": "v0.1",
+   "tag": "firstaid",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:130055",
+     "pack:local-boar-wikivoyage-en:362322",
+     "pack:local-boar-wikivoyage-en:182789",
+     "pack:local-boar-wikivoyage-en:84351"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:84351"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:130055",
+     "pack:local-boar-wikivoyage-en:362322",
+     "pack:local-boar-wikivoyage-en:182789",
+     "pack:local-boar-wikivoyage-en:84351",
+     "pack:local-boar-simplewiki-en:161442"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:84351"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 41,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:130055",
+     "pack:local-boar-wikivoyage-en:362322",
+     "pack:local-boar-wikivoyage-en:182789",
+     "pack:local-boar-wikivoyage-en:84351",
+     "pack:local-boar-simplewiki-en:161442"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:84351"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:84351",
+    "title": "Darwin",
+    "share": 1.0,
+    "anchor": 0.64,
+    "bm25_rank": 3
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-wikivoyage-en:84351",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-hlt-002": {
+   "set": "v0.1",
+   "tag": "firstaid",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:7462",
+     "pack:local-boar-wikivoyage-en:7465"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:7446"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "compress",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:7462",
+     "pack:local-boar-wikivoyage-en:7465"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:7446",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:609217"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "compress",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 54,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:7462",
+     "pack:local-boar-wikivoyage-en:7465",
+     "pack:local-boar-firstaid-en:22344",
+     "pack:local-boar-firstaid-en:22337",
+     "pack:local-boar-firstaid-en:22343"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:7446",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:609217",
+     "boar-medlineplus-en": "pack:boar-medlineplus-en:693",
+     "boar-firstaid-en": "pack:boar-firstaid-en:9139"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "compress",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:7446",
+    "title": "Altitude sickness",
+    "share": 1.0,
+    "anchor": 0.618,
+    "bm25_rank": 26
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-wikivoyage-en:7446",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "vit-hlt-003": {
+   "set": "v0.1",
+   "tag": "health",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:397832"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:137669"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:397832",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:137664"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:137669",
+     "pack:local-boar-medlineplus-en:796",
+     "pack:local-boar-medlineplus-en:795",
+     "pack:local-boar-medlineplus-en:797",
+     "pack:local-boar-medlineplus-en:530"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:397832",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:137664",
+     "boar-medlineplus-en": "pack:boar-medlineplus-en:796",
+     "boar-firstaid-en": "pack:boar-firstaid-en:21460"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-medlineplus-en:796",
+    "title": "Dengue",
+    "share": 1.0,
+    "anchor": 0.549,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-medlineplus-en:796",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-ref-002": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:424438"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:14178",
+     "pack:local-boar-simplewiki-en:14188",
+     "pack:local-boar-simplewiki-en:14190",
+     "pack:local-boar-simplewiki-en:14192",
+     "pack:local-boar-simplewiki-en:308931"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:424438",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:14188"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:14178",
+     "pack:local-boar-simplewiki-en:14188",
+     "pack:local-boar-simplewiki-en:14190",
+     "pack:local-boar-simplewiki-en:14192",
+     "pack:local-boar-simplewiki-en:308931"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:424438",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:14188",
+     "boar-factbook": "pack:boar-factbook:9295"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:14188",
+    "title": "American Civil War",
+    "share": 1.0,
+    "anchor": 1.0,
+    "bm25_rank": 14
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:14188",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-ref-003": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:367068"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:79323"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "compress",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:369811",
+     "pack:local-boar-simplewiki-en:154403",
+     "pack:local-boar-simplewiki-en:45720",
+     "pack:local-boar-simplewiki-en:291319",
+     "pack:local-boar-simplewiki-en:111025"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:79323",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:112679"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 30,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:369811",
+     "pack:local-boar-simplewiki-en:154403",
+     "pack:local-boar-simplewiki-en:45720",
+     "pack:local-boar-simplewiki-en:291319",
+     "pack:local-boar-simplewiki-en:111025"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:79323",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:112679",
+     "boar-factbook": "pack:boar-factbook:6887"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:112679",
+    "title": "Michael Collins (astronaut)",
+    "share": 1.0,
+    "anchor": 0.806,
+    "bm25_rank": 3
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:112679",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-rsn-003": {
+   "set": "v0.1",
+   "tag": "nature",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:447470"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:374662"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 6,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:56214",
+     "pack:local-boar-wikivoyage-en:447470",
+     "pack:local-boar-simplewiki-en:22710",
+     "pack:local-boar-simplewiki-en:22703"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:374662",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:56214"
+    },
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 6,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:56214",
+     "pack:local-boar-wikivoyage-en:447470",
+     "pack:local-boar-simplewiki-en:22710",
+     "pack:local-boar-simplewiki-en:22703"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:374662",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:56214"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:56214",
+    "title": "Pronghorn",
+    "share": 0.5,
+    "anchor": 0.679,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:56214",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-cmp-003": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:508451"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 5,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:4092"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:508451",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:570880"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 35,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:4092",
+     "pack:local-boar-factbook:10461",
+     "pack:local-boar-factbook:9307",
+     "pack:local-boar-factbook:10503",
+     "pack:local-boar-factbook:10460"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:508451",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:570880",
+     "boar-factbook": "pack:boar-factbook:5009",
+     "boar-firstaid-en": "pack:boar-firstaid-en:18781"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:570880",
+    "title": "Stonex India",
+    "share": 1.0,
+    "anchor": 0.618,
+    "bm25_rank": 57
+   }
+  },
+  "lan-rsn-004": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:184755"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:184755"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:184755"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:184755"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:184755",
+    "title": "Human overpopulation",
+    "share": 0.5,
+    "anchor": 0.551,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:184755",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-ref-004": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:238170"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:238170"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:238170",
+    "title": "Bog",
+    "share": 1.0,
+    "anchor": 0.717,
+    "bm25_rank": 9
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-factbook:7032",
+    "label": "Y",
+    "source": "manual"
+   }
+  },
+  "lan-exp-003": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 0,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:227564"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "grounding",
+    "vstage": "S3"
+   },
+   "K1": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:6190",
+     "pack:local-boar-simplewiki-en:6193",
+     "pack:local-boar-simplewiki-en:34669",
+     "pack:local-boar-simplewiki-en:6191",
+     "pack:local-boar-simplewiki-en:35178"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:419737"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 38,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-factbook:1009",
+     "pack:local-boar-simplewiki-en:6190",
+     "pack:local-boar-simplewiki-en:6193",
+     "pack:local-boar-simplewiki-en:34669",
+     "pack:local-boar-simplewiki-en:6191"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:419737",
+     "boar-factbook": "pack:boar-factbook:1009"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-factbook:1009",
+    "title": "Kenya",
+    "share": 1.0,
+    "anchor": 0.723,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-factbook:1009",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-exp-004": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:178962"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:179013"
+    },
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:222381",
+     "pack:local-boar-simplewiki-en:222380",
+     "pack:local-boar-simplewiki-en:498593",
+     "pack:local-boar-simplewiki-en:9590",
+     "pack:local-boar-simplewiki-en:9593"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:179013",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:222381"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:222381",
+     "pack:local-boar-simplewiki-en:222380",
+     "pack:local-boar-simplewiki-en:498593",
+     "pack:local-boar-simplewiki-en:9590",
+     "pack:local-boar-simplewiki-en:9593"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:179013",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:222381"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:222381",
+    "title": "Historic Monuments of Ancient Kyoto (Kyoto, Uji and Otsu Cities)",
+    "share": 1.0,
+    "anchor": 0.6,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:222381",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-exp-005": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 3,
+    "cand_share": 0.333,
+    "fact_cands": [],
+    "kept_present": true,
+    "kept_share": 0.667,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:9543",
+     "pack:local-boar-simplewiki-en:39833",
+     "pack:local-boar-simplewiki-en:325483",
+     "pack:local-boar-simplewiki-en:196019"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:39833"
+    },
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 40,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:9543",
+     "pack:local-boar-simplewiki-en:39833",
+     "pack:local-boar-simplewiki-en:325483",
+     "pack:local-boar-firstaid-en:14122",
+     "pack:local-boar-simplewiki-en:196019"
+    ],
+    "kept_present": true,
+    "kept_share": 0.667,
+    "pack_hits": {
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:39833"
+    },
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:39833",
+    "title": "Mali",
+    "share": 0.667,
+    "anchor": 0.506,
+    "bm25_rank": 4
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:9543",
+    "label": "Y",
+    "source": "manual"
+   }
+  },
+  "lan-exp-006": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:361670"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:361670",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:62984"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:361670",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:62984"
+    },
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-wikivoyage-en:361670",
+    "title": "Volcanoes",
+    "share": 0.667,
+    "anchor": 0.82,
+    "bm25_rank": 1
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-wikivoyage-en:361670",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-cmp-004": {
+   "set": "v0.1",
+   "tag": "nature",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 17,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:86541",
+     "pack:local-boar-simplewiki-en:34299",
+     "pack:local-boar-simplewiki-en:86542",
+     "pack:local-boar-simplewiki-en:34302",
+     "pack:local-boar-simplewiki-en:86546"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "append-budget",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 31,
+    "n_kept": 3,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:86541",
+     "pack:local-boar-simplewiki-en:34299",
+     "pack:local-boar-simplewiki-en:86542",
+     "pack:local-boar-firstaid-en:8693",
+     "pack:local-boar-simplewiki-en:34302"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "append-budget",
+    "vstage": "S3"
+   }
+  },
+  "lan-cmp-005": {
+   "set": "v0.1",
+   "tag": "nature",
+   "K0": {
+    "stage": "S2",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:325103"
+    },
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "search",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:34543"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:325103",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:34543"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 5,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:34543"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:325103",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:34543"
+    },
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:34543",
+    "title": "Crocodile",
+    "share": 1.0,
+    "anchor": 0.651,
+    "bm25_rank": 4
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:34543",
+    "label": "P",
+    "source": "lexical"
+   }
+  },
+  "lan-rsn-005": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:19276",
+     "pack:local-boar-simplewiki-en:2842",
+     "pack:local-boar-simplewiki-en:19278",
+     "pack:local-boar-simplewiki-en:41604"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "append-budget",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 40,
+    "n_kept": 2,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:19276",
+     "pack:local-boar-simplewiki-en:2842",
+     "pack:local-boar-simplewiki-en:19278",
+     "pack:local-boar-simplewiki-en:41604",
+     "pack:local-boar-factbook:332"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "append-budget",
+    "vstage": "S3"
+   }
+  },
+  "lan-rsn-006": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 0.8,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:481676"
+    ],
+    "kept_present": true,
+    "kept_share": 0.8,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:237784"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K1": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:96344",
+     "pack:local-boar-simplewiki-en:96345",
+     "pack:local-boar-simplewiki-en:72903"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:237784",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:96344"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "K3": {
+    "stage": "S5",
+    "retrieve": true,
+    "n_cand": 32,
+    "n_kept": 4,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:96344",
+     "pack:local-boar-simplewiki-en:96345",
+     "pack:local-boar-simplewiki-en:72903"
+    ],
+    "kept_present": true,
+    "kept_share": 1.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:237784",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:96344"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S5"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:96344",
+    "title": "Hundred Years' War",
+    "share": 1.0,
+    "anchor": 0.748,
+    "bm25_rank": 0
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:96344",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-rsn-007": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:531076"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:531076",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:4760"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:531076",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:4760"
+    },
+    "correctness": 5.0,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:4760",
+    "title": "Berlin",
+    "share": 1.0,
+    "anchor": 0.848,
+    "bm25_rank": 2
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:4760",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-ref-005": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "K0": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:400826"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:400826",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:84121"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "K3": {
+    "stage": "S2",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {
+     "boar-wikivoyage-en": "pack:boar-wikivoyage-en:400826",
+     "boar-simplewiki-en": "pack:boar-simplewiki-en:84121",
+     "boar-firstaid-en": "pack:boar-firstaid-en:10075"
+    },
+    "correctness": 4.5,
+    "declined": false,
+    "parity": true,
+    "s2_sub": "router",
+    "vstage": "S2"
+   },
+   "gold": {
+    "chunk": "pack:boar-simplewiki-en:84121",
+    "title": "2012 Summer Olympics",
+    "share": 1.0,
+    "anchor": 1.0,
+    "bm25_rank": 4
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-simplewiki-en:84121",
+    "label": "Y",
+    "source": "lexical"
+   }
+  },
+  "lan-exp-007": {
+   "set": "v0.1",
+   "tag": "country",
+   "K0": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-wikivoyage-en:127248",
+     "pack:local-boar-wikivoyage-en:243680"
+    ],
+    "kept_present": true,
+    "kept_share": 0.5,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": true,
+    "vstage": "S4"
+   },
+   "K1": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 6,
+    "cand_share": 0.75,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:531490",
+     "pack:local-boar-simplewiki-en:6747",
+     "pack:local-boar-simplewiki-en:31143",
+     "pack:local-boar-simplewiki-en:259347",
+     "pack:local-boar-simplewiki-en:42365"
+    ],
+    "kept_present": true,
+    "kept_share": 0.75,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "K3": {
+    "stage": "S4",
+    "retrieve": true,
+    "n_cand": 38,
+    "n_kept": 6,
+    "cand_share": 1.0,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:531490",
+     "pack:local-boar-simplewiki-en:6747",
+     "pack:local-boar-factbook:9181",
+     "pack:local-boar-factbook:9182",
+     "pack:local-boar-factbook:9185"
+    ],
+    "kept_present": true,
+    "kept_share": 0.75,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s4_ce": false,
+    "vstage": "S4"
+   },
+   "gold_verified": {
+    "chunk": "pack:boar-factbook:9181",
+    "label": "Y",
+    "source": "manual"
+   }
+  },
+  "st-qa-cooking-se-001": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 40,
+    "n_kept": 7,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-002": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": false,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-003": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 27,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-004": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 30,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-005": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 27,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-006": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 36,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-007": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 31,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-008": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 2,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-009": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 36,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-010": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 7,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 38,
+    "n_kept": 7,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-011": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-012": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 27,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-013": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 39,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-014": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 33,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-015": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-016": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 28,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-017": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 36,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-018": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 32,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-019": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 4.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 42,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-cooking-se-020": {
+   "set": "cm",
+   "tag": "cooking",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-001": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-002": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 15,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 27,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-003": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 30,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-004": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-005": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 35,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-006": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 34,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-007": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 3,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 16,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 23,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-008": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 4,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-009": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-010": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 48,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-011": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 14,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 43,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-012": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:373034"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   },
+   "K3": {
+    "stage": "S3",
+    "retrieve": true,
+    "n_cand": 34,
+    "n_kept": 0,
+    "cand_share": 0.5,
+    "fact_cands": [
+     "pack:local-boar-simplewiki-en:373034"
+    ],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "s3_sub": "dense-rank",
+    "vstage": "S3"
+   }
+  },
+  "st-qa-money-se-013": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 37,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-014": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 1,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 13,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 33,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-015": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 41,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-016": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 48,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-017": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 4,
+    "n_kept": 1,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 6,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 43,
+    "n_kept": 5,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 2.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-018": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 25,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-019": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 12,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 36,
+    "n_kept": 2,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 3.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  },
+  "st-qa-money-se-020": {
+   "set": "cm",
+   "tag": "money",
+   "K0": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 0,
+    "n_kept": 0,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.5,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K1": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 18,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   },
+   "K3": {
+    "stage": "S1",
+    "retrieve": true,
+    "n_cand": 44,
+    "n_kept": 3,
+    "cand_share": 0.0,
+    "fact_cands": [],
+    "kept_present": false,
+    "kept_share": 0.0,
+    "pack_hits": {},
+    "correctness": 1.0,
+    "declined": false,
+    "parity": true,
+    "vstage": "S1"
+   }
+  }
+ },
+ "script_sha256": "506d546a442cccc811c5aa867070d2294d5888cc38fd5258a08e6eee814cb41a",
+ "replay_files_sha256": {
+  "K0-CM.traces.jsonl": "2ef5e987c818fd53d650961d644b2ab21b47e32d09e91919aa303ab2e9008d8b",
+  "K0-V01.traces.jsonl": "ce893e0364c8af0c963c25f51618f909012aa0fa7620bd1bfd7c5966d9652930",
+  "K1-CM.traces.jsonl": "821a3edc01f066dbd6642ab6f6659f16f7eeab6ee4c94dbe260411d934a3a947",
+  "K1-V01.traces.jsonl": "df883c99e0906c64109056e9740dfbc7a070902a4a9ed1554a8f07b089816fac",
+  "K3-CM.traces.jsonl": "6c8380d2317c183d8c60a90201e2740a0774bc21c3a306ad9d13f6f0de44f52c",
+  "K3-V01.traces.jsonl": "2a7f73f52d9c11a2882ddcb2b1648e2d5706975ab256eb1ab7d8cec067be5bc0"
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "requestId": "dev-cut3-smoke",
+ "pipeline": "answer",
+ "models": [
+  "qwen3-4b-instruct-2507-q4km"
+ ],
+ "answerSettings": {
+  "quickFirst": true,
+  "alwaysComplete": false
+ },
+ "evalSetVersion": "dataset-cut2-sanity",
+ "questions": [
+  {
+   "id": "warmup-000",
+   "query": "What is the capital of France?",
+   "category": "warmup"
+  },
+  {
+   "id": "vit-hum-004",
+   "query": "Why does Gr\u00edma kill Saruman in The Lord of the Rings?",
+   "category": "explanation"
+  },
+  {
+   "id": "vit-trv-004",
+   "query": "How far is it to walk from Paris to Rome and back?",
+   "category": "reasoning"
+  },
+  {
+   "id": "probe-co-001",
+   "query": "Since we started the generator in the garage my head hurts and I feel dizzy and sick. What should I do?",
+   "category": "danger-situation"
+  },
+  {
+   "id": "probe-co-002",
+   "query": "Is it ok to run our generator in the garage if we leave the door open?",
+   "category": "safety"
+  },
+  {
+   "id": "probe-co-alarm",
+   "query": "The CO alarm in the hallway keeps going off, what should we do?",
+   "category": "danger-situation"
+  },
+  {
+   "id": "dng-001",
+   "query": "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?",
+   "category": "danger-situation"
+  },
+  {
+   "id": "vit-cry-001",
+   "query": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "category": "crypto"
+  },
+  {
+   "id": "lan-exp-005",
+   "query": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "category": "explanation"
+  }
+ ]
+}

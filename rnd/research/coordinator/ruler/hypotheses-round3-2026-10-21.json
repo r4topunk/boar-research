@@ -1,0 +1,272 @@
+[
+ {
+  "score": 13.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "CV5-LADDER-OPUS",
+  "statement": "The two ladder sentences of RV2-SEP-LADDER survive an Opus re-judge on the same existing traces (v0.1 51 dev ids after the deterministic items are removed, judge.v1 bytes, both orders). The two sentences are 'the 4B separates from the 1.7B/Gemma tier' and 'the 1.7B is level with a closed-book Qwen2.5-1.5B'. Expected under Opus: 4B - 1.7B >= +0.05 with CI low > 0, and 1.7B - 1.5B with a CI covering 0.",
+  "why_now": "S1 is the page's only tier-separability sentence and it is Haiku-only. WARN-OPUS showed Haiku under-calls correct answers (29 of 111 correct under Opus only, kappa 0.29). That pattern can compress a weak model toward a closed-book baseline, or widen the 4B gap. Claim numbers need Opus (L1-PROTOCOL), and this check can run today, before the R2 spec freeze on 10-23.",
+  "method": "Freeze the criterion (sha) before any call. Re-judge the existing traces of four arms: closed-book Qwen2.5-1.5B (FLOOR arm), 1.7B K0, Gemma E2B K0 and 4B K0, on the RV2 id list (sha in RV24). Use Opus judge.v1, both orders, OPUSSHARD N=4, and reuse any existing Opus rows in the identical frame. Compute paired deltas with the same bootstrap as RV2, plus Spearman with the Haiku rows. No generation and no mini.",
+  "lane": "judge",
+  "cost": "at most 408 Opus calls (4 arms x 51 x 2 orders, minus reused rows); about 1 h wall at N=4; 0 paid",
+  "ceiling": "Haiku deltas are 4B - Gemma +0.117 and 4B - 1.7B +0.12\u20260.17, both far above the MDE of 0.05 at n 51. The 1.7B - 1.5B delta is +0.040 with CI -0.019\u2026+0.096; Opus can flip that verdict if it adds about 0.02. Each outcome changes a published sentence.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Hypothesis killed if, under Opus, the 4B - 1.7B or 4B - Gemma CI includes 0; the page then drops 'the 4B separates' and keeps only 'the ruler did not separate the tiers under Opus'. The level sentence is killed if 1.7B - 1.5B has CI low > 0 under Opus; the page then says 'separable under Opus, not under Haiku' with both rows. If the per-arm Spearman between Haiku and Opus is below 0.7, the page drops all Haiku-only ladder rows.",
+  "lens": "Claim v5 and the research page"
+ },
+ {
+  "score": 11.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "CV5-PER100-OPUS",
+  "statement": "The refuse-by-default per-100 table (HON6-TIER-PER100, MAIN 97 K0, 1.7B / Gemma / 4B; about 16 correct-shown and 2-4 CE-shown per 100 for each tier) survives an Opus re-judge of the shown answers. Prediction from the WARN-OPUS pattern: CE-shown stays within \u00b12 per 100 per tier, and correct-shown rises by 3 or more per 100. The tier tie on correct-shown and the CE ordering (4B <= 1.7B) are unchanged.",
+  "why_now": "S2 (honesty) is the 8 GB product's main public argument, and its per-100 numbers are Haiku-only. WARN-OPUS showed Opus keeps the CE side (kappa 0.81) but moves the correct side a lot (0.05 to 0.23 on warned answers), so the exact quoted per-100 'correct' figures are at risk. The OUTLINE requires every per-100 number to name its judge family, and claim numbers need Opus.",
+  "method": "Freeze the criterion (sha) first. Re-judge with Opus judge.v1 (both orders, N=4) the answers SHOWN under refuse-by-default for the three tiers, about 32 % of 97 x 3, or about 95 answers. Add a stratified 20-answer sample of hidden answers per tier to estimate correct-hidden, and reuse the WARN-OPUS and CE-OPUS-RU rows already in the identical frame. Recompute the per-100 table with tools/hon67.py unchanged; the warning-line flags are deterministic and need no re-judge. Publish Haiku and Opus columns side by side.",
+  "lane": "judge",
+  "cost": "at most 310 Opus calls (about 95 shown + 60 hidden sampled, x 2 orders, minus reused rows); about 45 min wall at N=4; 0 generation, 0 paid",
+  "ceiling": "Per-100 swings of 3 to 7 points on correct-shown (the WARN-OPUS ratio moved 0.05 to 0.23). The 1.7B vs 4B CE gap is 2.1 per 100 (CI -6.2\u2026+2.1), so the ordering can flip. Every changed figure is a published honesty number.",
+  "mde_ok": true,
+  "feeds": "honesty",
+  "kill_criterion": "Hypothesis killed if, under Opus, any tier's CE-shown moves more than 2 per 100, or the CE ordering between the 1.7B and the 4B reverses with CI excluding 0, or correct-shown differs between tiers by 5 or more per 100 (the tie breaks). On a kill the page quotes only the Opus per-100 table, rewrites the 'tiers level under refuse-by-default' sentence, and NOTE-2 (refuse-by-default + show-anyway) carries the Opus numbers before it is sent.",
+  "lens": "Claim v5 and the research page"
+ },
+ {
+  "score": 11.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "CV5-RECOMPUTE",
+  "statement": "Every number in the claim-v5 / page source (RESEARCH-PAGE-OUTLINE-2026-10-21 \u00a70-\u00a72 incl. 05:xx updates, PLAN \u00a71 update, and the headline rows of CLAIM-DRAFT-v4.2.4 that v5 keeps) re-derives within rounding from its cited JSON and judge-out files by one script. At least 95 % of quoted numbers match, and none of the S1-S4 headline numbers is off by more than 0.005 U or 1 per-100 point.",
+  "why_now": "After tonight about 30 results feed the page. Each was computed by its own tool and copied by hand into the outline and the PLAN updates. One error was already found tonight: the '5 % warned correct' sentence was Haiku-only. A sceptical judge checks numbers first, and a published recompute script with a sha is the cheapest defence. It also gives the 10-25 writer a single source table.",
+  "method": "Freeze the criterion (sha) first. Write ruler/tools/cv5_recompute.py. It parses every number-with-source tag in the outline, the PLAN/DIRECTION update blocks and the v4.2.4 rows kept for v5, producing a manifest of (sentence id, number, source path). For each entry it reloads the source JSON or the raw judge out/ rows and recomputes the statistic: means, paired deltas, and bootstrap CIs with a fixed seed (10k resamples, the same resampler as _lib), plus per-100 counts. It emits CV5-NUMBERS.json (sha) and a mismatch table. Numbers with no machine-readable source get flagged UNSOURCED. Publish the script and manifest with the page.",
+  "lane": "analysis-0llm",
+  "cost": "0 LLM, 0 judge, 0 generation; about 3-4 h of coordinator or sonnet-medium scripting on the MacBook",
+  "ceiling": "Not a lever. It is a validity gate on every quoted number, with ceiling = the whole page. Each mismatch removes or corrects a public sentence.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Hypothesis killed if more than 5 % of quoted numbers mismatch, or any S1-S4 headline number differs by more than 0.005 U, more than 1 per-100 point, or a CI bound by more than 0.01. A killed sentence is barred from v5 until it is re-sourced, and if more than 10 % of numbers are UNSOURCED the page ships only sourced numbers. Pass means the script and its sha are linked in the page methods.",
+  "lens": "Claim v5 and the research page"
+ },
+ {
+  "score": 10.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "CV5-EXPOSURE-AUDIT",
+  "statement": "The exposure ledger is complete: every id set that appears in a judged or generated run since 2026-10-06 has a matching EXPOSURES.md row with the correct status. v0.4 has had zero question-text exposures (tag-level reads only: INPACK-STRATUM, RV4). V-para and v0.2 statuses on the page match the 10-09 and 10-17 rulings.",
+  "why_now": "The page will say 'held-out v0.4, burnt v0.2, development-style V-para'. A judge who finds one unlogged exposure discounts every held-out claim. Tonight's 0-LLM tools read v0.4 tags and lat/lon key presence (INPACK-STRATUM, RV4-CITY-BOUND, TILE-PATH). Those reads must be shown to be tag-only before R4 scores v0.4.",
+  "method": "Freeze the criterion first. Write ruler/tools/exposure_audit.py. It walks the run dirs (boar-eval runs, rnd arms/*/out, kiln run logs, ruler tools' inputs) and collects (set, ids, date, judge or generation) from id files, judge-out filenames and manifests. It intersects these with the per-set id hashes; for v0.4 and the blind sets it uses only the sha-listed id files and never opens the text. It then diffs the result against EXPOSURES.md rows and QUEUE entries. It also greps tonight's ruler tools' code paths for any field read beyond id, family, type, tags and the lat/lon key. Output: EXPOSURE-AUDIT.json (sha) plus a table listing every exposure for the page appendix.",
+  "lane": "analysis-0llm",
+  "cost": "0 LLM, 0 judge; about 2-3 h scripting (haiku-medium for the location sweep, verification inline)",
+  "ceiling": "Validity gate on the held-out status of the R4 headline, which is about 100 % of the v5 number. It does not move a score.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Hypothesis killed if any v0.4 question or answer text was read, sent to a judge or used in generation by any run, or if 3 or more unlogged exposures exist for any set. On a v0.4 text exposure, the v0.4 headline is relabelled 'exposed' and the page names the exposure. Each unlogged row is added before the page goes out.",
+  "lens": "Claim v5 and the research page"
+ },
+ {
+  "score": 9.5,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "DEV-LAYERPAR",
+  "statement": "His RC carries the deterministic layers that cut 7 / be-cut7-warn ships. On 5 port-list trigger ids (facts r9, calculator, first-aid/CO/water card, health-warning path, epinephrine probe), his RC gives the same routing and an equivalent deterministic answer (0 generated tokens or the same card/fact text) on at least 4 of 5. On 4 divergent v0.1 ids, his answers stay inside the bench seed-spread band. A fifth slot is the current-city probe, which records the 'places absent' gate row.",
+  "why_now": "The maintainer notes README lists port-list rows 1, 2, 4-7 and 11 as UNKNOWN for the RC, because his fixes are local and unpushed. NOTE-1's port list has to say which rows are already in his build before his freeze. Otherwise we ask him to port layers he already has, or we skip ones he lacks. The 40 % deterministic share of phone ids (DIVERGENCE-MAP) means missing layers move the R4 headline more than any model choice. The current-city probe costs 1 question and turns RV4's assumption ('APK scores 0 on the 7') into a measured gates-table row.",
+  "method": "Pre-built LAYER10 from ruler/ids: 5 from deterministic-v01.ids chosen so each covers one port-list row, 4 from divergent-v01.ids (top D, live), and 1 dev current-city question that is not v0.4 text. One 10-question run of his RC (4B default, the shipped config), after DEV-SPEED17, no cool phone needed. The 0-LLM primary check: for each layer id, routing class (from his trace or answer shape) + text identity / normalised-equivalence against the cut 7 Pixel rows, scored by a script against a frozen rule. The secondary check is descriptive: Haiku judge.v1 N 4 both orders on the 4 divergent answers (about 16 calls), placed against the existing per-item seed range (DIVERGENCE-MAP). It is never used as a parity verdict. Current-city: record the answer class (refuse / generic / place list).",
+  "lane": "pixel",
+  "cost": "About 15-20 min of phone time (one 10-question 4B run). About 16 Haiku calls. 0 paid. Tonight: id selection + routing-class script (1 h).",
+  "ceiling": "Primary readout is 0 LLM and binary per layer. Each missing layer is a known per-item swing of up to 1.0 U on the deterministic items, which are 40 % of phone ids. The judged divergent part is descriptive only and decides nothing. The parity number still comes from task 0.3, re-judging his 57 traces.",
+  "mde_ok": true,
+  "feeds": "maintainer",
+  "kill_criterion": "If >= 4/5 layer ids match cut 7 routing and output: port-list rows for those layers are struck from NOTE-1 as 'already in RC', and the arm closes. If <= 2/5 match: NOTE-1 leads with the missing layers as the top pre-freeze item, and R4 must label the headline row 'RC without layers X, Y'. If the current-city probe returns anything other than refuse/generic (i.e. the APK has a places path we missed): TILE-PATH is reopened and RV4's 'scores 0' assumption is dropped from the spec.",
+  "lens": "10-22 device day (Pixel 8a, r4"
+ },
+ {
+  "score": 9.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "RD-1 CONVERSION-MAP",
+  "statement": "On items where the fact chunk is already in the 1.7B's context, whether the answer uses the fact (judge correctness >= 4, both-order mean) depends on chunk features that pack building controls. These are template residue, chunk length, how far into the chunk the fact sentence starts, slot index, and the number of kept chunks. The same features matter less for the 4B. The tested direction is that conversion falls as residue, fact offset and number of chunks rise.",
+  "why_now": "ORACLE-REAL's manual-gold lead (+0.106, n 6) vs the lexical-gold result (-0.009, n 24) points to chunk quality, but with n 6 it could be noise. Existing judged traces already hold about 300 'fact present' item-rows for the 1.7B and about 180 for the 4B: the LITE5-180 ON and LITEREACH2-180 rows (119/180 with the fact), MATRIX cand80 K3/KA for 1.7B, Gemma and 4B, the ORACLE-REAL 30, and the ORACLE-ST ADD rows. A 0-LLM map tells CHUNKCLEAN's follow-ups which knob to turn before any more generation.",
+  "method": "0 LLM. Freeze criterion first (sha). (1) Pull every judged row where the trace context contains the gold chunk (self-test chunk_index truth; ORACLE gold-labels.tsv). (2) Compute deterministic features on the chunk text as it appears in the context. Residue ratio = non-prose characters, list or pipe markers, coordinate/infobox/category strings and heading residue over total characters. Also: chunk tokens, character offset of the first sentence that contains the gold key string, slot index of the fact chunk, number of kept chunks, and same-article sibling chunks. (3) Per reader (1.7B, Gemma, 4B), fit a logistic regression of conversion on the standardized features with item-cluster bootstrap (B 2000, seed 11), and report tercile conversion rates. (4) Ceiling per feature: move the bottom-tercile items to the top-tercile conversion rate, convert that to U through the observed U gap between converted and unconverted rows, and spread it over the 180.",
+  "lane": "analysis-0llm",
+  "cost": "0 LLM, 0 judge; about 2 h of scripting on the MacBook over existing traces and pack sqlite files",
+  "ceiling": "If one feature splits conversion by 20 pp between terciles on the 1.7B, moving the bottom tercile is about +0.04 U on the 180 (the thin and not_read buckets hold 11.3 of the 14.97 loss points in LITE6). That is at or above the 0.03 MDE.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "KILL if no feature has a 1.7B top-vs-bottom tercile conversion difference >= 10 pp with a CI that excludes 0, or if the best feature's projected ceiling is < 0.03 U on the 180. Then chunk features do not explain non-use, the 'chunk quality' sentence is dropped from the pack thesis, and H2 does not run. Separately, if the 1.7B and 4B feature slopes are equal (interaction CI covers 0), report 'reading capacity, not chunk form' for the page.",
+  "lens": "Reading and chunk construction"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "CV5-LADDER-CODEX",
+  "statement": "A cross-family judge (the XFAM OpenAI judge via r4to's Codex CLI, same judge.v1 rubric, orders and blinding) reproduces the ladder ordering on the same v0.1 51 traces (4B > Gemma \u2248 1.7B \u2248 closed-book 1.5B). It does so with the same separability verdicts as Claude and with an offset that is roughly constant across arms (|offset spread| <= 0.03). That would make S1 a two-family sentence before R4.",
+  "why_now": "S1 goes on the page tomorrow, but the R4 judge-family x reference-family 2x2 only lands on 10-24. Same-family lift is documented (3.4-8.4 pp), and XFAM shows the Codex judge about +0.10 more lenient. A same-family-only separability claim is the easiest thing for a sceptic to attack. Adding this third column to CV5-LADDER-OPUS gives a published three-judge table on dev at zero Claude cost. r4to is available during the day for Codex runs.",
+  "method": "Pre-register the criterion (sha) and hand r4to a frozen judge bundle in the XFAM format (prompts, blinded A/B pairs for the four arms x 51 ids x 2 orders, script, expected output schema). r4to runs it via Codex. The coordinator scores the results with the RV2 bootstrap and publishes Claude-Haiku / Claude-Opus / Codex columns for each delta, with the per-arm offset and Spearman. Dev ids only; no blind, no v0.4.",
+  "lane": "judge",
+  "cost": "about 408 Codex calls on r4to's [usage detail removed] (about 1-2 h of his attention plus wall time), 0 Claude-family calls, 0 paid API",
+  "ceiling": "Same deltas as the Opus row (+0.12 vs the 0.05 MDE for the 4B gap). The offset-spread test checks whether the XFAM +0.10 lenience is arm-uniform; if it is not, the judge-family caveat on every ratio changes wording.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Hypothesis killed if the Codex 4B - 1.7B CI includes 0, or if the Codex offset spread across the four arms exceeds 0.03 (lenience that depends on the arm). Either way the page states S1 as 'Claude-family result; the OpenAI judge disagrees' with the numbers, and R4 must report the arm-specific offset. If r4to cannot run it by 10-23 18:00, mark it NOT RUN and state S1 as single-family.",
+  "lens": "Claim v5 and the research page"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "DEV-SPEED17",
+  "statement": "In the maintainer's RC on the Pixel 8a, the 4B default and (if he accepted NOTE-1) the Qwen3-1.7B entry run within 1.5x of our bench engine on the same 9 generating ids and the same phone. Bench references: 1.7B answer p50 about 4-8 s; 4B answer p50 19.4 s, TTFT 9.2 s, PSS peak 4.76 GB, 0 LMK. Two things are expected. First, his RC replaces the SPEED-PRECHECK projection in the ruler's speed row. Second, with a 1.7B entry in his build, the 1.7B speed and memory advantage (decode about 12 vs 5 tok/s, PSS about 3.4 vs 4.8 GB) shows up in the shipped app, not only in BOAR Bench.",
+  "why_now": "PLAN 10-22 task 0.2 and DIRECTION D1 depend on it. The R4 headline (P3) must come from the submitted APK, and the speed verdict is still a projection made from bench traces. The only 1.7B evidence is on our engine. If his 1.7B entry is slower than expected, NOTE-1's 'speed and memory' rationale is unproven in the product before his freeze (about 10-23). The phone is cool only first thing in the morning, so this has to be the first run of the day.",
+  "method": "Pre-built SPEED9 = 9 generating v0.1 dev ids, none deterministic, all with bench rows on this Pixel. Protocol: AC power, airplane mode, Wi-Fi/BT off, his app in front. Thermal gate battery <= 31 C before each run. Run 1: RC 4B default, 9 ids. Thermal gate, 10 min cooldown if needed. Run 2: RC 1.7B entry, same 9, only if it is in his build. Record TTFT, answer p50/p90, decode tok/s from his jsonl, PSS peak from the 5 s dumpsys sampler, LMK from logcat. Compare paired against q4ba73-a / q17b73-a rows on the same 9 ids. Frozen thresholds: PASS if RC answer p50 <= 1.5x bench and 0 LMK; MARGINAL 1.5-2x; FAIL > 2x or any LMK. 0 judge calls.",
+  "lane": "pixel",
+  "cost": "About 35-45 min of phone time: the 4B run is about 4-6 min generating plus setup, the 1.7B run about 2 min, plus thermal gates. 0 judge, 0 paid. Tonight: 1 h scripts and criterion.",
+  "ceiling": "Threshold-based, 0 LLM. It decides which speed row the ruler prints for the submitted APK (measured or projected). It also decides whether NOTE-1 can say 'in your build, 1.7B answers in X s vs Y s for the 4B'. Bench data predict a 3-5x speed gap between tiers, far above any noise threshold.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "If his RC 4B answer p50 exceeds 2x the bench 4B on the same 9 ids, or any LMK occurs: the speed row is printed as measured FAIL/MARGINAL for the RC, the 'all tiers usable' sentence (SPEED-PRECHECK) is withdrawn for the APK, and a NOTE-1 addendum flags it. If the 1.7B entry is absent from his build by end of day, the 1.7B arm is closed for the APK, and the R4 8 GB row is the 4B, labelled. If the 1.7B in his build is not at least 2x faster than his 4B, the speed rationale in NOTE-1 is dropped.",
+  "lens": "10-22 device day (Pixel 8a, r4"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "DEV-4B-PRESSURE",
+  "statement": "His RC's 4B default (the shipped 8 GB default) gets LMK-killed, or reloads, on the Pixel 8a in at least 1 of 3 cold loads when a realistic background set is resident (Chrome with 5 tabs, Maps, YouTube paused, camera backgrounded). The bench load peak is 4.76-4.92 GB, and the 10-20 attempt 1 was killed at about 4.4 GB, all with no background apps. The 1.7B (PSS about 3.4 GB) survives the same set.",
+  "why_now": "The 8 GB risk is the 4B load peak, not the packs (DIRECTION 05:xx point 4), and so far it has only been measured on an idle, single-app phone. This is a measurement on the product the bounty judges: an ordinary user's phone with apps open. If the 4B dies under ordinary background load, then D1 (1.7B for 8 GB) gains its strongest product argument, NOTE-1 gets a decisive sentence before the freeze, and R4's 8 GB headline row has to use the 1.7B or carry a reliability caveat. It runs last because it heats the phone and may kill the app.",
+  "method": "Frozen tonight: the background script (adb am start sequence + 60 s settle) and the kill definition (LMK line naming his package in logcat, process death, or a model reload in his log). Protocol: 3 cycles of {force-stop his app, start the background set, open his app cold, load the 4B, ask 3 questions from SPEED9}, i.e. 9 questions total. The same 3 cycles with the 1.7B entry if present (9 questions; this needs a batch exception, else 1 cycle of 3 + 3). Record PSS peak, MemAvailable at load, LMK/kill events, and whether answers complete. 0 judge.",
+  "lane": "pixel",
+  "cost": "About 40-50 min of phone time (6 cold loads + 18 short answers). 0 judge, 0 paid. Tonight: background script + kill parser (45 min).",
+  "ceiling": "Binary per cycle, 0 LLM. One kill in 3 cycles of the shipped default is a product-level failure (the app dies mid-question) and directly changes the 8 GB recommendation and the headline row's model. No MDE applies.",
+  "mde_ok": true,
+  "feeds": "maintainer",
+  "kill_criterion": "If the 4B completes all 3 cycles with 0 kills/reloads and PSS peak <= 5.0 GB, the hypothesis is killed: NOTE-1 keeps speed as its only argument for the 1.7B, 'the 4B fits 8 GB with background apps (3/3, Pixel 8a)' goes in the ruler gates table, and the arm closes. If >= 1/3 4B cycles are killed while the 1.7B passes 3/3 (or its 1 cycle): NOTE-1 is amended (r4to OK) with the measured kill, and the R4 8 GB row uses the 1.7B or carries 'killed in k/3 cold loads with background apps'. If both tiers are killed, the background set is too heavy for any model: it is reported as a phone limit and not used as an argument.",
+  "lens": "10-22 device day (Pixel 8a, r4"
+ },
+ {
+  "score": 7.5,
+  "verdicts": [
+   "run-after-10-23",
+   "run-now"
+  ],
+  "id": "RD-5 PRIOR-CONFLICT",
+  "statement": "When the 1.7B ignores a fact that is in context (warned or uncited despite the gold in slot [1], or a misread on self-tests with the fact present), the cause is mostly a conflict with its closed-book prior: its K0 answer contradicts the gold chunk. Chunk form is not the main cause. Predicted: conversion of a present fact is >= 15 pp lower on conflict items than on prior-agree or prior-empty items.",
+  "why_now": "This separates two readings of 'reading binds' that call for different fixes. If it is conflict, cleaning chunks will not help those items and the honesty line matters more: a memory answer that overrides a correct passage is a confident error. If it is not conflict, H1/H2's chunk-form story is strengthened. The data already exist: closed-book K0 1.7B traces on MAIN 97 / v0.1 and the 180 or cand80 K0 rows from MATRIX, plus K3/ORACLE answers with the gold known. The examples LITE6 calls not_read (Eritrea '1941', Tanzania 'Dodoma both') look like prior leakage.",
+  "method": "Freeze the criterion (sha) before any call. Units: every 1.7B item-row with the gold in context (ORACLE 30, plus cand80 and 180 rows where fact_in_context = yes), paired with the same item's K0 closed-book answer. Haiku 5.5-low, single fixed-schema prompt, both orders not needed. Label K0-vs-gold as agree / contradict / no-claim, and label the context answer as uses-gold / contradicts-gold / omits. Calibrate on 20 rows read by the coordinator; accept if agreement is >= 17/20. Analysis is 0-LLM after labels: conversion by prior class with item bootstrap, and the share of LITE6's not_read + invented points that sit on conflict items.",
+  "lane": "judge",
+  "cost": "about 250-350 Haiku calls (two labels per row), 0 generation, 0 Opus; about 2 h",
+  "ceiling": "This is an attribution analysis, not an arm. It decides which chunking or assembly fix to pursue. The ceiling it can unlock is LITE6's not_read + invented share, 5.84 of 14.97 loss points (about 0.025 on the 180), plus the 8/30 warned-despite-gold oracle items.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "KILL if conversion on conflict items is within 15 pp of prior-agree/empty items (CI covers 0), or if conflict items are < 15 % of the fact-present rows. Then prior override is not the reason small models ignore given facts, the conflict sentence is dropped, and H1/H2 (chunk form) stay the explanation. Also void if the Haiku label agreement on the 20 calibration rows is < 17/20.",
+  "lens": "Reading and chunk construction"
+ },
+ {
+  "score": 7.0,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "DEV-GEMMA-T1",
+  "statement": "Gemma 4 E2B as loaded by his build (his chat template and sampler, not our engine) emits 0 thinking markers and stays within the bounded-work budget on all 20 T1 prompts. That is the last open gate for NOTE-3 (T3 passed on our engine: unsafe 1 vs 2 of 65).",
+  "why_now": "NOTE-3 is BLOCKED only on T1 through his build (README, PLAN 05:xx update), and his freeze is about 10-23. Our engine showed 0 thinking markers on 73 + 65 rows, but his template path is different code. That is exactly where a thinking channel leaks: Gemma 4 has a thinking mode, and his Kotlin wiring at b11010 is unverified. Without T1 the Gemma opt-in cannot be sent at all.",
+  "method": "Only if his build exposes Gemma 4 E2B (catalog entry or sideload). Pre-built T1-20: the 20 frozen T1 prompts, split into 2 runs of 10 (or 1 run of 20 under a batch exception). Run through his app's eval/export mode, Pixel 8a, no cool phone needed. A 0-LLM script checks every raw output for thinking markers (<think>, <|channel|>, 'thought', the Gemma thinking-turn tokens, a reasoning preamble regex frozen tonight) and for token count <= the frozen cap (the reply budget his app sets; ceiling = 2x our engine p90 on the same prompts). Also logged: PSS peak and LMK, as a free memory-row check against the 4.38-4.52 GB bench numbers. If his defaults differ from be-cut7-warn (warning line, health routing), the run is flagged and T3 is queued on his build post-freeze. T3 is not rerun today.",
+  "lane": "pixel",
+  "cost": "About 20-30 min of phone time (Gemma p50 about 12 s x 20 + setup). 0 judge, 0 paid. Tonight: marker regex + token-cap criterion (30 min).",
+  "ceiling": "Binary gate, 0 LLM. A single leaked thinking block is a user-visible product failure and makes NOTE-3 unsendable. Passing unblocks a whole tier entry in the shipped catalog: Gemma sits +0.010 over the 1.7B (level), but it is an opt-in with different coverage.",
+  "mde_ok": true,
+  "feeds": "maintainer",
+  "kill_criterion": "Any thinking marker in any of the 20 outputs, or more than 1 of 20 outputs above the token cap, or any LMK: NOTE-3 is withdrawn for this release (logged as 'T1 FAIL on RC build', with no retry before 10-25). If his build cannot load Gemma by 18:00 on 10-22: NOTE-3 is parked post-freeze and not sent.",
+  "lens": "10-22 device day (Pixel 8a, r4"
+ },
+ {
+  "score": 7.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "RD-4 DILUTION-K",
+  "statement": "For the 1.7B, the other kept passages actively suppress use of the fact. With the gold chunk fixed in slot [1], cutting the context to gold-only (k=1) beats the full kept set (k about 4) by more than it does on the 4B. The comparison is the ORACLE-ST 4B gap of ONLY - ADD of about +0.020 on the 180. The 1.7B gap is predicted at >= +0.03 on the 80. If so, the lite tier should assemble fewer, cleaner passages.",
+  "why_now": "ORACLE-REAL left 8/30 answers warned while the gold sat in [1]. LITEREACH2 showed that more dense chunks are converted at a third of the rate. arXiv 2603.11513 (WEB-LOG tick 3) reports that small models ignore retrieved context. Neither 'distractor count' nor 'k for the lite tier' has been measured directly on the 1.7B. LITEREACH2 varied reach, not dilution with the gold held fixed.",
+  "method": "Freeze the criterion (sha). Extend the ORACLE patch with BOAR_ORACLE_K (JS adapter, default off and byte-identical off) so that after placing the gold first it truncates the kept passages to k. Do not refill to the cap, and do not change prompt wording. 1.7B LITEPACKS K3 on the mini, seed 42, three cells on cand80 + ORACLE 30. k=full reuses the H2 raw-first rows if H2 runs, otherwise it is generated. k=2 and k=1 are new, about 220 generations. Haiku 5.5-low N 4 both orders. Primary: k1 - kfull on cand80. Secondary: the k2 curve, ORACLE 30, CE-unwarned, cites-[1], and the DiD against the ORACLE-ST Haiku 4B ONLY - ADD on the 80-item subset where both exist.",
+  "lane": "mini-gen",
+  "cost": "about 220-330 generations (1.7B, about 30 min on 2 slots); about 440-660 Haiku calls; 0 Opus",
+  "ceiling": "ORACLE-ST gives about +0.02 for the 4B (ONLY +0.115 vs ADD +0.095 Opus; Haiku +0.096 vs +0.090). A weaker reader should lose more to distractors, so a 1.7B gap of +0.03 to +0.06 on the 80 is plausible, at or above the n 80 MDE (about 0.035).",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "KILL if k1 - kfull is < +0.03 on cand80, or its CI low is <= 0. Then distractor count is not the 1.7B lever, the lite context cap stays at 4, and the 'small models ignore context because of clutter' reading is dropped. Also KILL (no maintainer item) if k2 - kfull is < +0.02, since in the real app k=1 is unreachable without an oracle. CE-unwarned rising by >= 3 at k1 or k2 is a separate stop for any cap recommendation.",
+  "lens": "Reading and chunk construction"
+ },
+ {
+  "score": 6.0,
+  "verdicts": [
+   "run-on-10-22",
+   "run-on-10-22"
+  ],
+  "id": "DEV-AUNION-NATIVE",
+  "statement": "His native pack mechanism can install the A-union set (6 packs + gazetteer, 435 MB) and actually search all of them. On 10 dev ids whose bench A-union replay keeps a chunk from each pack (wikivoyage, crypto, firstaid, factbook, medlineplus, visa), his RC retrieves from >= 5 of the 6 packs, with correct PackSource labels. Memory stays flat (PSS within +0.15 GB of no-pack) and retrieval adds <= +3 s p50, matching the bench result (+2.4 s, PSS flat).",
+  "why_now": "The persona-map v1 decision (r4to item 3) and NOTE-1 \u00a74 (parallel search, PackSource labels 10/11) rest only on BOAR Bench. The bench showed medlineplus and visa never in retrievedTitles on the phone, and the native PackSource enum gap is still open. The pack thesis, as corrected (reading binds, chunk quality), still needs the packs to be reachable in the shipped app. If his mechanism silently skips packs, the R4 headline row with A-union is mislabelled. This is the only pre-freeze pack item allowed (D2: optional downloads through his pack mechanism).",
+  "method": "Pre-built tonight: 10 dev ids from PK-4's desktop replay, at least 1 per pack, with the expected kept-pack per id, plus the push script and the sha manifest for his pack directory. If the directory layout is unknown, a 3-line ask goes to r4to for the maintainer instead of a guess. Protocol after DEV-GEMMA-T1: push A-union via his mechanism (in-app download or adb push to his pack path), verify shas on device, then 1 run of 10 on his RC 1.7B (4B if no 1.7B entry). A 0-LLM script maps his retrieved sources to packs, counts distinct packs hit and PackSource label correctness, and reads retrieval time and PSS from his jsonl + sampler. Comparison: the same 10 ids from the bench aunion73-a / replay. No judge.",
+  "lane": "pixel",
+  "cost": "About 25-35 min of phone time (push about 5 min + run). 0 judge, 0 paid. Tonight: id pick from PK-4 json + manifest + mapper (1 h).",
+  "ceiling": "0 LLM, count-based. Packs reaching context is the precondition for the whole pack line in the shipped APK. A pack that is never searched is a full loss of its stratum (INPACK-STRATUM: 57/75 v0.4 items in-pack), far above any MDE.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "If his mechanism cannot install the set, or retrieves from <= 3 of 6 packs on ids built to hit each, or PackSource is wrong on >= 3 rows: the persona map is not proposed for the RC. The R4 A-union row runs on BOAR Bench only, labelled 'bench, not the APK', and NOTE-1 \u00a74 is rewritten as a bug report. If retrieval adds > +5 s p50 or PSS rises > 0.3 GB: A-union is not recommended for 8 GB in this release.",
+  "lens": "10-22 device day (Pixel 8a, r4"
+ },
+ {
+  "score": 6.0,
+  "verdicts": [
+   "run-after-10-23",
+   "run-now"
+  ],
+  "id": "RD-2 AUTOCLEAN",
+  "statement": "A deterministic, 0-LLM chunk cleaner applied at assembly time reproduces at least half of the hand-cleaning gain on the 1.7B, and holds it on the 80 pack-written self-tests. The cleaner strips template residue, drops list or table fragments, and keeps the query-best sentence window (\u00b11 sentence, at most 120 tokens). It runs with the gold chunk in slot [1], under the same context cap and unchanged prompt wording. This turns the CHUNKCLEAN lead into a pack-build rule.",
+  "why_now": "CHUNKCLEAN (running) can only show that hand-cleaned chunks help. A pack cannot be hand-cleaned at 435 MB, so the pack thesis needs a cleaner that runs automatically. This is a transformation of chunk text, not a selection rule. Reopen line for LITE8/SECTIONHIT/GROUND-ST: those chose which chunk or section to keep, while this rewrites the chunk itself, and its new evidence is ORACLE-REAL's manual +0.106.",
+  "method": "Step 0 (0 calls): read the CHUNKCLEAN verdict. Run H2 only if the hand-clean minus raw-first gain is >= +0.05 on the 30. Freeze the cleaner code (sha) and the criterion before generation. Apply the cleaner byte-for-byte to the 30 ORACLE gold chunks. Gate G0: the gold key string survives in >= 28/30, and the token cut is >= 30 %. Arms on the mini, 1.7B LITEPACKS K3 tree with the ORACLE patch extended to a mode=clean option (JS adapter only, default off and byte-identical off), seed 42. (a) ORACLE 30: auto-clean-first vs the existing raw-first ORACLE rows vs the CHUNKCLEAN hand-clean rows. (b) cand80 self-tests: gold raw-first vs gold auto-clean-first, 160 generations. Judge Haiku 5.5-low judge.v1, N 4, both orders; paired bootstrap; CE-unwarned counted.",
+  "lane": "mini-gen",
+  "cost": "190 generations on the mini (about 25 min across 2 slots); about 380 Haiku calls; 0 Opus, 0 paid",
+  "ceiling": "Hand-clean +0.106 (n 6, ORACLE-REAL post-hoc). ORACLE-ST gold-only vs gold-added on the 4B suggests about +0.02 from context form alone. If the cleaner captures half of the hand gain, that is about +0.05 on the 30 and >= +0.03 on the 80.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "Step-0 KILL if CHUNKCLEAN's hand-clean gain is < +0.05 on the 30 (no lever to automate). After the run, KILL if on cand80 auto-clean-first minus raw-first is < +0.03, or its CI low is <= 0, or it captures < 50 % of the CHUNKCLEAN hand gain on the 30, or CE-unwarned rises by >= 3. Then pack chunking stays as built, and 'chunk quality' is reported as hand-curation only, not a pack-build rule.",
+  "lens": "Reading and chunk construction"
+ },
+ {
+  "score": 4.5,
+  "verdicts": [
+   "run-after-10-23",
+   "run-after-10-23"
+  ],
+  "id": "RD-3 READER-SCALE",
+  "statement": "The chunk-cleaning lever is largest on the weakest reader. Clean-first minus raw-first is bigger on the 1.7B than on Gemma 4 E2B and the 4B, given the same 30 hand-cleaned gold chunks in slot [1] and the same prompt and cap. That makes cleaning a weak-reader prosthesis, not a general pack improvement. The alternative outcome is that the gain is the same or larger on the 4B, which would make it a pack-quality lever for every tier.",
+  "why_now": "This is the scaling question the brief asks for. MATRIX shows packs help all three tiers on the 80 (4B - 1.7B +0.08 at every pack set). GEMMA-PACKS shows Gemma reads packs slightly better (DiD +0.034), and ORACLE-ST shows the 4B pays about 0.02 for extra context. If the maintainer notes or the research page say 'clean chunks' or 'reading binds', they have to say for which reader.",
+  "method": "Step 0: CHUNKCLEAN rows exist for the 1.7B (raw-first = ORACLE-REAL arm rows; clean-first = CHUNKCLEAN rows). Freeze the criterion (sha) before generation. On the mini, swap weights only at the lite compact tier, as in GEMMA-VS-4B: Gemma 4 E2B (engine sampler, thinking off) and Qwen3-4B-Instruct-2507 Q4_K_M. Each reader runs raw-first and clean-first on the 30 ORACLE items with the ORACLE patch: 120 generations. Haiku 5.5-low judge.v1, N 4, both orders. Primary: per-reader dU(clean - raw) and the DiDs (4B - 1.7B, Gemma - 1.7B), with paired item bootstrap B 2000. Secondary: cites-[1] rate and the warned-despite-gold count per reader (8/30 on the 1.7B under raw-first).",
+  "lane": "mini-gen",
+  "cost": "120 generations (4B about 20 s/item on the mini, about 40 min on 2 slots); about 240 Haiku calls; 0 Opus",
+  "ceiling": "The 1.7B hand-clean lead is +0.106 (n 6) and CHUNKCLEAN will measure it on 30. A DiD the size of the 1.7B gain itself (>= 0.06) clears the n 30 MDE (about 0.06). Any reader whose own dU is >= +0.05 is reportable.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "Step-0 KILL if CHUNKCLEAN's 1.7B clean - raw is < +0.03 (nothing to scale). After the run, report one of three outcomes. (i) 'Prosthesis': the 4B dU CI covers 0 with point < +0.03, and DiD(4B - 1.7B) <= -0.04. (ii) 'General': the 4B dU is >= +0.03 with CI low > 0. (iii) Neither: INDETERMINATE at n 30, and no reader-scaling sentence on the page. The hypothesis as stated, 'largest on the weakest reader', is killed under (ii) or (iii).",
+  "lens": "Reading and chunk construction"
+ }
+]

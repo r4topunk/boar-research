@@ -1,0 +1,25 @@
+--- a/src/routing/depth.ts	2026-10-08 18:32:09
++++ b/src/routing/depth.ts	2026-10-08 18:32:09
+@@ -241,9 +241,9 @@
+       retrieveK: DEEP_RETRIEVE_K,
+       contextTokens: DEEP_CONTEXT_TOKENS,
+       maxTokens: DEEP_MAX_TOKENS,
+-      thinking: false,
++      thinking: true, // DEEPTHINK-2 arm: deep tier thinks (DEEP_THINKING_BUDGET 3072); cut 6 = false
+     };
+-    reasonCodes.push(`generate:deep-model-${i.deepModel.id}`);
++    reasonCodes.push(`generate:deep-model-${i.deepModel.id}`, "generate:deep-thinking-3072");
+   } else if (complete && i.fastModel) {
+     // No deep model: go deeper with the same model instead (several focused passes).
+     generation = {
+--- a/src/routing/answer.ts	2026-10-08 18:32:09
++++ b/src/routing/answer.ts	2026-10-08 18:32:09
+@@ -261,7 +261,7 @@
+ 
+ /** Max <think> tokens before an answer (reasoning models only; see LlamaEngine thinkingBudget). */
+ export const FAST_THINKING_BUDGET = 256;
+-export const DEEP_THINKING_BUDGET = 1024;
++export const DEEP_THINKING_BUDGET = 3072; // DEEPTHINK-2 arm; cut 6 = 1024
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;

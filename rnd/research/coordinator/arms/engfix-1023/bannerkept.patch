@@ -1,0 +1,142 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index f6b3210..8c6f7b5 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1,7 +1,7 @@
+ import { describe, it, expect, beforeEach, afterEach } from "vitest";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { answerPromptPrefix, assemblePrompt, assembleChatMessages } from "../rag/pure";
+-import { AnswerDeps, createAnswerer, InstalledLlm, setBenchCompactDeclinesOff } from "./answer";
++import { AnswerDeps, COMPACT_DECLINE_RELEASED_WARNING, COMPACT_DECLINE_RELEASED_WARNING_FOUND, createAnswerer, InstalledLlm, setBenchCompactDeclinesOff } from "./answer";
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+@@ -891,6 +891,37 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     expect(big.result.receipt.reasonCodes).not.toContain("grounding:all-citations-removed-declined-compact");
+   });
+ 
++  it("BANNER-KEPT: a released decline with a kept on-topic source never says 'Not found' (CT-1 removed every [n], and no [n] at all)", async () => {
++    for (const gen of ["Mold grows in damp bathrooms [1].", "It was chosen by a referendum in 1911."]) {
++      f = makeFake();
++      f.deps.compactDeclinesOff = "all";
++      f.retrieved = [CANBERRA];
++      f.deps.engine.generate = async () => gen;
++      const { events, result } = await collect("Why was Canberra chosen as the capital of Australia?");
++      expect(events.some((e) => e.type === "sources"), gen).toBe(true);
++      expect(result.text.startsWith(`${COMPACT_DECLINE_RELEASED_WARNING_FOUND}\n`), gen).toBe(true);
++      expect(result.text, gen).not.toContain("Not found in this phone's offline library");
++      expect(events.find((e) => e.type === "warning"), gen).toMatchObject({ code: "weak_sources", message: COMPACT_DECLINE_RELEASED_WARNING_FOUND });
++      expect((events.find((e) => e.type === "warning") as any).declined, gen).toBeUndefined();
++      expect(result.receipt.reasonCodes, gen).toContain("grounding:compact-decline-released-uncited-with-sources");
++    }
++    expect(COMPACT_DECLINE_RELEASED_WARNING_FOUND).toMatch(/^The passages found don't support this answer\. From the model's memory, may be wrong:$/);
++  });
++
++  it("BANNER-KEPT: a released decline with nothing usable kept keeps the 'Not found in this phone's offline library' line", async () => {
++    for (const retrieved of [[], [WALIPINI]]) {
++      f = makeFake();
++      f.deps.compactDeclinesOff = "all";
++      f.retrieved = retrieved;
++      f.deps.engine.generate = async () => "Because the Earth's axis is tilted.";
++      const { events, result } = await collect("Why do we have seasons on Earth?");
++      expect(result.text.startsWith(`${COMPACT_DECLINE_RELEASED_WARNING}\n`)).toBe(true);
++      expect(result.text).toContain("Because the Earth's axis is tilted.");
++      expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "weak_sources", message: COMPACT_DECLINE_RELEASED_WARNING });
++      expect(result.receipt.reasonCodes).toContain("grounding:compact-decline-released-no-source");
++    }
++  });
++
+   it("Boar (A): the decline waits for attribution; a supported sentence gets its [n] back and the answer stands", async () => {
+     f.retrieved = [CANBERRA];
+     // The [1] is on a sentence from memory (removed); the first sentence is the source's own claim.
+@@ -2212,18 +2243,19 @@ describe("CMP30OFF: bench switch releases the five compact-only declines with a
+     expect(result.receipt.reasonCodes).not.toContain("grounding:declined-compact");
+     expect(events.some((e) => e.type === "warning" && (e as any).declined)).toBe(false);
+   });
++  // BANNER-KEPT: rules 3 and 4 fire with passages kept and shown, so their line is the "passages found" one.
+   it("uncited with sources (rule 4) and all citations removed (rules 3+4)", async () => {
+     setBenchCompactDeclinesOff(true);
+     f.retrieved = [CANBERRA];
+     f.deps.engine.generate = async () => "It was chosen by a referendum in 1911.";
+     const a = await collect("Why was Canberra chosen as the capital of Australia?");
+-    expect(a.result.text).toBe(`${W}\nIt was chosen by a referendum in 1911.`);
++    expect(a.result.text).toBe(`${COMPACT_DECLINE_RELEASED_WARNING_FOUND}\nIt was chosen by a referendum in 1911.`);
+     expect(a.result.receipt.reasonCodes).toContain("grounding:compact-decline-released-uncited-with-sources");
+     f = makeFake();
+     f.retrieved = [CANBERRA];
+     f.deps.engine.generate = async () => "Mold grows in damp bathrooms [1].";
+     const b = await collect("Why was Canberra chosen as the capital of Australia?");
+-    expect(b.result.text).toBe(`${W}\nMold grows in damp bathrooms.`);
++    expect(b.result.text).toBe(`${COMPACT_DECLINE_RELEASED_WARNING_FOUND}\nMold grows in damp bathrooms.`);
+     expect(b.result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:compact-decline-released-all-citations-removed", "grounding:compact-decline-released-uncited-with-sources"]));
+   });
+   it("false claim (rule 2): the 4B's path (sentence removed) behind the warning", async () => {
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b2956a1..f072ee4 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -370,6 +370,10 @@ const NOT_A_MODEL = new Set(["grounding-guard", "extractive", "none", "places",
+ 
+ /** CMP30OFF: the fixed first line of an answer a released compact decline would have declined. */
+ export const COMPACT_DECLINE_RELEASED_WARNING = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++/** BANNER-KEPT: the same line when passages were found and kept but don't back the answer (CT-1 removed every [n], or
++ * the answer cites nothing): "Not found" would be false there. Its first sentence is the product decline's own text for
++ * these rules ("The passages found don't support this answer.", Quill 892c049). */
++export const COMPACT_DECLINE_RELEASED_WARNING_FOUND = "The passages found don't support this answer. From the model's memory, may be wrong:";
+ /** CMP30OFF bench switch (BOAR Bench engineOverrides.compactDeclinesOff, per request): true = OFF5 ("all") for every
+  * answerer whose deps leave compactDeclinesOff unset. Default false = the engine as is. */
+ let benchCompactDeclinesOff = false;
+@@ -922,9 +926,15 @@ export function createAnswerer(deps: AnswerDeps) {
+       /** CMP30OFF: the compact-only declines skipped for this answer (none unless the eval switch is on). */
+       const declinesOff = deps.compactDeclinesOff ?? (benchCompactDeclinesOff ? ("all" as const) : undefined);
+       const released: string[] = [];
+-      const release = (rule: string) => {
++      /** BANNER-KEPT: the first released rule's line; `found` = passages were kept for the answer (the product decline
++       * of that rule would say "The passages found don't support this answer.", not "didn't find this"). */
++      let releasedLine = COMPACT_DECLINE_RELEASED_WARNING;
++      const release = (rule: string, found = false) => {
+         reasonCodes.push(`grounding:compact-decline-released-${rule}`);
+-        if (!released.length) emit({ type: "warning", answerId, code: "weak_sources", message: COMPACT_DECLINE_RELEASED_WARNING });
++        if (!released.length) {
++          releasedLine = found ? COMPACT_DECLINE_RELEASED_WARNING_FOUND : COMPACT_DECLINE_RELEASED_WARNING;
++          emit({ type: "warning", answerId, code: "weak_sources", message: releasedLine });
++        }
+         released.push(rule);
+       };
+       /** The instant answer is a source's own sentence without "[n]": it cites that source. */
+@@ -1468,7 +1478,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // model declines; the 4B loses the sentence. Deterministic, whatever the sampling seed.
+       const falseClaims = !health && gen.mode !== "multipass" ? falseQuantumClaims(text) : [];
+       if (falseClaims.length) {
+-        if (isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("false-claim");
++        if (isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("false-claim", sources.length > 0);
+         else if (isCompactModel(genLlm) && !req.answerAnyway) {
+           reasonCodes.push("grounding:false-claim-declined-compact");
+           const message = sources.length
+@@ -1507,7 +1517,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         }
+       }
+       if (stopRequested) return finish(genTier, "stopped", text, sources, baseReceipt);
+-      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && declinesOff && !req.answerAnyway && gen.mode !== "multipass") release("all-citations-removed");
++      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && declinesOff && !req.answerAnyway && gen.mode !== "multipass") release("all-citations-removed", true);
+       else if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
+         reasonCodes.push("grounding:all-citations-removed-declined-compact");
+         // Passages were found (and shown): "didn't find this" would be false (Quill 892c049).
+@@ -1526,7 +1536,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // nothing, (A) never fired and the compact model's PT confident errors went 5 -> 9. A compact answer with
+       // sources in its prompt and no [n] at all (after attribution) is treated like "every citation removed":
+       // the decline, unless asked to answer anyway. The 4B is unchanged.
+-      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) release("uncited-with-sources");
++      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) release("uncited-with-sources", true);
+       else if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
+         reasonCodes.push("grounding:uncited-with-sources-declined-compact");
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+@@ -1569,7 +1579,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       }
+       // CMP30OFF: an answer a released compact decline would have declined starts with the fixed warning line.
+       if (released.length && text.trim()) {
+-        text = `${COMPACT_DECLINE_RELEASED_WARNING}\n${text.trim()}`;
++        text = `${releasedLine}\n${text.trim()}`;
+         finalText = text;
+       }
+ 

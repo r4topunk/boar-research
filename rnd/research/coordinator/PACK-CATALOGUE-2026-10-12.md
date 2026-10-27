@@ -1,0 +1,55 @@
+# Knowledge Pack catalogue and authoring workflow (2026-10-12 23:4x, coordinator; direction from r4to: "write different packs from the data we have; we will be the first author with publications")
+
+TL;DR: build packs from open corpora with the existing format-2 builder, each with a card, a public 20-question self-test, a coverage probe and a crowding probe (0 judge calls), and publish them one by one on the public HF dataset r4topunk/boar-packs after r4to's OK per pack. Wave 1 (≈ 1 GB of downloads, 5 packs + 1 rebuild) adds the first **question-shaped** packs (Stack Exchange sites) and public-domain health/first-aid packs. Retrieval build-time improvements (chunk vectors, contextual headers, filtered expansion) are a separate format-v3 line that needs an engine path and pack-matched items before it is measured. Sources: packs-research/{se-dumps,open-health-howto,offline-packaging,local-inventory,VERIFIED}.md.
+
+## 1. Decisions (fixed; r4to can override)
+| # | Decision | Why |
+|---|---|---|
+| D-K1 | Pack = current format 2 (`scripts/build-wiki-pack.mjs`), one `source` code per corpus family; the engine's `SOURCES`/`SOURCE_LABEL` get the new codes in a worktree patch (PR to the app maintainer at the end). Unknown codes fall back to "enwiki" in the shipped app (local-inventory §3), so until the patch ships the packs still work, only the label is wrong | zero format risk; the builder, catalogue and sha checks already exist |
+| D-K2 | Per-row attribution: the builder JSONL gets `attribution` (free text) and `license` per row; the pack's `article_meta` carries it; the citation string shows it. Stack Exchange rows: "<author> (<profile url>), <question url>, CC BY-SA <2.5/3.0/4.0 by post date>" — required by SE's licensing page (VERIFIED.md 1c) | compliance; SE is the only question-shaped family |
+| D-K3 | Every pack ships four artefacts before publication: (a) card `rnd/research/packs/<id>.md` (source, snapshot, licence, size, build command, sha); (b) `selftest/<id>.jsonl`: 20 public questions written by an agent from the pack's own text (dev/public, never a claim item), scored by the pipeline (Haiku L1) → the card's quality number; (c) coverage probe: jev F0 over the V-para absent items (34) and v0.2 (110) by category (P2 tooling, [usage detail removed]–0.3); (d) crowding probe: retrieval replay with the pack added as a peer to the claim kit — share of kept slots ≤ 0.40 and gold not lower (DEEPWIKI/VITALPACK rule), else the pack is "user-selected only, not default" | the measured failure modes of packs (crowding −0.034; coverage sits where the loss is not) |
+| D-K4 | Publication target: HF dataset r4topunk/boar-packs (public, README "mixed-per-pack"), one directory per family (`topics/`, `wiki/`, `places/`, new `qa/` for Stack Exchange) with the card as README and the manifest .json; **upload only after r4to's explicit OK per pack** (standing rule) | first author with publications; licence clarity per pack |
+| D-K5 | Licence policy: PD (US federal), CC0, CC BY, CC BY-SA only. Never NC (wikiHow, WHO, OpenStax BY-NC-SA, iFixit, CK-12, Khan), never NHS (7-day refresh / no-charge clauses), never A.D.A.M./ASHP parts of MedlinePlus, never official SE dumps obtained under the 2024 login agreement (use the archive.org 2024-04-02 snapshot or Kiwix 2026 ZIMs) | VERIFIED.md |
+| D-K6 | Claim items stay non-Claude: the 100 held-out pack-matched items per pack (bench/v0.3/plan/pack-matched.md) are written by r4to or a curator with a non-Claude web-UI model; agents write only the public self-tests (D-K3b) | judge-contamination rule (CLAUDE.md) |
+| D-K7 | Format v3 (chunk vectors + contextual chunk header + doc2query--style filtered expansion at build time) is a separate line: engine two-stage semantic path for format-2 packs + measurement on pack-matched items (DENSECHUNK parked: fact chunk reachable on 23/32 vs 5/15 lead-level; +213 MB on Wikivoyage; two-stage 0.3–0.7 s) | content packs must not wait for engine work |
+
+## 2. Catalogue (ranked: value × licence clarity × size × bench relevance)
+| rank | pack id | source(s) | licence | raw size → pack (est.) | why / expected use | wave |
+|---|---|---|---|---|---|---|
+| 1 | `qa-travel-se` | travel.stackexchange.com, archive.org 2024-04-02 7z (156 MB) | CC BY-SA per post | 156 MB → ≈ 120 MB | question-shaped travel practical/local answers; pairs with boar-wikivoyage-en; bench travel-* categories | 1 |
+| 2 | `qa-ethereum-se` + `qa-bitcoin-se` | ethereum (107 MB) / bitcoin (74 MB) 7z | CC BY-SA per post | ≈ 90 + 60 MB | question-shaped crypto; pairs with boar-crypto; bench crypto category | 1 |
+| 3 | `qa-health-se` + `qa-outdoors-se` | medicalsciences (22 MB) / outdoors (31 MB) 7z | CC BY-SA per post | ≈ 20 + 25 MB | health/danger explanation questions; small | 1 |
+| 4 | `boar-firstaid-en` (= preparedness v4 rebuild) | ATP 4-02.11 (Mar 2026, PD, 12.7 MB PDF; FM 4-25.11 fallback), FM 21-76, ready.gov/FEMA, USGS/NOAA safety, MedlinePlus first-aid topics, Wikibooks First Aid, Appropedia (2,903 docs on disk, 567 kept today) | PD + CC BY-SA | ≈ 30–60 MB | danger/health categories (18/110 v0.2 health-strict, 17 with no source); reproducible build (v3 has no build log) | 1 |
+| 5 | `boar-medlineplus-en` | MedlinePlus Health Topics XML (4.7 MB zip; `full-summary` = PD NLM text; A.D.A.M. only as links) | PD, credit line required | ≈ 5–8 MB | consumer health summaries; tiny; credit "Courtesy of MedlinePlus from the National Library of Medicine" | 1 |
+| 6 | `boar-factbook` | CIA World Factbook CC0 archive (discontinued 2026-02-04; GitHub JSON) | CC0 | ≈ 20–40 MB | country facts for comparison questions (density, population, capitals); static | 2 |
+| 7 | `boar-simplewiki-en` | simplewiki multistream 387.9 MB bz2 (2026-10-01) via the builder's MediaWiki path with a `simplewiki` source code | CC BY-SA 4.0 + GFDL | 388 MB → ≈ 400–600 MB | general knowledge readable by a 4B; alternative to the 2.54 GB top-100k pack; must pass the crowding probe | 2 |
+| 8 | `boar-wikimed-en` | wikipedia_en_medicine ZIM 2026-10 (nopic 1.0 GB / mini 166 MB) → article title list → FineWiki text (shards on HF) or ZIM HTML via python-libzim | CC BY-SA | ≈ 300–600 MB (mini: ≈ 100 MB) | medical Wikipedia subset (WikiProject Medicine); needs the ZIM → text path | 2 |
+| 9 | `qa-money-se`, `qa-cooking-se`, `qa-sustainability-se` | 7z 133 / 88 / 10 MB | CC BY-SA per post | ≈ 100 / 70 / 8 MB | everyday domains; demand evidence thin (no usage data in IIAB/RACHEL) | 3 |
+| 10 | `boar-food-en` | USDA FoodData Central 04/2026 (CC0, 460 MB zip) | CC0 | subset ≈ 50 MB | tables → text rows needed (format 2 leaves table chunks unindexed: 17–19.5 %) | 3 |
+| — | `boar-crypto` / `boar-wikivoyage-en` | existing (kit) | — | — | re-cut crypto with more ethereum.org pages (228 of 8,527 used) when the attribution field lands | 3 |
+| — | OSM beyond food/drink; `qa-diy-se` (1.9 GB) | downloads | ODbL / CC BY-SA | large | later | — |
+
+## 3. Options (not decided)
+- O-K1 Fresher Stack Exchange via Kiwix 2026 ZIMs (python-libzim private iteration + our HTML stripping) instead of the 2024-04-02 archive.org snapshot (2.5 years stale). Default: archive.org snapshot for wave 1; Kiwix path as a task if the SE packs prove useful.
+- O-K2 Per-pack "answer style": SE packs keep the accepted/top answers (score ≥ 2) only, one doc per question; alternative = all answers (noisier, bigger).
+- O-K3 A `qa/` family in the catalogue vs mixing SE answers into the domain packs (travel SE into boar-wikivoyage-en). Default: separate packs (user-selected; crowding measured).
+- O-K4 Pack-matched claim items per pack (100, non-Claude writer) vs only the public self-tests: without the former there is no claim number per pack.
+
+## 4. Tasks (execution; owners = agents unless stated)
+| # | Task | Owner / model | Cost | Done when |
+|---|---|---|---|---|
+| T-K1 | Generic converter `rnd/kiln/packs/convert/*.mjs|py`: SE Posts.xml (7z) → builder JSONL + manifest (one doc per question: title, question body + answers by score, `url` = question link, `attribution` per row, `license` by post date); MedlinePlus XML → docs (`full-summary`, credit line); PDF (ATP 4-02.11, FM 21-76) → sections via pdftotext; Factbook JSON → one doc per country with "Key facts:" rows; schema from local-inventory §3; unit tests on 3 sample docs per format | opus/medium | 0 calls; small sample downloads (≤ 100 MB) on the MacBook | JSONL validates against the builder (dry run), attribution present on every SE row |
+| T-K2 | Engine patch (worktree `wt/packs` on 979187fa): new `source` codes (stackexchange, medlineplus, armypubs→usgov exists, factbook, simplewiki) in the builder `SOURCE` map and `wikiPack.ts SOURCES` + `SOURCE_LABEL`; `attribution` column in `article_meta` shown in the citation string; differential test: existing packs byte-identical | opus/medium | 0 calls | vitest src/rag passes; replay on the claim kit identical |
+| T-K3 | Wave-1 builds on the mini (`<runner>/kiln/packs/`): qa-travel/ethereum/bitcoin/health/outdoors-se, boar-firstaid-en v4, boar-medlineplus-en; manifests + sha; cards | sonnet/medium per pack, builder unchanged | downloads ≈ 400 MB (SE) + 20 MB; mini Metal lead embeddings | 7 packs built, cards written, sha256 logged in DISK-LOG |
+| T-K4 | Probes per pack (0 judge calls): coverage (jev F0 on V-para 34 absent + v0.2) and crowding (replay as peer: kept-slot share ≤ 0.40, gold not lower); self-test 20 questions per pack (agent-written from pack text; public) scored with Haiku L1 (20 × 2 = 40 calls per pack) | opus/medium (probes), sonnet (self-tests) | jev [usage detail removed] per pack; Haiku 40 per pack (week cap) | per-pack card numbers; the SE packs' V-para coverage decides whether a qa arm (criterion, L1/L2) is written |
+| T-K5 | Publication batch 1: HF upload (`push-knowledge-pack.mjs` or `hf upload`) of the packs that pass T-K4, with cards as README and licence files | coordinator, after r4to's OK per pack | — | packs listed on r4topunk/boar-packs; QUEUE row with shas |
+| T-K6 | Wave 2 (factbook, simplewiki, wikimed) after wave 1's probes; format v3 line (D-K7) only with pack-matched items | — | downloads 388 MB + 1 GB | — |
+
+Minimum that closes the loop: T-K1 → T-K3 (one SE pack: qa-travel-se) → T-K4 (its coverage + crowding + self-test) → publish or not (1 delivery, 1 metric, 1 next iteration).
+
+## 5. UNKNOWN
+- Whether Stack Exchange answers lift the bounty-style set: V-para coverage with every pack on disk is 10/51; the SE packs are the first question-shaped source — the coverage probe (T-K4) answers it before any arm.
+- Demand ranking across domains: no usage data found (IIAB/RACHEL state health + education as priorities); our proxy is the bench categories.
+- The Kiwix ZIM → text path for SE and WikiMed (python-libzim private API; HTML stripping quality).
+- SE legal reading: the 2024 agreement binds only downloads accepted on stackexchange.com; archive.org/Kiwix copies are under CC BY-SA alone — a reading, not advice (VERIFIED.md 1d).
+- Per-pack self-tests written by agents are dev numbers, not claim numbers (D-K6).

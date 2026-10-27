@@ -1,0 +1,78 @@
+--- a/scripts/build-wiki-pack.mjs	2026-10-14 21:57:49
++++ b/scripts/build-wiki-pack.mjs	2026-10-12 22:50:50
+@@ -19,7 +19,8 @@
+ //   redirects(title, article_id)           alternative titles → article
+ //   df(term, doc)                          document counts of common index terms (query-time idf)
+ //   lead_vecs(article_id, scale, vec)      int8 embedding of the article's lead chunk
+-//   article_meta(article_id, url, license) optional: per-article source URL and license (multi-source packs)
++//   article_meta(article_id, url, license[, attribution]) optional: per-article source URL and license (multi-source
++//                                          packs); `attribution` (per-row author credit) only when some row has one
+ //
+ // The approach (tiering by pageviews, contentless index over compressed blocks,
+ // redirect table) follows a competitor team's scripts/build_corpus.py and
+@@ -42,7 +43,11 @@
+ 
+   --out FILE              pack to write (replaced if it exists)
+   --shards FILES...       FineWiki parquet shards (data/enwiki/*.parquet), processed in order;
+-                          a .jsonl file with {page_id, title, text} per line also works (test fixtures)
++                          a .jsonl file with {page_id, title, text} per line also works (topic packs, fixtures);
++                          optional JSONL fields: source (enwiki, enwikivoyage, enwikibooks, appropedia, usgov,
++                          eips, ethspecs, ethereumorg, bips, stackexchange, medlineplus, factbook, simplewiki),
++                          url, license, attribution (free-text credit shown with the citation, e.g. a Stack
++                          Exchange post's "<author> (<profile url>), <question url>"), aliases[], views
+   --pageviews TSV         page_id<TAB>views; ranks articles for --full-top and the popularity signal
+   --pageview-days N       days the pageviews TSV covers (views are scaled to a month), default 30
+   --full-top N            articles kept in full, by views (others keep their lead), default 1000000
+@@ -71,7 +76,11 @@
+ 
+ const log = (msg) => console.log(`[${new Date().toISOString().slice(11, 19)}] ${msg}`);
+ // Source codes stored in articles.source (the app maps them back in src/rag/wikiPack.ts).
+-const SOURCE = { enwiki: 0, enwikivoyage: 1, enwikibooks: 2, appropedia: 3, usgov: 4, eips: 5, ethspecs: 6, ethereumorg: 7, bips: 8 };
++// Append only: ids are stored in shipped packs.
++const SOURCE = {
++  enwiki: 0, enwikivoyage: 1, enwikibooks: 2, appropedia: 3, usgov: 4, eips: 5, ethspecs: 6, ethereumorg: 7, bips: 8,
++  stackexchange: 9, medlineplus: 10, factbook: 11, simplewiki: 12,
++};
+ const DF_MIN = 2000; // terms in fewer chunks are counted from their (short) posting lists at query time
+ 
+ function options() {
+@@ -190,13 +199,22 @@
+     this.db.exec("BEGIN");
+   }
+ 
+-  /** Per-article URL and license, for packs mixing sources (table created on first use). */
+-  addMeta(id, url, license) {
++  /**
++   * Per-article URL and license, for packs mixing sources (table created on first use). The `attribution`
++   * column is added only once a row carries one, so packs without attribution keep the 3-column schema.
++   */
++  addMeta(id, url, license, attribution = null) {
+     if (!this.insMeta) {
+       this.db.exec("CREATE TABLE article_meta (article_id INTEGER PRIMARY KEY, url TEXT, license TEXT)");
+       this.insMeta = this.db.prepare("INSERT INTO article_meta VALUES (?, ?, ?)");
+     }
+-    this.insMeta.run(id, url ? normalizeUrl(url) : url, license);
++    if (attribution && !this.metaAttribution) {
++      this.db.exec("ALTER TABLE article_meta ADD COLUMN attribution TEXT");
++      this.insMeta = this.db.prepare("INSERT INTO article_meta (article_id, url, license, attribution) VALUES (?, ?, ?, ?)");
++      this.metaAttribution = true;
++    }
++    const row = [id, url ? normalizeUrl(url) : url, license];
++    this.insMeta.run(...(this.metaAttribution ? [...row, attribution || null] : row));
+   }
+ 
+   flushBlock() {
+@@ -275,11 +293,11 @@
+     // "# Title" heading first, then infobox facts, then the body without its own title heading
+     const withoutTitle = body.replace(/^# [^\n]*\n+/, "");
+     const text = `# ${r.title}\n\n${box ? `${box}\n\n` : ""}${withoutTitle}`;
+-    // JSONL rows may name another source and carry their own URL and license (manifest-listed packs).
++    // JSONL rows may name another source and carry their own URL, license and attribution (manifest-listed packs).
+     const source = r.source ? SOURCE[r.source] : SOURCE.enwiki;
+     if (source === undefined) throw new Error(`unknown source "${r.source}" for "${r.title}"`);
+     const id = w.add(source, pid, r.title, views?.get(pid) ?? r.views ?? 0, text);
+-    if (id !== null && (r.url || r.license)) w.addMeta(id, r.url ?? null, r.license ?? null);
++    if (id !== null && (r.url || r.license || r.attribution)) w.addMeta(id, r.url ?? null, r.license ?? null, r.attribution ?? null);
+     // Alternative names ("ERC-20", "EIP-4844") land in the redirects table like Wikipedia redirects.
+     if (id !== null) for (const a of r.aliases ?? []) w.aliases.push([a, id]);
+     if (id !== null && full) w.stats.full++;

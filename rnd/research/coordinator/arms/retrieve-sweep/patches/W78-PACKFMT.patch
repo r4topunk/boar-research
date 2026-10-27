@@ -1,0 +1,117 @@
+--- rs-W78/src/rag/wikiPack.ts
++++ rs-W78PF/src/rag/wikiPack.ts
+@@ -597,6 +597,7 @@
+   private rsLeadBits: { ids: Int32Array; words: Uint32Array; n: number; fileBytes: number } | null = null;
+   private rsLeadQ: Record<number, { ids: Int32Array; factor: Float32Array; codes: Uint8Array; n: number; fileBytes: number } | null> = {};
+   private rsIvf: { ids: Int32Array; cents: Float32Array; start: Uint32Array; rows: Uint32Array; n: number; k: number; fileBytes: number } | null | undefined = undefined;
++  private rsIvfp: { cents: Float32Array; counts: Uint32Array; pages: Uint32Array; k: number; pageSize: number; residentBytes: number } | null | undefined = undefined;
+ 
+   /**
+    * W78-BINARY: the F1 thread pick through a 1-bit sidecar (<RS_SE_LEAD_BIN_DIR>/<manifestSha256[:16]>.leadbits, w78/tools/build_leadbits.py):
+@@ -1239,6 +1240,13 @@
+     const denseQ = Number(w78cEnv.RS_DENSE_Q ?? 0);
+     const denseIvf = Number(w78cEnv.RS_DENSE_IVF ?? 0);
+     let stageMode = `bin${denseBinN}`;
++    // W78-PACKFMT (bench-only, default off): RS_DENSE_IVFP=<nprobe> reads only the probed lists from the pack's lead_ivf table; the lead matrix is never loaded.
++    const denseIvfp = Number(w78cEnv.RS_DENSE_IVFP ?? 0);
++    const rssBefore = w78cEnv.RS_DENSE_LOG ? (globalThis as any).process.memoryUsage().rss : 0;
++    if (!binStage && denseIvfp > 0) {
++      binStage = await this.rsDenseStage1Ivfp(queryVec, m, denseIvfp);
++      if (binStage) stageMode = `ivfp${denseIvfp}`;
++    }
+     if (!binStage && denseQ > 0) {
+       binStage = await this.rsDenseStage1Q(queryVec, m, denseQ, Number(w78cEnv.RS_DENSE_QN ?? 64));
+       stageMode = `q${denseQ}n${w78cEnv.RS_DENSE_QN ?? 64}`;
+@@ -1286,8 +1294,9 @@
+     }
+     const t2 = Date.now();
+     await this.rsDenseLog(binStage
+-      ? { mode: stageMode, ...binStage, leadMs: t2 - t1 }
+-      : { mode: "int8", rows: ids.length, scanMs: t2 - t1, hamMs: 0, loadMs, scanBytes: ids.length * dims, residentBytes: vecs.byteLength + norms.byteLength + ids.byteLength, rescoreRows: 0, top });
++      ? { mode: stageMode, ...binStage, leadMs: t2 - t1, rssBefore, rssAfter: (globalThis as any).process.memoryUsage().rss }
++      : { mode: "int8", rows: ids.length, scanMs: t2 - t1, hamMs: 0, loadMs, scanBytes: ids.length * dims, residentBytes: vecs.byteLength + norms.byteLength + ids.byteLength, rescoreRows: 0, top,
++          rssBefore, rssAfter: (globalThis as any).process.memoryUsage().rss });
+     const art = top.map((t) => t.id);
+     const rows = art.length
+       ? await this.db.getAllAsync<{ id: number; article_id: number; start: number; end: number; vec: Uint8Array }>(
+@@ -1555,6 +1564,80 @@
+     return { top, scanMs: Date.now() - tScan, hamMs: tCent - tScan, loadMs, scanBytes: iv.k * dims * 4 + members.length * dims, residentBytes: iv.fileBytes, rows: iv.n, rescoreRows: members.length };
+   }
+ 
++  /**
++   * W78-PACKFMT: IVF stage 1 from the pack's own tables (w78/tools/pack_ivf.py): lead_ivf_cent (k centroids + counts + SQLite pages per list, resident after the
++   * first call) and lead_ivf (one row per list: ids int32[n] + vecs int8[n x dims], ascending article_id). Cosine to the centroids, the nprobe best lists (ties:
++   * lower list), only those rows are read, members merged in ascending article_id (= W78C ascending row order), exact int8 cosine with the W78C arithmetic, top m.
++   * scanBytes = centroids (counted every call, as W78C) + SQLite pages of the probed rows x page size; payloadBytes = ids + vecs returned. Null: no lead_ivf table.
++   */
++  private async rsDenseStage1Ivfp(queryVec: Float32Array, m: number, nprobe: number) {
++    const dims = queryVec.length;
++    let loadMs = 0;
++    if (this.rsIvfp === undefined) {
++      const t = Date.now();
++      const has = await this.db.getFirstAsync<{ c: number }>("SELECT count(*) AS c FROM sqlite_master WHERE type = 'table' AND name IN ('lead_ivf', 'lead_ivf_cent')", []);
++      if (!has || Number(has.c) !== 2) this.rsIvfp = null;
++      else {
++        const r = await this.db.getFirstAsync<{ k: number; dims: number; cents: Uint8Array; counts: Uint8Array; pages: Uint8Array }>("SELECT k, dims, cents, counts, pages FROM lead_ivf_cent WHERE id = 0", []);
++        const ps = await this.db.getFirstAsync<{ page_size: number }>("PRAGMA page_size", []);
++        if (!r || Number(r.dims) !== dims) throw new Error("W78-PACKFMT: lead_ivf_cent missing or dims mismatch");
++        const k = Number(r.k);
++        const f32 = (b: Uint8Array) => new Float32Array(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength));
++        const u32 = (b: Uint8Array) => new Uint32Array(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength));
++        const cents = f32(r.cents), counts = u32(r.counts), pages = u32(r.pages);
++        if (cents.length !== k * dims || counts.length !== k || pages.length !== k) throw new Error("W78-PACKFMT: lead_ivf_cent sizes");
++        this.rsIvfp = { cents, counts, pages, k, pageSize: Number(ps?.page_size ?? 4096), residentBytes: cents.byteLength + counts.byteLength + pages.byteLength };
++      }
++      loadMs = Date.now() - t;
++    }
++    const iv = this.rsIvfp;
++    if (!iv) return null;
++    const tScan = Date.now();
++    const cs: Array<{ j: number; s: number }> = [];
++    for (let j = 0; j < iv.k; j++) {
++      let dot = 0;
++      const o = j * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * iv.cents[o + d];
++      cs.push({ j, s: dot });
++    }
++    cs.sort((a, b) => b.s - a.s || a.j - b.j);
++    const lists = cs.slice(0, nprobe).map((c) => c.j);
++    const tCent = Date.now();
++    const rows = await this.db.getAllAsync<{ list_id: number; n: number; ids: Uint8Array; vecs: Uint8Array }>(
++      `SELECT list_id, n, ids, vecs FROM lead_ivf WHERE list_id IN (${lists.map(() => "?").join(",")})`, lists);
++    const tRead = Date.now();
++    let total = 0, payloadBytes = 0, pageBytes = 0;
++    for (const r of rows) (total += Number(r.n)), (payloadBytes += r.ids.byteLength + r.vecs.byteLength), (pageBytes += iv.pages[Number(r.list_id)] * iv.pageSize);
++    // members: (article id, list row, slot), merged in ascending article id
++    const mem: Array<{ id: number; v: Int8Array; o: number }> = [];
++    for (const r of rows) {
++      const n = Number(r.n);
++      const idv = new Int32Array(r.ids.buffer.slice(r.ids.byteOffset, r.ids.byteOffset + 4 * n));
++      const vv = new Int8Array(r.vecs.buffer, r.vecs.byteOffset, n * dims);
++      for (let i = 0; i < n; i++) mem.push({ id: idv[i], v: vv, o: i * dims });
++    }
++    mem.sort((a, b) => a.id - b.id);
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const nf = new Float32Array(1);
++    const top: Array<{ id: number; s: number }> = [];
++    for (const { id, v, o } of mem) {
++      let nn = 0, dot = 0;
++      for (let d = 0; d < dims; d++) (nn += v[o + d] * v[o + d]), (dot += queryVec[d] * v[o + d]);
++      nf[0] = Math.sqrt(nn); // float32 norm, as the resident matrix's Float32Array
++      const s = nf[0] ? dot / (qn * nf[0]) : 0;
++      if (top.length < m || s > top[top.length - 1].s) {
++        let j = top.length < m ? top.length : top.length - 1;
++        if (top.length < m) top.push({ id, s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id, s };
++      }
++    }
++    return { top, scanMs: Date.now() - tScan, hamMs: tCent - tScan, readMs: tRead - tCent, loadMs, scanBytes: iv.k * dims * 4 + pageBytes, payloadBytes, pageBytes, lists,
++      residentBytes: iv.residentBytes, rows: total, rescoreRows: total };
++  }
++
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {
+     const perTitle: PackHit[][] = [];
+     for (const id of ids) perTitle.push(await this.articlePassages(id, stems, 2, action, !action && explain));

@@ -1,0 +1,29 @@
+--- a/scripts/lib/wiki-pack-lib.mjs
++++ b/scripts/lib/wiki-pack-lib.mjs
+@@ -145,9 +145,26 @@
+   return parts;
+ }
+ 
++// CONVERT-FIX (arms/convert-fix): {{convert|N|unit|...}} renders as "N unit" (first value + first unit, ranges kept) instead of "".
++const CV_UNIT = { c: "°C", f: "°F", m2: "m²", km2: "km²", m3: "m³", sqft: "sq ft", sqmi: "sq mi", mi2: "sq mi", sqkm: "km²", acre: "acres" };
++const CV_CONNECT = new Set(["to", "and", "or", "-", "–", "+", "&", "by", "×", "x", "to(-)", "and(-)"]);
++function renderConvert(parts) {
++  const pos = parts.slice(1).filter((p) => !/^\s*[A-Za-z][A-Za-z0-9_ -]{0,19}=/.test(p)).map((p) => cleanInline(p.trim()));
++  if (!pos[0]) return "";
++  let v = pos[0];
++  let i = 0;
++  while (CV_CONNECT.has(pos[i + 1]) && pos[i + 2]) {
++    v += ` ${pos[i + 1]} ${pos[i + 2]}`;
++    i += 2;
++  }
++  const u = pos[i + 1] ?? "";
++  return `${v} ${CV_UNIT[u.toLowerCase()] ?? u}`.trim();
++}
++
+ function renderTemplate(body) {
+   const parts = splitTop(body);
+   const name = parts[0].trim().toLowerCase();
++  if (name === "convert" || name === "cvt") return renderConvert(parts);
+   if (!LISTINGS.has(name)) return "";
+   const fields = {};
+   for (const p of parts.slice(1)) {

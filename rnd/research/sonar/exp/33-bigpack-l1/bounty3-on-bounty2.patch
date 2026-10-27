@@ -1,0 +1,96 @@
+diff -ruN be-0cfd4a77-bounty2/src/rag/wikiPack.test.ts be-0cfd4a77-bounty3/src/rag/wikiPack.test.ts
+--- be-0cfd4a77-bounty2/src/rag/wikiPack.test.ts	2026-10-03 15:07:10
++++ be-0cfd4a77-bounty3/src/rag/wikiPack.test.ts	2026-10-03 15:15:02
+@@ -171,3 +171,23 @@
+     }
+   });
+ });
++
++describe("title-tier shard without the body full-text index", () => {
++  it("still answers named articles (rare names included) and never keyword hits", async () => {
++    const { DatabaseSync } = await import("node:sqlite");
++    const { copyFileSync } = await import("node:fs");
++    const dir = mkdtempSync(join(tmpdir(), "boar-slim-"));
++    const src = join(dir, "full.sqlite"), out = join(dir, "slim.sqlite");
++    execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", src, "--shards", "src/rag/testing/fixtures/mini-wiki.jsonl", "--no-embed", "--chunk-chars", "300"], { stdio: "pipe" });
++    copyFileSync(src, out);
++    const db = new DatabaseSync(out);
++    db.exec("DROP TABLE IF EXISTS fts"); db.exec("VACUUM"); db.close();
++    const slim = await WikiPack.open(nodeSqliteDatabase(out), decompress);
++    slim.tuning = { ...slim.tuning, namedOnly: true, namedMinShare: 0.25 };
++    const bh = await slim.search("Tell me about black holes and how they form", { k: 4 });
++    expect(new Set(bh.map((h) => h.title))).toEqual(new Set(["Black hole"]));
++    const kkb = await slim.search("What is Kuala Kubu Bharu known for?", { k: 4 });
++    expect(new Set(kkb.map((h) => h.title))).toEqual(new Set(["Kuala Kubu Bharu"]));
++    expect(await slim.search("what happens when a massive star collapses under gravity", { k: 4 })).toEqual([]);
++  }, 60000);
++});
+diff -ruN be-0cfd4a77-bounty2/src/rag/wikiPack.ts be-0cfd4a77-bounty3/src/rag/wikiPack.ts
+--- be-0cfd4a77-bounty2/src/rag/wikiPack.ts	2026-10-03 15:07:00
++++ be-0cfd4a77-bounty3/src/rag/wikiPack.ts	2026-10-03 15:14:37
+@@ -441,7 +441,9 @@
+     private hasDf: boolean,
+     private hasMeta: boolean,
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+-    private topicSources: PackSource[] = []
++    private topicSources: PackSource[] = [],
++    /** False for a title-lookup tier shard built without the body full-text index (Sonar exp-33, TIER-PLAN.md). */
++    private hasFts = true
+   ) {}
+ 
+   static async open(db: PackSql, decompress: Decompress): Promise<WikiPack> {
+@@ -450,21 +452,22 @@
+     if (meta.format !== "boar-knowledge-pack" || meta.formatVersion !== "2") {
+       throw new Error("not a format-2 knowledge pack");
+     }
++    const tables = await db.getAllAsync<{ name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'", []);
++    const has = (n: string) => tables.some((t) => t.name === n);
+     // Vocabulary views: fts_v gives each stem's document count, qtok stems a question with the index's tokenizer.
++    // A title-tier shard has no body index (no fts): only qtok, and its stems' counts come from df.
+     await db.execAsync(`
+-      CREATE VIRTUAL TABLE IF NOT EXISTS temp.fts_v USING fts5vocab(main, fts, row);
++      ${has("fts") ? "CREATE VIRTUAL TABLE IF NOT EXISTS temp.fts_v USING fts5vocab(main, fts, row);" : ""}
+       CREATE VIRTUAL TABLE IF NOT EXISTS temp.qtok USING fts5(x, tokenize='porter unicode61 remove_diacritics 2');
+       CREATE VIRTUAL TABLE IF NOT EXISTS temp.qtok_v USING fts5vocab(temp, qtok, row);
+     `);
+-    const tables = await db.getAllAsync<{ name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'", []);
+-    const has = (n: string) => tables.some((t) => t.name === n);
+     // Only multi-source packs (small topic packs) record article_meta, so the scan stays cheap.
+     const topicSources = has("article_meta")
+       ? (await db.getAllAsync<{ source: number }>("SELECT DISTINCT source FROM articles", []))
+           .map((r) => SOURCES[r.source])
+           .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources);
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("fts"));
+   }
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+@@ -479,7 +482,9 @@
+       // A common term's count is precomputed in df; a rarer one's posting list is short enough to count.
+       const row =
+         (this.hasDf ? await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM df WHERE term = ?", [term]) : null) ??
+-        (await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM temp.fts_v WHERE term = ?", [term]));
++        (this.hasFts
++          ? await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM temp.fts_v WHERE term = ?", [term])
++          : { doc: 1 }); // no body index: df holds the common terms, so a missing one is rare (a name: "mozi", "gríma")
+       if (row && row.doc > 0) out.push({ stem: term, idf: Math.log(this.nIndexed / row.doc) });
+     }
+     return out;
+@@ -548,7 +553,7 @@
+         ))?.article_id ?? null;
+     }
+     const words = title.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+-    if (id === null && fuzzy && words.length >= 2) {
++    if (id === null && fuzzy && this.hasFts && words.length >= 2) {
+       const match = `title:(${words.map((w) => `"${w}"`).join(" AND ")})`;
+       const rows = await this.db.getAllAsync<{ title: string; views: number; id: number }>(
+         `SELECT a.id, a.title, a.views FROM (SELECT rowid FROM fts WHERE fts MATCH ? ORDER BY bm25(fts, 8.0, 0.0, 0.0) LIMIT 30) f
+@@ -667,6 +672,7 @@
+ 
+   /** bm25()'s ranking without reading any article text (cheap: index and table rows only). */
+   async bm25Candidates(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<Candidate[]> {
++    if (!this.hasFts) return []; // title-tier shard: no keyword search
+     const terms = this.queryTerms(stems);
+     if (!terms.length) return [];
+     const rows = await this.db.getAllAsync<{ id: number; s: number; article_id: number; start: number; end: number; views: number }>(

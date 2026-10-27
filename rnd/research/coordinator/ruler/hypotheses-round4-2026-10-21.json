@@ -1,0 +1,407 @@
+{
+ "ranked": [
+  {
+   "id": "NOTE2-TRANSFER",
+   "statement": "NOTE-2's refuse-by-default rule moves to the phone without retuning. The frozen rule hides warned LLM answers on 1.7B and Gemma; 4B answers stay shown. Applied offline to existing Pixel rows, it hides 35-50 % of 1.7B LLM-answered rows and 20-35 % of Gemma's, within +-10 pp of the desktop LITEPACKS replay on the same ids. The UX cost is then about 3-5 s of generation per hidden answer, with Opus CV5-PER100 correct-hidden near 19 per 100 for the 1.7B. On his RC's rows from device-day steps 1-3, the warning line appears on >= 7/10 ids where the bench engine warns.",
+   "why_now": "NOTE-2 goes to the maintainer 10-23, before the freeze, and every number in it is desktop. RC unknowns that decide it: his build's default is Detailed with nPredict 1024, and whether it carries the warning line at all is untested. The phone rows already exist, and steps 1-3 produce the RC rows anyway, so this costs 0 extra phone minutes. A single phone run cannot measure the reveal-rule UX cost any better than this per-tier hide rate x generation seconds x correct-hidden.",
+   "method": "0 LLM. A script applies the frozen NOTE-2 rule (warning-line regex + LLM-answered + kept-source flags) to handoff/pixel8-2026-10-20/bench/results/{q17b73-a,aunion73-a,gemma73-a,gemmaa73-a,q4ba73-a}/rows.jsonl (365 rows). It compares them with the desktop LITEPACKS traces on the same 73 ids and computes per tier: hide rate, seconds generated then hidden per 100 questions, and correct-hidden / CE-hidden per 100 (existing Haiku labels; Opus where CV5-PER100 has them). After device day it reruns the same script on results/rc-speed9-*, rc-layer10-4b and rc-t1{a,b}-gemma. Haiku N=4 both orders only on hidden rows with no label (cap 60).",
+   "lane": "replay-0-llm",
+   "ids": "v0.1 73 phone set (existing rows); device-day ids ruler/ids/dd1022-{speed9,layer10,t1a,t1b}.ids",
+   "cost": "0-60 Haiku, 0 Opus, 0 paid, scripting 1.5 h, 0 extra phone minutes (rides steps 1-3). r4to at the phone: 3 min during step 3 to screenshot one warned Gemma answer in his UI and note whether a show-anyway or reveal control exists.",
+   "ceiling": "Keeps NOTE-2 right before the freeze. It carries the H1 effect (CE-shown -2 to -4 per 100) and adds the UX-cost row (correct answers hidden and seconds wasted per 100, per tier) to the page.",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. KILLED if the phone hide rate differs from desktop by > 10 pp for the 1.7B or Gemma; NOTE-2 then quotes phone numbers per tier instead of desktop ones. NOTE-2's premise fails if the RC shows the warning line on <= 3/10 ids where the bench engine warns; NOTE-2 is then rewritten as 'add the warning line first' or withdrawn, with the decision going to r4to the same tick. If the RC rows show personalityId=detailed, the comparison is marked not like-for-like and only the warning presence clause decides.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: honesty on device (H1), coverage (C1) and the device day. Ranked by (ceiling x probability) / cost. Things read today that shape the list: (a) in llama.rn rc.4 (bench-app/node_modules/llama.rn/src) LoRA is set per context with applyLoraAdapters, and no completion request can carry its own LoRA. QUEUE l.349 already rejected parallel slots on rc.4 because they split n_ctx. So the only async gate that fits our pin runs serially after the answer. rc.4 n_probs are post-sampling (QUEUE l.347), so on the phone the gate becomes an argmax, which is RU's t=0.5 row (Opus 7->2 CE-unwarned, FR 0/14). (b) rc.4 has a swa_full context param (types.ts l.185), a flag-level way to avoid the SWA bug. (c) The Gemma phone result dirs have no 'memory slot' string, and Gemma phone = desktop on the 57 single-turn items, so the open risk is multi-turn cache fill only. (d) Most of the C1 reasons can already be read off ROUTING, KEEP and RAG-FUNNEL. Two device runs (H1, H4) share one bench APK build ('dd2').",
+   "p": 0.675,
+   "value": 4,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It costs 0 phone minutes, reuses existing rows and decides a pre-freeze note. Phone answers match desktop (+0.001), so hide-rate transfer is likely. The warning-line-presence clause on his RC is the real risk and the most valuable readout.",
+    "Every NOTE-2 number is desktop and the phone rows already exist, so 1.5 h of scripting with 0 extra phone minutes either validates or corrects a note that goes out 10-23; this is the best information per call on the list."
+   ],
+   "score": 2.7
+  },
+  {
+   "id": "H-A3 BLOCKCACHE",
+   "statement": "Raising the decompressed-block LRU from 16 blocks to 256 (at most +16 MB, against a PSS of about 4.2 GB) keeps medlineplus (35 blocks), visa (95) and factbook (102) fully decompressed after warm-up. Over the 72-question session order, block decompressions per search fall by at least 30 %, with ranking identical by construction. That projects the T_8GB p50 from 7.57 to about 5.1 s serial, without uninstalling any pack.",
+   "why_now": "The block phase is 73 % of the search window at 16 ms per block. Today the cache (16 x 64 KB) cannot hold even the smallest pack, so a 35-block pack is decompressed again on every question. This keeps visa and medlineplus coverage at almost the cost of dropping them.",
+   "method": "Desktop node replay of the bench-engine retrieve() over the aunion73-a question order, and over a shuffled order with 3 seeds. Count block() misses per pack at BLOCK_CACHE 16, 64, 256 and unbounded, plus the peak bytes held. Projected phone time = misses avoided x 16.0 ms (PARTIME per-block cost) applied to the perq windows. Parity: ordered raw ids identical, which must hold since the cache has no effect on ranking. If the projection is 1 s or more, add a 10-item phone A/B in BOAR Bench with a const-patched APK.",
+   "lane": "replay-0-llm",
+   "ids": "aunion73-a 72 (session order + 3 shuffles); MAIN 97 as a second order",
+   "cost": "0 LLM; about 10 desktop min; 1.5 h scripting; optional APK rebuild plus 20 phone min",
+   "ceiling": "about -2.4 s p50 (7.57 -> about 5.1) serial; about -1.2 s per search",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "(frozen) Misses fall less than 30 % at 256, or extra decompressed bytes exceed 32 MB, or the shuffled orders give less than half the session-order gain -> closed (the gain depends on question order).",
+   "ships_before_freeze": false,
+   "lens": "Lens A, T_8GB after PARTIME. Read with 0 LLM before proposing: in aunion73-a the p50 row (vit-hlt-002, 7.57 s) and all 17 detector-fired rows answer without calling the LLM, but they still search all 6 packs.\n\nCandidate (1) does not hold as stated. Of the 17 fired rows, 9 end with nothing kept (health-no-source, then a first-aid card). The other 8 keep a source, mostly from Wikivoyage or firstaid: Cold weather, Jellyfish, Dangerous snakes, Earthquake safety, Burn. So deciding the decline before search would change 8 answers, and it is not identical by construction. The safe version is to scope the search on fired turns, not to skip it.\n\nWhy a search costs this much (packs.ts / wikiPack.ts, tree 0ca54d87): searchBatched reads keyword candidates in rank order until the result is full. The pool is 80 candidates, and each one is kept only if it passes a coverage check of 0.5 or more. Each read decompresses a whole 64 KB zstd block with fzstd on the JS thread, and the decompressed-block LRU (BLOCK_CACHE) holds only 16 blocks. As a result:\n- packs with no relevant chunk walk most of the pool (visa 0.6 s and medlineplus 0.5 s per question, with 0 kept titles);\n- the 3 rows where nothing is retrieved (context 0->0) still spend 5.3-5.4 s searching;\n- medlineplus has only 35 blocks in total, yet it is decompressed again on every question.\n\nAll pack-level levers stall near 5.0-5.7 s on their own, because the p50 sits at a mode gap: once the health rows get faster, rows vit-hum-003 and vit-sci-001, which retrieve nothing at 5.4 s, become the median. Reaching 5.0 s or less needs two levers together, or one lever plus Promise.all. My own replay projections, from the per-pack windows in perq-aunion73-a.json:\n- Promise.all alone: 5.53 s\n- Drop visa and medlineplus: 5.67 s, or 4.77 s with Promise.all\n- Restrict fired turns to firstaid, medlineplus and wikivoyage: 5.65 s, or 4.00 s with Promise.all; 4.23 s with the two-pack drop, or 3.09 s with the drop plus Promise.all\n- Halve the block phase: 5.13 s, or 3.30 s with Promise.all\n- Cache the small packs: about 5.1 s\n- 16 KB blocks: about 5.1 s\n\nCandidate (3) is folded into H-A4: a cap on the candidate walk covers both the empty lexical case and the empty dense case. KEEP-E is already screening the dense side, so H-A4 adds no new dense rule.",
+   "p": 0.55,
+   "value": 4,
+   "costscore": 1.25,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "Ranking is identical by construction, so a miss-count replay over the session order and shuffled orders answers the question with 0 LLM, and the shuffle clause is a real order-dependence kill. Caveats: the 16 ms/block cost includes materialize, which a cache hit does not remove, and the first question of a cold session still pays in full. It is a one-constant change for the maintainer note.",
+    "Ranking stays identical by construction, it needs 0 LLM and about 10 desktop minutes, and a one-constant change is the easiest maintainer ask; the real risk is a global LRU in which the large packs evict the small ones, so log misses per pack and also test a per-pack cache."
+   ],
+   "score": 1.7600000000000002
+  },
+  {
+   "id": "H-A1 DEFAULT-SET",
+   "statement": "visa and medlineplus can leave the default 8 GB install without losing coverage. The kill clause is written as a coverage bound so that the hypothesis is falsifiable. Across MAIN 97, v0.1 57, the 72 A-union questions and the 180 pack self-tests, each of the two packs supplies a kept chunk on at most 3 rows. Each also holds the FACT-REACH fact chunk on at most 1 item, and loses 0 safety codes on the 64 safety probes. Under that bound, dropping them takes the T_8GB p50 from 7.57 to 5.67 s with serial search (4.77 s with Promise.all), with 0 LLM calls.",
+   "why_now": "PARTIME found 0 kept titles from either pack on the 73, at 1.1 s per question. It is the only lever that ships before the freeze with no code (catalog and default-install choice). Device-day arm C measures the time, but nobody has measured its coverage cost outside the 73.",
+   "method": "replay-retrieval.sh (gate=rules) on the LITEPACKS K1 tree, two runs: 6 A-union packs, and the same without visa and medlineplus. Per row: ordered raw and kept chunk ids, pack of each kept chunk, route and safety codes. Ids: MAIN 97, v0.1 57, aunion73-a's 72, the 180 PM, and 64 safety probes plus the health goldens. Join with FACT-REACH and RAG-FUNNEL S-labels to see whether the fact sits in a dropped pack. No judge, 1 seed (deterministic). Write the projected p50 with partime_analyze.py drop(). Persona check: list which personas lose a default-eligible pack.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97 + v0.1 57 + aunion73-a 72 + PM 180 + safety probes 64 + health goldens",
+   "cost": "0 LLM, 0 judge; about 20 desktop min; 1 h scripting (join with the FACT-REACH labels)",
+   "ceiling": "-1.90 s p50 serial (7.57 -> 5.67), -2.80 s with Promise.all (4.77)",
+   "mde_ok": true,
+   "feeds": "T_8GB",
+   "kill_criterion": "(frozen) Keep both packs installed if any of these holds: either pack supplies a kept chunk on 4 or more rows across all sets, holds the fact chunk on 2 or more items, or the drop loses at least one safety code on the probes. Separately, if device-day arm C shows less than 0.8 s off the search p50, the time claim is void.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, T_8GB after PARTIME. Read with 0 LLM before proposing: in aunion73-a the p50 row (vit-hlt-002, 7.57 s) and all 17 detector-fired rows answer without calling the LLM, but they still search all 6 packs.\n\nCandidate (1) does not hold as stated. Of the 17 fired rows, 9 end with nothing kept (health-no-source, then a first-aid card). The other 8 keep a source, mostly from Wikivoyage or firstaid: Cold weather, Jellyfish, Dangerous snakes, Earthquake safety, Burn. So deciding the decline before search would change 8 answers, and it is not identical by construction. The safe version is to scope the search on fired turns, not to skip it.\n\nWhy a search costs this much (packs.ts / wikiPack.ts, tree 0ca54d87): searchBatched reads keyword candidates in rank order until the result is full. The pool is 80 candidates, and each one is kept only if it passes a coverage check of 0.5 or more. Each read decompresses a whole 64 KB zstd block with fzstd on the JS thread, and the decompressed-block LRU (BLOCK_CACHE) holds only 16 blocks. As a result:\n- packs with no relevant chunk walk most of the pool (visa 0.6 s and medlineplus 0.5 s per question, with 0 kept titles);\n- the 3 rows where nothing is retrieved (context 0->0) still spend 5.3-5.4 s searching;\n- medlineplus has only 35 blocks in total, yet it is decompressed again on every question.\n\nAll pack-level levers stall near 5.0-5.7 s on their own, because the p50 sits at a mode gap: once the health rows get faster, rows vit-hum-003 and vit-sci-001, which retrieve nothing at 5.4 s, become the median. Reaching 5.0 s or less needs two levers together, or one lever plus Promise.all. My own replay projections, from the per-pack windows in perq-aunion73-a.json:\n- Promise.all alone: 5.53 s\n- Drop visa and medlineplus: 5.67 s, or 4.77 s with Promise.all\n- Restrict fired turns to firstaid, medlineplus and wikivoyage: 5.65 s, or 4.00 s with Promise.all; 4.23 s with the two-pack drop, or 3.09 s with the drop plus Promise.all\n- Halve the block phase: 5.13 s, or 3.30 s with Promise.all\n- Cache the small packs: about 5.1 s\n- 16 KB blocks: about 5.1 s\n\nCandidate (3) is folded into H-A4: a cap on the candidate walk covers both the empty lexical case and the empty dense case. KEEP-E is already screening the dense side, so H-A4 adds no new dense rule.",
+   "p": 0.275,
+   "value": 4.5,
+   "costscore": 1.25,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "This is the right minimal test: a 0-LLM coverage replay that complements device-day arm C, which only measures time. But the frozen bound is near-certain to kill on construction: the PM 180 self-tests include medlineplus-matched items, so medlineplus will supply kept chunks on far more than 3 rows. Re-freeze the bound on MAIN 97 + v0.1 57 + aunion 72 + probes, report PM 180 separately as persona-level loss, and run it.",
+    "Cheap 0-LLM replay that settles the only catalog-level time lever before the freeze, but the coverage bound counts the PM 180 self-tests, and some of those were written from medlineplus (and possibly visa), so the kill clause probably fires by construction; report per set (MAIN/v0.1/A-union/safety separately from PM) so the product call stays readable."
+   ],
+   "score": 0.99
+  },
+  {
+   "id": "H-A2 HEALTHSCOPE",
+   "statement": "On detector-fired turns, searching only firstaid, medlineplus and wikivoyage, instead of all 6 packs, gives the same kept chunk ids, route codes and safety codes on 100 % of fired rows: the 17 in aunion73-a, MAIN's fired rows and the 64 safety probes. It cuts the T_8GB p50 from 7.57 to 5.65 s with serial search, 4.00 s with Promise.all, and 3.09 s with the two-pack drop plus Promise.all. It needs 0 LLM calls, and every fired row of the 73 is already a no-LLM row.",
+   "why_now": "R1 showed the health gate runs retrieval and then drops every off-topic chunk. Every kept source on the 17 fired rows comes from Wikivoyage or firstaid; crypto, visa and factbook never survive the gate there. The p50 row itself is a fired row whose 7.33 s is pack search.",
+   "method": "Add one engine rule to the bench engine: when health and learned.fire are known before retrieve, searchWikiPacks gets a pack allowlist. Use replay-retrieval.sh, same tree, ON vs OFF. Ids: the 17 fired ids of aunion73-a, MAIN 97 (fired subset, about 10), the 64 safety probes and the 32 health goldens. Compare ordered raw, kept ids, grounding codes and fa-card. Projected phone p50 from the perq-aunion73-a per-pack windows (script in the lens notes). On parity: one 10-row phone check on the fired ids saf-*/vit-hlt-*, together with E1-PAR if the bench APK is rebuilt.",
+   "lane": "replay-0-llm",
+   "ids": "aunion73-a fired 17 + MAIN 97 fired subset + safety probes 64 + health goldens 32",
+   "cost": "0 LLM; about 15 desktop min; 2 h scripting (allowlist patch plus compare); optional 15 phone min",
+   "ceiling": "-1.92 s p50 serial (5.65), -3.57 s with Promise.all (4.00)",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "(frozen) Any kept-chunk, fa-card or safety-code difference on the fired rows or probes -> no-go as a parity rule. If the projected serial p50 gain is under 0.8 s once the non-health declines become the median -> report and stop.",
+   "ships_before_freeze": false,
+   "lens": "Lens A, T_8GB after PARTIME. Read with 0 LLM before proposing: in aunion73-a the p50 row (vit-hlt-002, 7.57 s) and all 17 detector-fired rows answer without calling the LLM, but they still search all 6 packs.\n\nCandidate (1) does not hold as stated. Of the 17 fired rows, 9 end with nothing kept (health-no-source, then a first-aid card). The other 8 keep a source, mostly from Wikivoyage or firstaid: Cold weather, Jellyfish, Dangerous snakes, Earthquake safety, Burn. So deciding the decline before search would change 8 answers, and it is not identical by construction. The safe version is to scope the search on fired turns, not to skip it.\n\nWhy a search costs this much (packs.ts / wikiPack.ts, tree 0ca54d87): searchBatched reads keyword candidates in rank order until the result is full. The pool is 80 candidates, and each one is kept only if it passes a coverage check of 0.5 or more. Each read decompresses a whole 64 KB zstd block with fzstd on the JS thread, and the decompressed-block LRU (BLOCK_CACHE) holds only 16 blocks. As a result:\n- packs with no relevant chunk walk most of the pool (visa 0.6 s and medlineplus 0.5 s per question, with 0 kept titles);\n- the 3 rows where nothing is retrieved (context 0->0) still spend 5.3-5.4 s searching;\n- medlineplus has only 35 blocks in total, yet it is decompressed again on every question.\n\nAll pack-level levers stall near 5.0-5.7 s on their own, because the p50 sits at a mode gap: once the health rows get faster, rows vit-hum-003 and vit-sci-001, which retrieve nothing at 5.4 s, become the median. Reaching 5.0 s or less needs two levers together, or one lever plus Promise.all. My own replay projections, from the per-pack windows in perq-aunion73-a.json:\n- Promise.all alone: 5.53 s\n- Drop visa and medlineplus: 5.67 s, or 4.77 s with Promise.all\n- Restrict fired turns to firstaid, medlineplus and wikivoyage: 5.65 s, or 4.00 s with Promise.all; 4.23 s with the two-pack drop, or 3.09 s with the drop plus Promise.all\n- Halve the block phase: 5.13 s, or 3.30 s with Promise.all\n- Cache the small packs: about 5.1 s\n- 16 KB blocks: about 5.1 s\n\nCandidate (3) is folded into H-A4: a cap on the candidate walk covers both the empty lexical case and the empty dense case. KEEP-E is already screening the dense side, so H-A4 adds no new dense rule.",
+   "p": 0.55,
+   "value": 3,
+   "costscore": 2,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "Parity is plausible because the health gate already drops off-topic chunks. But it is an engine rule that cannot ship before the freeze. Its p50 gain is mostly an artefact of the median sitting on a fired row (the non-health 0->0 declines become the median), so the user-time gain is limited to health turns. Queue it behind A1/A3/A4, which act on every row.",
+    "Parity is plausible because the gate drops off-topic packs, but cross-pack fusion can reorder what survives; it is an engine rule that cannot ship before 10-23 and only helps fired rows, so it goes in the maintainer note after the freeze."
+   ],
+   "score": 0.8250000000000001
+  },
+  {
+   "id": "C1-REASON",
+   "statement": "Of FACT-REACH's 16 facts held by packs we own, <= 3 have a pack-build-side cause: the fact split across chunk boundaries, or a chunk title with no question terms that a title field would fix. The rest split as about 9 install-only (qa-cooking-se 003/008/012, qa-money-se 007/009/010/011/020, vitalik cry-007: pack not in any K-set), 4 routing (cooking-002/013/015, money-004; ROUTING closed these as unsafe to release) and 3 in-pack losses at keep or reading (lan-rsn-001, vit-hum-004, vit-cry-005). Installing the three packs in a replay puts the fact in kept context on >= 6 of the about 9 install-only items, with <= 3 kept-set changes on other MAIN items.",
+   "why_now": "C1 projects +0.02 to +0.03 but has no per-item reason table. ROUTING and KEEP closed today and already supply most of the labels. The open question is whether anything is left for a pack rebuild (chunking, title field) before the post-freeze pack work. H8 contextual headers are already closed: the FTS index already has title + section.",
+   "method": "0 LLM. (1) Join FACT-REACH x RAG-FUNNEL stage x ROUTING inventory x KEEP replay traces into a per-item reason table. (2) Stub-server replay on the KEEP tree (base keep) of MAIN 97 with K3 + {qa-cooking-se, qa-money-se, boar-vitalik-blog-en}, then locate each fact at S2/S3/S4 with the ragfunnel.py fact rule. (3) For items stuck at S2/S3, use factq.py to check chunk-boundary splits (fact share < 0.5 in each chunk but >= 0.5 across adjacent chunks) and the title-token overlap with the question. (4) Count crowding as kept-set changes on the other MAIN items.",
+   "lane": "replay-0-llm",
+   "ids": "FACT-REACH (iii)-Y 16 ids (arms/k1-coverage/FACT-REACH-2026-10-21.md) within MAIN 97; crowding over all MAIN 97",
+   "cost": "0 LLM, 0 judge, 0 paid, scripting about 3 h, MacBook replay about 20 min (detector :8094 up), phone 0. r4to: 0 min.",
+   "ceiling": "<= +0.01 U from pack-build changes. Install-level gain up to about +0.02 on MAIN, but true by construction: the 13 self-tests were written from those packs, so it is not evidence for v0.4 or V-para.",
+   "mde_ok": false,
+   "feeds": "research-page",
+   "kill_criterion": "Written before the run. KILLED if >= 5 of 16 show a build-side cause (C1 then reopens as a pack-rebuild arm, post-freeze, with its own frozen criterion), or if the install replay reaches kept on < 4 of the install-only items. In that case C1 closes: neither build nor install is the lever, and keep and reading bind (KEEP-K1, RD-1).",
+   "ships_before_freeze": false,
+   "lens": "Lens C: honesty on device (H1), coverage (C1) and the device day. Ranked by (ceiling x probability) / cost. Things read today that shape the list: (a) in llama.rn rc.4 (bench-app/node_modules/llama.rn/src) LoRA is set per context with applyLoraAdapters, and no completion request can carry its own LoRA. QUEUE l.349 already rejected parallel slots on rc.4 because they split n_ctx. So the only async gate that fits our pin runs serially after the answer. rc.4 n_probs are post-sampling (QUEUE l.347), so on the phone the gate becomes an argmax, which is RU's t=0.5 row (Opus 7->2 CE-unwarned, FR 0/14). (b) rc.4 has a swa_full context param (types.ts l.185), a flag-level way to avoid the SWA bug. (c) The Gemma phone result dirs have no 'memory slot' string, and Gemma phone = desktop on the 57 single-turn items, so the open risk is multi-turn cache fill only. (d) Most of the C1 reasons can already be read off ROUTING, KEEP and RAG-FUNNEL. Two device runs (H1, H4) share one bench APK build ('dd2').",
+   "p": 0.575,
+   "value": 2,
+   "costscore": 2,
+   "verdicts": [
+    "run-now",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It cheaply closes a GOAL line, mostly from labels already produced by ROUTING/KEEP/RAG-FUNNEL, and its install replay informs the persona default set together with H-A1. The install-level gain is true by construction (self-tests written from those packs), so only the build-side count is evidence; keep it at low lane priority behind A1/A3/A4/B1/B3.",
+    "The install-level gain is true by construction (the self-tests were written from those packs), so the result is a research-page table, not a decision; most of its labels already exist in ROUTING, KEEP and RAG-FUNNEL."
+   ],
+   "score": 0.575
+  },
+  {
+   "id": "FA-CARDS",
+   "statement": "A 0-LLM replay over the dev health sets finds >= 3 model-answered health turns, beyond the 2 wrong epinephrine-site answers (ls03-t4 'forearm', epi-1021 'upper arm'), that are labelled unsafe or CE and that an existing conditionCards.v1.json card would cover with a trigger edit or one added sentence. Frozen prediction: 1-3 such turns, so the expected maintainer ask is NOTE-1 row 13 (epinephrine site) plus at most 1 trigger edit.",
+   "why_now": "The gate (RU) cannot catch these. Its 3-4 residual CEs are encyclopedic (vit-cry-007, factbook-011), and health turns are routed or warned, not gated. Card text is catalog data the maintainer can add before 10-23. Today the epinephrine row is a single-anecdote candidate with no count behind it.",
+   "method": "Stub-server replay (LITEPACKS adapter on the be-cut7-warn tree, 0 generation, detector :8094) on MAIN 97, v0.1 57, safety probes 64, longsession-v1 80 turns and the GEMMA-SAFETY 65. Keep turns with a health route + model answer, and join existing labels (Opus/Haiku CE, DRIFT17, GEMMA-SAFETY unsafe). Classify each: card exists + trigger missed / card exists + content missing / no card, using a card-topic term map. Then replay the proposed trigger edit and count false fires on the 40 cooking/money self-tests and non-health MAIN items, and route changes on the 64 probes.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97, v0.1 57, safety probes 64, longsession-v1 80, GEMMA-SAFETY 65 (existing id files); the epinephrine probes epi-1021 and ls03-t4",
+   "cost": "0 LLM, 0 judge, 0 paid. Scripting 2.5 h, MacBook replay about 15 min. Phone 0 extra: epi-1021 already runs at device-day step 2 (rc-layer10-4b), so his RC's anaphylaxis behaviour is read from that row. r4to: 0 min.",
+   "ceiling": "Unsafe/CE shown -0.5 to -1 per 100 overall (-2 to -4 per 100 health turns). The safety value matters more than U (U about +0.00).",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. KILLED if <= 2 coverable turns are found beyond epinephrine; only row 13 then goes to NOTE-1, with no broader card work before 10-25. A proposed trigger edit is rejected if it fires on > 1 non-health item (including any of the 6 cooking/money items ROUTING found) or moves any of the 64 probes off its current card or health path.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: honesty on device (H1), coverage (C1) and the device day. Ranked by (ceiling x probability) / cost. Things read today that shape the list: (a) in llama.rn rc.4 (bench-app/node_modules/llama.rn/src) LoRA is set per context with applyLoraAdapters, and no completion request can carry its own LoRA. QUEUE l.349 already rejected parallel slots on rc.4 because they split n_ctx. So the only async gate that fits our pin runs serially after the answer. rc.4 n_probs are post-sampling (QUEUE l.347), so on the phone the gate becomes an argmax, which is RU's t=0.5 row (Opus 7->2 CE-unwarned, FR 0/14). (b) rc.4 has a swa_full context param (types.ts l.185), a flag-level way to avoid the SWA bug. (c) The Gemma phone result dirs have no 'memory slot' string, and Gemma phone = desktop on the 57 single-turn items, so the open risk is multi-turn cache fill only. (d) Most of the C1 reasons can already be read off ROUTING, KEEP and RAG-FUNNEL. Two device runs (H1, H4) share one bench APK build ('dd2').",
+   "p": 0.32499999999999996,
+   "value": 3,
+   "costscore": 2,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It is a cheap 0-LLM join over existing labels, and card content is catalog data that can ship. But any trigger edit is the closed SC trigger family (R58-R60: held-out sets burned on recall/FP gates), so tuning it on dev sets with an FP check only on 40 self-tests is not a valid gate. Restrict pre-freeze output to content additions (epinephrine site) and queue trigger edits for a fresh held-out set.",
+    "A 0-LLM safety replay whose output is card or trigger data that can ship before the freeze; the predicted outcome is probably just the epinephrine row, so start it fifth, in the first lane that frees up after the top four."
+   ],
+   "score": 0.48749999999999993
+  },
+  {
+   "id": "H-A4 PACKBLOCK16",
+   "statement": "Repacking the 6 A-union packs from 64 KB to 16 KB zstd blocks, with the same text, chunks, FTS and embeddings, keeps retrieval byte-identical on every replayed row. It cuts the decompressed bytes per search by at least 3x and the desktop block-phase time by at least 45 %, with pack files growing at most 25 %. The projected T_8GB p50 falls from 7.57 to about 5.1 s serial (about 3.3 s with Promise.all). The format-2 reader only uses block_id/off/len, so it is a pack-build and catalog change, not an engine change.",
+   "why_now": "Each candidate decompresses a whole 64 KB block to read one chunk of about 1 KB (194 blocks, 3.1 s per search on the phone). Of the levers here, this is the only time lever below 5.5 s that ships before the freeze as data. The native Kotlin app reads format 2 too, so the same files serve it.",
+   "method": "Write a repack script (node, run on the mini): read each pack, decompress its blocks, rewrite them at --block-kb 16 and 8, update articles(block_id, off, len), keep everything else, and recompute the SHA256SUMS/MANIFEST. Parity: replay-retrieval.sh with ordered raw ids and text bytes on MAIN 97, v0.1 57, the 72 and PM 180 (0 diffs expected). Time: desktop node fzstd microbench of the block phase per search, decode ms and blocks per search, then scale to the phone with the PARTIME per-block 16 ms. Then 10 phone items (the e1par ids) with the repacked packs pushed into BOAR Bench, AC power, cool phone, plus one A2 drift run.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97 + v0.1 57 + aunion73-a 72 + PM 180; phone: e1par 10 ids",
+   "cost": "0 LLM; mini repack about 30 min; 3 h scripting; 25 phone min (when r4to connects the Pixel)",
+   "ceiling": "about -2.5 s p50 serial (about 5.1), about -4.3 s with Promise.all (about 3.3)",
+   "mde_ok": true,
+   "feeds": "T_8GB",
+   "kill_criterion": "(frozen) Any parity diff -> repack bug, fix or stop. Desktop block-phase time down less than 30 % at 16 KB, or files grown more than 40 % -> closed. On the phone, search p50 down less than 0.8 s vs A (A2 within 15 %) -> not shipped.",
+   "ships_before_freeze": true,
+   "lens": "Lens A, T_8GB after PARTIME. Read with 0 LLM before proposing: in aunion73-a the p50 row (vit-hlt-002, 7.57 s) and all 17 detector-fired rows answer without calling the LLM, but they still search all 6 packs.\n\nCandidate (1) does not hold as stated. Of the 17 fired rows, 9 end with nothing kept (health-no-source, then a first-aid card). The other 8 keep a source, mostly from Wikivoyage or firstaid: Cold weather, Jellyfish, Dangerous snakes, Earthquake safety, Burn. So deciding the decline before search would change 8 answers, and it is not identical by construction. The safe version is to scope the search on fired turns, not to skip it.\n\nWhy a search costs this much (packs.ts / wikiPack.ts, tree 0ca54d87): searchBatched reads keyword candidates in rank order until the result is full. The pool is 80 candidates, and each one is kept only if it passes a coverage check of 0.5 or more. Each read decompresses a whole 64 KB zstd block with fzstd on the JS thread, and the decompressed-block LRU (BLOCK_CACHE) holds only 16 blocks. As a result:\n- packs with no relevant chunk walk most of the pool (visa 0.6 s and medlineplus 0.5 s per question, with 0 kept titles);\n- the 3 rows where nothing is retrieved (context 0->0) still spend 5.3-5.4 s searching;\n- medlineplus has only 35 blocks in total, yet it is decompressed again on every question.\n\nAll pack-level levers stall near 5.0-5.7 s on their own, because the p50 sits at a mode gap: once the health rows get faster, rows vit-hum-003 and vit-sci-001, which retrieve nothing at 5.4 s, become the median. Reaching 5.0 s or less needs two levers together, or one lever plus Promise.all. My own replay projections, from the per-pack windows in perq-aunion73-a.json:\n- Promise.all alone: 5.53 s\n- Drop visa and medlineplus: 5.67 s, or 4.77 s with Promise.all\n- Restrict fired turns to firstaid, medlineplus and wikivoyage: 5.65 s, or 4.00 s with Promise.all; 4.23 s with the two-pack drop, or 3.09 s with the drop plus Promise.all\n- Halve the block phase: 5.13 s, or 3.30 s with Promise.all\n- Cache the small packs: about 5.1 s\n- 16 KB blocks: about 5.1 s\n\nCandidate (3) is folded into H-A4: a cap on the candidate walk covers both the empty lexical case and the empty dense case. KEEP-E is already screening the dense side, so H-A4 adds no new dense rule.",
+   "p": 0.5,
+   "value": 3.5,
+   "costscore": 3.75,
+   "verdicts": [
+    "run-now",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It is the only sub-5.5 s time lever that ships as data, so run step 0 now (repack on the mini, byte parity, desktop fzstd microbench) and gate the phone step on it. Before any catalog swap, verify that both the RN reader and the native Kotlin reader address chunks only by block_id/off/len and that the published SHA256SUMS/HF cards can be reissued under the pack standing OK. The phone check, the maintainer catalog swap and pushing 435 MB before 10-23 make the ship-before-freeze claim tight.",
+    "It ships as data only on paper: repacking and re-checksumming the published packs two days before the freeze, with 25 phone minutes on an already full device day and file-size growth from smaller zstd blocks, is too much risk; run the desktop microbench after H-A3 shows how much the block phase still costs."
+   ],
+   "score": 0.4666666666666667
+  },
+  {
+   "id": "G1-SWA5",
+   "statement": "In a 5-turn session on BOAR Bench (llama.rn rc.4 / b11010, Pixel 8a), Gemma 4 E2B hits the SWA prefix-reuse KV bug (llama.rn PR #410, fixed only in rc.7) in at least 1 of 8 follow-up turns. A hit is any of: 'failed to find a memory slot' or another decode error, an empty or garbled turn, or the first 32 tokens of turns 2-5 at greedy differing from the swa_full=true arm after an identical turn 1. Frozen prediction: hit in >= 1 turn, p about 0.4. Qwen3-1.7B control (not SWA): 0/8.",
+   "why_now": "NOTE-3 (Gemma opt-in) has to be sent or withdrawn before the 10-23 freeze. T1 checks only single-turn markers. Our Gemma phone evidence is all single-turn (gemma73-a, gemmaa73-a: 73/73, phone = desktop +0.001). The bug fires when the cache fills across turns, which is how chat follow-ups work. rc.4 exposes swa_full, so if the bug bites, the fix can be a flag or catalog entry instead of a runtime bump.",
+   "method": "Step 0, 0 LLM: grep logcat, bench.json and *.log of results/{gemma10-a,gemma10-b,gemma73-a,gemmaa73-a} for 'memory slot', 'llama_decode' and 'kv' errors (expected 0). Step 1: build bench APK dd2 with two bench-only switches: engineOverrides.swaFull, mapped to rc.4 ContextParams swa_full (absent = byte-identical init, checked by a desktop dry run), and a request 'session' field that passes earlier turns to answerService's follow-up path. Requests swa5-g-default, swa5-g-full and swa5-q17-default use 2 longsession-v1 sessions x 5 turns: ls03, which includes the epinephrine follow-up t4, and the next session id with >= 5 turns. Temperature 0, seed 42, A-union kit. Compare first-32-token identity between arms, error markers and empty turns per turn with a 0-LLM script. Optional manual control: if Gemma loads in his RC at device-day step 3, type ls03's 5 turns into his chat (MANUAL-SHEETS style).",
+   "lane": "pixel",
+   "ids": "longsession-v1: ls03 (5 turns) + the next session with >= 5 turns, frozen to ruler/ids/swa5.ids before the run; 10 turns per arm x 3 arms",
+   "cost": "0 judge, 0 Opus, 0 paid. Scripting 2-3 h (dd2 build shared with ASYNC-GATE-A0). Phone about 15 min of runs (Gemma about 12 s per turn, 30 turns) + 3 min install. r4to at the phone: install dd2, run 3 commands, about 20 min, no thermal gate (marker readout; temperature logged). Optional 8 min typing 5 turns into his RC's Gemma.",
+   "ceiling": "Decides whether the G1 Gemma opt-in tier ships multi-turn-safe on rc.4: +0.031 to +0.036 U (Opus, MAIN 97) for opt-in users, or a broken follow-up chat. Changes NOTE-3 wording (requires swa_full:true or llama.rn >= rc.7).",
+   "mde_ok": true,
+   "feeds": "device-day",
+   "kill_criterion": "Written before the run. The hypothesis (bug bites) is KILLED if all 10 Gemma-default turns show 0 error markers and 0 empty turns, and turns 2-5 match the swa_full arm on >= 7/8 at 32 tokens with turn 1 identical 2/2. NOTE-3 may then say '5-turn sessions clean on rc.4'. If turn 1 is not identical between arms, the identity clause is VOID and only markers decide. CONFIRMED if >= 1 marker or empty turn, or >= 2/8 divergent turns while the 1.7B control shows 0/8. NOTE-3 then requires swa_full:true (or rc.7+) and the tier is labelled single-turn until fixed.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: honesty on device (H1), coverage (C1) and the device day. Ranked by (ceiling x probability) / cost. Things read today that shape the list: (a) in llama.rn rc.4 (bench-app/node_modules/llama.rn/src) LoRA is set per context with applyLoraAdapters, and no completion request can carry its own LoRA. QUEUE l.349 already rejected parallel slots on rc.4 because they split n_ctx. So the only async gate that fits our pin runs serially after the answer. rc.4 n_probs are post-sampling (QUEUE l.347), so on the phone the gate becomes an argmax, which is RU's t=0.5 row (Opus 7->2 CE-unwarned, FR 0/14). (b) rc.4 has a swa_full context param (types.ts l.185), a flag-level way to avoid the SWA bug. (c) The Gemma phone result dirs have no 'memory slot' string, and Gemma phone = desktop on the 57 single-turn items, so the open risk is multi-turn cache fill only. (d) Most of the C1 reasons can already be read off ROUTING, KEEP and RAG-FUNNEL. Two device runs (H1, H4) share one bench APK build ('dd2').",
+   "p": 0.35,
+   "value": 4,
+   "costscore": 3,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "NOTE-3 must be sent or withdrawn before 10-23, and all existing Gemma phone evidence is single-turn, so this is decision-critical. The swa_full arm is the right paired control, and the void clause for turn-1 mismatch is correct. Confirm that PR #410's bug description matches rc.4 before building dd2, and treat <= 1/8 32-token divergence as possible backend nondeterminism rather than the bug.",
+    "It decides the NOTE-3 wording before the freeze for about 20 phone minutes and 0 judge calls, and the fix (swa_full) is a flag, so either outcome ships; start the dd2 build and the step-0 log grep now so the APK is ready for 10-22."
+   ],
+   "score": 0.4666666666666666
+  },
+  {
+   "id": "H-A5 MATBOUND",
+   "statement": "Capping searchBatched's keyword walk per pack, stopping after M materialized candidates or after R rejects in a row instead of walking the whole 80-candidate pool, keeps identical kept chunk ids on at least 98 % of retrieving rows. At the best (M, R) it removes at least 40 % of block decompressions per search. Projected T_8GB p50: 7.57 to about 5.1 s serial, about 3.3 s with Promise.all. The cap also covers the empty-result early exit of candidate (3): the 3 context 0->0 rows that spend 5.4 s finding nothing.",
+   "why_now": "Packs with 0 kept hits (visa, medlineplus) and empty-result rows cost the most because the walk ends only when the pool is exhausted. Where accepted candidates sit in the walk has never been logged, so the cost of a bound is unknown. It is the general version of bounded materialization that PARTIME priced at 1.80 s if the block phase vanished.",
+   "method": "Instrument the bench-engine searchBatched (desktop only): per pack and question, log the candidate index of each accepted hit, the materializations and the blocks decompressed. Then 0-LLM replay with grid M in {12, 20, 32, 48} and R in {8, 16} on MAIN 97, v0.1 57, the 72 and PM 180. Compare ordered raw and kept ids and FACT-REACH fact presence against uncapped. Project phone time with 16 ms per block avoided. Rows that differ, only if 2 % or fewer: a Haiku screen with N=4, both orders, on changed answers (1.7B regenerated on the mini, at most 30 rows, at most 240 calls) under a criterion frozen first.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97 + v0.1 57 + aunion73-a 72 + PM 180 (stage1-pool 87 first if a screen runs)",
+   "cost": "0 LLM for the replay; 3.5 h scripting; about 30 desktop min; optional at most 240 Haiku calls plus 30 mini generations",
+   "ceiling": "about -2.4 s p50 serial (about 5.1), about -4.3 s with Promise.all",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "(frozen) At every grid point with decompressions down 40 % or more, kept-id parity is below 98 % or a fact chunk is lost on 2 or more S3 items -> closed. A screen, if run, shows U_d below -0.01 or CE-unwarned up by 2 or more -> no-go.",
+   "ships_before_freeze": false,
+   "lens": "Lens A, T_8GB after PARTIME. Read with 0 LLM before proposing: in aunion73-a the p50 row (vit-hlt-002, 7.57 s) and all 17 detector-fired rows answer without calling the LLM, but they still search all 6 packs.\n\nCandidate (1) does not hold as stated. Of the 17 fired rows, 9 end with nothing kept (health-no-source, then a first-aid card). The other 8 keep a source, mostly from Wikivoyage or firstaid: Cold weather, Jellyfish, Dangerous snakes, Earthquake safety, Burn. So deciding the decline before search would change 8 answers, and it is not identical by construction. The safe version is to scope the search on fired turns, not to skip it.\n\nWhy a search costs this much (packs.ts / wikiPack.ts, tree 0ca54d87): searchBatched reads keyword candidates in rank order until the result is full. The pool is 80 candidates, and each one is kept only if it passes a coverage check of 0.5 or more. Each read decompresses a whole 64 KB zstd block with fzstd on the JS thread, and the decompressed-block LRU (BLOCK_CACHE) holds only 16 blocks. As a result:\n- packs with no relevant chunk walk most of the pool (visa 0.6 s and medlineplus 0.5 s per question, with 0 kept titles);\n- the 3 rows where nothing is retrieved (context 0->0) still spend 5.3-5.4 s searching;\n- medlineplus has only 35 blocks in total, yet it is decompressed again on every question.\n\nAll pack-level levers stall near 5.0-5.7 s on their own, because the p50 sits at a mode gap: once the health rows get faster, rows vit-hum-003 and vit-sci-001, which retrieve nothing at 5.4 s, become the median. Reaching 5.0 s or less needs two levers together, or one lever plus Promise.all. My own replay projections, from the per-pack windows in perq-aunion73-a.json:\n- Promise.all alone: 5.53 s\n- Drop visa and medlineplus: 5.67 s, or 4.77 s with Promise.all\n- Restrict fired turns to firstaid, medlineplus and wikivoyage: 5.65 s, or 4.00 s with Promise.all; 4.23 s with the two-pack drop, or 3.09 s with the drop plus Promise.all\n- Halve the block phase: 5.13 s, or 3.30 s with Promise.all\n- Cache the small packs: about 5.1 s\n- 16 KB blocks: about 5.1 s\n\nCandidate (3) is folded into H-A4: a cap on the candidate walk covers both the empty lexical case and the empty dense case. KEEP-E is already screening the dense side, so H-A4 adds no new dense rule.",
+   "p": 0.4,
+   "value": 3,
+   "costscore": 3,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "Unlike A3/A4 it changes kept sets, so it needs parity plus a possible Haiku screen. It is an engine change that cannot ship before the freeze, and much of its gain overlaps A3/A4 (fewer or cheaper block reads). Instrumenting accept positions is useful, but only after A3/A4 report.",
+    "It changes ranking (it needs a judged screen if more than 0 rows differ), takes 3.5 h of scripting and cannot ship; the accept-index log alone is a good research-page row after 10-25."
+   ],
+   "score": 0.4000000000000001
+  },
+  {
+   "id": "H-B3 FACTS-FAMILY",
+   "statement": "At most 2 new property families for the deterministic FACTS table, taken from Wikidata and chosen by class rather than by item, cover at least 5 MAIN/v0.1 items that the 1.7B currently gets wrong (S3/S4/S1 with judge correctness at most 2.5) with 0 false fires on the nearmiss sets. Candidate families: population/area/elevation by year, inception/founding date, record height/length/depth, currency per country, with the builder fixes from BACKLOG ENGFIX-FACTS-DATA. Each covered item moves to a deterministic answer scoring at least 4.0, as the 9 R1 facts-table items do.",
+   "why_now": "ROUTING-R1: all 9 facts-table items score 4.0-5.0, and the facts table is the one path that skips the 1.7B reader entirely, which is exactly where the 33 pct conversion binds. NUMCHECK (CLOSED 41) measured coverage of deep-tier wrong answers on V-para/v0.2, not of the 1.7B misses on MAIN. FACTS r10 already went to the maintainer as a data zip, so a table update is a catalog/data item that can ship before the freeze.",
+   "method": "Replay-0-llm with a read of v0.1 public and self-test text only (never v0.4 text; v0.4 tags only, through ruler/INPACK-STRATUM). Step 0: a script classifies each wrong 1.7B MAIN item from the LITEPACKS K1 s42 Haiku rows and the Opus rows where they exist. The question is whether its key fact is one entity-property pair. Then count the families needed. The coordinator reviews the class list before any build. Step 1: build the families on the mini with the facts-r9 builder. Replay MAIN, v0.1 57, the facts nearmiss sets and the 64 probes through the facts router for fires, FP and route changes. Judge only the changed answers: Haiku 5.5-low N 4, both orders, 1 seed, at most 40 calls. Report every number as dev-fitted (MAIN items picked the families) and separately count v0.4 tag-level matches as the out-of-sample signal.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97 (arms/litepacks K1 s42 traces + judgments), v0.1 57, arms/facts nearmiss sets, health probes 64; v0.4 tags only via ruler/INPACK-STRATUM-2026-10-21.json",
+   "cost": "About 3 h of scripting and class review, 0 LLM at step 0; about 30-60 min of builder time on the mini; at most 40 Haiku; 0 Opus, 0 paid",
+   "ceiling": "About +0.010 to +0.015 U_8GB (5 items times about +1.5 correctness points times ref, over 451); answer time drops to about 0 s LLM on fired rows",
+   "mde_ok": true,
+   "feeds": "U_8GB",
+   "kill_criterion": "Kill at step 0 if fewer than 5 wrong MAIN items are single entity-property facts coverable by 2 or fewer families, or if the families match fewer than 3 v0.4 items by tag. Kill at step 1 on any nearmiss FP, any probe route change, or any covered item whose deterministic answer is judged below 3.5.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: raising U_8GB through context and reading on the 1.7B, given that keep variants cap at about +0.01 and reading binds at 33 pct. Evidence I read: GOAL-2026-10-21, ROUTING-R1, KEEP-K1 (ED4B 7/17 S3 items at +50 pct tokens, 3/17 within +15 pct), X2B-OFF-MAIN, RAG-FUNNEL (K3 S3 17 / S4 15 / S5 8), FACTPRESENT (real cell (a) -0.010), ORACLE-REAL (+0.015; 8/30 answers still open with the memory warning while the gold chunk sits at [1]), CHUNKCLEAN (+0.031, inconclusive), the MORNING-REPORT, the round-3 and revisit-closed JSONs, and CLOSED rows 27/41/44/72/91/95/96/97. Also QUEUE 12:36: FEWSHOT-READ -0.001, SAMPLE2-GATE +0.003, HYBRID-READER and WARN-TUNE both KILL. Candidate (1), the per-source-type budget, is dropped and not in the list below. KEEP-K1 shows the 600-work budget binds and the facts sit at dense ranks 4-10. LITEREACH2-180 shows that the facts the 1.7B newly receives convert at about one third of the X2b rate. A token re-split at equal budget therefore cannot beat ED4B's 7/17, which is worth about +0.005 U. The direction that goes around the reading bottleneck, instead of feeding it more context, is to put the source sentence into the answer itself (H-B1) or to answer deterministically (H-B3). Two hypotheses act at decode or check time: H-B4 (number/entity check) and H-B5 (CAD), which is literature-backed and measured only for the page. H-B2 closes the empty-lexical gap that KEEP-E leaves open. Literature priors, searched 2026-10-21: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062) and CoCoA (aggregator listing, unverified) warn that contrastive decoding can hurt when the context does not conflict with the model's prior. The web-loop T3 note (arXiv 2603.11513) reports that models up to 7B ignore oracle context 85-100 pct of the time. UNKNOWN: how often the 1.7B misreads a present fact versus overrides it with its prior (RD-5 was never run); whether v0.4 has single-attribute items (only tag-level reads are allowed); and the real-item value per fact reached (+0.015 to +0.05).",
+   "p": 0.3,
+   "value": 3.5,
+   "costscore": 2.75,
+   "verdicts": [
+    "run-now",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "This is the reopen condition CLOSED R41 itself names (per-family statistic/date tables) and the only U lever that bypasses the reader and can ship as data. The step-0 class count is free. Families chosen from MAIN misses are dev-fitted, and FACTS recall was 70 % on blind, so the v0.4 tag-match clause is the real out-of-sample guard and must stay a hard kill. With 2 days to the freeze, the build plus nearmiss-FP replay is the binding risk.",
+    "The families are fitted on MAIN, NUMCHECK found low single-property coverage before, and new families need their own nearmiss FP sweep, so a 2-day turnaround to the maintainer zip is unrealistic; keep step 0 (classification of the wrong items) as filler for an idle agent."
+   ],
+   "score": 0.38181818181818183
+  },
+  {
+   "id": "ASYNC-GATE-A0",
+   "statement": "On BOAR Bench (rc.4, Pixel 8a, 1.7B, A-union) the GATE17 groundedness LoRA runs serially after the last answer token: applyLoraAdapters, then a 1-token greedy gate completion, then removeLoraAdapters. A parallel slot cannot be used, because LoRA is per context and rc.4 slots split n_ctx. Frozen predictions: (1) the gated question's TTFT is unchanged (|delta| <= 0.3 s); (2) the verdict arrives p50 8-11 s after the last answer token (about 790 gate tokens at the phone's 1.7B prefill rate); (3) argmax verdicts match the mini gate on the same phone answer texts on >= 8/9; (4) PSS rises <= 0.1 GB; (5) the NEXT question's TTFT rises 2-4 s because the cached answer prefix is evicted by the gate prompt.",
+   "why_now": "H1's open step is A0 feasibility. RU passes only as a serial gate that doubles TTFT (projected +9.3 s), and the context-first variant (GATELAT) loses AUC 0.934 -> 0.660. The tick-20 claim 'second parallel slot' does not hold for a LoRA gate at our pin, so the only design compatible with b11010 / rc.4 is answer-then-verify. Its TTFT, verdict delay and next-turn penalty are unmeasured, and the maintainer note needs them.",
+   "method": "Bench APK dd2 (shared build) with request flag gateAfter:true: after the answer completes, apply the GATE17 f16 LoRA (pushed to files/models with adb run-as, sha checked), run the GATE17 answer-first prompt with n_predict 1 greedy, read the token text (rc.4 n_probs is one-hot, so this is the t=0.5 row), remove the LoRA, and log spans gate_apply, gate_prefill, gate_total and remove. Requests gate9-a (off), gate9-b (on), gate9-a2 (off, drift control), each warmup + 9 ids, cool phone (thermal_gate.py 310). Then the mini runs the same gate on the 9 phone answer texts (9 local calls) for parity. A 0-LLM script compares TTFT(i), TTFT(i+1), PSS and answer-text identity of question i+1 between A and B.",
+   "lane": "pixel",
+   "ids": "ruler/ids/gate9.ids (freeze before run): vit-sci-002, lan-cmp-003, vit-hum-004 (gate FAIL on the mini, Opus CE) + 6 MAIN ids from the RU gated-PASS set (P(FAIL) < 0.1) drawn with seed 11 from arms/refuse-unsupported/gate output",
+   "cost": "0 judge, 0 Opus, 0 paid, 9 local gate calls on the mini. Scripting about 4 h (LoRA push, GATE17 prompt port, spans). Phone about 30 min (3 runs x 10 q + cooldowns). r4to at the phone: install dd2, one LoRA push command, 3 runs behind the thermal gate, about 35 min.",
+   "ceiling": "H1: CE-shown -2 to -4 per 100 (Opus RU t=0.5: 7 -> 2 of 177) at 0 s TTFT cost, compared with +9.3 s for the gate-before-show design",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run. Async-gate feasibility on rc.4 is KILLED if any of these holds: gated-question TTFT +> 0.5 s vs A; verdict p50 > 15 s after the last token; PSS +> 0.3 GB; any LMK; argmax parity < 7/9; or the answer text of the question after a gated one differs from arm A at greedy (adapter or sampler leak). A2 vs A TTFT drift > 15 % means rerun once after a 10 min cooldown. Readout clause: a next-question TTFT penalty > 2 s means the note must specify a saveSession/loadSession restore of the answer prefix.",
+   "ships_before_freeze": false,
+   "lens": "Lens C: honesty on device (H1), coverage (C1) and the device day. Ranked by (ceiling x probability) / cost. Things read today that shape the list: (a) in llama.rn rc.4 (bench-app/node_modules/llama.rn/src) LoRA is set per context with applyLoraAdapters, and no completion request can carry its own LoRA. QUEUE l.349 already rejected parallel slots on rc.4 because they split n_ctx. So the only async gate that fits our pin runs serially after the answer. rc.4 n_probs are post-sampling (QUEUE l.347), so on the phone the gate becomes an argmax, which is RU's t=0.5 row (Opus 7->2 CE-unwarned, FR 0/14). (b) rc.4 has a swa_full context param (types.ts l.185), a flag-level way to avoid the SWA bug. (c) The Gemma phone result dirs have no 'memory slot' string, and Gemma phone = desktop on the 57 single-turn items, so the open risk is multi-turn cache fill only. (d) Most of the C1 reasons can already be read off ROUTING, KEEP and RAG-FUNNEL. Two device runs (H1, H4) share one bench APK build ('dd2').",
+   "p": 0.475,
+   "value": 3,
+   "costscore": 4,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "The answer-then-verify design is the only one compatible with rc.4, and the predictions and kill clauses are well specified, including the adapter-leak and next-turn penalty checks. But it cannot ship before the freeze, needs 4 h of scripting plus 35 min of r4to at the phone, and competes with G1-SWA5 and device day for the Pixel. Share the dd2 build and run it on the first free phone slot after 10-23.",
+    "About 35 phone minutes and 4 h of scripting on a device day that is already budgeted at 2.5-3 h, for a design that cannot ship before the freeze; its numbers can feed the post-freeze maintainer note on the next device session."
+   ],
+   "score": 0.35624999999999996
+  },
+  {
+   "id": "H-B1 EXTRACT-LEAD",
+   "statement": "A 0-LLM extractive lead line ('Source [n]: <the kept sentence with the highest question-term BM25 that also contains the answer type the wh-word asks for: number, date or proper noun>'), prepended to the 1.7B answer whenever such a sentence clears a fixed score threshold, raises U on the stage1-pool 87 by at least +0.02 (Haiku, changed answers) with CE-unwarned not rising by more than 1. The step-0 gate: the lead sentence holds the key fact (FACTPRESENT rule applied to that one sentence) on at least 7 of the 15 K3 S4 items, holds it on at least 6 of the 8 S5 items, and fires on at most 30 pct of the keyed items with no fact in context.",
+   "why_now": "Reading is the binding stage (33 pct conversion; ORACLE-REAL +0.015; 8/30 answers carry the memory warning with the gold at [1]). Prompts, few-shot, quoting and two-pass are all null (FEWSHOT-READ, QUOTEFIRST, LITE17 Q). Every R1 item that leaves the normal path for a deterministic layer scores 4-5, and the health extractive path already scores 4.0-4.5 (vit-hlt-002, dng-002). Putting the source sentence in the answer bypasses the reader instead of feeding it, and it needs no generation because existing answers are reused.",
+   "method": "Step 0 (replay-0-llm, MacBook): script tools/extract_lead.py over the FACTPRESENT/RAG-FUNNEL K1 and K3 replay contexts (dumped Context blocks) and the LITEPACKS K1 s42 answers. Sentence split, then question-term BM25 within the kept chunks, then a wh-type regex (how many/much -> number, when/what year -> date, who/which/where -> proper noun). The threshold is fixed in the criterion before computing, with no sweep. Gate counts come from RAG-FUNNEL-2026-10-21.json stage lists. Step 1 runs only if step 0 passes. Variant L = lead line + the unchanged answer text, with no generation. Ids: ruler/ids/stage1-pool.ids (87). Haiku 5.5-low judge.v1-low, N 4 shards, both orders, only on answers that changed. DECLINE2STAGE stage 1 on the changed rows. Baseline = the LITEPACKS K1 s42 Haiku rows. 1 seed (no generation, so seeds are moot). Report dU on the MAIN 97 scale, CE-unwarned and refusals, with an item bootstrap (B 2000, seed 11). Freeze the criterion (sha256, committed) before step 0.",
+   "lane": "replay-0-llm",
+   "ids": "ruler/ids/stage1-pool.ids (87); step-0 gate lists from ruler/RAG-FUNNEL-2026-10-21.json (K3 S4 15, S5 8, S3 17) and arms/oracle-real/items.ids (30) as a sensitivity read",
+   "cost": "About 3 h of scripting, 0 generation, 0 mini or phone minutes, Haiku at most 2 calls per changed answer plus stage 1, capped at 150 Haiku (expected 40-60 changed rows), 0 Opus, 0 paid",
+   "ceiling": "S4 perfect fix +0.103 U (RAG-FUNNEL K3); a realistic +0.02 to +0.03 U_8GB if half of the S4 facts land in a lead the judge credits; 0 s added time (string work under 5 ms)",
+   "mde_ok": false,
+   "feeds": "U_8GB",
+   "kill_criterion": "Kill at step 0 if the lead holds the fact on fewer than 7 of 15 S4 items, or on fewer than 6 of 8 S5 items, or fires on more than 30 pct of no-fact keyed items. Kill at step 1 if dU < +0.015, or CE-unwarned rises by 2 or more, or any of the 64 health safety probes changes its route or text (replay check).",
+   "ships_before_freeze": false,
+   "lens": "Lens B: raising U_8GB through context and reading on the 1.7B, given that keep variants cap at about +0.01 and reading binds at 33 pct. Evidence I read: GOAL-2026-10-21, ROUTING-R1, KEEP-K1 (ED4B 7/17 S3 items at +50 pct tokens, 3/17 within +15 pct), X2B-OFF-MAIN, RAG-FUNNEL (K3 S3 17 / S4 15 / S5 8), FACTPRESENT (real cell (a) -0.010), ORACLE-REAL (+0.015; 8/30 answers still open with the memory warning while the gold chunk sits at [1]), CHUNKCLEAN (+0.031, inconclusive), the MORNING-REPORT, the round-3 and revisit-closed JSONs, and CLOSED rows 27/41/44/72/91/95/96/97. Also QUEUE 12:36: FEWSHOT-READ -0.001, SAMPLE2-GATE +0.003, HYBRID-READER and WARN-TUNE both KILL. Candidate (1), the per-source-type budget, is dropped and not in the list below. KEEP-K1 shows the 600-work budget binds and the facts sit at dense ranks 4-10. LITEREACH2-180 shows that the facts the 1.7B newly receives convert at about one third of the X2b rate. A token re-split at equal budget therefore cannot beat ED4B's 7/17, which is worth about +0.005 U. The direction that goes around the reading bottleneck, instead of feeding it more context, is to put the source sentence into the answer itself (H-B1) or to answer deterministically (H-B3). Two hypotheses act at decode or check time: H-B4 (number/entity check) and H-B5 (CAD), which is literature-backed and measured only for the page. H-B2 closes the empty-lexical gap that KEEP-E leaves open. Literature priors, searched 2026-10-21: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062) and CoCoA (aggregator listing, unverified) warn that contrastive decoding can hurt when the context does not conflict with the model's prior. The web-loop T3 note (arXiv 2603.11513) reports that models up to 7B ignore oracle context 85-100 pct of the time. UNKNOWN: how often the 1.7B misreads a present fact versus overrides it with its prior (RD-5 was never run); whether v0.4 has single-attribute items (only tag-level reads are allowed); and the real-item value per fact reached (+0.015 to +0.05).",
+   "p": 0.25,
+   "value": 3,
+   "costscore": 2.75,
+   "verdicts": [
+    "run-now",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "Deterministic sentence extraction is a new artefact class, not QUOTEFIRST/LITE17-Q in disguise, and it goes around the 33 % reading bottleneck. The step-0 gate is a free and real kill, so run only step 0 now. Step 1 is risky: a lead sentence that contradicts the 1.7B's own answer can raise CE, and a Haiku-only dU with mde_ok false cannot become a U_8GB claim. Add a lead-vs-answer contradiction count to the step-1 criterion.",
+    "It is the right direction around the reading bottleneck, but the MDE is not met, the judge may not credit a pasted sentence, and it changes the answer format, which cannot ship by 10-25; run its 0-LLM step-0 gate when a lane is idle."
+   ],
+   "score": 0.2727272727272727
+  },
+  {
+   "id": "H-B2 QRELAX-EMPTY",
+   "statement": "On the 17/100 MAIN rows where the lexical retrieve() list is empty, a deterministic query relaxation brings the key fact into the kept context on at least 3 keyed MAIN items beyond what KEEP-E (dense append on empty raw) already reaches. The relaxation drops stopwords, digits and question words, then ORs the top-4 idf terms and retries retrieve() once, only when raw is empty. It must do this at a mean prompt-token cost of at most +8 pct on MAIN, with 0 route changes on the 64 safety probes.",
+   "why_now": "KEEP-K1 found the empty-raw gap (17 rows, 3 S3 items) and KEEP-E is being screened now. E fixes only the dense side, while relaxed lexical hits also feed the X1 neighbour and grounding paths that E skips. QWRITE/QMERGE closed the LLM query writer (CLOSED 95/96), not a 0-LLM rule restricted to empty-raw rows. This is a different trigger and artefact class.",
+   "method": "Replay-0-llm on the MacBook. Clone of the KEEP-E tree (be-0cfd4a77-cut7-litepacks-keepe) plus an env-gated QRELAX=1 in the retrieve call site: if raw is empty, a second FTS query runs with the relaxed OR form. Stub llama-server, LITEPACKS adapter, LITEDECLINE_OFF=5, detector :8094 left as is. Requests: arms/retfloor/req/MAIN.requests.jsonl and the v0.1 57 rows, plus the 64 health probes. Arms: base, E, QRELAX, E+QRELAX. Count kept-fact keyed items with the RAG-FUNNEL fact rule, changed prompts, tokens and probe routes. If the gate passes and KEEP-E's frozen screen is GO, the changed rows join one Haiku screen of at most 60 calls (judge.v1-low, N 4, both orders, seed 42 generation on the mini for the changed rows only).",
+   "lane": "replay-0-llm",
+   "ids": "arms/retfloor/req/MAIN.requests.jsonl (MAIN 97/100 rows; the 17 empty-raw rows listed in arms/keep-k1/aggregates/keep-replay.json), v0.1 57, health probes 64",
+   "cost": "About 2 h of scripting and 4 replay runs of about 5 min each on the MacBook, 0 LLM at step 0; conditional step 1 of at most 15 mini generations (about 3 min) and at most 60 Haiku, 0 Opus",
+   "ceiling": "About +0.005 to +0.01 U_8GB (3-5 items times the real per-item prior of +0.015 to +0.05 times ref, over 451); +0.1 to 0.2 s retrieval on 17 pct of rows",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Kill if E+QRELAX reaches fewer than 3 keyed items beyond E alone, or adds more than 8 pct mean prompt tokens on MAIN, or changes the route of any of the 64 safety probes, or changes any v0.1 row that already had the fact kept.",
+   "ships_before_freeze": false,
+   "lens": "Lens B: raising U_8GB through context and reading on the 1.7B, given that keep variants cap at about +0.01 and reading binds at 33 pct. Evidence I read: GOAL-2026-10-21, ROUTING-R1, KEEP-K1 (ED4B 7/17 S3 items at +50 pct tokens, 3/17 within +15 pct), X2B-OFF-MAIN, RAG-FUNNEL (K3 S3 17 / S4 15 / S5 8), FACTPRESENT (real cell (a) -0.010), ORACLE-REAL (+0.015; 8/30 answers still open with the memory warning while the gold chunk sits at [1]), CHUNKCLEAN (+0.031, inconclusive), the MORNING-REPORT, the round-3 and revisit-closed JSONs, and CLOSED rows 27/41/44/72/91/95/96/97. Also QUEUE 12:36: FEWSHOT-READ -0.001, SAMPLE2-GATE +0.003, HYBRID-READER and WARN-TUNE both KILL. Candidate (1), the per-source-type budget, is dropped and not in the list below. KEEP-K1 shows the 600-work budget binds and the facts sit at dense ranks 4-10. LITEREACH2-180 shows that the facts the 1.7B newly receives convert at about one third of the X2b rate. A token re-split at equal budget therefore cannot beat ED4B's 7/17, which is worth about +0.005 U. The direction that goes around the reading bottleneck, instead of feeding it more context, is to put the source sentence into the answer itself (H-B1) or to answer deterministically (H-B3). Two hypotheses act at decode or check time: H-B4 (number/entity check) and H-B5 (CAD), which is literature-backed and measured only for the page. H-B2 closes the empty-lexical gap that KEEP-E leaves open. Literature priors, searched 2026-10-21: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062) and CoCoA (aggregator listing, unverified) warn that contrastive decoding can hurt when the context does not conflict with the model's prior. The web-loop T3 note (arXiv 2603.11513) reports that models up to 7B ignore oracle context 85-100 pct of the time. UNKNOWN: how often the 1.7B misreads a present fact versus overrides it with its prior (RD-5 was never run); whether v0.4 has single-attribute items (only tag-level reads are allowed); and the real-item value per fact reached (+0.015 to +0.05).",
+   "p": 0.25,
+   "value": 1,
+   "costscore": 2,
+   "verdicts": [
+    "drop",
+    "drop"
+   ],
+   "reasons": [
+    "The ceiling (+0.005 to +0.01) is below the MDE. It belongs to the closed retrieval-reach family (QWRITE/QMERGE/LCRELAX/PACKDENSE), with only a narrower trigger, and it depends on KEEP-E, whose screen has not returned. Reconsider only if KEEP-E is GO and the empty-raw rows still lack the fact.",
+    "Ceiling of +0.005 to +0.01 on 3-5 items, below any MDE, and it overlaps KEEP-E, which is already being screened; no decision depends on it."
+   ],
+   "score": 0.125
+  },
+  {
+   "id": "H-B4 NUMMATCH",
+   "statement": "A deterministic answer-to-context check flags at least 40 pct of the 1.7B's shown wrong answers (judge correctness at most 2.5) at a precision of at least 0.5 against shown correct answers (correctness at least 4). The check flags an answer whose numbers, years or capitalised entities appear in neither the question nor any kept chunk. Only if both bars pass does one re-generation at seed 43 on flagged rows, keeping the second answer only when it passes the check, raise U on the stage1-pool by at least +0.015 with CE-unwarned not rising.",
+   "why_now": "Candidate (3) as a verifier loop with 0 extra models. The selector content is new: SAMPLE2-GATE (+0.003) chose with GATE17 P(FAIL), LOGPROB/PHIFIRST used token confidence (AUC 0.49-0.53), and WARN-TUNE used retrieval trace features. None compared the answer's own content with the kept text. Step 0 is free over existing traces and labels, and it decides whether a re-ask is worth any generation.",
+   "method": "Step 0 (replay-0-llm): over the LITEPACKS K1 s42 MAIN answers and their dumped contexts (FACTPRESENT replay), extract numbers, years and capitalised spans with regexes. Exclude question tokens and normalise units. Flag mismatches. Compute recall and precision against the Haiku and Opus correctness labels (HAIKU-CAL pool, Opus where available), with an item bootstrap. Step 1 (mini-gen+haiku), only if step 0 passes: seed-43 generation (null-s43.patch) on flagged stage1-pool rows, then the selection rule, then Haiku judge.v1-low N 4 both orders on the changed picks (cap 100). Latency is reported as added generations per 100 answers, with the NUMGUARD and SAMPLE2 timing as the price.",
+   "lane": "replay-0-llm",
+   "ids": "MAIN 97 K1 s42 answers + contexts; ruler/ids/stage1-pool.ids for step 1",
+   "cost": "About 2.5 h of scripting, 0 LLM at step 0; conditional step 1 of about 20-30 mini generations (about 5 min) and at most 100 Haiku; 0 Opus, 0 paid",
+   "ceiling": "+0.01 to +0.015 U_8GB; adds one generation (+3 to +5 s on the Pixel) on flagged rows only, so p50 is unchanged if fewer than 30 pct of rows are flagged",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Kill at step 0 if recall on shown wrong answers is below 0.40 or precision is below 0.50, or if more than 30 pct of all shown answers are flagged. Kill at step 1 if dU < +0.015, or CE-unwarned rises, or the flag-fire rate exceeds 30 pct on stage1-pool.",
+   "ships_before_freeze": false,
+   "lens": "Lens B: raising U_8GB through context and reading on the 1.7B, given that keep variants cap at about +0.01 and reading binds at 33 pct. Evidence I read: GOAL-2026-10-21, ROUTING-R1, KEEP-K1 (ED4B 7/17 S3 items at +50 pct tokens, 3/17 within +15 pct), X2B-OFF-MAIN, RAG-FUNNEL (K3 S3 17 / S4 15 / S5 8), FACTPRESENT (real cell (a) -0.010), ORACLE-REAL (+0.015; 8/30 answers still open with the memory warning while the gold chunk sits at [1]), CHUNKCLEAN (+0.031, inconclusive), the MORNING-REPORT, the round-3 and revisit-closed JSONs, and CLOSED rows 27/41/44/72/91/95/96/97. Also QUEUE 12:36: FEWSHOT-READ -0.001, SAMPLE2-GATE +0.003, HYBRID-READER and WARN-TUNE both KILL. Candidate (1), the per-source-type budget, is dropped and not in the list below. KEEP-K1 shows the 600-work budget binds and the facts sit at dense ranks 4-10. LITEREACH2-180 shows that the facts the 1.7B newly receives convert at about one third of the X2b rate. A token re-split at equal budget therefore cannot beat ED4B's 7/17, which is worth about +0.005 U. The direction that goes around the reading bottleneck, instead of feeding it more context, is to put the source sentence into the answer itself (H-B1) or to answer deterministically (H-B3). Two hypotheses act at decode or check time: H-B4 (number/entity check) and H-B5 (CAD), which is literature-backed and measured only for the page. H-B2 closes the empty-lexical gap that KEEP-E leaves open. Literature priors, searched 2026-10-21: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062) and CoCoA (aggregator listing, unverified) warn that contrastive decoding can hurt when the context does not conflict with the model's prior. The web-loop T3 note (arXiv 2603.11513) reports that models up to 7B ignore oracle context 85-100 pct of the time. UNKNOWN: how often the 1.7B misreads a present fact versus overrides it with its prior (RD-5 was never run); whether v0.4 has single-attribute items (only tag-level reads are allowed); and the real-item value per fact reached (+0.015 to +0.05).",
+   "p": 0.15,
+   "value": 2,
+   "costscore": 2.5,
+   "verdicts": [
+    "drop"
+   ],
+   "reasons": [
+    "Step 1 is a resample-and-select loop, the SAMPLE2-GATE (+0.003) and DEEPBO2 family in disguise. A second 1.7B sample on the same context is unlikely to fix a reading failure, and many shown-wrong answers are hedged or memory-warned with no extractable numbers, so recall >= 0.40 is unlikely. If step 0 is kept at all, keep it only as a free diagnostic for RD-5, not as an arm."
+   ],
+   "score": 0.12
+  },
+  {
+   "id": "H-B5 CAD-ORACLE",
+   "statement": "Context-aware decoding, applied adapter-side with alpha 0.5 fixed in advance, lifts the 1.7B by at least +0.03 U over the ORACLE-REAL oracle arm on the same 30 real v0.1 items with the gold chunk at [1] (Haiku), and cuts the warned-with-gold answers from 8/30 to at most 4/30. CAD scores each token as (1+alpha)\u00b7logp(y|context,q) - alpha\u00b7logp(y|q), restricted to the top-40 n_probs of the context pass and decoded greedily.",
+   "why_now": "Reading binds, and ORACLE-REAL shows the 1.7B ignoring a gold passage on 8/30 items, which looks like the closed-book prior winning (the RD-5 thesis, never run). CAD (Shi et al. 2023, arXiv 2305.14739) is a prompt-free, training-free decoding rule that targets exactly that conflict. It is not a sampler-parameter sweep, so it is not one of the parked sampling nulls. Counter-priors: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062, accessed 2026-10-21) and the CoCoA listing report that contrastive decoding degrades on low-conflict items, hence a fixed alpha and a CE guard.",
+   "method": "Mini, 2 slots: two llama-server slots of the unchanged b11010 binary, one with the full prompt and one with the no-context prompt (same template, Context block removed), both with cache_prompt. Token-by-token /completion with n_predict 1 and n_probs 40. The combination happens in a Node adapter script (no llama.cpp or llama.rn change). Items: arms/oracle-real/items.ids (30), the gold chunk at [1] via oracle.vs-litepacks.patch, K3, seed 42, temperature 0. Control = the existing ORACLE-REAL oracle traces and Haiku rows. Haiku 5.5-low judge.v1-low N 4 both orders on changed answers (cap 60), with DECLINE2STAGE stage 1. Measured for the page only. A positive result becomes a maintainer-note line ('needs a sampler hook') and a post-10-25 item. Never a default.",
+   "lane": "mini-gen+haiku",
+   "ids": "arms/oracle-real/items.ids (30 real v0.1 dev ids)",
+   "cost": "About 5 h of scripting; about 30 x 150 tokens x 2 single-token calls, about 9k local calls, about 45-60 min of both mini slots; at most 60 Haiku; 0 Opus, 0 paid",
+   "ceiling": "+0.05 U on the oracle-30 (half the CHUNKCLEAN upper bound), about +0.01 to +0.02 U_8GB once diluted by reach; doubles prefill and decode on device (more than +3 s on the Pixel), so it is page-only",
+   "mde_ok": true,
+   "feeds": "research-page",
+   "kill_criterion": "Kill if dU vs the oracle arm is below +0.03, or the CI low is at or below -0.02, or CE-unwarned exceeds the oracle arm's 1/30 by 2 or more, or the count of warned-with-gold answers does not fall below 6/30. Abort the run if the top-40 truncation leaves the chosen token outside the no-context top-40 on more than 20 pct of steps (approximation invalid).",
+   "ships_before_freeze": false,
+   "lens": "Lens B: raising U_8GB through context and reading on the 1.7B, given that keep variants cap at about +0.01 and reading binds at 33 pct. Evidence I read: GOAL-2026-10-21, ROUTING-R1, KEEP-K1 (ED4B 7/17 S3 items at +50 pct tokens, 3/17 within +15 pct), X2B-OFF-MAIN, RAG-FUNNEL (K3 S3 17 / S4 15 / S5 8), FACTPRESENT (real cell (a) -0.010), ORACLE-REAL (+0.015; 8/30 answers still open with the memory warning while the gold chunk sits at [1]), CHUNKCLEAN (+0.031, inconclusive), the MORNING-REPORT, the round-3 and revisit-closed JSONs, and CLOSED rows 27/41/44/72/91/95/96/97. Also QUEUE 12:36: FEWSHOT-READ -0.001, SAMPLE2-GATE +0.003, HYBRID-READER and WARN-TUNE both KILL. Candidate (1), the per-source-type budget, is dropped and not in the list below. KEEP-K1 shows the 600-work budget binds and the facts sit at dense ranks 4-10. LITEREACH2-180 shows that the facts the 1.7B newly receives convert at about one third of the X2b rate. A token re-split at equal budget therefore cannot beat ED4B's 7/17, which is worth about +0.005 U. The direction that goes around the reading bottleneck, instead of feeding it more context, is to put the source sentence into the answer itself (H-B1) or to answer deterministically (H-B3). Two hypotheses act at decode or check time: H-B4 (number/entity check) and H-B5 (CAD), which is literature-backed and measured only for the page. H-B2 closes the empty-lexical gap that KEEP-E leaves open. Literature priors, searched 2026-10-21: FaithfulRAG (https://aclanthology.org/2025.acl-long.1062) and CoCoA (aggregator listing, unverified) warn that contrastive decoding can hurt when the context does not conflict with the model's prior. The web-loop T3 note (arXiv 2603.11513) reports that models up to 7B ignore oracle context 85-100 pct of the time. UNKNOWN: how often the 1.7B misreads a present fact versus overrides it with its prior (RD-5 was never run); whether v0.4 has single-attribute items (only tag-level reads are allowed); and the real-item value per fact reached (+0.015 to +0.05).",
+   "p": 0.225,
+   "value": 2,
+   "costscore": 4,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It is a legitimate new decoding class that targets the prior-override thesis (RD-5), and the truncation-validity abort is good. But it is page-only, costs about 9k token-level calls on both mini slots plus 5 h of scripting, and on n 30 an MDE of +0.03 is optimistic. Counter-priors (FaithfulRAG) predict harm on low-conflict items. Run RD-5 first to see whether the 8/30 are prior conflicts at all.",
+    "Page-only, 5 h of scripting plus about 1 h of both mini slots, a top-40 approximation risk, and counter-priors on low-conflict items; the mini slots buy more elsewhere before the freeze."
+   ],
+   "score": 0.1125
+  }
+ ]
+}

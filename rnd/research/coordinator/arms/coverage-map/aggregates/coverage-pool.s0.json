@@ -1,0 +1,937 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-001": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "Explain Mozi's views on universal love.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2392309",
+       "title": "Heaven",
+       "share": 1.0,
+       "anchor": 0.668,
+       "bm25_rank": 0,
+       "text": "With such a high monotheism, it is not surprising that Mohism championed a concept called \"universal love\" (jian'ai, \u517c\u611b), which taught that heaven loves all people equally and that each person should similarly love all human beings without distinguishing between his own relatives and those of others. In Mozi's Will of Heaven (\u5929\u5fd7), he writes:"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:155794",
+       "title": "Mohism",
+       "share": 1.0,
+       "anchor": 0.668,
+       "bm25_rank": 1,
+       "text": "Mohism is best known for the concept popularly translated as \"universal love\" (Chinese: \u517c\u611b; pinyin: ji\u0101n \u00e0i; lit. 'inclusive love/care'). According to Edward Craig, a more accurate translation for \u517c\u611b is \"impartial care\" because Mozi was more concerned with ethics than morality, as the latter tends to be based on fear more than hope."
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:155796",
+       "title": "Mohism",
+       "share": 1.0,
+       "anchor": 0.668,
+       "bm25_rank": 2,
+       "text": "The moral guide must then promote and encourage social behaviours that maximize the general utility of all the people in that society.\nThe concept of Ai (\u611b) was developed by the Chinese philosopher Mozi in the 4th century BC in reaction to Confucianism's benevolent love. Mozi tried to replace what he considered to be the long-entrenched Chinese over-attachment to family and clan structures with th"
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-001": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Give me a quick overview of Singapore: where it is, how it became independent, and what languages people speak there.",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:55432",
+       "title": "Cantonese phrasebook",
+       "share": 1.0,
+       "anchor": 0.509,
+       "bm25_rank": 2,
+       "text": "In Cantonese there are some characters which most Chinese speakers will not understand or even be able to guess. For example, means 'he, of, thing, give, to be, at (a place)'. And some words like for 'strawberry' are also unfamiliar. However, these words are not used in formal writing and rarely used outside Hong Kong and Macao.\n\nThere are different local languages in Guangdong that are sometimes "
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1969069",
+       "title": "Cantonese phrasebook",
+       "share": 1.0,
+       "anchor": 0.509,
+       "bm25_rank": 7,
+       "text": "In Cantonese there are some characters which most Chinese speakers will not understand or even be able to guess. For example, means 'he, of, thing, give, to be, at (a place)'. And some words like for 'strawberry' are also unfamiliar. However, these words are not used in formal writing and rarely used outside Hong Kong and Macao.\n\nThere are different local languages in Guangdong that are sometimes "
+      }
+     ]
+    }
+   }
+  },
+  "lan-ref-001": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "Who received the Nobel Prize in Literature in 2017?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:234015",
+       "title": "List of Nobel laureates by country",
+       "share": 1.0,
+       "anchor": 0.617,
+       "bm25_rank": 39,
+       "text": "- Tasuku Honjo, Physiology or Medicine, 2018\n- Kazuo Ishiguro*, Literature, 2017\n- Yoshinori Ohsumi, Physiology or Medicine, 2016\n- Takaaki Kajita, Physics, 2015\n- Satoshi \u014cmura, Physiology or Medicine, 2015\n- Shuji Nakamura*, Physics, 2014\n- Hiroshi Amano, Physics, 2014\n- Isamu Akasaki, Physics, 2014\n- Shinya Yamanaka, Physiology or Medicine, 2012\n- Akira Suzuki, Chemistry, 2010\n- Ei-ichi Negishi"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:234047",
+       "title": "List of Nobel laureates by country",
+       "share": 1.0,
+       "anchor": 0.617,
+       "bm25_rank": 52,
+       "text": "- Roger Penrose, Physics, 2020\n- Michael Houghton, Physiology or Medicine, 2020\n- Peter J. Ratcliffe, Physiology or Medicine, 2019\n- M. Stanley Whittingham, Chemistry, 2019\n- Greg Winter, Chemistry, 2018\n- Kazuo Ishiguro, born in Japan, Literature, 2017\n- Richard Henderson, Chemistry, 2017\n- Oliver Hart, Economics, 2016\n- Fraser Stoddart, Chemistry, 2016\n- David J. Thouless, Physics, 2016\n- F. Dun"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:246536",
+       "title": "Kazuo Ishiguro",
+       "share": 1.0,
+       "anchor": 0.823,
+       "bm25_rank": 0,
+       "text": "Key facts: honorific prefix: Sir; name: Kazuo Ishiguro; native name: \u77f3\u9ed2 \u4e00\u96c4, \u30ab\u30ba\u30aa\u30fb\u30a4\u30b7\u30b0\u30ed; native name lang: ja; honorific suffix: OBE FRSA FRSL; birth date: 1954 11 8; birth place: Nagasaki, Japan; residence: London, England; occupation: Novelist short story writer screenwriter columnist songwriter; nationality: English; citizenship: Japan (until 1983), United Kingdom (since 1983); education: Universi"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 12,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3579259",
+       "title": "List of Nobel laureates in Literature",
+       "share": 1.0,
+       "anchor": 0.617,
+       "bm25_rank": 6,
+       "text": "1941)                       | United States                                                   | English             | \"for having created new poetic expressions within the great American song tradition\"                                                                                                                                                                                                      "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3970071",
+       "title": "List of Nobel laureates by country",
+       "share": 1.0,
+       "anchor": 0.617,
+       "bm25_rank": 22,
+       "text": "### United Kingdom\n1. James A. Robinson, Economics, 2024\n2. Simon Johnson, Economics, 2024\n3. Geoffrey Hinton, Physics, 2024\n4. Demis Hassabis, Chemistry, 2024\n5. Abdulrazak Gurnah, born in Tanzania, Literature, 2021\n6. David MacMillan, Chemistry, 2021\n7. Roger Penrose, Physics, 2020\n8. Michael Houghton, Physiology or Medicine, 2020\n9. Peter J. Ratcliffe, Physiology or Medicine, 2019\n10. M. Stanle"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3970056",
+       "title": "List of Nobel laureates by country",
+       "share": 1.0,
+       "anchor": 0.617,
+       "bm25_rank": 43,
+       "text": "### Japan\n1. Nihon Hidankyo*, Peace, 2024\n2. Syukuro Manabe*, Physics, 2021\n3. Akira Yoshino, Chemistry, 2019\n4. Tasuku Honjo, Physiology or Medicine, 2018\n5. Kazuo Ishiguro*, Literature, 2017\n6. Yoshinori Ohsumi, Physiology or Medicine, 2016\n7. Takaaki Kajita, Physics, 2015\n8. Satoshi \u014cmura, Physiology or Medicine, 2015\n9. Shuji Nakamura*, Physics, 2014\n10. Hiroshi Amano, Physics, 2014\n11. Isamu "
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:33723",
+       "title": "Kazuo Ishiguro",
+       "share": 1.0,
+       "anchor": 0.823,
+       "bm25_rank": 52,
+       "text": "Sir Kazuo Ishiguro (Japanese: \u77f3\u9ed2 \u4e00\u96c4, Hepburn: Ishiguro Kazuo; ; born 8 November 1954) is a Japanese-British novelist, screenwriter, musician, and short-story writer. He is one of the most critically acclaimed contemporary fiction authors writing in English, having been awarded several major literary prizes, including the 2017 Nobel Prize in Literature. In its citation, the Swedish Academy describe"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1257616",
+       "title": "British literature",
+       "share": 1.0,
+       "anchor": 0.823,
+       "bm25_rank": 12,
+       "text": "British recipients of the Nobel Prize in Literature include Rudyard Kipling (1907), John Galsworthy (1932), T.S. Eliot (1948), Bertrand Russell (1950), Winston Churchill (1953), William Golding (1983), V.S. Naipaul (2001), Harold Pinter (2005) Doris Lessing (2007), and Kazuo Ishiguro (2017).\nLiterary prizes for which writers from the United Kingdom are eligible include:\n- Booker Prize\n- Commonweal"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1257611",
+       "title": "British literature",
+       "share": 1.0,
+       "anchor": 0.823,
+       "bm25_rank": 52,
+       "text": "In the 21st century, an outstanding concern with historical fiction has been noted. Dame Hilary Mantel (1952\u20132022) was a highly successful writer of historical novels, winning the Booker Prize twice for Wolf Hall 2009 and Bring Up the Bodies. One of the more ambitious novelists to emerge in this period is David Mitchell, whose far-reaching novel Cloud Atlas (2004) spans from the 19th century into "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1257596",
+       "title": "British literature",
+       "share": 1.0,
+       "anchor": 0.823,
+       "bm25_rank": 157,
+       "text": "Also from the West Indies is George Lamming (1927\u20132022) who wrote In the Castle of My Skin (1953), and from Pakistan came Hanif Kureshi (1954\u2013), a playwright, screenwriter, filmmaker, novelist and short story writer. 2017 Nobel Prize winner Kazuo Ishiguro (1954\u2013 ) was born in Japan, but his parents immigrated to Britain when he was age 6, and he became a British citizen as an adult. Martin Amis (1"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-001": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:41493",
+       "title": "Post-quantum cryptography on Ethereum",
+       "share": 0.5,
+       "anchor": 0.807,
+       "bm25_rank": 0,
+       "text": "Ethereum relies on several forms of cryptography to keep the network secure and protect user funds. The most important are:\n\n- **Elliptic curve digital signature algorithm (ECDSA)**: The cryptography used to sign transactions. Your Ethereum account's security depends on this.\n- **BLS signatures**: Used by validators to reach consensus on the state of the network.\n- **KZG polynomial commitments**: "
+      },
+      {
+       "chunk": "pack:boar-crypto:15674",
+       "title": "ERC-7524: PLUME Signature in Wallets",
+       "share": 0.5,
+       "anchor": 0.654,
+       "bm25_rank": 9,
+       "text": "ote that in the far future, once quantum computers can break ECDSA keypair security, most Ethereum keypairs will be broken, but migration to a quantum-resistant keypair in advance will keep active funds safe. Specifically, people can merely sign messages committing to new quantum-resistant keypairs (or just higher-bit keypairs on similar algorithms), and the canonical chain can fork to make such k"
+      },
+      {
+       "chunk": "pack:boar-crypto:26527",
+       "title": "EIP-8202: Scheme-Agile Transactions",
+       "share": 0.5,
+       "anchor": 0.566,
+       "bm25_rank": 10,
+       "text": "Quantum computers will eventually break ECDSA over secp256k1. Ethereum needs a user-facing transaction format that lets EOAs migrate to quantum-safe signing without wrapping execution in a new abstraction.\n\nThe ephemeral secp256k1 scheme achieves quantum safety by making each key pair single-use, eliminating long-term public key exposure. This requires no new cryptographic primitives beyond Keccak"
+      }
+     ]
+    },
+    "qa-ethereum-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-ethereum-se:16682",
+       "title": "Cold Storage after a Hard Fork?",
+       "share": 0.5,
+       "anchor": 0.566,
+       "bm25_rank": 5,
+       "text": "Perhaps the fork is so radically different that transactions are incompatible between chains. For example, maybe ECDSA is about to become obsolete due to quantum computers, so Ethereum adopts a new transaction signing process. A cold storage device that does signing will become obsolete, too, without a firmware update. There is no worry about cross-chain transaction replays, but there will be shor"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-007": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is d/acc?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:214093",
+       "title": "Peter Boulware",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 0,
+       "text": "As a sophomore, Boulware totaled 46 tackles, an ACC-leading ten sacks, and 18 tackles for losses, which ranked second in the ACC, and was named honorable mention All-ACC. As a junior, Boulware totaled 68 tackles, a school record 19 sacks, 20 tackles for losses, seven forced fumbles, and three fumble recoveries. He was a consensus first-team All-American, All-ACC, ACC Defensive Player of the Year, "
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:9516",
+       "title": "Bolivia",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 1,
+       "text": "Political parties: Autonomy for Bolivia \u2013 S\u00famate or APB S\u00famate Christian Democratic Party or PDC Community Citizen Alliance or ACC Freedom and Democracy or LIBRE Front for Victory or FPV Movement Toward Socialism or MAS National Unity or UN Popular Alliance or AP Revolutionary Left Front or FRI Revolutionary Nationalist Movement or MNR Social Democrat Movement or MDS Third System Movement or MTS W"
+      },
+      {
+       "chunk": "pack:boar-factbook:1571",
+       "title": "Nigeria",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 2,
+       "text": "Judicial branch (highest court(s)): Supreme Court (consists of the chief justice and 15 justices)\nJudicial branch (judge selection and term of office): judges appointed by the president upon the recommendation of the National Judicial Council, a 23-member independent body of federal and state judicial officials; judge appointments confirmed by the Senate; judges serve until age 70\nJudicial branch "
+      }
+     ]
+    },
+    "boar-vitalik-blog-en": {
+     "n_qualifying": 28,
+     "top": [
+      {
+       "chunk": "pack:boar-vitalik-blog-en:742",
+       "title": "d/acc: one year later",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 4,
+       "text": "* **d/acc is an extension of the underlying values of crypto** (decentralization, censorship resistance, open global economy and society) to other areas of technology.\n* Because crypto users are natural early adopters, and there is an alignment of values, **crypto communities are natural early users of d/acc** technology. The heavy emphasis on community (both online and offline, eg. events and pop"
+      },
+      {
+       "chunk": "pack:boar-vitalik-blog-en:723",
+       "title": "d/acc: one year later",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 9,
+       "text": "But these two points felt disconnected from the d/acc argument: \u201chere are some ideas for creating a more democratic and defense-favoring world at the base layer, and by the way here are some unrelated ideas for how we might do superintelligence\u201d.\n\nHowever, I think in reality there _are_ some very important connections between what labelled above as \u201cdefensive\u201d and \u201cprogressive\u201d d/acc technology. L"
+      },
+      {
+       "chunk": "pack:boar-vitalik-blog-en:743",
+       "title": "d/acc: one year later",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 10,
+       "text": "Today, many of the largest prediction markets are built on blockchains, and they are gradually becoming more sophisticated, decentralized and democratic.\n* There are also win-win **opportunities to collaborate on crypto-adjacent technologies** that are very useful to crypto projects, but are also key to achieving d/acc goals: formal verification, computer software and hardware security, and advers"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 13,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2905363",
+       "title": "Chris Paul",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 9,
+       "text": "## Awards and honors\nNBA\n- 12\u00d7 NBA All-Star: 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020, 2021, 2022\n- 11\u00d7 All-NBA Team:\n  - First Team: 2008, 2012, 2013, 2014\n  - Second Team: 2009, 2015, 2016, 2020, 2021\n  - Third Team: 2011, 2022\n- 9\u00d7 NBA All-Defensive Team:\n  - First Team: 2009, 2012, 2013, 2014, 2015, 2016, 2017\n  - Second Team: 2008, 2011\n- NBA All-Star Game Most Valuable Play"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:466527",
+       "title": "Clemson Tigers football",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 15,
+       "text": "Spiller (2009) Tajh Boyd (2012) Deshaun Watson (2015) Travis Etienne (2018, 2019) Trevor Lawrence (2020) - ACC Defensive Player of the Year Keith Adams (1999) Leroy Hill (2004) Gaines Adams (2006) Da'Quan Bowers (2010) Vic Beasley (2014) Ben Boulware (2016) Clelin Ferrell (2018) Isaiah Simmons (2019) | - ACC Rookie of the Year Chuck McSwain (1979) Terry Allen (1987) Ronald Williams (1990) Anthony "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2717224",
+       "title": "Gwangju",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 17,
+       "text": "- Asia Culture Center \u2013 The Asia Culture Center (also known as the ACC) is a facility in downtown Gwangju designed to celebrate and explore Gwangju's artistic and democratic culture and history, as well as provide space to host exhibits, experiences, and events from international artists. It is built primarily below street level, though its design incorporates large amounts of natural lighting. Th"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 23,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1727030",
+       "title": "2024 Atlantic Coast Conference football season",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 1,
+       "text": "### ACC individual awards\n| ACC Player of the Year Cam Ward, QB, Miami ACC Rookie of the Year Isaac Brown, RB, Louisville ACC Coach of the Year Rhett Lashlee, SMU | ACC Offensive Player of the Year Cam Ward, QB, Miami ACC Offensive Rookie of the Year Isaac Brown, RB, Louisville Jacobs Blocking Trophy Willie Lampkin \u2013 North Carolina | ACC Defensive Player of the Year Donovan Ezeiruaku, DE, Boston C"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:739480",
+       "title": "Miami Hurricanes",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 8,
+       "text": "In the 2012\u20132013 season, the University of Miami defeated first-ranked Duke 90\u201363, won their first 13 ACC games, and attained the highest Associated Press ranking (second in the nation) in school history. However, the Hurricanes lost to Wake Forest 80\u201365, which ruined their perfect record in ACC play that season. Miami went on to clinch the 2012\u201313 ACC regular season title with a home triumph over"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:315455",
+       "title": "Josh Howard",
+       "share": 0.5,
+       "anchor": 1.0,
+       "bm25_rank": 10,
+       "text": "## Awards and achievements\n- ACC Player of the Year: 2003[7]\n- All ACC First Team: 2003[7]\n- ACC All-Defensive Team: 2003[7]\n- AP First Team All-America: 2003[7]\n- NBA All-Rookie Second Team: 2004[34]\n- NBA All-Star: 2007[35]"
+      }
+     ]
+    }
+   }
+  },
+  "vit-sci-002": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Which is more densely populated, Japan or Germany, and by how much?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:719895",
+       "title": "Demographics of South Korea",
+       "share": 1.0,
+       "anchor": 0.824,
+       "bm25_rank": 0,
+       "text": "South Korea is one of the world's most densely populated countries, with an estimated 425 people per square kilometer in 1989\u2014over sixteen times the average population density of the United States in the late 1980s. By comparison, China had an estimated 114 people, the Federal Republic of Germany (West Germany) 246 people, and Japan 323 people per square kilometer in the late 1980s. Because about "
+      }
+     ]
+    }
+   }
+  },
+  "lan-ref-003": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "Did astronauts walk on the Moon before 1970?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 13,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:79323",
+       "title": "Craters of the Moon National Monument",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 9,
+       "text": "Craters of the Moon National Monument and Preserve is a United States national monument in the Snake River Plain of Central Idaho. The park was created to protect a vast landscape of lava flows with scattered islands of cinder cones and sagebrush. Starting 15,000 years ago, the landscape was created by molten lava flows. While the park's landscape varies tremendously from the celestial body after "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:220498",
+       "title": "Moon",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 16,
+       "text": "- Mare Tranquillitatis: Sea of Tranquility. near Sabine and Ritter craters. The location of Apollo 11, the first manned Moon landing. On July 21, 1969, NASA astronauts Neil A. Armstrong and Edwin \"Buzz\" E. Aldrin set foot on the Moon to become the first humans to ever touch another celestial body. Look for the American flag that was knocked over by the exhaust of the departing ascent stage of Eagl"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:220478",
+       "title": "Moon",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 20,
+       "text": "President John F. Kennedy of the United States made an ambitious plan in 1961 to send people to the Moon by the end of the decade \u2013 in part to distract from the Soviets beating the U.S. to the punch on virtually every space \"first\" up to that point. Apollo 8 was the first manned mission to orbit the Moon, bringing famous images to millions of households in time for Christmas 1968. Then on 21 July "
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 55,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:112679",
+       "title": "Michael Collins (astronaut)",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 3,
+       "text": "Collins joined the third group of fourteen astronauts in 1963. He had 2 space flights. His first spaceflight was in Gemini 10. With John Young they joined up in space with two different spacecraft. Collins also did two space walks.\n\nHis second space flight was in Apollo 11 where he was the command module pilot. While he kept going around the Moon, Neil Armstrong and Buzz Aldrin landed on the lunar"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:10464",
+       "title": "Astronaut",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 5,
+       "text": "An astronaut or cosmonaut is a person who goes into outer space. The Soviet Union and countries that it controlled used the word cosmonaut. Western countries including the United States said astronaut. Astronauts are also called \"taikonauts\" in China or \"spationaute\" in France.\n\nThe first person to go into space was a Russian from the Soviet Union. His name was Yuri Gagarin. This happened on April"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:369811",
+       "title": "List of people who have walked on the Moon",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 0,
+       "text": "Twelve people have walked on Earth's Moon. The first was Neil Armstrong, and the last was Gene Cernan. All crewed moon landings took place between July 1969 and December 1972 as part of the United States Apollo program.\n\nOf the twelve people who have walked on the Moon, four are still alive, including Apollo 11 astronaut Buzz Aldrin."
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:6887",
+       "title": "Germany",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 5,
+       "text": "Key space-program milestones: 1969 - first German scientific satellite (Azur) launched by US 1973 - participated with other European states, particularly France and the UK, in development of Ariane satellite launch vehicle 1978 - first German in space on Soviet Salyut space station 1980s-1990s - participated in US Space Shuttle program, including providing astronauts 1999 - launched a space-based "
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:56940",
+       "title": "Entry requirements for arrival from space",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 0,
+       "text": "The Apollo 11 astronauts had to clear customs when they arrived back from the moon. and declare their 'cargo' of moon rock and dust samples.\n\nAccording to NASA spokespeople it's genuine, but it was a bit of a joke at the time."
+      },
+      {
+       "chunk": "pack:qa-travel-se:5525",
+       "title": "Driving in Iceland: a good idea?",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 2,
+       "text": "2) If you want to take the Route 1 (Ring Road), 3 or 4 days would be good enough to drive around and look at some attractions like (Sn\u00e6fellsnes - mentioned in 'Journey to the center of Earth' novel/movie, Westfjords, Akureyri - Northern Iceland, Lake Myvatn, Vatnaj\u00f6kull, Skogarfoss, etc). You can also do it in shorter time. If it was me, I would take more time and explore all the places, stay over"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 133,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3922249",
+       "title": "Michael Collins (astronaut)",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 4,
+       "text": "Collins is one of the astronauts featured in the 2007 documentary In the Shadow of the Moon. He had a small part as \"Old Man\" in the 2009 movie Youth in Revolt. In the 1996 TV movie Apollo 11, he was played by Jim Metzler, and in the 1998 HBO miniseries From the Earth to the Moon, he was played by Cary Elwes. In the 2009 TV movie Moon Shot, he was played by Andrew Lincoln. In the 2018 film First M"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1761224",
+       "title": "John Young (astronaut)",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 32,
+       "text": "John Watts Young (September 24, 1930\u00a0\u2013 January 5, 2018) was an American astronaut, naval officer and aviator, test pilot, and aeronautical engineer. He became the 9th person to walk on the Moon as commander of the Apollo 16 mission in 1972. \nBefore becoming an astronaut, Young received his Bachelor of Science degree in Aeronautical Engineering from the Georgia Institute of Technology and joined th"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1562132",
+       "title": "Hollywood Walk of Fame",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 34,
+       "text": "The \"Friends of the Walk of Fame\" monuments are charcoal terrazzo squares rimmed by miniature pink terrazzo stars displaying the then five standard category emblems, along with the sponsor's corporate logo, with the sponsor's name and contribution in inlaid brass block lettering. Special stars and Friends monuments are granted by the Hollywood Chamber of Commerce or the Hollywood Historic Trust, b"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 13,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:35354",
+       "title": "Michael Collins (astronaut)",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 8,
+       "text": "Michael Collins (October 31, 1930 \u2013 April 28, 2021) was an American astronaut who flew the Apollo 11 command module Columbia around the Moon in 1969 while his crewmates, Neil Armstrong and Buzz Aldrin, made the first crewed landing on the surface. He was also a test pilot and major general in the U. S. Air Force Reserve. Born in Rome, where his father was serving as the U. S. military attach\u00e9, Col"
+      },
+      {
+       "chunk": "pack:wiki-vital5:96648",
+       "title": "Exploration of the Moon",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 9,
+       "text": "Human exploration of the Moon since Luna 2 has consisted of both crewed and uncrewed missions. NASA's Apollo program has been the only program to successfully land humans on the Moon, which it did six times on the near side in the late 20th century. The first human landing took place in 1969, when the Apollo 11 astronauts Buzz Aldrin and Neil Armstrong touched down on the surface in the region of "
+      },
+      {
+       "chunk": "pack:wiki-vital5:35356",
+       "title": "Michael Collins (astronaut)",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 17,
+       "text": "His first spaceflight was on Gemini 10 in 1966, in which he and Command Pilot John Young performed orbital rendezvous with two spacecraft and undertook two extravehicular activities (EVAs, also known as spacewalks). On the 1969 Apollo 11 mission, he became one of 24 Apollo astronauts to reach the Moon, which he orbited thirty times. He was the fourth person (and third American) to perform a spacew"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 43,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1171222",
+       "title": "NASA Astronaut Group 3",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 6,
+       "text": "He was commissioned an ensign through the Naval Reserve Officers Training Corps (NROTC) program, and attended the U.S. Naval Test Pilot School at NAS Patuxent River, Maryland. He served as backup command pilot for Gemini 10 and backup lunar module pilot for Apollo 9. As lunar module pilot of Apollo 12 in 1969, he became the fourth man to walk on the Moon. He was commander of Skylab 3 in 1973, and "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1171224",
+       "title": "NASA Astronaut Group 3",
+       "share": 1.0,
+       "anchor": 0.806,
+       "bm25_rank": 9,
+       "text": "He was the backup pilot for Gemini 12 and the backup lunar module pilot for Apollo 7. In May 1969 he was the lunar module pilot on Apollo 10, the \"dress rehearsal\" for the Moon landing, the first lunar flight of the lunar module, and highest velocity achieved by a crewed vehicle. He was backup commander of Apollo 14, and then returned to the Moon as commander of Apollo 17, the final crewed lunar l"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1848878",
+       "title": "Magnificent Desolation: Walking on the Moon 3D",
+       "share": 1.0,
+       "anchor": 0.562,
+       "bm25_rank": 4,
+       "text": "- Tom Hanks as The Narrator (voice) [portrayed Jim Lovell in Apollo 13 and hosted From the Earth to the Moon eps. 1-11]\n- John Corbett as Harrison Schmitt (voice)\n- Andrew Husmann as David Scott\n- Bryan Cranston as Buzz Aldrin (voice) [reprised From the Earth to the Moon role, portrayed Gus Grissom in That Thing You Do]\n- Aaron White as James Irwin\n- Matt Damon as Alan Shepard (voice)\n- John Travo"
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-004": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "What is Kyoto known for, and why was it historically important?",
+   "K1": "S5",
+   "K3": "S5",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 17,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:179013",
+       "title": "Kyoto (prefecture)",
+       "share": 1.0,
+       "anchor": 0.6,
+       "bm25_rank": 12,
+       "text": "Kyoto is unquestionably the single best place in the country for those interested in traditional Japanese culture; no other city can compare in terms of number or importance. As the former capital of the nation, many head temples, important shrines, and imperial palaces and villas were built in Kyoto. While many of the nation's cultural sites were destroyed by bombings in World War II, Kyoto was f"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:179139",
+       "title": "Kyoto/Higashiyama",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 7,
+       "text": "- Geisha Walking Lecture: If you're interested in the world of the geisha, you shouldn't miss the walking lecture by well-renowned cultural expert Peter MacIntosh. The walk will have you tour the geisha district of Gion, where Peter will give you an insider's view into the past, present and future of this unique and exotic world. If you're lucky, you might see a geisha walking by to one of her app"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:179202",
+       "title": "Kyoto/South",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 10,
+       "text": "- T\u014dfuku-ji: \u6771\u798f\u5bfa. 15-778 Honmachi, Higashiyama-ku. Daily 09:00-16:00 (varies, see website). Admission to grounds free; garden \u00a5400. A large temple complex with many small and beautiful gardens nearby. Hordes of Japanese tourists visit during the fall months, when the leaves show a dazzling array of colors, but it's not as well known to foreigners. A pleasant side path through the woods connects it"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 15,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:222381",
+       "title": "Historic Monuments of Ancient Kyoto (Kyoto, Uji and Otsu Cities)",
+       "share": 1.0,
+       "anchor": 0.6,
+       "bm25_rank": 2,
+       "text": "Kyoto was Japan's capital city from 794 until the late-19th century. Some of the city's historic structures show what life was like in the capital in those centuries.\n\nThe World Heritage Site has 17 properties which were established between the 10th century and the 19th century. Each is representative of the period in which it was built.\n\nThe several properties include 38 buildings which have been"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:103985",
+       "title": "Edo",
+       "share": 1.0,
+       "anchor": 0.791,
+       "bm25_rank": 41,
+       "text": "The site of the city, on what is now known as Tokyo Bay, had been settled for several centuries, but first became historically significant with the building of Edo Castle in 1457 by order of \u014cta D\u014dkan. Kyoto was the site of the Japanese emperor's residence and the capital of Japan for many centuries, until the Tokugawa shogunate was established in 1603 and Edo became its seat of government. From t"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:50801",
+       "title": "History of Japan",
+       "share": 1.0,
+       "anchor": 0.74,
+       "bm25_rank": 21,
+       "text": "The years from 794 to 1185 are known as the Heian period. It is named after city of Heian-ky\u014d, which is the early name of present-day Kyoto. The Heian period produced many cultural achievements, such as the Tale of Genji by Murasaki Shikibu. The power of the Japanese imperial court (that is, the Emperor, his ministers and other important persons) rose. This period is also famous for its art, poetr"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:17954",
+       "title": "Zen meditation in Kyoto, Japan",
+       "share": 1.0,
+       "anchor": 0.6,
+       "bm25_rank": 47,
+       "text": "-\nThe second one I want to highlight is the Kennin-ji Temple, since it's the oldest zen temple in Japan and considered one of the five most important Zen temples of Kyoto. while Soto Zen is said to have originated from here since its founder studied here, this temple is today one of the headquarters of the Rinzai-zen school. They not only let you participate in early morning zazen, but also give y"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 20,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1673767",
+       "title": "Kyoto",
+       "share": 1.0,
+       "anchor": 0.791,
+       "bm25_rank": 2,
+       "text": "In Japanese, Kyoto was previously called Ky\u014d (\u4eac), Miyako (\u90fd), Ky\u014d no Miyako (\u4eac\u306e\u90fd), and Keishi (\u4eac\u5e2b). After becoming the capital of Japan at the start of the Heian period (794\u20131185), the city was often referred to as Heian-ky\u014d (\u5e73\u5b89\u4eac, \"Heian capital\"), and late in the Heian period the city came to be widely referred to simply as \"Ky\u014dto\" (\u4eac\u90fd, \"capital city\"). After the seat of the emperor was moved to "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1673811",
+       "title": "Kyoto",
+       "share": 1.0,
+       "anchor": 0.6,
+       "bm25_rank": 25,
+       "text": "Although ravaged by wars, fires, and earthquakes during its eleven centuries as the imperial capital, Kyoto suffered only minor damage in World War II. Kyoto remains Japan's cultural center. About 20% of Japan's National Treasures and 14% of Important Cultural Properties exist in the city proper. The government of Japan relocated the Agency for Cultural Affairs to Kyoto in 2023.\nWith its 2,000 rel"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3121145",
+       "title": "Oiran",
+       "share": 1.0,
+       "anchor": 0.791,
+       "bm25_rank": 104,
+       "text": "The profession of oiran arose in the early Edo period (1600\u20131868), following the introduction of laws restricting brothels to bounded pleasure quarters known as y\u016bkaku (\u904a\u5ed3/\u904a\u90ed, lit.\u2009'playground') in roughly 1600, sometimes restricting brothels to literal walled-in districts.:\u200a59\u200a These quarters were often placed at some distance from the centre of the attached town or city, and the legal status and"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:16617",
+       "title": "Tokyo",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 107,
+       "text": "Special wards in Tokyo include Chiyoda, the site of the National Diet Building and the Tokyo Imperial Palace; Shinjuku, the city's administrative center; and Shibuya, a hub of commerce and business. Tokyo, originally known as Edo, rose to political prominence in 1603 when it became the seat of the Tokugawa shogunate, and by the mid-18th century, Edo had evolved from a small fishing village into on"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 24,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2092757",
+       "title": "Kyoto (prefecture)",
+       "share": 1.0,
+       "anchor": 0.6,
+       "bm25_rank": 16,
+       "text": "]]\nKyoto is unquestionably the single best place in the country for those interested in traditional Japanese culture; no other city can compare in terms of number or importance. As the former capital of the nation, many head temples, important shrines, and imperial palaces and villas were built in Kyoto. While many of the nation's cultural sites were destroyed by bombings in World War II, Kyoto wa"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2092883",
+       "title": "Kyoto/Higashiyama",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 14,
+       "text": "- Geisha Walking Lecture: If you're interested in the world of the geisha, you shouldn't miss the walking lecture by well-renowned cultural expert Peter MacIntosh. The walk will have you tour the geisha district of Gion, where Peter will give you an insider's view into the past, present and future of this unique and exotic world. If you're lucky, you might see a geisha walking by to one of her app"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2092946",
+       "title": "Kyoto/South",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 19,
+       "text": "- T\u014dfuku-ji: \u6771\u798f\u5bfa. 15-778 Honmachi, Higashiyama-ku. Daily 09:00-16:00 (varies, see website). Admission to grounds free; garden \u00a5400. A large temple complex with many small and beautiful gardens nearby. Hordes of Japanese tourists visit during the fall months, when the leaves show a dazzling array of colors, but it's not as well known to foreigners. A pleasant side path through the woods connects it"
+      }
+     ]
+    }
+   }
+  },
+  "lan-rsn-006": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "How long did the Hundred Years' War actually last, and which two kingdoms fought it?",
+   "K1": "S5",
+   "K3": "S5",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:237784",
+       "title": "Normandy",
+       "share": 0.8,
+       "anchor": 0.517,
+       "bm25_rank": 70,
+       "text": "Normandy's most famous duke - William the Conqueror (Guillaume le Conqu\u00e9rant) - sailed an invasion fleet to England in 1066 and there crowned himself King William&nbsp;I. Thus followed a long period of Anglo-Norman domination on both sides of the Channel, and Normandy was for several centuries a part of the Kingdom of England. During this time, many defensive castles and Romanesque and Gothic chur"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:96344",
+       "title": "Hundred Years' War",
+       "share": 1.0,
+       "anchor": 0.748,
+       "bm25_rank": 0,
+       "text": "The Hundred Years' War (French: Guerre de Cent Ans; 1337\u20131453) was a long conflict between the kingdoms of England and France. It started because of disagreements over the Duchy of Aquitaine and the claim to the French throne by Edward III of England. The war grew into a larger struggle involving many countries in Western Europe, with both sides becoming more focused on nationalism. Even though it"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:323456",
+       "title": "Kingdom of France",
+       "share": 0.6,
+       "anchor": 0.517,
+       "bm25_rank": 44,
+       "text": "Key facts: native name: fro Reaume de France, frm Royaulme de France, fr Royaume de France, la Regnum Franci\u00e6; conventional long name: Kingdom of France; common name: France; flag caption: Royal standards, Top: 1643 design (1643\u20131790), Bottom: Flag under the House of Bourbon (1589\u20131792; 1815\u20131848); symbol type: Coat of arms (1589\u20131792); national motto: fr \"Montjoie Saint Denis!\" \"Mountjoy Saint De"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1413770",
+       "title": "Hundred Years' War",
+       "share": 1.0,
+       "anchor": 0.646,
+       "bm25_rank": 1,
+       "text": "The Hundred Years' War (French: Guerre de Cent Ans; 1337\u20131453) was a conflict between the kingdoms of England and France and a civil war in France during the Late Middle Ages. It emerged from feudal disputes over the Duchy of Aquitaine and was triggered by a claim to the French throne made by Edward III of England. The war grew into a broader military, economic, and political struggle involving fa"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1550858",
+       "title": "Wars of the Roses",
+       "share": 0.8,
+       "anchor": 0.54,
+       "bm25_rank": 34,
+       "text": "The Wars of the Roses, known at the time and in following centuries as the Civil Wars, and also the Cousins' War, were a series of armed confrontations, machinations, battles and campaigns fought over control of the English throne from 1455 to 1487. The conflict was fought between supporters of the House of Lancaster and House of York, two rival cadet branches of the royal House of Plantagenet. Th"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2769779",
+       "title": "Middle Ages",
+       "share": 0.8,
+       "anchor": 0.516,
+       "bm25_rank": 175,
+       "text": "They ran into difficulties when attempting to confiscate the holdings of the English kings in southern France, leading to the Hundred Years' War, waged from 1337 to 1453. Early in the war the English under Edward III (r. 1327\u20131377) and his son Edward, the Black Prince (d. 1376), won the battles of Cr\u00e9cy and Poitiers, captured the city of Calais, and won control of much of France. The resulting str"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2151563",
+       "title": "Normandy",
+       "share": 0.8,
+       "anchor": 0.517,
+       "bm25_rank": 6,
+       "text": "Normandy's most famous duke - William the Conqueror (Guillaume le Conqu\u00e9rant) - sailed an invasion fleet to England in 1066 and there crowned himself King William&nbsp;I. Thus followed a long period of Anglo-Norman domination on both sides of the Channel, and Normandy was for several centuries a part of the Kingdom of England. During this time, many defensive castles and Romanesque and Gothic chur"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1100742",
+       "title": "Siege of Brest (1342)",
+       "share": 0.6,
+       "anchor": 0.567,
+       "bm25_rank": 93,
+       "text": "The siege of Brest took place in 1342 during the Breton Civil War. When John III, the Duke of Brittany, died childless in 1341 the title was contested by Charles of Blois and John of Montfort. Charles was the nephew of the French king, Philip VI (r.\u20091328\u20131350), who supported him with a large army. Charles invaded Brittany, making good progress and taking John prisoner. John's wife,  Joanna of Flan"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-003": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Why would a recipe tell me to cover a simmering pan with a round of baking paper rather than the normal pot lid?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-009": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Is it fine to eat Brussels sprouts uncooked, and how should they be prepared that way?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-015": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Whenever I roast a whole bird the thighs come out juicy but the white meat is dry. What am I doing wrong?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-001": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Does a lender looking at my credit report lower my score?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:79826",
+       "title": "Is it possible to find out how much of a mortgage I could be approved for without affecting credit report?",
+       "share": 0.5,
+       "anchor": 0.726,
+       "bm25_rank": 26,
+       "text": "Yes, it is possible, but it depends on the lender. Some lenders can do a \"soft pull\" which gets your credit info without affecting your score. They can then do their calculations based on that and when it's time to move forward with the loan they do a \"hard pull\" credit inquiry which is when it affects your credit score. Note that hard pulls have a minor impact and only affect your score for at mo"
+      },
+      {
+       "chunk": "pack:qa-money-se:33537",
+       "title": "Do credit checks affect credit scores?",
+       "share": 0.5,
+       "anchor": 0.591,
+       "bm25_rank": 5,
+       "text": "There are two types of credit checks. First is the hard pull which is typically done when you apply for a credit line. The lender will hard pull your file and make his/her decision based on that. This affects your score negatively. You might lose few points for one hard inquiry.\n\nSecond type is soft pull, which is done as a background check. Typically done by credit card companies to send you a pr"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-007": {
+   "set": "cm",
+   "tag": "money",
+   "question": "What stops American credit unions from accepting any customer who walks in?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-013": {
+   "set": "cm",
+   "tag": "money",
+   "question": "When a target-date fund holds only other mutual funds, is its stated expense ratio charged on top of the underlying funds' ratios?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:16979",
+       "title": "Does the expense ratio of a fund-of-funds include the expense ratios of its holdings?",
+       "share": 0.5,
+       "anchor": 0.558,
+       "bm25_rank": 4,
+       "text": "I just looked at a fund for my client, the fund is T Rowe Price Retirement 2015 (TRRGX). As stated in the prospectus, it has an annual expense ratio of 0.63%. In the fine print below the funds expenses, it says \"While the fund itself charges no management fee, it will indirectly bear its pro-rata share of the expenses of the underlying T. Rowe Price funds in which it invests (acquired funds). The "
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-019": {
+   "set": "cm",
+   "tag": "money",
+   "question": "My bank looks financially shaky, but my balance is within the FDIC limit. Should I move my money out?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

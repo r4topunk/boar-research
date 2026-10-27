@@ -1,0 +1,28 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -378,6 +378,14 @@
+ 
+ /** CMP30OFF: the fixed first line of an answer a released compact decline would have declined. */
+ export const COMPACT_DECLINE_RELEASED_WARNING = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++/** QUOTEFIRST (arm, 2026-10-20): the compact model with sources, English, not health: the answering source sentence
++ * copied verbatim with its [n] first, then at most two plain sentences. No quotation marks: after a closing quote
++ * CT-1's sentenceBefore stops at the quote and keeps any [n] unchecked. With no answering passage it answers as
++ * before, so the uncited / released-decline paths below (warning line) are unchanged. */
++export const QUOTE_FIRST_INSTRUCTION =
++  "If a numbered source answers the question, start your answer with the sentence from that source that answers it, " +
++  "copied word for word without quotation marks, followed by its number, like [1]. Then add at most two short plain " +
++  "sentences that answer the question directly. If no source answers the question, ignore this and answer as usual.";
+ /** CMP30OFF bench switch (BOAR Bench engineOverrides.compactDeclinesOff, per request): true = OFF5 ("all") for every
+  * answerer whose deps leave compactDeclinesOff unset. Default false = the engine as is. */
+ let benchCompactDeclinesOff = false;
+@@ -1331,6 +1339,10 @@
+         [
+           ctx.styleReminder,
+           health ? HEALTH_GROUNDING_INSTRUCTION : fromMemory ? NO_SOURCE_INSTRUCTION : undefined,
++          // QUOTEFIRST: next to the question, where the compact model follows it (Personality.styleReminder note).
++          !health && !fromMemory && !pt && sources.length && genLlm && isCompactModel(genLlm) && gen?.mode !== "multipass"
++            ? QUOTE_FIRST_INSTRUCTION
++            : undefined,
+           // "today"/"hoje": the model gets the device's date instead of guessing one (Prism TD-1).
+           mentionsNow(req.query) ? todayLine(deps.today?.() ?? new Date(), pt) : undefined,
+           // A PT question, in Portuguese, next to it: with English sources the 4B answered 8 of 29 PT questions in

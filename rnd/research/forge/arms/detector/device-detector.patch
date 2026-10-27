@@ -1,0 +1,330 @@
+diff --git a/src/routing/answerService.ts b/src/routing/answerService.ts
+index b48c3125..2b278e17 100644
+--- a/src/routing/answerService.ts
++++ b/src/routing/answerService.ts
+@@ -24,6 +24,7 @@ import { getActiveModelId, getAnswerSettings, getCustomSystemPrompt, getPersonal
+ import { getPersonality } from "../constants/personalities";
+ import { runDeepResearch } from "../services/orchestrator";
+ import { createAnswerer, InstalledLlm } from "./answer";
++import { deviceEmergencyScore } from "./emergencyDetector";
+ import { measuredSpeeds } from "./depth";
+ import { listRecentExecutions, recordExecution } from "../services/executionTelemetry";
+ import type { GeoProviders } from "./geo";
+@@ -94,6 +95,8 @@ export const { answer, deepen, effectiveModel: effectiveAnswerModel } = createAn
+     }
+   },
+   getGeoProviders: () => geoProviders,
++  // The learned emergency detector (health13 config), when its files are installed; else the lexical predicate.
++  emergencyScore: deviceEmergencyScore,
+   getModelSpeeds: async () => measuredSpeeds(await listRecentExecutions(500)),
+   recordExecution,
+   // iOS: the footprint (jetsam's figure; RSS counts clean mmap'd weights); the native module names it totalPssBytes.
+diff --git a/src/routing/emergencyDetector.test.ts b/src/routing/emergencyDetector.test.ts
+new file mode 100644
+index 00000000..d5e8519e
+--- /dev/null
++++ b/src/routing/emergencyDetector.test.ts
+@@ -0,0 +1,141 @@
++import { beforeEach, describe, expect, it, vi } from "vitest";
++
++// A 384-dim head that maps the pooled vector's first coordinate to the emergency logit, so tests control p.
++const DIM = 384;
++const zeros = () => new Array(DIM).fill(0);
++const head = (() => {
++  const dense = zeros().flatMap((_, i) => zeros().map((__, j) => (i === j ? 1 : 0)));
++  const cls_w = [...zeros(), ...zeros()];
++  cls_w[DIM] = 1; // logit[1] = z[0]
++  return { kind: "mmbert-cls", dim: DIM, eps: 1e-5, dense, norm: new Array(DIM).fill(1), cls_w, cls_b: [5, 0] }; // bias: p ~0 unless z[0] is large
++})();
++const vecFor = (lead: number) => {
++  const v = zeros().map((_, i) => ((i * 7919) % 13) / 13 - 0.4);
++  v[0] = lead;
++  return v;
++};
++
++const state = {
++  files: {} as Record<string, string>,
++  inits: [] as any[],
++  embeds: [] as { text: string; params: any }[],
++  released: 0,
++  // what the fake context returns for a text (by default: the canary's own reference vector)
++  vector: (text: string): number[] => vecFor(text.includes("choking") ? 30 : -30),
++};
++
++vi.mock("react-native", () => ({ Platform: { OS: "android" } }));
++vi.mock("expo-file-system/legacy", () => ({
++  documentDirectory: "file:///docs/",
++  getInfoAsync: async (uri: string) => ({ exists: uri.replace("file:///docs/", "") in state.files }),
++  readAsStringAsync: async (uri: string) => state.files[uri.replace("file:///docs/", "")],
++}));
++vi.mock("llama.rn", () => ({
++  getBackendDevicesInfo: async () => [{ backend: "CPU", type: "cpu", deviceName: "CPU" }],
++  initLlama: async (params: any) => {
++    state.inits.push(params);
++    return {
++      tokenize: async (t: string) => ({ tokens: t.split(" ") }),
++      embedding: async (text: string, params: any) => {
++        state.embeds.push({ text, params });
++        return { embedding: state.vector(text) };
++      },
++      release: async () => {
++        state.released++;
++      },
++    };
++  },
++}));
++
++import { mmbertProbability } from "./emergencyHead";
++import { canaryCheck, deviceEmergencyScore, EmergencyDetector, DETECTOR_CANARY_FILE, DETECTOR_HEAD_FILE, DETECTOR_MODEL_FILE } from "./emergencyDetector";
++
++const T = { cos_min: 0.99, l2_rel_max: 0.02, p_abs_max: 0.05 };
++const l2 = (v: number[]) => Math.sqrt(v.reduce((s, x) => s + x * x, 0));
++const canaryItem = (text: string, lead: number) => {
++  const vec = vecFor(lead);
++  return { text, vec, l2: l2(vec), p: mmbertProbability(head as any, vec) };
++};
++const canaryFile = () => ({
++  model_sha256: "a86f", head_sha256: "7664", thresholds: T,
++  items: [canaryItem("my child is choking", 30), canaryItem("capital of Japan", -30)],
++});
++
++beforeEach(() => {
++  state.files = {
++    [DETECTOR_MODEL_FILE]: "gguf",
++    [DETECTOR_HEAD_FILE]: JSON.stringify(head),
++    [DETECTOR_CANARY_FILE]: JSON.stringify(canaryFile()),
++  };
++  state.inits = [];
++  state.embeds = [];
++  state.released = 0;
++  state.vector = (text: string) => vecFor(text.includes("choking") ? 30 : -30);
++});
++
++describe("canaryCheck", () => {
++  const ref = canaryItem("x", 30);
++  it("passes the reference itself", () => {
++    expect(canaryCheck(ref, T, ref.vec, ref.p).ok).toBe(true);
++  });
++  it("fails a scaled vector with the same direction and p (the last-token pooling case: p passes, L2 doesn't)", () => {
++    const r = canaryCheck(ref, T, ref.vec.map((x) => x * 1.35), ref.p);
++    expect(r.cos).toBeCloseTo(1, 6);
++    expect(r.ok).toBe(false);
++  });
++  it("fails another direction, and a p off by more than 0.05", () => {
++    expect(canaryCheck(ref, T, vecFor(-30), ref.p).ok).toBe(false);
++    expect(canaryCheck(ref, T, ref.vec, ref.p - 0.06).ok).toBe(false);
++  });
++  it("fails a vector of the wrong length", () => {
++    expect(canaryCheck(ref, T, ref.vec.slice(0, 100), ref.p).ok).toBe(false);
++  });
++});
++
++describe("EmergencyDetector", () => {
++  it("loads with pooling 'mean' (a string: llama.rn maps it), n_parallel 1, and passes the canary", async () => {
++    const d = new EmergencyDetector();
++    expect(await d.load()).toBe(true);
++    expect(d.status).toBe("ready");
++    expect(state.inits[0]).toMatchObject({ embedding: true, pooling_type: "mean", n_parallel: 1, n_ctx: 512, n_ubatch: 512, n_threads: 2 });
++    expect(d.canary.map((c) => c.ok)).toEqual([true, true]);
++  });
++
++  it("scores with the RAW vector (embd_normalize -1) and fires at the frozen threshold", async () => {
++    const d = new EmergencyDetector();
++    await d.load();
++    const hit = await d.score("my child is choking on a grape", ["we are at a restaurant"]);
++    expect(hit.fire).toBe(true);
++    expect(hit.p).toBeGreaterThan(0.99);
++    const last = state.embeds[state.embeds.length - 1];
++    expect(last.params).toEqual({ embd_normalize: -1 });
++    expect(last.text).toBe("we are at a restaurant | my child is choking on a grape");
++    expect((await d.score("what is the capital of Japan", [])).fire).toBe(false);
++  });
++
++  it("stays off (lexical fallback) when the canary fails, e.g. a wrongly pooled vector of the same direction", async () => {
++    state.vector = (text: string) => vecFor(text.includes("choking") ? 30 : -30).map((x) => x * 1.4);
++    const d = new EmergencyDetector();
++    expect(await d.load()).toBe(false);
++    expect(d.status).toBe("canary-fail");
++    expect(state.released).toBe(1);
++    await expect(d.score("anything", [])).rejects.toThrow("not loaded");
++  });
++
++  it("stays off without a canary file, and reports absent without the model", async () => {
++    delete state.files[DETECTOR_CANARY_FILE];
++    const a = new EmergencyDetector();
++    expect(await a.load()).toBe(false);
++    expect(a.status).toBe("no-canary");
++    delete state.files[DETECTOR_MODEL_FILE];
++    const b = new EmergencyDetector();
++    expect(await b.load()).toBe(false);
++    expect(b.status).toBe("absent");
++    expect(state.inits).toHaveLength(1);
++  });
++
++  it("deviceEmergencyScore is null when the detector is not installed (answer() then uses the lexical predicate)", async () => {
++    state.files = {};
++    expect(await deviceEmergencyScore("my child is choking", [])).toBeNull();
++  });
++});
+diff --git a/src/routing/emergencyDetector.ts b/src/routing/emergencyDetector.ts
+new file mode 100644
+index 00000000..b6ce6054
+--- /dev/null
++++ b/src/routing/emergencyDetector.ts
+@@ -0,0 +1,156 @@
++import { Platform } from "react-native";
++import * as FileSystem from "expo-file-system/legacy";
++import { getBackendDevicesInfo, initLlama, type LlamaContext } from "llama.rn";
++import { cpuDeviceNames, initWithCpuFallback } from "../inference/initFallback";
++import { DETECTOR_THRESHOLD, detectorText, mmbertProbability, type DetectorHead, type MmbertHead } from "./emergencyHead";
++
++/**
++ * The learned emergency detector on the device (Forge device-detector arm; Sonar's frozen health13 config).
++ * Desktop runs score through boar-eval's runner (llama-server + emergencyHead.ts); this is the same pipeline on
++ * llama.rn, so a phone answers health questions with the detector the desktop numbers were measured with:
++ *   - its own embedding context (mmBERT-small GGUF, encoder only): pooling "mean" (llama.rn's initLlama maps the string to the native int; an int would map to undefined = no pooling),
++ *     n_parallel 1 (the 256k-vocab logits buffer is 1 MB per sequence), 512 ctx/batch/ubatch, 2 threads; resident;
++ *   - input = detectorText(): 126 content tokens counted with tokenize() (no BOS/EOS; embedding() adds both);
++ *   - embedding(text, { embd_normalize: -1 }): the RAW mean-pooled vector, then the JS head (mmbertProbability).
++ * Files come with the kit (models/emergency-detector.gguf + .head.json, the frozen pair a86fe8b9… / 766434de…).
++ * After init, a 2-string canary (vector cos, L2 and p vs the desktop reference) must pass, else the detector stays off.
++ * Missing files → load() is false and answer() gets no detector (lexical predicate, health10 behaviour). Any error
++ * while scoring throws; answer.ts turns it into null → lexical. Never "not emergency" by failure.
++ */
++export const DETECTOR_MODEL_FILE = "models/emergency-detector.gguf";
++export const DETECTOR_HEAD_FILE = "models/emergency-detector.head.json";
++/** Load-time canary (Sonar, detector-canary.v3b.json): 2 strings with the desktop b11010 reference vector, L2 and p. */
++export const DETECTOR_CANARY_FILE = "models/emergency-detector.canary.json";
++
++export type DetectorStatus = "absent" | "loading" | "ready" | "no-canary" | "canary-fail" | "load-failed";
++export interface CanaryItem { text: string; p: number; l2: number; vec: number[] }
++export interface CanaryFile { model_sha256: string; head_sha256: string; thresholds: { cos_min: number; l2_rel_max: number; p_abs_max: number }; items: CanaryItem[] }
++
++/**
++ * One canary item vs the device's measurement. p alone is not enough (Sonar: last-token pooling also gives p 1/0 on
++ * these strings); the vector must match too: cos >= cos_min, relative L2 within l2_rel_max, |dp| <= p_abs_max.
++ */
++export function canaryCheck(ref: CanaryItem, t: CanaryFile["thresholds"], vec: ArrayLike<number>, p: number) {
++  let dot = 0, nv = 0, nr = 0;
++  const n = Math.min(vec.length, ref.vec.length);
++  for (let i = 0; i < n; i++) {
++    dot += vec[i] * ref.vec[i];
++    nv += vec[i] * vec[i];
++    nr += ref.vec[i] * ref.vec[i];
++  }
++  const cos = vec.length === ref.vec.length && nv > 0 && nr > 0 ? dot / Math.sqrt(nv * nr) : 0;
++  const l2Rel = Math.abs(Math.sqrt(nv) - ref.l2) / ref.l2;
++  const dp = Math.abs(p - ref.p);
++  return { ok: cos >= t.cos_min && l2Rel <= t.l2_rel_max && dp <= t.p_abs_max, cos, l2Rel, dp };
++}
++
++export class EmergencyDetector {
++  private context: LlamaContext | null = null;
++  private head: MmbertHead | null = null;
++  private loading: Promise<boolean> | null = null;
++  private queue: Promise<unknown> = Promise.resolve();
++  /** Why the detector is (not) answering; BOAR Bench writes it into each run's sidecar. */
++  status: DetectorStatus = "absent";
++  canary: { text: string; cos: number; l2Rel: number; dp: number; ok: boolean }[] = [];
++
++  /** Serializes llama.rn calls on the detector context ("Context is busy" otherwise). */
++  private enqueue<T>(task: () => Promise<T>): Promise<T> {
++    const run = this.queue.then(task, task);
++    this.queue = run.catch(() => {});
++    return run;
++  }
++
++  get loaded(): boolean {
++    return this.context !== null && this.head !== null;
++  }
++
++  /** Loads once; true when the detector is ready, false when its files are not installed or loading failed. */
++  load(): Promise<boolean> {
++    if (this.loaded) return Promise.resolve(true);
++    this.loading ??= this.loadNow().finally(() => (this.loading = null));
++    return this.loading;
++  }
++
++  private async loadNow(): Promise<boolean> {
++    const dir = FileSystem.documentDirectory ?? "";
++    const [model, head] = await Promise.all([
++      FileSystem.getInfoAsync(`${dir}${DETECTOR_MODEL_FILE}`),
++      FileSystem.getInfoAsync(`${dir}${DETECTOR_HEAD_FILE}`),
++    ]);
++    if (!model.exists || !head.exists) {
++      this.status = "absent";
++      return false;
++    }
++    this.status = "loading";
++    try {
++      const parsed = JSON.parse(await FileSystem.readAsStringAsync(`${dir}${DETECTOR_HEAD_FILE}`)) as DetectorHead;
++      if (parsed.kind !== "mmbert-cls") throw new Error(`detector head kind ${parsed.kind} is not supported on the device`);
++      const loaded = await initWithCpuFallback(
++        initLlama,
++        { model: `${dir}${DETECTOR_MODEL_FILE}`, embedding: true, pooling_type: "mean", n_parallel: 1, n_ctx: 512, n_batch: 512, n_ubatch: 512, n_threads: 2 },
++        { platform: Platform.OS, cpuDevices: () => cpuDeviceNames(getBackendDevicesInfo), log: (m) => console.warn(m) }
++      );
++      const context = loaded.context;
++      // Canary before first use: a wrong pooling/normalization/tokenizer path disables the detector (lexical answers).
++      const canaryInfo = await FileSystem.getInfoAsync(`${dir}${DETECTOR_CANARY_FILE}`);
++      if (!canaryInfo.exists) {
++        await context.release();
++        this.status = "no-canary";
++        console.warn("[detector] no canary file; detector off, the lexical predicate answers");
++        return false;
++      }
++      const canary = JSON.parse(await FileSystem.readAsStringAsync(`${dir}${DETECTOR_CANARY_FILE}`)) as CanaryFile;
++      const countTokens = async (t: string) => (await context.tokenize(t)).tokens.length;
++      this.canary = [];
++      for (const item of canary.items) {
++        const { embedding } = await context.embedding(await detectorText([], item.text, countTokens), { embd_normalize: -1 });
++        const p = embedding.length === parsed.dim ? mmbertProbability(parsed, embedding) : NaN;
++        this.canary.push({ text: item.text, ...canaryCheck(item, canary.thresholds, embedding, p) });
++      }
++      if (!this.canary.length || this.canary.some((c) => !c.ok)) {
++        await context.release();
++        this.status = "canary-fail";
++        console.warn("[detector] canary FAILED; detector off, the lexical predicate answers:", JSON.stringify(this.canary));
++        return false;
++      }
++      this.context = context;
++      this.head = parsed;
++      this.status = "ready";
++      return true;
++    } catch (e: any) {
++      console.warn("[detector] load failed; the lexical predicate answers:", e?.message ?? e);
++      this.context = null;
++      this.head = null;
++      this.status = "load-failed";
++      return false;
++    }
++  }
++
++  /** P(emergency) for the message in its conversation; throws on any failure (the caller falls back to lexical). */
++  score(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean }> {
++    return this.enqueue(async () => {
++      const context = this.context, head = this.head;
++      if (!context || !head) throw new Error("detector not loaded");
++      const countTokens = async (t: string) => (await context.tokenize(t)).tokens.length;
++      const text = await detectorText(userTurns, query, countTokens);
++      const { embedding } = await context.embedding(text, { embd_normalize: -1 });
++      const p = mmbertProbability(head, embedding);
++      return { p, fire: p >= DETECTOR_THRESHOLD };
++    });
++  }
++
++  release(): Promise<void> {
++    return this.enqueue(async () => {
++      await this.context?.release();
++      this.context = null;
++      this.head = null;
++    });
++  }
++}
++
++export const emergencyDetector = new EmergencyDetector();
++
++/** answer()'s `emergencyScore` dependency: null when the detector isn't installed (lexical path). */
++export async function deviceEmergencyScore(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean } | null> {
++  return (await emergencyDetector.load()) ? emergencyDetector.score(query, userTurns) : null;
++}

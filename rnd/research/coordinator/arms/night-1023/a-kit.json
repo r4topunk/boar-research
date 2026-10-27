@@ -1,0 +1,120 @@
+{
+ "criterion_sha": "36635ca23543a44e",
+ "arms": {
+  "SEFIX-124 (K13 control)": {
+   "n_packs_extra": "SEFIX-124 (K13 control)",
+   "chunk92": 42,
+   "v01": 28,
+   "cm40": 14,
+   "art92": 50,
+   "art_v01": 30,
+   "gained": [],
+   "lost": [],
+   "losses": 0,
+   "losses_v01": 0,
+   "gained_v01": [],
+   "gained_cm": [],
+   "junk_own": 3.28,
+   "junk_own_n": 50,
+   "junk_both": 3.28,
+   "junk_both_n": 50,
+   "junk_ctlset": 3.28,
+   "junk_ctlset_n": 50,
+   "mean_kept": 4.141304347826087,
+   "kept_tokens": 585.6907216494845,
+   "lists_changed": 0,
+   "wall_ms": 1065.0793814432989
+  },
+  "K13+SE2": {
+   "n_packs_extra": "K13+SE2",
+   "chunk92": 43,
+   "v01": 28,
+   "cm40": 15,
+   "art92": 52,
+   "art_v01": 30,
+   "gained": [
+    "st-qa-money-se-005",
+    "vit-cry-010"
+   ],
+   "lost": [
+    "vit-cry-001"
+   ],
+   "losses": 1,
+   "losses_v01": 1,
+   "gained_v01": [
+    "vit-cry-010"
+   ],
+   "gained_cm": [
+    "st-qa-money-se-005"
+   ],
+   "junk_own": 3.2244897959183674,
+   "junk_own_n": 49,
+   "junk_both": 3.1458333333333335,
+   "junk_both_n": 48,
+   "junk_ctlset": 3.2,
+   "junk_ctlset_n": 50,
+   "mean_kept": 4.130434782608695,
+   "kept_tokens": 571.6082474226804,
+   "lists_changed": 20,
+   "wall_ms": 1023.4608247422681,
+   "junk_ratio_own": 0.9830761572921852,
+   "junk_ratio_both": 0.9590955284552847,
+   "junk_ratio_ctlset": 0.9756097560975611,
+   "tok_ratio": 0.9759557839892979,
+   "adopt_v01": false,
+   "adopt_losses": true,
+   "adopt_junk": true,
+   "ADOPTED": false
+  },
+  "K13+SE2+NIST": {
+   "n_packs_extra": "K13+SE2+NIST",
+   "chunk92": 43,
+   "v01": 28,
+   "cm40": 15,
+   "art92": 52,
+   "art_v01": 30,
+   "gained": [
+    "st-qa-money-se-005",
+    "vit-cry-010"
+   ],
+   "lost": [
+    "vit-cry-001"
+   ],
+   "losses": 1,
+   "losses_v01": 1,
+   "gained_v01": [
+    "vit-cry-010"
+   ],
+   "gained_cm": [
+    "st-qa-money-se-005"
+   ],
+   "junk_own": 3.2244897959183674,
+   "junk_own_n": 49,
+   "junk_both": 3.1458333333333335,
+   "junk_both_n": 48,
+   "junk_ctlset": 3.2,
+   "junk_ctlset_n": 50,
+   "mean_kept": 4.130434782608695,
+   "kept_tokens": 570.7010309278351,
+   "lists_changed": 20,
+   "wall_ms": 979.9876288659793,
+   "junk_ratio_own": 0.9830761572921852,
+   "junk_ratio_both": 0.9590955284552847,
+   "junk_ratio_ctlset": 0.9756097560975611,
+   "tok_ratio": 0.9744068154615222,
+   "adopt_v01": false,
+   "adopt_losses": true,
+   "adopt_junk": true,
+   "ADOPTED": false
+  }
+ },
+ "rule": "ADOPTED iff v0.1 chunk-level >= 31 AND losses <= 1 AND junk <= 1.15x SEFIX-124",
+ "adopted": null,
+ "eips_pack": {
+  "built": false,
+  "reason": "(1) rnd/kiln/packs/convert has 4 formats (stackexchange, medlineplus, factbook, pdf), none handles markdown/front-matter, so no build with the existing converter; (2) boar-crypto (in K13) already holds the EIPs (sources.eips 1208 docs CC0): 592 of 603 non-Moved EIPs in ethereum/EIPs@f1bcca1b (2026-10-22, LICENSE.md verified CC0 1.0) are in it by number, the 11 missing are new Drafts (EIP-8247..8450); a standalone pack would duplicate chunks and crowd.",
+  "clone": "scratchpad/eips-src/repo (shallow, read-only, .git removed, no script run)"
+ },
+ "adopted_kit": "K13",
+ "note": "KSE and KSEN replays: v0.1 28 (needs 31), 1 loss (vit-cry-001), junk 0.98x; NIST inert (identical delivered set to KSE)."
+}

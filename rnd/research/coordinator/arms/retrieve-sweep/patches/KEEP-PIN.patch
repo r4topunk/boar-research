@@ -1,0 +1,91 @@
+diff -ruN rs-SEFIX/src/routing/answer.ts rs-KEEPPIN/src/routing/answer.ts
+--- rs-SEFIX/src/routing/answer.ts	2026-10-22 19:47:17
++++ rs-KEEPPIN/src/routing/answer.ts	2026-10-23 09:43:28
+@@ -67,6 +67,8 @@
+   healthTopicTerms,
+   onHealthTopic,
+   noKeptHoldsProper,
++  titleNamedBy,
++  holdsQuestionProper,
+   riskyHealthInstruction,
+   termCoverage,
+ } from "./context";
+@@ -1061,6 +1063,16 @@
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
++      // KEEP-PIN (RS_KEEP_PIN=1, bench-only, default off): a raw candidate whose title the question names ("Kyoto" for
++      // "Kyoto's role in Japanese history") is pinned through compression (no relative floor) and the non-health keep step.
++      const titlePinned = new Set<string>();
++      if ((globalThis as any).process?.env?.RS_KEEP_PIN === "1") {
++        for (const c of raw) if (titleNamedBy(req.query, c.title) && !pinned.has(c.chunkId)) titlePinned.add(c.chunkId);
++        if (titlePinned.size) {
++          for (const id of titlePinned) pinned.add(id);
++          reasonCodes.push(`context:title-pinned-${titlePinned.size}`);
++        }
++      }
+       const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
+@@ -1072,7 +1084,8 @@
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        let kept = sources.filter((c) => onSubject(c));
++        let kept = sources.filter((c) => onSubject(c) || (titlePinned.has(c.chunkId) && !cryptoBlocked(c)));
++        if (titlePinned.size && kept.some((c) => titlePinned.has(c.chunkId) && !onSubject(c))) reasonCodes.push("grounding:title-pin-kept");
+         // SEFIX F4 (RS_KEEP_NOPROPER=1 per source / =lit only when no kept source holds a proper noun; bench-only, default off): a source the
+         // proper-noun rule alone dropped comes back when it holds any content term of the question and passes the rest of onTopic.
+         const noProper = (globalThis as any).process?.env?.RS_KEEP_NOPROPER;
+@@ -1082,6 +1095,16 @@
+           if (back.length) {
+             kept = sources.filter((c) => kept.includes(c) || back.includes(c));
+             reasonCodes.push(`grounding:keep-noproper-restored-${back.length}`);
++          }
++        }
++        // KEEP-PIN PN (RS_KEEP_PN=1, bench-only, default off): the proper-noun rule is met by the kept SET: a source that fails only
++        // that rule comes back when some kept source holds a question proper noun (its own title holding one already passes onTopic).
++        if ((globalThis as any).process?.env?.RS_KEEP_PN === "1" && kept.length < sources.length && !history && kept.some((c) => holdsQuestionProper(matchQuery, c))) {
++          const pnOk = (c: RetrievedChunk) => (cryptoBlocked(c) ? false : names.length ? namedByLexicon(names, c) || onTopic(req.query, c, "skip") : onTopic(matchQuery, c, "skip"));
++          const back = sources.filter((c) => !kept.includes(c) && pnOk(c));
++          if (back.length) {
++            kept = sources.filter((c) => kept.includes(c) || back.includes(c));
++            reasonCodes.push(`grounding:keep-pn-restored-${back.length}`);
+           }
+         }
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+diff -ruN rs-SEFIX/src/routing/context.ts rs-KEEPPIN/src/routing/context.ts
+--- rs-SEFIX/src/routing/context.ts	2026-10-22 19:47:17
++++ rs-KEEPPIN/src/routing/context.ts	2026-10-23 09:43:28
+@@ -709,15 +709,28 @@
+   });
+ }
+ 
+-/** `relaxProper` (SEFIX F4, bench-only): the proper-noun requirement becomes "any content term of the question is in the source". */
+-export function onTopic(query: string, chunk: RetrievedChunk, relaxProper = false): boolean {
++/** KEEP-PIN (RS_KEEP_PIN, bench-only): some title segment of this source is named by the question (every term a question term). */
++export function titleNamedBy(query: string, title: string): boolean {
++  return titleSegmentNamed(title, new Set(tokenizeTerms(query)));
++}
++
++/** KEEP-PIN PN (RS_KEEP_PN, bench-only): this source holds (title or body) a proper noun the question names. */
++export function holdsQuestionProper(query: string, chunk: RetrievedChunk): boolean {
++  const proper = properNounTerms(query);
++  if (!proper.length) return false;
++  const words = new Set(tokenizeTerms(`${chunk.title} ${chunk.body}`));
++  return proper.some((p) => words.has(p));
++}
++
++/** `relaxProper` (SEFIX F4, bench-only): the proper-noun requirement becomes "any content term of the question is in the source"; "skip" (KEEP-PIN PN): no proper-noun requirement. */
++export function onTopic(query: string, chunk: RetrievedChunk, relaxProper: boolean | "skip" = false): boolean {
+   const q = new Set(tokenizeTerms(query));
+   const text = `${chunk.title} ${chunk.body}`;
+   // A year or a proper noun in the question must be in the source (Sextant, gate a9f156c:
+   // "1513 Marash earthquake" for the 1906 one, a cricketer for the 1970 World Cup).
+   if (!yearsIn(query).every((y) => yearsIn(text).includes(y))) return false;
+   const proper = properNounTerms(query);
+-  if (proper.length) {
++  if (proper.length && relaxProper !== "skip") {
+     const words = new Set(tokenizeTerms(text));
+     if (relaxProper) {
+       if (!tokenizeTerms(query).some((t) => !proper.includes(t) && words.has(t))) return false;

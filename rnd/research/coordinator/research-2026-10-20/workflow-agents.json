@@ -1,0 +1,1008 @@
+[
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/judge_noise.md",
+  "findings": [
+   {
+    "claim": "Single-run LLM judge verdicts are noisy: pairwise preferences flip on average 13.6% of the time on identical reruns (GPT-4o-mini and GPT-4.1-mini, 29 tasks); 28% of questions exceed 20% flip rate; one reaches 56%. Cross-judge agreement 76% (kappa 0.51); equivalent prompt templates change majority outcomes in 25% of cases.",
+    "source_url": "https://arxiv.org/abs/2606.13685",
+    "source_kind": "paper",
+    "actionable_for_boar": "Run a test-retest flip-rate check on the Haiku judge before comparing any arms; the 13-of-37 re-judge result is in the same range.",
+    "load_bearing": true,
+    "model_size_tested": "GPT-4o-mini, GPT-4.1-mini (judges)",
+    "numbers": "13.6% mean pairwise flip; 28% of questions >20% flip; max 56%; kappa 0.51 cross-judge; 25% template sensitivity",
+    "year": "2026",
+    "licence": "arXiv non-exclusive 1.0"
+   },
+   {
+    "claim": "Averaging over repeated judge trials stabilises verdicts: about 11 trials needed for a majority vote to recover the 50-trial reference verdict with 95% probability (15 for high-variance questions). Paper recommends randomising answer position and reporting uncertainty.",
+    "source_url": "https://arxiv.org/abs/2606.13685",
+    "source_kind": "paper",
+    "actionable_for_boar": "Use repeated judging with majority/mean aggregation; measure the repeat count for absolute scores on BOAR data.",
+    "load_bearing": true,
+    "model_size_tested": "GPT-4o-mini, GPT-4.1-mini",
+    "numbers": "11 trials (95% recovery), 15 for high-variance items",
+    "year": "2026",
+    "licence": "arXiv non-exclusive 1.0"
+   },
+   {
+    "claim": "Temperature 0 does not guarantee reproducible judge verdicts. At provider default temperature 1.0, per-item disagreement reached about 50% over 20 runs in an open safety harness; under forced greedy decoding, 1 to 2 of 7 borderline items remained non-reproducible. The abstract states Claude Opus 4.7/4.8 has deprecated the temperature parameter.",
+    "source_url": "https://arxiv.org/abs/2606.26185",
+    "source_kind": "paper",
+    "actionable_for_boar": "Pin judge sampling settings where the API allows; assume residual flips and measure them. Do not rely on temperature 0 for reproducibility.",
+    "load_bearing": false,
+    "model_size_tested": "Not named in abstract (two providers, three tiers)",
+    "numbers": "~50% max per-item disagreement over 20 runs at temp 1.0; 1-2 of 7 borderline items non-reproducible at top_k=1",
+    "year": "2026",
+    "licence": "CC BY-NC-ND 4.0 (cite only; no reuse)"
+   },
+   {
+    "claim": "Pairwise judging amplifies verbosity and authority-tone bias relative to pointwise judging, which is less susceptible because each output is judged in isolation. PRePair (pointwise reasoning inside a pairwise frame) is proposed and reported to improve on LLMBar; no numbers on the fetched abstract.",
+    "source_url": "https://arxiv.org/abs/2406.12319",
+    "source_kind": "paper",
+    "actionable_for_boar": "Prefer pointwise or per-key-point checks over pairwise 'A vs B' for answer quality; watch authority-tone bias when judging confident wrong answers.",
+    "load_bearing": false,
+    "model_size_tested": "Not named on the abstract page",
+    "numbers": "none on abstract page",
+    "year": "2024 (v4 2025)",
+    "licence": "CC BY-SA 4.0"
+   },
+   {
+    "claim": "Position bias in rubric-based judging is model-specific in direction and can be attenuated by permuting rubric option order; only a small number of random permutations is sufficient to reduce the error for most models; correlation with humans improves mainly for strongly biased models.",
+    "source_url": "https://arxiv.org/abs/2602.02219",
+    "source_kind": "paper",
+    "actionable_for_boar": "Randomise/permute answer and rubric order and average over a few permutations; check both orders for position bias.",
+    "load_bearing": false,
+    "model_size_tested": "Multiple models (not named on abstract page)",
+    "numbers": "none exact on abstract page; 'small number' of permutations",
+    "year": "2026",
+    "licence": "CC BY 4.0"
+   },
+   {
+    "claim": "CheckEval decomposes each criterion into yes/no sub-questions instead of a Likert score; it improves average agreement across 12 evaluator models by 0.45 and average correlation with humans by about 0.10, and reduces score variance.",
+    "source_url": "https://arxiv.org/abs/2403.18771",
+    "source_kind": "paper",
+    "actionable_for_boar": "Per-key-point binary checks (fact present, supported by cited source) are a concrete replacement for a 1-5 correctness score; test against a human labeller on BOAR items.",
+    "load_bearing": false,
+    "model_size_tested": "12 evaluator models (sizes not stated on abstract)",
+    "numbers": "+0.45 agreement across evaluators; +0.10 human correlation (from search summary; the 0.10 figure was not on the fetched abstract page)",
+    "year": "2024 (EMNLP 2025)",
+    "licence": "CC BY-NC-ND 4.0 (cite only)"
+   },
+   {
+    "claim": "Judge error can be corrected with a small human-labelled calibration set via sensitivity/specificity plug-in correction with CIs covering test and calibration uncertainty; an adaptive allocation of calibration samples is proposed. PPI-style estimators can be biased when test and calibration distributions differ (v3).",
+    "source_url": "https://arxiv.org/abs/2511.21140",
+    "source_kind": "paper",
+    "actionable_for_boar": "Hand-label a calibration subset (human, not Claude) and correct the judge's error rates before quoting headline numbers.",
+    "load_bearing": true,
+    "model_size_tested": "Not stated on the abstract page",
+    "numbers": "No calibration size or CI numbers on the fetched page",
+    "year": "2025 (v4 2026, ICML 2026)",
+    "licence": "CC BY-SA 4.0"
+   },
+   {
+    "claim": "Efficient-influence-function estimators unify measurement-error correction (Rogan-Gladen style) with prediction-powered inference; PPI-style estimators attain smaller asymptotic variance under stated conditions for noisy LLM-as-a-judge evaluation.",
+    "source_url": "https://arxiv.org/abs/2601.05420",
+    "source_kind": "paper",
+    "actionable_for_boar": "If a calibration set is used, prefer the PPI-style estimator for tighter CIs; check conditions before use.",
+    "load_bearing": false,
+    "model_size_tested": "Not stated on the abstract page",
+    "numbers": "none on abstract page",
+    "year": "2026",
+    "licence": "CC BY 4.0"
+   },
+   {
+    "claim": "For non-degenerate binary judge verdicts, Pearson r, Spearman rho, Kendall tau_b, phi and MCC are the same statistic; the protocol (abstention and invalid-output handling) can move reported accuracy from 0.551 to 0.899 without changing any verdict; excluding cases leaves accuracy only loosely bounded.",
+    "source_url": "https://arxiv.org/abs/2606.00093",
+    "source_kind": "paper",
+    "actionable_for_boar": "Fix the metric and the invalid-output rule in advance; report the exclusion count next to any agreement number.",
+    "load_bearing": false,
+    "model_size_tested": "Not named on abstract page (gpt-3.5-turbo-16k appears in data filenames only)",
+    "numbers": "0.551 vs 0.899 accuracy from protocol choice alone",
+    "year": "2026",
+    "licence": "CC BY-NC-ND 4.0 (cite only)"
+   },
+   {
+    "claim": "Binary/coarse judgments may align with humans as well as or better than fine Likert scales: alignment is strong for binary tasks and degrades with rubric granularity (one model, one dataset). Coarse rubrics cited as correlating with humans at least as well as per-level descriptors.",
+    "source_url": "https://arxiv.org/abs/2601.08843",
+    "source_kind": "paper",
+    "actionable_for_boar": "Test 1-5 vs binary vs 3-level on BOAR's own labelled items; do not assume the 1-5 scale is better.",
+    "load_bearing": false,
+    "model_size_tested": "Qwen 2.5-72B (SciEntsBank)",
+    "numbers": "qualitative only (from search summary, full text not opened)",
+    "year": "2025",
+    "licence": "not checked"
+   },
+   {
+    "claim": "A strong LLM judge (GPT-4) reaches over 80% agreement with human preferences, matching human-human agreement; position bias is named as a limitation.",
+    "source_url": "https://arxiv.org/abs/2306.05685",
+    "source_kind": "paper",
+    "actionable_for_boar": "Baseline reference only; no small-model number; swap-consistency numbers are in the full paper.",
+    "load_bearing": false,
+    "model_size_tested": "GPT-4 (pairwise)",
+    "numbers": ">80% agreement with humans",
+    "year": "2023",
+    "licence": "arXiv non-exclusive 1.0"
+   }
+  ],
+  "searched_found_nothing": [
+   "Direct controlled comparison of 1-5 Likert vs binary judge agreement with humans on the same items (only indirect evidence found: CheckEval, arXiv 2601.08843).",
+   "A 2025 (not 2026) paper specifically on judge test-retest or repeated sampling; the search returned 2026 work.",
+   "Exact calibration-set sizes and CI widths for the PPI and Rogan-Gladen judge-correction estimators (abstract pages give none).",
+   "Numeric position-bias swap-consistency for GPT-4 in MT-Bench (abstract page gives none).",
+   "Judge reliability or test-retest studies for Claude or Haiku-family judges specifically.",
+   "Power formulas that explicitly include judge error (only generic MDE/power blogs and a paired-design ICML 2026 paper found; judge error not modelled).",
+   "Full-text numbers for 2601.08843, 2502.08489, 2606.19544, 2505.21972, 2601.05420, 2406.12319 and 2602.02219 (abstract-level only)."
+  ]
+ },
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/honesty_ft.md",
+  "findings": [
+   {
+    "claim": "R-Tuning (SFT-only refusal-aware tuning, 'I am sure'/'I am unsure' suffix) raises refusal on unanswerable sets at 3B: FalseQA 87.32% vs vanilla 2.07%, NEC 95.72% vs 0.96%, SelfAware 90.99% vs 5.23% (OpenLLaMA-3B). Also 7B and 13B. No RL.",
+    "source_url": "https://arxiv.org/abs/2311.09677",
+    "source_kind": "paper",
+    "actionable_for_boar": "Cheapest recipe to test first on Qwen3-1.7B: self-labelled known/unknown items, uncertainty phrase, LoRA SFT. Must also measure answer rate on answerable items.",
+    "year": "2024",
+    "load_bearing": true,
+    "model_size_tested": "OpenLLaMA-3B, LLaMA-7B, LLaMA-13B",
+    "numbers": "Refusal on unanswerable sets (R-Tuning vs vanilla) as above; ID MMLU at 3B is chance (24.96 vs 24.19); OOD ParaRel LLaMA-7B 74.61 vs 78.08 (loss)",
+    "licence": "code github.com/shizhediao/r-tuning, licence not verified; paper arXiv non-exclusive"
+   },
+   {
+    "claim": "Alignment for Honesty: the best fine-tuned honesty method (Confidence-Verb) on TriviaQA gives prudence 58.9% and over-conservativeness 10.7% at LLaMA2-Chat-13B, accuracy 73.3 vs 73.7 unaligned. At 7B: prudence 56.0, over-conservativeness 11.4, accuracy 68.1 vs 69.1. Over-refusal cost is measured here and is about 11 points.",
+    "source_url": "https://arxiv.org/html/2312.07000v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Any abstention recipe must report over-refusal on answerable items; expect the 1.7B to do worse than 7B. Data: 8k TriviaQA items balanced known/unknown.",
+    "year": "2023 (NeurIPS 2024)",
+    "load_bearing": true,
+    "model_size_tested": "LLaMA2-Chat-7B, 13B, 70B (no 1-3B)",
+    "numbers": "13B Confidence-Verb: prudence 58.91, over-cons 10.68, honesty 74.12, acc 73.34 (unaligned acc 73.71, honesty 50.00). Multisample: prudence 67.72, over-cons 15.89, acc 68.88",
+    "licence": "code github.com/GAIR-NLP/alignment-for-honesty; licence not stated"
+   },
+   {
+    "claim": "FaithEval (ICLR 2025): when the context has no answer, 3.8B models answer 'unknown' rarely: Phi-3-mini 0.063 strict / 0.134 non-strict; Phi-3.5-mini 0.131 / 0.196; 7B Mistral 0.290 / 0.395; Claude 3.5 Sonnet 0.621. Base small models do not abstain from unanswerable context by default.",
+    "source_url": "https://arxiv.org/html/2410.03727v3",
+    "source_kind": "benchmark",
+    "actionable_for_boar": "Explains part of the 28% confident-error rate as a context-grounding failure. Train negatives (context present, answer absent) and evaluate on this condition. Do not ship the data (NC licence).",
+    "year": "2024 (ICLR 2025)",
+    "load_bearing": true,
+    "model_size_tested": "Phi-3-mini 3.8B, Phi-3.5-mini 3.8B, Phi-3-medium 14B, Mistral-7B, Llama-3/3.1-8B, Gemma-2-9B, frontier models (no 1B)",
+    "numbers": "Strict/non-strict accuracy on unanswerable context as above; gap to original context 13.6% to 68.4%; Phi-3-medium 75.8% original vs 7.4% unanswerable",
+    "licence": "paper CC BY-NC-SA 4.0; code github.com/SalesforceAIResearch/FaithEval"
+   },
+   {
+    "claim": "Rewarding Intellectual Humility (arXiv 2601.20126): SFT abstention pretraining followed by RLVR with a ternary reward (-1 wrong, r_abs abstain, +1 correct). Moderate r_abs \u2248 -0.25 to 0.3 cuts wrong answers on multiple-choice without severe accuracy loss. Larger models are more robust to abstention incentives.",
+    "source_url": "https://arxiv.org/abs/2601.20126",
+    "source_kind": "paper",
+    "actionable_for_boar": "The only opened paper with a ~2B model (Granite-3.3-2B) in the abstention setting. RL cost is higher than SFT; the SFT warm-start step is the part that is cheap.",
+    "year": "2026",
+    "load_bearing": true,
+    "model_size_tested": "Granite-3.3-2B-Instruct, Qwen3-4B-Instruct",
+    "numbers": "Qualitative only in the abstract; table values not extracted",
+    "licence": "paper CC BY 4.0; code github.com/Mystic-Slice/rl-abstention, licence not stated"
+   },
+   {
+    "claim": "AbstentionBench (NeurIPS 2025): model scale has almost no effect on abstention; reasoning fine-tuning degrades abstention by about 24% on average versus non-reasoning counterparts.",
+    "source_url": "https://arxiv.org/html/2506.09038",
+    "source_kind": "benchmark",
+    "actionable_for_boar": "Evaluation tool for abstention and a warning that scale will not fix abstention in the 1.7B. Do not use reasoning-tuned variants as the abstaining base without checking.",
+    "year": "2025",
+    "load_bearing": false,
+    "model_size_tested": "Llama 3.1 8B, Mistral 7B v0.3, OLMo 7B (no 1-3B)",
+    "numbers": "Scale effect almost none (text claim); 24% average drop with reasoning fine-tuning (relative vs absolute not stated); judge 88% accuracy on manual sample",
+    "licence": "paper CC BY 4.0; code github.com/facebookresearch/AbstentionBench"
+   },
+   {
+    "claim": "GRAIT (arXiv 2502.05911): gradient-driven selection of refusal samples plus adaptive weighting of the idk loss to cut over-refusal. On LLaMA3-8B MMLU GRait 50.4 accuracy / 6.9 error vs CRaFT 53.3 / 9.6; NQ OOD error 38.8 vs 57.6.",
+    "source_url": "https://arxiv.org/html/2502.05911v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Gradient selection adds compute (LoRA plus random projections). Consider only if plain R-Tuning splitting over-refuses. No over-refusal rate is reported explicitly.",
+    "year": "2025",
+    "load_bearing": false,
+    "model_size_tested": "LLaMA2-7B-Chat, LLaMA3-8B-Instruct (no 1-3B)",
+    "numbers": "Table 2 as in claim; temperature 0.05, correctness threshold 0.5",
+    "licence": "code github.com/opendatalab/GRAIT announced, not verified as live; licence not stated"
+   },
+   {
+    "claim": "CRaFT (arXiv 2410.06913) identifies 'dynamic conflict' in refusal-aware tuning: as SFT proceeds the model learns to answer items whose labels still say 'I don't know'; fixes are certainty-based relabelling and rehearsal.",
+    "source_url": "https://arxiv.org/abs/2410.06913",
+    "source_kind": "paper",
+    "actionable_for_boar": "If BOAR labels once from the base model, labels go stale during training. Relabel per checkpoint or hold out a rehearsal set.",
+    "year": "2024",
+    "load_bearing": false,
+    "model_size_tested": "not extracted from abstract (LLaMA2-Chat family in same authors' tables)",
+    "numbers": "Not in abstract",
+    "licence": "paper CC BY-SA 4.0; code github.com/opendatalab/CRaFT announced"
+   },
+   {
+    "claim": "RAFT (arXiv 2403.10131): train on question + golden doc + distractor docs with chain-of-thought answers that quote the passage; consistent gains on PubMed, HotpotQA, Gorilla.",
+    "source_url": "https://arxiv.org/abs/2403.10131",
+    "source_kind": "paper",
+    "actionable_for_boar": "Direct recipe for 'answer from context, ignore distractors'. Trains the quote-first behaviour that prompting failed to produce. Needs a small-model test.",
+    "year": "2024",
+    "load_bearing": false,
+    "model_size_tested": "not verified (abstract only)",
+    "numbers": "Not extracted",
+    "licence": "not verified"
+   },
+   {
+    "claim": "Self-Alignment for Factuality (arXiv 2402.09267, ACL 2024): the model self-evaluates its own answers, SK-Tuning calibrates confidence, then DPO on self-annotated pairs; gains on TruthfulQA and BioGEN.",
+    "source_url": "https://arxiv.org/abs/2402.09267",
+    "source_kind": "paper",
+    "actionable_for_boar": "Label-free DPO pairs from the model's own correctness, if gold labels are not affordable.",
+    "year": "2024",
+    "load_bearing": false,
+    "model_size_tested": "Llama-family, sizes not verified (snippet only)",
+    "numbers": "Not extracted",
+    "licence": "code github.com/zhangxy-2019 per search snippet; licence not verified"
+   },
+   {
+    "claim": "RHIO (arXiv 2501.13573): masks retrieval heads to create unfaithful samples, trains with control tokens, then contrastive decoding over control tokens to amplify faithfulness; introduces GroundBench.",
+    "source_url": "https://arxiv.org/abs/2501.13573",
+    "source_kind": "paper",
+    "actionable_for_boar": "Decoding-time cost; not the layer-contrast decoding already closed. Low priority for a 1.7B on phone.",
+    "year": "2025",
+    "load_bearing": false,
+    "model_size_tested": "not stated in abstract",
+    "numbers": "Abstract only: 'significantly improves faithfulness, even outperforming GPT-4o'",
+    "licence": "no code link found; paper arXiv non-exclusive"
+   },
+   {
+    "claim": "CANOE (arXiv 2505.16483): Dual-GRPO rule-based RL on synthetic verifiable short-form QA improves contextual faithfulness on 11 tasks; abstention not part of the method.",
+    "source_url": "https://arxiv.org/abs/2505.16483",
+    "source_kind": "paper",
+    "actionable_for_boar": "RL route to faithfulness; heavier than SFT; no abstention signal.",
+    "year": "2025",
+    "load_bearing": false,
+    "model_size_tested": "not stated in abstract",
+    "numbers": "Not in abstract",
+    "licence": "code link not found"
+   },
+   {
+    "claim": "Abstain-R1 (arXiv 2604.17073): clarification-aware RLVR reward for calibrated abstention; base is a 3B model (Qwen2.5-3B per search summary); 'substantially improves over its base model' and competitive with DeepSeek-R1.",
+    "source_url": "https://arxiv.org/abs/2604.17073",
+    "source_kind": "paper",
+    "actionable_for_boar": "A 3B abstention result to chase in the HTML version for exact numbers and over-refusal.",
+    "year": "2026",
+    "load_bearing": false,
+    "model_size_tested": "3B (abstract says 'a 3B model')",
+    "numbers": "No numbers in the abstract",
+    "licence": "paper arXiv non-exclusive; weights/code licence not stated"
+   }
+  ],
+  "searched_found_nothing": [
+   "Small-model (1-3B) abstention training with over-refusal measured on answerable questions: not found in opened papers; the only measured cost is at 7B and 13B (Alignment for Honesty).",
+   "Llama 3.2 1B or 3B abstention or honesty fine-tuning results: not found.",
+   "RAFT results at small model sizes: abstract only, full paper not opened.",
+   "A 2024-2026 abstention or faithfulness paper with a permissive dataset licence verified in the paper: not found. FaithEval data is CC BY-NC-SA. TriviaQA, MMLU and HotpotQA licences were not checked.",
+   "Featherless.ai qwen2.5 1.5B/3B LoRA abstention model cards: exist, but give no benchmark numbers or training data, so not used as evidence.",
+   "Hidden-state answerability study (alphaxiv 2607.08456), Know2Guess (arXiv 2606.26101), Twin Worlds (arXiv 2608.28018), PFaithBench / Rethinking Faithfulness (arXiv 2610.07894): seen in search snippets only, not opened, numbers unverified.",
+   "DPO-specific abstention results for Llama-3.2-3B or Qwen2.5-1.5B in 2025: not found in search."
+  ]
+ },
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/rag_slms.md",
+  "findings": [
+   {
+    "claim": "OCC-RAG-1.7B (mid-trained from Qwen3-1.7B-Base on ~3.25M synthetic multi-hop/abstain QA, citations as literal quotes) vs Qwen3-1.7B no-think on the paper's own table: HotpotQA In-Acc 47.7->60.9, MuSiQue 20.1->38.2, ConFiQA In-Acc 64.8->81.4, ConFiQA MR 12.7->5.0 (lower better), MuSiQue-Un refusal R-Acc 54.7->87.2. Metrics are substring-based; vendor-reported; no BOAR-style judge.",
+    "source_url": "https://arxiv.org/html/2606.00683",
+    "source_kind": "paper",
+    "actionable_for_boar": "Test OCC-RAG-1.7B GGUF as a same-arch drop-in for the main Qwen3-1.7B on the frozen ruler; first check that a GGUF exists (HF repo occ-ai/OCC-RAG-1.7B, not verified).",
+    "load_bearing": true,
+    "year": "2026",
+    "model_size_tested": "1.7B (and 0.6B); baselines Qwen3-1.7B/4B/8B, SmolLM3-3B, Gemma-3-1B/4B",
+    "numbers": "HotpotQA 60.9, MuSiQue 38.2, TAT-QA F1 81.0, ConFiQA In-Acc 81.4, MR 5.0, MuSiQue-Un 87.2 (OCC-RAG-1.7B); Qwen3-4B no-think HotpotQA 60.6",
+    "licence": "MIT (per Featherless listing; verify on HF); context 32k"
+   },
+   {
+    "claim": "Pleias-RAG-1B: small (~1.2B) RAG model trained to quote literal passages and cite; third-party run on the same table gives Pleias-RAG-1.2B HotpotQA 48.5, MuSiQue 15.0, TAT-QA F1 8.4, ConFiQA MR 25.3 (worse than Qwen3-1.7B), MuSiQue-Un 21.9. Paper's own numbers are only in figures.",
+    "source_url": "https://huggingface.co/PleIAs/Pleias-RAG-1B",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Apache-2.0 + GGUF makes it testable on the phone path, but third-party numbers suggest weak general factual answers; run a citation-format check and the ruler before adopting.",
+    "load_bearing": true,
+    "year": "2025",
+    "model_size_tested": "1.2B (350M sibling); compared to Qwen2.5-7B, Llama-3.1-8B, Gemma-3-4B (paper)",
+    "numbers": "Pleias-RAG-1.2B (third party): HotpotQA In-Acc 48.5, MuSiQue 15.0, TAT-QA F1 8.4, ConFiQA In-Acc 37.3, MR 25.3, MuSiQue-Un R-Acc 21.9; training 3,126,691 examples at 4096 ctx",
+    "licence": "apache-2.0 (HF card); GGUF at PleIAs/Pleias-RAG-1B-gguf"
+   },
+   {
+    "claim": "IBM Granite 3.3 8B RAG intrinsics (LoRA): Query Rewrite, Context Relevance, Answerability, Uncertainty, Hallucination Detection (per-sentence risk), Citation Generation (sentence-level). Base is 8B only; no small variant.",
+    "source_url": "https://huggingface.co/ibm-granite/granite-3.3-8b-rag-agent-lib",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Not a phone component at 8B; possible offline diagnostic or citation-label teacher for eval only, since small open judges were closed for the headline.",
+    "load_bearing": false,
+    "year": "2025",
+    "model_size_tested": "8B (granite-3.3-8b-instruct)",
+    "numbers": "no benchmark numbers on the card",
+    "licence": "apache-2.0"
+   },
+   {
+    "claim": "LFM2-1.2B-RAG: 1.2B model fine-tuned on 1M+ multi-turn and multi-document samples, GGUF released, multilingual (9 languages); no faithfulness or RAG benchmark numbers on the card.",
+    "source_url": "https://huggingface.co/LiquidAI/LFM2-1.2B-RAG",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Candidate only after a licence read; licence is lfm1.0, not Apache/MIT, so redistribution terms must be checked first.",
+    "load_bearing": false,
+    "year": "2025",
+    "model_size_tested": "1.2B",
+    "numbers": "none reported",
+    "licence": "lfm1.0 (not permissive by name; not read in full)"
+   },
+   {
+    "claim": "B1ade-1B: 1B SLM trained with GRPO on 723M tokens (2.2M context-question pairs), answer-similarity reward only; reports avg 0.654 across correctness/completeness/coherence/faithfulness (+10.8% over SFT) and cites retrieved passages in 42.4% of responses (emergent, not trained).",
+    "source_url": "https://arxiv.org/abs/2607.27506",
+    "source_kind": "paper",
+    "actionable_for_boar": "Shows RL on answer similarity can induce some citation behaviour; licence, GGUF and judge are unclear, so treat as a lead only.",
+    "load_bearing": false,
+    "year": "2026",
+    "model_size_tested": "1B (335M embedder sibling)",
+    "numbers": "avg 0.654; PopQA 81.82%, PubMedQA 65.8%, FEVER 51.09%; citation rate 42.4%",
+    "licence": "not stated on abstract page"
+   },
+   {
+    "claim": "Finetune-RAG: fine-tuning on a RAG dataset that mimics real-world retrieval imperfection; reports +21.2% factual accuracy over base model; code and dataset claimed open-sourced.",
+    "source_url": "https://arxiv.org/abs/2505.10792",
+    "source_kind": "paper",
+    "actionable_for_boar": "Possible training-data recipe for noisy-retrieval robustness; base model size unknown, so read the full text before using.",
+    "load_bearing": false,
+    "year": "2025",
+    "model_size_tested": "unknown from abstract",
+    "numbers": "+21.2% factual accuracy vs base",
+    "licence": "not stated on abstract page"
+   },
+   {
+    "claim": "SmolLM3-3B reference row in the same RAG table: no-think HotpotQA 49.9, MuSiQue 21.5, ConFiQA 58.6, MR 15.4, MuSiQue-Un 32.1; with think 56.5 / 29.4 / 60.5 / 13.3 / 77.1. Gemma-3-1B-it: HotpotQA 30.8, ConFiQA 62.1, MR 7.7.",
+    "source_url": "https://arxiv.org/html/2606.00683",
+    "source_kind": "paper",
+    "actionable_for_boar": "Gives the 3B-class baseline on the same metrics; SmolLM3-3B is below OCC-RAG-1.7B on these tasks, so it is not a stronger fallback.",
+    "load_bearing": false,
+    "year": "2026",
+    "model_size_tested": "3B and 1B",
+    "numbers": "see claim",
+    "licence": "n/a"
+   },
+   {
+    "claim": "HalluGuard (4B grounded/hallucinated classifier, not a generator): search snippet claims 84.4% balanced accuracy on RAGTruth subset of LLM-AggreFact, beating MiniCheck (7B) and Granite Guardian 3.3 (8B). Page fetch returned 404; not verified.",
+    "source_url": "https://preview.aclanthology.org/ingest-acl/2026.findings-acl.835/",
+    "source_kind": "paper",
+    "actionable_for_boar": "Relevant only as an offline grounding checker, not for the answer path.",
+    "load_bearing": false,
+    "year": "2026",
+    "model_size_tested": "4B",
+    "numbers": "84.4% balanced accuracy (snippet only)",
+    "licence": "unknown"
+   },
+   {
+    "claim": "RAGTruth (ACL 2024): ~18,000 RAG responses with word-level hallucination labels; a fine-tuned small model is competitive with prompt-based GPT-4 for detection (snippet only).",
+    "source_url": "https://aclanthology.org/2024.acl-long.585",
+    "source_kind": "paper",
+    "actionable_for_boar": "Usable as an external labelled set to measure confident errors independently of Claude judges; check its licence first.",
+    "load_bearing": false,
+    "year": "2024",
+    "model_size_tested": "not in snippet",
+    "numbers": "~18k responses",
+    "licence": "see github.com/ParticleMedia/RAGTruth (not read)"
+   }
+  ],
+  "searched_found_nothing": [
+   "Granite 4.0 Micro RAG LoRA adapters (none found; 3.4B model exists, Oct 2025)",
+   "Phi-4-mini 3.8B RAG faithfulness or RAGTruth numbers (none found; only Phi-4 14B as a judge)",
+   "LFM2-1.2B-RAG faithfulness/RAG benchmark numbers (none on the card)",
+   "Llama 3.2 1B/3B RAG faithfulness numbers (none found beyond one snippet without numbers)",
+   "Gemma 3n and MiniCPM RAG-faithfulness results (not found)",
+   "RAGTruth results for 1B-3B models with exact per-model numbers (not found; abstract only)",
+   "Independent (non-vendor) faithfulness benchmark for 1-3B RAG models with a correctness rubric (not found)",
+   "On-device speed of OCC-RAG or Pleias-RAG on Tensor G3 or 8 GB phone (not found)",
+   "Not searched: Gemma 3 small RAG fine-tunes, SmolLM3 RAG fine-tunes, MiniCheck 0.4B/0.8B, LongCite-style 1-3B citation SFT, Hugging Face GGUF listing for OCC-RAG"
+  ]
+ },
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/device_speed.md",
+  "findings": [
+   {
+    "claim": "LiteRT-LM Qwen3-1.7B (wi4b32, 932 MB) on Galaxy S26 (Snapdragon 8 Elite Gen 5): GPU OpenCL decode 40.5-40.7 tok/s, prefill 532-568, TTFT 0.38-0.40 s, RSS 1036 MB; CPU XNNPACK decode 8.0-8.3, prefill 48-76, TTFT 2.8-4.3 s, RSS 2523 MB. Community measurement, litert-lm v0.16.0 (card requires 0.18+). Apache-2.0.",
+    "source_url": "https://huggingface.co/litert-community/Qwen3-1.7B",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Run the same LiteRT file with CPU vs GPU on the Pixel 8a (Mali-G715) to test whether the GPU delegate gives a similar ratio; the S26 absolute numbers do not transfer.",
+    "load_bearing": true,
+    "model_size_tested": "Qwen3-1.7B, 4-bit/8-bit LiteRT (932 MB / 2.1 GB)",
+    "numbers": "GPU decode ~40.6 tok/s vs CPU ~8.1 tok/s (~5x); GPU prefill ~550 vs CPU ~60 (~9x)",
+    "year": "2026",
+    "licence": "Apache-2.0"
+   },
+   {
+    "claim": "Gemma 3 1B on Samsung S24 Ultra (Snapdragon 8 Gen 3): LiteRT-LM GPU prefill 2531 vs CPU 379 tok/s (int4 QAT, ctx 2048), while decode is about equal (GPU 49 vs CPU 55). MediaPipe GPU prefill up to 2585 tok/s per Google blog (dated 2025-03-12).",
+    "source_url": "https://huggingface.co/litert-community/Gemma3-1B-IT/blob/main/README.md",
+    "source_kind": "model_card",
+    "actionable_for_boar": "The GPU delegate mainly cuts prefill (RAG context ingestion and time-to-first-token) and does little for decode; decide whether the 8a GPU test is about latency, not answer quality.",
+    "load_bearing": true,
+    "model_size_tested": "Gemma 3 1B int4 QAT (529 MB)",
+    "numbers": "prefill 379 (CPU) vs 2531 (GPU); decode 55 vs 49; MediaPipe CPU int4 decode 50, prefill 138 at ctx 1280",
+    "year": "2025",
+    "licence": "Gemma terms (not Apache-2.0)"
+   },
+   {
+    "claim": "Measurement study of mobile LLM inference across five frameworks and CPU/GPU/NPU: NPUs best for compute-bound prefill, CPUs outperform other backends for memory-bound decode; framework gaps on NPUs up to 10x; CPU frequency tuning saves up to 39.7% energy. Device/SoC and model details not verified (PDF unreadable; abstract only).",
+    "source_url": "https://arxiv.org/abs/2607.05475",
+    "source_kind": "paper",
+    "actionable_for_boar": "Supports the view that decode is bandwidth-bound on CPU, so CPU-side decode gains are limited; prefill is where an accelerator helps. Read full PDF before quoting numbers.",
+    "load_bearing": true,
+    "model_size_tested": "not verified",
+    "numbers": "framework gap up to 10x on NPU; energy cut up to 39.7% (CPU freq) and 53.2% (NPU config)",
+    "year": "2026",
+    "licence": "CC BY 4.0"
+   },
+   {
+    "claim": "llama.cpp OpenCL backend lists only Qualcomm Adreno GPUs as verified (750, 810, 830, 840, X1-85, X2-90); Mali is not mentioned; no Android performance numbers; 'Improve OpenCL C kernels performance' still a TODO.",
+    "source_url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
+    "source_kind": "docs",
+    "actionable_for_boar": "Do not spend on llama.cpp OpenCL for the Pixel 8a; a GPU test should use LiteRT-LM first.",
+    "load_bearing": false,
+    "model_size_tested": "n/a",
+    "numbers": "no throughput figures",
+    "year": "2026",
+    "licence": "MIT (llama.cpp)"
+   },
+   {
+    "claim": "Tensor G3 (Pixel 8/8 Pro, Mali-G715) llama.cpp Q4_K_M estimates: 1B CPU 25-32 / Vulkan 30-38 tok/s; 3B CPU 12-16 / Vulkan 15-20 tok/s. Third-party blog with no methodology, no run count, device rows labelled representative; not verified.",
+    "source_url": "https://www.ertas.ai/zh/blog/llm-android-benchmarks-snapdragon-tensor",
+    "source_kind": "blog",
+    "actionable_for_boar": "Do not quote. Use only as a hypothesis that Vulkan may beat CPU on Tensor G3; our own 8a sweep must confirm. The 3B CPU figure is close to our 1.7B measurement on the 8a, which is a warning sign.",
+    "load_bearing": false,
+    "model_size_tested": "1B and 3B class (not named)",
+    "numbers": "G3 1B CPU 25-32, Vulkan 30-38; 3B CPU 12-16, Vulkan 15-20",
+    "year": "2026",
+    "licence": "not stated"
+   },
+   {
+    "claim": "Qualcomm Qwen3-1.7B on Snapdragon NPU via GENIE (w4a16, 4096 ctx): 56-58 tok/s on Snapdragon 8 Elite (Gen 5) with TTFT 0.03-0.93 s; llama.cpp via GENIEX_LLAMACPP q4_0 on the same chip 22.86 tok/s at ctx 4096. GENIE 'will be deprecated soon'.",
+    "source_url": "https://huggingface.co/qualcomm/Qwen3-1.7B",
+    "source_kind": "model_card",
+    "actionable_for_boar": "NPU route is Qualcomm-only and not available on Tensor G3; use only as a ceiling. Do not pursue GENIE for BOAR.",
+    "load_bearing": false,
+    "model_size_tested": "Qwen3-1.7B w4a16",
+    "numbers": "GENIE 58.30 tok/s (8 Elite Gen 5); llama.cpp q4_0 22.86 tok/s at ctx 4096",
+    "year": "2026",
+    "licence": "Apache-2.0"
+   },
+   {
+    "claim": "Google Tensor G3 TPU is not open to third-party LLMs: AICore exposes Gemini Nano only (text only); no public SDK for Tensor G3 NPU inference found; GrapheneOS forum anecdote reports third-party apps fall back to CPU on Pixel 10 Pro Fold.",
+    "source_url": "https://discuss.grapheneos.org/d/41853-local-llms-on-the-pixel-10-pro-fold-are-cpu-only-anyone-gotten-the-tpu-working",
+    "source_kind": "other",
+    "actionable_for_boar": "Treat the Tensor NPU as closed for BOAR; plan on CPU and GPU only. Search snippet only, AICore docs not opened.",
+    "load_bearing": false,
+    "model_size_tested": "n/a",
+    "numbers": "n/a",
+    "year": "2026",
+    "licence": "n/a"
+   },
+   {
+    "claim": "LiteRT-LM is Apache-2.0, runs on Android, iOS, Web, Desktop, IoT with GPU and NPU acceleration (CPU not named as a backend in README); Gemma 4 E2B on Android GPU (OpenCL) decode 52 tok/s, device not named; S26 Ultra up to 2.2x decode with MTP.",
+    "source_url": "https://github.com/google-ai-edge/LiteRT-LM",
+    "source_kind": "repo",
+    "actionable_for_boar": "LiteRT-LM is the runtime to test on the 8a GPU; check Mali OpenCL support with the actual device.",
+    "load_bearing": false,
+    "model_size_tested": "Gemma 4 E2B (~2.58 GB)",
+    "numbers": "Gemma 4 E2B GPU decode 52 tok/s (device unnamed)",
+    "year": "2026",
+    "licence": "Apache-2.0"
+   },
+   {
+    "claim": "Community Qwen3-1.7B on other phones (search snippets only): Qualcomm llama.cpp ~23-48 tok/s; DakeQQ Native-LLM-for-Android Qwen3-1.7B q4f32 ~37 tok/s on Vivo X200 Pro (MediaTek 9400, CPU).",
+    "source_url": "https://www.sourcepulse.org/projects/1840135",
+    "source_kind": "other",
+    "actionable_for_boar": "Scale only; no Tensor data. Not to be quoted as a BOAR number.",
+    "load_bearing": false,
+    "model_size_tested": "Qwen3-1.7B",
+    "numbers": "~37 tok/s (MediaTek 9400, CPU, anecdotal)",
+    "year": "2026",
+    "licence": "not checked"
+   },
+   {
+    "claim": "llama.cpp speculative decoding: examples README gives no speedups or mobile data (links PRs #2926, #3624, #5625). Blog claims of 2-3x and Pixel 9 40+ tok/s with a Qwen 0.5B draft are unverified. PELM (arXiv 2609.09662, SenSys'26) reports up to 23.1% speedup and 52.4% energy cut with self-speculative decoding; device not stated in abstract.",
+    "source_url": "https://arxiv.org/abs/2609.09662",
+    "source_kind": "paper",
+    "actionable_for_boar": "Speculative decoding is low priority for BOAR; no credible on-phone evidence at 1.7B. Revisit only after the GPU and thread-count tests.",
+    "load_bearing": false,
+    "model_size_tested": "not stated",
+    "numbers": "PELM up to +23.1% speed, -52.4% energy",
+    "year": "2026",
+    "licence": "not checked"
+   },
+   {
+    "claim": "Fast on-device LLM inference with NPUs (mllm-NPU): 22.4x faster prefill, 30.7x energy saving on average, more than 1,000 tok/s prefill for a billion-sized model; devices not stated in abstract; 2024 work, not on Tensor.",
+    "source_url": "https://arxiv.org/abs/2407.05858",
+    "source_kind": "paper",
+    "actionable_for_boar": "Background only; confirms prefill is the NPU-friendly phase. No Tensor path.",
+    "load_bearing": false,
+    "model_size_tested": "billion-sized model (Gemma-2B named as example)",
+    "numbers": "22.4x prefill; >1000 tok/s prefill",
+    "year": "2024",
+    "licence": "not checked"
+   }
+  ],
+  "searched_found_nothing": [
+   "No Pixel 8 / 8a / Tensor G3 LiteRT-LM or MediaPipe benchmark with prefill, decode or TTFT numbers",
+   "No Pixel 8 / 8a llama.cpp Vulkan or OpenCL benchmark for Mali-G715",
+   "No Qwen3-1.7B measurement on any Tensor chip",
+   "No third-party LLM access to the Tensor G3 TPU/NPU (AICore is Gemini Nano only)",
+   "No 2025-2026 llama.cpp speculative-decoding phone benchmark for a 1-2B target",
+   "Readable tables from arXiv 2607.05475 (PDF text did not extract; abstract only)",
+   "ExecuTorch, MLC-LLM: not searched in depth (gap)",
+   "Qualcomm/MediaTek NPU phone tables for 1-2B models beyond the Qualcomm model card: not found",
+   "Searches were standard mode only (13 WebSearch queries, about 25 WebFetch calls); no extended search run"
+  ]
+ },
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/uncertainty.md",
+  "findings": [
+   {
+    "claim": "At 3-4B, single-pass answer NLL is weak for detecting wrong short answers (AUROC 0.63-0.69 on TriviaQA/BioASQ/MedicalQA), while sampling-based semantic entropy (10 samples) reaches 0.884 on TriviaQA for Llama-3.2-3B-Instruct (NLL 0.664 same model).",
+    "source_url": "https://arxiv.org/html/2603.21172v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Single-pass NLL alone will not give a usable abstain signal at 1.7B; the gap to SE is only reachable with multiple samples, which the phone cannot afford at 12-16 tok/s.",
+    "load_bearing": true,
+    "model_size_tested": "Llama-3.2-3B, Qwen3-4B, Gemma-3-4B, Ministral-8B",
+    "numbers": "Llama 3.2 3B TriviaQA: NLL 0.664, SE 0.884, SE probe 0.723; Qwen3 4B: NLL 0.632, SE 0.844; Gemma 3 4B NLL 0.504, SE 0.752",
+    "year": "2026",
+    "licence": "arXiv non-exclusive (paper); no code link found"
+   },
+   {
+    "claim": "A correctness probe on prompt representations combined with entropy lifts single-pass detection at 3-4B on TriviaQA (Llama 3.2 3B PC+NLL 0.826 vs NLL 0.664; Qwen3 4B PC+NLL 0.888 vs 0.632), but does not beat plain SE everywhere and is worse on MedicalQA for Llama.",
+    "source_url": "https://arxiv.org/html/2603.21172v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "A one-pass probe plus NLL is a plausible cheap abstain score for BOAR, but it needs a labelled set of BOAR's own answers; probe training size and cost are not reported.",
+    "load_bearing": false,
+    "model_size_tested": "Llama-3.2-3B-Instruct, Qwen3-4B-Instruct-2507",
+    "numbers": "PC+NLL TriviaQA: Llama 3.2 3B 0.826, Qwen3 4B 0.888; MedicalQA Llama PC+NLL 0.649 vs NLL 0.690",
+    "year": "2026",
+    "licence": "arXiv non-exclusive (paper)"
+   },
+   {
+    "claim": "SAPLMA-style truthfulness probes trained on true/false statements reach 0.80-0.83 cross-topic accuracy on Llama 2-7B but fall to near chance (0.56-0.59) on the model's own TriviaQA-generated facts, so probes do not transfer to model-generated text.",
+    "source_url": "https://arxiv.org/html/2505.16520v3",
+    "source_kind": "paper",
+    "actionable_for_boar": "Any BOAR probe must be trained on labels from BOAR's own generated answers, not on public true/false data; a probe trained on curated facts will look good in-sample and fail on real answers.",
+    "load_bearing": true,
+    "model_size_tested": "Llama 2-7B, OPT-6.7B",
+    "numbers": "Llama 2-7B cross-topic accuracy layer 16 0.8281, layer 20 0.8012; TriviaQA-generated facts 0.562-0.594",
+    "year": "2025",
+    "licence": "CC BY 4.0 (paper); code https://github.com/sisinflab/HidingInTheHiddenStates (licence not checked)"
+   },
+   {
+    "claim": "A single greedy decode's first-token normalized top-K logit entropy (phi_first) reaches mean AUROC 0.820 across three 7-8B models and two closed-book QA sets, above semantic agreement (0.793) and surface self-consistency (0.791), at the cost of one decode.",
+    "source_url": "https://arxiv.org/abs/2605.05166",
+    "source_kind": "paper",
+    "actionable_for_boar": "Cheapest published candidate that fits the phone budget (no extra samples, no NLI model); test it first on the existing 1.7B dev traces, since the paper's models are 7-8B and it is untested at 1.7B.",
+    "load_bearing": true,
+    "model_size_tested": "three 7-8B instruction models (names not on abstract page)",
+    "numbers": "phi_first mean AUROC 0.820; semantic agreement 0.793; surface self-consistency 0.791",
+    "year": "2026",
+    "licence": "arXiv non-exclusive (paper); no code link found"
+   },
+   {
+    "claim": "Across 0.5B-14B instruction models on ARC-Challenge and TruthfulQA, Platt scaling reaches ECE as low as 0.02, but certified autonomy at a 20% risk budget is granted to only 3 model-task pairs and to none at 10%.",
+    "source_url": "https://arxiv.org/abs/2608.05064",
+    "source_kind": "paper",
+    "actionable_for_boar": "A guaranteed low-risk answer policy is out of reach at small size; BOAR should report a measured risk-coverage curve, not a guarantee, and avoid claiming certified abstention.",
+    "load_bearing": true,
+    "model_size_tested": "eleven models from three families, 0.5B to 14B",
+    "numbers": "ECE as low as 0.02 (Platt); certified autonomy: 3 pairs at 20% risk, 0 at 10%",
+    "year": "2026",
+    "licence": "not stated on abstract page"
+   },
+   {
+    "claim": "Verbalized confidence tracks whether a model commits to an answer rather than whether the answer is correct; log-probabilities show the opposite profile.",
+    "source_url": "https://arxiv.org/abs/2606.29490",
+    "source_kind": "paper",
+    "actionable_for_boar": "Do not use the 1.7B's self-reported confidence as the abstain threshold without validating it against correctness labels.",
+    "load_bearing": false,
+    "model_size_tested": "eight models (sizes not stated), plus Gemma 3 and 4 for mechanistic work",
+    "numbers": "no AUROC in abstract; residual verbal link to correctness 'fell to near chance'",
+    "year": "2026",
+    "licence": "arXiv non-exclusive (paper)"
+   },
+   {
+    "claim": "Mid-layer linear probes on hidden states reach 0.904-1.000 AUROC on held-out splits at 7-8B (4-bit), while sampling-based detectors stay at or below 0.541 under the same protocol.",
+    "source_url": "https://arxiv.org/abs/2606.02628",
+    "source_kind": "paper",
+    "actionable_for_boar": "Supports the probe direction, but it is a single preprint at 7-8B with per-dataset labels, and its sampling baseline conflicts with the 3B SE numbers, so the protocol drives the result; no 1-3B evidence.",
+    "load_bearing": false,
+    "model_size_tested": "Llama-3.1-8B, Mistral-7B, Qwen2.5-7B (4-bit NF4)",
+    "numbers": "single mid-layer probe AUROC 0.904-1.000; sampling <= 0.541; MLP rarely beats linear by more than 0.01",
+    "year": "2026",
+    "licence": "code and data stated as released; no repo link on page"
+   },
+   {
+    "claim": "Semantic Energy (penultimate-layer logit energy over sampled responses) beats semantic entropy by about 4-5 AUROC points, but still needs 10 samples per answer.",
+    "source_url": "https://arxiv.org/html/2508.14496v3",
+    "source_kind": "paper",
+    "actionable_for_boar": "A gain over SE, not a single-pass method; not usable on the phone as is.",
+    "load_bearing": false,
+    "model_size_tested": "Qwen3-8B, ERNIE-21B-A3B (MoE)",
+    "numbers": "Qwen3-8B SE 71.6 vs energy 76.1 (CSQA), 69.6 vs 74.8 (TriviaQA); 10 samples per question",
+    "year": "2025",
+    "licence": "paper CC BY 4.0; code https://github.com/MaHuanAAA/SemanticEnergy/tree/main (licence not checked)"
+   },
+   {
+    "claim": "Semantic Entropy Probes predict semantic entropy from hidden states at near-zero inference overhead (vs 5-10x for SE), with AUROC 0.7-0.95; smallest model tested is Phi-3 3.8B.",
+    "source_url": "https://arxiv.org/html/2406.15927v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Right shape for a one-pass phone probe (distil SE into a probe), but no evidence below 3.8B.",
+    "load_bearing": false,
+    "model_size_tested": "Llama-2-7B/70B, Mistral-7B, Phi-3-3.8B, Llama-3-70B",
+    "numbers": "SEP AUROC 0.7-0.95; SEP minus accuracy probe Phi-3-3.8B +9.9 (generalization, x100); 10 samples for SE",
+    "year": "2024",
+    "licence": "arXiv (paper); no code link found"
+   },
+   {
+    "claim": "Verbal-semantic uncertainty mismatch predicts hallucinations better than semantic uncertainty alone, and intervening on verbal uncertainty reduces confident hallucinations on short-form answers by about 30% relative.",
+    "source_url": "https://aclanthology.org/2025.emnlp-main.187",
+    "source_kind": "paper",
+    "actionable_for_boar": "Needs internal activation steering; not a cheap abstain signal by itself. Model sizes and AUROC not read.",
+    "load_bearing": false,
+    "model_size_tested": "not stated on the page read",
+    "numbers": "average relative reduction ~30% (short-form answers)",
+    "year": "2025",
+    "licence": "ACL Anthology materials CC BY 4.0; no code link found"
+   },
+   {
+    "claim": "llama.cpp server exposes top-N token probabilities (n_probs on /completion) but does not document per-layer hidden-state output; probes need a C API eval callback or patch (not verified).",
+    "source_url": "https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md",
+    "source_kind": "docs",
+    "actionable_for_boar": "Single-pass entropy features are available today via the server; hidden-state probes need an engineering spike on the Android build before they can be planned.",
+    "load_bearing": false,
+    "model_size_tested": "n/a",
+    "numbers": "n_probs returns top_logprobs per token; /v1/chat/completions logprobs option not seen in the truncated section",
+    "year": "2026",
+    "licence": "not shown on page read"
+   },
+   {
+    "claim": "A student model predicts a teacher's semantic dispersion before any answer token is generated, so the expensive sampling cost is avoided; tested on TriviaQA and MMLU.",
+    "source_url": "https://arxiv.org/abs/2602.04577",
+    "source_kind": "paper",
+    "actionable_for_boar": "Pre-generation abstain decision is attractive for latency, but AUROC and model sizes were not extracted; read the full HTML before deciding.",
+    "load_bearing": false,
+    "model_size_tested": "not extracted (lightweight students)",
+    "numbers": "not extracted",
+    "year": "2026",
+    "licence": "CC BY 4.0 (paper); no code link found"
+   },
+   {
+    "claim": "Early hallucination detection in small language models from per-token entropy, max-probability and entropy-change trajectories, scored by a small recurrent model, is claimed competitive with feature-rich white-box detectors and can flag errors before the response ends.",
+    "source_url": "https://neurips.cc/virtual/2026/165336",
+    "source_kind": "paper",
+    "actionable_for_boar": "Most on-topic title (single pass, small models, early exit), but no numbers were on the page read; fetch the OpenReview PDF before any decision.",
+    "load_bearing": false,
+    "model_size_tested": "titled 'small language models'; sizes not confirmed",
+    "numbers": "none on page read",
+    "year": "2026",
+    "licence": "code said to be released; no repo link on page"
+   }
+  ],
+  "searched_found_nothing": [
+   "AUROC for any uncertainty method at 1B-1.7B (semantic entropy, NLL, probes, verbal confidence): not found; the only sub-4B numbers were a 1.5B mean AUROC in a snippet (HalluScan, 2605.02443, not opened) and 3B in 2603.21172",
+   "P(True) / P(IK) on small models: no 2024-2026 small-model paper found; Kadavath et al. 2207.05221 abstract only, claims are for larger models",
+   "Hidden-state probes at 1-3B evaluated on the model's own generations with cross-topic splits: not found (closest is 2505.16520 at 7B)",
+   "llama.cpp per-layer hidden-state extraction on the server: not documented; cb_eval callback route not checked",
+   "Compute cost per answer in ms or joules on an Android phone for any of these methods: not found",
+   "Software licences for SEP, SAPLMA reproduction, Semantic Energy, phi_first and TrajECT code: not checked beyond page-level statements",
+   "Conformal abstention with a small-model (<=3B) result: not found; 2604.27914, 2502.06884 and 2502.19110 read as snippets only, not opened",
+   "Full text of TrajECT (2605 NeurIPS AI4GOOD) numbers and model sizes: not on the NeurIPS page; OpenReview PDF not opened"
+  ]
+ },
+ {
+  "notes_file": "<workspace>/rnd/research/coordinator/research-2026-10-20/notes/extractive.md",
+  "findings": [
+   {
+    "claim": "DeBERTa-v3-xsmall (MIT; 22M backbone + 48M embedding params) scores 84.8 F1 / 82.0 EM on SQuAD 2.0 dev per its model card; a community squad2 fine-tune (cc-by-4.0) self-reports 81.5/78.3 with an unofficial script, and its eval block gives F1 81.641 / EM 78.534. No on-device latency published.",
+    "source_url": "https://huggingface.co/microsoft/deberta-v3-xsmall",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Candidate span/no-answer gate for the reader slot; test on the 180 self-test items with deterministic containment scoring, then time int8 ONNX/LiteRT on the Pixel 8a.",
+    "load_bearing": true,
+    "model_size_tested": "xsmall, 22M backbone + 48M embeddings",
+    "numbers": "SQuAD2 dev F1/EM 84.8/82.0 (official); community fine-tune 81.5/78.3 self-reported, 81.641/78.534 eval block",
+    "year": "2021",
+    "licence": "MIT (base); cc-by-4.0 (nbroad/deberta-v3-xsmall-squad2 fine-tune)"
+   },
+   {
+    "claim": "LLMQuoter: a LoRA-fine-tuned LLaMA-3.2-3B quote extractor (teacher Gemini Pro 1.5, HotpotQA 15k) raises semantic answer accuracy from full context to extracted quotes: LLaMA 1B 24.4 -> 62.2, LLaMA 3B 57.7 -> 83.0, GPT-3.5 Turbo 75.8 -> 88.5. Quoter F1 41.3 -> 69.1. Judge is an LLM (paper says GPT-4.0).",
+    "source_url": "https://arxiv.org/html/2501.05554v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Quote-first gain at small size comes from a fine-tuned extractor, not from a prompt (BOAR's prompt-only quoting failed). Test a 1-3B quoter fine-tune against the prompt baseline; log as a new line since the closed DATA line was 4B.",
+    "load_bearing": true,
+    "model_size_tested": "LLaMA 3.2 1B and 3B answerers; 3B quoter with LoRA (about 24M trainable params)",
+    "numbers": "+37.8 (1B), +25.3 (3B), +12.7 (GPT-3.5); quoter F1 41.3 -> 69.1; 600-item HotpotQA test",
+    "year": "2025",
+    "licence": "no software licence stated; code github.com/yurifacanha/LLMQuoter"
+   },
+   {
+    "claim": "Small encoders beat fine-tuned 3B LLMs on a grounded-or-not decision at much lower compute: RoBERTa-large FT 90.2 vs Llama-3.2-3B FT 82.2 on SQuAD v2 grounding; ModernBERT-base FT 86.4 at 5.1e11 inference FLOPs vs Llama-3.2-1B 2.9e12 and 3B 7.0e12. Task is yes/no groundedness, not span extraction; latency not reported.",
+    "source_url": "https://arxiv.org/html/2506.21288",
+    "source_kind": "paper",
+    "actionable_for_boar": "Supports using an encoder as the source-supports-question gate that routes to the answer-from-memory warning branch, rather than asking the 1.7B for confidence.",
+    "load_bearing": true,
+    "model_size_tested": "RoBERTa-base 125M, RoBERTa-large 355M, ModernBERT-base 149M, Llama-3.2 1B/3B, Llama-3.1 8B",
+    "numbers": "SQuAD v2 FT: RoBERTa-large 90.2 +/- 0.4; ModernBERT-base 86.4 +/- 0.2; Llama-3.2-3B FT 82.2 +/- 0.8; Llama-3.1-8B FT 91.1 +/- 0.8; GPT-4o 0-shot 95.5",
+    "year": "2025",
+    "licence": "no model licence stated; code github.com/chandarlab/Hallucinate-less (licence not stated)"
+   },
+   {
+    "claim": "Extractive readers do better than generative readers on short-context QA and generalize better out of domain; the T5 encoder is a stronger extractive reader than RoBERTa (abstract-level claim, 2022 study on T5/BART-era models).",
+    "source_url": "https://arxiv.org/abs/2203.07522",
+    "source_kind": "paper",
+    "actionable_for_boar": "BOAR's context is short (2-5 chunks), the regime where extractive readers were reported to win; re-test with current encoders rather than assume.",
+    "load_bearing": true,
+    "model_size_tested": "T5/BART generative readers; nine pretrained models (not named in abstract)",
+    "numbers": "not in the abstract page; full paper not opened",
+    "year": "2022",
+    "licence": "arXiv non-exclusive licence (paper only)"
+   },
+   {
+    "claim": "ModernBERT-base: 149M params, 8,192-token native context, Apache-2.0; GLUE 88.4 (base), 90.4 (large); no QA benchmark or latency on the card.",
+    "source_url": "https://huggingface.co/answerdotai/ModernBERT-base",
+    "source_kind": "model_card",
+    "actionable_for_boar": "Redistributable long-context encoder option if a whole retrieved page must be read in one pass; not needed for the current 350-token context.",
+    "load_bearing": false,
+    "model_size_tested": "base, 149M",
+    "numbers": "GLUE 88.4 base / 90.4 large; StackQA 56.4 / 59.5 (code)",
+    "year": "2024",
+    "licence": "apache-2.0"
+   },
+   {
+    "claim": "MobileBERT (pretraining checkpoint, Apache-2.0): SQuAD v1.1/v2.0 dev F1 90.0/79.2; 62 ms latency on a Pixel 4 for a GLUE NLI task (not QA). Parameter count not stated on the page.",
+    "source_url": "https://arxiv.org/abs/2004.02984",
+    "source_kind": "paper",
+    "actionable_for_boar": "Oldest phone-tested encoder; useful as a latency floor, but the checkpoint needs a SQuAD 2.0 fine-tune before use.",
+    "load_bearing": false,
+    "model_size_tested": "MobileBERT (parameter count not on page; about 25M is commonly cited, unverified)",
+    "numbers": "SQuAD2 F1 79.2; Pixel 4 62 ms (GLUE)",
+    "year": "2020",
+    "licence": "apache-2.0 (google/mobilebert-uncased, https://huggingface.co/google/mobilebert-uncased)"
+   },
+   {
+    "claim": "Small generative RAG readers trained with rejection sampling and margin-aware preference optimization (RoseRAG) beat the best baseline for Qwen2.5-1.5B on HotpotQA (EM 34.8 vs 31.2) and 2WikiMultiHopQA (EM 31.6 vs 23.6). Answers are generative with reasoning, not extractive.",
+    "source_url": "https://arxiv.org/html/2502.10993v1",
+    "source_kind": "paper",
+    "actionable_for_boar": "Contrast case: a training-based fix for a 1.5B reader, outside the extractive angle; no code or licence stated.",
+    "load_bearing": false,
+    "model_size_tested": "Qwen2.5-1.5B-Instruct, Llama-3.2-1B, gemma-2-2b",
+    "numbers": "HotpotQA EM/F1 34.8/44.8 vs 31.2/39.6; 2Wiki EM/F1 31.6/35.0 vs 23.6/26.9; StrategyQA acc 59.8 vs 59.4",
+    "year": "2025",
+    "licence": "not stated"
+   },
+   {
+    "claim": "CoCoLex: decoding-time copy blending (model vocab distribution mixed with a context-copy distribution, weighted by confidence) reported to beat context-aware decoding, especially for long-form generation; no numbers or models on the abstract page.",
+    "source_url": "https://arxiv.org/abs/2508.05534",
+    "source_kind": "paper",
+    "actionable_for_boar": "Closest 2025 copy-mechanism decoding method; would need custom logit code in llama.cpp; low priority until numbers are checked.",
+    "load_bearing": false,
+    "model_size_tested": "not stated in abstract (five legal benchmarks)",
+    "numbers": "none on the abstract page",
+    "year": "2025",
+    "licence": "code licence not stated"
+   },
+   {
+    "claim": "Lazy-k: constrained decoding for token-classification information extraction, which the abstract says helps smaller models most. No numbers on the page.",
+    "source_url": "https://aclanthology.org/2023.emnlp-main.416",
+    "source_kind": "paper",
+    "actionable_for_boar": "Only evidence that constraints help small models more; it is IE, not QA. Not actionable on its own.",
+    "load_bearing": false,
+    "model_size_tested": "not stated",
+    "numbers": "none",
+    "year": "2023",
+    "licence": "not stated"
+   },
+   {
+    "claim": "Answer-sentence selection: selector-only models fail when all retrieved candidates are weak; a seq2seq answer generator over the top candidates gained up to 32 points on three English datasets (snippet only, not opened).",
+    "source_url": "https://arxiv.org/pdf/2106.00955",
+    "source_kind": "paper",
+    "actionable_for_boar": "Explains the wrong-top-passage failure; a plain sentence ranker cannot abstain, so a no-answer score is needed. Verify the 32-point figure before quoting.",
+    "load_bearing": false,
+    "model_size_tested": "not verified",
+    "numbers": "up to 32 points (snippet, unverified)",
+    "year": "2021",
+    "licence": "not stated"
+   },
+   {
+    "claim": "SlimLM (ACL 2025 demo): small generative models from 125M to 7B for on-device document QA, tested on a Samsung Galaxy S24 (snippet only, not opened).",
+    "source_url": "https://research.adobe.com/publication/slimlm-an-efficient-small-language-model-for-on-device-document-assistance",
+    "source_kind": "paper",
+    "actionable_for_boar": "Phone-feasibility data point at the 125M class; open it for the latency and QA table.",
+    "load_bearing": false,
+    "model_size_tested": "125M to 7B",
+    "numbers": "not verified",
+    "year": "2025",
+    "licence": "not stated"
+   }
+  ],
+  "searched_found_nothing": [
+   "Extractive QA small encoders on-device mobile 2025: only AI Indigo aggregator pages (MobileBERT, TinyRoBERTa) with no numbers.",
+   "Answer-sentence selection with small models and RAG in 2025: no 2025 AS2 paper found; only older AS2 work.",
+   "ModernBERT extractive QA or SQuAD 2.0 fine-tunes with F1: none found.",
+   "2024-2026 controlled comparison of extractive vs generative readers in RAG with 1-3B models: none found; only the 2022 Luo et al. study.",
+   "Span-constrained decoding (generation restricted to context spans) in a small model with QA numbers: none found; closest CoCoLex, Lazy-k, STOC-TOT (STOC-TOT not opened).",
+   "ONNX Runtime or LiteRT int8 latency for MiniLM or DeBERTa-xsmall on Android: no numbers found; BERT-base TFLite CPU about 352 ms (snippet, arXiv 2106.00526) is the only phone-CPU encoder latency seen.",
+   "Faithfulness work from 2025 (Generate-but-Verify, IJCNLP-AACL 2025): on search page only, not opened; it is a verifier, not a reader.",
+   "Licence and size checks for Qwen3-1.7B, knowledge-pack corpora, or reader pairings: out of scope for this angle.",
+   "Open problems not resolved: parameter count and int8 file size for MobileBERT and DeBERTa-xsmall; any Tensor G3 latency for an encoder reader; whether the 2022 extractive advantage holds for 2025 encoders."
+  ]
+ },
+ {
+  "verdicts": [
+   {
+    "claim": "R-Tuning SFT refusal-aware tuning raises refusal at 3B (FalseQA 87.32 vs 2.07, NEC 95.72 vs 0.96, SelfAware 90.99 vs 5.23)",
+    "angle": "honesty_ft",
+    "status": "corrected",
+    "evidence": "Table 3 refusal rates match exactly for OpenLLaMA-3B. The training is SFT with cross-entropy loss and no RL. The suffix is 'I am sure'/'I am unsure', appended after 'Are you sure you accurately answered...'. NAACL 2024. Correction: MMLU 24.96 vs 24.19 and ParaRel LLaMA-7B 74.61 vs 78.08 are AP scores (Table 1), not accuracy. The repo shizhediao/R-Tuning has no licence file. Refusal on unanswerable sets does not measure over-refusal on answerable items.",
+    "applies_to_1_7b_offline": "Partly. It was tested at 3B on a weak base model (MMLU AP is near chance). The LoRA SFT recipe is cheap and adds no inference cost on the phone. Over-refusal on answerable items must be measured.",
+    "corrected_claim": "R-Tuning (SFT only) on OpenLLaMA-3B gives refusal rates (Table 3) of FalseQA 87.32% vs 2.07%, NEC 95.72% vs 0.96%, SelfAware 90.99% vs 5.23%. MMLU ID AP is 24.96 vs 24.19 (AP, not accuracy; near chance). ParaRel OOD AP at LLaMA-7B is 74.61 vs 78.08 (a loss). The code repo has no licence.",
+    "source_url": "https://arxiv.org/html/2311.09677v3"
+   },
+   {
+    "claim": "Alignment for Honesty Confidence-Verb numbers at 13B/7B; over-refusal about 11 points",
+    "angle": "honesty_ft",
+    "status": "confirmed",
+    "evidence": "Table 5 (13B), Confidence-Verb: 58.91/10.68/74.12/73.34; unaligned acc 73.71. Multisample: 67.72/15.89/75.91/68.88. Table 6 (7B), Confidence-Verb: 56.04/11.43/72.31/68.12 vs unaligned 69.07. At 70B, Confidence-Verb has over-cons 6.51, so over-refusal shrinks with size. At 7B the prompt-based method has over-cons 36.63. The GAIR-NLP repo has no licence.",
+    "applies_to_1_7b_offline": "No model below 7B was tested. Over-refusal at 1.7B is likely worse than 11 points (the trend from 70B to 7B points that way).",
+    "source_url": "https://arxiv.org/html/2312.07000v1"
+   },
+   {
+    "claim": "FaithEval: small models rarely answer 'unknown' on unanswerable context",
+    "angle": "honesty_ft",
+    "status": "corrected",
+    "evidence": "Table 4 AVG strict/non-strict matches: Phi-3-mini 0.063/0.134, Phi-3.5-mini 0.131/0.196, Mistral-7B 0.290/0.395, Claude 3.5 Sonnet 0.621/0.630. The gap range is 13.6-68.4%, and Phi-3-medium scores 75.8 vs 7.4. Licence: the paper text is CC BY-NC-SA 4.0, but the GitHub code is Apache-2.0, and the HF dataset Salesforce/FaithEval-unanswerable-v1.0 card states no licence. So 'NC data' is not established; the data licence is unclear.",
+    "applies_to_1_7b_offline": "The smallest model tested is 3.8B (no 1-2B). Measuring the condition offline is fine. Use the data for evaluation only.",
+    "corrected_claim": "The numbers are as stated. The paper text is CC BY-NC-SA 4.0, the code is Apache-2.0, and the dataset licence is unstated on HF. Treat the data as not redistributable, but not because of a confirmed NC licence.",
+    "source_url": "https://arxiv.org/html/2410.03727v3"
+   },
+   {
+    "claim": "Rewarding Intellectual Humility: SFT then RLVR with a ternary reward; moderate r_abs cuts wrong answers; larger models more robust",
+    "angle": "honesty_ft",
+    "status": "corrected",
+    "evidence": "The abstract confirms the ternary reward (-1, r_abs, 1), the SFT abstention step before RL, and that r_abs ~ -0.25 to 0.3 reduces incorrect responses 'without severe accuracy degradation on multiple-choice tasks', with larger models more robust. It also states that open-ended QA showed limitations from insufficient exploration. Benchmarks are MedMCQA and Hendrycks Math; models are Granite-3.3-2B-Instruct and Qwen3-4B-Instruct. The paper is CC BY 4.0; the code repo has no licence. The abstract gives no accuracy numbers.",
+    "applies_to_1_7b_offline": "Tested at 2B, but the positive result covers multiple-choice only. In open-ended QA (BOAR's setting) the abstract reports limitations. Training is off-device.",
+    "corrected_claim": "The claim is right for multiple-choice tasks (MedMCQA, MATH). The abstract says open-ended QA showed limitations from insufficient exploration, so transfer to BOAR's free-form answers is unproven.",
+    "source_url": "https://arxiv.org/abs/2601.20126"
+   },
+   {
+    "claim": "Judge pairwise flips 13.6% on reruns; 28% of questions >20%; max 56%; kappa 0.51; 25% template sensitivity",
+    "angle": "judge_noise",
+    "status": "confirmed",
+    "evidence": "Abstract and Table 1: 13.6% mean flip rate (13.3% GPT-4o-mini, 13.9% GPT-4.1-mini). 28% of questions exceed 20% (8/29). Max 56% (GPT-4.1-mini, q004). Cross-judge agreement is 76%, kappa 0.51. Templates change the majority outcome in 5/20 = 25% of cases. These are pairwise preferences; the pointwise score gaps were small and not significant.",
+    "applies_to_1_7b_offline": "Not applicable (judge methodology). It is relevant to BOAR's Haiku 1-5 judge, though the paper's setting is pairwise and uses OpenAI mini judges.",
+    "source_url": "https://arxiv.org/html/2606.13685"
+   },
+   {
+    "claim": "About 11 trials for majority vote to recover the 50-trial verdict with 95% probability; 15 for high-variance",
+    "angle": "judge_noise",
+    "status": "corrected",
+    "evidence": "The abstract states 11 trials for 95% and 15 for high-variance questions. Table 6 disagrees: on hard questions, 15 trials give 90% fidelity and more than 50 are needed for 95%. The paper also recommends position randomisation and uncertainty reporting.",
+    "applies_to_1_7b_offline": "Not applicable. The repeat count must be re-measured for BOAR's pointwise 1-5 scores.",
+    "corrected_claim": "11 trials recover the 50-trial pairwise reference verdict with 95% probability overall. For high-variance questions, Table 6 gives 15 trials for 90% fidelity and more than 50 for 95% (the abstract's '15 for 95%' conflicts with Table 6).",
+    "source_url": "https://arxiv.org/html/2606.13685"
+   },
+   {
+    "claim": "Judge error correctable with a small human calibration set via sensitivity/specificity plug-in correction; PPI-style biased under shift",
+    "angle": "judge_noise",
+    "status": "corrected",
+    "evidence": "The method corrects BINARY judge verdicts using sensitivity/specificity, with CIs that cover both test and calibration uncertainty. Adaptive allocation uses a pilot of about 10 per label and Prop. 5.2. The intro states that existing methods can become biased under distribution shift (Sec. 8: the PPI-type difference estimator), while their estimator stays unbiased. Simulations use n=1000 and m=200; the Arena experiment uses a 90/10 split. Judges: GPT-4.1-mini, with Claude-Haiku-4.5 and others in the appendix. CC BY-SA 4.0, ICML 2026, v4 dated 2026-05-31. The bias statement was checked on the current version, not on v3 specifically.",
+    "applies_to_1_7b_offline": "Not applicable. BOAR's 1-5 scores must be binarised (e.g. correct = score >= 4) before this correction applies, and the calibration labels must come from humans.",
+    "corrected_claim": "The plug-in correction applies to binary judge verdicts (sensitivity/specificity), with CIs over test and calibration uncertainty and adaptive allocation of calibration labels. The paper shows existing estimators (including the PPI difference estimator) can be biased under test/calibration shift, while theirs is not. In simulations, m=200 calibration labels go with n=1000 test items.",
+    "source_url": "https://arxiv.org/html/2511.21140"
+   },
+   {
+    "claim": "LiteRT-LM Qwen3-1.7B wi4b32 on Galaxy S26: GPU ~40.6 tok/s decode vs CPU ~8.1; prefill ~550 vs ~60",
+    "angle": "device_speed",
+    "status": "confirmed",
+    "evidence": "The card's numbers match exactly. It is a community measurement on a Galaxy S26 SM8850 with litert_lm_advanced_main v0.16.0, a 202-token prompt and 2 runs. The files require litert-lm 0.18.0 or newer. Apache-2.0. Caveats: the int8 file's CPU prefill is 238-245 (vs 48-76 for int4), which points to an unoptimised int4 CPU path, so the 5x/9x ratio is not a hardware property. GPU engine init takes 4.4-8.3 s. MMLU-100 is 64 for int4 vs 70 for BF16. llama.cpp CPU on the Pixel 8a already decodes 12-16 tok/s, faster than LiteRT CPU's 8 tok/s on a faster SoC.",
+    "applies_to_1_7b_offline": "Same model size and fully offline. Mali-G715 is untested, and the S26 Adreno numbers do not transfer.",
+    "source_url": "https://huggingface.co/litert-community/Qwen3-1.7B"
+   },
+   {
+    "claim": "Gemma 3 1B S24 Ultra: LiteRT-LM GPU prefill 2531 vs CPU 379, decode 49 vs 55; MediaPipe GPU 2585 per Google blog",
+    "angle": "device_speed",
+    "status": "confirmed",
+    "evidence": "The card's LiteRT-LM table (int4 QAT, ctx 2048) gives CPU 379/55 and GPU 2531/49. MediaPipe GPU int4 QAT gives 2585/56 with TTFT 4.50 s; MediaPipe CPU int4 block128 at ctx 1280 gives 138/50. The Google Developers blog of 2025-03-12, 'Gemma 3 on mobile and web with Google AI Edge', quotes 2585 tok/s (S24 Ultra, performance governor). The licence is Gemma terms.",
+    "applies_to_1_7b_offline": "A 1B model, offline. It is an Adreno GPU, not the Pixel 8a's Mali. It supports the view that the GPU helps prefill and TTFT, not decode.",
+    "source_url": "https://huggingface.co/litert-community/Gemma3-1B-IT"
+   },
+   {
+    "claim": "Mobile LLM inference measurement study: NPU best at prefill, CPU best at decode; 10x NPU framework gaps; 39.7% energy saving",
+    "angle": "device_speed",
+    "status": "corrected",
+    "evidence": "Title: 'Is Your NPU Ready for LLMs?' (CC BY 4.0). The full HTML gives the details. Devices: Xiaomi 17 and OnePlus 15 (SM8850), Xiaomi 15 (SM8750), Xiaomi 14 (SM8650). Frameworks: llama.cpp, MNN, MLC-LLM, MLLM, GENIE. Models: Llama 3.2-1B/3B, Qwen2.5-1.5B/7B, Phi-3.5-mini, all 4-bit. The 10x example is the OnePlus 15 with Qwen2.5-1.5B: GENIE NPU prefill 1463.7 vs llama.cpp 115.1 tok/s, with decode about 23 for both. llama.cpp CPU decode reaches 55.7 vs 23.0 for the NPU, and CPUs reach up to about 70 tok/s. The 39.7% saving comes from CPU frequency tuning during NPU inference; the NPU energy config saves 53.2%.",
+    "applies_to_1_7b_offline": "It covers 1-3B models, offline. All devices are Qualcomm (no Tensor G3/Mali), so the direction transfers but the numbers do not.",
+    "corrected_claim": "On 4 Snapdragon phones (8 Gen 3 to 8 Elite Gen 5), 5 frameworks, and 1B-7.6B 4-bit models: NPUs win prefill (e.g. 1463.7 vs 115.1 tok/s for Qwen2.5-1.5B on a OnePlus 15), and CPU llama.cpp wins decode (55.7 vs 23.0 tok/s). NPU framework gaps exceed 10x. CPU frequency tuning saves up to 39.7% energy, and the NPU config saves 53.2%.",
+    "source_url": "https://arxiv.org/html/2607.05475"
+   }
+  ]
+ },
+ {
+  "verdicts": [
+   {
+    "claim": "At 3-4B, single-pass answer NLL is weak (AUROC 0.63-0.69); SE (10 samples) 0.884 TriviaQA Llama-3.2-3B vs NLL 0.664.",
+    "angle": "uncertainty",
+    "status": "corrected",
+    "corrected_claim": "Sequence-NLL AUROC across 3-4B models spans 0.504-0.690. TriviaQA/BioASQ/MedicalQA: Llama-3.2-3B 0.664/0.656/0.690, Qwen3-4B 0.632/0.663/0.613, Gemma-3-4B 0.504/0.647/0.635. SE with K=10, T=1 on TriviaQA: Llama 0.884, Qwen 0.844, Gemma 0.752. SE probe (Llama) 0.723. The same paper's single-pass prompt-hidden-state probe (PC probe, logistic regression, no sampling) reaches TriviaQA 0.813 (Llama 3B), 0.888 (Qwen3-4B, above SE) and 0.752 (Gemma). So the gap is NOT only reachable with samples, but it needs labels from the model's own answers. Test sets are about 150 questions.",
+    "evidence": "Main-results tables in the arXiv HTML. SE is defined with K=10 samples at T=1. PC probe = 'logistic regression classifier on prompt representations' at the last token before generation.",
+    "source_url": "https://arxiv.org/html/2603.21172v1",
+    "applies_to_1_7b_offline": "Partly. Raw NLL is a weak abstain signal; SE is too costly on the phone. A prompt-state probe is one forward pass and fits the budget if llama.cpp exposes hidden states, but it is untested below 3B and needs BOAR-labelled training data."
+   },
+   {
+    "claim": "SAPLMA-style probes 0.80-0.83 cross-topic on Llama 2-7B fall to 0.56-0.59 on model-generated TriviaQA facts.",
+    "angle": "uncertainty",
+    "status": "confirmed",
+    "evidence": "Table 1 (Repr. avg): L16 0.8281, L20 0.8012, L24 0.7586, last 0.7326. Table 6 (TriviaQA-generated, threshold 0.5): 0.562 (last) to 0.594 (L16); threshold tuning does not help. Models are Llama 2-7B and OPT-6.7B only. Paper CC BY 4.0. Code repo exists; GitHub API shows no licence.",
+    "source_url": "https://arxiv.org/html/2505.16520v3",
+    "applies_to_1_7b_offline": "Indirectly. Measured at 7B only. The lesson (train probes on the model's own generations) transfers as a methodology rule, not as a number."
+   },
+   {
+    "claim": "phi_first (first-token top-K normalized entropy, single greedy decode) mean AUROC 0.820 across three 7-8B models and two closed-book QA sets, vs semantic agreement 0.793 and surface self-consistency 0.791.",
+    "angle": "uncertainty",
+    "status": "confirmed",
+    "evidence": "Models: Llama-3.1-8B-Instruct, Mistral-7B-Instruct-v0.3, Qwen2.5-7B-Instruct. Data: PopQA test and TriviaQA val, n=1000 each, K=100. phi_first per cell: PopQA 0.887/0.842/0.895, TriviaQA 0.794/0.727/0.772, mean 0.820. Sem. AU mean 0.793; AU-full mean 0.791. No NLL baseline is reported and there is no code link.",
+    "source_url": "https://arxiv.org/html/2605.05166",
+    "applies_to_1_7b_offline": "Fits the phone: it needs only top-n logits that llama.cpp already exposes, with no extra decode. Untested at <=3B and in RAG/multi-sentence answers, where the 'first content token' must be defined. Validate on the 1.7B dev traces before relying on it."
+   },
+   {
+    "claim": "0.5B-14B models on ARC-Challenge/TruthfulQA: Platt ECE as low as 0.02; certified autonomy at 20% risk for only 3 model-task pairs, none at 10%.",
+    "angle": "uncertainty",
+    "status": "confirmed",
+    "evidence": "Best Platt ECE is 0.015 (Qwen2.5-3B, ARC), rounded to 0.02 in the abstract. The 3 pairs certified at 20% risk are Qwen2.5-14B ARC (99.8% coverage), Qwen2.5-7B ARC (93.3%) and Qwen2.5-14B TruthfulQA (43.6%); none at 10%. 11 models: Qwen2.5-0.5/1.5/3/7/14B, Llama3.2-1B/3B, Llama3.1-8B, Gemma3-1B/4B/12B. Verbalized confidence, multiple-choice tasks, 25,168 predictions. No code; arXiv licence only.",
+    "source_url": "https://arxiv.org/abs/2608.05064",
+    "applies_to_1_7b_offline": "Yes, as a negative result. No model <=4B was certified at any risk budget, so BOAR should report risk-coverage curves, not guarantees. The tasks are multiple choice, not open QA."
+   },
+   {
+    "claim": "DeBERTa-v3-xsmall (MIT; 22M backbone + 48M embedding) SQuAD 2.0 dev 84.8 F1 / 82.0 EM; nbroad squad2 fine-tune (cc-by-4.0) 81.5/78.3 unofficial script, eval block F1 81.641 / EM 78.534; no on-device latency.",
+    "angle": "extractive",
+    "status": "confirmed",
+    "evidence": "The Microsoft card says 'License: mit', '22M backbone parameters', '48M parameters in the Embedding layer', and SQuAD 2.0 84.8/82.0. The nbroad card says cc-by-4.0 and 'I got 81.5/78.3 but I only did one run and I didn't use the official squad2 evaluation script'; its eval block gives squad_v2 EM 78.534 / F1 81.641. No latency is published.",
+    "source_url": "https://huggingface.co/microsoft/deberta-v3-xsmall",
+    "applies_to_1_7b_offline": "Plausible as a ~70M-param gate/reader alongside the 1.7B within the RAM budget. Licences allow redistribution. Phone latency is unmeasured."
+   },
+   {
+    "claim": "LLMQuoter: LoRA LLaMA-3.2-3B quoter (teacher Gemini Pro 1.5, HotpotQA 15k) lifts accuracy 1B 24.4->62.2, 3B 57.7->83.0, GPT-3.5 75.8->88.5; quoter F1 41.3->69.1; judge GPT-4.0.",
+    "angle": "extractive",
+    "status": "confirmed",
+    "evidence": "All numbers are exact. Quoter P 43.6->71.0, R 48.3->68.0. Data: 14.4k train/val + 600 test. LoRA has about 24M trainable params. Judge is 'OpenAI GPT-4.0' via DSPy. The full context is the long HotpotQA distractor set, unlike BOAR's short context. The code repo yurifacanha/LLMQuoter has licence null per the GitHub API, so the code is not redistributable as-is.",
+    "source_url": "https://arxiv.org/html/2501.05554v1",
+    "applies_to_1_7b_offline": "Promising, but the gain was measured against long 10-paragraph contexts. With BOAR's 2-5 short chunks the headroom is likely smaller. A quoter adds a second decode on the phone; a 1B quoter would be needed to fit the latency budget."
+   },
+   {
+    "claim": "RoBERTa-large FT 90.2 vs Llama-3.2-3B FT 82.2 on SQuAD v2 grounding; ModernBERT-base 86.4 at 5.1e11 FLOPs vs Llama-3.2-1B 2.9e12 and 3B 7.0e12; yes/no task; no latency.",
+    "angle": "extractive",
+    "status": "corrected",
+    "corrected_claim": "Numbers are exact: RoBERTa-base 75.8, RoBERTa-large 90.2 (1.1e12 FLOPs), ModernBERT-base 86.4 (5.1e11), Llama-3.2-1B FT 56.8 (2.9e12), Llama-3.2-3B FT 82.2 (7.0e12), Llama-3.1-8B FT 91.1, GPT-4o 0-shot 95.5. The task is binary relevance and no latency is reported. The code URL is github.com/chandar-lab/Hallucinate-less (not chandarlab), and the GitHub API returns Not Found, so code availability and licence are unknown. A fine-tuned 1B decoder does poorly (56.8).",
+    "evidence": "Table 1 of the arXiv HTML, mean \u00b1 std over 5 seeds. The GitHub API query for chandar-lab/Hallucinate-less returned 'Not Found'.",
+    "source_url": "https://arxiv.org/html/2506.21288",
+    "applies_to_1_7b_offline": "Supports an encoder gate (ModernBERT-base, about 149M) over asking a small decoder; it fits phone RAM. The gate must be trained by BOAR, since no public checkpoint was found."
+   },
+   {
+    "claim": "Extractive readers beat generative on short-context QA and generalize better OOD; T5 encoder is a stronger extractive reader than RoBERTa (2022).",
+    "angle": "extractive",
+    "status": "confirmed",
+    "evidence": "The abstract states all three findings. The full text uses the MRQA benchmark (6 in-domain + 6 out-of-domain datasets) with readers RoBERTa, ELECTRA, T5-base and BART-large, fine-tuned; T5-large was excluded as 'too large (737M)'.",
+    "source_url": "https://arxiv.org/abs/2203.07522",
+    "applies_to_1_7b_offline": "Weak transfer. It compares fine-tuned <=400M seq2seq generators with encoders, not an in-context 1.7B decoder LLM. Treat it only as motivation to re-test an encoder reader."
+   },
+   {
+    "claim": "OCC-RAG-1.7B vs Qwen3-1.7B no-think: HotpotQA 47.7->60.9, MuSiQue 20.1->38.2, ConFiQA 64.8->81.4, MR 12.7->5.0, MuSiQue-Un 54.7->87.2; substring metrics; vendor-reported; citations as literal quotes; GGUF unverified.",
+    "angle": "rag_slms",
+    "status": "corrected",
+    "corrected_claim": "The table numbers are exact. Against Qwen3-1.7B think mode the gains shrink to: HotpotQA 60.9 vs 60.9 (0), MuSiQue 38.2 vs 30.7, ConFiQA 81.4 vs 70.4, MR 5.0 vs 8.3, MuSiQue-Un 87.2 vs 82.8. OCC cites by source id inside a 5-section structured trace (query analysis, source analysis, reasoning, status ANSWERABLE/UNANSWERABLE, answer), not literal quotes, so output length and latency must be measured. Training: about 3.25M pairs (43k abstain), roughly 9e9 tokens, distilled from a larger teacher. A GGUF exists: occ-ai/OCC-RAG-1.7B-GGUF, with Q4_K_M at 1.11 GB. Licence is MIT, confirmed on HF.",
+    "evidence": "Table 2 of arXiv 2606.00683 and the HF model card. The HF API lists occ-ai/OCC-RAG-1.7B-GGUF files Q4_0, Q4_K_M, Q5_K_M, Q6_K, Q8_0, F16 and BF16, with tag license:mit and base Qwen3-1.7B-Base. GitHub: optimal-cognitive-core/OCC-RAG.",
+    "source_url": "https://arxiv.org/html/2606.00683",
+    "applies_to_1_7b_offline": "Yes, as a same-size drop-in on the phone (Q4_K_M 1.11 GB, MIT). The open question is answer latency from its reasoning trace at 12-16 tok/s, plus fit with BOAR's prompt and citation format."
+   },
+   {
+    "claim": "Pleias-RAG-1B (~1.2B) quotes literal passages; third-party: HotpotQA 48.5, MuSiQue 15.0, TAT-QA F1 8.4, ConFiQA MR 25.3, MuSiQue-Un 21.9; 3,126,691 examples at 4096 ctx; apache-2.0 + GGUF.",
+    "angle": "rag_slms",
+    "status": "corrected",
+    "corrected_claim": "The licence (apache-2.0), the literal <ref> quote citations and the training figures (3,126,691 examples, about 9.47B tokens, 4096 ctx) are confirmed. The third-party numbers (48.5/15.0/8.4/ConFiQA In-Acc 37.3/MR 25.3/21.9) come from the OCC-RAG paper, a competing vendor's table; TAT-QA F1 8.4 points to a format mismatch, so treat them as a lower bound. The official GGUF is a single unquantized 2.39 GB file, so Q4 needs local quantization. The paper itself gives benchmarks only in figures and calls the model both 1B and 1.2B.",
+    "evidence": "arXiv 2504.18225 Section 3 (mid-training stats) and Section 4 (qualitative results only). HF card: apache-2.0. HF API: Pleias-RAG-1B-gguf contains only Pleias-RAG-1B.gguf, 2,393,458,272 bytes.",
+    "source_url": "https://huggingface.co/PleIAs/Pleias-RAG-1B",
+    "applies_to_1_7b_offline": "Usable on the phone after Q4 quantization, with a redistributable licence. Evidence of quality on general factual QA is weak, so treat it as a lower priority than OCC-RAG-1.7B."
+   }
+  ]
+ }
+]

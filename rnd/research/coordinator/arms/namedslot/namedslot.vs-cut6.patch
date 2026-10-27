@@ -1,0 +1,62 @@
+diff --git a/src/rag/wikiPack.test.ts b/src/rag/wikiPack.test.ts
+index 44b48628..9e1522ab 100644
+--- a/src/rag/wikiPack.test.ts
++++ b/src/rag/wikiPack.test.ts
+@@ -72,6 +72,16 @@ describe("WikiPack", () => {
+     expect(named.every((n) => n.share < 0.5)).toBe(true);
+   });
+ 
++  it("NAMEDSLOT: a side-named article gets one lead passage after the first hit, never first", async () => {
++    const q = "Which financial crisis and debt problems led to the revolution, not the Black Sea trade?";
++    const hits = await pack.search(q, { k: 4 });
++    expect(hits[0].title).not.toBe("Black Sea");
++    const sea = hits.filter((h) => h.title === "Black Sea");
++    expect(sea.length).toBe(1);
++    expect(sea[0].lead).toBe(true);
++    expect(hits.indexOf(sea[0])).toBe(1);
++  });
++
+   it("covers both sides of a comparison", async () => {
+     const hits = await pack.search("Compare the French Revolution and the Industrial Revolution.", { k: 4 });
+     expect(hits.slice(0, 4).map((h) => h.title).sort()).toEqual(["French Revolution", "French Revolution", "Industrial Revolution", "Industrial Revolution"]);
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..31eda0c4 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -824,7 +824,12 @@ export class WikiPack {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
+     const stems = await this.stems(query);
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+-    const ids = (await this.titlesInQuestion(query, stems)).filter((t) => t.share >= this.tuning.namedMinShare).map((t) => t.id);
++    const named = await this.titlesInQuestion(query, stems);
++    const ids = named.filter((t) => t.share >= this.tuning.namedMinShare).map((t) => t.id);
++    // NAMEDSLOT: a name below the share bar still gets ONE passage, its lead, after the first hit (never first): the
++    // generic words of "Kenya: its location, capital, official languages…" otherwise pick other countries' guides
++    // over Kenya's, and "How big is Iceland in square kilometres?" South/North Iceland over Iceland. At most two.
++    const sideIds = named.filter((t) => t.share < this.tuning.namedMinShare && !ids.includes(t.id)).map((t) => t.id).slice(0, 2);
+     for (const t of titles) {
+       const id = await this.resolveTitle(t);
+       if (id !== null && !ids.includes(id)) ids.push(id);
+@@ -915,6 +920,22 @@ export class WikiPack {
+         }
+       }
+     }
++    if (sideIds.length && hits.length) {
++      // NAMEDSLOT (see sideIds): the lead of each side-named article, right after the first hit, past the limit.
++      const side: PackHit[] = [];
++      for (const id of sideIds) {
++        if (hits.some((h) => h.articleId === id)) continue;
++        const lead = (await this.articlePassages(id, stems, 0, action, false))[0];
++        if (!lead || seen.has(lead.chunkId) || hits.some((x) => nearDuplicate(x.text, lead.text))) continue;
++        // A travel guide is no side source for a question the encyclopedia already answers ("Darwin" in "When did
++        // Darwin publish…" is Charles Darwin, not the city); with no encyclopedia hit it is the only account of the place.
++        if (lead.source === "enwikivoyage" && !isTravelQuestion(query) && hits.some((x) => x.source === "enwiki")) continue;
++        side.push({ ...lead, via: "bm25", score: hits[0].score });
++        seen.add(lead.chunkId);
++      }
++      hits.splice(Math.min(1, hits.length), 0, ...side);
++      lay += side.length;
++    }
+     if (hits.length < minHits && expand) {
+       const extra = (await expand(query)).filter((t) => t.trim());
+       if (extra.length) {

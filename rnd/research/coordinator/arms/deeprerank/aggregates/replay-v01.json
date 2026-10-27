@@ -1,0 +1,96 @@
+{
+ "n": 60,
+ "retrieved": 46,
+ "goldItems": 31,
+ "emptyPool": 4,
+ "engineK": {
+  "6": 46
+ },
+ "topk": 20,
+ "ks": [
+  6,
+  4
+ ],
+ "tau": null,
+ "perK": {
+  "4": {
+   "recallBase": 0.2903,
+   "recallRerank": 0.3387,
+   "recallPoolHead": 0.2903,
+   "itemsChanged": 30,
+   "goldEnter": [
+    "vit-trv-003",
+    "vit-sci-002"
+   ],
+   "goldLeave": [],
+   "recallUp": [
+    "vit-trv-003",
+    "vit-sci-002"
+   ],
+   "recallDown": [],
+   "itemsEmptied": 0,
+   "baseNePoolHead": 1,
+   "minTopkP": {
+    "p10": 0.0003,
+    "p50": 0.0806,
+    "p90": 0.8303
+   }
+  },
+  "6": {
+   "recallBase": 0.3226,
+   "recallRerank": 0.371,
+   "recallPoolHead": 0.3226,
+   "itemsChanged": 28,
+   "goldEnter": [
+    "vit-sci-002",
+    "trv-004"
+   ],
+   "goldLeave": [],
+   "recallUp": [
+    "vit-sci-002",
+    "trv-004"
+   ],
+   "recallDown": [],
+   "itemsEmptied": 0,
+   "baseNePoolHead": 2,
+   "minTopkP": {
+    "p10": 0.0003,
+    "p50": 0.0509,
+    "p90": 0.6657
+   }
+  }
+ },
+ "scoreP": {
+  "all": {
+   "p10": 0.0001,
+   "p50": 0.022,
+   "p90": 0.7954
+  },
+  "top1": {
+   "p10": 0.007,
+   "p50": 0.8392,
+   "p90": 0.9852
+  }
+ },
+ "rerankMs": {
+  "p50": 3668.7654,
+  "p90": 19846.6706,
+  "max": 33910.3
+ },
+ "maxPromptTokensPerCall": 4233,
+ "docCharsP90": 1022,
+ "docCharsMax": 1516,
+ "docCharsCut": 2000,
+ "reranker": {
+  "file": "<workspace>/shared-models/bge-reranker-v2-m3-q4km.gguf",
+  "sha256": "e186a244ed455b4ab66ec64339ce7427a6ae13f5c0b5e544de96e50f0f8b3673",
+  "server": "<scratch> -m <workspace>/shared-models/bge-reranker-v2-m3-q4km.gguf --rerank --host 127.0.0.1 --port 8097 -c 8192 -b 8192 -ub 8192 --parallel 1 -t 4 --no-webui"
+ },
+ "tree": "<workspace>/wt/cut7",
+ "questions": "<workspace>/boar-eval/bench/v0.1/questions.public.jsonl",
+ "gold": "<workspace>/boar-eval/bench/v0.1/gold/sources.json",
+ "gate": "rules",
+ "detector": "lexical",
+ "tier": "deep (alwaysComplete + deepModelId)",
+ "totalSeconds": 350
+}

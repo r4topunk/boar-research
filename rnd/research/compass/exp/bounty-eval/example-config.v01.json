@@ -1,0 +1,91 @@
+{
+ "title": "BOAR vs internet + frontier AI — DEMO on bench v0.1 (development set, not the claim)",
+ "bench": "v0.1 public (57 judged items; development set: arms were tuned on it)",
+ "questions": "<workspace>/boar-eval/bench/v0.1/questions.public.jsonl",
+ "decline_ratio": 0.306,
+ "reference_recipe": "claude-opus-5-5 with WebSearch + WebFetch, prompt reference.v1, frozen 2026-09-30/10-02",
+ "headline": "and4b",
+ "systems": [
+  {
+   "key": "and4b",
+   "label": "BOAR Android 12 GB (Qwen3-4B, main 0cfd4a77)",
+   "tier": "Android 12 GB",
+   "kind": "boar",
+   "runs": [
+    "<workspace>/boar-eval/runs/night-2026-10-01/and-qwen-s42",
+    "<workspace>/boar-eval/runs/night-2026-10-01/and-qwen-s43"
+   ],
+   "timing_source": "desktop-proxy (node backend, Android profile)"
+  },
+  {
+   "key": "ios15",
+   "label": "BOAR iPhone 13 profile (Qwen2.5-1.5B, main 0cfd4a77)",
+   "tier": "iPhone 4 GB (1B-class)",
+   "kind": "boar",
+   "runs": [
+    "<workspace>/boar-eval/runs/night-2026-10-01/ios-main-s42",
+    "<workspace>/boar-eval/runs/night-2026-10-01/ios-main-s43"
+   ],
+   "timing_source": "desktop-proxy"
+  }
+ ],
+ "one_b_baseline": "ios15",
+ "anchors": [
+  {
+   "key": "haiku",
+   "label": "Haiku, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<workspace>/boar-eval/runs/anchors-2026-10-02/haiku"
+   ]
+  },
+  {
+   "key": "sonnet",
+   "label": "Sonnet, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<workspace>/boar-eval/runs/anchors-2026-10-02/sonnet"
+   ]
+  },
+  {
+   "key": "opus",
+   "label": "Opus, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<workspace>/boar-eval/runs/anchors-2026-10-02/opus"
+   ]
+  },
+  {
+   "key": "fable",
+   "label": "Fable, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<workspace>/boar-eval/runs/anchors-2026-10-02/fable"
+   ]
+  }
+ ],
+ "slices": [
+  {
+   "title": "Vitalik slice (V-exact, items available in v0.1)",
+   "ids": "demo-vslice-ids.txt",
+   "note": "Demo: only the 3 judge-graded V-exact items already in v0.1. The full slice adds vx-001 (Tell me about Japan), vx-002 (quantum-resistant signatures) and the vegan items (venue-list vs OSM).",
+   "per_item": [
+    "and4b",
+    "ios15",
+    "haiku",
+    "opus"
+   ]
+  }
+ ],
+ "caveats": [
+  "DEMO on the development set v0.1: arms were tuned on it, so this is not a claim. The claim uses v0.2 (held-out v0.2-new) per the frozen analysis plan.",
+  "The judge is a Claude model (opus, judge.v1) without web; the reference is a frontier model WITH web. A cross-family judge re-score and a 40-pair human sample are planned (plan §6) and not in this report.",
+  "References reflect the web on their generation date and are not ground truth.",
+  "Speed rows here come from a desktop proxy; the claim's speed must come from the physical Android device.",
+  "Venue items (vegan restaurants) are graded against OSM gold, not by the judge; they are not in the ratio."
+ ]
+}

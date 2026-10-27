@@ -1,0 +1,201 @@
+diff -ruN -x node_modules -x .cache rs-H4/be/adapter-litedecline.ts rs-RD2/be/adapter-litedecline.ts
+--- rs-H4/be/adapter-litedecline.ts	2026-10-20 17:44:17
++++ rs-RD2/be/adapter-litedecline.ts	2026-10-22 21:01:09
+@@ -834,6 +834,7 @@
+     persona: persona.id,
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
++    ...(process.env.BOAR_READ_GROUND === "1" ? { "engine.read_ground": "1", "engine.read_ground_bar": process.env.BOAR_READ_GROUND_BAR ?? "0.6" } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
+     ...(server && process.env.BOAR_SERVER_EXTRA_ARGS ? { "server.extra_args": process.env.BOAR_SERVER_EXTRA_ARGS.trim() } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+diff -ruN -x node_modules -x .cache rs-H4/be/adapter.ts rs-RD2/be/adapter.ts
+--- rs-H4/be/adapter.ts	2026-10-14 15:36:47
++++ rs-RD2/be/adapter.ts	2026-10-22 21:01:09
+@@ -822,6 +822,7 @@
+     persona: persona.id,
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
++    ...(process.env.BOAR_READ_GROUND === "1" ? { "engine.read_ground": "1", "engine.read_ground_bar": process.env.BOAR_READ_GROUND_BAR ?? "0.6" } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+diff -ruN -x node_modules -x .cache rs-H4/src/routing/answer.ts rs-RD2/src/routing/answer.ts
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-RD2/src/routing/answer.ts	2026-10-22 21:00:24
+@@ -73,7 +73,7 @@
+ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+-import { attributeCitations, checkCitations } from "./citations";
++import { attributeCitations, checkCitations, groundUncited } from "./citations";
+ import { calculate } from "./calculators";
+ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+@@ -276,6 +276,9 @@
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
+ /** HEADPASS-ST eval only (= ORACLE-ST's dump, default off): BOAR_PROMPT_DUMP = JSONL file that receives each generation's prompt/messages. */
++// READER arm RD2 (bench-only, default off = byte-identical): cite-or-ground for an uncited but supported compact answer.
++const READ_GROUND = typeof process !== "undefined" && process.env?.BOAR_READ_GROUND === "1";
++const READ_GROUND_BAR = typeof process !== "undefined" ? Number(process.env?.BOAR_READ_GROUND_BAR ?? 0.6) : 0.6;
+ const PROMPT_DUMP: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_PROMPT_DUMP || undefined : undefined;
+ async function dumpPrompt(query: string, prompt: unknown): Promise<void> {
+   const fs = await import("node:fs");
+@@ -1587,6 +1590,17 @@
+           reasonCodes.push(`citations:added-${attributed.added.join("-")}`);
+           text = attributed.text;
+           finalText = text;
++        }
++      }
++      // READ-GROUND (RD2): a compact answer with sources and still no [n] whose claim sentences an on-topic kept source
++      // supports (numbers included) gets those [n], so the all-citations-removed / uncited-with-sources checks below
++      // see a cited answer. Post-processing only; the 4B and every other path are untouched.
++      if (READ_GROUND && !health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !stopRequested) {
++        const g = groundUncited(text, sources.map((c) => fullOf(c)), req.query, READ_GROUND_BAR);
++        if (g.added.length) {
++          text = g.text;
++          finalText = text;
++          reasonCodes.push(`citations:grounded-${g.added.join("-")}`);
+         }
+       }
+       // VG (cut 3 dev, coordinator 4B-LOSS-ANATOMY arm 1): a Yes/No or winner that the answer's own facts contradict
+diff -ruN -x node_modules -x .cache rs-H4/src/routing/citations.ground.test.ts rs-RD2/src/routing/citations.ground.test.ts
+--- rs-H4/src/routing/citations.ground.test.ts	1969-12-31 21:00:00
++++ rs-RD2/src/routing/citations.ground.test.ts	2026-10-22 21:15:37
+@@ -0,0 +1,70 @@
++import { describe, expect, it } from "vitest";
++import { groundUncited } from "./citations";
++
++const chunk = (id: string, title: string, body: string) => ({ chunkId: id, docId: id, title, body, score: 1, matchType: "lexical" as const });
++
++// Shapes of the READER arm RD2 pre-count (F1b kept chunks, answers without any [n]).
++const moose = chunk("m1", "Moose", "The moose or elk (Alces alces) is the world's tallest, largest and heaviest extant species of deer. Most adult male moose weigh between 380 and 700 kg.");
++const bison = chunk("b1", "American bison", "The American bison is a species of bison, a bovine mammal. Adult males weigh up to 1,270 kg, making the bison the heaviest land animal in North America.");
++const tiger = chunk("t1", "Siberian tiger", "The average historical wild male Siberian tiger weighed 215.3 kg and the female 137.5 kg.");
++
++describe("groundUncited (READ-GROUND)", () => {
++  it("lan-cmp-004 shape: a supported comparison answer gets the [n] of the bison chunk", () => {
++    const q = "Which weighs more on average, an adult male moose or an adult male American bison?";
++    const a = "An adult male American bison weighs up to 1,270 kg, so the bison is the heaviest land animal in North America.";
++    const out = groundUncited(a, [moose, bison, tiger], q);
++    expect(out.added).toEqual([2]);
++    expect(out.text).toBe("An adult male American bison weighs up to 1,270 kg, so the bison is the heaviest land animal in North America [2].");
++  });
++
++  it("lan-rsn-004 shape: a memory number absent from the sources gets no [n] (numeric guard)", () => {
++    const pop = chunk("p1", "Human overpopulation", "The world's population has greatly increased in the last 50 years. The recent rapid increase in human population over the past two centuries has raised concerns that humans are beginning to overpopulate the Earth.");
++    const q = "Roughly how many people were alive on Earth in 1900, and when did humanity first reach one billion?";
++    const a = "In 1900, there were approximately 1.2 billion people alive on Earth, and humanity first reached one billion around the year 1400.";
++    expect(groundUncited(a, [pop], q)).toEqual({ text: a, added: [] });
++  });
++
++  it("an off-topic source (no key term shared with the query) is never cited", () => {
++    const voy = chunk("v1", "Wikivoyage", "Travellers should carry cash. The currency is accepted everywhere and the coastline offers many beaches for tourists to enjoy in summer.");
++    const q = "How do I season sushi rice without vinegar?";
++    const a = "Travellers should carry cash, the currency is accepted everywhere and the coastline offers many beaches for tourists.";
++    expect(groundUncited(a, [voy], q)).toEqual({ text: a, added: [] });
++  });
++
++  it("the 50% rule: one supported claim in three stays uncited; two in three is cited", () => {
++    const q = "Tell me about moose and bison weight";
++    const s1 = "Most adult male moose weigh between 380 and 700 kg.";
++    const s2 = "Quantum chromodynamics describes gluon interactions inside protons.";
++    const s3 = "Pineapple plantations dominate Hawaiian agriculture exports.";
++    const one = [s1, s2, s3].join(" ");
++    expect(groundUncited(one, [moose], q)).toEqual({ text: one, added: [] });
++    const two = [s1, "The moose or elk is the tallest, largest and heaviest extant species of deer.", s3].join(" ");
++    const out = groundUncited(two, [moose], q);
++    expect(out.added).toEqual([1, 1]);
++    expect(out.text).toContain("700 kg [1].");
++    expect(out.text).toContain("species of deer [1].");
++    expect(out.text).not.toContain("Hawaiian agriculture exports [1]");
++  });
++
++  it("is deterministic and leaves decimals whole", () => {
++    const sah = chunk("s1", "Sahara", "The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres of North Africa.");
++    const a = "The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres.";
++    const out = groundUncited(a, [sah], "How big is the Sahara desert?");
++    expect(out.text).toBe("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres [1].");
++    expect(out).toEqual(groundUncited(a, [sah], "How big is the Sahara desert?"));
++  });
++
++  it("a raised bar withholds a [n] that a lower bar gives", () => {
++    const q = "Which weighs more on average, an adult male moose or an adult male American bison?";
++    const a = "The American bison is heavier than the moose, a bovine mammal of North America.";
++    const lo = groundUncited(a, [moose, bison], q, 0.5);
++    const hi = groundUncited(a, [moose, bison], q, 0.95);
++    expect(lo.added.length).toBeGreaterThan(0);
++    expect(hi.added).toEqual([]);
++  });
++
++  it("empty inputs return the text unchanged", () => {
++    expect(groundUncited("", [moose], "moose")).toEqual({ text: "", added: [] });
++    expect(groundUncited("Moose are deer.", [], "moose")).toEqual({ text: "Moose are deer.", added: [] });
++  });
++});
+diff -ruN -x node_modules -x .cache rs-H4/src/routing/citations.ts rs-RD2/src/routing/citations.ts
+--- rs-H4/src/routing/citations.ts	2026-10-07 09:27:55
++++ rs-RD2/src/routing/citations.ts	2026-10-22 20:59:57
+@@ -143,6 +143,61 @@
+   return { text: dedupeCitations(text), added };
+ }
+ 
++/**
++ * READ-GROUND (READER arm RD2, bench-only behind BOAR_READ_GROUND=1; default off = unchanged): cite-or-ground for a
++ * compact-model answer that carries no [n] at all after attribution. When at least half of its claim sentences
++ * (and at least one) are supported by an on-topic kept source at `bar` (below the ATTRIBUTION_MIN_SUPPORT bar the
++ * sentence-by-sentence pass already used, so only sentences it left alone are reached), each gets that source's [n]
++ * and the answer is not treated as memory. Guards: a source is eligible only if its title or body shares a key
++ * term with the query (off-topic neighbours never get cited); every number token in a sentence must appear in the
++ * source's title+body (memory figures never get a source). Otherwise the text is returned unchanged.
++ */
++const numberTokens = (text: string): string[] =>
++  (text.match(/\d[\d,.]*/g) ?? []).map((t) => t.replace(/,/g, "").replace(/\.+$/, "")).filter((t) => t.length > 0);
++
++export function groundUncited(answer: string, sources: RetrievedChunk[], query: string, bar = 0.6): AttributedCitations {
++  const none = { text: answer, added: [] as number[] };
++  if (!sources.length || !answer.trim()) return none;
++  const queryKeys = keyTerms(query);
++  const eligible = sources.map((s) => {
++    const have = terms(`${s.title} ${s.body}`);
++    return queryKeys.some((q) => have.some((h) => same(h, q)));
++  });
++  if (!eligible.some(Boolean)) return none;
++  const bodyNums = sources.map((s) => new Set(numberTokens(`${s.title} ${s.body}`)));
++  const picks = new Map<number, number>(); // sentence start offset -> source index
++  let claims = 0;
++  answer.replace(/(?:[^.!?\n]|(?<=\d)\.(?=\d))+[.!?]*/g, (sentence: string, at: number) => {
++    if (keyTerms(sentence).length < MIN_KEY_TERMS) return sentence;
++    if (/^\s*(#{1,6}\s|\*\*[^*]+\*\*\s*:?\s*$)/.test(sentence)) return sentence;
++    claims++;
++    const nums = numberTokens(sentence);
++    let best = -1;
++    let bestSupport = 0;
++    sources.forEach((source, i) => {
++      if (!eligible[i]) return;
++      if (nums.some((n) => !bodyNums[i].has(n))) return;
++      const support = citationSupport(sentence, source);
++      if (support >= bar && support > bestSupport) {
++        best = i;
++        bestSupport = support;
++      }
++    });
++    if (best >= 0) picks.set(at, best);
++    return sentence;
++  });
++  if (claims === 0 || picks.size === 0 || picks.size / claims < 0.5) return none;
++  const added: number[] = [];
++  const text = answer.replace(/(?:[^.!?\n]|(?<=\d)\.(?=\d))+[.!?]*/g, (sentence: string, at: number) => {
++    const best = picks.get(at);
++    if (best === undefined) return sentence;
++    added.push(best + 1);
++    const m = /^(.*?)(\s*)([.!?]*)(\s*)$/s.exec(sentence)!;
++    return `${m[1]} [${best + 1}]${m[3]}${m[4]}`;
++  });
++  return { text: dedupeCitations(text), added };
++}
++
+ /** The same [n] twice around one sentence end ("… Zone [1]. [1]", "… [1] [1].") is shown once (Prism CIT-2). */
+ export function dedupeCitations(text: string): string {
+   return text.replace(/\[(\d+)\][ \t]*([.!?]?)[ \t]*\[\1\]/g, "[$1]$2");

@@ -1,0 +1,16 @@
+# Answer-style L1 (Anvil, pre-registered 2026-10-03 before any generation)
+- **Items:** v0.1 EN, the 57 judgeable items. Prompts are the engine's real fast-tier prompts from `boar-eval/runs/and-qwen-s44/and-qwen-s44.prompts.jsonl` (main 0cfd4a77, 4B). Only the two style strings change (`variants.json`): the system "Answer in 2-3 …" line and the user "Keep it short: 2-3 sentences …" suffix. Contexts, no-source instructions and date lines are byte-identical.
+- **Arms:**
+  - S0 = control (unchanged replay);
+  - S2 = answer-first: one-line answer + 2–3 supporting facts;
+  - S3 = check-then-conclude + cover every part.
+  - The 4–6-sentence persona is NOT re-run: already measured, QUEUE #12, Δ −0.044 over 2 seeds, cw 10 → 20.
+- **Generation:** Qwen3-4B Q4_K_M, node-llama-cpp CPU, app sampler (0.7/40/0.95/0.05), nPredict 512, seed 42; seed 43 only if the s42 signal clears the screen below.
+- **Judging:** judge.v1 (Opus, both orders) vs the frozen v0.1 refs. Ratio as judge-core.
+- **Screen to go to 2 seeds:** an arm with Δratio ≥ +0.02 vs S0 at s42.
+- **Adopt bar (2 seeds, paired vs S0):** Δratio ≥ +0.03, AND judge correctness not lower (Δ ≥ −0.1), AND confidently-wrong (correctness ≤ 2) not higher by more than 1 per seed.
+- **Reported:**
+  - added output tokens p50/mean, and phone decode time at 5 tok/s;
+  - labels pass/cw/fail;
+  - Compass safety rules (latest frozen) on the danger/health items, hand-read.
+- **Expected (stated now):** S2 ≈ 0 to +0.02 (structure without new facts). S3 ≈ 0 to +0.02: fixes some (b)/(a) items, may add memory facts (the #12 risk). Neither likely clears +0.03.

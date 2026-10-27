@@ -1,0 +1,55 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/answer.ts rs-A/src/routing/answer.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-A/src/routing/answer.ts	2026-10-21 23:13:48
+@@ -119,6 +119,25 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++
++/** RETRIEVE-SWEEP arm A: cosine of the search query to a chunk (its retrieval similarity when known, else both embedded now). */
++const rsQueryVec = new Map<string, Float32Array>();
++async function rsDenseSim(query: string, c: RetrievedChunk): Promise<number> {
++  if (typeof c.similarity === "number" && Number.isFinite(c.similarity)) return c.similarity;
++  try {
++    const { embeddingEngine } = await import("../rag/embed");
++    const { cosineSimilarity } = await import("../rag/pure");
++    let qv = rsQueryVec.get(query);
++    if (!qv) {
++      qv = await embeddingEngine.embed(query);
++      rsQueryVec.clear();
++      rsQueryVec.set(query, qv);
++    }
++    return cosineSimilarity(qv, await embeddingEngine.embed(`${c.title}\n${c.body}`.slice(0, 1500)));
++  } catch {
++    return -1;
++  }
++}
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+@@ -1071,7 +1090,24 @@
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        const kept = sources.filter((c) => onSubject(c));
++        // RS_GROUND_DENSE (RETRIEVE-SWEEP arm A, bench-only env switch, default off = unchanged): a chunk that fails onSubject
++        // is also kept when its dense similarity (bge-small cosine) to the search query is >= tau (never a crypto-blocked chunk,
++        // never a today-in-history question).
++        const rsTau = Number((globalThis as any).process?.env?.RS_GROUND_DENSE ?? "");
++        let kept: RetrievedChunk[];
++        if (rsTau > 0) {
++          kept = [];
++          for (const c of sources) {
++            if (onSubject(c)) kept.push(c);
++            else if (!cryptoBlocked(c) && !history) {
++              const s = await rsDenseSim(searchQuery, c);
++              if (s >= rsTau) {
++                kept.push(c);
++                reasonCodes.push(`rs:ground-dense:${c.chunkId}:${s.toFixed(3)}`);
++              }
++            }
++          }
++        } else kept = sources.filter((c) => onSubject(c));
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;

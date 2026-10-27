@@ -1,0 +1,17 @@
+diff --git a/conversion/bert.py b/conversion/bert.py
+index 8ea6c42..1a86eb5 100644
+--- a/conversion/bert.py
++++ b/conversion/bert.py
+@@ -604,7 +604,11 @@ class ModernBertModel(BertModel):
+         self.gguf_writer.add_add_bos_token(True)
+         self.gguf_writer.add_add_eos_token(True)
+         self.gguf_writer.add_add_sep_token(True)
+-        self._set_vocab_gpt2()
++        try:
++            self._set_vocab_gpt2()
++        except NotImplementedError:
++            # mmBERT: Gemma-style SentencePiece BPE (Metaspace + byte_fallback) stored only as tokenizer.json
++            self._set_vocab_llama_hf()
+ 
+     def set_gguf_parameters(self):
+         super().set_gguf_parameters()

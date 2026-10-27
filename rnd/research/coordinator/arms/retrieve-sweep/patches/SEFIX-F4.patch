@@ -1,0 +1,65 @@
+diff -ruN rs-H4/src/routing/answer.ts rs-SEFIX-F4/src/routing/answer.ts
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-SEFIX-F4/src/routing/answer.ts	2026-10-22 20:17:10
+@@ -66,6 +66,7 @@
+   emergencyLine,
+   healthTopicTerms,
+   onHealthTopic,
++  noKeptHoldsProper,
+   riskyHealthInstruction,
+   termCoverage,
+ } from "./context";
+@@ -1071,7 +1072,18 @@
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        const kept = sources.filter((c) => onSubject(c));
++        let kept = sources.filter((c) => onSubject(c));
++        // SEFIX F4 (RS_KEEP_NOPROPER=1 per source / =lit only when no kept source holds a proper noun; bench-only, default off): a source the
++        // proper-noun rule alone dropped comes back when it holds any content term of the question and passes the rest of onTopic.
++        const noProper = (globalThis as any).process?.env?.RS_KEEP_NOPROPER;
++        if (noProper && kept.length < sources.length && (noProper !== "lit" || noKeptHoldsProper(matchQuery, kept))) {
++          const relaxed = (c: RetrievedChunk) => (cryptoBlocked(c) ? false : history ? history.isDateArticle(c.title) : names.length ? namedByLexicon(names, c) || onTopic(req.query, c, true) : onTopic(matchQuery, c, true));
++          const back = sources.filter((c) => !kept.includes(c) && relaxed(c));
++          if (back.length) {
++            kept = sources.filter((c) => kept.includes(c) || back.includes(c));
++            reasonCodes.push(`grounding:keep-noproper-restored-${back.length}`);
++          }
++        }
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;
+diff -ruN rs-H4/src/routing/context.ts rs-SEFIX-F4/src/routing/context.ts
+--- rs-H4/src/routing/context.ts	2026-10-07 09:27:55
++++ rs-SEFIX-F4/src/routing/context.ts	2026-10-22 20:17:10
+@@ -699,7 +699,18 @@
+   });
+ }
+ 
+-export function onTopic(query: string, chunk: RetrievedChunk): boolean {
++/** SEFIX F4 (literal variant): the question has proper nouns and none of these sources holds one. */
++export function noKeptHoldsProper(query: string, kept: RetrievedChunk[]): boolean {
++  const proper = properNounTerms(query);
++  if (!proper.length) return false;
++  return !kept.some((c) => {
++    const words = new Set(tokenizeTerms(`${c.title} ${c.body}`));
++    return proper.some((p) => words.has(p));
++  });
++}
++
++/** `relaxProper` (SEFIX F4, bench-only): the proper-noun requirement becomes "any content term of the question is in the source". */
++export function onTopic(query: string, chunk: RetrievedChunk, relaxProper = false): boolean {
+   const q = new Set(tokenizeTerms(query));
+   const text = `${chunk.title} ${chunk.body}`;
+   // A year or a proper noun in the question must be in the source (Sextant, gate a9f156c:
+@@ -708,7 +719,9 @@
+   const proper = properNounTerms(query);
+   if (proper.length) {
+     const words = new Set(tokenizeTerms(text));
+-    if (!proper.some((p) => words.has(p))) return false;
++    if (relaxProper) {
++      if (!tokenizeTerms(query).some((t) => !proper.includes(t) && words.has(t))) return false;
++    } else if (!proper.some((p) => words.has(p))) return false;
+   }
+   // The article the question names ("Monsoon" for "What causes the monsoon?": every word of a title
+   // segment is in the question) is on topic even when this passage doesn't repeat the question's

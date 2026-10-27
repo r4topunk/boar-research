@@ -1,0 +1,102 @@
+--- rs-H4/src/rag/retrieve.ts
++++ rs-R34/src/rag/retrieve.ts
+@@ -201,7 +201,48 @@
+   const merged = lists.flatMap((l) => l.slice(0, topK).map((c, i) => ({ c, rrf: 1 / (k + i + 1) })));
+   merged.sort((a, b) => b.rrf - a.rrf || b.c.score - a.c.score);
+   return merged.map(({ c, rrf }) => ({ ...c, score: (rrf * (k + 1)) * maxOrig }));
++}
++
++/**
++ * SEARCHPAR arm R4 (RS_DEDUPE=0.9, bench-only, default off = unchanged): near-duplicate filter on the ranked candidate list. A candidate is
++ * dropped when at least `min` of its 8-word shingles (lower-cased word runs of the body; a body under 8 words is one shingle) also occur in
++ * a higher-ranked candidate that was kept, so a Stack Exchange thread that repeats another thread's answer does not take a second slot.
++ * `against` seeds the kept set (the list the candidates join). Appends one line per call to RS_DEDUPE_LOG when set.
++ */
++const rsShingles = (text: string): Set<string> => {
++  const w = text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
++  const out = new Set<string>();
++  if (w.length < 8) { out.add(w.join(" ")); return out; }
++  for (let i = 0; i + 8 <= w.length; i++) out.add(w.slice(i, i + 8).join(" "));
++  return out;
++};
++export function rsNearDup<T extends { chunkId: string; body: string }>(list: T[], min: number, against: T[] = []): { kept: T[]; dropped: { id: string; of: string; share: number }[] } {
++  const keptSets: { id: string; sh: Set<string> }[] = against.map((c) => ({ id: c.chunkId, sh: rsShingles(c.body) }));
++  const kept: T[] = [];
++  const dropped: { id: string; of: string; share: number }[] = [];
++  for (const c of list) {
++    const sh = rsShingles(c.body);
++    let hit: { id: string; share: number } | null = null;
++    for (const k of keptSets) {
++      let n = 0;
++      for (const x of sh) if (k.sh.has(x)) n++;
++      const share = n / sh.size;
++      if (share >= min) { hit = { id: k.id, share }; break; }
++    }
++    if (hit) dropped.push({ id: c.chunkId, of: hit.id, share: hit.share });
++    else { kept.push(c); keptSets.push({ id: c.chunkId, sh }); }
++  }
++  return { kept, dropped };
++}
++function rsDedupeMin(): number {
++  const v = Number((globalThis as any).process?.env?.RS_DEDUPE ?? 0);
++  return v > 0 && v <= 1 ? v : 0;
+ }
++function rsDedupeLog(stage: string, query: string, topK: number, dropped: { id: string; of: string; share: number }[]) {
++  const f = (globalThis as any).process?.env?.RS_DEDUPE_LOG;
++  if (!f) return;
++  try { (globalThis as any).process.getBuiltinModule("node:fs").appendFileSync(f, JSON.stringify({ stage, query, topK, n: dropped.length, dropped }) + "\n"); } catch {}
++}
+ 
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+ export function isDisambiguation(c: { title: string; body: string }): boolean {
+@@ -259,10 +300,12 @@
+   // "extra" / "append": the dense list stays out of the fusion and is returned beside the result (retrieve appends it /
+   // attaches it).
+   const extra = opts.packDense2 === "extra" || opts.packDense2 === "append";
++  // RS_DEDUPE (SEARCHPAR R4): the fusion returns a longer ranked list so a dropped near-duplicate is backfilled by the next candidate.
++  const dedupeMin = rsDedupeMin();
+   const fused = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+     [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
+-    topK
++    dedupeMin ? topK * 4 : topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+   // right after the named articles, instead of competing in the fusion with keyword noise from the bundled corpus.
+@@ -275,10 +318,16 @@
+   const seen = new Set(first.map((c) => c.chunkId));
+   // One copy per article passage across libraries (src/rag/dedupe.ts), before the cut, so a dropped
+   // copy makes room for the next distinct source.
+-  const result = dedupeArticleCopies([
++  let result = dedupeArticleCopies([
+     ...first.filter((c, i) => first.findIndex((x) => x.chunkId === c.chunkId) === i),
+     ...fused.filter((c) => !seen.has(c.chunkId)),
+-  ]).slice(0, Math.max(topK, named.length));
++  ]);
++  if (dedupeMin) {
++    const nd = rsNearDup(result, dedupeMin);
++    result = nd.kept;
++    rsDedupeLog("list", query, topK, nd.dropped);
++  }
++  result = result.slice(0, Math.max(topK, named.length));
+   // A what-to-do question: the lay sources the pack search added past its limit (a first-aid manual next to the
+   // clinical article) must reach the answer, not be cut here with the rest of the keyword hits.
+   if (action) {
+@@ -289,7 +338,16 @@
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
+-  return { chunks: result, dense: extra ? wikiSemantic : [], sidecar: wiki.some((w) => w.pack?.hasChunkVecs === true) };
++  // RS_DEDUPE: dense candidates that repeat a chunk already in the list (or a higher-ranked dense candidate) are not offered either.
++  let denseOut = extra ? wikiSemantic : [];
++  if (dedupeMin && denseOut.length) {
++    const ranked = [...denseOut].sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
++    const nd = rsNearDup(ranked, dedupeMin, result);
++    const keepIds = new Set(nd.kept.map((c) => c.chunkId));
++    denseOut = denseOut.filter((c) => keepIds.has(c.chunkId));
++    rsDedupeLog("dense", query, topK, nd.dropped);
++  }
++  return { chunks: result, dense: denseOut, sidecar: wiki.some((w) => w.pack?.hasChunkVecs === true) };
+ }
+ 
+ export { assemblePrompt } from "./pure";

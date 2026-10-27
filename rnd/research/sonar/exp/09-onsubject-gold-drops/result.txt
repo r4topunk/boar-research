@@ -1,0 +1,49 @@
+
+vit-hlt-002 | health=false matchQuery="I'm at 4,000 m in the Andes with a headache and nausea. What should I do?"
+  compress 691 -> 67; kept idx 3
+  [0] Wikivoyage: Altitude sickness §Treatment via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-  <= GOLD
+  [1] Wikivoyage: Altitude sickness §Treatment > Oxygen and hyperbaric chambers via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-  <= GOLD
+  [2] Wikivoyage: Altitude sickness §Treatment > Acetazolamide via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-  <= GOLD
+  [3] Wikivoyage: North Sikkim §Stay safe via=bm25 | compressed:kept | onTopic(raw):false onTopic(compressed):false
+
+lan-exp-002 | health=false matchQuery="What are the key facts about Montenegro: capital, currency, coastline and how it"
+  compress 316 -> 231; kept idx 0,1
+  [0] Wikivoyage: Montenegro §lead via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Montenegro (Montenegrin: Crna Gora, Црна Гора) is a country in the Balkans, on the Adriatic Sea. It is one of Europe's newest independent countries, having gained its independence in 2006. Infrastructure greatly improved
+  [1] Wikivoyage: Montenegro §Understand > History via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Understand > History: Montenegro has been a political entity since at least the 11th century. It was founded as a state under its present name in the 15th century, continuing the tradition of the Slavic state of Duklja. 
+
+lan-exp-004 | health=false matchQuery="What is Kyoto known for, and why was it historically important?"
+  compress 347 -> 202; kept idx 0,2,3
+  [0] Wikivoyage: Kyoto §See > World Heritage Sites via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: See > World Heritage Sites: In 1994, 17 historic sites were inscribed on the UNESCO World Heritage List under the group designation Historic Monuments of Ancient Kyoto. Fourteen of the listed sites are in Kyoto itself, t
+  [1] Wikivoyage: Uji §lead via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-
+  [2] Wikivoyage: Kyoto/Higashiyama §Sleep via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true
+  [3] Wikivoyage: Kyoto/Central §Sleep > Splurge > Three Great Historic Ryokan via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true
+
+lan-exp-006 | health=false matchQuery="What is Kilimanjaro, how high is it, and is it a volcano?"
+  compress 583 -> 341; kept idx 2,0,1
+  [0] Wikivoyage: Volcanoes §Destinations > Africa > Tanzania via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true
+  [1] Wikivoyage: Volcanoes §Understand > Classifying volcanoes via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true
+  [2] Wikivoyage: Mount Kilimanjaro §Stay safe via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Stay safe: Kilimanjaro is a high risk destination for altitude sickness due to its height, technical ease and usual rapid ascent. There are seven main factors that affect the incidence and severity of Kilimanjaro altitud
+  [3] Wikivoyage: Mount Kenya §lead via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-
+
+lan-rsn-007 | health=false matchQuery="In which year was the Berlin Wall built, and in which year did it come down?"
+  compress 671 -> 394; kept idx 0,1,2,3
+  [0] Wikivoyage: Berlin Wall §lead via=title | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: The Berlin Wall (Berliner Mauer) was a concrete barrier separating Western and Eastern parts of Berlin from 1961 to 1989. It is regarded as one of the symbols of the Cold War. While most of it was dismanted after German 
+  [1] Wikivoyage: Berlin Wall §Go > Leisure paths on former Berlin Wall via=title | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Go > Leisure paths on former Berlin Wall: - Mauerweg: About 18-km-long, mostly asphalt path going from Lichterfelde Allee in Lichterfeld to Buckower Damm in Neukölln comprising significant part of southern Berlin Wall. O
+  [2] Wikivoyage: Berlin Wall §Go via=title | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Go: - East Side Gallery: Mühlenstraße. Established in 1990 a collection of mostly political graffiti painted over eastern side of the wall. It is the longest remaining section of the wall at 1.3 kilometers of length. Con
+  [3] Wikivoyage: Berlin §See > Remains of the Berlin Wall via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true
+
+lan-exp-007 | health=false matchQuery="Describe Greenland: who governs it, its capital, roughly how many people live th"
+  compress 641 -> 498; kept idx 0,2,1
+  [0] Wikivoyage: Greenland §Understand > Climate via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Understand > Climate: The interior ice sheet escapes much of the influence of heat transfer from the ocean or from cyclones, and its high elevation also acts to give it a colder climate since temperatures tend to decreas
+  [1] Wikivoyage: Greenland §Work via=bm25 | compressed:kept | onTopic(raw):true onTopic(compressed):true  <= GOLD
+      compressed body: Work: Skilled workers (K-12 teachers and doctors in particular) are always needed, knowledge of Danish or Greenlandic (preferably both) are necessary, although the University of Greenland in Nuuk does offer some programs
+  [2] Wikivoyage: Glaciers §lead via=bm25 | compressed:kept | onTopic(raw):false onTopic(compressed):false
+  [3] Wikivoyage: Nuuk §Learn via=bm25 | compressed:CUT | onTopic(raw):false onTopic(compressed):-

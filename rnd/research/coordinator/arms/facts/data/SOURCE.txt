@@ -1,0 +1,29 @@
+FACTS data cache — Wikidata (https://www.wikidata.org), licence CC0 1.0 (public domain dedication).
+Fetched 2026-10-06 from the Wikidata Query Service (https://query.wikidata.org/sparql) by tools/fetch_wikidata.py,
+generic User-Agent "facts-pack-builder/0.1 (offline research; generic)", no personal data. The service was rate-limited
+to 1 request/min (outage rule), so the fetch ran sequentially (~25 queries).
+raw/<name>.rq  = the exact SPARQL query; raw/<name>.json = its response (unmodified).
+  sel_*        entity selection: sovereign states (Q3624078, not dissolved); cities > 1 M pop (top 300 kept) + all capitals;
+               lakes by area, rivers by length, mountains by prominence, skyscrapers by height (top 100 kept each);
+               plus the step-1 entities (Q155 Brazil, Q159 Russia, Q189 Iceland, Q12495 Burj Khalifa, Q5513 Lake Baikal,
+               Q7296 Kilimanjaro, Q5086 Berlin Wall, Q8613 2016 Summer Olympics, Q37922 Nobel Prize in Literature).
+  lab_/qty_/pop_/itm_/tim_  labels+aliases+descriptions, normalized quantities, population (+P585), item values, dates.
+  award_winners  P1346 / P166 (+P585) for Q37922.
+Engine asset: tools/build_asset.py raw -> wt/facts/src/rag/facts.v1.json (1,052 entities, 262,845 bytes,
+sha256 036b0b0b2db3fcce8a36a4951e151f3b6f666f006732e363ea3e97ed0944dc6a). Selection noise exists (e.g. mis-unit lake
+areas at the top of sel_lakes); values are raw Wikidata, not reviewed against Wikipedia (CF lesson: not curated).
+r6 (2026-10-06 23:00–23:50, FACTS-r6-criterion.md A): tools/fetch_wikidata_r6.py (same q(), UA and 1 req/min pacing) added
+  sel_{cities,mountains_elev,mountains_prom,rivers,lakes,buildings,towers,dams}_r6 and {lab,qty,pop,itm,tim}_r6_0..5 (the r1
+  query texts, for 4,032 entities not in the r1 cache); tools/fetch_homonyms_r6.py added homonym_r6_0..4 (data-review gate b).
+  Engine asset: tools/build_asset.py (r6) -> src/rag/facts.v1.json, 4,233 entities, 760,970 bytes,
+  sha256 92d64c02f7cdf2dc5c61b9d73377d0aec45a8187defa3d911d50d39b79d61598.
+r9 (2026-10-19, arms/facts-r9): tools/fetch_wikidata_r9.py (same generic UA, no personal data, 5 sequential queries) added
+  raw/{drive,call,volt,plug,tz}_r9.{rq,json} for the 197 r8 countries: P1622 driving side, P474 calling code, P2884 mains voltage
+  with qualifier P2144 frequency, P2853 plug (fetched for comparison only; the table keeps the 10-06 plug rows), P421 time zone
+  (not shipped). Engine asset: tools/build_asset.py (r9) -> facts.v1.r9.json, 4,233 entities, 784,561 bytes,
+  sha256 0c167a8f3271d2e2c17bc63c7b58aa283c7ea6f03173f89980f9153e289a4841. Licence unchanged: CC0 1.0.
+r11 (2026-10-23, arms/facts-r9/ENGFIX-FACTS-2026-10-23.md): tools/fetch_currency_r11.py (same generic UA, 3 sequential queries + wbgetentities) added
+  raw/{cur,curitem,nobel}_r11.{rq,json} (P38 statements with P580/P582/P518 qualifiers for the 197 countries; the currency items' P31/P576/P1366;
+  P1346 + P166 of the Nobel Prize in Literature with statement ids) and data/labels-r11.json (bare-QID labels, languagefallback en -> mul).
+  Engine asset: tools/rebuild_r11.sh -> facts.v1.r11.json, 4,233 entities, 784,786 bytes,
+  sha256 0bf5c62a21889c4934697a9be5d07c56a892e913e6fa99b63daff767aa332aa8. Licence unchanged: CC0 1.0.

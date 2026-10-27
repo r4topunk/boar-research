@@ -1,0 +1,91 @@
+== v01-s44: items 60, text changed 3, fired 3, changed outside fires 0 []; fired-but-same-text []
+   tier changes ['vit-cry-002']; errors ctl 0 arm 0
+  [vit-cry-002] ['truth:eip-card']
+    Q: What is FOCIL (EIP-7805) and what problem does it solve?
+    CTL: 'FOCIL (Fork-choice Enforced Inclusion Lists) is a proposed Ethereum improvement (EIP-7805) that introduces a mechanism to enforce inclusion of certain blocks in the chain by defining mandatory inclusion lists. It solves the problem of potential chain divergence and incorrect fork choices by ensuring that specific blocks must be included, enhancing finality and security in the Ethereum consensus pr'
+    ARM: 'EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)\nStatus: Draft\n\nFOCIL implements a robust mechanism to preserve Ethereum’s censorship resistance properties by guaranteeing timely transaction inclusion. [1]'
+  [vit-cry-005] ['truth:norec']
+    Q: What is the difference between Privacy Pools and Tornado Cash?
+    CTL: 'Privacy Pools and Tornado Cash are both privacy-focused cryptocurrency mixing services, but Tornado Cash is a specific, well-known decentralized protocol that uses cryptographic proofs to obscure transaction links. Privacy Pools is not a widely recognized or documented service in the context of cryptocurrency privacy tools, and there is no verified public information distinguishing it from Tornado'
+    ARM: "I couldn't find Privacy Pools in the offline library, so I can't say what it is."
+  [vit-cry-007] ['truth:norec']
+    Q: What is d/acc?
+    CTL: 'This answer is not from an offline source on this phone; check it before relying on it.\n\n"d/acc" is not a recognized or standard term in common usage or context. It may be a typo, abbreviation, or specific to a niche field—no clear definition exists in available knowledge. If you meant something else, please clarify.'
+    ARM: "I couldn't find d/acc in the offline library, so I can't say what it is."
+== v01-s45: items 60, text changed 2, fired 2, changed outside fires 0 []; fired-but-same-text []
+   tier changes ['vit-cry-002']; errors ctl 0 arm 0
+  [vit-cry-002] ['truth:eip-card']
+    Q: What is FOCIL (EIP-7805) and what problem does it solve?
+    CTL: 'FOCIL (Fork-choice Enforced Inclusion Lists) is a mechanism in Ethereum (EIP-7805) that ensures only valid, included blocks are accepted in the chain by enforcing inclusion lists through a committee. It solves the problem of malicious or incorrect block inclusion by defining a formal, verifiable process for validators to agree on which blocks should be part of the canonical chain, improving finali'
+    ARM: 'EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)\nStatus: Draft\n\nFOCIL implements a robust mechanism to preserve Ethereum’s censorship resistance properties by guaranteeing timely transaction inclusion. [1]'
+  [vit-cry-007] ['truth:norec']
+    Q: What is d/acc?
+    CTL: 'This answer is not from an offline source on this phone; check it before relying on it.\n\n"d/acc" is not a recognized term in standard contexts. It may be a typo or shorthand for something else. Without more context, its meaning cannot be determined.'
+    ARM: "I couldn't find d/acc in the offline library, so I can't say what it is."
+changes outside fires, both seeds: 0
+== chat: 192 messages, fires 0, text changed 0, changed outside fires []
+== probes: changed 9, fired 9
+  [fic-001] fires ['truth:norec'] eip-card-none
+    Q: What is EIP-99999?
+    CTL: 'This answer is not from an offline source on this phone; check it before relying on it.\n\nEIP-99999 is not a recognized or documented Ethereum Improvement Proposal. There is no official information or specification available for this EIP.'
+    ARM: "I couldn't find EIP-99999 in the offline library, so I can't say what it is."
+  [fic-002] fires ['truth:norec'] 
+    Q: Explain the Zorblax consensus protocol.
+    CTL: 'This answer is not from an offline source on this phone; check it before relying on it.\n\nThe Zorblax consensus protocol is not a known or documented consensus mechanism in existing cryptographic or distributed systems literature. There is no verified technical description or implementation of such a protocol.'
+    ARM: "I couldn't find Zorblax in the offline library, so I can't say what it is."
+  [fic-003] fires [] eip-card-none
+    Q: What does ERC-77777 standardize?
+    CTL: 'There is no known ERC-7777 standard in the Ethereum EIP repository. The closest is ERC-777, which is a fungible token standard that improves upon ERC-20 [2]. You may be referring to a misnumbered or non-existent standard.'
+    ARM: 'There is no known ERC-7777 standard in the Ethereum EIP repository. The closest is ERC-777, which is a fungible token standard that improves upon ERC-20 [2]. You may be referring to a misnumbered or non-existent standard.'
+  [inf-001] fires [] eip-card-none
+    Q: What is EIP-1559?
+    CTL: "EIP-1559 is a protocol update to Ethereum's fee market that introduced a new fee structure with a base fee and a priority fee. It improves network stability and reduces miner revenue volatility by burning a portion of transaction fees."
+    ARM: "EIP-1559 is a protocol update to Ethereum's fee market that introduced a new fee structure with a base fee and a priority fee. It improves network stability and reduces miner revenue volatility by burning a portion of transaction fees."
+  [inf-002] fires ['truth:eip-card'] 
+    Q: What is EIP-4844?
+    CTL: 'EIP-4844, known as Shard Blob Transactions, is a Ethereum improvement proposal that enhances data availability by introducing blob transactions, which reduce the amount of data stored on the blockchain. It is forwards-compatible and improves scalability through efficient data commitment methods like KZG proofs.'
+    ARM: 'EIP-4844: Shard Blob Transactions\nStatus: Final\n\nIntroduce a new transaction format for "blob-carrying transactions" which contain a large amount of data that cannot be accessed by EVM execution, but whose commitment can be accessed. The format is intended to be fully compatible with the format that will be used in full sharding. [1]'
+  [inf-003] fires ['truth:eip-card'] 
+    Q: Explain ERC-4337.
+    CTL: 'ERC-4337 enables account abstraction on Ethereum by allowing users to sign and send transactions via UserOperations, which are then processed by bundlers through an alternative mempool. It does not require consensus-layer changes and introduces new JSON-RPC APIs like `eth_sendUserOperation` [3]. However, it lacks compatibility with pre-ERC-4337 sma'
+    ARM: 'ERC-4337: Account Abstraction Using Alt Mempool\nStatus: Final\n\nAccount abstraction without consensus-layer protocol changes, instead relying on higher-layer infrastructure. [1]'
+  [inf-004] fires ['truth:eip-card'] 
+    Q: What is ERC-20?
+    CTL: "ERC-20 is a token standard on the Ethereum blockchain that defines a set of rules for creating fungible tokens. It enables smart contracts to issue and manage tokens with functions like balance queries, transfers, and approvals. Proposed by Fabian Vogelsteller in 2015, it's widely used for cryptocurrencies and digital assets [2]."
+    ARM: 'ERC-20: Token Standard\nStatus: Final\n\nThe following standard allows for the implementation of a standard API for tokens within smart contracts. This standard provides basic functionality to transfer tokens, as well as allow tokens to be approved so they can be spent by another on-chain third party. [1]'
+  [inf-005] fires ['truth:eip-card'] 
+    Q: What does EIP-7251 do?
+    CTL: 'EIP-7251 increases the maximum effective balance for Ethereum validators, allowing them to hold more than the current 32 ETH lower bound while maintaining security and validator eligibility [1]. This change enhances network flexibility and scalability without compromising core validator requirements.'
+    ARM: 'EIP-7251: Increase the MAX_EFFECTIVE_BALANCE\nStatus: Final\n\nIncreases the constant `MAX_EFFECTIVE_BALANCE`, while keeping the minimum staking balance `32 ETH`. This permits large node operators to consolidate into fewer validators while also allowing solo-stakers to earn compounding rewards and stake in more flexible increments. [1]'
+  [inf-006] fires [] eip-card-none
+    Q: What does EIP-155 do?
+    CTL: "This answer is not from an offline source on this phone; check it before relying on it.\n\nEIP-155 defines a rule for handling transaction signatures in Ethereum, specifically requiring that the block's timestamp be used to validate the transaction's signature. This prevents transaction malleability and ensures that signed transactions are only valid"
+    ARM: "This answer is not from an offline source on this phone; check it before relying on it.\n\nEIP-155 defines a rule for handling transaction signatures in Ethereum, specifically requiring that the block's timestamp be used to validate the transaction's signature. This prevents transaction malleability and ensures that signed transactions are only valid"
+  [inf-007] fires [] eip-card-none
+    Q: What is ERC-721?
+    CTL: 'ERC-721 is a non-fungible token (NFT) standard on the Ethereum blockchain that defines how unique digital assets, like art or collectibles, can be created, owned, and traded. It includes optional metadata to describe the asset, such as name and image [1].'
+    ARM: 'ERC-721 is a non-fungible token (NFT) standard on the Ethereum blockchain that defines how unique digital assets, like art or collectibles, can be created, owned, and traded. It includes optional metadata to describe the asset, such as name and image [1].'
+  [inf-008] fires ['truth:eip-card'] 
+    Q: Summarize EIP-3675.
+    CTL: "EIP-3675 specifies the upgrade of Ethereum's consensus mechanism to Proof-of-Stake (PoS), transitioning from Proof-of-Work. It is a core standard track EIP finalized in July 2021, forming part of Ethereum's transition to a more energy-efficient and secure consensus model [1]. This change enables the Ethereum Mainnet to operate using PoS, improving "
+    ARM: 'EIP-3675: Upgrade consensus to Proof-of-Stake\nStatus: Final\n\nThis EIP deprecates Proof-of-Work (PoW) and supersedes it with the new Proof-of-Stake consensus mechanism (PoS) driven by the beacon chain. Information on the bootstrapping of the new consensus mechanism is documented in EIP-2982. Full specification of the beacon chain can be found in the'
+  [inf-009] fires [] 
+    Q: Who wrote EIP-1559?
+    CTL: 'EIP-1559 was proposed by Vlad Zamfir, a core developer of Ethereum. It was designed to improve the fee market and address issues with gas price volatility. The proposal was later refined and implemented by the Ethereum community.'
+    ARM: 'EIP-1559 was proposed by Vlad Zamfir, a core developer of Ethereum. It was designed to improve the fee market and address issues with gas price volatility. The proposal was later refined and implemented by the Ethereum community.'
+  [inf-010] fires [] 
+    Q: What is the difference between EIP-1559 and EIP-4844?
+    CTL: "EIP-1559 improved Ethereum's fee market by introducing dynamic gas pricing and a burn mechanism for transaction fees [3]. EIP-4844 extends this by adding blob transactions to offload data storage costs, improving data availability and scalability through shard blobs [1]. Together, they enhance transaction efficiency and network capacity."
+    ARM: "EIP-1559 improved Ethereum's fee market by introducing dynamic gas pricing and a burn mechanism for transaction fees [3]. EIP-4844 extends this by adding blob transactions to offload data storage costs, improving data availability and scalability through shard blobs [1]. Together, they enhance transaction efficiency and network capacity."
+  [inf-011] fires ['truth:norec'] 
+    Q: What is d/acc?
+    CTL: 'This answer is not from an offline source on this phone; check it before relying on it.\n\n"d/acc" is not a recognized or standard term in common usage or context. It may be a typo, abbreviation, or specific to a niche field—no clear definition exists in available knowledge. If you meant something else, please clarify.'
+    ARM: "I couldn't find d/acc in the offline library, so I can't say what it is."
+  [inf-012] fires ['truth:norec'] 
+    Q: What is the difference between Privacy Pools and Tornado Cash?
+    CTL: 'Privacy Pools and Tornado Cash are both privacy-focused cryptocurrency mixing services, but Tornado Cash is a specific, well-known decentralized protocol that uses cryptographic proofs to obscure transaction links. Privacy Pools is not a widely recognized or documented service in the context of cryptocurrency privacy tools, and there is no verified'
+    ARM: "I couldn't find Privacy Pools in the offline library, so I can't say what it is."
+  [inf-013] fires [] 
+    Q: What is account abstraction?
+    CTL: 'Account abstraction is a feature on Ethereum that allows smart contract wallets to initiate transactions directly, without requiring users to manage ETH balances or manually sign transactions. This simplifies wallet interactions, enables batch processing, and makes smart contract wallets safer and easier to use [3]. It is implemented via EIP-4337, '
+    ARM: 'Account abstraction is a feature on Ethereum that allows smart contract wallets to initiate transactions directly, without requiring users to manage ETH balances or manually sign transactions. This simplifies wallet interactions, enables batch processing, and makes smart contract wallets safer and easier to use [3]. It is implemented via EIP-4337, '

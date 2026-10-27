@@ -1,0 +1,92 @@
+{
+ "title": "Vitalik slice V-exact v1 — BOAR vs internet + frontier AI on his own questions",
+ "bench": "compass Vitalik slice V-exact v1 (public; his questions)",
+ "questions": "<workspace>/rnd/research/compass/exp/bounty-eval/bench-vslice/questions.jsonl",
+ "decline_ratio": 0.306,
+ "reference_recipe": "claude-opus-5-5 with WebSearch + WebFetch, prompt reference.v1 (v0.1 frozen + Kiln gen_refs.bounty.mjs for vx-001/vx-002)",
+ "headline": "and4b",
+ "systems": [
+  {
+   "key": "and4b",
+   "label": "BOAR Android 12 GB (ship stack)",
+   "tier": "Android 12 GB",
+   "kind": "boar",
+   "runs": [
+    "<RUN_DIR>/vslice-and4b-s42",
+    "<RUN_DIR>/vslice-and4b-s43"
+   ],
+   "timing_source": "<device|desktop-proxy>"
+  },
+  {
+   "key": "ios15",
+   "label": "BOAR iPhone 1.5B",
+   "tier": "iPhone 4 GB (1B-class)",
+   "kind": "boar",
+   "runs": [
+    "<RUN_DIR>/vslice-ios15-s42",
+    "<RUN_DIR>/vslice-ios15-s43"
+   ],
+   "timing_source": "<device|desktop-proxy>"
+  }
+ ],
+ "one_b_baseline": "ios15",
+ "anchors": [
+  {
+   "key": "haiku",
+   "label": "Haiku, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<ANCHOR_DIR>/haiku"
+   ]
+  },
+  {
+   "key": "sonnet",
+   "label": "Sonnet, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<ANCHOR_DIR>/sonnet"
+   ]
+  },
+  {
+   "key": "opus",
+   "label": "Opus, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<ANCHOR_DIR>/opus"
+   ]
+  },
+  {
+   "key": "fable",
+   "label": "Fable, no web",
+   "tier": "context (frontier, no internet)",
+   "kind": "anchor",
+   "runs": [
+    "<ANCHOR_DIR>/fable"
+   ]
+  }
+ ],
+ "slices": [
+  {
+   "title": "Vitalik's exact questions",
+   "ids": "<workspace>/rnd/research/compass/exp/bounty-eval/vslice-exact.ids.txt",
+   "note": "Judge-graded items only in the ratio; the 6 vegan items are reported as venue counts (OSM) below the table by the venue scorer.",
+   "per_item": [
+    "and4b",
+    "ios15",
+    "haiku",
+    "sonnet",
+    "opus",
+    "fable"
+   ]
+  }
+ ],
+ "caveats": [
+  "His questions are public and the team has seen them: this slice shows performance on exactly what he will type, not generalisation (that is V-para, blind).",
+  "n = 5 judge items: CIs are very wide; per-item rows matter more than the aggregate.",
+  "Judge = Claude opus without web; references = Claude opus with web."
+ ],
+ "thin_strata": "plain"
+}

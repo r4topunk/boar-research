@@ -1,0 +1,383 @@
+{
+ "_note": "Proposed additions to src/routing/emergencyNumbers.ts COUNTRIES, generated from Wikipedia 'List of emergency telephone numbers' raw wikitext rev 1377218654 (2026-09-28), parsed by parse.py. Recheck each row by eye against the page (or official national sources) before shipping. Notes column carries secondary numbers (e.g. Peru SAMU 106). Hand fixes: Colombia/Indonesia/Bolivia/Peru/Uruguay lines include the notes-column service numbers; ambiguous aliases removed (lima = 'lime' in PT, 'ama', Cartagena in Spain). Alias rule: only names that can't be a common word or a place in another country.",
+ "additions": [
+  {
+   "country": "Peru",
+   "names_regex": "peru|peru|cusco|machu picchu",
+   "en": "Peru: 911, or police 105, ambulance (SAMU) 106, fire 116.",
+   "pt": "Peru: 911, ou polícia 105, ambulância (SAMU) 106, bombeiros 116.",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Police – 105; Ambulance (SAMU) – 106; Fire – 116; Civil defense – 115; Domestic violence – 100."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Bolivia",
+   "names_regex": "bolivia|bolívia|la paz|uyuni",
+   "en": "Bolivia: 911, or police 110, ambulance 118, fire 119.",
+   "pt": "Bolívia: 911, ou polícia 110, ambulância 118, bombeiros 119.",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Police – 110; Ambulance – 118; Fire – 119; Civil protection – 114; National police – 120."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Chile",
+   "names_regex": "chile|chile|santiago de chile|atacama|patag[oô]nia chilena",
+   "en": "Chile: police 133, ambulance 131, fire 132.",
+   "pt": "Chile: polícia 133, ambulância 131, bombeiros 132.",
+   "wiki_row": {
+    "police": "133",
+    "ambulance": "131",
+    "fire": "132",
+    "notes": "Useful mnemonic is ABC123: Ambulancia (Ambulance) – 131, Bomberos (Fire) – 132, Carabineros (Police) – 133. 911 and 112 redirect to 133."
+   }
+  },
+  {
+   "country": "Colombia",
+   "names_regex": "colombia|colômbia|bogot[áa]|medell[íi]n",
+   "en": "Colombia: 123 (general emergencies); police 112, ambulance 125, fire 119.",
+   "pt": "Colômbia: 123 (emergências em geral); polícia 112, ambulância 125, bombeiros 119.",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "125",
+    "fire": "119",
+    "notes": "General emergency - 123; Anti-kidnapping and extortion hotline – 165."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Ecuador",
+   "names_regex": "ecuador|equador|quito|gal[áa]pagos",
+   "en": "Ecuador: 911 (all emergencies).",
+   "pt": "Equador: 911 (todas as emergências).",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Police – 101; Ambulance – 131; Fire – 102; Emergency in Guayaquil – 112; Traffic police in Guayaquil – 103."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Uruguay",
+   "names_regex": "uruguay|uruguai|montevid[ée]u|montevideo|punta del este",
+   "en": "Uruguay: 911, or police 109, ambulance 105, fire 104.",
+   "pt": "Uruguai: 911, ou polícia 109, ambulância 105, bombeiros 104.",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Police – 109; Ambulance – 105; Fire – 104."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Costa Rica",
+   "names_regex": "costa rica|costa rica",
+   "en": "Costa Rica: 911 (all emergencies); from mobile phones 112.",
+   "pt": "Costa Rica: 911 (todas as emergências); de celular 112.",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Mobile phones – 112."
+   }
+  },
+  {
+   "country": "Cuba",
+   "names_regex": "cuba|cuba|havana|havana",
+   "en": "Cuba: police 106, ambulance 104, fire 105.",
+   "pt": "Cuba: polícia 106, ambulância 104, bombeiros 105.",
+   "wiki_row": {
+    "police": "106",
+    "ambulance": "104",
+    "fire": "105",
+    "notes": ""
+   }
+  },
+  {
+   "country": "Dominican Republic",
+   "names_regex": "dominican republic|república dominicana|punta cana",
+   "en": "Dominican Republic: 911 (all emergencies).",
+   "pt": "República Dominicana: 911 (todas as emergências).",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "112 redirects to 911 on mobile phones."
+   }
+  },
+  {
+   "country": "Indonesia",
+   "names_regex": "indonesia|indonésia|bali|jakarta|lombok",
+   "en": "Indonesia: 112, or police 110, ambulance 118 or 119, fire 113.",
+   "pt": "Indonésia: 112, ou polícia 110, ambulância 118 ou 119, bombeiros 113.",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "112",
+    "fire": "112",
+    "notes": "Police – 110; Ambulance – 118 or 119; Fire – 113 or 1131; Search & rescue – 115; Natural disasters – 129; Electricity emergency – 123; Mental health – 1-500-454."
+   },
+   "hand_fixed": "from the row's notes column"
+  },
+  {
+   "country": "Malaysia",
+   "names_regex": "malaysia|malásia|kuala lumpur|langkawi",
+   "en": "Malaysia: 999 (all emergencies); from mobile phones 112.",
+   "pt": "Malásia: 999 (todas as emergências); de celular 112.",
+   "wiki_row": {
+    "police": "999",
+    "ambulance": "999",
+    "fire": "999",
+    "notes": "From mobile phones – 112"
+   }
+  },
+  {
+   "country": "Singapore",
+   "names_regex": "singapore|singapura",
+   "en": "Singapore: police 999, ambulance 995, fire 995; from mobile phones 112.",
+   "pt": "Singapura: polícia 999, ambulância 995, bombeiros 995; de celular 112.",
+   "wiki_row": {
+    "police": "999",
+    "ambulance": "995",
+    "fire": "995",
+    "notes": "Mobile phones – 112 or 911; Non-emergency ambulance – 1777; Police hotline – 1800 255 0000; Traffic police – 6547 0000."
+   }
+  },
+  {
+   "country": "Cambodia",
+   "names_regex": "cambodia|camboja|siem reap|phnom penh",
+   "en": "Cambodia: police 117, ambulance 119, fire 118.",
+   "pt": "Camboja: polícia 117, ambulância 119, bombeiros 118.",
+   "wiki_row": {
+    "police": "117",
+    "ambulance": "119",
+    "fire": "118",
+    "notes": "Child helpline – 1280"
+   }
+  },
+  {
+   "country": "Laos",
+   "names_regex": "laos|laos|luang prabang|vientiane",
+   "en": "Laos: police 191, ambulance 195, fire 190.",
+   "pt": "Laos: polícia 191, ambulância 195, bombeiros 190.",
+   "wiki_row": {
+    "police": "191",
+    "ambulance": "195",
+    "fire": "190",
+    "notes": ""
+   }
+  },
+  {
+   "country": "Nepal",
+   "names_regex": "nepal|nepal|kathmandu|katmandu|everest base camp",
+   "en": "Nepal: police 100, ambulance 102, fire 101; from mobile phones 112.",
+   "pt": "Nepal: polícia 100, ambulância 102, bombeiros 101; de celular 112.",
+   "wiki_row": {
+    "police": "100",
+    "ambulance": "102",
+    "fire": "101",
+    "notes": "Traffic police – 103; From mobile phones – 112."
+   }
+  },
+  {
+   "country": "Sri Lanka",
+   "names_regex": "sri lanka|sri lanka",
+   "en": "Sri Lanka: police 119, ambulance 110, fire 110.",
+   "pt": "Sri Lanka: polícia 119, ambulância 110, bombeiros 110.",
+   "wiki_row": {
+    "police": "119",
+    "ambulance": "110",
+    "fire": "110",
+    "notes": "Traffic police – 112 691 111."
+   }
+  },
+  {
+   "country": "Egypt",
+   "names_regex": "egypt|egito|cairo|luxor",
+   "en": "Egypt: police 112 or 122, ambulance 123, fire 180; from mobile phones 112.",
+   "pt": "Egito: polícia 112 or 122, ambulância 123, bombeiros 180; de celular 112.",
+   "wiki_row": {
+    "police": "112 or 122",
+    "ambulance": "123",
+    "fire": "180",
+    "notes": "Tourist police – 126; Traffic police – 128; Electricity emergency – 121; Gas emergency – 129; Mobile phones – 112."
+   }
+  },
+  {
+   "country": "Morocco",
+   "names_regex": "morocco|marrocos|marrakech|marrakesh",
+   "en": "Morocco: police 19, ambulance 15, fire 15; from mobile phones 112.",
+   "pt": "Marrocos: polícia 19, ambulância 15, bombeiros 15; de celular 112.",
+   "wiki_row": {
+    "police": "19",
+    "ambulance": "15",
+    "fire": "15",
+    "notes": "Royal gendarmerie – 177; Drugs & alcohol service – 113; Racial discrimination hotline – 114; Non-emergency disturbances – 110; General information – 160; National Freeway call center – 5050; Mobile phones – 112."
+   }
+  },
+  {
+   "country": "South Africa",
+   "names_regex": "south africa|áfrica do sul|cape town|cidade do cabo|kruger",
+   "en": "South Africa: police 10 111, ambulance 10 177, fire 10 177; from mobile phones 112.",
+   "pt": "África do Sul: polícia 10 111, ambulância 10 177, bombeiros 10 177; de celular 112.",
+   "wiki_row": {
+    "police": "10 111",
+    "ambulance": "10 177",
+    "fire": "10 177",
+    "notes": "Emergency in Cape Town – 107; Mobile phones – 112."
+   }
+  },
+  {
+   "country": "Kenya",
+   "names_regex": "kenya|quênia|nairobi",
+   "en": "Kenya: 112 or 999 or 911 (all emergencies).",
+   "pt": "Quênia: 112 or 999 or 911 (todas as emergências).",
+   "wiki_row": {
+    "police": "112 or 999 or 911",
+    "ambulance": "112 or 999 or 911",
+    "fire": "112 or 999 or 911",
+    "notes": ""
+   }
+  },
+  {
+   "country": "Tanzania",
+   "names_regex": "tanzania|tanzânia|zanzibar|kilimanjaro",
+   "en": "Tanzania: police 112, ambulance 114, fire 115.",
+   "pt": "Tanzânia: polícia 112, ambulância 114, bombeiros 115.",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "114",
+    "fire": "115",
+    "notes": "Police – 999; Health call centre - 199"
+   }
+  },
+  {
+   "country": "Greece",
+   "names_regex": "greece|grécia|athens|atenas|santorini",
+   "en": "Greece: police 100 or 112, ambulance 166 or 112, fire 199 or 112.",
+   "pt": "Grécia: polícia 100 or 112, ambulância 166 or 112, bombeiros 199 or 112.",
+   "wiki_row": {
+    "police": "100 or 112",
+    "ambulance": "166 or 112",
+    "fire": "199 or 112",
+    "notes": "European emergency service line – 112; Coast guard – 108; National Child Protection Helpline – 1056; European Hotline for Missing Children – 116000; EU Helpline for Children and Teenagers – 116111"
+   }
+  },
+  {
+   "country": "Netherlands",
+   "names_regex": "netherlands|holanda|países baixos|amsterdam|amsterd[ãa]",
+   "en": "Netherlands: 112 (all emergencies).",
+   "pt": "Holanda: 112 (todas as emergências).",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "112",
+    "fire": "112",
+    "notes": "Text phone – 0800 81 12; Non-emergency police – 0900 88 44 or 0343 578 844; Non-emergency police (text phone) – 0900 18 44; Suicide prevention – 0800-0113; Animal emergency – 144; Child abuse – 0900 123 12 30; Anti-bullying hotline – 0800 90 50."
+   }
+  },
+  {
+   "country": "Switzerland",
+   "names_regex": "switzerland|suíça|zurich|zurique|zermatt",
+   "en": "Switzerland: police 117, ambulance 144, fire 118.",
+   "pt": "Suíça: polícia 117, ambulância 144, bombeiros 118.",
+   "wiki_row": {
+    "police": "117",
+    "ambulance": "144",
+    "fire": "118",
+    "notes": "Poison control – 145; Road help – 0800 140 140; Psychological support – 143; Psychological support for teens and children – 147; Rega air rescue – 1414 or by radio on ;  air-rescue (Valais only) – 1415. The emergency number 112 is used differently based on the Canton. While in some cantons 112, 117,"
+   }
+  },
+  {
+   "country": "Austria",
+   "names_regex": "austria|áustria|vienna|viena",
+   "en": "Austria: police 112 or 133, ambulance 144, fire 122.",
+   "pt": "Áustria: polícia 112 or 133, ambulância 144, bombeiros 122.",
+   "wiki_row": {
+    "police": "112 or 133",
+    "ambulance": "144",
+    "fire": "122",
+    "notes": "Gas emergency – 128; Mountain rescue – 140; Doctors – 141; Crisis hotline – 142; Support for children and teens – 147; Non-emergency police – 059 133; Deaf fax/SMS – 0800 133 133; Poisoning Informations Center – 01 406 43 43. The emergency telephone number 112 will be answered by the police, but wil"
+   }
+  },
+  {
+   "country": "Ireland",
+   "names_regex": "ireland|irlanda|dublin",
+   "en": "Ireland: 112 or 999 (all emergencies).",
+   "pt": "Irlanda: 112 or 999 (todas as emergências).",
+   "wiki_row": {
+    "police": "112 or 999",
+    "ambulance": "112 or 999",
+    "fire": "112 or 999",
+    "notes": "SMS messages can be sent to 112."
+   }
+  },
+  {
+   "country": "Iceland",
+   "names_regex": "iceland|islândia|reykjavik",
+   "en": "Iceland: 112 (all emergencies).",
+   "pt": "Islândia: 112 (todas as emergências).",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "112",
+    "fire": "112",
+    "notes": "Non-emergency police Reykjavík area – 444 10 00; 911 redirects to 112 on mobile phones; +354 570 2112 from abroad."
+   }
+  },
+  {
+   "country": "Norway",
+   "names_regex": "norway|noruega|oslo",
+   "en": "Norway: police 112, ambulance 113, fire 110.",
+   "pt": "Noruega: polícia 112, ambulância 113, bombeiros 110.",
+   "wiki_row": {
+    "police": "112",
+    "ambulance": "113",
+    "fire": "110",
+    "notes": "Emergency at sea: 120; non-emergency police: 02 800; child abuse and family violence: 116 111; text phone: 1412; nearest health care outside office hours: 116 117; 911 redirects to 112."
+   }
+  },
+  {
+   "country": "United Arab Emirates",
+   "names_regex": "united arab emirates|emirados árabes|dubai|abu dhabi",
+   "en": "United Arab Emirates: police 999, ambulance 998, fire 997.",
+   "pt": "Emirados Árabes: polícia 999, ambulância 998, bombeiros 997.",
+   "wiki_row": {
+    "police": "999",
+    "ambulance": "998",
+    "fire": "997",
+    "notes": "Coast guard – 996; Non-emergency police – 901; Water failure – 922; Electricity failure – 991"
+   }
+  },
+  {
+   "country": "Israel",
+   "names_regex": "israel|israel|jerusalem|jerusal[ée]m|tel aviv",
+   "en": "Israel: police 100, ambulance 101, fire 102; from mobile phones 112.",
+   "pt": "Israel: polícia 100, ambulância 101, bombeiros 102; de celular 112.",
+   "wiki_row": {
+    "police": "100",
+    "ambulance": "101",
+    "fire": "102",
+    "notes": "Israel Electric Corporation – 103; Home Front Command – 104; Online child abuse hotline – 105; Non-emergency municipal hazards – 106; Non-emergency police inquiries – 110; Mobile phones – 112."
+   }
+  },
+  {
+   "country": "Jordan",
+   "names_regex": "jordan|jordânia|petra|amman",
+   "en": "Jordan: 911 (all emergencies); from mobile phones 112.",
+   "pt": "Jordânia: 911 (todas as emergências); de celular 112.",
+   "wiki_row": {
+    "police": "911",
+    "ambulance": "911",
+    "fire": "911",
+    "notes": "Mobile phones – 112."
+   }
+  }
+ ]
+}

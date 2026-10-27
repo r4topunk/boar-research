@@ -1,0 +1,259 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/answer.ts rs-H2/src/routing/answer.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-H2/src/routing/answer.ts	2026-10-22 16:01:36
+@@ -70,6 +70,7 @@
+   termCoverage,
+ } from "./context";
+ import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
++import { healthTopicFallback } from "./healthTopicFallback"; // RS H2 (RS_HEALTH_TOPIC_FB, default off)
+ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+@@ -1079,7 +1080,7 @@
+       if (health) {
+         reasonCodes.push("grounding:health-strict");
+         // Health: only sources whose title names the health topic (never a plant, a cave or a TV show).
+-        const topic = healthTopicTerms(req.query, english);
++        const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+         const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
+         sources = onTopicHealth;
+@@ -1119,7 +1120,7 @@
+             let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
+             if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
+             if (health) {
+-              const topic = healthTopicTerms(req.query, english);
++              const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
+               add = ok;
+@@ -1138,7 +1139,7 @@
+             let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+             if (health && add.length) {
+-              const topic = healthTopicTerms(req.query, english);
++              const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:dense:health-dropped-${add.length - ok.length}`);
+               add = ok;
+@@ -1251,7 +1252,7 @@
+         // Score on each source's full text: compression keeps the sentences matching the question
+         // words, which can leave out a first-aid text's instructions.
+         const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
+-        const rules = excerptRules(req.query, healthTopicTerms(req.query, english));
++        const rules = excerptRules(req.query, healthTopicFallback(req.query, english, reasonCodes, userTurns)) /* RS H2 */;
+         // The best source whose excerpt is safe: no disputed procedure, no dangerous instruction (Sextant
+         // dng-001: "pressure immobilization … remains a point of controversy"). None: emergency + get care.
+         let text = "";
+@@ -1486,7 +1487,7 @@
+             if (risky && sources.length) {
+               reasonCodes.push(`grounding:health-unsafe-${risky}`);
+               const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
+-              const rules = excerptRules(req.query, healthTopicTerms(req.query, english));
++              const rules = excerptRules(req.query, healthTopicFallback(req.query, english, reasonCodes, userTurns)) /* RS H2 */;
+               const safe = healthSourceOrder(fullSources, rules.procedure ?? null)
+                 .map((k) => healthExtract(fullSources[k], k + 1, pt, rules))
+                 .find(safeHealthExcerpt);
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/context.ts rs-H2/src/routing/context.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/context.ts	2026-10-07 09:27:55
++++ rs-H2/src/routing/context.ts	2026-10-22 16:01:19
+@@ -349,8 +349,8 @@
+ // A venomous animal with a sting/bite, a child or a severity question; something swallowed; a person who doesn't
+ // respond. PT/ES/EN, no action phrase needed ("Escorpião picou meu filho, é grave?", "Mi hijo se tragó una pila"):
+ // these went to the model and came back "Scorpions do not sting children" (Sonar exp-29).
+-const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
+-const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
++export const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
++export const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
+ const SWALLOWED = /(^|[^\p{L}])(engol\p{L}*|se trag\p{L}*|trag[oó]|swallow\p{L}*)(?![\p{L}])/iu;
+ const UNRESPONSIVE = /(^|[^\p{L}])(sem responder|n[ãa]o responde\p{L}*|inconscient\p{L}*|desacordad\p{L}*|no responde|unresponsive|not responding|n[ãa]o est[áa] respirando|no respira|not breathing)(?![\p{L}])/iu;
+ const HEALTH_ES = /(^|[^\p{L}])(picad[oa]s?|picó|mordid[oa]s?|mordió|quemad\p{L}*|quemó|atragant\p{L}*|envenen\p{L}*|intoxica\p{L}*|convulsi\p{L}*|desmay\p{L}*|sangrando|sangrad\p{L}*|sangre|fiebre|emergencia|primeros auxilios)(?![\p{L}])/iu;
+@@ -482,7 +482,8 @@
+  */
+ // Words that name no condition: in a title they match anything ("Just Stop Oil", "Tree snake",
+ // "California Department of Water Resources", gate ee1f2b7).
+-const GENERIC_TOPIC = new Set(tokenizeTerms("water stop treat treatment child children nose safe drink drinking prevent help make first aid snake arm hand hot cold"));
++// RS (H2): exported so healthTopicFallback.ts reuses the same generic-word filter and compound table.
++export const GENERIC_TOPIC = new Set(tokenizeTerms("water stop treat treatment child children nose safe drink drinking prevent help make first aid snake arm hand hot cold"));
+ 
+ export function healthTopicTerms(query: string, articleTerms: string | null): Set<string> {
+   // With article terms (the dictionary / canonical names), they ARE the topic: the story's own
+@@ -584,7 +585,7 @@
+  * Conditions written as one word or two ("snakebite" / "snake bite", Wikibooks'
+  * "Animal bites > Snakes"): the compound matches a title with both parts.
+  */
+-const COMPOUNDS: Record<string, [string, string]> = {
++export const COMPOUNDS: Record<string, [string, string]> = {
+   snakebite: ["snake", "bite"],
+   nosebleed: ["nose", "bleed"],
+   heatstroke: ["heat", "stroke"],
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/healthTopicFallback.test.ts rs-H2/src/routing/healthTopicFallback.test.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/healthTopicFallback.test.ts	1969-12-31 21:00:00
++++ rs-H2/src/routing/healthTopicFallback.test.ts	2026-10-22 16:04:48
+@@ -0,0 +1,73 @@
++import { afterEach, describe, expect, it } from "vitest";
++import { healthTopicTerms, onHealthTopic } from "./context";
++import { regexCondition } from "./conditionCards";
++import { healthTopicFallback } from "./healthTopicFallback";
++
++// RETRIEVE-SWEEP arm H2. The switch is read at call time; unset = healthTopicTerms unchanged.
++const c = (title: string, body: string, action?: boolean) => ({ chunkId: title, docId: title, title, body, score: 1, matchType: "lexical" as const, ...(action === undefined ? {} : { action }) });
++const env = (globalThis as any).process.env as Record<string, string | undefined>;
++afterEach(() => { delete env.RS_HEALTH_TOPIC_FB; });
++
++const JELLY = "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?";
++const ALT = "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?";
++
++describe("healthTopicFallback", () => {
++  it("is healthTopicTerms exactly when the switch is off", () => {
++    for (const q of [JELLY, ALT, "How do I treat a burn on my arm?", "What is the capital of Australia?"]) {
++      const codes: string[] = [];
++      expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++      expect(codes).toEqual([]);
++    }
++  });
++
++  it("jellyfish: the empty topic gets the card's terms and the jellyfish article passes", () => {
++    expect(healthTopicTerms(JELLY, null).size).toBe(0);
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const codes: string[] = [];
++    const t = healthTopicFallback(JELLY, null, codes);
++    expect(t.has("jellyfish")).toBe(true);
++    expect(t.has("sting")).toBe(true);
++    expect(t.has("stung")).toBe(true);
++    expect(codes.some((x) => x.startsWith("rs:health-topic-fb:"))).toBe(true);
++    expect(onHealthTopic(t, c("Jellyfish", "Jellyfish stings are treated with vinegar."))).toBe(true);
++    expect(onHealthTopic(healthTopicTerms(JELLY, null), c("Jellyfish", "Jellyfish stings are treated with vinegar."))).toBe(false);
++  });
++
++  it("jellyfish mode 2 keeps only the distinctive term", () => {
++    env.RS_HEALTH_TOPIC_FB = "2";
++    expect([...healthTopicFallback(JELLY, null)]).toEqual(["jellyfish"]);
++  });
++
++  it("altitude: a symptom-only topic gets the condition added", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const t = healthTopicFallback(ALT, null);
++    for (const w of ["altitude", "hace", "hape"]) expect(t.has(w), w).toBe(true);
++    expect(onHealthTopic(t, c("Wikivoyage: Altitude sickness", "Altitude sickness is common above 2,500 m.", false))).toBe(true);
++    expect(onHealthTopic(t, c("Wikivoyage: Vung Tau", "Rub isopropyl alcohol in the ear after swimming."))).toBe(false);
++  });
++
++  it("a health question with no card and a topic already named is unchanged", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "What are the symptoms of dehydration and what is the dosage of oral rehydration salts?";
++    const codes: string[] = [];
++    expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++    expect(codes).toEqual([]);
++  });
++
++  it("an empty topic with a venomous animal and no card gets the animal (b)", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "A spider bit my toddler, is it grave?";
++    expect(healthTopicTerms(q, null).has("spider")).toBe(false);
++    const codes: string[] = [];
++    expect(healthTopicFallback(q, null, codes).has("spider")).toBe(true);
++    expect(codes.length).toBe(1);
++  });
++
++  it("MULTI conditions add nothing from the card", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "My son had a seizure and burned his hand on a hot stove, what do I do?";
++    expect(regexCondition(q)).toBe("MULTI");
++    const codes: string[] = [];
++    expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++  });
++});
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/healthTopicFallback.ts rs-H2/src/routing/healthTopicFallback.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/healthTopicFallback.ts	1969-12-31 21:00:00
++++ rs-H2/src/routing/healthTopicFallback.ts	2026-10-22 16:06:57
+@@ -0,0 +1,89 @@
++/**
++ * RETRIEVE-SWEEP arm H2 HEALTH-TOPIC-FALLBACK (bench-only, env switch RS_HEALTH_TOPIC_FB, default off = healthTopicTerms unchanged).
++ *
++ * health-strict (answer.ts) keeps only sources whose title (or, for lay sources, text) names the question's health topic, and
++ * healthTopicTerms() builds that topic from the lexical HEALTH regex only. The learned detector and the card-condition
++ * trigger fire on questions the regex misses ("stung by a jellyfish", "at 4,000 m ... headache and nausea"), so the topic is
++ * empty or symptom-only and every retrieved passage, the Altitude sickness article included, is dropped as off-topic.
++ *
++ * healthTopicFallback(query, english, userTurns) = healthTopicTerms plus
++ *  (a) the term list of the first-aid condition card the question (or, for a follow-up, the conversation) names, and
++ *  (b) when the set is still empty, the venomous animal / sting-bite words the detector matched.
++ * RS_HEALTH_TOPIC_FB=1: full lists (spec); =2: distinctive terms only (no sting/sickness/mountain-type generic words).
++ * onHealthTopic is not changed.
++ */
++import { COMPOUNDS, GENERIC_TOPIC, STUNG_OR_RISK, VENOMOUS, healthTopicTerms, tokenizeTerms } from "./context";
++import { conversationCondition } from "./conditionCards";
++
++/** Condition card key -> its name / alias / title words (Wikipedia, Wikivoyage, first-aid book titles). */
++export const CARD_TOPIC_TERMS: Record<string, string> = {
++  co: "carbon monoxide poisoning",
++  burn: "burn scald",
++  heatstroke: "heatstroke heat stroke",
++  hypothermia: "hypothermia",
++  frostbite: "frostbite frostnip",
++  choking: "choking heimlich",
++  chokinginfant: "choking heimlich",
++  bleeding: "bleeding hemorrhage",
++  heartattack: "heart attack myocardial infarction cardiac",
++  stroke: "stroke",
++  seizure: "seizure epilepsy convulsion",
++  anaphylaxis: "anaphylaxis allergic reaction",
++  battery: "button battery ingestion",
++  eyechem: "chemical burn eye",
++  electric: "electrical injury electrocution shock",
++  jellyfish: "jellyfish sting stings stung",
++  nosebleed: "nosebleed epistaxis",
++  earthquake: "earthquake",
++  tsunami: "tsunami",
++  drowning: "drowning",
++  hypoglycemia: "hypoglycemia",
++  altitude: "altitude sickness acute mountain sickness hace hape",
++  beesting: "bee wasp hornet sting",
++  scorpion: "scorpion sting",
++  scorpionadult: "scorpion sting",
++  marinepuncture: "stingray sea urchin stonefish",
++  tick: "tick",
++  animalbite: "animal bite rabies",
++  heatexhaustion: "heat exhaustion heat cramps",
++  headinjury: "head injury concussion",
++  ripcurrent: "rip current",
++  snakebite: "snakebite snake bite",
++};
++
++/** Generic words dropped from the card lists in mode 2 (they name no condition on their own in a title). */
++const GENERIC_ALIAS = new Set(tokenizeTerms("acute sting stings stung sickness mountain reaction attack heart carbon blood low shock chemical eye button battery injury electrical allergic heat animal cramps head rip current"));
++
++const mode = (): number => {
++  const v = Number((globalThis as any).process?.env?.RS_HEALTH_TOPIC_FB ?? "");
++  return v === 1 || v === 2 ? v : 0;
++};
++
++export function healthTopicFallback(query: string, english: string | null, reasonCodes?: string[], userTurns: string[] = []): Set<string> {
++  const t = healthTopicTerms(query, english);
++  const m = mode();
++  if (!m) return t;
++  const before = t.size;
++  const add = (src: string) => {
++    for (const w of tokenizeTerms(src)) if (!GENERIC_TOPIC.has(w) && !(m === 2 && GENERIC_ALIAS.has(w))) t.add(w);
++  };
++  // (a) the card the matcher names (several conditions = MULTI = none)
++  const { condition } = conversationCondition(query, userTurns);
++  if (condition && condition !== "MULTI" && CARD_TOPIC_TERMS[condition]) add(CARD_TOPIC_TERMS[condition]);
++  // (b) still nothing: the animal the detector matched (VENOMOUS) and, in mode 1, the sting / bite words next to it
++  // (STUNG_OR_RISK without its child / severity words, and never "a bit" or "picked"). Only when the animal side fired.
++  if (t.size === 0) {
++    const animals = query.match(new RegExp(VENOMOUS.source, "giu")) ?? [];
++    if (animals.length) {
++      add(animals.join(" "));
++      if (m === 1) add((query.replace(/\ba (little )?bit\b/gi, " ").match(new RegExp(STUNG_OR_RISK.source, "giu")) ?? []).filter((w) => /^(stung|sting|bit|bite|bitten)/i.test(w.trim())).join(" "));
++    }
++  }
++  // "snakebite snake bite": the parts only count together, as in healthTopicTerms.
++  for (const [compound, parts] of Object.entries(COMPOUNDS)) if (t.has(compound)) parts.forEach((p) => t.delete(p));
++  if (t.size > before && reasonCodes) {
++    const code = `rs:health-topic-fb:${[...t].sort().join(",")}`;
++    if (!reasonCodes.includes(code)) reasonCodes.push(code);
++  }
++  return t;
++}

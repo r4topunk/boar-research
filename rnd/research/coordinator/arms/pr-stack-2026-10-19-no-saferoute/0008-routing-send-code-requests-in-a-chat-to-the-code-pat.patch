@@ -1,0 +1,569 @@
+From bcf2adef66458bad4ae215723189f014176edb16 Mon Sep 17 00:00:00 2001
+From: BOAR R&D <noreply>
+Date: Mon, 19 Oct 2026 14:43:02 -0300
+Subject: [PATCH 8/8] routing: send code requests in a chat to the code path,
+ and search a follow-up with the conversation's subject
+
+In a multi-turn chat the rules lost both the intent and the topic. "What can a smart contract do?" -> "what it look like?" ->
+"i want to see the code" -> "can you write it?" ended with the model refusing to write code: the code rule only knew
+"write (a|some) code", so "write it", "show me the code" and "not even an example?" went to lookup/chat with retrieval
+and the 2-3 sentence answer, and the follow-up search took only the immediately previous turn, which from the third turn
+on has no subject of its own ("what it look like?").
+
+Two changes, no prompt change:
+- classify.ts: classifyTaskInContext. An explicit code noun ("show me the code", "in Python") is a code request; the
+  ambiguous forms ("write it", "an example", "what does it look like") are code only when this message or an earlier user
+  turn has a technical word (smart contract, algorithm, function, Python, ...), so "an example of a supervolcano" stays a
+  lookup. answer.ts uses it for the rules' task type and skips the route gate when it decides code (a SEARCH verdict would
+  turn the request back into a chat with retrieval).
+- followUp.ts (the follow-up search planner from fullnative-dev, the TypeScript twin of FollowUp.kt): a follow-up is
+  anchored on the latest earlier question that names its own subject, else on the first question, instead of on the turn
+  just before it. answer.ts now searches through it.
+
+Neither applies in a health or emergency conversation (a detector fire, health or safety words or a card condition in this
+or any earlier user turn, a health follow-up): first-aid chats keep exactly the route and the search they had.
+
+Measured on a 30-chat / 159-turn multi-turn probe set (49 capability asks), deterministic replay: intent accuracy
+74.8% -> 85.5%, code asks routed to code 0/21 -> 17/21, capability asks left on a retrieval + 2-3 sentence route
+45/49 -> 28/49; 0 class changes on control chats and on first-aid chats; 0 changes on 144 single-turn guard questions
+(60 public bench questions, 30 emergency and 54 pack questions). With Qwen3-4B generating, this routing plus a prompt
+line raised fulfilled capability turns 0.633 -> 0.755 (a hand audit puts the real gain near +0.10); the prompt line
+alone gave a third of it and is not part of this change, because it added wrong first-aid steps.
+
+Tests: code asks in a chat, the follow-up anchor, and first-aid follow-ups that keep their route and search.
+
+Co-Authored-By: Claude Opus 5.5 <noreply>
+---
+ src/routing/answer.test.ts   |  55 ++++++++++++
+ src/routing/answer.ts        |  30 ++++++-
+ src/routing/classify.test.ts |  24 +++++-
+ src/routing/classify.ts      |  36 ++++++++
+ src/routing/followUp.test.ts | 130 ++++++++++++++++++++++++++++
+ src/routing/followUp.ts      | 161 +++++++++++++++++++++++++++++++++++
+ 6 files changed, 432 insertions(+), 4 deletions(-)
+ create mode 100644 src/routing/followUp.test.ts
+ create mode 100644 src/routing/followUp.ts
+
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 386284fd..5a6ec7b7 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { answerPromptPrefix, assemblePrompt, assembleChatMessages } from "../rag/pure";
+ import { AnswerDeps, createAnswerer, InstalledLlm } from "./answer";
++import { classifyTask } from "./classify";
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+@@ -2705,3 +2706,57 @@ describe("WARN (deps.warn): the health caution", () => {
+     expect(done.warn?.tier).not.toBe("no-source");
+   });
+ });
++
++describe("answer(): CHATFAIL code requests in a chat (L2) and the follow-up anchor (L3)", () => {
++  const qwen4: InstalledLlm = { id: "qwen3-4b-instruct-2507-q4km", label: "Qwen3 4B", filename: "models/q4b.gguf", sizeBytes: 2.5 * GB, roles: ["general", "fast"], isDefault: true };
++  const chat = (...u: string[]) => ({ ...ctx, history: { turns: u.flatMap((text) => [{ role: "user", text }, { role: "assistant", text: "An answer." }]) } });
++  const searched = () => {
++    const q: string[] = [];
++    f.deps.retrieve = async (text: string) => (q.push(text), f.retrieved);
++    return q;
++  };
++  const task = (r: { receipt: { reasonCodes: string[] } }) => r.receipt.reasonCodes.find((c) => c.startsWith("task:"));
++
++  it("'can you write it?' after a smart-contract question is a code request: no search, no gate, the model answers", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    let gateCalls = 0;
++    f.deps.engine.nextTokenProbs = async () => (gateCalls++, [{ token: "SEARCH", prob: 0.99 }]);
++    const q = searched();
++    const { result } = await collect("can you write it?", undefined, chat("What can a smart contract do?", "what it look like?"));
++    expect(task(result)).toBe("task:code");
++    expect(result.receipt.reasonCodes).toContain("route-gate:skip-code-request");
++    expect(gateCalls).toBe(0);
++    expect(q).toEqual([]);
++    expect(f.generations).toHaveLength(1);
++  });
++
++  it("'show me the code' and 'write it in Python' after a technical turn are code; with no earlier turn 'can you write it?' is unchanged", async () => {
++    expect(task((await collect("i want to see the code", undefined, chat("What can a smart contract do?"))).result)).toBe("task:code");
++    expect(task((await collect("write it in Python", undefined, chat("How does gradient descent work in a neural network?"))).result)).toBe("task:code");
++    expect(task((await collect("can you write it?")).result)).toBe("task:lookup");
++  });
++
++  it("a follow-up that points back is searched with the conversation's subject, not the subjectless turn before it", async () => {
++    const q = searched();
++    const { result } = await collect("how hot does it get?", undefined, chat("How long is a day on Venus?", "and the year?"));
++    expect(q[0]).toBe("How long is a day on Venus? how hot does it get?");
++    expect(result.receipt.reasonCodes).toContain("retrieve:follow-up-direct");
++  });
++
++  it("a first-aid chat keeps its route: no code rule, no follow-up search", async () => {
++    for (const [first, next] of [
++      ["How do I help a choking adult?", "what about a baby?"],
++      ["How do I help a choking adult?", "compare the two in a table"],
++      ["What should I do for a minor burn?", "how long should I cool it?"],
++      ["What do I do if someone has a nosebleed?", "should I tilt their head back?"],
++      ["How do I do CPR on an adult?", "can you write it as a simple program?"],
++    ]) {
++      const q = searched();
++      const { result } = await collect(next, undefined, chat(first));
++      expect(task(result), next).toBe(`task:${classifyTask(next)}`);
++      expect(result.receipt.reasonCodes.filter((c) => c.startsWith("retrieve:follow-up")), next).toEqual([]);
++      expect(q.some((t) => t.startsWith(first)), next).toBe(false);
++    }
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 150ee32a..94c87353 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -10,7 +10,8 @@
+  * waits for it to settle, and LlamaEngine itself serializes completions, so
+  * a double send can never run two completions on one context.
+  */
+-import { classifyTask } from "./classify";
++import { classifyTask, classifyTaskInContext } from "./classify";
++import { followUpSearch, searchWithFollowUp } from "./followUp";
+ import { gatedTaskType, routeGateSkip, routeGateMessages, routeGateVerdict, ROUTE_GATE_CONFIG, ROUTE_GATE_MODEL_IDS, ROUTE_GATE_N_PROBS, type GateMessage, type TokenProb } from "./routeGate";
+ import {
+   compressContext,
+@@ -875,8 +876,17 @@ export function createAnswerer(deps: AnswerDeps) {
+       const depthModels = deepCandidates.map((m) => toDepth(m, fits.get(m.id)));
+       const deepModel = resolveDeepModel(depthModels, fastLlm?.id, settings.deepModelId);
+       // Route gate (4B only): the loaded model decides whether to search; the rules stay the fallback.
+-      const ruleTaskType = classifyTask(req.query);
++      // CHATFAIL L2: a chat follow-up that asks for code ("can you write it?", "show me the code", "not even an example?" after a
++      // smart-contract question) is a code request: no retrieval, no 2-3 sentence lookup answer. Never in a health or emergency
++      // conversation (a detector fire, health or safety words or a card condition in this or any earlier user turn, a health
++      // follow-up): a first-aid chat keeps exactly the route it had.
++      const lexicalHealthTurn = (t: string) => isHealthQuestion(t) || isSafetyQuery(t) || isCardEmergency(t);
++      const healthChat = !!learned?.fire || lexicalHealthTurn(req.query) || isHealthFollowUp(req.query, userTurns) || userTurns.some(lexicalHealthTurn);
++      const plainTaskType = classifyTask(req.query);
++      const ruleTaskType = healthChat ? plainTaskType : classifyTaskInContext(req.query, userTurns);
++      const codeInChat = ruleTaskType !== plainTaskType;
+       const gateCodes: string[] = [];
++      if (codeInChat) gateCodes.push("route-gate:skip-code-request");
+       let gateLoadMs = 0;
+       let taskType = ruleTaskType;
+       let gateSkip = false;
+@@ -888,6 +898,8 @@ export function createAnswerer(deps: AnswerDeps) {
+         (req.tier ?? "auto") === "auto" &&
+         !req.reuseSources &&
+         !req.answerAnyway &&
++        // The code rule decided: a SEARCH verdict would turn the request back into a chat with retrieval.
++        !codeInChat &&
+         // CUT5-SPEED: the rules decide (lookup/research/compare, no detector fire, no history, not about BOAR): no gate pass.
+         !(gateSkip = routeGateSkip({
+           ruleTaskType,
+@@ -1141,7 +1153,19 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await deps.retrieve(searchQuery, gen?.retrieveK ?? 6).catch((e) => {
++        // CHATFAIL L3: a follow-up with no subject of its own ("what does it look like?") is searched together with the
++        // conversation's subject (followUp.ts). Not in a health conversation (healthChat above): that path has its own follow-up
++        // rule (isHealthFollowUp, conversationCondition) and searches by the condition's name, unchanged.
++        const k = gen?.retrieveK ?? 6;
++        const followUp = !health && !healthChat && !history && (ctx.history?.turns?.length ?? 0) > 0;
++        const fuPlan = followUp ? followUpSearch(searchQuery, ctx.history) : {};
++        raw = await (followUp
++          ? searchWithFollowUp(searchQuery, ctx.history, (text) => deps.retrieve(text, k), (c) => `${c.title} ${c.body}`).then((r) => {
++              if (r.searchedFor !== searchQuery) reasonCodes.push(fuPlan.direct ? "retrieve:follow-up-direct" : "retrieve:follow-up-fallback");
++              return r.chunks;
++            })
++          : deps.retrieve(searchQuery, k)
++        ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
+diff --git a/src/routing/classify.test.ts b/src/routing/classify.test.ts
+index b1c84888..5fdad77a 100644
+--- a/src/routing/classify.test.ts
++++ b/src/routing/classify.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, it, expect } from "vitest";
+-import { classifyTask, isRetrievalIrrelevant } from "./classify";
++import { classifyTask, classifyTaskInContext, isRetrievalIrrelevant } from "./classify";
+ 
+ describe("classifyTask", () => {
+   it("returns unknown for empty input", () => {
+@@ -210,3 +210,25 @@ describe("classifyTask yes/no questions (Sextant trv-009)", () => {
+     expect(classifyTask("Can you help me")).toBe("conversation");
+   });
+ });
++
++describe("classifyTaskInContext (CHATFAIL L2)", () => {
++  const sc = ["What can a smart contract do?", "what it look like?"];
++  it("a code follow-up after a technical turn is a code request", () => {
++    expect(classifyTask("can you write it?")).toBe("lookup");
++    expect(classifyTaskInContext("can you write it?", sc)).toBe("code");
++    expect(classifyTaskInContext("not even an example?", sc)).toBe("code");
++    expect(classifyTaskInContext("what does it look like?", ["What is a Merkle tree?"])).toBe("code");
++    expect(classifyTaskInContext("write it in Python", ["How does gradient descent work in a neural network?"])).toBe("code");
++  });
++  it("an explicit code noun needs no context", () => {
++    expect(classifyTaskInContext("i want to see the code", [])).toBe("code");
++    expect(classifyTaskInContext("show me what the deposit call looks like in code", [])).toBe("code");
++  });
++  it("leaves non-technical follow-ups and format asks alone", () => {
++    expect(classifyTaskInContext("can you give me an example of a supervolcano?", ["How do volcanoes form?"])).toBe(classifyTask("can you give me an example of a supervolcano?"));
++    expect(classifyTaskInContext("what does the road look like in January?", ["Is the Ring Road in Iceland paved?"])).toBe(classifyTask("what does the road look like in January?"));
++    expect(classifyTaskInContext("write it down for me", sc)).toBe(classifyTask("write it down for me"));
++    expect(classifyTaskInContext("can you put that in a table?", sc)).toBe(classifyTask("can you put that in a table?"));
++    expect(classifyTaskInContext("translate that to Portuguese", sc)).toBe("translate");
++  });
++});
+diff --git a/src/routing/classify.ts b/src/routing/classify.ts
+index eca2136d..31ef15f0 100644
+--- a/src/routing/classify.ts
++++ b/src/routing/classify.ts
+@@ -64,6 +64,42 @@ const CONVERSATION_RE =
+ const YES_NO =
+   /^(is|are|was|were|do|does|did|can|could|should|will|would|has|have|é|e|são|sao|era|foi|posso|pode|podem|devo|deve|precisa|preciso|tem|há|ha|existe|vale)(?![\p{L}])[^?]*\?\s*$/iu;
+ 
++// CHATFAIL L2: intent for follow-ups that ask for code or an example. The base regex only knew "write (a|some) code", so
++// "write it", "show me the code", "not even an example?" and "what does it look like?" (after a technical turn) fell to lookup/chat,
++// with retrieval and the Succinct 2-3 sentence cap. Explicit code nouns need no context; the ambiguous words ("it", "an example",
++// "look like") need a technical word in this message or an earlier user turn, so "an example of a supervolcano" and "what does the
++// road look like in January" stay lookups.
++const CODE_CONTEXT =
++  /\b(smart contracts?|solidity|erc-?\d+|merkle|hash(?:es|ing)?|algorithms?|programs?|programming|code|coding|scripts?|software|functions?|apis?|compiler|sql|database|python|javascript|typescript|rust|numpy|neural networks?|backpropagation|simulations?|data structures?)\b/i;
++const CODE_EXPLICIT = [
++  // show/see/give/paste + (the|some|a) code|program|script|snippet
++  /\b(?:show|see|view|give|get|have|paste|print|display|read)\b(?:\s+(?:me|us))?(?:\s+(?:the|its|that|this|some|a|an|your|full))?\s+(?:source\s+)?(?:code|program|script|snippet)\b/i,
++  // "in code", "in Python", "as code"
++  /\b(?:in|as|using|with)\s+(?:code|python|javascript|js|typescript|solidity|rust|c\+\+|numpy|sql|bash)\b/i,
++];
++const CODE_NEEDS_CONTEXT = [
++  // write it / write one for me (not "write it down")
++  /\bwrite\s+(?:me\s+)?(?:it|that|this|one|them)\b(?!\s+down)/i,
++  // an example / not even an example (not "an example of ...")
++  /\b(?:an?|one|some|another|any)\s+(?:(?:small|short|simple|quick|minimal|tiny|code)\s+)*examples?\b(?!\s+of\b)/i,
++  // what/how does it look like
++  /\b(?:what|how)\b[^?]*\blooks?\s+like\b/i,
++];
++
++/**
++ * Like classifyTask, with the user's earlier turns (oldest first) as context for the code-intent rule. Only a lookup, research,
++ * chat or unknown message can become code; every other type is returned as classifyTask gives it. The answer path never calls
++ * this for a health or emergency message (answer.ts), so a first-aid chat keeps its health route.
++ */
++export function classifyTaskInContext(query: string, priorUserTurns: string[] = []): TaskType {
++  const base = classifyTask(query);
++  if (base !== "lookup" && base !== "research" && base !== "chat" && base !== "unknown") return base;
++  const q = query.trim();
++  if (CODE_EXPLICIT.some((re) => re.test(q))) return "code";
++  if (CODE_NEEDS_CONTEXT.some((re) => re.test(q)) && (CODE_CONTEXT.test(q) || priorUserTurns.some((t) => CODE_CONTEXT.test(t)))) return "code";
++  return base;
++}
++
+ export function classifyTask(query: string): TaskType {
+   const trimmed = query.trim();
+   if (!trimmed) return "unknown";
+diff --git a/src/routing/followUp.test.ts b/src/routing/followUp.test.ts
+new file mode 100644
+index 00000000..3c479a93
+--- /dev/null
++++ b/src/routing/followUp.test.ts
+@@ -0,0 +1,130 @@
++import { describe, expect, it } from "vitest";
++import { followUpSearch, searchWithFollowUp } from "./followUp";
++
++const after = (question: string) => ({
++  turns: [
++    { role: "user" as const, text: question },
++    { role: "assistant" as const, text: "An answer about it." },
++  ],
++});
++
++describe("followUpSearch", () => {
++  it("searches a question that points back together with the previous question", () => {
++    expect(followUpSearch("What did he publish?", after("Who proposed the theory of evolution by natural selection?"))).toEqual({
++      direct: "Who proposed the theory of evolution by natural selection? What did he publish?",
++      previous: "Who proposed the theory of evolution by natural selection?",
++    });
++  });
++
++  it("does the same in Portuguese", () => {
++    expect(followUpSearch("O que ele publicou?", after("Quem propôs a teoria da evolução?")).direct).toContain("Quem propôs");
++  });
++
++  it("borrows the previous topic for a short question only as a fallback", () => {
++    expect(followUpSearch("What are the side effects?", after("How do vaccines work?"))).toEqual({
++      fallback: "How do vaccines work? What are the side effects?",
++    });
++  });
++
++  it("never borrows for a question that names its own subject", () => {
++    expect(followUpSearch("What is the capital of Australia?", after("Compare the French Revolution and the Industrial Revolution."))).toEqual({});
++  });
++
++  it("leaves a longer self-contained question alone", () => {
++    expect(followUpSearch("How does the immune system respond to a new virus infection?", after("How do vaccines work?"))).toEqual({});
++  });
++
++  it("never takes the current question as the previous one", () => {
++    const history = {
++      turns: [
++        { role: "user" as const, text: "Who proposed the theory of evolution?" },
++        { role: "assistant" as const, text: "Charles Darwin." },
++        { role: "user" as const, text: "What did he publish?" },
++      ],
++    };
++    expect(followUpSearch("What did he publish?", history).direct).toBe("Who proposed the theory of evolution? What did he publish?");
++  });
++
++  it("CHATFAIL L3: anchors on the earlier question that names the subject, not on a subjectless follow-up", () => {
++    const history = {
++      turns: [
++        { role: "user" as const, text: "What can a smart contract do?" },
++        { role: "assistant" as const, text: "A definition." },
++        { role: "user" as const, text: "what it look like?" },
++        { role: "assistant" as const, text: "The same definition." },
++      ],
++    };
++    expect(followUpSearch("can you write it?", history).direct).toBe("What can a smart contract do? can you write it?");
++    // A follow-up that names its own subject is the anchor for the next one.
++    const named = { turns: [...history.turns, { role: "user" as const, text: "How do Ethereum gas fees work?" }] };
++    expect(followUpSearch("what about it on L2?", named).direct).toBe("How do Ethereum gas fees work? what about it on L2?");
++  });
++
++  it("does nothing without an earlier question", () => {
++    expect(followUpSearch("What did he publish?", { turns: [] })).toEqual({});
++    expect(followUpSearch("What did he publish?")).toEqual({});
++  });
++
++  it("does not read 'the' or 'there' inside other words as pointing back", () => {
++    expect(followUpSearch("How does photosynthesis work in theory?", after("How do vaccines work?")).direct).toBeUndefined();
++  });
++
++  it("reads 'there' as pointing back only as a place, not in 'is there' or 'there are'", () => {
++    const prev = after("How do vaccines work?");
++    expect(followUpSearch("Is there an effective treatment for malaria in adults?", prev)).toEqual({});
++    expect(followUpSearch("Are there any side effects?", prev)).toEqual({ fallback: "How do vaccines work? Are there any side effects?" });
++    expect(followUpSearch("There's a cure?", prev)).toEqual({ fallback: "How do vaccines work? There's a cure?" });
++    for (const q of ["What happened there?", "Were they there last week?", "There?"]) expect(followUpSearch(q, prev).direct).toBe(`How do vaccines work? ${q}`);
++  });
++
++  it("counts a name as the first word as the question's own subject, but not an opening word", () => {
++    const prev = after("Who proposed the theory of evolution by natural selection?");
++    for (const q of ["Australia capital?", "EIP-1559?", "Canberra?", "«Darwin» books?"]) expect(followUpSearch(q, prev)).toEqual({});
++    for (const q of ["What are his books?", "Summarize the books", "Quais são os livros?", "What's the date?"]) expect(followUpSearch(q, prev)).not.toEqual({});
++  });
++});
++
++describe("searchWithFollowUp", () => {
++  const history = after("How do vaccines work?");
++
++  it("keeps what the question alone found", async () => {
++    const seen: string[] = [];
++    const r = await searchWithFollowUp("What are the side effects?", history, async (t) => (seen.push(t), ["chunk"]));
++    expect(r).toEqual({ chunks: ["chunk"], searchedFor: "What are the side effects?" });
++    expect(seen).toHaveLength(1);
++  });
++
++  it("retries with the previous question when the short one finds nothing", async () => {
++    const seen: string[] = [];
++    const r = await searchWithFollowUp("What are the side effects?", history, async (t) => (seen.push(t), t.includes("vaccines") ? ["vaccine side effects"] : []));
++    expect(r.chunks).toEqual(["vaccine side effects"]);
++    expect(r.searchedFor).toBe("How do vaccines work? What are the side effects?");
++    expect(seen).toEqual(["What are the side effects?", "How do vaccines work? What are the side effects?"]);
++  });
++
++  it("searches a question that points back combined, once, when that finds sources", async () => {
++    const seen: string[] = [];
++    const r = await searchWithFollowUp("What did he publish?", after("Who proposed evolution?"), async (t) => (seen.push(t), ["darwin"]));
++    expect(seen).toEqual(["Who proposed evolution? What did he publish?"]);
++    expect(r.searchedFor).toBe("Who proposed evolution? What did he publish?");
++  });
++
++  it("falls back to the previous question alone, still compressing against the combined words", async () => {
++    const seen: string[] = [];
++    const r = await searchWithFollowUp("What did he publish?", after("Who proposed evolution?"), async (t) =>
++      (seen.push(t), t === "Who proposed evolution?" ? ["Evolution article"] : [])
++    );
++    expect(seen).toEqual(["Who proposed evolution? What did he publish?", "Who proposed evolution?"]);
++    expect(r).toEqual({ chunks: ["Evolution article"], searchedFor: "Who proposed evolution? What did he publish?" });
++  });
++
++  it("a fallback keeps only passages about the question: a typo gets no sources, not the previous topic's", async () => {
++    const history = { turns: [{ role: "user" as const, text: "What causes the greenhouse effect?" }, { role: "assistant" as const, text: "Gases trap heat." }] };
++    const search = async (t: string) => (t.includes("greenhouse") ? ["Greenhouse effect: gases trap heat"] : []);
++    const typo = await searchWithFollowUp("what is a moonsoon", history, search, (c) => c);
++    expect(typo).toEqual({ chunks: [], searchedFor: "what is a moonsoon" });
++    const vaccines = { turns: [{ role: "user" as const, text: "How do vaccines work?" }, { role: "assistant" as const, text: "They train immunity." }] };
++    const side = await searchWithFollowUp("What are the side effects?", vaccines, async (t) => (t.includes("vaccines") ? ["Vaccine side effects are usually mild", "Vaccines train the immune system"] : []), (c) => c);
++    expect(side.chunks).toEqual(["Vaccine side effects are usually mild"]);
++  });
++});
+diff --git a/src/routing/followUp.ts b/src/routing/followUp.ts
+new file mode 100644
+index 00000000..b385fc0c
+--- /dev/null
++++ b/src/routing/followUp.ts
+@@ -0,0 +1,161 @@
++/**
++ * What to search the library for when the question is a follow-up.
++ *
++ * Retrieval saw only the question's own words, so a follow-up found nothing:
++ * "What did he publish?" after a Darwin answer, "What are the side effects?"
++ * after a vaccines answer (Pixel 6a, 2026-10-04, both models: no sources). The
++ * model still resolved "he" from the history and answered from memory, uncited,
++ * which is the weaker case for the bounty (Qwen3-4B 0.49 from memory vs 0.61
++ * with passages, r4to's eval).
++ *
++ * Rule, from the conversation's previous question:
++ * - A question that points back ("he", "it", "that", "ele", "isso"…) is searched
++ *   together with the previous question, and with the previous question alone
++ *   when that finds nothing.
++ * - A short question with no name of its own ("What are the side effects?") is
++ *   searched as written first, and with the previous question only when that
++ *   finds nothing. A self-contained question that finds sources keeps them, and
++ *   one with a name ("the capital of Australia") never borrows another topic.
++ *
++ * Pure (no native imports), like context.ts, so it is unit-testable.
++ */
++import type { ConversationHistory } from "../rag/pure";
++import { tokenizeTerms } from "./context";
++
++/** Words that only make sense with an earlier subject (English and Portuguese); "there" is checked apart (thereAsPlace). */
++const POINTS_BACK =
++  /(?:^|[^\p{L}])(he|she|it|its|they|them|their|theirs|him|his|her|hers|this|that|these|those|ele|ela|eles|elas|dele|dela|deles|delas|isso|isto|aquilo|nele|nela|esse|essa|esses|essas)(?![\p{L}])/iu;
++
++/** Words around an existential "there" ("Is there a cure?", "There are two kinds"), which points at nothing earlier. */
++const EXISTENTIAL_BEFORE = new Set(["is", "are", "was", "were", "be", "been", "isn't", "aren't", "wasn't", "weren't"]);
++const EXISTENTIAL_AFTER = new Set([
++  "is", "are", "was", "were", "be", "been", "isn't", "aren't", "wasn't", "weren't", "will", "would", "could", "might",
++  "may", "must", "seem", "seems", "appear", "appears", "exist", "exists", "remain", "remains", "used",
++]);
++
++/**
++ * "there" as a place ("What happened there?", "Were they there last week?", "There?"), not the existential "is there"
++ * of a question that brings its own subject ("Is there an effective treatment for malaria?", CodeRabbit on #80).
++ */
++function thereAsPlace(query: string): boolean {
++  const words = query.toLowerCase().replace(/\u2019/g, "'").split(/[^\p{L}']+/u).filter(Boolean);
++  return words.some((w, i) => w === "there" && !EXISTENTIAL_BEFORE.has(words[i - 1] ?? "") && !EXISTENTIAL_AFTER.has(words[i + 1] ?? ""));
++}
++
++/** At most this many content words for a question to borrow the previous one's topic when it finds nothing. */
++export const SHORT_FOLLOW_UP_TERMS = 3;
++
++export interface FollowUpSearch {
++  /** Search this instead of the question (it points back). */
++  direct?: string;
++  /**
++   * With `direct`: the previous question alone, when the combined text finds nothing. The keyword search
++   * wants most of the query's words in a source, and the combined query has many: "Who proposed the theory
++   * of evolution… What did he publish?" found 0 chunks, the Evolution article lacking "publish" (Pixel 6a).
++   */
++  previous?: string;
++  /** Search this only if the question alone found nothing (short, no name of its own). */
++  fallback?: string;
++}
++
++/**
++ * A question that names its own subject by the rule below (no pointing back, and either a name of its own or more than
++ * SHORT_FOLLOW_UP_TERMS content words). A bare "I" does not count as a name here.
++ */
++function selfContained(text: string): boolean {
++  if (POINTS_BACK.test(text) || thereAsPlace(text)) return false;
++  return tokenizeTerms(text).length > SHORT_FOLLOW_UP_TERMS || namesItsOwnSubject(text.replace(/(^|\s)I(?:['\u2019][a-z]+)?(?=[\s?.!,]|$)/g, "$1"));
++}
++
++/**
++ * CHATFAIL L3: the earlier question that carries the conversation's subject, never the current one. Was: the
++ * latest earlier user turn, which from the third turn on is itself a follow-up with no subject ("what it look like?"), so the
++ * anchor was lost. Now: the latest earlier user turn that names its own subject; if none does, the first user turn (the root).
++ */
++function previousQuestion(query: string, history?: ConversationHistory): string | null {
++  const turns = history?.turns ?? [];
++  const current = query.trim();
++  let root: string | null = null;
++  for (let i = turns.length - 1; i >= 0; i--) {
++    const text = turns[i].text.trim();
++    if (turns[i].role !== "user" || !text || text === current) continue;
++    root = text;
++    if (selfContained(text)) return text;
++  }
++  return root;
++}
++
++/** Words a question or request starts with, capitalized only because they open it (English and Portuguese). */
++const OPENERS = new Set(
++  (
++    "what whats who whos whom whose which when whens where wheres why whys how hows is are was were am be do does did " +
++    "can could should would will shall may might must have has had tell explain describe compare list give show define " +
++    "summarize summarise name find write help please and but or so then also now ok okay i you we they he she it " +
++    "there theres here heres " +
++    "a an the any some my your in on at for of to from with about between after before during if " +
++    "o os as um uma uns umas qual quais quem como quando onde por porque porquê que quê e mas ou então também agora " +
++    "me fale explique descreva compare liste diga mostre defina resuma é são foi foram era há tem têm existe existem " +
++    "eu você voce nós ele ela isso isto no na nos nas do da dos das de em para com sobre entre depois antes durante se"
++  ).split(" ")
++);
++
++/**
++ * A name the question brings itself ("Australia", "EIP-1559"): a capitalized word or one starting with a digit. The first
++ * word counts too ("Australia capital?", CodeRabbit on #80), unless it is one a question usually opens with.
++ */
++function namesItsOwnSubject(query: string): boolean {
++  const words = query.trim().split(/\s+/);
++  return words.some((w, i) => {
++    const bare = w.replace(/^["'(«“]/, "");
++    if (!/^[\p{Lu}0-9]/u.test(bare)) return false;
++    return i > 0 || !OPENERS.has(bare.toLowerCase().replace(/\u2019/g, "'").replace(/'/g, "").replace(/[^\p{L}0-9]+.*$/u, ""));
++  });
++}
++
++export function followUpSearch(query: string, history?: ConversationHistory): FollowUpSearch {
++  const previous = previousQuestion(query, history);
++  if (!previous) return {};
++  const combined = `${previous} ${query.trim()}`;
++  if (POINTS_BACK.test(query) || thereAsPlace(query)) return { direct: combined, previous };
++  if (tokenizeTerms(query).length <= SHORT_FOLLOW_UP_TERMS && !namesItsOwnSubject(query)) return { fallback: combined };
++  return {};
++}
++
++/**
++ * Passages the fallback found that are about the question: they share at least one of its own content words
++ * (stemmed, as retrieval does). The fallback adds the previous question's words, so a question that found nothing
++ * because of a typo ("what is a moonsoon", after a greenhouse-effect question) got the earlier topic's passages
++ * as its sources (X6, 2026-10-10). A question with no content words of its own keeps them all.
++ */
++export function aboutTheQuestion<T>(query: string, chunks: T[], textOf: (chunk: T) => string): T[] {
++  const own = new Set(tokenizeTerms(query));
++  if (!own.size) return chunks;
++  return chunks.filter((c) => tokenizeTerms(textOf(c)).some((t) => own.has(t)));
++}
++
++/**
++ * Runs the search with the follow-up rule. `search` gets the text to search and
++ * returns its chunks; the result says which text found them, so the caller
++ * compresses against the same words. With `textOf`, the fallback keeps only the
++ * passages about the question (aboutTheQuestion).
++ */
++export async function searchWithFollowUp<T>(
++  query: string,
++  history: ConversationHistory | undefined,
++  search: (text: string) => Promise<T[]>,
++  textOf?: (chunk: T) => string
++): Promise<{ chunks: T[]; searchedFor: string }> {
++  const plan = followUpSearch(query, history);
++  if (plan.direct) {
++    const chunks = await search(plan.direct);
++    if (chunks.length || !plan.previous) return { chunks, searchedFor: plan.direct };
++    // Found by the earlier subject; compressed against the combined words, so the sentences closest to the
++    // follow-up ("publish") are the ones kept.
++    return { chunks: await search(plan.previous), searchedFor: plan.direct };
++  }
++  const chunks = await search(query);
++  if (chunks.length || !plan.fallback) return { chunks, searchedFor: query };
++  const found = await search(plan.fallback);
++  const kept = textOf ? aboutTheQuestion(query, found, textOf) : found;
++  return { chunks: kept, searchedFor: kept.length ? plan.fallback : query };
++}
+-- 
+2.50.1 (Apple Git-155)
+

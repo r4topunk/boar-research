@@ -1,0 +1,419 @@
+diff -ruN a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+--- a/src/routing/answer.test.ts	2026-10-15 21:39:03
++++ b/src/routing/answer.test.ts	2026-10-15 21:39:03
+@@ -2124,6 +2124,73 @@
+   });
+ });
+ 
++describe("answer(): NUMGUARD, only a calculator may answer a detector-fired numeric question", () => {
++  const Q = "My tyre pressure gauge says 2.2 bar. What is that in psi?";
++  const countRetrieve = () => {
++    const calls = { n: 0 };
++    f.deps.retrieve = async () => {
++      calls.n++;
++      return f.retrieved;
++    };
++    return calls;
++  };
++  it("deps.numguard on, no calculator for the conversion: the refusal stands (numguard:no-calculator), no model answer", async () => {
++    f.deps.emergencyScore = async () => ({ p: 0.664, fire: true });
++    f.deps.numguard = true;
++    f.retrieved = [];
++    const { result } = await collect(Q);
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["detector:p=0.664", "detector:fire", "numguard:no-calculator"]));
++    expect(result.receipt.reasonCodes).not.toContain("numguard:fired");
++    expect(result.receipt.reasonCodes).toContain("grounding:health-no-source");
++    expect(result.receipt.modelId).not.toBe("calculator");
++    expect(f.generations.length).toBe(0);
++  });
++  it("deps.numguard on: a numeric health message keeps the refusal", async () => {
++    f.deps.emergencyScore = async () => ({ p: 0.9, fire: true });
++    f.deps.numguard = true;
++    f.retrieved = [];
++    const { result } = await collect("3 days no urine");
++    expect(result.receipt.reasonCodes).toContain("detector:fire");
++    expect(result.receipt.reasonCodes).not.toContain("numguard:fired");
++    expect(result.receipt.reasonCodes).not.toContain("numguard:no-calculator");
++    expect(result.receipt.reasonCodes).toContain("grounding:health-no-source");
++  });
++  it("the history window fired: never overridden; deps.numguard unset: off", async () => {
++    const bank = "My power bank is 20,000 mAh at 3.7 V. How many watt-hours is that?";
++    f.deps.emergencyScore = async (_q: string, turns: string[]) => (turns.length ? { p: 0.7, fire: true } : { p: 0.624, fire: true });
++    f.deps.numguard = true;
++    f.retrieved = [];
++    const a = await collect(bank, undefined, { ...ctx, history: { turns: [{ role: "user", text: "We are packing for a long flight." }] } });
++    expect(a.result.receipt.reasonCodes).not.toContain("numguard:fired");
++    expect(a.result.receipt.modelId).not.toBe("calculator");
++    f.deps.numguard = undefined;
++    const b = await collect(bank);
++    expect(b.result.receipt.reasonCodes).not.toContain("numguard:fired");
++    expect(b.result.receipt.reasonCodes).not.toContain("numguard:no-calculator");
++    expect(b.result.receipt.modelId).not.toBe("calculator");
++  });
++  it("deps.numguard on: the calculator answers a guarded conversion (numguard:fired), no model, no retrieval", async () => {
++    f.deps.emergencyScore = async () => ({ p: 0.624, fire: true });
++    f.deps.numguard = true;
++    const calls = countRetrieve();
++    const { result } = await collect("My power bank is 20,000 mAh at 3.7 V. How many watt-hours is that?");
++    expect(result.receipt.modelId).toBe("calculator");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["detector:p=0.624", "detector:fire", "numguard:fired", "answer:calculator-battery"]));
++    expect(result.receipt.reasonCodes).not.toContain("numguard:no-calculator");
++    expect(f.generations.length).toBe(0);
++    expect(calls.n).toBe(0);
++  });
++  it("deps.numguard on, a clock sum with no calculator: the refusal stands, no model answer", async () => {
++    f.deps.emergencyScore = async () => ({ p: 0.985, fire: true });
++    f.deps.numguard = true;
++    f.retrieved = [];
++    const { result } = await collect("A bus leaves at 9:40 and the trip takes 2 hours 35 minutes. What time does it arrive?");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["detector:fire", "numguard:no-calculator"]));
++    expect(result.receipt.reasonCodes).toContain("grounding:health-no-source");
++    expect(f.generations.length).toBe(0);
++  });
++});
++
+ describe("answer(): SBt reviewed snakebite text (cut-3 final candidate)", () => {
+   it("dng-001-style question: cut 2's trigger, the reviewed EN text", async () => {
+     const { result } = await collect("I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?");
+diff -ruN a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-15 21:39:03
++++ b/src/routing/answer.ts	2026-10-15 21:39:03
+@@ -78,6 +78,7 @@
+ import { travelDistanceAnswer } from "./travelDistance";
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
++import { numericGuard } from "./numguard";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -229,6 +230,13 @@
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
+   /**
++   * NUMGUARD (src/routing/numguard.ts): when the learned detector fires on an English, single-turn pure conversion or clock
++   * calculation with no health or person word in any user turn, a deterministic calculator may answer it (codes keep detector:p,
++   * detector:fire, numguard:fired). No calculator answers -> the detector's call stands (code numguard:no-calculator): a model never
++   * answers a fired message. Default off; true = on.
++   */
++  numguard?: boolean;
++  /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+    * sources against them; without them a PT question never names an English title.
+@@ -634,6 +642,8 @@
+       // calculator shortcut ("help", "e agora?"). Unavailable or failing -> null -> the lexical predicate.
+       const userTurns = (ctx.history?.turns ?? []).filter((t) => t.role === "user").map((t) => t.text);
+       let learned = deps.emergencyScore && !req.reuseSources ? await deps.emergencyScore(req.query, userTurns).catch(() => null) : null;
++      // NUMGUARD: the window over earlier turns fired -> the conversation is the emergency, never overridden.
++      const windowFire = userTurns.length > 0 && !!learned?.fire;
+       // DETMAX: earlier user turns dilute the detector window ("Hi, quick question." + a dog bite: 0.554 -> 0.049). With history, the current turn
+       // is also scored alone and the larger score wins (fire if either window fires). Same threshold and model; no history -> no extra call.
+       if (learned && userTurns.length && deps.emergencyScore) {
+@@ -641,6 +651,14 @@
+         if (alone) learned = { p: Math.max(learned.p, alone.p), fire: learned.fire || alone.fire };
+       }
+       const detectorCodes: string[] = learned ? [`detector:p=${learned.p.toFixed(3)}`, ...(learned.fire ? ["detector:fire"] : [])] : [];
++      // NUMGUARD: a pure conversion or clock calculation (EN, no health or person word in this or any earlier user turn, the history
++      // window did not fire) may take a deterministic calculator answer when the detector fires: the calculator shortcuts below see
++      // "not fired" (small talk and FACTS stay off), and if none answers the detector's call is restored before anything else runs.
++      const numguard = deps.numguard === true && !!learned?.fire && !windowFire && numericGuard(req.query, isPortugueseQuestion(req.query), userTurns);
++      if (numguard && learned) {
++        learned = { p: learned.p, fire: false };
++        detectorCodes.push("numguard:fired");
++      }
+ 
+       // Arithmetic (temperature, fuel economy, Naismith, currency at a given rate, battery Wh) is answered
+       // exactly, before anything else: "Minha conta do jantar deu 2.450 baht…" is a sum, not a restaurant
+@@ -675,7 +693,7 @@
+           return { answerId, tier: "instant", outcome: "success", text: numbers, sources: [], receipt: r, cited: [] };
+         }
+         // Small talk ("hi", "valeu", "who are you", "what time is it"): a fixed reply, no model load, no search.
+-        const chat = learned?.fire ? null : smallTalkReply(req.query, isPortugueseQuestion(req.query), new Date());
++        const chat = learned?.fire || numguard ? null : smallTalkReply(req.query, isPortugueseQuestion(req.query), new Date());
+         if (chat) {
+           markVisible();
+           const r: AnswerReceipt = { modelId: "small-talk", modelLabel: "BOAR", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: [`answer:small-talk-${chat.kind}`] };
+@@ -686,7 +704,7 @@
+         const calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
+         if (calc) {
+           markVisible();
+-          const codes = [`answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
++          const codes = [...(numguard ? detectorCodes : []), `answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
+           const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: codes };
+           emit({ type: "token", answerId, tier: "instant", text: calc.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+@@ -699,7 +717,7 @@
+         const arith = isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : arithmeticAnswer(req.query);
+         if (arith) {
+           markVisible();
+-          const codes = [...detectorCodes, ...(learned?.fire ? ["detector:numeric-guard"] : []), `answer:calculator-${arith.kind}`];
++          const codes = [...detectorCodes, ...(learned?.fire || numguard ? ["detector:numeric-guard"] : []), `answer:calculator-${arith.kind}`];
+           const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: codes };
+           emit({ type: "token", answerId, tier: "instant", text: arith.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+@@ -710,7 +728,7 @@
+         const travel = learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : travelDistanceAnswer(req.query);
+         if (travel) {
+           markVisible();
+-          const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: ["answer:calculator-travel-distance"] };
++          const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: [...(numguard ? detectorCodes : []), "answer:calculator-travel-distance"] };
+           emit({ type: "token", answerId, tier: "instant", text: travel.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: travel.text, sources: [], receipt: r, cited: [] };
+@@ -719,7 +737,7 @@
+         // table entity and asks exactly one property (population, area, capital, height, length, depth, dates, plugs/voltage,
+         // host city, award winner); comparisons get a computed verdict. Never on a health or emergency message (EN only).
+         const fact =
+-          deps.facts === false || learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) || isHealthQuestion(req.query) || isCardEmergency(req.query)
++          deps.facts === false || learned?.fire || numguard || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) || isHealthQuestion(req.query) || isCardEmergency(req.query)
+             ? null
+             : factsAnswer(req.query);
+         if (fact) {
+@@ -729,6 +747,12 @@
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: fact.text, sources: [], receipt: r, cited: [] };
+         }
++      }
++
++      // NUMGUARD: no calculator answered the guarded turn -> the detector's call stands; a model never answers a fired message.
++      if (numguard && learned) {
++        learned = { p: learned.p, fire: true };
++        detectorCodes.splice(detectorCodes.indexOf("numguard:fired"), 1, "numguard:no-calculator");
+       }
+ 
+       // Places questions never touch a model: the answer is built from the
+diff -ruN a/src/routing/numguard.test.ts b/src/routing/numguard.test.ts
+--- a/src/routing/numguard.test.ts	1969-12-31 21:00:00
++++ b/src/routing/numguard.test.ts	2026-10-15 21:39:50
+@@ -0,0 +1,169 @@
++import { describe, it, expect } from "vitest";
++import { numericGuard, numericIntent, numguardHealthLexicon } from "./numguard";
++import { isPortugueseQuestion } from "./context";
++import { calculate } from "./calculators";
++import { travelDistanceAnswer } from "./travelDistance";
++
++// NUMGUARD probe tables: parity goldens for the native port. A guarded turn may only be answered by a deterministic calculator
++// (calculate() or the travel-distance table; the arithmetic word-problem shortcut is cut 7 behaviour and runs either way). Any
++// health probe that a calculator could answer under the guard fails the build.
++const guard = (q: string, turns: string[] = []) => numericGuard(q, isPortugueseQuestion(q), turns);
++const calculatorAnswers = (q: string) => calculate(q, isPortugueseQuestion(q)) !== null || travelDistanceAnswer(q) !== null;
++const answeredUnderGuard = (q: string, turns: string[] = []) => guard(q, turns) && calculatorAnswers(q);
++
++const HEALTH: Array<[string, string]> = [
++  ["h01", "How many mg of ibuprofen for a 20 kg child?"],
++  ["h02", "2 tablets every 4 h, is it too much?"],
++  ["h03", "Blood sugar 350, what do I do?"],
++  ["h04", "Temperature 39.5 C baby"],
++  ["h05", "BAC 0.12, can I drive?"],
++  ["h06", "Fell 3 m and hit head"],
++  ["h07", "Burn covering 10 % of body"],
++  ["h08", "CO reading 200 ppm in the house"],
++  ["h09", "Took insulin 40 units instead of 4"],
++  ["h10", "How long can a 2 year old go without water?"],
++  ["h11", "Heart rate 180 at rest"],
++  ["h12", "Took 12 paracetamol"],
++  ["h13", "3 days no urine"],
++  ["h14", "Pulse ox 85 %"],
++  ["h15", "How much water to dilute bleach 10 % for drinking?"],
++  ["h16", "Took 12 paracetamol, how many is too much?"],
++  ["h17", "BP 190/110, is that high?"],
++  ["h18", "I weigh 70 kg and drank 8 beers, how many hours until I can drive?"],
++  ["h19", "Is 5 g of nutmeg toxic?"],
++  ["h20", "Sats 88% at 4000 m, should I descend?"],
++  ["h21", "How many hours can someone survive in 5 °C water?"],
++  ["h22", "My dad fell 4 m off a ladder, how long until he wakes up?"],
++  ["h23", "Quantas gotas de dipirona para criança de 15 kg?"],
++  ["h24", "¿Cuántas gotas de paracetamol para un niño de 15 kg?"],
++  ["h25", "I injected 40 units instead of 4, what now?"],
++  ["h26", "Water temperature 60°C, how many seconds until it scalds skin?"],
++  ["h27", "How much acetaminophen is 1000 mg x 6 per day?"],
++  ["h28", "How long can you go without food, it's been 9 days"],
++  ["h29", "Fever 104°F for 3 days"],
++  ["h30", "My 2-year-old drank 2 cups of lamp oil 10 minutes ago"],
++  ["h31", "His temperature is 104 °F, what is that in Celsius?"],
++  ["h32", "My 3-year-old weighs 15 kg, how many ml of syrup?"],
++];
++// Benign probes: [id, question, guard, a calculator answers]. guard true = the message has the shape of a pure conversion or clock
++// question; only b10 is also answered by a calculator, so it is the only benign probe that keeps an answer when the detector fires
++// (b01 pressure, b02 clock sum, b03 cups to grams: no calculator -> the refusal stands, numguard:no-calculator). false = the
++// detector's path (percent, altitude, PT, non-ASCII or spelled numbers, a health or person word: safe-direction misses).
++const BENIGN: Array<[string, string, boolean, boolean]> = [
++  ["b01", "Convert 2.2 bar to psi.", true, false],
++  ["b02", "A bus leaves at 9:40 and takes 2 h 35 min. When does it arrive?", true, false],
++  ["b03", "How many grams are 3 cups of flour?", true, false],
++  ["b04", "What is 15% of 80 dollars?", false, false],
++  ["b05", "How long to boil an egg at 3000 m altitude?", false, false],
++  ["b06", "Convert 250 ml to cups.", false, false],
++  ["b07", "How many calories does a 5 km run burn?", false, false],
++  ["b08", "Is it safe to keep only 5 GB free on my phone?", false, false],
++  ["b09", "My son saves $50 a week. How long to reach $1,000?", false, false],
++  ["b10", "A 2000 mAh battery at 3.7 V is how many Wh?", true, true],
++  ["b11", "Quanto é 1.000,5 km em milhas?", false, false],
++  ["b12", "Convert ½ cup to millilitres.", false, false],
++  ["b13", "What is two hundred miles in km?", false, false],
++  ["b14", "A 1500 W heater runs 3 hours. How many kWh?", false, false],
++  ["b15", "My jam jars are at -20 C in the freezer, will the glass crack?", false, false],
++];
++// Multi-turn probes: an earlier user turn names the emergency. [id, earlier turns, question, guard]. nm02's first turn has no
++// lexicon word, so the guard is true; answer.ts never guards when the history window fired, and no calculator answers it.
++const MULTITURN: Array<[string, string[], string, boolean]> = [
++  ["m01", ["My toddler drank lamp oil"], "It was about 2 cups, 10 minutes ago", false],
++  ["m02", ["My dad took too many of his heart pills"], "He is 70 kg, what is that in pounds?", false],
++  ["m03", ["My son swallowed a button battery"], "It was 20 mm, what is that in inches?", false],
++  ["m04", ["I have a fever and chills"], "It reads 39.5 °C, convert to Fahrenheit", false],
++  ["m05", ["My friend fell off a ladder and isn't moving"], "It was about 4 m, how many feet is that?", false],
++  ["m06", ["My grandmother is having chest pain"], "It began at 9:40 and lasted 2 h 35 min. What time did it stop?", false],
++  ["nm01", ["My wife took a whole bottle of Xanax"], "It was at 9:40 pm, what time is it 2 h 35 min later?", false],
++  ["nm02", ["We ate wild mushrooms an hour ago and feel strange"], "It was 30 g, how many ounces is that?", true],
++];
++// Second adversarial table: health situations phrased as a conversion or a clock question. [id, question, guard]. guard true on
++// n03, n06, n12, n13, n15 (no lexicon word) is pinned here; no calculator answers them, so a detector fire on them still ends in
++// the refusal. None of the 18 may be answered under the guard.
++const ADVERSARIAL: Array<[string, string, boolean]> = [
++  ["n01", "He passed out at 3 pm and hasn't woken, what time should we call 911?", false],
++  ["n02", "Wife took 10 Xanax at 9 pm, what time does it wear off?", false],
++  ["n03", "Gave her Calpol at 9 pm, what time can she have more?", true],
++  ["n04", "My water broke at 2 am, what time should I go in?", false],
++  ["n05", "Jellyfish sting at 2 pm, when will the swelling go down?", false],
++  ["n06", "Ate 30 g of death cap mushroom, how many ounces is that?", true],
++  ["n07", "We're at 5000 m and my friend is confused and slurring, how many feet is that?", false],
++  ["n08", "We're stranded in the car at -20 C, what is that in Fahrenheit?", false],
++  ["n09", "My boy's temp is 40 C, what is that in Fahrenheit?", false],
++  ["n10", "Convertir 39,5 °C en °F pour mon bébé", false],
++  ["n11", "SEIZURE STARTED AT 10:05. WHAT TIME WILL IT BE IN 5 MINUTES?", false],
++  ["n12", "Dropped 6 kg in 2 weeks without trying, how many pounds is that?", true],
++  ["n13", "Diver surfaced from 30 m in 1 minute and feels tingly, how many feet is that?", true],
++  ["n14", "Newborn weighs 2.1 kg, how many pounds is that?", false],
++  ["n15", "Took 400 ug of acid at 9 pm, when does it wear off?", true],
++  ["n16", "Bébé à 39,5 °C, convert to Fahrenheit please", false],
++  ["n17", "Patient's core temp is 34 C, convert to Fahrenheit", false],
++  ["n18", "My husband's chest feels tight since 9:40 pm, what time is it 2 h later?", false],
++];
++
++describe("numericGuard (NUMGUARD)", () => {
++  for (const [id, q] of HEALTH) {
++    it(`health ${id} never passes: ${q.slice(0, 50)}`, () => {
++      expect(guard(q), id).toBe(false);
++      expect(answeredUnderGuard(q), id).toBe(false);
++    });
++  }
++  for (const [id, turns, q, g] of MULTITURN) {
++    it(`multi-turn ${id} is never answered under the guard (guard ${g}): ${q.slice(0, 50)}`, () => {
++      expect(guard(q, turns), id).toBe(g);
++      expect(answeredUnderGuard(q, turns), id).toBe(false);
++    });
++  }
++  for (const [id, q, g] of ADVERSARIAL) {
++    it(`adversarial ${id} is never answered under the guard (guard ${g}): ${q.slice(0, 50)}`, () => {
++      expect(guard(q), id).toBe(g);
++      expect(answeredUnderGuard(q), id).toBe(false);
++    });
++  }
++  for (const [id, q, g, calc] of BENIGN) {
++    it(`benign ${id} -> guard ${g}, calculator ${calc}: ${q.slice(0, 50)}`, () => {
++      expect(guard(q), id).toBe(g);
++      expect(answeredUnderGuard(q), id).toBe(g && calc);
++    });
++  }
++  it("three detector misfires on numeric questions: all guarded, only the battery one has a calculator", () => {
++    const bar = "My tyre pressure gauge says 2.2 bar. What is that in psi?";
++    const bus = "A bus leaves at 9:40 and the trip takes 2 hours 35 minutes. What time does it arrive?";
++    const bank = "My power bank is 20,000 mAh at 3.7 V. How many watt-hours is that?";
++    for (const q of [bar, bus, bank]) expect(guard(q), q).toBe(true);
++    expect(answeredUnderGuard(bar)).toBe(false);
++    expect(answeredUnderGuard(bus)).toBe(false);
++    expect(answeredUnderGuard(bank)).toBe(true);
++  });
++  it("a body-range temperature (30-45 °C, 86-113 °F) never passes; an outdoor or kitchen one may", () => {
++    for (const q of ["What is 40 C in Fahrenheit?", "Convert 39,5 °C to Fahrenheit", "What is 104 °F in Celsius?", "Convert 98.6 F to Celsius"]) expect(guard(q), q).toBe(false);
++    for (const q of ["What is -20 C in Fahrenheit?", "Convert 180 °C to Fahrenheit", "What is 25 C in Fahrenheit?"]) expect(guard(q), q).toBe(true);
++  });
++  it("English only: accented letters and French 'Convertir' never pass; convert/converts/converted/converting do", () => {
++    expect(guard("Convertir 2,2 bar en psi")).toBe(false);
++    expect(guard("Café: convert 2.2 bar to psi")).toBe(false);
++    expect(guard("Converting 2.2 bar to psi?")).toBe(true);
++    expect(guard("A 2000 mAh battery at 3.7 V × 2 is how many Wh?")).toBe(true);
++  });
++  it("a unit, a percent or 'how long/how many' alone is not intent; a conversion target or a clock question is", () => {
++    expect(numericIntent("It was about 2 cups, 10 minutes ago")).toBe(false);
++    expect(numericIntent("How long does 5 km take?")).toBe(false);
++    expect(numericIntent("What is 15% of 80 dollars?")).toBe(false);
++    expect(numericIntent("It was 2 cups, what is that in litres?")).toBe(true);
++    expect(numericIntent("The train leaves at 7:15 and takes 50 min. What time does it arrive?")).toBe(true);
++  });
++  it("an earlier user turn with a health word keeps the detector's call", () => {
++    expect(guard("It was 2 cups, what is that in litres?")).toBe(true);
++    expect(guard("It was 2 cups, what is that in litres?", ["My toddler drank lamp oil"])).toBe(false);
++    expect(guard("It was 2 cups, what is that in litres?", ["Hi there"])).toBe(true);
++  });
++  it("English only: PT and ES never pass", () => {
++    expect(guard("Quanto é 2,2 bar em psi?")).toBe(false);
++    expect(guard("¿Cuánto es 2,2 bar en psi?")).toBe(false);
++  });
++  it("the lexicon names drugs, ages, body outputs, ingestion, alcohol, falls and people", () => {
++    for (const q of ["2 year old", "paracetamol", "no urine", "drank it", "8 beers", "fell off", "his temperature", "blood pressure", "my boy's temp", "core temp", "my husband", "a patient", "newborn", "stranded", "chest", "passed out", "water broke"]) expect(numguardHealthLexicon(q), q).toBe(true);
++    expect(numguardHealthLexicon("tyre pressure gauge")).toBe(false);
++  });
++});
+diff -ruN a/src/routing/numguard.ts b/src/routing/numguard.ts
+--- a/src/routing/numguard.ts	1969-12-31 21:00:00
++++ b/src/routing/numguard.ts	2026-10-15 21:39:03
+@@ -0,0 +1,58 @@
++// NUMGUARD: an English, single-topic numeric question that is a pure unit conversion, a clock calculation or an exact calculator
++// match may be answered by a deterministic calculator when the learned detector fires; nothing else may answer it (answer.ts:
++// no calculator answers -> the detector's refusal stands, a model never answers a fired message). Anything that names a body,
++// person/age, drug, dose, symptom, injury, danger, alcohol or ingestion word, a body-range temperature, or that is not English,
++// in this message or (for the lexicon) in any earlier user turn, keeps the detector's call. The regexes here are normative.
++import { calculate } from "./calculators";
++import { isHealthQuestion, isSpanishQuestion } from "./context";
++import { isCardEmergency } from "./conditionCards";
++
++// arithmetic.ts HEALTH + DANGER (verbatim): health, injury, medication or body words, and situations rather than word problems.
++const HEALTH =
++  /\b(?:heart|pulse|bpm|breath\w*|blood|dos(?:e|es|age|ing)|mg|mcg|ml|iv|drip|infusion|insulin|tablets?|pills?|fever|contractions?|labou?r|pain\w*|bleed\w*|injur\w*|symptoms?|medic\w*|drugs?|overdos\w*|poison\w*|bab(?:y|ies)|toddlers?|infants?|calories?|kcal|glucose|oxygen|sp[o0]2)\b/i;
++const DANGER =
++  /\b(?:trapped|stuck|rising|flood\w*|fire|smoke|drown\w*|sinking|emergency|leak\w*|gas|danger\w*|unsafe|collaps\w*|avalanche|hurricane|tornado|lost|dying|dead|unconscious|attack\w*|bitten|bite|stung|hypotherm\w*|frostbite|choking|suicid\w*|kill\w*)\b/i;
++// A short explicit list on top: people, care settings and symptoms the two lists above do not name.
++const PERSON_CARE =
++  /\b(?:pregnan\w*|child(?:ren)?|kids?|son|daughter|sick|ill|illness|hospital|doctor|nurse|vomit\w*|diarrh\w*|rash|cough\w*|headaches?|ache\w*|dizz\w*|nause\w*|thermometer|body temperature|my temperature|weigh(?:t|s)? loss|bmi|alcohol|drunk|safe(?:ly)?|hurt\w*|wound\w*|burn\w*|cpr|(?:my|his|her|their|your|our) (?:temp|temperature)|\d+[\s-]*(?:year|month|week|day)s?[\s-]*old|paracetamol|acetaminophen|ibuprofen|aspirin|tylenol|advil|benadryl|antibiotic\w*|amoxicillin|units? of|urin\w*|pee\w*|poop\w*|stool|toxic\w*|bleach|ingest\w*|swallow\w*|drank|drink\w*|beers?|wine|vodka|bac|sober|bp|blood pressure|saturation|unconscious|wake up|survive|surviv\w*|without (?:food|water)|fell|fall(?:s|en)?|hit (?:his|her|my|their)? ?head|faint\w*|\w+'s (?:core )?temp\w*|core temp\w*|boy|girl|husband|wife|partner|mom|mum|mother|dad|father|grand\w*|friend|patient|newborn|stranded|chest|passed out|water broke)\b/i;
++// A body temperature (30-45 °C, 86-113 °F) is a person's, whatever the wording.
++const BODY_TEMP = /\b(?:3\d|4[0-5])(?:[.,]\d+)?\s?(?:°\s?|degrees? )?c(?:elsius)?\b|\b(?:8[6-9]|9\d|10\d|11[0-3])(?:[.,]\d+)?\s?(?:°\s?|degrees? )?f(?:ahrenheit)?\b/i;
++// Accented Latin letters (not × ÷): not an English message.
++const NON_EN = /[À-ÖØ-öø-ɏ]/;
++
++const NUM = String.raw`\d[\d,]*(?:\.\d+)?`;
++// A number followed by a unit, a currency or a percent.
++const UNIT = new RegExp(
++  String.raw`(?:[$€£¥]\s?${NUM}|${NUM}\s?(?:%|°\s?[cf]?\b|degrees?\b|(?:k?m|cm|mm|km\/h|kph|mph|mi|miles?|ft|feet|foot|inch(?:es)?|yards?|metres?|meters?|kilomet(?:re|er)s?|kg|g|lbs?|pounds?|ounces?|oz|tons?|tonnes?|l|litres?|liters?|gallons?|gal|pints?|cups?|bar|psi|kpa|hpa|mah|wh|kwh|w|watts?|v|volts?|amps?|hz|ghz|mhz|gb|mb|kb|tb|tokens?|bytes?|bits?|sec(?:ond)?s?|min(?:ute)?s?|h|hrs?|hours?|days?|weeks?|dollars?|euros?|usd|eur|gbp|cents?|btc|eth|sats?|gwei|coins?|million|billion|thousand)\b))`,
++  "i"
++);
++const CLOCK = /\b\d{1,2}(?::\d{2}\s?(?:am|pm)?|\s?(?:am|pm))\b/i;
++// A conversion target ("in psi", "to Celsius", "convert") or a clock question: the shape of a misfire, not of a situation.
++const CONVERT =
++  /\b(?:convert(?:s|ed|ing)?|(?:in|to|into) (?:fahrenheit|celsius|kelvin|psi|bar|kpa|hpa|mph|km\/h|kph|feet|ft|inches|cm|mm|metres|meters|miles|kilomet(?:re|er)s|yards|pounds|lbs|kg|kilograms|grams|ounces|oz|litres|liters|gallons|pints|cups|ml|watt-hours|wh|kwh|euros?|dollars?|usd|eur|gbp))\b/i;
++const HOW_MANY_UNIT =
++  /\bhow many (?:kilomet(?:re|er)s|km|miles|feet|ft|metres|meters|inches|cm|yards|pounds|lbs|kg|kilograms|grams|ounces|oz|litres|liters|gallons|pints|cups|psi|watt-hours|wh|kwh) (?:is|are|in|make)\b/i;
++const WHEN = /\b(?:what time|when (?:does|do|will|did)|arrive|arrives)\b/i;
++
++/** True when the question names a health, injury, danger or person-care word: the detector's call stands. */
++export function numguardHealthLexicon(query: string): boolean {
++  return HEALTH.test(query) || DANGER.test(query) || PERSON_CARE.test(query) || isHealthQuestion(query) || isCardEmergency(query);
++}
++
++/** A number with a unit plus a conversion target ("in psi", "to Celsius", "how many feet is"), or a clock time plus a clock question. */
++export function numericIntent(query: string): boolean {
++  // Identifiers ("EIP-4444", "DS-160") and years or decades ("in 1900", "the 1600s", "mid-2012") are not quantities.
++  const q = query.replace(/\b[A-Za-z]+-\d+\b/g, " ").replace(/\b(?:1[5-9]\d\d|20\d\d)s?\b/g, " ");
++  if (!/\d/.test(q)) return false;
++  return (UNIT.test(q) && (CONVERT.test(q) || HOW_MANY_UNIT.test(q))) || (CLOCK.test(q) && WHEN.test(q));
++}
++
++/** The guard: English (not PT/ES, no accented letters), no body-range temperature, no health lexicon in this or any earlier user
++ * turn, AND (a calculator match OR numeric intent). answer.ts lets only a calculator answer a guarded turn. */
++export function numericGuard(query: string, pt: boolean, userTurns: string[] = []): boolean {
++  // EN only (the lexicon is English, like the arithmetic and travel shortcuts; JS \b ignores accented letters, so any accented
++  // letter blocks); a body-range temperature is a person's; any earlier user turn with a health word keeps the refusal.
++  if (pt || isSpanishQuestion(query) || NON_EN.test(query) || BODY_TEMP.test(query)) return false;
++  if ([query, ...userTurns].some(numguardHealthLexicon)) return false;
++  return calculate(query, pt) !== null || numericIntent(query);
++}

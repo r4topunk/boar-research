@@ -1,0 +1,69 @@
+--- a/adapter.ts
++++ b/adapter.ts
+@@ -292,6 +292,24 @@
+     hasEmbeddedChatTemplate: () => hasTemplate,
+     async estimateFit() { return null; },
+     setAnswerPrefix() { /* the app prefills its fixed prefix in llama.rn's KV; not emulated (fresh context per answer) */ },
++    // Route gate (Anvil B4 arm, engine src/routing/routeGate.ts): top-N next-token probabilities after the messages, raw
++    // softmax at one forward (anvil/exp/chat-routing/run.mjs firstProbs). llama.rn rc.4 returns post-sampling probabilities;
++    // the 0.5 decision is the same (anvil llamarn-nprobs.md). ChatML = the GGUF jinja render for Qwen2.5/Qwen3 (checked).
++    async nextTokenProbs(messages: { role: string; content: string }[], opts: { modelFilename: string; nProbs: number }) {
++      if (opts.modelFilename !== fileName || !String(model.fileInfo.metadata?.tokenizer?.chat_template ?? "").includes("<|im_start|>")) return null;
++      const text = messages.map((m) => `<|im_start|>${m.role}\n${m.content}<|im_end|>\n`).join("") + "<|im_start|>assistant\n";
++      const tokens = model.tokenize(text, true);
++      const ctx = await model.createContext({ contextSize: Math.max(2048, tokens.length + 16), threads: cli.threads, seed });
++      try {
++        const out = await ctx.getSequence().controlledEvaluate(tokens.map((t: any, i: number) =>
++          i === tokens.length - 1 ? [t, { generateNext: { probabilities: true, token: true, options: { temperature: 0 } } }] : t) as any);
++        const probs: Map<number, number> = (out as any)[tokens.length - 1]?.next?.probabilities ?? new Map();
++        return { promptTokens: tokens.length,
++                 probs: [...probs.entries()].sort((a, b) => b[1] - a[1]).slice(0, opts.nProbs).map(([t, p]) => ({ token: model.detokenize([t], true), prob: p })) };
++      } finally {
++        await ctx.dispose();
++      }
++    },
+     async generate(o: any): Promise<string> {
+       const ctx = await model.createContext({ contextSize: Math.max(2048, o.nCtx ?? 4096), threads: cli.threads, seed });
+       const seq = ctx.getSequence();
+@@ -498,6 +516,12 @@
+     hasEmbeddedChatTemplate: () => (current ? loaded.get(current)!.hasEmbeddedChatTemplate() : true),
+     async estimateFit() { return null; },
+     setAnswerPrefix() { /* not emulated, as in makeEngine */ },
++    // Route gate (Anvil B4 arm): on the model the engine names, loaded here if needed (the app keeps it resident).
++    async nextTokenProbs(messages: { role: string; content: string }[], opts: { modelFilename: string; nProbs: number }) {
++      if (!byFile.has(opts.modelFilename)) return null;
++      await facade.load(opts.modelFilename);
++      return loaded.get(opts.modelFilename)!.nextTokenProbs(messages, opts);
++    },
+     async generate(o: any): Promise<string> {
+       if (!current) throw new Error("--installed: generate before any load");
+       onUse(byFile.get(current)!.id);
+@@ -620,6 +644,7 @@
+     const gen0 = engine.generate.bind(engine);
+     engine.load = (async (filename: string, opts?: any) => { guard.onLoad(filename, opts?.meta?.modelId); return load0(); }) as any;
+     engine.getModelInfo = () => ({ filename: guard.loadedFilename });
++
+     engine.generate = async (o: any) => {
+       const v = guard.check();
+       if (v) throw new Error(v);
+@@ -629,6 +654,20 @@
+       return gen0(o);
+     };
+   }
++  // Route gate (Anvil B4 arm): only on an engine tree that asks for it (engine.nextTokenProbs is optional there);
++  // BOAR_ROUTE_GATE=0 turns it off for a same-tree control. One other/route-gate event per call.
++  const gate0 = (engine as any).nextTokenProbs?.bind(engine);
++  if (gate0 && process.env.BOAR_ROUTE_GATE !== "0")
++    (engine as any).nextTokenProbs = async (messages: any[], opts: any) => {
++      if (!cli.installed && guard.check()) return null;
++      const t = performance.now();
++      const r = await gate0(messages, opts);
++      const top = r?.probs.slice(0, 2).map((p: any) => `${p.token}:${p.prob.toFixed(3)}`).join(",") ?? null;
++      events.push({ tMs: at(), type: "other", kind: "route-gate", origin: "adapter", promptTokens: r?.promptTokens ?? null, top,
++                    ms: round1(performance.now() - t) } as any);
++      return r?.probs ?? null;
++    };
++  else delete (engine as any).nextTokenProbs;
+   const records: any[] = [];
+   const answerer = A.createAnswerer({
+     engine,

@@ -1,0 +1,176 @@
+{
+ "name": "P3-0 offline probe (Anvil card p3-source-self-check)",
+ "frozen": "2026-10-02, before any 4B prompt dump was seen",
+ "labels_source": "rnd/research/compass/rows.json (Compass in-kit taxonomy, and-qwen s42/s43); answers = full text from boar-eval/runs/night-2026-10-01/<run>.traces.jsonl",
+ "positives": [
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-trv-003",
+   "targets": [
+    2
+   ]
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-cry-002",
+   "targets": [
+    1,
+    2
+   ]
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-cmp-003",
+   "targets": [
+    1
+   ]
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-hum-005",
+   "targets": [
+    2
+   ]
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-exp-002",
+   "targets": [
+    3,
+    4
+   ]
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-cry-002",
+   "targets": [
+    1,
+    2
+   ]
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-cmp-003",
+   "targets": [
+    1
+   ]
+  }
+ ],
+ "negatives": [
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-exp-001",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-exp-002",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-exp-004",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-ref-002",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-ref-005",
+   "cat": "7 near reference"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "lan-rsn-007",
+   "cat": "7 near reference"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-cry-003",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-cry-004",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-cry-008",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-hlt-003",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s42",
+   "id": "vit-hum-005",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-exp-001",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-exp-004",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-ref-002",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-ref-005",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "lan-rsn-007",
+   "cat": "7 near reference"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-cry-003",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-cry-004",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-cry-008",
+   "cat": "6 correct but incomplete"
+  },
+  {
+   "run": "and-qwen-s43",
+   "id": "vit-cry-010",
+   "cat": "6 correct but incomplete"
+  }
+ ],
+ "sentence_split": "re.split(r'(?<=[.!?])\\s+|\\n+', answer) stripped, empty removed; labels S1..Sk in order",
+ "passages": "system message of the s44 --dump-prompts row for the same itemId; an item is EXCLUDED (and reported) if the s44 trace's retrieval.kept titles differ from the labelled run's",
+ "check_turn": {
+  "model": "Qwen3-4B-Instruct-2507 Q4_K_M (shared-models), node-llama-cpp, temp 0, maxTokens 12, thoughtTokens 0",
+  "messages": "dump system + dump user + assistant(labelled answer) + user(CHECK)",
+  "CHECK": "Check your answer against the numbered passages. Your sentences: {LIST} Reply with the labels of sentences that a passage contradicts or that contradict another of your sentences, or reply \"none\". Labels only.",
+  "LIST": "S<i> «first 6 words of sentence i…»  joined by spaces"
+ },
+ "parse": "labels = set of S<number> tokens in the reply (case-insensitive); 'none' with no labels = empty set; anything else (no labels, no 'none') = parse failure",
+ "metrics": {
+  "positive_hit": "labels ∩ targets ≠ ∅ (detection; guard outcome reported separately)",
+  "negative_false_flag": "labels ≠ ∅ (strict: any flag on a correct answer)",
+  "guard_report": "for each item: flagged > half of sentences -> answer kept unchanged (reported, not a criterion)"
+ },
+ "criterion": "PASS iff positive hits >= 3/7 AND negative false flags <= 2/20 AND parse failures <= 2/27. With exclusions: hits >= ceil(3/7*n_pos), false flags <= floor(2/20*n_neg), parse failures <= floor(2/27*n_all). Fail -> the 4B is not a usable self-checker; P-3 on the 4B closes (hand to Compass NLI line)."
+}

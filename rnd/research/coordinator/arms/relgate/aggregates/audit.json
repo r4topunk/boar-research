@@ -1,0 +1,158 @@
+{
+ "note": "agent read the text (public selftest packs); marks: answers = chunk/context answers the question with content outside the gold quotes; partial = on point but incomplete or conflicting; no",
+ "G1_top20_negB_m4_W2": {
+  "marks": [
+   {
+    "cid": "st-boar-simplewiki-en-012#2",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-ethereum-se-010#4",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-ethereum-se-010#1",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-ethereum-se-014#3",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-boar-simplewiki-en-002#2",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-health-se-013#1",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-boar-simplewiki-en-014#5",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-qa-ethereum-se-001#1",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-outdoors-se-005#5",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-qa-health-se-003#2",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-boar-firstaid-en-014#2",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-outdoors-se-005#1",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-qa-bitcoin-se-006#3",
+    "p": 1.0,
+    "mark": "no"
+   },
+   {
+    "cid": "st-qa-bitcoin-se-015#1",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-health-se-009#2",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-qa-bitcoin-se-006#2",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-ethereum-se-012#4",
+    "p": 1.0,
+    "mark": "partial"
+   },
+   {
+    "cid": "st-qa-travel-se-012#1",
+    "p": 1.0,
+    "mark": "no"
+   },
+   {
+    "cid": "st-qa-bitcoin-se-001#2",
+    "p": 1.0,
+    "mark": "answers"
+   },
+   {
+    "cid": "st-qa-ethereum-se-018#5",
+    "p": 1.0,
+    "mark": "answers"
+   }
+  ],
+  "counts": {
+   "answers": 11,
+   "partial": 7,
+   "no": 2
+  }
+ },
+ "G2_falsepos_B_at_tstar_m4_exploratory": {
+  "method": "B K-negatives with G2 p >= t*; mark from the G3-picked chunk plus any G1-audited chunk of the same item",
+  "marks": {
+   "st-boar-firstaid-en-014": "answers",
+   "st-boar-medlineplus-en-002": "no",
+   "st-boar-simplewiki-en-002": "answers",
+   "st-qa-bitcoin-se-001": "answers",
+   "st-qa-bitcoin-se-006": "answers",
+   "st-qa-bitcoin-se-007": "partial",
+   "st-qa-bitcoin-se-015": "answers",
+   "st-qa-bitcoin-se-018": "answers",
+   "st-qa-ethereum-se-001": "answers",
+   "st-qa-ethereum-se-009": "answers",
+   "st-qa-ethereum-se-010": "answers",
+   "st-qa-ethereum-se-012": "partial",
+   "st-qa-ethereum-se-014": "answers",
+   "st-qa-ethereum-se-018": "answers",
+   "st-qa-ethereum-se-019": "partial",
+   "st-qa-health-se-003": "partial",
+   "st-qa-health-se-009": "partial",
+   "st-qa-outdoors-se-009": "answers",
+   "st-qa-outdoors-se-012": "partial",
+   "st-qa-outdoors-se-015": "no",
+   "st-qa-travel-se-007": "answers",
+   "st-qa-travel-se-016": "no"
+  },
+  "counts": {
+   "answers": 13,
+   "no": 3,
+   "partial": 6
+  }
+ },
+ "tokenisation_qwen3_vocab": {
+  "yes": 9693,
+  "Yes": 9454,
+  "YES": 14004,
+  " yes": 9834,
+  " Yes": 7414,
+  "no": 2152,
+  "No": 2753,
+  "NO": 8996,
+  " no": 902,
+  " No": 2308,
+  "digits 0-9": "15-24 (single tokens)",
+  "note": "same ids on Qwen3-4B-2507 and Qwen3-1.7B; all label variants single-token; p fallback 0.5 used 0 times"
+ }
+}

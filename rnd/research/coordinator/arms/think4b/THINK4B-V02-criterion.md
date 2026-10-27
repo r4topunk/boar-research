@@ -1,0 +1,16 @@
+# THINK4B-V02: the thinking 4B (budget 512) on the seed-stable set (frozen 2026-10-10 14:3x, coordinator; follows THINK4B d3fe2522…, which stopped at one seed on V-para by its own rule)
+
+Question: THINK4B's arm Z (Qwen3-4B-Thinking-2507 Q4_K_M, FAST_THINKING_BUDGET 512) reached Opus +0.026 (−0.013…+0.068) vs the claim 4B on V-para with one seed, below the +0.03 continuation bar. SEEDVAR then showed that a one-seed Δ on V-para of that size is inside seed noise (deep tier SD 0.020; the 4B's own two seeds r 0.81) while v0.2 is seed-stable (r 0.90, 110 items). Is the thinking 4B a lever on v0.2 (dev, burnt held-out), where the measurement is sharper? New criterion, not an amendment of THINK4B's rule: its V-para verdict (NO near-lever) stands.
+
+## Fixed inputs
+- Arm **ZV** = Z's tree `be-0cfd4a77-think4b512` (cut 6 + adapter 796add7 entries + think4b512-on-cut6.patch 6a977a29…), runner `tools/remote-run.sh` arg `Z noplaces` (v0.2 = the claim's Run A: no places kit), model sha ddd52e18…, settings `{quickFirst, alwaysComplete: false}`, server backend, detector v3b, `--timeout-ms 600000`. Requests = DEEPVPARA's C v0.2 requests rewritten (arm think4b512, modelId qwen3-4b-thinking-2507-q4km): full 110 sha 358adf78…, slice 20 (signal20-v02, 66530c5d…) sha 11a33447…. Seed 42 only (v0.2 seed noise ≈ ±0.01).
+- Controls: **C** = dv-C-v02-s42 (4B instruct, same backend; Haiku rows on 110 ids), **K** = cut6-v02-s42 (claim rows, Opus judge.v1) for the claim scales, **D** = dv-D-v02-s42 (deep no-think, Opus) for the ladder. No smoke (Z's smoke on the same tree passed today; the only change is `noplaces`, exercised by every v0.2 run).
+- Script-only scoped exception as DEEPVPARA stage 2; exposures logged (v0.2 is dev).
+## Stages and rules (strict; SLICE20; near-miss rule incl. the 10-10 addendum: a 4B-arm Haiku slice Δ ≥ +0.02 counts as a near-miss)
+1. Slice 20 (signal20-v02, seed 42), Haiku 5.5-low N = 4 paired vs C's Haiku rows on the same ids: **continue** if wins ≥ C + 3 OR Δ ≥ +0.03; near-miss (Δ ≥ +0.02) → Opus N = 4 on the 20 ids for ZV, paired vs K's Opus rows on those ids (40 calls), continue if Opus Δ ≥ +0.03. Else **NO** (log, stop).
+2. Full 110 ids seed 42, Haiku vs C: same clause (near-miss → Opus directly on the full set, as the Opus pass is the next step anyway) → Opus judge.v1 N = 4 on ZV (220 calls), scales beside K and D (arm-ZV-l2.conf). Verdict on the paired Δ vs K (raw, Opus, one seed on the stable set): **LEVER** (CI low > 0 and point ≥ +0.03), **SMALL** (CI low > 0, point < +0.03), else **NO**. Report floor-adjusted and win-rate vs the bar, p50 time vs K and C, reasoning-token stats, and the V-para/v0.2 pair of numbers side by side.
+- One generation per stage; no rerun except an infrastructure error before the first token.
+## Stop rules and budget
+Disk ≥ 25 GiB, swap ≤ 8 GB, heavy lock, one llama-server, detector untouched; never while another heavy job runs (queued behind DEEPSAMP P). Mini: slice ≤ 20 min, full ≤ 1.5 h. Haiku ≤ 40 + 220; Opus ≤ 40 (near-miss) + 220 (full, only after continuation).
+## Outputs
+Addendum section in `arms/think4b/THINK4B.md` (≤ 25 lines; cites this sha), `aggregates/` (v0.2 files prefixed ZV), `arm-ZV.conf`, `arm-ZV-l2.conf`; traces/judgments in `blind/bench-v02/runs-think4b/`. QUEUE entry and EXPOSURES row by the coordinator.

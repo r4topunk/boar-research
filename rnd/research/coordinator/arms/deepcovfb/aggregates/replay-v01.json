@@ -1,0 +1,159 @@
+{
+ "setup": {
+  "tree": "wt/cut7",
+  "tier": "deep (alwaysComplete + deepModelId, k 6, ctx 400)",
+  "gate": "rules",
+  "detector": "lexical",
+  "cap": 8,
+  "n": 60,
+  "retrieving": 46,
+  "gold_items": 39
+ },
+ "r2": {
+  "count": 13,
+  "ids": [
+   "vit-hum-001",
+   "vit-hum-002",
+   "vit-hum-003",
+   "vit-hum-006",
+   "lan-hlt-001",
+   "lan-hlt-002",
+   "vit-sci-001",
+   "vit-hlt-001",
+   "vit-hlt-002",
+   "lan-ref-003",
+   "lan-rsn-004",
+   "lan-exp-003",
+   "lan-rsn-005"
+  ],
+  "reasons": {
+   "vit-hum-001": "grounding:no-good-source",
+   "vit-hum-002": "empty-raw (context:0->0)",
+   "vit-hum-003": "empty-raw (context:0->0)",
+   "vit-hum-006": "grounding:no-good-source",
+   "lan-hlt-001": "grounding:no-good-source",
+   "lan-hlt-002": "grounding:no-good-source",
+   "vit-sci-001": "empty-raw (context:0->0)",
+   "vit-hlt-001": "grounding:health-no-source",
+   "vit-hlt-002": "grounding:health-no-source",
+   "lan-ref-003": "grounding:no-good-source",
+   "lan-rsn-004": "empty-raw (context:0->0)",
+   "lan-exp-003": "grounding:no-good-source",
+   "lan-rsn-005": "grounding:no-good-source"
+  },
+  "gold_items_among_r2": [
+   "vit-hum-001",
+   "vit-hum-002",
+   "vit-hum-006",
+   "lan-hlt-001",
+   "vit-hlt-002",
+   "lan-ref-003",
+   "lan-rsn-004",
+   "lan-exp-003",
+   "lan-rsn-005"
+  ]
+ },
+ "arms": {
+  "base": {
+   "recall_at_kept_39": 0.2051,
+   "items_gold_in_kept": 8,
+   "gold_enters": [],
+   "gold_leaves": [],
+   "empty_kept": 13,
+   "emptied_vs_base": [],
+   "kept_slots": 90,
+   "pack_slots": 0,
+   "pack_share": 0.0,
+   "items_with_pack_chunk": 0,
+   "recall_at_6_raw_39": 0.2564
+  },
+  "peer": {
+   "recall_at_kept_39": 0.3077,
+   "items_gold_in_kept": 13,
+   "gold_enters": [
+    "vit-hum-004",
+    "lan-cmp-002",
+    "vit-cry-011",
+    "lan-exp-003",
+    "lan-exp-004",
+    "lan-cmp-005",
+    "lan-rsn-006"
+   ],
+   "gold_leaves": [
+    "lan-exp-002",
+    "vit-trv-003"
+   ],
+   "empty_kept": 7,
+   "emptied_vs_base": [
+    "vit-sci-002"
+   ],
+   "kept_slots": 113,
+   "pack_slots": 70,
+   "pack_share": 0.619,
+   "items_with_pack_chunk": 30,
+   "recall_at_6_raw_39": 0.3846
+  },
+  "fallback": {
+   "recall_at_kept_39": 0.2308,
+   "items_gold_in_kept": 9,
+   "gold_enters": [
+    "lan-exp-003"
+   ],
+   "gold_leaves": [],
+   "empty_kept": 6,
+   "emptied_vs_base": [],
+   "kept_slots": 107,
+   "pack_slots": 17,
+   "pack_share": 0.159,
+   "items_with_pack_chunk": 7
+  },
+  "fallback-raw": {
+   "recall_at_kept_39": 0.2692,
+   "items_gold_in_kept": 11,
+   "gold_enters": [
+    "lan-rsn-004",
+    "lan-exp-003",
+    "lan-rsn-005"
+   ],
+   "gold_leaves": [],
+   "empty_kept": 1,
+   "emptied_vs_base": [],
+   "kept_slots": 168,
+   "pack_slots": 78,
+   "pack_share": 0.464,
+   "items_with_pack_chunk": 12
+  },
+  "fallback-raw6": {
+   "recall_at_kept_39": 0.2692,
+   "items_gold_in_kept": 11,
+   "gold_enters": [
+    "lan-rsn-004",
+    "lan-exp-003",
+    "lan-rsn-005"
+   ],
+   "gold_leaves": [],
+   "empty_kept": 1,
+   "emptied_vs_base": [],
+   "kept_slots": 152,
+   "pack_slots": 62,
+   "pack_share": 0.408,
+   "items_with_pack_chunk": 12
+  }
+ },
+ "latency_ms": {
+  "base": {
+   "p50": 114.7,
+   "p90": 168.8
+  },
+  "peer": {
+   "p50": 249.9,
+   "p90": 381.2
+  }
+ },
+ "gate": {
+  "rule": "fallback: gold enters kept on >= 5 items and 0 items emptied (v0.1)",
+  "enters": 1,
+  "emptied": 0,
+  "pass": false
+ }
+}

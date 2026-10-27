@@ -1,0 +1,12 @@
+JUDGE2 pre-gates (2026-10-07 15:10, Kiln)
+disk after download: 28,338,136 KiB = 27.0 GiB >= 25 GiB PASS (projection 27.1 GiB at 15:03)
+GGUF sha256 2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658 = expected PASS (10,546,934,240 B)
+server loads: /health ok ~30 s after start (b11010 0.4.1-dev 4bc272f, -t 4 -c 4096 -np 1 --jinja --no-webui, under <runner>/bin/run-heavy owner kiln-judge2), RSS 4.9 GB idle PASS
+smoke 3 calls (judge.mjs --limit 3, deep35 traces): 3/3 schema-valid (ints 1-5, winner enum), finish=stop, 0 reasoning chars, 0 think-token leaks; s/call 45.6 / 32.5 / 44.6 (<= 240) PASS
+setup: boar-eval not on the mini -> judge.mjs runs on the MacBook, shim POSTs to the mini's llama-server via ssh -L 18091
+
+Rerun (Addendum 1, criterion 4e825da3…), 2026-10-07 16:04:
+deep35 GGUF deleted 15:55 (sha 96b9c0af… verified) -> free 46.3 GiB
+disk after Gemma download, before load: 39,318,332 KiB = 37.5 GiB >= 35 GiB PASS; GGUF sha 2a1d26df… PASS; swap 1.6 GB used
+server loads: model loaded in ~26 s, RSS 4.6 GB (default mmap, no --mlock) PASS
+smoke2 3 calls: 3/3 schema-valid, finish=stop, 0 think leaks, 50.2 / 35.5 / 44.4 s; verdicts byte-identical to run-1 smoke PASS

@@ -1,0 +1,467 @@
+Draft v4.1.1 (2026-10-15) — v4.1 with the 20 edits of CLAIM-REVIEW-v4.1 applied (reviewer verdict ACCEPT WITH EDITS) — Draft v4.1 (2026-10-15) — v4.0.1 + one new fact: the official submission vehicle is the app maintainer's Kotlin native app, whose own score is not yet measured; every number here is the TypeScript engine's (cut 7); PR #85 is the reference implementation (S55, S56); not yet reviewed — Draft v4.0.1 — v4.0 (drafted 2026-10-15, closing sprint) with the 26 edits of CLAIM-REVIEW-v4.0 applied (reviewer verdict ACCEPT WITH EDITS): adds the post-facing text (§0, 873 words) and Appendix A (numbers), cut 7 on a 12 GB-class phone (S51), longer sessions (S52), PR-1 scope (S53), v0.3 out before the deadline (S54), open-source link placeholders; body §1/§4/§6/§7/UNKNOWN/Sources updated to match; see "Changes vs v3.9" — Draft v3.9 — reviewed 2026-10-13 (independent Opus reviewer, a parallel session): adjudicates CLAIM-REDTEAM-2026-10-13 (exposure and authorship wording, verdict reuse, device-implication gaps, seed-noise CIs, the pre-registered raw rule stated in section 1; see CLAIM-REVIEW-v3.9.md) — Draft v3.8 (2026-10-10 midday; v3.7 + one levers row: thinking 4B on the fast path, not adopted; S42; §6 deep-tier row: best-of-2 and V-para routing sentences, S43, S44; independent review 2026-10-10 ACCEPT WITH EDITS, applied) — Draft v3.7 (2026-10-09 night; v3.6 + thinking-budget curve closed (256 loses), 512 measured on v0.2; independent review 2026-10-09 night ACCEPT WITH EDITS, 1 major + 6 minor + 1 nit applied) — Draft v3.6 (2026-10-09 evening; v3.5.1 + v0.2 two-seed thinking number, thinking budget 512, phone-speed estimate from a public competitor measurement, long-answer persona negative; independent review 2026-10-09 ACCEPT WITH EDITS, 3 major + 7 minor applied) — Draft v3.5.1 (2026-10-09; v3.5 + v0.2 thinking sentence S35 + Gemma 4 deep-model sentence S36; reviewed with v3.6) — Draft v3.5 (2026-10-09; v3.4 + deep tier with thinking (DEEPTHINK, S33; DEEPTHINK-2 negative); independent review 2026-10-09 ACCEPT WITH EDITS, 3 major + 7 minor applied) — Draft v3.4 (2026-10-08; v3.3 + the deep-tier held-out-style results (DEEPVPARA, S31; DEEPROUTE-OOS, S32); independent review 2026-10-08 ACCEPT WITH EDITS, 4 edits applied) — v3.3 (v3.2 reviewed; v3.3 adds only the deep-tier engine-parity sentence and S30, reviewed 2026-10-07 ACCEPT WITH EDITS, edits applied) — v2 reviewed (CLAIM-REVIEW.md), updated with evidence from 2026-10-05/06; v3.1 (2026-10-07) reordered the headline to floor-removed + win rate (PIPELINE-AUDIT-2026-10-06 D1); v3.2 (2026-10-07) adds the 10-07 results (cut 7 claim build, venues with location + area tile, local-judge bias, deep-tier routing, v0.3 plan). Not published.
+
+# BOAR claim draft for poidh bounty #31 (DRAFT v4.1.1; independently reviewed through v4.1, see CLAIM-REVIEW-v4.1.md and the changelogs; not published)
+
+Status: draft. Nothing here has been posted, pushed or uploaded. Every number carries a source tag in square brackets. The tags are listed in "Sources" at the end. Paths are relative to the workspace root.
+
+## Changes vs v4.0.1 (v4.1, 2026-10-15; no new measurement, 0 judge calls)
+- **Submission vehicle (new fact, maintainer's alignment note 2026-10-15) [S55]:** the official submission is the app maintainer's Kotlin native Android app (`android-native/`, branch `fullnative-dev`), two APKs (≈ 30 MB onboarding APK that downloads models; ≈ 2.7 GB zero-network bundle with Qwen3-4B, bge-small and the Wikipedia Vital Articles pack, for air-gapped testing on GrapheneOS). It ports the measured engine's rules to Kotlin; arithmetic and unit conversions go through the model (no calculator path). Its score on our benchmark is **not measured** on the release build; traces requested (v0.1 public 60 + longsession-v1 80), result to be published as "the submitted app".
+- **Every number in this claim is the TypeScript engine's (cut 7)**, measured on the desktop runner and, for the phone rows, in the measurement app (BOAR Bench) with that engine, not in the native app. Said in §0 ("What is submitted", "On a phone", bar paragraph), the Appendix A header, §1 and §4.
+- **"What ships" replaced** by "What is submitted" + "Reference implementation": PR #85 (open, CI green) proposes the cut 7 engine and the Android chat wiring to the React Native app as the reference implementation [S56].
+- §0 trimmed to fit (longer-sessions paragraph shortened, A15 sentence shortened; numbers unchanged and in Appendix A); research notes link added. No competitor or native-app quality comparison added.
+
+## Changes vs v3.9 (v4.0, 2026-10-15; no new measurement, 0 judge calls)
+- **New §0 post text** (873 words, post-facing, readable in 5 minutes) + **Appendix A** (numbers: A1 quality on V-para and v0.2 with status, seeds, three scales and seed-noise CIs; A2 phone runs; A3 longer sessions). Sections 1–7 stay as the evidence body behind it.
+- **On a phone:** cut 7 (the claim build) on a 12 GB-class POCO X6 Pro (10.7 GiB usable, Android 16, airplane mode, no INTERNET permission): 72/72, fast tier p50 30.7 s / p90 48.4 s, PSS ≤ 4.23 GB after a 5.88 GB load peak, thermal status 0 over 29 min; phone 0.529 = desktop 0.529 on 57 v0.1 dev items (Haiku judge, one run) [S51]. The A15 8 GB cut 6 run is kept beside it. §1 device bullet, §4 rows 1, 2, 4, 8, 12, §6 and §7 updated.
+- **Longer sessions (new):** no quality drop detected out to turn 15 (in-session vs standalone, Haiku, dev, agent-written, one seed; the reference is BOAR's own standalone answer); latency grows with full history (desktop p50 ≈ 22 s at turns 14–15 vs ≈ 8 s standalone); the app's 6-message + summary window was not itself run [S52].
+- **Deep tier** reported in its own paragraph, labelled "measured on desktop only; needs a 12 GB phone"; it has not run on the POCO.
+- **What ships:** PR-1 = cut 7 rebased on the app's current main + a separate droppable Android chat wiring commit (not yet built or run on a device); packs/pack retrieval (X2b) and the catalogue in a second PR after 2026-10-20; deep tier not shipped [S53].
+- **Bench v0.3 out before the 2026-10-20 deadline** (closing-sprint decision); public numbers are the dev / formerly held-out numbers with the caveat [S54]; §1 and §7 updated.
+- **Open source:** https://github.com/r4topunk/boar-bench / https://github.com/r4topunk/boar-research placeholders and an invitation to other teams (run the judge on their traces; contribute non-Claude held-out items).
+- **Hygiene:** a person's name in one run-directory path (S28), a third-party GitHub handle in S38's URL and the bounty issuer's name in row 15 and two source descriptions replaced with neutral wording. Nothing about competitors or about the native-app comparison was added.
+
+## 0. Post text (v4.1.1, post-facing; ≤ 900 words; every number is in Appendix A with its source)
+
+**BOAR: an offline research assistant for Android (poidh bounty #31).** In the measured engine (TypeScript, cut 7), a 4B model (Qwen3-4B-Instruct-2507, Q4_K_M) reads passages retrieved from knowledge packs on the phone and answers with citations. Code answers what code can before any model runs: single facts from a 4,233-entity table, travel distances, arithmetic, carbon-monoxide and first-aid cards. The kit is 3.03 GB. The measurement app has no INTERNET permission and no Google Play Services code. Safety cards are AI-reviewed, not clinically reviewed.
+
+**How we measured.** Each answer is compared with a reference written by Claude Opus with web search; an Opus judge scores both, in both orders, on correctness, completeness and usefulness (1–5). Three scales, in this order: **floor-adjusted** ratio (rubric minimum removed), **win/tie/loss** against the reference, then **raw** ratio. Raw 0.50 is not "half as good": declining every question already scores about 0.31 raw. Sets: **V-para**, 51 judged bounty-style questions written by a Claude Opus agent (plus 7 venue questions, 0/7), held out for the 4B claim runs (2026-10-05/06), development-style since; **v0.2**, 110 questions by Claude-family agents, held out at the time but stored in plaintext in a private repository before the claim runs; now development data; **v0.1**, 60 public development questions. No unexposed set exists: the planned non-Claude set (v0.3) was not written in time.
+
+**The claim build (cut 7, 4B; two seeds).** V-para: floor-adjusted **0.261** (0.224–0.299), win/tie/loss **0/0/51** on both seeds, raw 0.413 (0.384–0.445). v0.2: floor-adjusted **0.389** (0.347–0.435), win/tie/loss **0/0/110 and 0/1/109**, raw 0.513 (0.479–0.550).
+
+**On a phone.** Cut 7 ran in our measurement app with the TypeScript engine (not the submitted native app) on a POCO X6 Pro (12 GB class, 10.7 GiB usable, Android 16) in airplane mode: **72/72** answered, 0 crashes. Fast-tier answers median 30.7 s, p90 48.4 s. App memory peaked at 5.88 GB at model load, then stayed ≤ 4.23 GB; thermal status 0 throughout. On 57 v0.1 development items it matched the desktop: floor-adjusted 0.403 vs 0.402, raw 0.529 vs 0.529 (one run; Haiku triage judge, level not comparable with Opus). Earlier, cut 6 on an 8 GB Galaxy A15: 73/73, median 49 s; raw 0.561 vs desktop 0.558/0.560 on the same 57 items (Opus judge).
+
+**Longer sessions.** Ten 5-turn sessions (three extended to 15) on desktop with full history; each in-session answer paired with the same question asked standalone. **No quality drop was detected out to turn 15**: in-session/standalone ratio 1.136 (0.993–1.320) on turns 6–15; on self-contained questions 1.017 (0.950–1.095), parity. Limits: 80 agent-written development questions, one seed, Haiku judge; the reference is BOAR's own standalone answer, so this shows stability, not quality against the bar. A wrong early answer can carry forward (2 sessions). Desktop median rose to 22 s at turns 14–15 (8 s standalone). Neither the React Native app's window (6 messages, summary from turn 8; turns 5–7 drop the oldest) nor the submitted app's was run.
+
+**Deep tier: measured on desktop only, never on a phone.** Qwen3.6-35B-A3B with a 512-token thinking budget, development data, best of many deep variants tried on these sets. Intervals include seed noise. V-para (two seeds): floor-adjusted **0.436** (0.387–0.486) vs 0.261 for the 4B, win/tie/loss 0/0/51, raw 0.553 (0.513–0.592). v0.2 (one seed): **0.508** (0.463–0.553) vs 0.389, 0/1/109, raw 0.608 (0.569–0.647). Desktop median 79 s. Not in any submitted build.
+
+**Where we stand against the bar.** These are the TypeScript engine's numbers; the submitted app is unscored. Our own pre-registered rule, not the bounty's, is a raw-ratio 95% CI above 0.50 on v0.2; we also apply it to V-para. On both sets only the deep tier with thinking meets it: development data, desktop only, not submitted. Our stricter target (floor-adjusted CI low end ≥ 0.50 on V-para) is met by no configuration (best 0.436). The win rate is 0 on both sets. BOAR is not shown to be half as good as frontier AI with web. Most of the gap is completeness and usefulness: answers are often thin or partly wrong, or miss knowledge the packs do not hold.
+
+**What is submitted.** The submission is the app maintainer's Kotlin native Android app (`android-native/`, branch `fullnative-dev`), as two APKs: a ~30 MB onboarding APK that downloads models and a ~2.7 GB zero-network bundle (Qwen3-4B, bge-small, the Wikipedia Vital Articles pack) for air-gapped testing on GrapheneOS. It ports the measured engine's rules (emergency routing, grounding and health, citation support) to Kotlin; arithmetic and unit conversions go through the model (no calculator path). **Its score on our benchmark has not been measured on the release build.** We have asked for its traces (v0.1, 60 questions; longsession-v1, 80) and will publish the result.
+
+**Reference implementation.** https://github.com/UPSTREAM_REPO/boar-app/pull/85 (open, CI green) proposes the measured engine (cut 7) and the Android chat wiring to the React Native app; its wiring has not run on a device. Not in it: the deep tier and the knowledge-pack improvements.
+
+**Open benchmark and research.** Benchmark: https://github.com/r4topunk/boar-bench. Research record: https://github.com/r4topunk/boar-research. Research notes: [private page]. Other teams can run the judge on their own traces and contribute held-out questions written outside the Claude family.
+
+**Limits.** One model family writes, references and judges; no human label check. Bench-set numbers come from a desktop runner; the phones matched it only on the 57 development items. No GrapheneOS device and no dynamic network capture yet. Safety evidence is small (0 unsafe-rule hits on 10 danger questions, one of which prompted a fix). Health content is AI-reviewed, not clinically reviewed.
+
+### Appendix A. Numbers (every row: set, status, seeds, judge, CI; three scales where they exist)
+
+All rows are the TypeScript engine's (desktop runner; phone rows in the measurement app with that engine). The submitted native app's score on this benchmark is pending (traces requested) [S55].
+
+Floor-adjusted = Σ(S − 1) / Σ(R − 1); raw = Σ S / Σ R; CI = stratified two-level bootstrap, 95 % (seed-noise CI = run-to-run seed variance added, BAR-TABLE addendum 2026-10-11). W/T/L = BOAR answer vs the frontier reference, per seed. "Dev" = development data. Claim-build rows: cut 3 runs, re-run on cut 6 (judge verdicts copied for byte-identical answers), cut 7 identical by replay.
+
+**A1. Quality against the frontier reference (Opus judge.v1, both orders, desktop proxy)**
+
+| Configuration | Set (status) | Seeds | Floor-adjusted (95 % CI) | W/T/L vs reference | Raw (95 % CI) | Desktop p50 | Source |
+|---|---|---|---|---|---|---|---|
+| 4B claim build (cut 7) | V-para, 51 judged (held out at the time of these runs; dev-style since 2026-10-06) | 2 (42, 43) | **0.261 (0.224–0.299)** | 0/0/51 · 0/0/51 | 0.413 (0.384–0.445) | 10.1 s | S1, S46 |
+| 4B claim build (cut 7) | v0.2, 110 (held out at the time; burnt → dev) | 2 | **0.389 (0.347–0.435)** | 0/0/110 · 0/1/109 (cut 6) | 0.513 (0.479–0.550) | 6.3 / 6.1 s (same-backend run) | S1, S46 |
+| Deep, no thinking | V-para (dev-style) | 2 | 0.329 (0.294–0.362) | 0/0/51 · 0/0/51 | 0.467 (0.439–0.494) | 33.3 / 30.9 s | S31, S46 |
+| Deep, no thinking | v0.2 (dev) | 2 | 0.457 (0.417–0.500) | 0/0/110 · 0/0/110 | 0.568 (0.536–0.602) | 34.4 / 33.6 s | S31, S46 |
+| **Deep + thinking 512** (recommended deep config) | V-para (dev-style) | 2 | **0.436 (0.401–0.472; 0.387–0.486 with seed noise)** | 0/0/51 · 0/0/51 | 0.553 (0.524–0.581; 0.513–0.592 with seed noise) | 78.9 / 79.4 s | S37, S46 |
+| **Deep + thinking 512** | v0.2 (dev) | 1 (42) | **0.508 (0.467–0.550; 0.463–0.553 with seed noise)** | 0/1/109 | 0.608 (0.575–0.641; 0.569–0.647 with seed noise) | 82.4 s | S41, S46 |
+| Deep + thinking 1024 | V-para (dev-style) | 2 | 0.422 (0.385–0.459; 0.371–0.473 with seed noise) | 0/0/51 · 0/0/51 | 0.542 (0.513–0.571; 0.502–0.582 with seed noise) | 142.9 / 146.0 s | S33, S46 |
+| Deep + thinking 1024 | v0.2 (dev) | 2 | 0.514 (0.475–0.554; 0.472–0.556 with seed noise) | 0/1/109 · 0/2/108 | 0.612 (0.581–0.644; 0.578–0.647 with seed noise) | 132.6 / 136.8 s | S35, S46 |
+| Haiku 5.5, no web (anchor, not BOAR) | V-para | 1 | 0.48 (CI not computed) | not computed | 0.588 (0.559–0.615) | — | S1, S46 |
+
+Bar readings (BAR-TABLE §1c): the formal raw rule (CI low > 0.50) is met on both sets only by the deep tier with thinking (512: V-para 0.513 with seed noise, v0.2 0.569 on one seed; 1024: 0.502 and 0.578, two seeds); deep without thinking meets it on v0.2 only (0.536); the 4B meets it on neither (V-para CI high 0.445; v0.2 CI contains 0.50). Floor-adjusted target (CI low ≥ 0.50 on V-para, two seeds): met by none. Win rate: 0 on every row and seed. V-para's 7 venue questions (outside the 51): 0/7 in the claim run (no device location passed); 7/7 only with device location and the user's area tile (§4 row 15; plumbing check, not a quality score). Deep-tier rows: desktop proxy (M4 CPU, llama-server), never on a phone. Correctness alone (BAR-TABLE §2, dev, not a bar reading): floor-adjusted V-para 0.427 (4B) and 0.660 (deep + thinking 512); the gap sits in completeness and usefulness.
+
+**A2. Phone runs (v0.1 development items; one run per phone; measurement app built without INTERNET, airplane mode)**
+
+| Phone (build) | Answered | Fast/model answers p50 / p90 | App memory (PSS) | Thermal | Phone vs desktop on 57 v0.1 items | Judge | Source |
+|---|---|---|---|---|---|---|---|
+| POCO X6 Pro, MT6897, 10.7 GiB usable RAM, Android 16 (cut 7) | 72/72, 0 crashes; run wall 29 min 14 s | 30.7 s / 48.4 s (all answers 24.7 s / 41.4 s; TTFT p50 18.5 s; decode p50 5.5 tok/s) | peak 5.88 GB at model load, then ≤ 4.23 GB | thermal_status 0 throughout; battery 34.5 → 41.7 °C max (charging) | raw 0.529 (0.481–0.575) vs 0.529 (0.484–0.575), paired −0.000 (−0.026…+0.028); above-min 0.403 (0.343–0.461) vs 0.402 (0.346–0.458); W/T/L 2/1/54 vs 1/2/54 | Haiku 5.5-low, judge.v1, both orders (not comparable in level with the Opus rows) | S51 |
+| Galaxy A15, 8 GB (cut 6) | 73/73 | 49 s / 77 s (max 111 s; instant answers p50 8.5 s) | max 4.41 GiB | 0 | raw 0.561 (0.507–0.617) vs 0.558 and 0.560 (floor-adjusted not computed) | Opus judge.v1-med | S28, S49 |
+
+**A3. Longer sessions (cut 7, MacBook desktop CPU, seed 42; 80 agent-written dev questions; Haiku 5.5 judge.v1-low, both orders; reference = BOAR's own standalone answer to the same question)**
+
+| Turns | n | In-session / standalone ratio (95 % CI) | W/T/L (in-session vs standalone) | Self-contained items only | In-session p50 (desktop) | Source |
+|---|---|---|---|---|---|---|
+| 1 | 10 | 1.000 (identical by construction) | 0/10/0 | — | 9.1 s | S52 |
+| 2–5 | 40 | 1.397 (1.187–1.673) | 19/17/4 | 1.205 (1.010–1.467) (turns 2–5) | 5.1–10.6 s per turn (standalone 2.5–7.1 s) | S52 |
+| 6–15 (3 sessions) | 30 | 1.136 (0.993–1.320) | 10/18/2 | 1.017 (0.950–1.095) (17 items) | 12.5–22.4 s per turn; ≈ 22 s at turns 14–15 vs ≈ 8 s standalone | S52 |
+
+Full-history prompt peak 1,658 tokens (turn 14); linear fit crosses the phone's 4,096-token context at about turn 50. The app sends the last 6 messages plus a ≤ 150-token summary from turn 8 (≈ 360–420 history tokens at turn 15, estimated); that app policy was not run in this arm. History-specific defects: 3 of 50 items in turns 1–5 (an earlier first-aid card replayed for a new question, 2; history pushing a comparison onto the health extractive path, 1); none of these two kinds in turns 6–15, where one follow-up resolved "it" to the wrong coin and one answer invented a penalty figure primed by earlier turns.
+
+
+## 1. TL;DR
+
+<!-- src: CLAIM-RESULTS-cut3.md (raw, floor removed, CIs); PIPELINE-AUDIT-2026-10-06 §1 (win/tie/loss, anchors floor-adj); CLAIM-RESULTS-cut6.md (s42 105/110 identical) -->
+- **Headline metric (changed in v3.1):** floor-removed ratio plus pairwise win rate, raw ratio second. The judge gives a blank or wrong answer 1/5 on each axis, so a system that declines every question gets a raw ratio of about 0.31 (D = 0.306) for free; raw 0.50 is therefore not "half as good". [S1] [S2]
+- **Held-out set in the style of the bounty's example questions (V-para: 58 questions written by a Claude Opus agent, 51 judged plus 7 venue questions, so the writer and the judge are one model family; blind to the engine builders when these claim runs were made, although a runner script once printed the set's grading fields (no questions, answers or references) before them; spent since by deep-tier and venue arms, see section 5):** floor removed **0.261 (0.224–0.299)**; pairwise wins **0 of 51**; raw 0.413 (0.384–0.445). The bar is not met on this set. A no-web Haiku scores raw 0.588 (floor removed 0.48) on the same items. [S1] The 7 venue questions scored 0 of 7 in the claim run, which passed no device location; **with device location and the user's area tile** (5 tiles, +3.65 MB) the places path returned ≥ 3 OSM-gold venues on 7 of 7 (10 per item), both seeds (measured 2026-10-07, development-style per section 5); engine venues and gold both come from OSM diet tags. That is a plumbing check, not a quality score (section 5). [S1] [S20]
+- **Formerly held-out result (bench v0.2, 110 questions written blind by two Claude-family subagents; development data since 2026-10-06):** floor removed **0.389 (0.347–0.435)** (cut 6 s42 alone: 0.397 [S27]); raw 0.513 (95% CI 0.479–0.550), an interval that contains 0.50. On the cut 6 re-run (seed 42; 105 of 110 answers byte-identical to cut 3) win/tie/loss is **0/0/110**. The honest reading is "below half once the floor is removed; not shown to be above half even on the raw scale". The v0.2 set is exposed (questions and references in plaintext in a private repository's history since 2026-10-02, before the claim runs; at least 12 full generation runs and 10 full Opus judge passes to date, team ledger [S47]) and is treated as development data; a final number needs a new set (bench v0.3, written outside the Claude family; not written before the 2026-10-20 deadline (closing-sprint decision 2026-10-14 [S54]), section 7). [S1] [S25]
+- **Pre-registered raw rule vs our stricter target (new in v3.9; context, not a claim number):** the analysis plan judges the bar on the raw ratio over bench v0.2, met when the 95% CI lies above 0.50; our bar table applies the same rule to V-para. The 4B claim build does not meet it (V-para raw CI high 0.445; v0.2 CI contains 0.50). The deep tier, which is not in the claim build and has never run on a phone, meets it on the desktop proxy on development-style data: with 512-token thinking, V-para raw 0.553 (0.513–0.592 with seed noise, two seeds) and v0.2 raw 0.608 (0.569–0.647, one seed); with 1024-token thinking, on two seeds on both sets (CI low ends 0.502 and 0.578 with seed noise). Because a system that declines everything already scores raw about 0.31, we lead with the floor-removed target (CI low at or above 0.50 on V-para, two seeds), which nothing reaches: the best deep tier scores 0.436 (0.387–0.486 with seed noise). The win rate is 0 on every set and seed. No unexposed set exists; a final number needs v0.3. [S1] [S2] [S46]
+- **Three scales, always shown together:**
+
+| Set | Raw | Floor removed | Above always-decline |
+|---|---|---|---|
+| v0.2, formerly held-out (exposed) (110) | 0.513 (0.479–0.550) | 0.389 (0.347–0.435) | 0.299 (0.250–0.351) |
+| V-para (51 judged) | 0.413 (0.384–0.445) | 0.261 (0.224–0.299) | 0.154 (0.112–0.200) |
+
+  [S1] "Floor removed" subtracts the judge's minimum score from both sides. "Above always-decline" measures the gain over a system that declines every question (fixed at D = 0.306). [S2]
+- **Device status (updated in v4.0: an 8 GB and a 12 GB-class phone; the deep tier on neither):** cut 6 (the claim build minus the facts tier) ran the 73 v0.1 questions on an 8 GB Galaxy A15 with airplane mode on and the network permission absent: 73/73 completed; model answers p50 49 s, p90 77 s, max 111 s; instant answers p50 8.5 s; app memory (PSS) max 4.41 GiB; thermal status 0. On the 57 judged items the phone scored 0.561 (0.507–0.617) against 0.558 and 0.560 on the desktop (judge.v1-med; one phone, one run): on these items the phone score is not distinguishable from the desktop's. These are development items the engine was tuned on, so this is not evidence for the bar. A cut 5 rate sweep on the same phone measured decode at 2.0–2.7 tokens/s. The earlier 9-question cut 3 smoke test (model answers 100–147 s) predates the KV-cache fix. **Cut 7 (the claim build) has since run on a 12 GB-class phone** (POCO X6 Pro, MT6897, 10.7 GiB usable RAM, Android 16; airplane mode, Wi-Fi and Bluetooth off, measurement app without the INTERNET permission; 2026-10-14): 72/72 answered (plus a warm-up), 0 crashes; fast tier p50 30.7 s, p90 48.4 s (all answers p50 24.7 s, p90 41.4 s); app PSS peak 5.88 GB during model load, then ≤ 4.23 GB; thermal status 0 over the 29 min 14 s run. On the 57 judged v0.1 development items, phone raw 0.529 (0.481–0.575) vs desktop 0.529 (0.484–0.575), paired −0.000 (−0.026…+0.028), one phone run, Haiku 5.5-low judge (a triage judge: not comparable in level with the Opus numbers or with the A15 figure above). Not evidence for the bar. [S51] [S28] <!-- src: QUEUE.md l.695, l.711 -->
+- **Engine lineage (updated in v3.2):** the claim build is **cut 7** (commit 6d0b93b1, tree 7c96e59e…) = cut 6 + an instant facts tier (FACTS r6). The headline numbers were measured on **cut 3** and re-run on **cut 6** (held-out raw 0.512 vs 0.513, Δ −0.001, CI −0.010…+0.008; 210 of 220 held-out item-seed answers byte-identical; the judge verdicts of byte-identical answers were copied from the cut 3 run and only the 10 changed item-seeds were judged fresh (V-para: 96 of 102 copied), so the narrow Δ reflects that reuse and is not an independent re-judging). The facts tier fires on 0 of 110 held-out and 0 of 58 V-para questions, so cut 7's answers on those sets equal cut 6's (engine replay 110/110 and 58/58 identical); cut 7 was adopted on gates, with 0 judge calls. Its only measured effect is a projected +0.027 on the v0.1 development set (8 fires). See section 3. [S18] [S19]
+- **Fidelity and reproducibility (new in v3):** the claim runs used the runner with the route gate and emergency detector on; the gate does not change v0.1 answers. The runner is now committed behind flags. See section 2. [S14] [S15] **Offline (new in v3):** no-network APKs (no INTERNET permission, by construction) of cut 4 and cut 5 exist. Cut 6's no-network APK has since run 73/73 questions on the 8 GB A15 in airplane mode (device status above); no traffic capture exists. See rows 4 and 5. [S16]
+- **Not yet done:** the submitted native app's score on our benchmark (traces requested [S55]), Android UI integration (PR #85 open, CI green on typecheck and tests; its wiring not yet built for Android or run on a device [S53] [S56]), the deep tier on any phone, public demo post. Done 2026-10-15: public benchmark and research repos (https://github.com/r4topunk/boar-bench, https://github.com/r4topunk/boar-research; QUEUE.md row "PUBLIC REPOS LIVE (10:07)"). See section 4.
+- **Scope of this claim:** all claim numbers are desktop-proxy results of cut 3 (re-run on cut 6; cut 7 identical on these sets by replay). They are not device results, and they are the TypeScript engine's numbers, not the submitted native app's (its score is pending [S55]). [S1] [S18] [S19]
+
+## 2. What was measured and how
+
+### Judge and reference
+- Each BOAR answer is compared pairwise with a reference answer written by a frontier model (Claude Opus 5.5) with web search (`reference.v1`, generated once and frozen). The judge is the same model family. [S2]
+- The judge is an Opus model (`judge.v1`). Every pair is judged in both A/B orders and the scores are averaged. Disagreement between orders counts as a tie. [S2]
+- Score per answer = mean of correctness, completeness and usefulness. Ratio = sum of BOAR scores / sum of reference scores. [S2]
+- Confidence intervals: stratified two-level bootstrap (resample items within category, then runs within item), 2,000 resamples, 95% percentile. Two runs per arm (seeds 42 and 43). [S1] [S2]
+- Always-decline reference point D = 0.306, measured on 79 declined answers across 7 earlier runs. [S2]
+- **Triage judges (new in v3.2; method only, not claim numbers).** Development screens are now triaged with Haiku 5.5 (effort low): same winner as Opus on 54 of 57 v0.1 items, about 14× cheaper than Sonnet-low, run 8 in parallel (same winner 55/57 vs sequential). It compresses paired gaps (deep35 − 4B +0.007 vs Opus +0.029), so it ranks but does not size effects. Every claim number in this draft is Opus `judge.v1`, except the phone-vs-desktop comparison in section 1 (judge.v1-med: the same Opus prompt at medium effort, which matched judge.v1 with κ 1.000 in a calibration re-judge). [S22] [S49]
+
+### Frozen before running
+- The bench, references, judge prompt, analysis plan and scoring scripts were hashed (per-file sha256 plus one combined hash) before any BOAR run on the held-out set. [S2] [S1]
+- The claim runs had a written authorisation file with its own hash, verified unchanged. No code, config or criterion changed between the authorisation and the runs. No re-runs. [S1]
+- Dev and held-out are separate. Bench v0.1 (60 items, the planned public split) is the development set; engine changes were tuned on it. The 110 v0.2 questions were the held-out set: no engine change was tuned on their scores except one disclosed item (below). Other known exposures: one item seen by a researcher on 2026-10-03, 3 hand-adjudicated items, and the questions and references in plaintext in a private repository's history since 2026-10-02, before the claim runs; the set has been development data since 2026-10-06 (team ledger [S47]). [S2]
+- The V-para set was written separately and kept blind through the claim runs (cut 3 on 2026-10-05, cut 6 on 2026-10-06). Researchers did not read it; only aggregate scripts touched it. It has been spent since (section 5). [S1]
+- Caveat on the held-out rule: one held-out item (a generator-indoors safety question) was known before the safety fix. It is excluded from any claim of improvement. [S3]
+
+### Runner fidelity and reproducibility (new in v3)
+- **Which runner made the claim numbers.** The cut 3 claim runs (held-out v0.2 and V-para) used the "be-ship" desktop runner: node backend, **route gate on**, learned emergency detector on. An earlier internal note that desktop runs had no gate was true only for the older committed runner. [S14]
+- **The gate does not change v0.1 answers.** On v0.1 EN (seed 44, 60 items), a same-tree run with the gate off was compared with the gate on. Cut 4 with gate: 54 gate calls, all "search"; cut 5 with gate: 22 calls (32 skipped by rule), all "search". 0 of 60 answers changed text, 0 route or tier changes. Nothing needed judging. Limits: one seed; v0.1 has no small-talk items, so the gate's answer-directly path is not exercised; this shows the gate is harmless on questions, not that its other path is right. [S15]
+- **Reproducibility.** The runner variant that made the claim numbers lived only on the experiment machine. It is now committed behind flags (`BOAR_RUNNER_PROFILE=ship`, `BOAR_ROUTE_GATE`, `BOAR_DETECTOR*`, `BOAR_KV_TYPE`), with defaults of older committed runs unchanged, and a table maps each run to its runner. The commit is local; the repository is private and unpublished. Server-backend runs (some development experiments, not the claim runs) have no gate. [S14]
+
+### Ladders
+**Model-size ladder, 1.5B to 4B (development set, bench v0.1, earlier engine):**
+
+| Config | Raw | Floor removed | Above always-decline |
+|---|---|---|---|
+| 1.5B (iPhone config) | 0.381 (0.350–0.414) | 0.222 (0.183–0.263) | 0.108 (0.063–0.156) |
+| 4B (Android config) | 0.512 (0.466–0.558) | 0.387 (0.330–0.444) | 0.297 (0.231–0.363) |
+| Paired gap 4B minus 1.5B | +0.131 (+0.095…+0.171) | +0.165 (+0.120…+0.215) | +0.189 (+0.137…+0.246) |
+
+[S2, section 10] These were computed before the later engine changes. They show the size effect only.
+
+**Frontier ladder on V-para, no web access, same judge (context, not a bar):**
+
+| System | Raw ratio |
+|---|---|
+| BOAR cut 3 (4B) | 0.413 (0.384–0.445) |
+| Haiku | 0.588 (0.559–0.615) |
+| Sonnet | 0.961 |
+| Opus | 1.044 |
+| Fable | 1.037 |
+
+The ladder models ran once each on the 51 items; BOAR's figure pools two runs. BOAR is below a small hosted model (Haiku) without web. This is the gap to close. [S1]
+
+The deep tier (35B-class model, desktop proxy) is not on this ladder; its V-para rungs (floor removed: 4B 0.26 (held-out claim run) → deep 0.33 → deep + thinking 0.42 (0.44 at a 512-work budget) (the deep rungs are development-style, measured after 2026-10-06, section 5); win rate 0 of 51 at every rung; bar 0.50) and its v0.2 rungs (development data; floor removed: 4B 0.39 → deep 0.46 → deep + thinking 0.51 (0.475–0.554, CI straddles 0.50, bar reading not met) (0.51 at 512, 0.467–0.550, one seed); win rate 0 of 110 at every rung) are in section 6. [S31] [S33] [S35] [S37] [S41]
+
+### Other results on the development set (not claim evidence)
+- v0.1 EN, cut 3, seeds 44 and 45, 57 judged items: 0.566, versus 0.534 for cut 2 (+0.032, 90% CI +0.010…+0.062). These items are the ones the cut 3 levers were built on. [S4]
+- The full 167-item view (0.533, CI 0.502–0.564) contains 57 development items, so it is not used as the claim. [S1]
+
+### Departures from the pre-registered plan
+- **Headline source.** The plan says device numbers lead. No 12 GB device run exists yet, so this draft leads with desktop-proxy numbers, labelled as such.
+- **1B-class gap on the held-out set: not run.** The plan requires it with a paired CI. The only size ladder shown is from the development set on an earlier engine.
+- **Seeds.** The plan planned three runs (seeds 42, 43, 44). Two were run (42, 43), which is the plan's stated minimum.
+- **Not yet reported:** the always-decline level measured on the claim run's own declines; per-writer held-out results; the cross-family judge; the 40-pair human label check.
+- **Headline metric (changed after the results).** The plan judges the bar on the raw ratio (plan §3). After the cut 3 and cut 6 claim results, an internal audit (2026-10-06) moved the headline to the floor-removed ratio plus win rate, a stricter scale; the raw reading stays beside it in every table, and section 1 says where the pre-registered rule is met (deep tier, development-style data) and where it is not (4B claim build). [S2] [S27] [S46]
+- **Pre-registration timing.** Hashes were committed to a private repository before the held-out runs. They have not been published, so an outside reader cannot yet verify the timing. The plan said to publish the combined hash before the first run.
+
+## 3. The engine
+
+### Default model and knowledge kit
+- **Reader model:** Qwen3-4B-Instruct-2507, Q4_K_M quantisation, 2.50 GB. [S8] [S11]
+- **Everything pushed to the phone (3.03 GB in total, model included):** reader model 2.50 GB, embedding model 37 MB, emergency detector 108 MB, English Wikivoyage pack 351 MB, crypto pack 36 MB. The knowledge packs themselves are therefore about 0.39 GB. The V-para run (desktop) also loaded a places kit (world places and three city tiles); its size is not in the sources reviewed. [S1] [S11] **Cut 7 additions (new in v3.2):** a facts table asset of 761 KB (4,233 entities); for venue questions, one area tile per user location (0.2–1.1 MB each; the 5 V-para tiles total +3.65 MB). [S18] [S20]
+- Retrieval picks passages from the kit, then the 4B answers with citations. Questions about emergencies go to a separate safety path first. [S5]
+
+### Deterministic modules (code answers instead of the model)
+Each module acts only when its trigger fires. Otherwise the normal path runs.
+
+| Module | What it does | Evidence |
+|---|---|---|
+| Travel calculator | Distance between two named places (great-circle times a route factor), round trip, travel time at a stated pace. Always labelled "an estimate, not a mapped route". Uses a 6,000-city table (GeoNames, CC BY 4.0, 272 KB). English only. Never fires on emergencies. | Paris–Rome item: 0.29 before, 0.89–0.94 after. 0 false fires on 1,034 dev messages. [S3] |
+| Arithmetic tools | Computes simple rates and times from the numbers in the question, plus a guard against the health detector firing on a math question. | 1 dev item moved +3.33; 0 fires on 1,467 dev messages; on a separate held-out probe set (not bench v0.2), 28/32 right, 0 wrong numbers. [S3] [S4] |
+| Verdict guard (v3) | Checks a yes/no or compare answer against the model's own stated facts. If the verdict contradicts them, it repairs the verdict. It abstains when facts are ambiguous. | 3 dev items improved (+1.0 to +2.7 each); 0 worse. On 90 fresh probes it fired once, correctly. It catches only a small part of such errors (1 of 17 on a later probe set). [S3] [S4] |
+| Safety cards | Fixed text from official sources for snakebite and other emergencies, shown before the model. The snakebite text was revised after an independent review. | Snakebite item +0.92 on the confirmation run. 0 unsafe-rule hits on the 10 held-out danger questions, both seeds. One of the 10 (generator indoors) had failed in an earlier run and motivated the CO card, so it is not independent evidence. Card texts are AI-reviewed, not clinically reviewed. [S1] [S4] |
+| Facts instant tier (cut 7, new in v3.2) | Answers single-fact questions (capital, currency, height and similar) from a fixed table, before the model. Does not fire on health, emergency or Portuguese or Spanish questions. | Blind recall set 4: recall 28/40 (70 %, below its 75 % partial bar (pass 85 %), so the recall line was closed), precision 28/29, 0/20 false fires on near-misses. v0.1: 8 fires, projected +0.027. 0 fires on held-out v0.2 and V-para. Warm lookup p95 0.090 ms; desktop cold load 111–129 ms; phone cold load unmeasured. [S18] |
+| Places with device location (new in v3.2) | Lists venues near the user's location from the area tile (OpenStreetMap tags), with no model call. Needs a location fix and the tile for that area. | V-para venues 7/7 both seeds with location + tile (0/7 with no location, both seeds; 0/7 with location but no tile, seed 42 only); 5–192 ms per item, desktop; 5 non-venue controls unchanged. [S20] |
+| CO hazard card | Fixed carbon-monoxide safety answer when a fuel-burning device and an enclosed space appear together, plus a symptom card. Reviewed by an independent model reviewer, sources checked. | On a separate blind lookalike set (not bench v0.2): recall 23/26, 1 false fire in 38. The earlier engine gave an unsafe answer on the held-out generator-indoors item. Cut 3 did not, but the card was built after that failure was seen, so this item is excluded from any improvement claim. Card texts are AI-reviewed, not clinically reviewed. [S3] [S1] |
+
+### Levers that failed
+Many ideas were tested against frozen criteria and dropped. The full record is in `rnd/research/QUEUE.md` [S3]. One line each, for the 4B reader:
+
+| Lever | What happened |
+|---|---|
+| Larger Wikipedia packs (top-100k) | Retrieval 3.3× slower, no gain on knowledge items, v0.1 −0.005 to −0.016. Killed. |
+| Retrieval v2 (right sentence reached the model 7 → 18 of 56 dev items) | Judged score did not rise (−0.021, 90% CI −0.054…+0.009). Killed. |
+| Query expansion, passage reranker | Expansion: no key passage reached the context after gating. Reranker: dropped 0 key passages, 1 worse item. Killed at the first gate. |
+| Answer-style prompts (answer first, check then conclude) | −0.031 and −0.006; more confident-wrong answers. Closed. |
+| Self-check by the 4B, separate passage checker | The 4B flagged 8 of 20 correct answers (bar 2); the NLI checker caught 0 of 7 (wrong claims came from memory, not from a contradicted passage). Closed. |
+| Computed-verdict arms (four variants) | Verdict accuracy rose on fresh verdict sets, but the judged score fell or new wrong answers appeared. Closed. |
+| Other 4B-class readers (Qwen3.5-4B, Gemma 4 E4B, Ministral; Qwen3.5-9B) | None beat the current one in screens; Gemma in the engine was −0.0385 and 1.49× slower. Closed. |
+| Country-facts pack, water-safety card, crypto and travel passage selection | Each failed its own frozen gate. |
+| Prompt trimming ("prompt diet") with an answer cap, for speed | Judged −0.0158 (bar −0.015); confident-wrong answers rose 5 → 9; the cap cut 7–8 answers per seed mid-sentence. Ended. |
+| Speculative decoding for speed | Draft-model acceptance 31%; projected A15 decode gain −8.4% and erased by the draft's own prefill; the phone runtime supports only another draft path. Closed. |
+| Retrieval speed bundle (native decompression, batched SQL) | Desktop retrieval gate failed (the desktop cannot show a phone-side gain). Kept only as a device A/B, not in cut 5. |
+| Remaining dev-set quality levers (facts tables and similar) | Expected gain under +0.01 each. Declared exhausted for the 4B on the dev set. [S9] [S17] |
+| 35B deep tier | Quality +0.060 (CI +0.021…+0.101) on the desktop (old main engine); desktop peak footprint 10.0–10.3 GiB (max RSS 4.0–8.7 GiB) against our own ≤ 8 GiB per-process estimate for 8 GB phones. Parked; not part of this claim. [S3] <!-- src: QUEUE.md l.267, l.271 --> |
+| Other 25–35B MoE readers (Qwen3.5-35B-A3B, Gemma 4 26B-A4B), closed-book | 0.603 and 0.613 vs the 4B's 0.487 and deep35's 0.596 (v0.1, 1 seed); neither beat deep35 by the +0.03 bar (+0.007, +0.018). One plateau at about 0.60. [S24] |
+| Long-answer persona on the deep tier (deep + thinking, persona "detailed") | Paired raw-ratio difference vs the succinct deep + thinking tier (Haiku scale): with the 200-token answer cap −0.066 (−0.134…+0.014), answers truncated at the cap; with 1200 context tokens and a 400-token cap: −0.013 (−0.069…+0.048). 20-item V-para slice, Haiku triage, one seed (development-style). Not pursued; the succinct persona stays. [S39] <!-- src: arms/deepfull/DEEPFULL.md l.2, l.16–17, l.21, l.24; QUEUE.md l.834 --> |
+| Thinking 4B on the fast path (Qwen3-4B-Thinking-2507 Q4_K_M, the thinking twin of the claim model; the engine already asks the fast model to think, FAST_THINKING_BUDGET 256, but the instruct model produces 0 reasoning tokens on 58 of 58 items) | At budget 256 no better than the instruct 4B (20-item V-para slice of the hardest items, Haiku triage only, −0.012 (−0.050…+0.025)). At budget 512 (patch 6a977a29…) the same slice judged by Opus read +0.091 (+0.010…+0.185) over the instruct 4B and sent the arm to the full set, where the gain shrank: on the 51 judged V-para items, one seed, Opus judge.v1, raw 0.439 (0.401–0.476) vs the claim run's 0.413 (0.381–0.446), paired +0.026 (items resampled, −0.013…+0.068), floor-adjusted 0.293 (0.244–0.340) vs 0.261 (paired +0.032, −0.016…+0.088), win-rate 0/51, head-to-head 17/13/21. Below the +0.03 continuation bar, so the frozen rule stopped the arm after seed 42 (seed 43 not run); not adopted (development-style data) [S42]. Cost: ≈ 3.7× the answer time of the instruct 4B on the same desktop backend (p50 23.6 s vs 6.3 s; first visible token after ≈ 20 s; median 370 reasoning tokens). On the 8 GB A15, where decode measured 2.0–2.7 tokens/s [S28], 370 extra tokens would add roughly 2–3 min per answer before the first visible token (our arithmetic, not measured; the fast-path p50 there is 49 s). <!-- src: arms/think4b/THINK4B.md l.2, l.17–19, l.25, l.27, l.30; aggregates/L2-Z-1seed.opus.json, paired_gap-ZvsK-1seed.json, L1-YvsC-slice.haiku55-low.json, L2-ZvsC-slice.opus.json, think-Z-full-s42.json; QUEUE.md l.695, l.856, l.863 --> |
+| Grounded-reading fine-tune data | Strict faithfulness review: Opus teacher 16/20 examples with an unsupported claim, with sentence rejection 11/20, human CLAPnq 6/20 (bar ≤ 2/20). No LoRA trained; line closed. [S26] |
+
+The 4B loss analysis explains why the gains are small: the largest remaining losses are "correct but thin" answers and missing knowledge, and no tested 4B lever reaches them. [S9] [S17]
+
+### Engine lineage: cut 3 to cut 7 (updated in v3.2)
+| Cut | What it is | Evidence |
+|---|---|---|
+| **Cut 3** | The frozen engine behind every number in the headline table. | [S1] |
+| **Cut 4** | Cut 3 plus (1) a fix for the KV session-cache bug, (2) rules that stop a sentence fragment or a figurative "capital" from being returned as an instant answer (the "capital of France" → Lyon case), (3) a subject check that stops an instant answer about the wrong place. These touch the instant tier and the cache, not model answers. On the desktop, cut 3 plus fixes (1) and (2) gave byte-identical answers on the 60 v0.1 questions in both seeds; of 1,328 English dev messages, 1 changed tier (a garbage fragment). Fix (3) was checked by a stub-model replay and unit tests only. The desktop runner cannot exercise fix (1). | [S10] |
+| **Cut 5** | Cut 4 plus two phone-latency changes: the route gate is skipped when rules already decide the question, and a second KV prefix is cached for prompts without sources. v0.1 EN, seeds 44 and 45 (120 answers): text, tier and passages identical to cut 4 on all 120; 0 skip-safety violations on 464 dev messages. Built as a device candidate. The two changes can only show their benefit on a phone. Included in cut 6 and cut 7. | [S12] |
+| **Cut 6** | Cut 5 plus DETMAX (with history, the emergency detector scores the window and the current turn alone and takes the max). Claim re-run on held-out v0.2 and V-para (seeds 42, 43; judge verdicts copied from cut 3 for byte-identical answers): raw 0.512 (0.478–0.549) and 0.413 (0.384–0.445); 0 unsafe-rule hits on the 10 danger items. | [S19] |
+| **Cut 7 (claim build)** | Cut 6 + facts tier r6 (patch 0eee6a0b…). All gates pass (1,346/1,346 tests; 52/52 non-target v0.1 retrieval identical). 0 fires on held-out and V-para, so their numbers are cut 6's. | [S18] |
+
+**State plainly:** the held-out headline (0.513) and V-para (0.413) were measured on cut 3 and re-measured on cut 6 (0.512, 0.413). Cut 7 equals cut 6 on both sets by deterministic replay, not by a new judged run. Cut 5's two phone-latency changes are in cut 6 and cut 7 (commit ancestry), so the cut 6 held-out re-run (0.512) already includes them. [S18] [S19] [S29]
+
+## 4. Requirements checklist (against `BOUNTY_31.md`)
+
+Key: met / partly met / not yet. Strict reading.
+
+| # | Requirement | Status | Basis |
+|---|---|---|---|
+| 1 | Runs on Android and GrapheneOS-compatible hardware | **Partly met** | Cut 6 ran the 73 v0.1 questions on one Android phone (Galaxy A15, 8 GB): 73/73 completed (an earlier cut 3 smoke test: 9/9) [S28]. Cut 7 ran the same questions on a second Android phone (POCO X6 Pro, 12 GB class): 72/72 [S51]. Both runs used the measurement app with the TypeScript engine, not the submitted native app, whose zero-network bundle targets air-gapped testing on GrapheneOS [S55]. No GrapheneOS device has been tried by us. A static scan of the measurement APK finds no Google Play Services or Firebase code (E1). [S5] [S6] E1 E4 |
+| 2 | Within 12 GB RAM | **Partly met** | Cut 6 on the 8 GB A15 (73 questions): app memory (PSS) max 4.41 GiB, thermal status 0 [S28]. Earlier, on the cut 3 smoke test, app memory (PSS) peaked at about 4.6 GB during model load, then stayed about 3.6 GB. Up to 1.6 GB was swapped after the first question (0.7 GB at the end). An earlier engine's 4B was killed by the OS on another 8 GB phone (moto g75) at about 4.7–5.0 GiB. Cut 7 on a 12 GB-class POCO X6 Pro (10.7 GiB usable): app PSS peak 5.88 GB during model load, then ≤ 4.23 GB; thermal status 0 [S51]. The deep tier has not run on any phone. [S5] [S7] [S3] |
+| 3 | Total size at most 50 GB | **Met** | Device kit 3.03 GB in total (model 2.50 GB, detector and embedding 0.15 GB, knowledge packs 0.39 GB), plus the measurement app (BOAR Bench APK) 77 MB (77,086,168 bytes, 74 MiB). The submitted native app ships as a ≈ 30 MB onboarding APK (downloads models) and a ≈ 2.7 GB zero-network bundle (Qwen3-4B, bge-small, Vital Articles pack), per the app maintainer [S55]; not measured by us. Cut 7 adds 0.76 MB (facts table) and one area tile per user area (0.2–1.1 MB; +3.65 MB for the 5 V-para tiles). The base places kit size is not recorded but does not change the conclusion. [S11] [S10] [S18] [S20] |
+| 4 | Works completely offline | **Partly met (one 8 GB phone run)** | The engine is designed to run from local files. The cut 6 no-network APK ran 73/73 v0.1 questions on the A15 with airplane mode on and the network permission absent (device.json) [S28]; no traffic capture. Cut 7's no-network measurement app ran 72/72 on the POCO X6 Pro in airplane mode with Wi-Fi and Bluetooth off [S51]. The earlier cut 3 smoke test did not log airplane mode (E3), and the desktop runs used a networked machine. The cut 3 measurement APK can open network connections (E1). [S5] [S16] E1 E3 E5 |
+| 5 | No API calls or network requests in use | **Partly met (static, by construction)** | The cut 3 measurement APK audits as **NETWORK-CAPABLE**: it declares INTERNET and lists 19 hosts to review (E1). The cut 4 and cut 5 no-network APKs are built without INTERNET and network-state permissions (E5), so they cannot open sockets; the cut 6 no-network APK (cca28caf…) ran on the phone [S28]. This is a static result about the measurement app only. No dynamic capture or per-app traffic count exists. The Android UI app is not yet on the measured engine path; the submitted native app's network behaviour is not audited by us (zero-network bundle per the app maintainer [S55]). (The judge calls are in the evaluation harness, not the app.) [S16] E1 E2 E5 |
+| 6 | No Google Play Services for core function | **Partly met (static only)** | No Google Play Services, Firebase or tracker classes in any of the three measurement APKs (E1), nor in the cut 7 no-network APK (audit 2026-10-10, QUEUE.md l.897). Never run on a device without Play Services (the A15 is a stock Samsung phone, and no GrapheneOS device has been tried). E1 E4 |
+| 7 | Useful research questions beyond recall (explain, compare, synthesise, reason) | **Partly met (answers often thin or wrong)** | Floor removed 0.389, raw 0.513 (0.479–0.550) on a mix of explanation, reasoning, comparison, synthesis, crypto, travel, health, danger and honesty questions. On the separate V-para set (0.413), the weakest categories were reasoning 0.348 (7 items) and travel 0.36 (8 items). "Above half" is not shown on either set. On V-para the 4B claim build's correctness is 2 of 5 or lower on 49 % of items, and its usefulness reaches 3 of 5 on 2.9 % of items (v0.2: 34.5 %). [S27] [S46] [S1] |
+| 8 | Speed that feels usable | **Not shown (judgement call; measured on two phones)** | **Measured, cut 7 on the 12 GB-class POCO X6 Pro, 72 questions, airplane mode:** fast tier p50 30.7 s, p90 48.4 s, max 53.0 s; time to first token p50 18.5 s; decode p50 5.5 tokens/s; instant tier p50 0.1 s; thermal 0 [S51]. **Measured, cut 6 on the A15, 73 questions, airplane mode:** model answers p50 49 s, p90 77 s, max 111 s; instant answers p50 8.5 s; 53 min wall; thermal 0 [S28]. A cut 5 rate sweep on the same phone: decode 2.0–2.7 tokens/s, prefill 13–14 tokens/s, thread ranking within noise, q8 KV unmeasured [S28]. Earlier, on the A15 smoke test (cut 3), rule-based answers (travel calculator, CO rule, snakebite rule) took 0.07–0.2 s. Health cards that pass through the route gate took 17.5–52 s, and the first (cold-start) instant answer took 127 s. Model answers took 100–147 s (time to first token 72–100 s). Our KV-cache save bug re-did an estimated 55–65 s of prefill on each model answer. Cut 4 and later contain the fix; the cut 6 phone run above includes it. **Projection, superseded by the cut 6 measurement above (model calibrated on the 9 cut 3 rows, ±10%):** cut 4 with the fix working, about 69 s p50 and 89 s p90 per model answer (range of parameter sets 55–84 s p50); without it about 117 s and 142 s. Cut 5's two latency changes are modelled at about −3.9 s (second KV prefix; larger on items without sources) and −3.7 s (gate skip) on that p50. Decode was 2.0–2.9 tokens/s (cause unmeasured; the phone swapped and throttled), warm retrieval 6–15 s. Desktop proxy, not a phone number: median first token 7.3 s, full answer 10.7 s. [S5] [S6] [S1] [S13] [S28] |
+| 9 | Public GitHub repo with the functional version | **Partly met (code public; release not checked by us)** | The submitted native app's code is on a public branch (`fullnative-dev`) of the BOAR app repository, not checked by us [S55]; the measured engine is public as PR #85 [S56]; the benchmark and research record are public (https://github.com/r4topunk/boar-bench, https://github.com/r4topunk/boar-research; QUEUE.md row "PUBLIC REPOS LIVE (10:07)"). A public release of the submitted APKs is the app maintainer's step, not checked by us. The claim kit's two knowledge packs (crypto, English Wikivoyage) and further packs used in no claim number are public on the project's Hugging Face dataset (boar-packs). [S0] [S48] |
+| 10 | All code, assets, dependencies and instructions to reproduce | **Not yet** | Patches, scripts and hashes exist internally, and the desktop runner behind the claim numbers is now committed (privately) behind flags with a run-to-runner table [S14]. A public, step-by-step install does not. The Android UI does not yet call the engine path that was measured (PR phase). [S3] |
+| 11 | Document models, datasets, indexes, resources | **Partly met** | Internally documented with hashes and licences (for example GeoNames CC BY 4.0). Public documentation is not written. [S3] |
+| 12 | Real-device requirement | **Partly met** | Cut 6 on one 8 GB phone: 73/73 v0.1 questions, airplane mode, model answers p50 49 s; phone 0.561 vs desktop 0.558/0.560 on the same 57 development items [S28]. Earlier cut 3 smoke test: 9/9, 2 wrong answers. Cut 7 has since run on a 12 GB-class POCO X6 Pro: 72/72, phone raw 0.529 vs desktop 0.529 on the 57 development items (Haiku judge) [S51]. The phone runs used the debuggable measurement app (BOAR Bench) with the TypeScript engine, not the submitted native app (score pending [S55]) or another installable user app, and neither Android chat app calls the measured engine path yet (Android UI note below; PR-1's wiring commit routes the chat through it, not yet built or run on a device [S53]). The bounty requires a stranger to install from a public repo in minutes; for the submitted vehicle that path is the app maintainer's two APKs [S55], not checked by us. [S5] [S28] |
+| 13 | Proof: public demo post on X or Farcaster, with queries, repo link and explanation | **Not yet** | Not made. |
+| 14 | ">50% as good as internet + frontier AI" (the bar) | **Not shown** | Floor removed: V-para 0.261, held-out 0.389; wins 0/51 (cut 3) and 0/110 (cut 6, s42; cut 7 identical on these sets). Raw (floor ≈ 0.31): held-out 0.513 (0.479–0.550), contains 0.50; V-para 0.413, below. All of these are the TypeScript engine's numbers; the submitted native app's score is pending [S55]. Held-out v0.2 is exposed; a final number needs v0.3. The deep tier (not in the claim build, desktop only) meets the pre-registered raw rule on development-style data but not the floor-removed target (section 1). [S1] [S18] [S25] [S46] <!-- src: CLAIM-RESULTS-cut3.md; PIPELINE-AUDIT-2026-10-06 §1 --> |
+| 15 | Venue questions (the bounty's literal example, "best vegan restaurants in [city]"; V-para P5) | **Partly met (desktop, plumbing only)** | Claim run 0/7 (no device location passed). With device location and the user's area tile: 7/7 on both seeds, 10 venues per item, all 10 matching OSM gold. Caveat: engine venues and gold both come from OSM diet tags, so this shows the path works, not that the venues are good. Not a claim number (V-para is exposed). Tile download UX in the app and cities without a catalog tile: untested. The location path has not been tested on a phone (section 5). [S19] [S20] |
+
+Android UI note: the Android chat screen currently uses an older routing path. The measured engine path (`answerService`) is used by the iOS UI and by the benchmark. Wiring the Android UI to it is planned for the pull-request phase. Until then, the measured gains do not reach the Android UI. [S3] **Update v4.0:** PR-1 carries a separate, droppable commit that routes ordinary Android chat through `answerService.answer()` (setting "Measured answer path", default on); tsc clean and 1,378/1,378 vitest on the branch, but no Android build or device run of that commit yet (the PR's CI runs typecheck, tests and CodeQL), and no UI for "answer anyway", "deeper answer" or a location prompt. [S53] **Update v4.1:** PR-1 is open as https://github.com/UPSTREAM_REPO/boar-app/pull/85 (CI green), proposed as the reference implementation; the submission vehicle is the app maintainer's Kotlin native app, which ports the engine's rules and does not use this path [S55] [S56].
+
+## 5. Caveats
+
+- **V-para venues: 0 of 7 in the claim run; 7 of 7 only "with device location and the user's area tile".** In the claim run no location fix reached the engine (cause: no-location on 7 of 7, both seeds), and every venue answer was "location unavailable". The items carry no location field; the engine routed all 7 as 'near the device' and does not turn a place or coordinates typed in the question into a location fix, so a user who types a place instead of sharing location gets no venues. Passing a device location alone gave 0 of 7 (seed 42; seed 43 not run) (the kit had no tile for those areas). Adding the 5 catalog tiles for the users' areas (+3.65 MB) gave 7 of 7 on both seeds, with no engine change. Any public venue result must carry the words "with device location and the user's area tile". Engine venues and gold both come from OSM diet tags, so venue quality is unmeasured. The location path has not been tested on a phone. [S1] [S20]
+- **Single model family.** The reference answers and all claim judging come from Claude (Opus) models, and the v0.2 questions were written by Claude models too. A local Gemma 4 26B-A4B running the same `judge.v1` prompt (v0.1, 57 items, two systems) picks the same winner as Opus on 49/57 and 50/57 items (86–88 %), keeps the ranking (deep35 − 4B +0.026 vs Opus +0.029), but scores **+0.110 and +0.112 higher** (CIs exclude 0) and agrees weakly on BOAR correctness (κ 0.32 and 0.55). One non-Claude judge (Gemma 4 26B-A4B, Q2 quantised, run locally) scored the ratio 0.11 higher than Opus on v0.1 for both systems tested. That quantifies how much the level depends on the judge; it is not a correction to the headline, and Gemma is not a substitute headline judge. A cross-family judge on the claim set has not been run. If run, the plan says the lower of the two ratios is the headline when they differ by more than 0.05. Judge noise on identical answers reached 0.05 per item on single items. Bench v0.3 moves questions and references outside the Claude family; the judge stays Opus. [S2] [S4] [S21] [S25]
+- **Judge and reference are not human.** The 40-pair human label check in the analysis plan has not been done. [S2]
+- **Safety language.** Every safety card and any public wording must keep: **"AI-reviewed, not clinically reviewed."** The card texts were checked by an independent model reviewer against official sources, not by clinicians. [S0] [S3]
+- **Safety checks are small.** 0 unsafe-rule hits on 10 held-out danger questions is a small sample. The water-safety card was dropped after three failed gates, so a flood-water question gets no card, only the model answer. [S1] [S3]
+- **KV session bug was our own regression.** The session-cache code was added by our ship-stack patch, not by the upstream app. It never worked on a phone and was invisible on desktop because the desktop shim skips it. The fix must ship together with that design. [S7]
+- **Desktop proxy.** Claim numbers come from a desktop runner that simulates the phone's profile (4B, 12 GB settings). They are not phone numbers. [S1]
+- **Dev items in the 167-item view.** That view is not used as the claim. The cut 3 gain on the held-out set (+0.011 over the previous stack, 95% CI −0.004…+0.029) is smaller than the minimum detectable effect (0.018). Treat it as directional. [S1]
+- **Run-to-run noise.** In byte-identity checks, about one answer per seed changes between runs with identical inputs. [S3] [S10]
+- **V-para used for a deep-tier measurement (new in v3.4).** V-para was used for the deep-tier measurement (4 script-only generation runs on 2026-10-08 for DEEPVPARA, 2 more for DEEPTHINK (seeds 42 and 43) and 1 for DEEPTHINK-2 (seed 42), plus script-only Haiku and Opus judging of the 51 judged items, all logged in QUEUE; later deep-tier arms on V-para are logged the same way; at least 19 full generation runs, 12 twenty-item slices and 16 full Opus judge passes to date [S47]), which makes it development data for the deep tier; the final number still needs v0.3. [S31] [S33] [S25] **Status ruling (coordinator, 2026-10-09):** the 4B claim numbers above were measured while V-para was unexposed (no item read by anyone who built the engine, no tuning on it), so they stand as held-out numbers; every number measured on V-para after 2026-10-06 (venue runs, deep-tier arms, and any later arm) is development-style evidence and validates no engine change (the cut 7 deterministic replay of 2026-10-07, 0 of 58 facts-tier fires and 58 of 58 identical answers, only carries the cut 6 numbers forward to cut 7; it is not a quality result), and the ledger (`coordinator/EXPOSURES.md`) is the list of record. "Burnt" in the venue report means the same thing. [S34]
+- **Small knowledge-item sets.** V-exact has 5 judged items, so its intervals are wide. It is shown in internal notes only. [S3]
+
+## 6. What would change the claim
+
+| Change | Effect on the claim |
+|---|---|
+| A 12 GB-class phone: first-token and full-answer times, memory, thermal behaviour | **Done for the 4B claim build (v4.0):** cut 7 on the POCO X6 Pro, 72/72, fast tier p50 30.7 s / p90 48.4 s, PSS ≤ 4.23 GB after load, thermal 0, phone = desktop on 57 dev items (Haiku judge) [S51]. Requirements 2, 8 and 12 now rest on one 8 GB and one 12 GB-class phone run. Still open: the deep tier on that phone. The analysis plan says device numbers, not desktop numbers, lead; the bench-set numbers remain desktop-proxy. [S2] |
+| Android UI wired to the measured engine path | Makes the measured ratio apply to the React Native app's chat; it does not reach the submitted native app, a separate port whose score is pending [S55]. PR #85 carries the wiring (CI green on typecheck and tests; no Android build or device run yet) [S53] [S56]. |
+| On-device v0.1 ratio (the benchmark app judged on our side) | Done for cut 6 on an 8 GB phone: 0.561 (0.507–0.617) vs desktop 0.558/0.560 on the same 57 development items (judge.v1-med), so on one 8 GB phone the phone score is not distinguishable from the desktop's. Cut 7 on a 12 GB-class phone: phone raw 0.529 (0.481–0.575) vs desktop 0.529 (0.484–0.575), paired −0.000 (−0.026…+0.028), 57 items, Haiku judge, one run [S51]. [S28] |
+| Public repo, install instructions, network audit, Play Services check | Closes requirements 4, 5, 6, 9, 10, 11. |
+| Bench v0.3 claim run (110 items written with a non-Claude model, references by the same model with web) | Planned to give the first number from an unexposed set; the judge stays Opus, so judge-family bias remains. Ratios will not be 1:1 comparable with v0.2 (references from another family move the denominator); control and anchor runs measure that. [S25] |
+| Cross-family judge and human label check | Tests whether the ratio depends on one judge family. A local Gemma judge scored v0.1 0.11 higher than Opus with the same ranking (quantification, not a correction). [S21] |
+| A stronger reader or more knowledge | The loss analysis puts the remaining gap in thin answers and missing knowledge. No tested 4B lever closed it. [S9] |
+| Fine-tuning the 4B on grounded-answer data | Closed: no candidate dataset passed a strict faithfulness review (best: human CLAPnq 6/20 examples with an unsupported claim, bar ≤ 2/20), so no LoRA was trained. [S26] |
+
+## 7. Pending before submission
+
+Items marked [x] are done (v4.0); every other item is open.
+
+- [ ] **Bench v0.3 (the path to a final number): out of scope before the 2026-10-20 deadline** (closing-sprint decision 2026-10-14: 0 items written; public numbers are the development and formerly held-out numbers with the caveat) [S54]. The benchmark repo's CONTRIBUTING invites other teams to contribute held-out items in the v0.3 schema (hashes first, plaintext on a release date). [S25]
+- [x] 12 GB-class phone for the claim build: cut 7 on the POCO X6 Pro, 72/72, airplane mode (2026-10-14) [S51]. The deep tier on that phone is still open (see the deep-tier line below).
+- [ ] App: area-tile download for the user's location (row 15); the 12 GB config lists the tile download. [S20]
+- [ ] Deep tier: measured on the desktop on both held-out-style sets; device run still pending (the 12 GB-class POCO X6 Pro has run only the 4B build); deep tier + thinking has the highest measured V-para score (floor removed 0.436 at a 512-work budget, 0.422 at 1024, within the parity margin of each other; development-style; 0.06–0.08 below the bar); phone speed and memory unmeasured; a 512-token thinking answer takes ≈ 1.3 min on the desktop proxy (2.4 min at 1024). [S31] [S33] The recommended configuration is now deep + 512-token thinking (V-para floor removed 0.436, desktop p50 ≈ 79 s) [S37]; applying that competitor's public 12 GB phone rates gives roughly 1.9–2.8 min per such answer on a cool phone (our arithmetic, their rates) [S38] [S45]; no BOAR deep-tier run on any phone exists yet.
+- [x] Cut 7 (facts tier) on a phone: v0.1 run in airplane mode on the POCO X6 Pro, 72/72 [S51]. Cold load of the 761 KB facts table on the phone: not reported separately.
+- [ ] ABBA rerun of the cut 5 speed A/B on the A15 (the first A/B had an order and cache confound). <!-- src: QUEUE.md l.699 -->
+- [ ] Dynamic network capture (per-app traffic count during a run) and a run on a phone without Google Play Services; GrapheneOS device untested.
+- [ ] Android UI wired to the measured engine path: PR #85 open, CI green on typecheck and tests (reference implementation; no Android build or device run of the wiring yet) [S53] [S56].
+- [ ] The submitted native app's score on our benchmark: traces of the release build requested (v0.1 public 60 + longsession-v1 80); judge and publish as "the submitted app" [S55].
+- [ ] Install instructions, reproduction steps, model and dataset documentation (rows 9–11). Done 2026-10-15: two curated public repos (benchmark: https://github.com/r4topunk/boar-bench; research record: https://github.com/r4topunk/boar-research).
+- [ ] Cross-family judge, 40-pair human label check, held-out 1B-class gap, third seed, always-decline level on the claim run's own declines (section 2).
+- [ ] Publish the pre-registration hashes so an outsider can check their timing.
+- [ ] Public demo post with queries, repo link and explanation (row 13). No public upload or post without the owner's explicit approval.
+- [ ] Keep the wording "AI-reviewed, not clinically reviewed" on every safety card and in every public text.
+
+## Sources
+- S0: `CLAUDE.md` (workspace map and rules); `BOUNTY_31.md` (requirements)
+- S1: `rnd/research/coordinator/CLAIM-RESULTS-cut3.md`
+- S2: `boar-eval/bench/v0.2/plan/analysis-plan.md` (method, D = 0.306, section 10 ladder)
+- S3: `rnd/research/QUEUE.md` (decisions, killed levers, caveats; last 150 lines)
+- S4: `rnd/research/coordinator/cut3-confirm.md`
+- S5: `rnd/research/QUEUE.md` (A15 smoke entries); `rnd/research/coordinator/device/A15-SMOKE-DIAGNOSIS.md`
+- S6: `rnd/research/coordinator/device/A15-SMOKE-DIAGNOSIS.md` (latency table)
+- S7: `rnd/research/coordinator/device/A15-SMOKE-DIAGNOSIS.md` (correction section, 2026-10-05)
+- S8: `rnd/research/QUEUE.md` (device-day entry: APK 74 MiB, kit about 3.03 GB; model file)
+- S9: `rnd/research/coordinator/4B-LOSS-ANATOMY.md` (TL;DR)
+- S10: `rnd/research/coordinator/arms/cut4/CUT4.md` (TL;DR)
+- S11: `rnd/research/coordinator/DEVICE-DAY.md` (§2 kit file table; APK size)
+- S12: `rnd/research/coordinator/arms/cut5lite/CUT5LITE.md` (cut 5 identity and safety gates)
+- S13: `rnd/research/coordinator/device/A15-LATENCY-BUDGET.md` (latency model; projections); `rnd/research/coordinator/arms/speedpack/SPEEDPACK-L1.md`; `rnd/research/coordinator/arms/specdec/SPECDEC.md`
+- S14: `boar-eval/adapters/desktop-node/RUNNERS.md` (run-to-runner table, flags)
+- S15: `rnd/research/coordinator/arms/gatefid/GATEFID.md`
+- S16: `rnd/research/QUEUE.md` (no-network APK entries); `rnd/research/coordinator/DEVICE-DAY.md` (§9a, §10, §11)
+- S17: `rnd/research/coordinator/CUT5-LOSS-REFRESH.md`
+- S18: `rnd/research/coordinator/arms/cut7/CUT7.md` (claim build, gates, fire count); `arms/facts/FACTS-r6-SET4.md` (recall, precision); `arms/facts/FACTS-JUDGE.md` (+0.027 projection)
+- S19: `rnd/research/coordinator/CLAIM-RESULTS-cut6.md`
+- S20: `rnd/research/coordinator/arms/venuegps/VENUEGPS.md` (cause, location only 0/7); `arms/venuegps/VENUEGPS-2.md` (location + area tile 7/7, +3.65 MB)
+- S21: `rnd/research/coordinator/arms/judge2/JUDGE2.md` (local Gemma 4 judge vs Opus)
+- S22: `rnd/research/coordinator/arms/haikujudge/HAIKUJUDGE.md`; `arms/parjudge/PARJUDGE.md` (triage judge, parallel judging)
+- S23: `rnd/research/coordinator/arms/deeproute/DEEPROUTE.md`
+- S24: `rnd/research/coordinator/arms/moescreen/MOESCREEN.md`; `arms/moescreen/MOESCREEN-gemma4.md`
+- S25: `rnd/research/coordinator/BENCH-V03-SPEC.md` (§1 TL;DR, §7 timeline)
+- S26: `rnd/research/coordinator/arms/ftdata/FTDATA-REJ.md` and `arms/humansft/HUMANSFT.md` (verdict sections)
+- S27: `rnd/research/coordinator/PIPELINE-AUDIT-2026-10-06.md` (§1 anchors table)
+- S28: `rnd/research/QUEUE.md` l.695 (cut 5 rate sweep), l.711 (cut 6 final on the A15); `boar-eval/runs/<A15 device run directory>/final-cut6-v01/ (directory name withheld: it contains a person's name)` (device.json, bench.json)
+- S29: `rnd/research/coordinator/arms/detfu/DETMAX.md` l.3; `rnd/research/QUEUE.md` l.694 (cut 6 = cut 5 + DETMAX); git ancestry of 6d0b93b1 (CLAIM-REVIEW.md, Review v3.2 M1)
+- S30: `rnd/research/coordinator/arms/deeppar/DEEPPAR.md` (token-level, FAIL) and `DEEPPAR-L1.md` (judged, TRANSFER; criterion sha 1d974587…); `rnd/research/QUEUE.md` DEEPPAR-L1 entry (2026-10-07)
+- S31: `rnd/research/coordinator/arms/deepvpara/DEEPVPARA.md` + `DEEPVPARA-CATS.md` + `aggregates/*.json` (criterion sha 503c2a0c…); `rnd/research/QUEUE.md` DEEPVPARA entries (2026-10-08)
+- S32: `rnd/research/coordinator/arms/deeproute/DEEPROUTE-OOS.md`
+- S33: `rnd/research/coordinator/arms/deepthink/DEEPTHINK.md` l.1–57 (criterion `DEEPTHINK-criterion.md`, sha 1d988821…; patch eb3f464b…) + `aggregates/L2-TvsD-2seed.opus.json`, `L2-TvsD-2seed.paired_gap.json`, `cat-opus-2seed.json`, `think-T-s42.json`, `think-T-s43.json`; `rnd/research/coordinator/arms/deepthink2/DEEPTHINK2.md` l.1–47 (criterion sha 5af5b013…, patch e813da6d…); `rnd/research/QUEUE.md` l.818, l.820, l.821 (DEEPTHINK), l.823 (DEEPTHINK-2) (2026-10-08)
+- S34: `rnd/research/coordinator/EXPOSURES.md l.14 (V-para row, status column) and l.89 (Open questions, RULED 2026-10-09); rnd/research/QUEUE.md l.825 (ledger) and l.827 (ruling)`
+- S35: `rnd/research/coordinator/arms/deepthinkv02/DEEPTHINKV02.md` l.1–28 (DEEPTHINK-V02 L1, NO by rule) and l.31–39 (Addendum 1 result: two seeds, Opus; addendum sha 92121156…; s43 overwrite deviation l.39) + `aggregates/L2-TV-2seed.opus.json`, `paired_gap-TVvsD-2seed.txt`, `paired_gap-TVvsK-2seed.txt`, `gen-TV-s43.txt`; `rnd/research/QUEUE.md` l.828 (L1 NO), l.836 (one-seed interim), l.838 (s43 deviation), l.839 (two seeds) (2026-10-09)
+- S36: `rnd/research/coordinator/arms/gemmathink/GEMMATHINK.md` l.1–41 (GEMMATHINK, NO); `rnd/research/QUEUE.md` GEMMATHINK entries (2026-10-09)
+- S37: `rnd/research/coordinator/arms/dt512/DT512.md` l.1–42 (DT512, CHEAPER-PARITY; criterion sha 7fafba05…, patch f9a1979b…) + `aggregates/L2-H-2seed.opus.json`, `paired_gap-HvsT-2seed.json`, `paired_gap-HvsD-2seed.json`; `rnd/research/QUEUE.md` l.835 (frozen), l.837, l.841 (interim), l.842 (verdict) (2026-10-09)
+- S38: `rnd/research/coordinator/WEB-SWEEP-2026-10-09.md` l.6 (TL;DR item 1) and l.7 (item 2, MTP slower on the phone); third-party source (URLs in WEB-SWEEP-2026-10-09.md l.6; repository owner's handle omitted here) (their measurement, not ours); per-answer minutes from `arms/dt512/DT512.md` l.36; `rnd/research/QUEUE.md` l.833
+- S39: `rnd/research/coordinator/arms/deepfull/DEEPFULL.md` l.1–27 (DEEPFULL, NO at the slice; criterion sha c13b5679…, patch 63159edf…); `rnd/research/QUEUE.md` l.832 (frozen), l.834 (verdict) (2026-10-09)
+
+- S40: `rnd/research/coordinator/arms/dt256/DT256.md` l.1–44 (DT256, CHEAPER-LOSS; criterion sha 6d3c325c…, patch 9d91b564…) + `aggregates/L2-Q-2seed.opus.json`, `paired_gap-QvsT-2seed.json`, `paired_gap-QvsH-2seed.json`, `paired_gap-QvsD-2seed.json`; `rnd/research/QUEUE.md` l.843 (frozen), l.845 (slice), l.846 (verdict) (2026-10-09)
+- S41: `rnd/research/coordinator/arms/dt512v02/DT512V02.md` l.1–26 (DT512-V02, measurement only; criterion sha 6d91cfb4…) + `aggregates/L2-H-1seed.opus.json`, `paired_gap-HvsTV-1seed.json`, `paired_gap-HvsD-1seed.json`, `paired_gap-HvsK-1seed.json`; `rnd/research/QUEUE.md` l.847 (frozen), l.848 (result) (2026-10-09)
+- S42: `rnd/research/coordinator/arms/think4b/THINK4B.md` l.1–36 (THINK4B, NO near-lever; criterion sha d3fe2522…, 512 patch 6a977a29…) + `aggregates/L2-Z-1seed.opus.json`, `paired_gap-ZvsK-1seed.json`, `L1-YvsC-slice.haiku55-low.json`; `rnd/research/QUEUE.md` THINK4B entries (2026-10-10)
+- S43: `rnd/research/coordinator/arms/deepbo2/DEEPBO2.md` l.1–32 (DEEPBO2, NO for every selector; criterion sha c7e2232f…) + `aggregates/score-{S1,S2,oracle,s42,s43}.json`, `S1.picks.json`, `S2.picks.json`; `rnd/research/QUEUE.md` l.855 (oracle), l.857 (frozen), l.861 (S2), l.866 (verdict) (2026-10-10)
+- S44: `rnd/research/coordinator/arms/deeproute/DEEPROUTE-VPARA.md` l.1–18 (DEEPROUTE-VPARA, descriptive, no verdict rule; script `hybrid-vpara.py`); `rnd/research/QUEUE.md` l.867 (2026-10-10)
+- S45: `rnd/research/coordinator/DEEP-RESEARCH-2026-10-12.md` D-3 and `deepresearch-2026-10-12/verify/engine_speed.md` (per-answer phone time from the competitor's measured rates: 512 budget 1.9–2.8 min cool, in-app upper end ≈ 3 min, 1024 budget 3.4–5.0 min; third back-to-back request −22 % decode)
+- S46: `rnd/research/coordinator/BAR-TABLE.md` §0 (targets), §1a/§1b/§1c (rows and readings), §2 (usefulness and correctness shares), addendum 2026-10-11 (CIs with seed noise)
+- S47: `rnd/research/coordinator/EXPOSURES.md` status rows bench-v02 and V-para (writers, run and judge-pass counts, A05, hand-adjudicated items, grading-field print, git plaintext d8154b6)
+- S48: `rnd/research/coordinator/REPRO-PLAN.md` l.19 (claim kit packs public on the dataset); `rnd/research/QUEUE.md` pack publication rows (2026-10-13)
+- S49: `rnd/research/QUEUE.md` l.543 (judge.v1-med vs judge.v1, κ 1.000) and l.711 (A15 comparison judged with judge.v1-med)
+- S50: `deep/RESUME.md` addendum 2026-10-09 D6 (bmoe v0.28.0 exposes only `--no-think`; budget needs an app-side cap)
+- S51: `rnd/research/coordinator/arms/device-x6/DEVICE-X6.md` l.7 (device), l.12–20 (cut 7 run table), l.29–34 (judged table and paired phone − desktop); criterion `DEVICE-X6-criterion.md` sha ed1d7dc1…; raw data `boar-eval/runs/device-poco-x6pro/final-cut7-v01/`; `rnd/research/QUEUE.md` DEVICE-X6 row (2026-10-14 19:26)
+- S52: `rnd/research/coordinator/arms/longsession/LONGSESSION.md` §1–§6 (5 turns; criterion sha 20faabff…) and Addendum 1 (15 turns; criterion addendum sha cec210c2…), `aggregates/longsession.json`; `rnd/research/QUEUE.md` LONGSESSION rows (2026-10-14 22:21, 22:43)
+- S53: `rnd/research/coordinator/arms/pr1/PR-DESCRIPTION.md` (Summary, Verification, Chat wiring, Review fixes, Known follow-ups); `arms/pr1/PR1-REBASE.md`; `rnd/research/QUEUE.md` PR-1 rows (2026-10-14 22:31–22:54)
+- S54: `rnd/research/coordinator/CLOSING-SPRINT-2026-10-14.md` §1 (Q3 v0.3 out; Q5 PR-1/PR-2; Q7 wiring; Q11 two public repos)
+- S55: maintainer's alignment note 2026-10-15 (relayed by the owner): `rnd/research/QUEUE.md` row "Maintainer alignment received (11:00)"; reply note `handoff/REPLY-MAINTAINER-ALIGNMENT-2026-10-15.md` (traces request)
+- S56: https://github.com/UPSTREAM_REPO/boar-app/pull/85; `rnd/research/QUEUE.md` rows "PR-1 OPENED (10:10)" and "PR #85 CI green (10:49)"
+## Evidence keys (used in the checklist)
+- **E1, static network audit of the measurement APK (review).** Run with the upstream offline-proof tool `boar-app/scripts/audit-apk.py` (v0.2.0) on three BOAR Bench APKs: cut 3 (the one run on the A15), cut 4, and final cut 4. Results identical for all three: verdict **NETWORK-CAPABLE** (declares `android.permission.INTERNET`; includes OkHttp, React Native networking, WebSocket and DownloadManager classes; 19 hosts to review). **Google Play Services / Firebase: none found. Tracker SDKs: none found.** Remote code loading: none. The APK is debuggable and signed with the public Expo debug key. No location permission is declared. `aapt2 dump permissions` agrees, and `bench-app/android/app/src/main/AndroidManifest.xml` declares INTERNET.
+- **E2, upstream offline build variant.** `boar-app/plugins/withBuildVariant.js` builds an "offline" variant that strips INTERNET and network-state permissions. `rnd/bench/legal/README.md` §4 records a "BOAR offline `1928502d`" build as offline by construction (no INTERNET, no GMS or tracker classes; debug-signed). That build does not contain the measured engine (the Android UI uses the legacy path).
+- **E3, network state of the A15 run.** `device/a15-smoke-2026-10-05/device.json` and `bench.json` record no airplane-mode or network state. Earlier device runs of the older 1.5B engine were in airplane mode (`boar-eval/reports/devices-2026-10-02/android-g75.md`, `ios-q15.md`).
+- **E5, no-network builds (new in v3).** The cut 4 no-network measurement APK (built with `BENCH_NONET=1`) audits as **NO-NETWORK-BY-CONSTRUCTION**: INTERNET, network-state and similar permissions removed; network classes remain as code but cannot open sockets; still debuggable. The cut 5 and cut 5 speed-variant no-network APKs carry no INTERNET permission in their manifests (build reports). Desktop sanity runs passed on all of them. The cut 6 no-network APK ran 73/73 on the A15 (S28).
+- **E4, GrapheneOS.** No device has been tried. `rnd/research/summit/S1-memo.md` says nobody on the team has tested one.
+
+## Review log
+- Issue 13 was applied by meaning: the corrected row 3 text was kept and the wording "measurement app (BOAR Bench APK) 77 MB" from the issue was merged into it. Issue 12 was applied through the corrected row 4. Issues 1–11 and 14–21 were applied as written. The corrected rows 1–6, 8 and 12 replaced the old rows; row 7 follows issue 10; rows 2 and 8 use the text from issues 4 and 3. The UNKNOWN list was updated as the review specified. The E1–E4 evidence keys were copied (condensed) from the review so the row citations resolve.
+
+- v3.2 reviewed (independent Opus, 2026-10-07): ACCEPT WITH EDITS, 1 blocker + 3 major + 8 minor applied. Changes listed in `CLAIM-DRAFT-v3.2-changes.md`; rows 1, 2, 4, 5, 8, 12, §7 and E5 to be spot-checked by the reviewer.
+- v3.5 reviewed (independent Opus, 2026-10-09): ACCEPT WITH EDITS, 0 blockers, 3 major + 7 minor applied; see `CLAIM-REVIEW-v3.5.md`.
+- v3.6 reviewed (independent Opus, 2026-10-09 evening): ACCEPT WITH EDITS, 0 blockers, 3 major + 7 minor applied; see `CLAIM-REVIEW-v3.6.md`.
+- v3.7 reviewed (independent Opus, 2026-10-09 night): ACCEPT WITH EDITS, 0 blockers, 1 major + 6 minor + 1 nit applied; see `CLAIM-REVIEW-v3.7.md`.
+- v3.8 reviewed (independent Opus, 2026-10-10): ACCEPT WITH EDITS, 0 blockers, 1 major + 6 minor + 1 nit applied; see `CLAIM-REVIEW-v3.8.md`.
+- v3.9 reviewed (independent Opus, 2026-10-13, a parallel session): red-team adjudication (CLAIM-REDTEAM-2026-10-13) applied as an edit list; see `CLAIM-REVIEW-v3.9.md`.
+- v4.0 drafted 2026-10-15 (drafting agent, closing sprint): post-facing §0 + Appendix A, body updates; reviewed (independent opus/high, 2026-10-15): ACCEPT WITH EDITS, 2 must-fix + 9 should-fix + 5 nits, applied as v4.0.1; see `CLAIM-REVIEW-v4.0.md`. Evidence trail: `CLAIM-DRAFT-v4.0-notes.md`.
+- v4.1 drafted 2026-10-15 (drafting agent): submission vehicle = the native app; reviewed (independent Opus, 2026-10-15): ACCEPT WITH EDITS, 1 must-fix + 8 should-fix + 3 nits, applied as v4.1.1; see `CLAIM-REVIEW-v4.1.md`.
+
+## UNKNOWN
+- The submitted native app's quality, speed, memory and network behaviour on our benchmark (release build not measured; its Kotlin port of the rules, including the FACTS citation check, not measured; arithmetic goes through the model) [S55].
+- Whether the app makes any network request in use. Static audits exist (E1, E5); no dynamic capture does.
+- Whether any core path needs Google Play Services at run time. A static scan finds no Play Services code, but it has never run on a device without them.
+- Behaviour on GrapheneOS.
+- Deep-tier speed, memory and heat on any phone (the 12 GB-class POCO X6 Pro has run only the 4B claim build [S51]). Long-session quality under the app's own window (last 6 messages + summary from turn 8; turns 5–7 drop the oldest turns with no summary) was not measured: LONGSESSION passed full history [S52].
+- The v0.3 result: not produced before the 2026-10-20 deadline [S54]. It is the only planned source of a final number, and its ratios will not be directly comparable with v0.2. [S25]
+- Venue quality (gold and engine share OSM tags), tile download UX, and cities with no catalog tile [S20]. Whether Gemma's +0.11 leniency is a constant offset (two systems measured) and how a cross-family judge behaves on held-out sets. [S21]
+- Why a re-judge of cut 4 on v0.1 (0.5591, 57 items, two seeds, [S17]) differs from the cut 3 figure (0.566, [S4]) when the answers are text-identical on the 60 desktop questions; different judge sessions, not reconciled.
+- Whether the measured gains hold on a phone, since the desktop proxy does not model truncation, memory pressure or heat.
+- Deep tier + thinking on a phone (speed, memory, heat): the only phone speed figures are a third-party measurement of the same model, quantisation and engine on a 12 GB Pixel 8 Pro (4–6 tokens/s decode, ≈ 7.9 GB) [S38]; we have not measured it on any phone. The 3072-work budget was judged by Haiku on one seed only (no Opus run) [S33]. The thinking-budget curve is measured on V-para (256/512/1024/3072) and 512 on v0.2 on one seed; on v0.2, 256 is unmeasured and among thinking budgets only 1024 has two seeds. [S40] [S41]
+
+## Changelog v4.1 → v4.1.1
+- v4.1.1: the 20 edits of CLAIM-REVIEW-v4.1 applied (1 must-fix, 8 should-fix, 3 nits); reviewer verdict ACCEPT WITH EDITS
+
+## Changelog v4.0.1 → v4.1 (2026-10-15; one new fact; no new measurement, 0 judge calls)
+- v4.1: submission vehicle = the app maintainer's Kotlin native app (two APKs; rules ported; no calculator path; its score pending, traces requested); every number labelled as the TypeScript engine's; PR #85 = reference implementation. §0 ("What ships" → "What is submitted" + "Reference implementation"; "On a phone"; bar paragraph; longer sessions and A15 sentence trimmed; research notes link), Appendix A header, §4 rows 1, 3, 5, 12, 14 and the Android UI note, §7, UNKNOWN, Sources S55–S56, review log.
+
+## Changelog v4.0 → v4.0.1
+- v4.0.1: the 26 edits of CLAIM-REVIEW-v4.0 applied (2 must-fix, 9 should-fix, 5 nits); reviewer verdict ACCEPT WITH EDITS
+
+## Changelog v3.9 → v4.0 (2026-10-15; closing sprint; no new measurement, 0 judge calls)
+- New §0 post text (873 words) + Appendix A (A1 quality, A2 phones, A3 longer sessions); "Changes vs v3.9" block at the top; header and title.
+- §1: v0.3 timing sentence (out before the deadline); device bullet adds cut 7 on the POCO X6 Pro (Haiku judge, not comparable in level with the Opus figures); "Not yet done" updated (repos, PR-1, deep tier on a phone).
+- §4: rows 1, 2, 4, 8 (status "Not shown (judgement call; measured on two phones)"), 12 updated with S51; row 15 wording; Android UI note gets the PR-1 wiring update (S53).
+- §6: 12 GB-class phone row done for the 4B; Android UI row points to PR-1. §7: v0.3 out (S54); 12 GB phone and cut 7 on a phone ticked; wiring and repos lines updated. UNKNOWN: deep tier on any phone; the app's own history window unmeasured (S52); v0.3 not produced.
+- Sources S51–S54; S28 run-directory name, S38 third-party URL handle and the issuer's name in S34/S47 neutralised.
+
+## Changelog v3.8 → v3.9 (2026-10-13; red-team adjudication by the independent Opus reviewer; no new measurement)
+- §1: v0.2 relabelled formerly held-out (writers, exposure dates, run counts); V-para authorship and the grading-field print disclosed; cut 6 verdict reuse disclosed; phone parity reworded (judge.v1-med, one phone); stale airplane-mode sentence corrected; new bullet: the pre-registered raw rule is met by the deep tier (desktop, development-style) and not by the 4B claim build; floor-removed target not met; win rate 0.
+- §2: judge.v1-med exception; v0.2 exposure list; headline-metric change listed under departures. §3: cut 6 row notes verdict reuse.
+- §4: row 3 APK bytes; row 7 qualified with correctness and usefulness shares; row 9 public packs; row 12 measurement app vs user app; row 14 raw-rule sentence; row 15 location path not on a phone. §5: V-para run counts.
+- §6: seed-noise CIs for the deep-tier rows in BAR-TABLE's addendum (T, H, TV, H on v0.2); H raw 0.553; v0.2 1024 sentence: selection and raw rule; bar reading aligned with BAR-TABLE (win rate reported, not gated); bmoe has no thinking-budget setting; bmoe parity untested with thinking; phone time 1.9–2.8 min cool (DEEP-RESEARCH D-3); 12 GB phone wording. §7: 12 GB phone line; phone time.
+- Sources S45–S50; header, title line and review log.
+
+## Changelog v3.7 → v3.8 (2026-10-10 midday; one row + two §6 sentences; independent review 2026-10-10 ACCEPT WITH EDITS, 1 major + 6 minor + 1 nit applied)
+- Header: v3.8 line prepended.
+- §3 "Levers that failed": thinking 4B on the fast path (THINK4B: 256 NO at the slice; 512 +0.026 (−0.013…+0.068) raw, one seed, ×3.7 time, not adopted); S42.
+- §6 deep-tier row: best-of-2 sentence (DEEPBO2: oracle +0.038, no judge-blind selector captures it; device plan = one deep answer, no verifier pass); S43.
+- §6 deep-tier row: V-para routing sentence after the DEEPROUTE-OOS sentence (R2 → deep + thinking 512: 37 % routed, 34–43 % of the gain captured, hybrid raw 0.465/0.467 vs 0.413) and a pointer beside the v0.1 routing figure; S44.
+- Review edits applied (CLAIM-REVIEW-v3.8.md): levers row findings 1–6 and 8 (phone-time arithmetic from the measured A15 decode rate, one-seed stop under the frozen rule, slice +0.091 vs full +0.026, time base = instruct 4B on the same backend, CIs and statistic named, 256 slice = hardest items and Haiku only, instruct 4B never thinks); finding 7 via the S44 sentence.
+
+## Changelog v3.6 → v3.7 (2026-10-09 night; independent review 2026-10-09 night ACCEPT WITH EDITS, 1 major + 6 minor + 1 nit applied)
+- Line 1: v3.7 header.
+- §6 deep-tier row: 256-work budget sentence and the thinking-budget curve 0 → 256 → 512 → 1024 → 3072 (knee at 512; 256 = CHEAPER-LOSS, fallback only); S40.
+- §6 deep-tier row: "512 was measured on V-para only; the v0.2 figure above (0.514) is at 1024" replaced by the v0.2 512-token result (seed 42, floor removed 0.508 (0.467–0.550), win 0 of 110, −0.005 vs 1024, bar reading not met); S41.
+- §2 Ladders: v0.2 rung adds "(0.51 at 512, one seed)"; [S41] tag added; V-para "(0.44 at a 512-work budget)" kept.
+- UNKNOWN: DT256 "no result yet" clause replaced by the budget-curve coverage sentence.
+- Sources: S40, S41 added.
+- Review edits applied (CLAIM-REVIEW-v3.7.md): l.189 findings 1-6 ("scores lower" with seed split, paired raw + two-level labels, 0.349–0.426 rounding, 63 % base named, "gains stop at 512" with 512 vs 1024 CI, seed-43 trigger reason); l.277 finding 7 ("among thinking budgets"); l.72 finding 8 (CI 0.467–0.550).
+
+## Changelog v3.5.1 → v3.6 (2026-10-09 evening; independent review 2026-10-09 ACCEPT WITH EDITS, 3 major + 7 minor applied)
+- Header: v3.6 line prepended.
+- Review edits applied (CLAIM-REVIEW-v3.6.md): l.189 (findings 1, 3, 4, 5, 6, 8, 10), l.72 (2), l.199 (3, 7), l.124 (9), l.274 (10); EXPOSURES.md l.13 aligned to the DEEPTHINK-V02 row.
+- §6 deep-tier row: the v3.5.1 v0.2 sentence (Haiku triage only) replaced by the two-seed Opus addendum result (floor removed 0.514 (0.475–0.554), wins 0/110 ×2, raw 0.612; +0.045 over deep, +0.100 over the 4B claim run; point above 0.50, bar reading not met; development data); S35 updated. The misplaced S35 src comment after the S36 sentence now points at GEMMATHINK.
+- §6 deep-tier row: DT512 passage (512-token thinking budget = 1024 on V-para at 55 % of the desktop time; local engine recommendation, not in the claim build); S37.
+- §6 deep-tier row: competitor's public 12 GB Pixel 8 Pro measurement (4–6 tok/s decode, 32–36 tok/s prefill, ≈ 7.9 GB) and the derived 2–3 / 3.5–5 min per thinking answer, marked as our arithmetic on their rates; S38.
+- §3 "Levers that failed": long-answer persona on the deep tier (DEEPFULL, −0.066 / −0.013, slice, Haiku, not pursued); S39.
+- §2 Ladders: V-para rungs add "0.44 at a 512-work budget"; v0.2 rungs 4B 0.39 → deep 0.46 → deep + thinking 0.51 added.
+- §7: deep-tier item names deep + 512-token thinking as the recommended configuration; phone measurement still pending.
+- Sources: S35 updated; S37, S38, S39 added. UNKNOWN: the v0.2-thinking bullet replaced by one on the phone speed being a third-party measurement.
+- Headline (section 1), all existing claim numbers and the "AI-reviewed, not clinically reviewed" caveat unchanged; the current decision is still 4B only.
+
+## Changelog v3.5 → v3.5.1 (2026-10-09; two sentences, reviewed with v3.6)
+- §6 deep-tier row: GEMMATHINK sentence (alternative 26B deep model + thinking, faster, −0.028 raw, not adopted); S36.
+- §6 deep-tier row: the DEEPTHINK-V02 placeholder replaced by one sentence (v0.2 thinking arm, Haiku triage only, +0.029 below the +0.03 threshold, no Opus number); S35. To be covered by the next independent review together with any later change.
+
+## Changelog v3.4 → v3.5 (2026-10-09; independent review ACCEPT WITH EDITS, applied)
+- §1, §2 (Frozen), §5: V-para status ruling — held-out for the 4B claim runs (cut 3/6), development-style for everything measured after 2026-10-06; wording aligned (was "blind set" / "kept blind" / "development data" / "burnt" across docs); S34 (EXPOSURES ledger).
+- Header: v3.5 line prepended.
+- Section 2 Ladders: one sentence pointing to the deep-tier V-para rungs in section 6.
+- Section 5 V-para caveat: run counts updated (DEEPTHINK 2 runs, DEEPTHINK-2 1 run); S33 tag.
+- Section 6 deep-tier row: "With thinking" passage (V-para, 2 seeds, Opus: scales, paired gain, bar distance, cost, 3072 budget negative, per-category counts) and a DEEPTHINK-V02 placeholder comment.
+- Section 7: deep-tier item extended (deep + thinking best measured; ≈ 2.4 min per answer on the desktop proxy).
+- Sources: S33. UNKNOWN: deep + thinking on v0.2 and on a phone.
+- Headline (section 1), all existing numbers and the "AI-reviewed, not clinically reviewed" caveat unchanged; the current decision is still 4B only.
+- Review edits applied (CLAIM-REVIEW-v3.5.md): l.188 (findings 1, 5, 6, 7, 8), l.72 (2), l.174 (3), l.198 (4), l.11 (9), l.244 (10); EXPOSURES.md l.3 and l.93 aligned to the ruling.
+
+## Changelog v3.3 → v3.4 (2026-10-08; independent review ACCEPT WITH EDITS, applied)
+- Section 6 deep-tier row: held-out-style results (V-para and v0.2, 2 seeds, Opus), bar distance, category split, desktop latency, out-of-sample routing; sources S31, S32.
+- Section 5: new bullet, V-para is development data for the deep tier after 4 logged runs. Section 7: deep-tier device item.
+- Headline (section 1), all existing numbers and the "AI-reviewed, not clinically reviewed" caveat unchanged; the current decision is still 4B only.
+
+## Changelog v3.2 → v3.3 (2026-10-07 night; independent review ACCEPT WITH EDITS, applied)
+- Section 6 deep-tier row: engine-parity sentence (bmoe vs llama-server, DEEPPAR / DEEPPAR-L1) and source S30. No other change; headline numbers unchanged.
+
+## Changelog v3.1 → v3.2
+- Headline numbers, intervals, three-scale tables and win rates: unchanged. Added the cut 6 s42 floor-removed 0.397 beside 0.389 [S27].
+- Claim build is cut 7 (cut 6 + facts tier); lineage table extended with cut 6 and cut 7; scope line updated (TL;DR, section 3).
+- Venues: new row 15; caveat rewritten to "0/7 in the claim run; 7/7 with device location and the user's area tile", with the OSM-tag caveat.
+- Single-family caveat now quantified (local Gemma judge: +0.11 level, 86–88 % same winner, κ 0.32/0.55); triage-judge method note (Haiku, parallel).
+- Section 6: v0.3 claim run, deep tier on a 12 GB device with routing numbers, fine-tune data line closed. Levers table: MoE plateau and fine-tune data rows.
+- Section 7: v0.3 timeline replaces the cut 5 re-measure decision; area-tile download item. Sources S18–S27; four UNKNOWN items.
+
+## Changelog v2 → v3 (condensed in v3.2)
+- Unchanged: headline numbers, intervals, three-scale tables, ladders, the "AI-reviewed, not clinically reviewed" caveat.
+- Added: engine lineage cut 3 → 4 → 5; runner fidelity and reproducibility (section 2); no-network APKs and E5 (rows 4, 5; row 5 to "Partly met (static, by construction)"); calibrated phone-speed projections replacing "about 40–85 s"; one "levers that failed" table with speed levers and the deep tier; section 7, sources S12–S17, three UNKNOWN items.

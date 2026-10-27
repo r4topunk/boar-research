@@ -1,0 +1,37 @@
+<|im_start|>system
+You are Boar, a concise offline research assistant. Answer in 2-3 short, direct sentences or a brief paragraph, no preamble. Do not default to a bulleted list or a single takeaway sentence followed by three bullet points — use bullets only when the content is genuinely a list of distinct items. Use the context below when relevant, and cite a source you used by its number, like [1] or [2]. If the context doesn't cover the question, say so and answer from general knowledge. You are BOAR, an offline AI research app running on this phone; "Boar" is the app's name, never the animal, so never describe yourself as one. You have no ability to control real-world devices or take physical actions — no alarms, lights, thermostats, timers, or any other device or system. You can only respond with text. Treat greetings and casual small talk conversationally and briefly, not as a command or task. Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you don't actually have the ability to do.
+
+Context:
+[1] ethereum.org: Post-quantum cryptography on Ethereum
+Why post-quantum cryptography matters: Ethereum relies on several forms of cryptography to keep the network secure and protect user funds. The most important are:
+
+[2] ethereum.org: A more secure Ethereum
+Quantum resistance: Ethereum uses cryptography to keep the network secure and protect user funds. **No quantum computer can break Ethereum's cryptography today.** The hardware required does not yet exist at scale.
+
+[3] Ethereum EIPs/ERCs: ERC-7524: PLUME Signature in Wallets
+Security Considerations: Note that in the far future, once quantum computers can break ECDSA keypair security, most Ethereum keypairs will be broken, but migration to a quantum-resistant keypair in advance will keep active funds safe.
+
+[4] Ethereum EIPs/ERCs: EIP-8202: Scheme-Agile Transactions
+Security Considerations > Quantum migration timing: Any secp256k1 address whose public key has already been revealed on-chain remains vulnerable once ECDSA can be broken. Users of `SCHEME_EPHEMERAL_K1` are protected against retrospective key recovery: even after a quantum computer exists, previously used ephemeral keys are useless because the nonce has advanced.
+
+[5] ethereum.org: Post-quantum cryptography on Ethereum
+Four areas vulnerable to quantum attack > 3. This is what protects your funds. **The approach**: Rather than a single protocol-wide migration, Ethereum plans to use account abstraction (specifically EIP-8141, being considered for Hegotá in second half of 2026) to give users **signature agility**.<|im_end|>
+<|im_start|>user
+How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?
+
+(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+Ethereum currently relies on the fact that no quantum computer exists at scale to break ECDSA today, meaning funds are safe from immediate quantum attacks [2]. In the future, the network plans to use account abstraction (specifically EIP-8141) to enable signature agility, allowing users to migrate to
+
+generation: 64 tokens, 0.111 s/token (9.001 tok/s)
+compute: 56.8% CPU occupancy (0.2524 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 637 tokens, 20.230 s (31.5 tok/s) | model load 9.238 s | TTFT 29.469 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 7252.8 MiB (113.32 MiB/token), decode 0.111 s/token (compute 0.053 + cache mgmt 0.003 + flash I/O 0.238 s/token, 475 MiB/s)
+moe-cache: 38.3% hit, resident 1499.5 MiB
+moe-cache: 19658 evictions, 12854 re-reads (200.8/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.055 s/token (flash reads overlapped with FFN compute)

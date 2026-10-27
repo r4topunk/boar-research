@@ -1,0 +1,17 @@
+# DEEPWIKI: a larger corpus (English Wikipedia top-100k full articles) for the deep thinking tier (frozen 2026-10-10 16:2x, coordinator; r4to's standing instruction: run autonomously)
+
+Question: the knowledge packs still add ≈ +[competitor score removed] to the deep tier with thinking (DEEPNORAG), the 35B reads context better than the 4B (DEEPREAD), and the one competitor lever moving this week is corpus size (a competitor team 1.7.0: full-text Wikipedia on device, their own deep-detail test 2.84 → 5.35; sweep 10-10). The enwiki top-100k pack (2.54 GB, 98,389 full articles, lead vectors for the top 50k) was built on 10-01 and **rejected for the 4B** (enwiki-top100k v1: key-in-context +3 vs bar +6, gate failures from displaced sources, retrieval 2–3× slower). Does the same pack help the deep thinking tier on V-para, where the reader is stronger and the route is always deep?
+
+## Fixed inputs
+- Arm **W**: the dt512 tree and runner unchanged (cut 6 824e0b35… + deepthink eb3f464b… + dt512 f9a1979b…; thinking 512, succinct, ctx 400, k = 6; `--deep-model`, `--places` kit-vexact, detector v3b, `--timeout-ms 600000`), requests = H's (DT512) with one more kit entry: `{"id":"boar-wiki-en-top100k","sha256":"9123b3720abd847291e2502d7529419ca86c1fc4cf111e9b449a2be06fc694e7"}` (mini `<runner>/shared-data/packs/boar-wiki-en-top100k.sqlite`, 2,542,215,168 bytes; manifest: embedTop 50,000 lead vectors, 4.0 M chunks, 3.2 M indexed). `config.arm` stays `dt512` (same tree); the arm is identified by `config.kit` and the run id prefix `dw-W-vpara`. Requests: smoke `dw-smoke-W` (2 v0.1 items), slice `dw-W-vpara-s42-slice` (signal20-vpara 6e707734…), shas in the QUEUE entry.
+- Control **H** = DT512 (Haiku slice rows for L1; Opus s42/s43 for L2), D and K for the ladder. The only difference between W and H is the extra pack (same seed, same items, same engine).
+- Script-only scoped exception as DT512; exposures logged.
+## Stages and rules (strict; SLICE20; near-miss rule)
+1. Smoke: the pack resolves (sha check passes, no `kit pack` failure), 2/2 `generate:deep-thinking`, 1 ≤ reasoning ≤ 522, 0 errors, non-empty answers; record retrieval time (`timing.retrievalMs` or the adapter's equivalent) vs H's smoke. Else FAIL-INFRA.
+2. Slice 20 (seed 42), Haiku 5.5-low N = 4 paired vs H's Haiku slice rows: **continue** if wins ≥ H + 3 OR Δ ≥ +0.03; near-miss (within 0.01) → Opus N = 4 on the 20 ids for W and H's slice traces (≤ 80 calls). Else **NO** (corpus size closed for the deep tier on the desktop). Also report: how many of the 20 answers cite a wiki source (counts from the traces' source ids/titles via script), retrieval p50, total p50.
+3. Full 51 s42 Haiku vs H → same rule → Opus N = 4 s42 → s43 → two-seed scales beside H, D, K. Verdict: **BETTER** (two-seed Δ vs H CI low > 0), else **NO**. A retrieval p50 > 3× H's is reported as a device-cost caveat, not a stop.
+- One generation per seed and stage; no rerun except an infrastructure error before the first token. No pack rebuild or re-embedding within this arm.
+## Stop rules and budget
+Disk ≥ 25 GiB (30 now; the pack is already on the mini), swap ≤ 8 GB, heavy lock, one MoE server, detector untouched. Mini: smoke ≤ 15 min, slice ≤ 1 h, full ≤ 2.5 h per seed. Haiku ≤ 40 + 102 (+ 40 near-miss); Opus ≤ 204 after stage 3 (+ ≤ 80 near-miss).
+## Outputs
+`arms/deepwiki/DEEPWIKI.md` (≤ 60 lines; cites this sha), `aggregates/`, `arm.conf`; traces/judgments in `blind/V-para/runs-deepwiki/`; smoke in `boar-eval/runs/kiln/deepwiki/`. QUEUE entry and EXPOSURES row by the coordinator.

@@ -1,0 +1,166 @@
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/nearestPlace.test.ts be-0cfd4a77-pcity/src/rag/nearestPlace.test.ts
+--- be-0cfd4a77-bounty1/src/rag/nearestPlace.test.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-pcity/src/rag/nearestPlace.test.ts	2026-10-03 18:24:20
+@@ -0,0 +1,35 @@
++import { describe, expect, it } from "vitest";
++import { nearestPlaceIn } from "./poiPack";
++import { formatPlacesAnswer } from "../routing/geo";
++
++const rows = [
++  { name: "Tokyo", country: "Japan", lat: 35.6895, lon: 139.69171, population: 9733276 },
++  { name: "Shibuya", country: "Japan", lat: 35.664, lon: 139.698, population: 224533 },
++  { name: "Yokohama", country: "Japan", lat: 35.43333, lon: 139.65, population: 3777491 },
++  { name: "Hamlet", country: "Japan", lat: 36.5, lon: 139.0, population: 300 },
++];
++// A fake gazetteer: the bounding-box query, as SQLite would answer it.
++const db = {
++  getAllAsync: async (_sql: string, [la0, la1, lo0, lo1]: number[]) => rows.filter((r) => r.lat >= la0 && r.lat <= la1 && r.lon >= lo0 && r.lon <= lo1),
++  getFirstAsync: async () => null,
++  execAsync: async () => {},
++  runAsync: async () => ({}),
++} as any;
++
++describe("nearestPlaceIn (GPS venue header names the city)", () => {
++  it("a fix in Shibuya names Tokyo (most populous 100k+ within 25 km), not the ward", async () => {
++    expect(await nearestPlaceIn(db, { lat: 35.659, lon: 139.7 })).toEqual({ name: "Tokyo", country: "Japan" });
++  });
++  it("in the countryside: the nearest place within 15 km, else null", async () => {
++    expect(await nearestPlaceIn(db, { lat: 36.51, lon: 139.0 })).toEqual({ name: "Hamlet", country: "Japan" });
++    expect(await nearestPlaceIn(db, { lat: 37.5, lon: 139.0 })).toBeNull();
++  });
++});
++
++describe("formatPlacesAnswer header", () => {
++  const intent = { lang: "en", diet: ["vegan"], near: { kind: "device" } } as any;
++  it("near you in <city>, <country> when known; plain 'near you' otherwise", () => {
++    expect(formatPlacesAnswer({ intent, places: [], areaLabel: "near you", byDistance: true, nearCity: { name: "Tokyo", country: "Japan" } })).toMatch(/^Vegan places near you in Tokyo, Japan, /);
++    expect(formatPlacesAnswer({ intent, places: [], areaLabel: "near you", byDistance: true })).toMatch(/^Vegan places near you, /);
++  });
++});
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/poiPack.ts be-0cfd4a77-pcity/src/rag/poiPack.ts
+--- be-0cfd4a77-bounty1/src/rag/poiPack.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-pcity/src/rag/poiPack.ts	2026-10-03 18:23:42
+@@ -279,6 +279,24 @@
+   return { name: s };
+ }
+ 
++/**
++ * The city a point is in, from the world gazetteer, for "near you in Tokyo" (Compass V-exact: a GPS venue answer
++ * must name the city). The most populous place of 100k+ within 25 km, so a fix in Shibuya says Tokyo, not the ward;
++ * else the nearest place within 15 km; null when none.
++ */
++export async function nearestPlaceIn(db: PackSql, p: { lat: number; lon: number }): Promise<{ name: string; country?: string } | null> {
++  const dLat = 0.25;
++  const dLon = 0.25 / Math.max(0.2, Math.cos((p.lat * Math.PI) / 180));
++  const rows = await db.getAllAsync<{ name: string; country: string | null; lat: number; lon: number; population: number }>(
++    "SELECT name, country, lat, lon, population FROM places WHERE lat BETWEEN ? AND ? AND lon BETWEEN ? AND ?",
++    [p.lat - dLat, p.lat + dLat, p.lon - dLon, p.lon + dLon]
++  );
++  const near = rows.map((r) => ({ ...r, d: distanceM(p, r) }));
++  const city = near.filter((r) => r.population >= 100000 && r.d <= 25000).sort((a, b) => b.population - a.population)[0];
++  const best = city ?? near.filter((r) => r.d <= 15000).sort((a, b) => a.d - b.d)[0];
++  return best ? { name: best.name, ...(best.country ? { country: best.country } : {}) } : null;
++}
++
+ export async function resolvePlaceIn(db: PackSql, name: string): Promise<PlaceMatch | null> {
+   const { name: clean, country } = cleanPlaceName(name);
+   if (!clean) return null;
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/pois.ts be-0cfd4a77-pcity/src/rag/pois.ts
+--- be-0cfd4a77-bounty1/src/rag/pois.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-pcity/src/rag/pois.ts	2026-10-03 18:23:42
+@@ -8,7 +8,7 @@
+ import * as FileSystem from "expo-file-system/legacy";
+ import type { CatalogModel } from "../models/manifest";
+ import { onAssetInstalled, registerAssetProvider, unregisterAssetProvider } from "../models/assetRegistry";
+-import { PoiPack, resolvePlaceIn, searchPlacesIn, searchPoiPacks, type PlaceSuggestion, type PoiArea } from "./poiPack";
++import { PoiPack, nearestPlaceIn, resolvePlaceIn, searchPlacesIn, searchPoiPacks, type PlaceSuggestion, type PoiArea } from "./poiPack";
+ import { WORLD_PLACES_ID, tileBbox, tileEntry, tileIdsFor, type PoiTile } from "./poiRegions";
+ import type { PlaceMatch, PoiQuery, PoiSearchResult } from "./pois.types";
+ import type { PackSql } from "./wikiPack";
+@@ -138,7 +138,11 @@
+ registerResetHook("forget", "places", forgetAllPoiPacks);
+ 
+ export async function searchPois(q: PoiQuery): Promise<PoiSearchResult> {
+-  return searchPoiPacks(await installedPoiAreas(), q);
++  const [found, near] = await Promise.all([
++    searchPoiPacks(await installedPoiAreas(), q),
++    gazetteer().then((db) => (db ? nearestPlaceIn(db, q.center) : null)).catch(() => null),
++  ]);
++  return near ? { ...found, nearPlace: near } : found;
+ }
+ 
+ function gazetteer(): Promise<PackSql | null> {
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/pois.types.ts be-0cfd4a77-pcity/src/rag/pois.types.ts
+--- be-0cfd4a77-bounty1/src/rag/pois.types.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-pcity/src/rag/pois.types.ts	2026-10-03 18:23:42
+@@ -76,6 +76,8 @@
+   coverage: "none" | "partial" | "full";
+   /** Id of the pack that answered. */
+   region?: string;
++  /** The gazetteer's city for the search center ("near you in Tokyo"), when the gazetteer is installed. */
++  nearPlace?: { name: string; country?: string };
+   /** How the list is ordered, in words, for "best" questions. */
+   criterion: string;
+   timingsMs: { search: number };
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/routing/answer.ts be-0cfd4a77-pcity/src/routing/answer.ts
+--- be-0cfd4a77-bounty1/src/routing/answer.ts	2026-10-03 14:57:44
++++ be-0cfd4a77-pcity/src/routing/answer.ts	2026-10-03 18:23:42
+@@ -588,7 +588,7 @@
+         truncated: found.pois.length >= PLACES_LIMIT,
+         attribution,
+       });
+-      reasonCodes.push(`places:${places.length}`, `places:coverage-${found.coverage}`, ...(found.region ? [`places:region-${found.region}`] : []));
++      reasonCodes.push(`places:${places.length}`, `places:coverage-${found.coverage}`, ...(found.region ? [`places:region-${found.region}`] : []), ...(byDistance && found.nearPlace ? ["places:near-city"] : []));
+       const text = formatPlacesAnswer({
+         intent,
+         places,
+@@ -596,6 +596,7 @@
+         byDistance,
+         radiusM: found.radiusUsedM,
+         osmDate: attribution.find((a) => a.source === "osm")?.date,
++        nearCity: byDistance ? found.nearPlace ?? null : null,
+       });
+       const r = receipt(retrievalMs);
+       emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r });
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/routing/geo.ts be-0cfd4a77-pcity/src/routing/geo.ts
+--- be-0cfd4a77-bounty1/src/routing/geo.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-pcity/src/routing/geo.ts	2026-10-03 18:24:01
+@@ -45,6 +45,8 @@
+   coverage: "none" | "partial" | "full";
+   region?: string;
+   timingsMs?: { search: number };
++  /** The gazetteer's city for the search center (src/rag/pois.ts), named in a "near you" header. */
++  nearPlace?: { name: string; country?: string };
+ }
+ 
+ export interface GeoPoint {
+@@ -305,10 +307,12 @@
+   radiusM?: number;
+   /** OpenStreetMap extract date, for the provenance line. */
+   osmDate?: string;
++  /** Near the device: the gazetteer's city for the fix, named in the header ("near you in Tokyo, Japan"). */
++  nearCity?: { name: string; country?: string } | null;
+ }
+ 
+ /** Text answer (also what screen readers and "copy" get). Every name comes from `places`. */
+-export function formatPlacesAnswer({ intent, places, areaLabel, byDistance, radiusM, osmDate }: PlacesAnswerInput): string {
++export function formatPlacesAnswer({ intent, places, areaLabel, byDistance, radiusM, osmDate, nearCity }: PlacesAnswerInput): string {
+   const pt = intent.lang === "pt";
+   const L = pt ? "pt" : "en";
+   const dietWords = intent.diet.map((d) => DIET_LABEL[L][d]).join(pt ? " e " : " and ");
+@@ -316,7 +320,14 @@
+   const guide = places.filter((p) => !listed.includes(p));
+ 
+   const what = pt ? `Lugares${dietWords ? ` com opção ${dietWords}` : " para comer"}` : `${dietWords ? `${dietWords[0].toUpperCase()}${dietWords.slice(1)} places` : "Places to eat"}`;
+-  const where = byDistance ? (pt ? "perto de você" : "near you") : pt ? `em ${areaLabel}` : `in ${areaLabel}`;
++  const city = nearCity ? `${nearCity.name}${nearCity.country ? `, ${nearCity.country}` : ""}` : "";
++  const where = byDistance
++    ? pt
++      ? `perto de você${city ? ` (${city})` : ""}`
++      : `near you${city ? ` in ${city}` : ""}`
++    : pt
++      ? `em ${areaLabel}`
++      : `in ${areaLabel}`;
+   const order = intent.diet.length
+     ? byDistance
+       ? pt

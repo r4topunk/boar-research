@@ -1,0 +1,251 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf1..2c977646 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -489,6 +489,12 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /**
++   * VITALADD (eval-only, default off): on the deep tier, a pack used additively. The curated retrieval leaves it out,
++   * then up to `k` of its chunks are appended after grounding (same onSubject/health filters), never replacing one.
++   * `pool` (default k): candidates retrieved from the pack, ranked by compression relevance before grounding.
++   */
++  addPack?: { id: string; k: number; pool?: number } | null;
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..2895aff5 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -147,6 +147,23 @@ async function openPackFile(pack: CatalogModel, uri: string, started: number, si
+   return db;
+ }
+ 
++/**
++ * VITALADD: restricts a search to some packs (`only`) or leaves some out (`exclude`), by pack id; a pack file
++ * outside the catalog (corpus/<name>.sqlite, id "local-<name>") also answers to <name>. Absent = every pack.
++ */
++export interface PackFilter {
++  only?: string[];
++  exclude?: string[];
++  /** Also carry a format-1 pack's `source` column to the chunk (format-1 chunks have none otherwise). */
++  source?: boolean;
++}
++const packIds = (p: CatalogModel) => [p.id, p.id.replace(/^local-/, "")];
++export function packAllowed(p: CatalogModel, f?: PackFilter): boolean {
++  if (!f) return true;
++  if (f.only && !packIds(p).some((id) => f.only!.includes(id))) return false;
++  return !(f.exclude && packIds(p).some((id) => f.exclude!.includes(id)));
++}
++
+ export interface WikiPackResult {
+   packId: string;
+   pack: WikiPack;
+@@ -155,14 +172,16 @@ export interface WikiPackResult {
+ }
+ 
+ /** Searches every installed format-2 pack (a failing pack is skipped). */
+-export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}): Promise<WikiPackResult[]> {
++export async function searchWikiPacks(query: string, opts: PackSearchOptions & { packs?: PackFilter } = {}): Promise<WikiPackResult[]> {
+   const out: WikiPackResult[] = [];
++  const { packs: filter, ...search } = opts;
+   for (const pack of await knowledgePacks()) {
++    if (!packAllowed(pack, filter)) continue;
+     try {
+       if (!(await openPack(pack))) continue;
+       const wp = wikiPacks.get(pack.id);
+       if (!wp) continue;
+-      const { hits, stems } = await wp.searchDetailed(query, opts);
++      const { hits, stems } = await wp.searchDetailed(query, search);
+       out.push({ packId: pack.id, pack: wp, hits, stems });
+     } catch (e: any) {
+       console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+@@ -219,14 +238,14 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+   };
+ }
+ 
+-type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
++type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number; source?: string };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+ export async function searchPacks(
+   query: string,
+   queryVec: Float32Array,
+   limit: number,
+-  opts: { explain?: boolean } = {}
++  opts: { explain?: boolean; packs?: PackFilter } = {}
+ ): Promise<{ lexical: RetrievedChunk[]; semantic: RetrievedChunk[] }> {
+   const lexicalQuery = buildLexicalQuery(query);
+   const lexical: RetrievedChunk[] = [];
+@@ -234,11 +253,12 @@ export async function searchPacks(
+   if (!lexicalQuery) return { lexical, semantic };
+ 
+   for (const pack of await knowledgePacks()) {
++    if (!packAllowed(pack, opts.packs)) continue;
+     try {
+       const db = await openPack(pack);
+       if (!db || wikiPacks.has(pack.id)) continue;
+       const rows = await db.getAllAsync<PackRow>(
+-        `SELECT c.id, c.title, c.body, c.vec, bm25(chunks_fts) AS rank
++        `SELECT c.id, c.title, c.body, c.vec, bm25(chunks_fts) AS rank${opts.packs?.source ? ", c.source" : ""}
+          FROM chunks_fts f JOIN chunks c ON c.id = f.rowid
+          WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?`,
+         [lexicalQuery.match, PACK_CANDIDATES]
+@@ -251,6 +271,7 @@ export async function searchPacks(
+         body: r.body,
+         score,
+         matchType,
++        ...(opts.packs?.source && typeof r.source === "string" ? { source: r.source } : {}),
+       });
+       let lex = filterByTermCoverage(rows, lexicalQuery.terms).slice(0, limit).map((r) => toChunk(r, -r.rank, "lexical"));
+       const scored = rows.map((r) => toChunk(r, cosineSimilarityInt8(queryVec, r.vec), "semantic"));
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..0d31047f 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -10,7 +10,7 @@ import {
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+-import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
++import { packHitToChunk, searchPacks, searchWikiPacks, type PackFilter } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+ import { EXPLAIN_INTENT } from "./explain";
+@@ -115,7 +115,7 @@ async function semanticSearch(queryVec: Float32Array, limit: number): Promise<Re
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packs?: PackFilter } = {}
+ ): Promise<RetrievedChunk[]> {
+   const main = await retrieveOne(query, topK, opts);
+   // A Portuguese question against English sources: search again with the English names it mentions
+@@ -130,6 +130,7 @@ export async function retrieve(
+   // The names alone ("Earthquake") don't say the question asks what to do; the question does.
+   const found = await retrieveOne(names.join(" "), topK, {
+     includeWikiPacks: opts.includeWikiPacks,
++    ...(opts.packs ? { packs: opts.packs } : {}),
+     titles: names,
+     action: ACTION_INTENT.test(query),
+     explain: EXPLAIN_INTENT.test(query),
+@@ -161,17 +162,20 @@ export function isDisambiguation(c: { title: string; body: string }): boolean {
+ async function retrieveOne(
+   query: string,
+   topK: number,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean }
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean; packs?: PackFilter }
+ ): Promise<RetrievedChunk[]> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
++  // VITALADD: a pack-only search (opts.packs.only) skips the built-in knowledge base.
++  const kb = !opts.packs?.only;
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+-    lexicalSearch(query, queryVec, topK * 2),
+-    semanticSearch(queryVec, topK * 2),
++    kb ? lexicalSearch(query, queryVec, topK * 2) : Promise.resolve([]),
++    kb ? semanticSearch(queryVec, topK * 2) : Promise.resolve([]),
+     // Downloaded knowledge packs (src/rag/packs.ts); a failing pack is skipped, never fatal.
+-    searchPacks(query, queryVec, topK * 2, opts.explain !== undefined ? { explain: opts.explain } : {}).catch(() => ({ lexical: [], semantic: [] })),
++    searchPacks(query, queryVec, topK * 2, { ...(opts.explain !== undefined ? { explain: opts.explain } : {}), ...(opts.packs ? { packs: opts.packs } : {}) }).catch(() => ({ lexical: [], semantic: [] })),
+     includeWikiPacks
+       ? searchWikiPacks(query, {
++          ...(opts.packs ? { packs: opts.packs } : {}),
+           k: topK,
+           queryVec,
+           ...(titles ? { titles } : {}),
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 35877fca..651a982c 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -118,6 +118,7 @@ import type {
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import type { PackFilter } from "../rag/packs";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+ import type { MemoryFit } from "../inference/memoryFit";
+@@ -184,7 +185,8 @@ export interface AnswerEngine {
+ 
+ export interface AnswerDeps {
+   engine: AnswerEngine;
+-  retrieve(query: string, k: number): Promise<RetrievedChunk[]>;
++  /** `opts.packs` (VITALADD, only with settings.addPack): restrict or exclude packs by id. */
++  retrieve(query: string, k: number, opts?: { packs?: PackFilter }): Promise<RetrievedChunk[]>;
+   getSettings(): Promise<AnswerSettings>;
+   listInstalledLlms(): Promise<InstalledLlm[]>;
+   getActiveModelId(): Promise<string | null>;
+@@ -355,6 +357,8 @@ const withoutRelevance = (s: RetrievedChunk[]): RetrievedChunk[] => s.map(({ rel
+ /** Receipts of answers no model wrote (fixed answers, source excerpts). */
+ /** Crypto-pack sources (their source labels) and a crypto cue in the user's own words (PT/EN/ES). "gás/gas" is not a
+  *  cue: a gas leak is an emergency. Sonar exp-30 (health11). */
++/** VITALADD: context tokens for each chunk settings.addPack appends on the deep tier (on top of the deep cap). */
++const ADD_PACK_TOKENS = 150;
+ const CRYPTO_SOURCE = /^(Ethereum EIPs\/ERCs|Ethereum specs|ethereum\.org|Bitcoin BIPs)\b/;
+ const CRYPTO_CUE =
+   /(?<![\p{L}\p{N}])(ethereum|ether|eth|bitcoin|btc|blockchains?|cripto\p{L}*|crypto\p{L}*|tokens?|nfts?|erc-?\d*|eip-?\d*|bip-?\d*|carteiras?( digita\p{L}*| cripto\p{L}*)?|wallets?|billeteras?|staking|stake|validador\p{L}*|validator\p{L}*|rollups?|l2s?|layer ?2|camada ?2|capa ?2|defi|smart contracts?|contratos? inteligentes?|solidity|minera\p{L}*|mining|hash\p{L}*|merkle|zk\p{L}*|sharding|consenso|consensus|privacy pools?|tornado cash|stablecoins?|usdc|usdt|uniswap|airdrops?|chave privada|private keys?|seed phrase|frase semente|mempool|satoshis?|lightning network|proof of (stake|work)|prova de (participa\p{L}+|trabalho)|prueba de (participaci\p{L}+|trabajo)|vitalik|buterin|nakamoto|dapps?|web3)(?![\p{L}\p{N}])/iu;
+@@ -971,6 +975,11 @@ export function createAnswerer(deps: AnswerDeps) {
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+       let retrievalMs: number | undefined;
++      // VITALADD: settings.addPack on the deep tier: that pack is left out of the curated retrieval and added below.
++      const addPack =
++        genTier === "deep" && plan.retrieve && gen?.mode !== "multipass" && !req.reuseSources && settings.addPack?.id && settings.addPack.k > 0
++          ? settings.addPack
++          : null;
+       if (plan.retrieve && gen?.mode !== "multipass") {
+         stage("retrieving", plan.instant !== "off" ? "instant" : genTier);
+         const rs = deps.now();
+@@ -980,7 +989,8 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await deps.retrieve(searchQuery, gen?.retrieveK ?? 6).catch((e) => {
++        const k0 = gen?.retrieveK ?? 6;
++        raw = await (addPack ? deps.retrieve(searchQuery, k0, { packs: { exclude: [addPack.id] } }) : deps.retrieve(searchQuery, k0)).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
+@@ -1042,6 +1052,26 @@ export function createAnswerer(deps: AnswerDeps) {
+           }
+         }
+       }
++      // VITALADD: up to addPack.k chunks of the added pack, appended after the curated sources. Each is compressed on its
++      // own budget (ADD_PACK_TOKENS, so it never evicts a curated passage) and must pass the same grounding filter.
++      if (addPack && !stopRequested) {
++        const as = deps.now();
++        // addPack.pool > k: that many candidates, ranked by compression relevance and grounded; the first k that pass are kept.
++        const pool = Math.max(addPack.k, addPack.pool ?? addPack.k);
++        const got = await deps.retrieve(searchQuery, pool, { packs: { only: [addPack.id], source: true } }).catch(() => [] as RetrievedChunk[]);
++        retrievalMs = (retrievalMs ?? 0) + (deps.now() - as);
++        const fresh = got.filter((c) => isSubstantive(c) && !sources.some((s) => s.chunkId === c.chunkId)).slice(0, pool);
++        const squeezed = fresh.length ? compressContext(matchQuery, fresh, { tokenBudget: ADD_PACK_TOKENS * fresh.length }).chunks : [];
++        const topic = health ? healthTopicTerms(req.query, english) : null;
++        const grounded = squeezed.filter((c) => (topic ? onHealthTopic(topic, c) : onSubject(c)));
++        if (squeezed.length > grounded.length) reasonCodes.push(`addpack:dropped-${squeezed.length - grounded.length}`);
++        // Each kept chunk on its own budget (a pooled ranking used ADD_PACK_TOKENS per candidate).
++        const added = grounded.slice(0, addPack.k).map((c) =>
++          pool > addPack.k ? compressContext(matchQuery, [fresh.find((f) => f.chunkId === c.chunkId) ?? c], { tokenBudget: ADD_PACK_TOKENS }).chunks[0] ?? c : c
++        );
++        reasonCodes.push(added.length ? `addpack:kept-${added.length}` : "addpack:none");
++        sources = [...sources, ...added];
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }
+diff --git a/src/routing/answerService.ts b/src/routing/answerService.ts
+index 2b278e17..6c94bbe8 100644
+--- a/src/routing/answerService.ts
++++ b/src/routing/answerService.ts
+@@ -75,7 +75,7 @@ function knowledgeReady(): Promise<void> {
+ 
+ export const { answer, deepen, effectiveModel: effectiveAnswerModel } = createAnswerer({
+   engine: llamaEngine,
+-  retrieve: (q, k) => retrieve(q, k),
++  retrieve: (q, k, opts) => (opts ? retrieve(q, k, opts) : retrieve(q, k)),
+   knowledgeReady,
+   englishNames: (query) => englishNamesIn(query, ptLexicon()),
+   getSettings: getAnswerSettings,

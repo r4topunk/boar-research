@@ -1,0 +1,406 @@
+diff -ruN base/src/rag/denseCandidates.test.ts h12/src/rag/denseCandidates.test.ts
+--- base/src/rag/denseCandidates.test.ts	2026-10-14 14:05:21
++++ h12/src/rag/denseCandidates.test.ts	2026-10-22 16:56:53
+@@ -49,3 +49,30 @@
+   });
+   it("budget is 600 tokens", () => expect(HEADPASS_BUDGET_TOKENS).toBe(600));
+ });
++
++describe("RS_HP_SLATE (bench-only) dense pick and budget options", () => {
++  const ca = (chunkId: string, docId: string, similarity: number) => ({ ...c(chunkId, similarity), docId });
++  it("maxPerArticle=1: two same-article candidates -> the first is picked, then the next article", () => {
++    const cand = [ca("a1", "A", 0.9), ca("a2", "A", 0.85), ca("b1", "B", 0.8), ca("c1", "C", 0.7)];
++    expect(ids(pickDenseAppend(cand, [], 0, 2, 4, 1))).toEqual(["a1", "b1"]);
++    expect(ids(pickDenseAppend(cand, [], 0, 3, 4, 1))).toEqual(["a1", "b1", "c1"]);
++    // An article already present (kept or appended) takes no more; the cap and d still bound the picks.
++    expect(ids(pickDenseAppend(cand, [ca("k", "A", 0)], 1, 3, 4, 1))).toEqual(["b1", "c1"]);
++    expect(ids(pickDenseAppend(cand, [], 3, 3, 4, 1))).toEqual(["a1"]);
++    // Without the option the same-article pair is kept (default behaviour).
++    expect(ids(pickDenseAppend(cand, [], 0, 2, 4))).toEqual(["a1", "a2"]);
++  });
++  it("applyAppendBudget skipOver: a chunk over the budget is skipped and the next that fits is kept", () => {
++    const len = (xs: string[]) => 100 + xs.join("").length;
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10, true)).toEqual({ kept: ["aaa", "c"], dropped: ["bbbbbbbb"] });
++    expect(applyAppendBudget(["aaaaaaaaaaaa", "b"], len, 10, true)).toEqual({ kept: ["b"], dropped: ["aaaaaaaaaaaa"] });
++    expect(applyAppendBudget(["aaa", "bb", "c"], len, 10, true)).toEqual({ kept: ["aaa", "bb", "c"], dropped: [] });
++  });
++  it("default arguments are byte-identical to the pre-switch behaviour", () => {
++    const len = (xs: string[]) => 100 + xs.join("").length;
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10, false)).toEqual(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10));
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10)).toEqual({ kept: ["aaa"], dropped: ["bbbbbbbb", "c"] });
++    const cand = [ca("a1", "A", 0.9), ca("a2", "A", 0.85), ca("b1", "B", 0.8)];
++    expect(JSON.stringify(pickDenseAppend(cand, [], 0, 2, 4, undefined))).toBe(JSON.stringify(pickDenseAppend(cand, [], 0)));
++  });
++});
+diff -ruN base/src/rag/denseCandidates.ts h12/src/rag/denseCandidates.ts
+--- base/src/rag/denseCandidates.ts	2026-10-14 14:04:53
++++ h12/src/rag/denseCandidates.ts	2026-10-22 16:56:53
+@@ -48,15 +48,27 @@
+  */
+ export function pickDenseAppend(
+   candidates: RetrievedChunk[],
+-  present: { chunkId: string }[],
++  present: { chunkId: string; docId?: string }[],
+   appendedSoFar: number,
+   d = HEADPASS_DENSE_D,
+-  cap = HEADPASS_MAX_APPEND
++  cap = HEADPASS_MAX_APPEND,
++  maxPerArticle?: number
+ ): RetrievedChunk[] {
+   const n = Math.max(0, Math.min(d, cap - appendedSoFar));
+   if (!n) return [];
+   const have = new Set(present.map((c) => c.chunkId));
+-  return candidates.filter((c) => !have.has(c.chunkId)).slice(0, n);
++  if (!maxPerArticle) return candidates.filter((c) => !have.has(c.chunkId)).slice(0, n);
++  // RS_HP_SLATE (bench-only): at most `maxPerArticle` chunks per article (docId), counting the chunks already present; walk in cosine order.
++  const perArticle = new Map<string, number>();
++  for (const c of present) perArticle.set(c.docId ?? c.chunkId, (perArticle.get(c.docId ?? c.chunkId) ?? 0) + 1);
++  const out: RetrievedChunk[] = [];
++  for (const c of candidates) {
++    if (out.length >= n) break;
++    if (have.has(c.chunkId) || (perArticle.get(c.docId) ?? 0) >= maxPerArticle) continue;
++    out.push(c);
++    perArticle.set(c.docId, (perArticle.get(c.docId) ?? 0) + 1);
++  }
++  return out;
+ }
+ 
+ /** HEADPASS-X2b (settings.packDense2 "append-budget"): prompt tokens (engine approxTokens) the head-pass append may add. */
+@@ -68,12 +80,18 @@
+  * stops (it and every later chunk are returned in `dropped`). Characters, not tokens: approxTokens = ceil(chars / 4), so a
+  * delta of at most 4 x budget characters keeps the token delta within the budget whatever the rounding.
+  */
+-export function applyAppendBudget<T>(adds: T[], measure: (prefix: T[]) => number, maxChars: number): { kept: T[]; dropped: T[] } {
++export function applyAppendBudget<T>(adds: T[], measure: (prefix: T[]) => number, maxChars: number, skipOver = false): { kept: T[]; dropped: T[] } {
+   const base = measure([]);
+   const kept: T[] = [];
++  const dropped: T[] = [];
+   for (let i = 0; i < adds.length; i++) {
+-    if (measure([...kept, adds[i]]) - base > maxChars) return { kept, dropped: adds.slice(i) };
++    if (measure([...kept, adds[i]]) - base > maxChars) {
++      // skipOver (RS_HP_SLATE, bench-only): skip the chunk that does not fit and try the next; default: stop at it.
++      if (!skipOver) return { kept, dropped: adds.slice(i) };
++      dropped.push(adds[i]);
++      continue;
++    }
+     kept.push(adds[i]);
+   }
+-  return { kept, dropped: [] };
++  return { kept, dropped };
+ }
+diff -ruN base/src/routing/answer.ts h12/src/routing/answer.ts
+--- base/src/routing/answer.ts	2026-10-20 17:44:17
++++ h12/src/routing/answer.ts	2026-10-22 16:56:53
+@@ -70,6 +70,7 @@
+   termCoverage,
+ } from "./context";
+ import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
++import { healthTopicFallback } from "./healthTopicFallback"; // RS H2 (RS_HEALTH_TOPIC_FB, default off)
+ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+@@ -119,6 +120,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { tokenizeTerms as rsTokenizeTerms } from "./context";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+@@ -1079,7 +1081,7 @@
+       if (health) {
+         reasonCodes.push("grounding:health-strict");
+         // Health: only sources whose title names the health topic (never a plant, a cave or a TV show).
+-        const topic = healthTopicTerms(req.query, english);
++        const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+         const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
+         sources = onTopicHealth;
+@@ -1111,15 +1113,36 @@
+       const hpBefore = sources.length;
+       let pendX1: RetrievedChunk[] = [];
+       let pendDense: RetrievedChunk[] = [];
+-      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
+-        if (settings.packHeadPass === "a2") {
++      // RS_HP_SLATE (RETRIEVE-SWEEP arm H1 HP-SLATE, bench-only env switch, unset or '' = every path below unchanged): (1) X1 gate,
++      // (2) dense-first order + skip-over budget, (3) one dense pick per article and width RS_HP_SLATE_D (default 3), (4) the
++      // head-pass block also runs when the raw list is empty but retrieve() attached dense candidates.
++      const rsSlate = Number((globalThis as any).process?.env?.RS_HP_SLATE ?? "") > 0;
++      const rsSlateD = Number((globalThis as any).process?.env?.RS_HP_SLATE_D ?? "") > 0 ? Number((globalThis as any).process?.env?.RS_HP_SLATE_D) : 3;
++      const rsRawEmptyDense = rsSlate && !retrievedRaw.length && (denseCandidatesOf(retrievedRaw)?.candidates.length ?? 0) > 0;
++      if (rsRawEmptyDense) reasonCodes.push("rs:hp:rawempty-dense");
++      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && (retrievedRaw.length || rsRawEmptyDense)) {
++        if (settings.packHeadPass === "a2" && !(rsSlate && !retrievedRaw.length)) {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+           if (!head) reasonCodes.push("headpass:no-user-pack");
+           else {
+             let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
+             if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
++            if (rsSlate && add.length) {
++              // (1) X1 gate: drop the neighbours of an article all of whose (substantive) raw chunks fail onSubject (the grounding test;
++              // not applied to health, whose grounding is the stricter topic filter below), and any neighbour with no retrieval score
++              // that shares no content term with the question.
++              const artRaw = raw.filter((c) => c.docId === head.first.docId);
++              const artOff = guarded && !health && artRaw.length > 0 && artRaw.every((c) => !onSubject(c));
++              const qTerms = new Set([...rsTokenizeTerms(req.query), ...rsTokenizeTerms(searchQuery)]);
++              const okX1: RetrievedChunk[] = [];
++              for (const c of add) {
++                if (artOff || (!(c.score > 0) && !rsTokenizeTerms(`${c.title} ${c.body}`).some((t) => qTerms.has(t)))) reasonCodes.push(`rs:hp:x1-offsubject-skip:${c.chunkId}`);
++                else okX1.push(c);
++              }
++              add = okX1;
++            }
+             if (health) {
+-              const topic = healthTopicTerms(req.query, english);
++              const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
+               add = ok;
+@@ -1135,10 +1158,12 @@
+           const dense = denseCandidatesOf(retrievedRaw);
+           if (!dense?.sidecar) reasonCodes.push("headpass:dense:nosidecar");
+           else {
+-            let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
++            let add = rsSlate
++              ? pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, rsSlateD, HEADPASS_MAX_APPEND, 1)
++              : pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+             if (health && add.length) {
+-              const topic = healthTopicTerms(req.query, english);
++              const topic = healthTopicFallback(req.query, english, reasonCodes, userTurns); // RS H2
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+               if (ok.length < add.length) reasonCodes.push(`headpass:dense:health-dropped-${add.length - ok.length}`);
+               add = ok;
+@@ -1161,7 +1186,10 @@
+               : deps.assemblePrompt(req.query, s, ctx.systemPrompt, ctx.history)).length;
+           };
+           const x1Ids = new Set(pendX1.map((c) => c.chunkId));
+-          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          if (rsSlate && pendDense.length) for (const c of pendDense) reasonCodes.push(`rs:hp:dense-first:${c.chunkId}`);
++          const { kept, dropped } = rsSlate
++            ? applyAppendBudget([...pendDense, ...pendX1], chars, 4 * HEADPASS_BUDGET_TOKENS, true)
++            : applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
+           for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];
+@@ -1251,7 +1279,7 @@
+         // Score on each source's full text: compression keeps the sentences matching the question
+         // words, which can leave out a first-aid text's instructions.
+         const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
+-        const rules = excerptRules(req.query, healthTopicTerms(req.query, english));
++        const rules = excerptRules(req.query, healthTopicFallback(req.query, english, reasonCodes, userTurns)) /* RS H2 */;
+         // The best source whose excerpt is safe: no disputed procedure, no dangerous instruction (Sextant
+         // dng-001: "pressure immobilization … remains a point of controversy"). None: emergency + get care.
+         let text = "";
+@@ -1486,7 +1514,7 @@
+             if (risky && sources.length) {
+               reasonCodes.push(`grounding:health-unsafe-${risky}`);
+               const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
+-              const rules = excerptRules(req.query, healthTopicTerms(req.query, english));
++              const rules = excerptRules(req.query, healthTopicFallback(req.query, english, reasonCodes, userTurns)) /* RS H2 */;
+               const safe = healthSourceOrder(fullSources, rules.procedure ?? null)
+                 .map((k) => healthExtract(fullSources[k], k + 1, pt, rules))
+                 .find(safeHealthExcerpt);
+diff -ruN base/src/routing/context.ts h12/src/routing/context.ts
+--- base/src/routing/context.ts	2026-10-07 09:27:55
++++ h12/src/routing/context.ts	2026-10-22 16:56:53
+@@ -349,8 +349,8 @@
+ // A venomous animal with a sting/bite, a child or a severity question; something swallowed; a person who doesn't
+ // respond. PT/ES/EN, no action phrase needed ("Escorpião picou meu filho, é grave?", "Mi hijo se tragó una pila"):
+ // these went to the model and came back "Scorpions do not sting children" (Sonar exp-29).
+-const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
+-const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
++export const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
++export const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
+ const SWALLOWED = /(^|[^\p{L}])(engol\p{L}*|se trag\p{L}*|trag[oó]|swallow\p{L}*)(?![\p{L}])/iu;
+ const UNRESPONSIVE = /(^|[^\p{L}])(sem responder|n[ãa]o responde\p{L}*|inconscient\p{L}*|desacordad\p{L}*|no responde|unresponsive|not responding|n[ãa]o est[áa] respirando|no respira|not breathing)(?![\p{L}])/iu;
+ const HEALTH_ES = /(^|[^\p{L}])(picad[oa]s?|picó|mordid[oa]s?|mordió|quemad\p{L}*|quemó|atragant\p{L}*|envenen\p{L}*|intoxica\p{L}*|convulsi\p{L}*|desmay\p{L}*|sangrando|sangrad\p{L}*|sangre|fiebre|emergencia|primeros auxilios)(?![\p{L}])/iu;
+@@ -482,7 +482,8 @@
+  */
+ // Words that name no condition: in a title they match anything ("Just Stop Oil", "Tree snake",
+ // "California Department of Water Resources", gate ee1f2b7).
+-const GENERIC_TOPIC = new Set(tokenizeTerms("water stop treat treatment child children nose safe drink drinking prevent help make first aid snake arm hand hot cold"));
++// RS (H2): exported so healthTopicFallback.ts reuses the same generic-word filter and compound table.
++export const GENERIC_TOPIC = new Set(tokenizeTerms("water stop treat treatment child children nose safe drink drinking prevent help make first aid snake arm hand hot cold"));
+ 
+ export function healthTopicTerms(query: string, articleTerms: string | null): Set<string> {
+   // With article terms (the dictionary / canonical names), they ARE the topic: the story's own
+@@ -584,7 +585,7 @@
+  * Conditions written as one word or two ("snakebite" / "snake bite", Wikibooks'
+  * "Animal bites > Snakes"): the compound matches a title with both parts.
+  */
+-const COMPOUNDS: Record<string, [string, string]> = {
++export const COMPOUNDS: Record<string, [string, string]> = {
+   snakebite: ["snake", "bite"],
+   nosebleed: ["nose", "bleed"],
+   heatstroke: ["heat", "stroke"],
+diff -ruN base/src/routing/healthTopicFallback.test.ts h12/src/routing/healthTopicFallback.test.ts
+--- base/src/routing/healthTopicFallback.test.ts	1969-12-31 21:00:00
++++ h12/src/routing/healthTopicFallback.test.ts	2026-10-22 16:56:53
+@@ -0,0 +1,73 @@
++import { afterEach, describe, expect, it } from "vitest";
++import { healthTopicTerms, onHealthTopic } from "./context";
++import { regexCondition } from "./conditionCards";
++import { healthTopicFallback } from "./healthTopicFallback";
++
++// RETRIEVE-SWEEP arm H2. The switch is read at call time; unset = healthTopicTerms unchanged.
++const c = (title: string, body: string, action?: boolean) => ({ chunkId: title, docId: title, title, body, score: 1, matchType: "lexical" as const, ...(action === undefined ? {} : { action }) });
++const env = (globalThis as any).process.env as Record<string, string | undefined>;
++afterEach(() => { delete env.RS_HEALTH_TOPIC_FB; });
++
++const JELLY = "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?";
++const ALT = "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?";
++
++describe("healthTopicFallback", () => {
++  it("is healthTopicTerms exactly when the switch is off", () => {
++    for (const q of [JELLY, ALT, "How do I treat a burn on my arm?", "What is the capital of Australia?"]) {
++      const codes: string[] = [];
++      expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++      expect(codes).toEqual([]);
++    }
++  });
++
++  it("jellyfish: the empty topic gets the card's terms and the jellyfish article passes", () => {
++    expect(healthTopicTerms(JELLY, null).size).toBe(0);
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const codes: string[] = [];
++    const t = healthTopicFallback(JELLY, null, codes);
++    expect(t.has("jellyfish")).toBe(true);
++    expect(t.has("sting")).toBe(true);
++    expect(t.has("stung")).toBe(true);
++    expect(codes.some((x) => x.startsWith("rs:health-topic-fb:"))).toBe(true);
++    expect(onHealthTopic(t, c("Jellyfish", "Jellyfish stings are treated with vinegar."))).toBe(true);
++    expect(onHealthTopic(healthTopicTerms(JELLY, null), c("Jellyfish", "Jellyfish stings are treated with vinegar."))).toBe(false);
++  });
++
++  it("jellyfish mode 2 keeps only the distinctive term", () => {
++    env.RS_HEALTH_TOPIC_FB = "2";
++    expect([...healthTopicFallback(JELLY, null)]).toEqual(["jellyfish"]);
++  });
++
++  it("altitude: a symptom-only topic gets the condition added", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const t = healthTopicFallback(ALT, null);
++    for (const w of ["altitude", "hace", "hape"]) expect(t.has(w), w).toBe(true);
++    expect(onHealthTopic(t, c("Wikivoyage: Altitude sickness", "Altitude sickness is common above 2,500 m.", false))).toBe(true);
++    expect(onHealthTopic(t, c("Wikivoyage: Vung Tau", "Rub isopropyl alcohol in the ear after swimming."))).toBe(false);
++  });
++
++  it("a health question with no card and a topic already named is unchanged", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "What are the symptoms of dehydration and what is the dosage of oral rehydration salts?";
++    const codes: string[] = [];
++    expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++    expect(codes).toEqual([]);
++  });
++
++  it("an empty topic with a venomous animal and no card gets the animal (b)", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "A spider bit my toddler, is it grave?";
++    expect(healthTopicTerms(q, null).has("spider")).toBe(false);
++    const codes: string[] = [];
++    expect(healthTopicFallback(q, null, codes).has("spider")).toBe(true);
++    expect(codes.length).toBe(1);
++  });
++
++  it("MULTI conditions add nothing from the card", () => {
++    env.RS_HEALTH_TOPIC_FB = "1";
++    const q = "My son had a seizure and burned his hand on a hot stove, what do I do?";
++    expect(regexCondition(q)).toBe("MULTI");
++    const codes: string[] = [];
++    expect([...healthTopicFallback(q, null, codes)].sort()).toEqual([...healthTopicTerms(q, null)].sort());
++  });
++});
+diff -ruN base/src/routing/healthTopicFallback.ts h12/src/routing/healthTopicFallback.ts
+--- base/src/routing/healthTopicFallback.ts	1969-12-31 21:00:00
++++ h12/src/routing/healthTopicFallback.ts	2026-10-22 16:56:53
+@@ -0,0 +1,89 @@
++/**
++ * RETRIEVE-SWEEP arm H2 HEALTH-TOPIC-FALLBACK (bench-only, env switch RS_HEALTH_TOPIC_FB, default off = healthTopicTerms unchanged).
++ *
++ * health-strict (answer.ts) keeps only sources whose title (or, for lay sources, text) names the question's health topic, and
++ * healthTopicTerms() builds that topic from the lexical HEALTH regex only. The learned detector and the card-condition
++ * trigger fire on questions the regex misses ("stung by a jellyfish", "at 4,000 m ... headache and nausea"), so the topic is
++ * empty or symptom-only and every retrieved passage, the Altitude sickness article included, is dropped as off-topic.
++ *
++ * healthTopicFallback(query, english, userTurns) = healthTopicTerms plus
++ *  (a) the term list of the first-aid condition card the question (or, for a follow-up, the conversation) names, and
++ *  (b) when the set is still empty, the venomous animal / sting-bite words the detector matched.
++ * RS_HEALTH_TOPIC_FB=1: full lists (spec); =2: distinctive terms only (no sting/sickness/mountain-type generic words).
++ * onHealthTopic is not changed.
++ */
++import { COMPOUNDS, GENERIC_TOPIC, STUNG_OR_RISK, VENOMOUS, healthTopicTerms, tokenizeTerms } from "./context";
++import { conversationCondition } from "./conditionCards";
++
++/** Condition card key -> its name / alias / title words (Wikipedia, Wikivoyage, first-aid book titles). */
++export const CARD_TOPIC_TERMS: Record<string, string> = {
++  co: "carbon monoxide poisoning",
++  burn: "burn scald",
++  heatstroke: "heatstroke heat stroke",
++  hypothermia: "hypothermia",
++  frostbite: "frostbite frostnip",
++  choking: "choking heimlich",
++  chokinginfant: "choking heimlich",
++  bleeding: "bleeding hemorrhage",
++  heartattack: "heart attack myocardial infarction cardiac",
++  stroke: "stroke",
++  seizure: "seizure epilepsy convulsion",
++  anaphylaxis: "anaphylaxis allergic reaction",
++  battery: "button battery ingestion",
++  eyechem: "chemical burn eye",
++  electric: "electrical injury electrocution shock",
++  jellyfish: "jellyfish sting stings stung",
++  nosebleed: "nosebleed epistaxis",
++  earthquake: "earthquake",
++  tsunami: "tsunami",
++  drowning: "drowning",
++  hypoglycemia: "hypoglycemia",
++  altitude: "altitude sickness acute mountain sickness hace hape",
++  beesting: "bee wasp hornet sting",
++  scorpion: "scorpion sting",
++  scorpionadult: "scorpion sting",
++  marinepuncture: "stingray sea urchin stonefish",
++  tick: "tick",
++  animalbite: "animal bite rabies",
++  heatexhaustion: "heat exhaustion heat cramps",
++  headinjury: "head injury concussion",
++  ripcurrent: "rip current",
++  snakebite: "snakebite snake bite",
++};
++
++/** Generic words dropped from the card lists in mode 2 (they name no condition on their own in a title). */
++const GENERIC_ALIAS = new Set(tokenizeTerms("acute sting stings stung sickness mountain reaction attack heart carbon blood low shock chemical eye button battery injury electrical allergic heat animal cramps head rip current"));
++
++const mode = (): number => {
++  const v = Number((globalThis as any).process?.env?.RS_HEALTH_TOPIC_FB ?? "");
++  return v === 1 || v === 2 ? v : 0;
++};
++
++export function healthTopicFallback(query: string, english: string | null, reasonCodes?: string[], userTurns: string[] = []): Set<string> {
++  const t = healthTopicTerms(query, english);
++  const m = mode();
++  if (!m) return t;
++  const before = t.size;
++  const add = (src: string) => {
++    for (const w of tokenizeTerms(src)) if (!GENERIC_TOPIC.has(w) && !(m === 2 && GENERIC_ALIAS.has(w))) t.add(w);
++  };
++  // (a) the card the matcher names (several conditions = MULTI = none)
++  const { condition } = conversationCondition(query, userTurns);
++  if (condition && condition !== "MULTI" && CARD_TOPIC_TERMS[condition]) add(CARD_TOPIC_TERMS[condition]);
++  // (b) still nothing: the animal the detector matched (VENOMOUS) and, in mode 1, the sting / bite words next to it
++  // (STUNG_OR_RISK without its child / severity words, and never "a bit" or "picked"). Only when the animal side fired.
++  if (t.size === 0) {
++    const animals = query.match(new RegExp(VENOMOUS.source, "giu")) ?? [];
++    if (animals.length) {
++      add(animals.join(" "));
++      if (m === 1) add((query.replace(/\ba (little )?bit\b/gi, " ").match(new RegExp(STUNG_OR_RISK.source, "giu")) ?? []).filter((w) => /^(stung|sting|bit|bite|bitten)/i.test(w.trim())).join(" "));
++    }
++  }
++  // "snakebite snake bite": the parts only count together, as in healthTopicTerms.
++  for (const [compound, parts] of Object.entries(COMPOUNDS)) if (t.has(compound)) parts.forEach((p) => t.delete(p));
++  if (t.size > before && reasonCodes) {
++    const code = `rs:health-topic-fb:${[...t].sort().join(",")}`;
++    if (!reasonCodes.includes(code)) reasonCodes.push(code);
++  }
++  return t;
++}

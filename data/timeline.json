@@ -1,0 +1,8454 @@
+{
+ "schema": "boar-publication/timeline",
+ "schema_version": "1.0.0",
+ "generated": "2026-10-25",
+ "license": "CC BY 4.0 (text and data); see /CITATION.cff",
+ "count": 465,
+ "types": [
+  "build",
+  "decision",
+  "experiment",
+  "incident",
+  "milestone",
+  "pivot",
+  "release",
+  "result",
+  "start"
+ ],
+ "notes": [
+  "Times are local (UTC-3) when present; dates without a time come from day-level sources.",
+  "Rows dated only by sequence in the private log are marked by the date the verify pass accepted.",
+  "Update 2026-10-24: rows for 2026-10-18..10-24 appended from the update verify pass (update-A/update-B); old rows unchanged except supersession marks.",
+  "Update 2026-10-24 evening: rows for QUEUE 1787-1815 (BoarLite final candidate, SEARCHPORT, GROUNDED-DOSE, REFS-V2 second family, RULER-FINAL) appended; aliases U2-*.",
+  "Update 2026-10-25: rows for QUEUE 1819-1820, the 2026-10-24 PM and 2026-10-25 hand-offs and the DEVICE-FINAL criterion (LabRat rename, cleanup, hosting, DEVICE-FINAL started; no DEVICE-FINAL results) appended; aliases U4-*.",
+  "Update 2026-10-25 final (v1.0): DEVICE-FINAL result, LabRat 1.0.0 hosted and its repository public, pack counts, article live (QUEUE 1822-1833); aliases U6-*; X-406 result filled."
+ ],
+ "timeline": [
+  {
+   "id": "E-001",
+   "date": "2026-09-17",
+   "time": null,
+   "title": "Public post (by Vitalik Buterin) asks for an offline phone research tool \">50 % as good as internet + frontier AI\"; bounty #31 is later opened on poidh, inspired by it",
+   "type": "start",
+   "significance": 3,
+   "fact_ids": [
+    "F-047"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L31"
+   ]
+  },
+  {
+   "id": "E-002",
+   "date": "2026-09-24",
+   "time": null,
+   "title": "Upstream app README benchmark on a hot Xiaomi (Dimensity 8300): LFM2.5-8B-A1B 14.8 tok/s, Qwen2.5-1.5B 11.4 (maintainer's own measurement, 17 questions)",
+   "type": "experiment",
+   "significance": 1,
+   "fact_ids": [
+    "F-049"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L23"
+   ]
+  },
+  {
+   "id": "E-003",
+   "date": "2026-09-26",
+   "time": null,
+   "title": "Author does a read-only review of the app maintainer's existing bounty claim (#124): \"solid engineering, weak research\"; default Qwen2.5-1.5B + ~1,300 Wikipedia paragraphs; biggest lever named = large streamed MoE + full Wikipedia",
+   "type": "start",
+   "significance": 3,
+   "fact_ids": [
+    "F-051"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L32"
+   ]
+  },
+  {
+   "id": "E-004",
+   "date": "2026-09-26",
+   "time": null,
+   "title": "Author joins the app maintainer as co-builder; thesis \"quality per second + blind eval vs frontier\"; official Android submission planned as a no-INTERNET variant",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-052"
+   ],
+   "decision_ids": [
+    "D-001"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L33"
+   ]
+  },
+  {
+   "id": "E-005",
+   "date": "2026-09-27",
+   "time": null,
+   "title": "First knowledge kit packs built: boar-crypto (36.1 MB), boar-wikivoyage-en (351 MB), boar-preparedness",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-054"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L24"
+   ]
+  },
+  {
+   "id": "E-006",
+   "date": "2026-09-28",
+   "time": null,
+   "title": "Overnight agent-run UI and layout-performance review of the app; heavy work routed to the Mac mini queue",
+   "type": "start",
+   "significance": 1,
+   "fact_ids": [
+    "F-055"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L23"
+   ]
+  },
+  {
+   "id": "E-007",
+   "date": "2026-09-29",
+   "time": null,
+   "title": "Research-pipeline kickoff: first written diagnosis (prefill dominates time-to-first-token; corpus coverage limits quality; 4B never run on a real Android)",
+   "type": "start",
+   "significance": 2,
+   "fact_ids": [
+    "F-056"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L34"
+   ]
+  },
+  {
+   "id": "E-008",
+   "date": "2026-09-29",
+   "time": null,
+   "title": "Overnight on-device tuning on an older 61-question bounty-style set (v2): score 0.26 → 0.48 with the 1.5B + quick mode + packs; vegan-venue test 5 % → 85 %",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-057"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L35"
+   ]
+  },
+  {
+   "id": "E-012",
+   "date": "2026-09-30",
+   "time": "22:28",
+   "title": "Frozen Opus+web reference answers generated for the 33 kept v0 items (prompt reference.v1, sha d5144343…)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-068"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L27"
+   ]
+  },
+  {
+   "id": "E-009",
+   "date": "2026-09-30",
+   "time": null,
+   "title": "First \"in-RAM MoE\" experiments: Ling-3.0-tiny and Maple-Preview 20B-A1B vs Qwen3-4B (desktop, app contexts)",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-060"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L36"
+   ]
+  },
+  {
+   "id": "E-010",
+   "date": "2026-09-30",
+   "time": null,
+   "title": "Frozen frontier-plus-web reference answers for the public v0.1 set start being generated (09-30 → 10-02)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-061"
+   ],
+   "decision_ids": [
+    "D-002"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L37"
+   ]
+  },
+  {
+   "id": "E-011",
+   "date": "2026-09-30",
+   "time": null,
+   "title": "Author decides 10 open items after an overnight eval run (early metric, iPhone 13; not comparable to later ratios)",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-062"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L24"
+   ]
+  },
+  {
+   "id": "E-019",
+   "date": "2026-10-01",
+   "time": "21:06",
+   "title": "Research lanes start: the models/latency research agent cycle 1 (21:06), the evaluation/safety research agent cycle 1 (21:10), the retrieval research agent cycle 1 (~21:45) under one written mandate",
+   "type": "start",
+   "significance": 3,
+   "fact_ids": [
+    "F-826"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L25"
+   ]
+  },
+  {
+   "id": "E-016",
+   "date": "2026-10-01",
+   "time": "21:30",
+   "title": "First frozen criterion before opening a blind set (embedding danger detector; sha frozen, \"no tuning after this point\")",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-293",
+    "F-294"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L26",
+    "E-chron-early-L41"
+   ]
+  },
+  {
+   "id": "E-024",
+   "date": "2026-10-01",
+   "time": "21:30",
+   "title": "Embedding danger detector criterion frozen before its blind set exists (start of learned-detector line)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-295"
+   ],
+   "decision_ids": [
+    "D-006"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L25"
+   ]
+  },
+  {
+   "id": "E-020",
+   "date": "2026-10-01",
+   "time": "22:45",
+   "title": "\"Off-the-shelf scan\" added to every lane (look for ready-made GitHub/HF artifacts first)",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-827"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L27"
+   ]
+  },
+  {
+   "id": "E-017",
+   "date": "2026-10-01",
+   "time": "23:00",
+   "title": "Rule: an effect is reported only if it exceeds the minimum detectable effect (MDE)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-109"
+   ],
+   "decision_ids": [
+    "D-005"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L42"
+   ]
+  },
+  {
+   "id": "E-018",
+   "date": "2026-10-01",
+   "time": "23:40",
+   "title": "First 4B baseline on the shared engine: raw 0.521 (s42), \"first point above 0.50, CI contains it\"",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-296"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L43"
+   ]
+  },
+  {
+   "id": "E-013",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "exp-06: the app's real answer engine runs on the desktop (Mac mini), 54 questions in 2 min 34 s",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-291"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L38"
+   ]
+  },
+  {
+   "id": "E-014",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "ADR-001 proposes one evaluation harness: 5 layers, one trace schema, 7 axes never averaged, gate vs full modes",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-102",
+    "F-106"
+   ],
+   "decision_ids": [
+    "D-003"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L39",
+    "T-method-L28"
+   ]
+  },
+  {
+   "id": "E-015",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Research mandate: three researcher lanes (retrieval, models, evaluation/safety) write \"technique cards\"; a runner executes arms",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-824"
+   ],
+   "decision_ids": [
+    "D-007",
+    "D-008"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L40"
+   ]
+  },
+  {
+   "id": "E-021",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "Run-to-run noise found as large as measured effects (Δ 0.031, 17/60 labels changed)",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-107"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L29"
+   ]
+  },
+  {
+   "id": "E-022",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "27 items from a competing team's fork removed from the bench; replaced with original items of the same slot (bench v0.1)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-108"
+   ],
+   "decision_ids": [
+    "D-004"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L30"
+   ]
+  },
+  {
+   "id": "E-023",
+   "date": "2026-10-01",
+   "time": null,
+   "title": "First frozen criteria on fresh sets (hm-fresh2/3) before any reading",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-432"
+   ],
+   "decision_ids": [
+    "D-009"
+   ],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L23"
+   ]
+  },
+  {
+   "id": "E-049",
+   "date": "2026-10-02",
+   "time": "00:08",
+   "title": "References for the 27 new v0.1 items generated (27 calls, 0 failures, ≈ [usage detail removed] list)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-137"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L31"
+   ]
+  },
+  {
+   "id": "E-025",
+   "date": "2026-10-02",
+   "time": "01:00",
+   "title": "Two-seed baseline: 4B raw 0.512 (0.461–0.567), 1.5B 0.379",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-439"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L44"
+   ]
+  },
+  {
+   "id": "E-026",
+   "date": "2026-10-02",
+   "time": "02:15",
+   "title": "Danger detector + no-source card (A1) confirmed on both profiles; first safety win",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-302"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L45"
+   ]
+  },
+  {
+   "id": "E-027",
+   "date": "2026-10-02",
+   "time": "04:30",
+   "title": "Longer-answer persona makes the 4B hallucinate (Δ −0.044, confident-wrong 10 → 20)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-440"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L46"
+   ]
+  },
+  {
+   "id": "E-044",
+   "date": "2026-10-02",
+   "time": "04:45",
+   "title": "Blind-set rule widened after a filename-only grep leaked set composition",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-832"
+   ],
+   "decision_ids": [
+    "D-022"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L28"
+   ]
+  },
+  {
+   "id": "E-028",
+   "date": "2026-10-02",
+   "time": "05:25",
+   "title": "Big-pack verdicts invalidated: pack lead vectors were mislabelled by a builder bug",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-991"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L47"
+   ]
+  },
+  {
+   "id": "E-029",
+   "date": "2026-10-02",
+   "time": "06:10",
+   "title": "Strategy memo (high-tier model, one call): Android-only, three fronts; stop iPhone/1.5B and prompt work",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-698"
+   ],
+   "decision_ids": [
+    "D-010",
+    "D-016"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L48"
+   ]
+  },
+  {
+   "id": "E-030",
+   "date": "2026-10-02",
+   "time": "06:10",
+   "title": "Rubric-floor risk found: a blank system scores ~0.20–0.31 of the reference",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-303"
+   ],
+   "decision_ids": [
+    "D-019"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L49"
+   ]
+  },
+  {
+   "id": "E-045",
+   "date": "2026-10-02",
+   "time": "06:10",
+   "title": "Strategy agent (the strategy agent) memo S1: three fronts, ~1 in 4 chance the CI lower bound clears 0.50; stop list",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-833"
+   ],
+   "decision_ids": [
+    "D-023"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L29"
+   ]
+  },
+  {
+   "id": "E-031",
+   "date": "2026-10-02",
+   "time": "11:15",
+   "title": "Author's morning decisions: bar on the raw ratio, but always publish raw + floor-removed + above-decline side by side",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-272",
+    "F-273"
+   ],
+   "decision_ids": [
+    "D-011"
+   ],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L50",
+    "E-process-L30"
+   ]
+  },
+  {
+   "id": "E-032",
+   "date": "2026-10-02",
+   "time": "12:40",
+   "title": "Big-pack relevance gate fails replay → knowledge front closed for the bounty (kill rule K1)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-073"
+   ],
+   "decision_ids": [
+    "D-012"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L51"
+   ]
+  },
+  {
+   "id": "E-033",
+   "date": "2026-10-02",
+   "time": "12:55",
+   "title": "Deep tier (35B MoE) approved; counts only if reported separately from the default",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-571"
+   ],
+   "decision_ids": [
+    "D-013"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L52"
+   ]
+  },
+  {
+   "id": "E-042",
+   "date": "2026-10-02",
+   "time": "18:30",
+   "title": "Own 8 GB Android: 4B killed by the OS while loading; root cause = ARM weight repack",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-699"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L61"
+   ]
+  },
+  {
+   "id": "E-034",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "iPhone 13 run matches the desktop proxy (0.394 vs 0.395)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-680"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L53"
+   ]
+  },
+  {
+   "id": "E-035",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Held-out v0.2 analysis plan frozen (combined sha fe100e91…); items frozen in a second commit",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-115"
+   ],
+   "decision_ids": [
+    "D-020"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L54"
+   ]
+  },
+  {
+   "id": "E-036",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "First deep-tier test: Qwen3.6-35B-A3B +0.060 over the 4B (first lever above MDE)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-569"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L55"
+   ]
+  },
+  {
+   "id": "E-037",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Bounty re-read: winning is a public confirmation, not a numeric benchmark",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-116"
+   ],
+   "decision_ids": [
+    "D-014"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L56"
+   ]
+  },
+  {
+   "id": "E-038",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Direction: \"eval + pipeline technique\" (better answers from the same model)",
+   "type": "pivot",
+   "significance": 2,
+   "fact_ids": [
+    "F-297"
+   ],
+   "decision_ids": [
+    "D-021"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L57"
+   ]
+  },
+  {
+   "id": "E-039",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Anchor ladder on v0.1: frontier no-web ≥ frontier+web → bar is effectively \"≥ 50 % of a frontier model\"",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-117"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L58"
+   ]
+  },
+  {
+   "id": "E-040",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Held-out baseline E3: v0.2 raw 0.506 (0.475–0.538), v0.1 not inflated",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-118"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L59"
+   ]
+  },
+  {
+   "id": "E-041",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "35B memory check in a 6,750 MiB (≈ 6.6 GiB) Linux container: 10/10, 0 OOM",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-681"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L60"
+   ]
+  },
+  {
+   "id": "E-043",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Author: \"iterate fast first, rigor later\" (sha only when an idea reaches the full/held-out bench); no fixed greeting rules",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-119"
+   ],
+   "decision_ids": [
+    "D-018"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L62"
+   ]
+  },
+  {
+   "id": "E-046",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Bench v0.2 written by two blind writer agents (55 items each); plan frozen (combined sha fe100e91)",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-830"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L31"
+   ]
+  },
+  {
+   "id": "E-047",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Second freeze d8154b6 puts v0.2 question + reference plaintext into the private bench repo's git history (latent exposure)",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-120",
+    "F-136"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L32",
+    "T-method-L36"
+   ]
+  },
+  {
+   "id": "E-048",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Direction: two tracks only (harness + pipeline technique); v0.2 = held-out, confirm only",
+   "type": "pivot",
+   "significance": 2,
+   "fact_ids": [
+    "F-121"
+   ],
+   "decision_ids": [
+    "D-015"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L33"
+   ]
+  },
+  {
+   "id": "E-050",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Calibration ladder: Claude models with no web vs the Opus+web reference on v0.1 (Opus no-web 1.029, Sonnet 0.950, Haiku 4.5 0.653)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-133"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L32"
+   ]
+  },
+  {
+   "id": "E-051",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Second Claude judge (Fable 5.1) agrees with Opus on 453/456 verdicts",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1144"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L33"
+   ]
+  },
+  {
+   "id": "E-052",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Bench v0.2 analysis plan frozen and hashed before any v0.2 item existed (raw ratio = primary; stratified two-level CI; seeds 42/43/44)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-134"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L34"
+   ]
+  },
+  {
+   "id": "E-054",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Bench v0.2 started; iPhone device run",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-693"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L24"
+   ]
+  },
+  {
+   "id": "E-055",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Root cause of a 4B kill on an 8 GB moto phone: llama.cpp ARM weight repack copies ~2.3 GiB into anonymous memory",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-694"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L26"
+   ]
+  },
+  {
+   "id": "E-056",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "Probe A: no-repack drops 4B max RSS 5.1–5.4 → 3.41 GB on desktop",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-695"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L27"
+   ]
+  },
+  {
+   "id": "E-057",
+   "date": "2026-10-02",
+   "time": null,
+   "title": "iPhone 13 repack probe: llama.rn does not repack on iOS; fit-repack stays Android-only",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-696"
+   ],
+   "decision_ids": [
+    "D-024"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L28"
+   ]
+  },
+  {
+   "id": "E-058",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "A research agent's trace scan prints one v0.2 item; plaintext moved to blind/, copies quarantined",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-835",
+    "F-837"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L63",
+    "E-process-L34"
+   ]
+  },
+  {
+   "id": "E-059",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Several health blind sets declared dev after traces sat in readable paths",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-305"
+   ],
+   "decision_ids": [
+    "D-026"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L64"
+   ]
+  },
+  {
+   "id": "E-061",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Learned emergency gate generalizes on blind sets (90/90, 71/72); lexical does not",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-306"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L66"
+   ]
+  },
+  {
+   "id": "E-062",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "\"No human review\": an independent Opus reviewer agent decides content; caveat \"AI-reviewed, not clinically reviewed\"",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-445",
+    "F-836",
+    "F-838"
+   ],
+   "decision_ids": [
+    "D-027"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L26",
+    "E-chron-early-L67",
+    "E-process-L35"
+   ]
+  },
+  {
+   "id": "E-063",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Direction change: single goal = win the bounty; lanes re-tasked",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-077",
+    "F-079",
+    "F-082",
+    "F-083"
+   ],
+   "decision_ids": [
+    "D-030"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L68",
+    "E-process-L36",
+    "T-results-L25",
+    "T-system-L29"
+   ]
+  },
+  {
+   "id": "E-064",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "English only",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-307"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L69"
+   ]
+  },
+  {
+   "id": "E-065",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "V-para blind set frozen (58 items, bounty-style paraphrases)",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-078"
+   ],
+   "decision_ids": [],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L70"
+   ]
+  },
+  {
+   "id": "E-066",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "No more work inside the app maintainer's app; build \"BOAR Bench\" measurement app",
+   "type": "pivot",
+   "significance": 2,
+   "fact_ids": [
+    "F-1247"
+   ],
+   "decision_ids": [
+    "D-028"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L71"
+   ]
+  },
+  {
+   "id": "E-067",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Ship candidate on held-out: raw 0.503, neutral vs baseline",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-139"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L72"
+   ]
+  },
+  {
+   "id": "E-068",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Gold-passage oracle: 4B + gold passages 0.606 vs engine 0.507",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-308"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L73"
+   ]
+  },
+  {
+   "id": "E-069",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Cut 1 / 1b built; cut 2 frozen (cff2f2bc…)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-309"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L74"
+   ]
+  },
+  {
+   "id": "E-070",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Retrieval v2 killed: gold-in-context 7 → 18 yet quality −0.021",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-310"
+   ],
+   "decision_ids": [
+    "D-029"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L75"
+   ]
+  },
+  {
+   "id": "E-071",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Deep tier D1 (on-device MoE engine build) done",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-700"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L76"
+   ]
+  },
+  {
+   "id": "E-072",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "work budget: work pauses; deep tier paused at D1",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-573"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L77"
+   ]
+  },
+  {
+   "id": "E-073",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "One v0.2 item printed into a research agent's trace scan; plaintext moved to an isolated folder",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-839"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L37"
+   ]
+  },
+  {
+   "id": "E-074",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Deep tier D1: pinned build of the bmoe streamed-MoE engine (Android payload 12.4 MB); deep work paused for work budget",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-702"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L30"
+   ]
+  },
+  {
+   "id": "E-075",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Ship cut 1 / 1b built (health cards, gate cold-load, travel calc, CO hazard, device detector)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-703"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L31"
+   ]
+  },
+  {
+   "id": "E-076",
+   "date": "2026-10-03",
+   "time": null,
+   "title": "Final cut 2 (cut 1b + exposure fix + citation fix)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-315"
+   ],
+   "decision_ids": [
+    "D-025"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L32"
+   ]
+  },
+  {
+   "id": "E-077",
+   "date": "2026-10-04",
+   "time": "01:03",
+   "title": "Overnight generation: cut 2 v0.1 EN ≈ 0.533 over 4 seeds",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-325"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L78"
+   ]
+  },
+  {
+   "id": "E-078",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Direction: 4B default tier only; deep tier parked; no team chat agents, coordinator + subagents",
+   "type": "pivot",
+   "significance": 2,
+   "fact_ids": [
+    "F-574"
+   ],
+   "decision_ids": [
+    "D-031"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L79"
+   ]
+  },
+  {
+   "id": "E-079",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "4B loss anatomy: gap to Haiku +0.121 net; biggest buckets have no live lever",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-446"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L80"
+   ]
+  },
+  {
+   "id": "E-080",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Cut 3 adopted (cut 2 + verdict guard v3 + arithmetic repair + snakebite text); L1 Δ +0.029 [+0.007, +0.058]",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-316",
+    "F-321",
+    "F-324"
+   ],
+   "decision_ids": [
+    "D-032"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L81",
+    "T-results-L29",
+    "T-system-L34"
+   ]
+  },
+  {
+   "id": "E-081",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Computed-verdict family (4 variants) closed: verdict accuracy +23–28 pp does not survive the judged bench",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-140"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L82"
+   ]
+  },
+  {
+   "id": "E-082",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "4B loss anatomy: cut 2 gains over old main come only from non-model paths (cards, calculator); \"thin\" and \"knowledge\" buckets have no 4B lever",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-320"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L27"
+   ]
+  },
+  {
+   "id": "E-083",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Cut 2 extra seeds: v0.1 ratio 0.532/0.535/0.539/0.527",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-143"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L28"
+   ]
+  },
+  {
+   "id": "E-084",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Cut 3 confirmed: v0.1 EN 0.566 vs cut 2 0.534, Δ +0.032 CI90 [+0.010, +0.062]",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-322"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L30"
+   ]
+  },
+  {
+   "id": "E-085",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Computed-verdict line (CV/CVS/CVH/CVO) and safety-card trigger v1–v3 all closed at gates",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-323"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L31"
+   ]
+  },
+  {
+   "id": "E-086",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "ORACLE: reader is not the bottleneck; retrieval is (+0.10 ceiling)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-448"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L33"
+   ]
+  },
+  {
+   "id": "E-087",
+   "date": "2026-10-04",
+   "time": null,
+   "title": "Knowledge-pack sizing: web-only pack parked for the bounty",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-085"
+   ],
+   "decision_ids": [
+    "D-033"
+   ],
+   "chapter": "question",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L35"
+   ]
+  },
+  {
+   "id": "E-088",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Model line closed for the 4B tier (Qwen3.5-4B, Gemma 4 E4B, 9B, 8B)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-449"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L83"
+   ]
+  },
+  {
+   "id": "E-089",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "First real-phone run of a frozen build on a volunteer tester's 8 GB phone (smoke, 9 items)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-707"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L84"
+   ]
+  },
+  {
+   "id": "E-090",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Phone latency root cause: our own KV-cache save-path bug (desktop shim hid it)",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-326"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L85"
+   ]
+  },
+  {
+   "id": "E-091",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Claim runs on cut 3 approved and run: v0.2 held-out raw 0.513 (0.479–0.550); V-para 0.413 FAIL",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1222",
+    "F-329",
+    "F-330"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L86",
+    "T-results-L32",
+    "T-system-L40"
+   ]
+  },
+  {
+   "id": "E-092",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Cut 4 = cut 3 + KVFIX + INSTANT-FRAG (+ INSTANT-SUBJ)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-708",
+    "F-720"
+   ],
+   "decision_ids": [
+    "D-034"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L87",
+    "T-system-L38"
+   ]
+  },
+  {
+   "id": "E-093",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "First independent claim-text review: 21 issues",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-327"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L88"
+   ]
+  },
+  {
+   "id": "E-094",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "No-network measurement APK (INTERNET permission removed by construction)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-709",
+    "F-721"
+   ],
+   "decision_ids": [
+    "D-035"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L89",
+    "T-system-L39"
+   ]
+  },
+  {
+   "id": "E-095",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "4B claim runs on V-para (cut 3, cut 6) while V-para was still unseen: raw 0.413, floor-adj 0.261, win 0/51",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1225"
+   ],
+   "decision_ids": [],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L38"
+   ]
+  },
+  {
+   "id": "E-096",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "Cut 4 (KV-cache fix + instant fragment) built; cut 5 (lite gate skip) adopted as device candidate",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-717"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L33"
+   ]
+  },
+  {
+   "id": "E-097",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "First real-phone run (cut 3 smoke, Galaxy A15 8 GB): 9/9, tree hash = desktop, latency 52–147 s",
+   "type": "experiment",
+   "significance": 3,
+   "fact_ids": [
+    "F-718"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L36"
+   ]
+  },
+  {
+   "id": "E-098",
+   "date": "2026-10-05",
+   "time": null,
+   "title": "A15 diagnosis: KV-cache save path bug (our own regression) re-prefills ~430+~300 tokens per question",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-719"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L37"
+   ]
+  },
+  {
+   "id": "E-102",
+   "date": "2026-10-06",
+   "time": "14:06",
+   "title": "Pipeline audit: \"rigorous process, looping direction\"; honest metric adopted",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-351"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L93"
+   ]
+  },
+  {
+   "id": "E-105",
+   "date": "2026-10-06",
+   "time": "21:25",
+   "title": "Cheaper judge triage adopted (Sonnet-low, later Haiku)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-158"
+   ],
+   "decision_ids": [
+    "D-040"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L96"
+   ]
+  },
+  {
+   "id": "E-108",
+   "date": "2026-10-06",
+   "time": "22:40",
+   "title": "Honest-metric rewrite: headline becomes floor-adjusted ratio + win/tie/loss, raw second",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-282"
+   ],
+   "decision_ids": [
+    "D-036",
+    "D-043"
+   ],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L39"
+   ]
+  },
+  {
+   "id": "E-099",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Cut 5 (speed-only), cut 6 (detector fix)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-334"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L90"
+   ]
+  },
+  {
+   "id": "E-100",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Phone (8 GB) full run, cut 6: 73/73, phone 0.561 = desktop 0.558/0.560",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-724",
+    "F-732"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L91",
+    "T-system-L46"
+   ]
+  },
+  {
+   "id": "E-101",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Claim/device build frozen at cut 6; later only routing/safety fixes",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-335",
+    "F-731"
+   ],
+   "decision_ids": [
+    "D-038"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L92",
+    "T-system-L44"
+   ]
+  },
+  {
+   "id": "E-103",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Cut 6 claim runs: v0.2 raw 0.512, V-para raw 0.413 / floor-adj 0.261",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1229",
+    "F-336"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L45",
+    "E-chron-early-L94"
+   ]
+  },
+  {
+   "id": "E-104",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Directional day: DEEPREAD, COMPLETE, NAMEDSLOT, FACTS; \"reader-capability gap\"",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-577"
+   ],
+   "decision_ids": [
+    "D-042"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L95"
+   ]
+  },
+  {
+   "id": "E-106",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "FACTS r6 on blind set 4: recall 70 % < 75 % → FAIL; kept as head by decision",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-337",
+    "F-352"
+   ],
+   "decision_ids": [
+    "D-042"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L97",
+    "T-results-L37"
+   ]
+  },
+  {
+   "id": "E-107",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "v0.2 declared burnt → dev",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-148"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L38"
+   ]
+  },
+  {
+   "id": "E-109",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Pipeline audit: rubric floor gives an always-decline system ≈ 0.31 \"for free\"; decision D1 = floor-adjusted headline; D5 = treat v0.2 as burnt",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-281"
+   ],
+   "decision_ids": [],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L39"
+   ]
+  },
+  {
+   "id": "E-110",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "L1 triage protocol frozen: 20-item slice, paired vs named control, never an absolute L1 ratio; Sonnet-low as cheap judge",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-155"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L40"
+   ]
+  },
+  {
+   "id": "E-111",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Cut 6 claim runs (second spend): v0.2 0.512 (0.478–0.549), V-para 0.413 (0.384–0.445), floor-adj 0.261, Haiku-no-web anchor 0.588",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1228"
+   ],
+   "decision_ids": [],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L34"
+   ]
+  },
+  {
+   "id": "E-112",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "v0.2 ruled burnt (plaintext in private bench repo history) → dev",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-156"
+   ],
+   "decision_ids": [
+    "D-041"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L35"
+   ]
+  },
+  {
+   "id": "E-113",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "DEEPREAD: deep model reads gold passages like the 4B (+0.029, CI −0.004…+0.063) → its gain is knowledge",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-580"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L36"
+   ]
+  },
+  {
+   "id": "E-114",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Retrieval scorecard: coverage is the largest failure bucket (49 %); recall@5 0.333",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-456"
+   ],
+   "decision_ids": [
+    "D-037",
+    "D-039"
+   ],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L38"
+   ]
+  },
+  {
+   "id": "E-115",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "A15 latency budget: warm p50 68.7 s model-path answer predicted for cut 4",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-730"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L41"
+   ]
+  },
+  {
+   "id": "E-116",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Cut 5 = cut 4 + no-source KV prefix + route-gate skip (CUT5-LITE adopted; CUT5-SPEED rejected on desktop gate)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-349"
+   ],
+   "decision_ids": [
+    "D-044"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L42"
+   ]
+  },
+  {
+   "id": "E-117",
+   "date": "2026-10-06",
+   "time": null,
+   "title": "Cut 6 = cut 5 + DETMAX (detector scores window and current turn)",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-350"
+   ],
+   "decision_ids": [
+    "D-045"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L43"
+   ]
+  },
+  {
+   "id": "E-123",
+   "date": "2026-10-07",
+   "time": "00:11",
+   "title": "MOESCREEN: 25–35B MoE closed-book plateau ≈ 0.60 vs 4B 0.487",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-586",
+    "F-587"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L39",
+    "E-chron-early-L98"
+   ]
+  },
+  {
+   "id": "E-125",
+   "date": "2026-10-07",
+   "time": "08:02",
+   "title": "Overnight loop closed; 158 local commits, nothing pushed",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-841"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L41"
+   ]
+  },
+  {
+   "id": "E-124",
+   "date": "2026-10-07",
+   "time": "09:23",
+   "title": "Cut 7 = cut 6 + FACTS r6; v0.3 to be written outside the Claude family; \"no device exists\"",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-360",
+    "F-361",
+    "F-746"
+   ],
+   "decision_ids": [
+    "D-046"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L47",
+    "T-results-L40",
+    "E-chron-early-L99"
+   ]
+  },
+  {
+   "id": "E-119",
+   "date": "2026-10-07",
+   "time": "14:26",
+   "title": "Autonomous research mandate",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-362"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L101"
+   ]
+  },
+  {
+   "id": "E-126",
+   "date": "2026-10-07",
+   "time": "17:58",
+   "title": "HAIKUJUDGE: Haiku 5.5-low adopted as L1 triage judge; JUDGE2 local Gemma judge = ranking only (+0.11 lenient)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1155",
+    "F-1156"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L41",
+    "T-method-L41"
+   ]
+  },
+  {
+   "id": "E-128",
+   "date": "2026-10-07",
+   "time": "18:06",
+   "title": "PARJUDGE: judge sharded into 4-8 parallel processes, ×4.5-4.8 faster, 0 rate-limit errors",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-168"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L43"
+   ]
+  },
+  {
+   "id": "E-118",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Fine-tune data line closed (teacher 16/20 → +rejection 11/20 → human 6/20 unsupported)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-354"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L100"
+   ]
+  },
+  {
+   "id": "E-120",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "VENUEGPS-2: venue items 0/7 → 7/7 with device location + area tile",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-734",
+    "F-744"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L102",
+    "T-system-L49"
+   ]
+  },
+  {
+   "id": "E-121",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Haiku 5.5-low becomes the L1 triage judge; judge sharding N = 4; \"no device exists\" ruling",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-160",
+    "F-736"
+   ],
+   "decision_ids": [
+    "D-052",
+    "D-049",
+    "D-053"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L103",
+    "E-process-L40"
+   ]
+  },
+  {
+   "id": "E-122",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "DEEPPAR-L1: on-device MoE engine (bmoe) judged-equivalent to llama-server (Δ −0.012) → TRANSFER",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-735",
+    "F-743",
+    "F-747"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L104",
+    "T-system-L48",
+    "T-results-L43"
+   ]
+  },
+  {
+   "id": "E-127",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "JUDGE2: local open-weights judge (Gemma 4 26B) keeps the ranking but scores +0.11 above Opus",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1154"
+   ],
+   "decision_ids": [
+    "D-050",
+    "D-048",
+    "D-051"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L42"
+   ]
+  },
+  {
+   "id": "E-129",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "Bench v0.3 spec accepted: claim set to be written outside the Claude family by the author with a non-Claude web-UI model",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1254"
+   ],
+   "decision_ids": [
+    "D-047"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L44"
+   ]
+  },
+  {
+   "id": "E-130",
+   "date": "2026-10-07",
+   "time": null,
+   "title": "VENUEGPS-2: venue items 0/7 → 7/7 with device location + area tile (plumbing proof)",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-742"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L42"
+   ]
+  },
+  {
+   "id": "E-136",
+   "date": "2026-10-08",
+   "time": "20:20",
+   "title": "DEEPTHINK: deep + thinking 1024 = 0.422 floor-adj; +0.093 over no thinking",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-597"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L45"
+   ]
+  },
+  {
+   "id": "E-131",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "DEEPVPARA: deep tier on V-para floor-adj 0.329 vs 4B 0.261 (two seeds, Opus)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-589",
+    "F-596"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L105",
+    "T-results-L44"
+   ]
+  },
+  {
+   "id": "E-132",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "Thinking mode on the deep tier: V-para floor-adj 0.422",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-590"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L106"
+   ]
+  },
+  {
+   "id": "E-133",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "Opus judge sharding for claim numbers; 20-item slice before any full deep-tier run",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-591"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L42"
+   ]
+  },
+  {
+   "id": "E-134",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "OPUSSHARD: Opus judge also allowed in N = 4 shards (20-call probe, same winner 10/10)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-171"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L45"
+   ]
+  },
+  {
+   "id": "E-135",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "SLICE20: every deep-tier / held-out-style arm starts on a 20-item slice",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-594"
+   ],
+   "decision_ids": [
+    "D-054"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L46"
+   ]
+  },
+  {
+   "id": "E-137",
+   "date": "2026-10-08",
+   "time": null,
+   "title": "Deep tier thinking budget curve; 512 adopted (DT512)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-595"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L50"
+   ]
+  },
+  {
+   "id": "E-142",
+   "date": "2026-10-09",
+   "time": "00:39",
+   "title": "Exposure ledger backfilled (45 rows); V-para status found to disagree across docs → ruling",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-175"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L43"
+   ]
+  },
+  {
+   "id": "E-145",
+   "date": "2026-10-09",
+   "time": "02:32",
+   "title": "DEEPTHINK-V02 L1 NO at Haiku +0.027 (later Opus addendum: v0.2 floor-adj 0.514)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-609"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L46"
+   ]
+  },
+  {
+   "id": "E-146",
+   "date": "2026-10-09",
+   "time": "06:35",
+   "title": "GEMMATHINK: Gemma 27 % faster but −0.028 raw → NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-462"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L47"
+   ]
+  },
+  {
+   "id": "E-147",
+   "date": "2026-10-09",
+   "time": "20:45",
+   "title": "DT256: budget 256 loses −0.028 vs 1024 (CHEAPER-LOSS); knee at 512",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-611"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L49"
+   ]
+  },
+  {
+   "id": "E-148",
+   "date": "2026-10-09",
+   "time": "23:14",
+   "title": "DT512-V02: H on v0.2 floor-adj 0.508 (0.467–0.550), first point above 0.50, CI straddles",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-612"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L50"
+   ]
+  },
+  {
+   "id": "E-138",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "Exposure ledger built; V-para status ruling",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-172"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L107"
+   ]
+  },
+  {
+   "id": "E-139",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "Gemma 4 26B + thinking: faster, not at parity → NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-600"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L108"
+   ]
+  },
+  {
+   "id": "E-140",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "DT512: thinking budget 512 = 1024 quality at 0.55× time → recommended config",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-364",
+    "F-610"
+   ],
+   "decision_ids": [
+    "D-056"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L109",
+    "T-results-L48"
+   ]
+  },
+  {
+   "id": "E-141",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "v0.2 deep + thinking two seeds: floor-adj 0.514 (CI straddles 0.50), win 0/110",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-601"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L110"
+   ]
+  },
+  {
+   "id": "E-143",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "V-para status ruling: held-out for the 4B claim runs, dev-style for everything measured after 2026-10-06",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1234"
+   ],
+   "decision_ids": [
+    "D-055"
+   ],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L47"
+   ]
+  },
+  {
+   "id": "E-144",
+   "date": "2026-10-09",
+   "time": null,
+   "title": "Exposure ledger backfilled from the log (one row per touch of a blind set)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-174"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L48"
+   ]
+  },
+  {
+   "id": "E-151",
+   "date": "2026-10-10",
+   "time": "13:30",
+   "title": "R&D process review: strong instrument, wrong target; deliverables unbuilt",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-366"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L113"
+   ]
+  },
+  {
+   "id": "E-164",
+   "date": "2026-10-10",
+   "time": "13:30",
+   "title": "R&D process review (10 Opus agents: 7 readers, 2 refuters, 1 critic; 76 findings): \"measurement machine better than typical, pointed at the wrong target\"",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1174"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L44"
+   ]
+  },
+  {
+   "id": "E-152",
+   "date": "2026-10-10",
+   "time": "17:34",
+   "title": "Claim readiness audit: evidence complete except v0.3; submission side not started",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1255"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L114"
+   ]
+  },
+  {
+   "id": "E-165",
+   "date": "2026-10-10",
+   "time": "20:50",
+   "title": "Double-check of that review (5 Opus agents): of 32 claims, 10 verified, 20 partly, 2 false; one task withdrawn",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-851"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L45"
+   ]
+  },
+  {
+   "id": "E-155",
+   "date": "2026-10-10",
+   "time": "20:57",
+   "title": "Handoff for the next session written: 10-step \"claim path\" (backups, decision note, UI wiring, judge fail-closed, APKs, repro package, claim text, readiness gate)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1235"
+   ],
+   "decision_ids": [],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L18"
+   ]
+  },
+  {
+   "id": "E-156",
+   "date": "2026-10-10",
+   "time": "21:05",
+   "title": "Decision note with defaults sent to the author (claim vehicle, bar scale \"raw formal + floor-adj + win-rate\", no v0.3, no device relay)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-759"
+   ],
+   "decision_ids": [
+    "D-060"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L19"
+   ]
+  },
+  {
+   "id": "E-157",
+   "date": "2026-10-10",
+   "time": "21:16",
+   "title": "Judge pipeline made fail-closed (missing ids/shards abort; tests 33/33)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-852"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L20"
+   ]
+  },
+  {
+   "id": "E-166",
+   "date": "2026-10-10",
+   "time": "21:16",
+   "title": "Judge pipeline made fail-closed (errored traces no longer silently dropped)",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-853"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L46"
+   ]
+  },
+  {
+   "id": "E-170",
+   "date": "2026-10-10",
+   "time": "21:16",
+   "title": "Fail-closed judge pipeline: errored or missing items now stop the run or score at the floor instead of vanishing",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-194"
+   ],
+   "decision_ids": [
+    "D-063"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L52"
+   ]
+  },
+  {
+   "id": "E-153",
+   "date": "2026-10-10",
+   "time": "21:27",
+   "title": "Cut 7 no-network measurement APK built and audited",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-760"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L115"
+   ]
+  },
+  {
+   "id": "E-158",
+   "date": "2026-10-10",
+   "time": "21:27",
+   "title": "Measurement-app (\"BOAR Bench\") cut 7 no-network APK built and audited: no INTERNET permission",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-761"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L21"
+   ]
+  },
+  {
+   "id": "E-159",
+   "date": "2026-10-10",
+   "time": "21:40",
+   "title": "Android chat wired to the measured engine on a branch; identity check 20/20",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-762"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L22"
+   ]
+  },
+  {
+   "id": "E-154",
+   "date": "2026-10-10",
+   "time": "21:50",
+   "title": "Author's direction: research on the Mac mini only until the bar is met; device and claim work after",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-367",
+    "F-764"
+   ],
+   "decision_ids": [
+    "D-059",
+    "D-065"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L116",
+    "E-chron-late-L24"
+   ]
+  },
+  {
+   "id": "E-160",
+   "date": "2026-10-10",
+   "time": "21:50",
+   "title": "STOP by the author (\"para tudo\"): all app/claim-package work halted",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-855"
+   ],
+   "decision_ids": [
+    "D-059"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L23"
+   ]
+  },
+  {
+   "id": "E-161",
+   "date": "2026-10-10",
+   "time": "22:09",
+   "title": "Criterion template with mandatory Power block; random-20 slices; bar table frozen",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-856"
+   ],
+   "decision_ids": [
+    "D-061",
+    "D-062"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L25"
+   ]
+  },
+  {
+   "id": "E-167",
+   "date": "2026-10-10",
+   "time": "22:09",
+   "title": "Power block mandatory in every criterion; random stratified 20-id slices replace the \"20 hardest\" slice",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-196",
+    "F-197"
+   ],
+   "decision_ids": [
+    "D-064"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L47",
+    "T-method-L53"
+   ]
+  },
+  {
+   "id": "E-162",
+   "date": "2026-10-10",
+   "time": "22:31",
+   "title": "BAR-TABLE written (all configs vs bar); LENGTHSHARE: ≈ 17 % of H's gap is reference length, ≈ 83 % substance",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1172",
+    "F-1175"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L53",
+    "E-chron-late-L26"
+   ]
+  },
+  {
+   "id": "E-163",
+   "date": "2026-10-10",
+   "time": "22:32",
+   "title": "DEEPRERANK, MP4B, DEEPITER, DEEPCOV-FB closed (retrieval-side levers on the deep tier)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-625"
+   ],
+   "decision_ids": [
+    "D-068"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L27"
+   ]
+  },
+  {
+   "id": "E-149",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Best-of-2, sampling presets, context size, corpus size, thinking 4B: all NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-615"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L111"
+   ]
+  },
+  {
+   "id": "E-150",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "SEEDVAR: H over 3 seeds mean floor-adj 0.432 (SD 0.025); one-seed deep Δ < 0.03 = seed noise",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1163",
+    "F-1171",
+    "F-1173"
+   ],
+   "decision_ids": [
+    "D-058"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-early-L112",
+    "T-results-L52",
+    "T-method-L50"
+   ]
+  },
+  {
+   "id": "E-168",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Near-miss rule after a Haiku triage stopped an arm Opus later rated +0.048",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-192"
+   ],
+   "decision_ids": [
+    "D-057"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L49"
+   ]
+  },
+  {
+   "id": "E-169",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Independent ML-process review (RND-REVIEW): CIs ~1.2× too narrow, hardest-20 slices inflate deltas, 0/32 criteria stated an MDE",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-193"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L51"
+   ]
+  },
+  {
+   "id": "E-171",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "THINK4B: thinking twin of the 4B +0.026 (CI crosses 0), ×3.7 time → NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-623"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L51"
+   ]
+  },
+  {
+   "id": "E-172",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Desktop queue empty: 4B side and deep-tier line both closed",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-624"
+   ],
+   "decision_ids": [
+    "D-067"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L54"
+   ]
+  },
+  {
+   "id": "E-173",
+   "date": "2026-10-10",
+   "time": null,
+   "title": "Deep tier handoff note: config + engine changes needed; no 12 GB device",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-757"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L51"
+   ]
+  },
+  {
+   "id": "E-174",
+   "date": "2026-10-11",
+   "time": "02:55",
+   "title": "NOTES35 (35B-written notes pack) fails its gate; all handoff research steps exhausted",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1001"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L28"
+   ]
+  },
+  {
+   "id": "E-175",
+   "date": "2026-10-11",
+   "time": "03:00",
+   "title": "JUDGEVAR: re-judging unchanged answers gives σ_judge ≈ 0.003; common-mode CIs adopted for deep-tier rows",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1180",
+    "F-1181",
+    "F-1183"
+   ],
+   "decision_ids": [
+    "D-072"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L55",
+    "E-chron-late-L29",
+    "T-method-L54"
+   ]
+  },
+  {
+   "id": "E-176",
+   "date": "2026-10-11",
+   "time": "03:4x",
+   "title": "LOOP-PROGRAM written: unattended self-paced loop, one experiment per tick",
+   "type": "start",
+   "significance": 3,
+   "fact_ids": [
+    "F-859"
+   ],
+   "decision_ids": [
+    "D-069"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L30",
+    "E-process-L48"
+   ]
+  },
+  {
+   "id": "E-177",
+   "date": "2026-10-11",
+   "time": "12:10",
+   "title": "Loop tick 1: LOSSMAP measures where the deep tier loses points",
+   "type": "experiment",
+   "significance": 3,
+   "fact_ids": [
+    "F-629"
+   ],
+   "decision_ids": [
+    "D-070"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L31"
+   ]
+  },
+  {
+   "id": "E-180",
+   "date": "2026-10-11",
+   "time": null,
+   "title": "Verdict labels LEVER / SMALL / NO / \"not detected at MDE\"; honesty relabel of under-powered closures",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-202"
+   ],
+   "decision_ids": [
+    "D-073",
+    "D-074"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L55"
+   ]
+  },
+  {
+   "id": "E-181",
+   "date": "2026-10-11",
+   "time": null,
+   "title": "CLOSED.md registry built (36 rows); honesty relabel \"not detected at MDE x\" for under-powered negatives",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-203"
+   ],
+   "decision_ids": [
+    "D-073"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L56"
+   ]
+  },
+  {
+   "id": "E-183",
+   "date": "2026-10-12",
+   "time": "00:34",
+   "title": "DEEPCOVER NO (correctness −0.11), VITALADD NO at slice",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-633"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L34"
+   ]
+  },
+  {
+   "id": "E-184",
+   "date": "2026-10-12",
+   "time": "01:28",
+   "title": "QUANTCEIL: 3-bit quant of deep model +0.004 (not detected); cycle adds 0 V-para points per 1,804 judge calls",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-634",
+    "F-865"
+   ],
+   "decision_ids": [
+    "D-075"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L35",
+    "T-results-L57"
+   ]
+  },
+  {
+   "id": "E-185",
+   "date": "2026-10-12",
+   "time": "08:07",
+   "title": "SYNTHDEEP, WIKISECTION, DEEPHEDGE closed at 0-call gates",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-635"
+   ],
+   "decision_ids": [
+    "D-077"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L36"
+   ]
+  },
+  {
+   "id": "E-186",
+   "date": "2026-10-12",
+   "time": "08:21",
+   "title": "Sequencing incident: the 35B Q2 model was deleted for QUANTCEIL while DEEPHEDGE needed it",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-636"
+   ],
+   "decision_ids": [
+    "D-075"
+   ],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L37"
+   ]
+  },
+  {
+   "id": "E-197",
+   "date": "2026-10-12",
+   "time": "08:21",
+   "title": "Model swap for one arm deletes the 35B model another arm still needs (second time) → rule 22",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-637"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L50"
+   ]
+  },
+  {
+   "id": "E-187",
+   "date": "2026-10-12",
+   "time": "11:27",
+   "title": "BAR-TABLE addendum: 0 floor-adjusted points adopted per 1,804 judge calls this cycle",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-866"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L38"
+   ]
+  },
+  {
+   "id": "E-188",
+   "date": "2026-10-12",
+   "time": "13:43",
+   "title": "Peer deep-research report (258 findings, 23 claims verified, 18 corrected); \"facts are not in Wikipedia\" withdrawn",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1010",
+    "F-863"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L39",
+    "E-process-L51"
+   ]
+  },
+  {
+   "id": "E-189",
+   "date": "2026-10-12",
+   "time": "14:17",
+   "title": "RATIONALEPASS, NUMCHECK, EVALFIX, K2HALF, SEEDSPEC (0 Claude calls)",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-868"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L40"
+   ]
+  },
+  {
+   "id": "E-190",
+   "date": "2026-10-12",
+   "time": "20:06",
+   "title": "Author's direction: Knowledge Packs; research question becomes conditional quality with the matching pack installed",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1013"
+   ],
+   "decision_ids": [
+    "D-078"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L41"
+   ]
+  },
+  {
+   "id": "E-191",
+   "date": "2026-10-12",
+   "time": "20:14",
+   "title": "PACKCOND P1–P4, PACKDENSE, HEALTHQ, SECTIONHIT: in-pack loss is retrieval, not grounding",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1014"
+   ],
+   "decision_ids": [
+    "D-082"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L42"
+   ]
+  },
+  {
+   "id": "E-192",
+   "date": "2026-10-12",
+   "time": "20:41",
+   "title": "Loop stopped by the author, restarted 12 min later on a 30-min cron",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-869"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L43"
+   ]
+  },
+  {
+   "id": "E-193",
+   "date": "2026-10-12",
+   "time": "22:32",
+   "title": "Author: build a pack-authoring workflow (\"we will be the first author with publications\")",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1016"
+   ],
+   "decision_ids": [
+    "D-079",
+    "D-083"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L44"
+   ]
+  },
+  {
+   "id": "E-194",
+   "date": "2026-10-12",
+   "time": "22:46",
+   "title": "Pack catalogue + authoring workflow (licence policy PD/CC0/CC BY/CC BY-SA only)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1307"
+   ],
+   "decision_ids": [
+    "D-080"
+   ],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L45"
+   ]
+  },
+  {
+   "id": "E-195",
+   "date": "2026-10-12",
+   "time": "23:22",
+   "title": "Autonomy rule from the author: never ask for approval; paid API only when no free equivalent",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-871"
+   ],
+   "decision_ids": [
+    "D-081"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L46"
+   ]
+  },
+  {
+   "id": "E-196",
+   "date": "2026-10-12",
+   "time": "23:24",
+   "title": "7 wave-1 packs built",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1018"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L47"
+   ]
+  },
+  {
+   "id": "E-200",
+   "date": "2026-10-12",
+   "time": "23:4x",
+   "title": "Knowledge Pack catalogue and authoring workflow (D-K1..D-K7)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-370"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L52"
+   ]
+  },
+  {
+   "id": "E-198",
+   "date": "2026-10-12",
+   "time": null,
+   "title": "v0.3 power statement: bar test at n = 110 needs a point estimate ≈ 0.53 (≈ 0.545 with one-seed run noise)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1256"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L56"
+   ]
+  },
+  {
+   "id": "E-199",
+   "date": "2026-10-12",
+   "time": null,
+   "title": "Correction: \"facts are not in Wikipedia\" withdrawn (scope was the top-100k pack only)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1009"
+   ],
+   "decision_ids": [
+    "D-076"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L58"
+   ]
+  },
+  {
+   "id": "E-201",
+   "date": "2026-10-13",
+   "time": "00:01",
+   "title": "Wave 1 (7 packs) published on Hugging Face (the author's boar-packs dataset)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1037",
+    "F-1038"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L48",
+    "T-system-L53"
+   ]
+  },
+  {
+   "id": "E-202",
+   "date": "2026-10-13",
+   "time": "01:50",
+   "title": "WIKIFULL (all of Wikipedia + 2026-10-01 delta) holds the missing fact for 9/34 (a lower bound) V-para absent items: Wikipedia closed as kit content for the bar",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1039"
+   ],
+   "decision_ids": [
+    "D-089"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L49"
+   ]
+  },
+  {
+   "id": "E-203",
+   "date": "2026-10-13",
+   "time": "02:30",
+   "title": "Wave 2 (Factbook, Simple English Wikipedia) published",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1041",
+    "F-372"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L50",
+    "T-system-L54"
+   ]
+  },
+  {
+   "id": "E-215",
+   "date": "2026-10-13",
+   "time": "08:45",
+   "title": "Author challenges 9+ idle ticks; loop un-idled; rules 24 (never idle while 0-call work exists) and 25 (no Haiku cap)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-875"
+   ],
+   "decision_ids": [
+    "D-090"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L52"
+   ]
+  },
+  {
+   "id": "E-204",
+   "date": "2026-10-13",
+   "time": "10:20",
+   "title": "Rule 25: no Haiku cap",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-877"
+   ],
+   "decision_ids": [
+    "D-090"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L51"
+   ]
+  },
+  {
+   "id": "E-205",
+   "date": "2026-10-13",
+   "time": "10:37",
+   "title": "SELFTEST-SCORES: 9 packs scored with/without on the 180",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1042"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L52"
+   ]
+  },
+  {
+   "id": "E-206",
+   "date": "2026-10-13",
+   "time": "10:58",
+   "title": "Two session restarts in one day; nohup jobs survive, in-process agents die",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-878",
+    "F-879"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L53",
+    "E-process-L53"
+   ]
+  },
+  {
+   "id": "E-207",
+   "date": "2026-10-13",
+   "time": "12:33",
+   "title": "Pack-stack measurement: DENSECHUNK-ST2, PACKROUTE, PACKROUTE-2, GROUND-ST, CROWDQ, STACK/STACK-2, SEEDGEN",
+   "type": "experiment",
+   "significance": 3,
+   "fact_ids": [
+    "F-1044"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L54"
+   ]
+  },
+  {
+   "id": "E-208",
+   "date": "2026-10-13",
+   "time": "17:15",
+   "title": "REPORT-PACKS drafted and independently reviewed (39 edits)",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1048"
+   ],
+   "decision_ids": [
+    "D-087"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L55"
+   ]
+  },
+  {
+   "id": "E-209",
+   "date": "2026-10-13",
+   "time": "19:34",
+   "title": "Wave 3 (cooking, money SE) published; hub holds 11 packs",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1049",
+    "F-1050"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L56",
+    "T-system-L55"
+   ]
+  },
+  {
+   "id": "E-210",
+   "date": "2026-10-13",
+   "time": "19:36",
+   "title": "SELFTEST-DEEP 18/18: the deep tier gains nothing from any pack",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1051"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L57"
+   ]
+  },
+  {
+   "id": "E-212",
+   "date": "2026-10-13",
+   "time": "21:14",
+   "title": "Phone tester package for a 12 GB-class phone built and shared via a link folder",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-769"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L59"
+   ]
+  },
+  {
+   "id": "E-217",
+   "date": "2026-10-13",
+   "time": "21:43",
+   "title": "Ledger audit workflow (54-58 Opus agents): 159 verified arm records; 48 verdicts with no closed-registry row, 10 exposures with no row",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-883"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L55"
+   ]
+  },
+  {
+   "id": "E-213",
+   "date": "2026-10-13",
+   "time": "23:11",
+   "title": "ORACLE-ST: injecting the known fact chunk = +0.095 → retrieval reach is the wall on pack items, not the reader",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1055",
+    "F-1056"
+   ],
+   "decision_ids": [
+    "D-086"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L60",
+    "E-chron-late-L60"
+   ]
+  },
+  {
+   "id": "E-218",
+   "date": "2026-10-13",
+   "time": "23:14",
+   "title": "Judge resume provenance fix: resuming over another trace's rows now exits 7",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-884"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L56"
+   ]
+  },
+  {
+   "id": "E-214",
+   "date": "2026-10-13",
+   "time": "23:28",
+   "title": "RIVALSET: on a competitor team's public 72 questions (our port of their rubric) 4B 3.12 vs competitor [competitor score removed] vs Haiku 7.17",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-478",
+    "F-479"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L61",
+    "E-chron-late-L61"
+   ]
+  },
+  {
+   "id": "E-219",
+   "date": "2026-10-13",
+   "time": null,
+   "title": "Ledger audit of 159 arms: 12 HIGH / 97 MEDIUM discrepancies, 48 verdicts without a registry row, 10 unlogged exposures",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-213"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L57"
+   ]
+  },
+  {
+   "id": "E-220",
+   "date": "2026-10-13",
+   "time": null,
+   "title": "Determinism rule (SEEDGEN): pair runs on prompt identity; the desktop 4B path is byte-deterministic",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-477"
+   ],
+   "decision_ids": [],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L58"
+   ]
+  },
+  {
+   "id": "E-221",
+   "date": "2026-10-13",
+   "time": null,
+   "title": "Knowledge packs published on Hugging Face: 7 at 00:01 and 9 at 02:30 on 10-13, 11 by 19:34 the same day; single pack +0.042 Opus on its 180 self-tests; deep tier gains nothing from packs (−0.002)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1034"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L59"
+   ]
+  },
+  {
+   "id": "E-222",
+   "date": "2026-10-13",
+   "time": null,
+   "title": "Pack-stack technical report (crowding, routing, keep, reader)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1035"
+   ],
+   "decision_ids": [
+    "D-084"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L56"
+   ]
+  },
+  {
+   "id": "E-233",
+   "date": "2026-10-14",
+   "time": "01:33",
+   "title": "Ledger fixes applied: closed-registry rows R50-R70",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-920"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L57"
+   ]
+  },
+  {
+   "id": "E-223",
+   "date": "2026-10-14",
+   "time": "01:47",
+   "title": "HEADPASS X1 (neighbour chunks): Opus +0.033 (measured beyond plan; label capped \"not decidable\")",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1066",
+    "F-1067",
+    "F-1068",
+    "F-1071"
+   ],
+   "decision_ids": [
+    "D-092"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L62",
+    "T-results-L62",
+    "E-chron-late-L65",
+    "T-results-L66"
+   ]
+  },
+  {
+   "id": "E-224",
+   "date": "2026-10-14",
+   "time": "08:04",
+   "title": "MICROD2Q (doc2query) fails; doc2query closed",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-922"
+   ],
+   "decision_ids": [
+    "D-091"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L63"
+   ]
+  },
+  {
+   "id": "E-234",
+   "date": "2026-10-14",
+   "time": "10:4x",
+   "title": "Coordinator session dies on an expired login token; mini idle 2.2 h",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-924"
+   ],
+   "decision_ids": [
+    "D-099"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L58"
+   ]
+  },
+  {
+   "id": "E-225",
+   "date": "2026-10-14",
+   "time": "10:56",
+   "title": "SFT TEACHER-PROBE NO-GO (deep teacher 6/120 faithful); fine-tuning line closed",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-483"
+   ],
+   "decision_ids": [
+    "D-093"
+   ],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L64"
+   ]
+  },
+  {
+   "id": "E-226",
+   "date": "2026-10-14",
+   "time": "16:35",
+   "title": "Author: wind-down to a decision point; no new arms",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-925"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L66"
+   ]
+  },
+  {
+   "id": "E-227",
+   "date": "2026-10-14",
+   "time": "17:06",
+   "title": "RIVALSET-DEEP: deep tier 3.92 on the competitor port, gap is obscure-subject coverage",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-643"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L67"
+   ]
+  },
+  {
+   "id": "E-229",
+   "date": "2026-10-14",
+   "time": "19:56",
+   "title": "LOOP v2 retrospective: 133 ticks, ≈ 12.0k Claude calls (≈ 10.5k judge calls), 1 lever, ≈31 avoidable machine-hours",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-928",
+    "F-929"
+   ],
+   "decision_ids": [
+    "D-095"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L69",
+    "E-process-L60"
+   ]
+  },
+  {
+   "id": "E-237",
+   "date": "2026-10-14",
+   "time": "21:59",
+   "title": "Team's closing-sprint deadline set to 2026-10-20 (the bounty page says final decision by 2026-10-31); closing sprint",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1258",
+    "F-1260"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L63",
+    "T-method-L60"
+   ]
+  },
+  {
+   "id": "E-230",
+   "date": "2026-10-14",
+   "time": "22:17",
+   "title": "Open-source intent: research AND benchmark public; v0.1 reference-answer text made public",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-223"
+   ],
+   "decision_ids": [
+    "D-097"
+   ],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L71"
+   ]
+  },
+  {
+   "id": "E-231",
+   "date": "2026-10-14",
+   "time": "22:21",
+   "title": "LONGSESSION: no quality drop across 5 turns (and to turn 15)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1259",
+    "F-1261"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L65",
+    "E-chron-late-L72"
+   ]
+  },
+  {
+   "id": "E-232",
+   "date": "2026-10-14",
+   "time": "22:31",
+   "title": "PR-1 (cut 7 rebased on upstream + chat wiring) engineering complete, review \"mergeable as is\"",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-373"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L73"
+   ]
+  },
+  {
+   "id": "E-235",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "Rule 28 (verdict + registry rows in the same commit) and Rule 29 (experiment economics: Ceiling, Budget, kill points, judge escalation); Rule 29 reviewed ACCEPT WITH EDITS",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-892"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L59"
+   ]
+  },
+  {
+   "id": "E-236",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "RULE 29 experiment economics: Ceiling + Budget + Transfer blocks; no Opus on dev sets",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-918"
+   ],
+   "decision_ids": [
+    "D-094",
+    "D-098"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L59"
+   ]
+  },
+  {
+   "id": "E-238",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "EXPERIMENT-ECONOMICS: of 101 closed arms 54 closed at 0 judge calls",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-919"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L67"
+   ]
+  },
+  {
+   "id": "E-239",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "HEADPASS-X2b lever (+0.066 on 180 dev self-tests)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1065"
+   ],
+   "decision_ids": [
+    "D-092"
+   ],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L57"
+   ]
+  },
+  {
+   "id": "E-240",
+   "date": "2026-10-14",
+   "time": null,
+   "title": "Cut 7 on a 12 GB-class phone (POCO X6 Pro): device = desktop",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-784"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L58"
+   ]
+  },
+  {
+   "id": "E-242",
+   "date": "2026-10-15",
+   "time": "00:45",
+   "title": "Closing-sprint loop on in the live session",
+   "type": "start",
+   "significance": 1,
+   "fact_ids": [
+    "F-935"
+   ],
+   "decision_ids": [
+    "D-108"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L74"
+   ]
+  },
+  {
+   "id": "E-243",
+   "date": "2026-10-15",
+   "time": "01:03",
+   "title": "Public repos staged: scrub, mechanical gate, independent review (41/44 findings applied)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1314",
+    "F-1315"
+   ],
+   "decision_ids": [
+    "D-105"
+   ],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L75",
+    "E-process-L62"
+   ]
+  },
+  {
+   "id": "E-260",
+   "date": "2026-10-15",
+   "time": "01:18",
+   "title": "Public bench and research repos staged and verified (scrubbed, reviewed)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1317"
+   ],
+   "decision_ids": [],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L61"
+   ]
+  },
+  {
+   "id": "E-244",
+   "date": "2026-10-15",
+   "time": "10:07",
+   "title": "Public repos live: boar-bench (139 files) and boar-research (411 files)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1318"
+   ],
+   "decision_ids": [],
+   "chapter": "reproduce",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L76"
+   ]
+  },
+  {
+   "id": "E-256",
+   "date": "2026-10-15",
+   "time": "10:07",
+   "title": "Public repos live (first push by the coordinator, explicitly authorised for those two repos only)",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-937"
+   ],
+   "decision_ids": [
+    "D-100"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L63"
+   ]
+  },
+  {
+   "id": "E-245",
+   "date": "2026-10-15",
+   "time": "10:10",
+   "title": "Engine PR opened to the upstream app; CI green 10:49",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1271",
+    "F-938"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L77",
+    "E-process-L64"
+   ]
+  },
+  {
+   "id": "E-246",
+   "date": "2026-10-15",
+   "time": "10:48",
+   "title": "Illustrated research page + short group post ready",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-939"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L78"
+   ]
+  },
+  {
+   "id": "E-247",
+   "date": "2026-10-15",
+   "time": "11:00",
+   "title": "Official submission vehicle = maintainer's native Kotlin app",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1273",
+    "F-1274"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L79",
+    "T-system-L60"
+   ]
+  },
+  {
+   "id": "E-248",
+   "date": "2026-10-15",
+   "time": "15:24",
+   "title": "MATHROUTE: math-through-the-model router does not recover the calculator (20/26 vs 23/26)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-381"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L80"
+   ]
+  },
+  {
+   "id": "E-249",
+   "date": "2026-10-15",
+   "time": "18:58",
+   "title": "Maintainer package sent (140-question eval request, health-path port spec)",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-940"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L81"
+   ]
+  },
+  {
+   "id": "E-250",
+   "date": "2026-10-15",
+   "time": "19:28",
+   "title": "Session split: PR-watch session vs research session",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-941"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L82"
+   ]
+  },
+  {
+   "id": "E-263",
+   "date": "2026-10-15",
+   "time": "19:5x",
+   "title": "Native iOS port started (SwiftUI + Swift port of the Kotlin engine)",
+   "type": "start",
+   "significance": 1,
+   "fact_ids": [
+    "F-383"
+   ],
+   "decision_ids": [],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L62"
+   ]
+  },
+  {
+   "id": "E-251",
+   "date": "2026-10-15",
+   "time": "20:11",
+   "title": "LOOP v2 tooling T1–T7 built (queue runner, STATE line, smoke gate, log writers, judge preflight, lane locks, watchdog)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-942",
+    "F-943"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L66",
+    "E-chron-late-L83"
+   ]
+  },
+  {
+   "id": "E-252",
+   "date": "2026-10-15",
+   "time": "20:36",
+   "title": "NUMGUARD r1→r3: lexicon guard rejected as unsafe by review; calculator-only r3 PASS",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-384"
+   ],
+   "decision_ids": [
+    "D-103",
+    "D-109"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L84"
+   ]
+  },
+  {
+   "id": "E-258",
+   "date": "2026-10-15",
+   "time": "21:34",
+   "title": "Independent reviewer REJECTs a numeric guard as unsafe; scope cut to calculator-only",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-385"
+   ],
+   "decision_ids": [
+    "D-103"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L67"
+   ]
+  },
+  {
+   "id": "E-253",
+   "date": "2026-10-15",
+   "time": "22:14",
+   "title": "Ternary Bonsai models closed; Qwen3-1.7B becomes the lite candidate",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1268",
+    "F-1276"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L68",
+    "E-chron-late-L85"
+   ]
+  },
+  {
+   "id": "E-254",
+   "date": "2026-10-15",
+   "time": "22:2x",
+   "title": "Author: lite tier is an open, post-10-20 exploration line; starts with an unsafe-answer warning",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1277"
+   ],
+   "decision_ids": [
+    "D-104",
+    "D-106"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L86"
+   ]
+  },
+  {
+   "id": "E-255",
+   "date": "2026-10-15",
+   "time": "22:51",
+   "title": "HEALTHGAP: 15 health probes reach the model unguarded; predicate v1.1/v1.2, implementation PASS",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-387"
+   ],
+   "decision_ids": [
+    "D-109"
+   ],
+   "chapter": "builds",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L87"
+   ]
+  },
+  {
+   "id": "E-259",
+   "date": "2026-10-15",
+   "time": "23:38",
+   "title": "Coordinator's own hashing error: a valid freeze wrongly \"corrected\", then the correction corrected",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-944"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L68"
+   ]
+  },
+  {
+   "id": "E-257",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Research page + post reviewed by an independent agent: PUBLISHABLE AFTER FIXES; every number matched the release",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-931"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L65"
+   ]
+  },
+  {
+   "id": "E-261",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Submission vehicle = maintainer's native Kotlin app; PR #85 (cut 7 engine as reference) open",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1269"
+   ],
+   "decision_ids": [
+    "D-101"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L69"
+   ]
+  },
+  {
+   "id": "E-262",
+   "date": "2026-10-15",
+   "time": null,
+   "title": "Port spec of the health path written for the native app",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1270"
+   ],
+   "decision_ids": [
+    "D-107"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L61"
+   ]
+  },
+  {
+   "id": "E-264",
+   "date": "2026-10-16",
+   "time": "00:56",
+   "title": "LITE5-180: X2b on 1.7B +0.071 (Haiku); 1.7B+X2b = 4B plain (−0.007) on pack-matched items",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1086",
+    "F-1088"
+   ],
+   "decision_ids": [],
+   "chapter": "packs",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L88",
+    "T-results-L70"
+   ]
+  },
+  {
+   "id": "E-273",
+   "date": "2026-10-16",
+   "time": "04:00",
+   "title": "Lanes idle by coordinator choice, then judge login dead (06:50); logged as a coordinator fault; \"idle lane is a failure\" restated",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-947"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L69"
+   ]
+  },
+  {
+   "id": "E-265",
+   "date": "2026-10-16",
+   "time": "06:50",
+   "title": "Judge authentication expired; no judge passes for ≈ 2.5 h; lanes idle ≈ 5 h (coordinator fault acknowledged)",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-948"
+   ],
+   "decision_ids": [
+    "D-111"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L89"
+   ]
+  },
+  {
+   "id": "E-266",
+   "date": "2026-10-16",
+   "time": "09:38",
+   "title": "NUMGUARD r3 + HEALTHGAP r2 added to the upstream PR; WARN banner spec v2",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1283",
+    "F-1285"
+   ],
+   "decision_ids": [
+    "D-117"
+   ],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L63",
+    "E-chron-late-L90"
+   ]
+  },
+  {
+   "id": "E-267",
+   "date": "2026-10-16",
+   "time": "10:05",
+   "title": "Lite line closed: readers, quant, reach budget, follow-up, query rewrite, thinking",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-647"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L91"
+   ]
+  },
+  {
+   "id": "E-268",
+   "date": "2026-10-16",
+   "time": "18:04",
+   "title": "SMALLROUTE (small model as router) opened and closed at S0",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-951"
+   ],
+   "decision_ids": [],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L92"
+   ]
+  },
+  {
+   "id": "E-269",
+   "date": "2026-10-16",
+   "time": "18:13",
+   "title": "LESPORT: expert-streaming fork runs the 35B in 2.8 GiB RSS on desktop CPU, judged parity TRANSFER",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-797",
+    "F-798",
+    "F-800"
+   ],
+   "decision_ids": [
+    "D-119"
+   ],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L65",
+    "E-chron-late-L93",
+    "T-results-L73"
+   ]
+  },
+  {
+   "id": "E-270",
+   "date": "2026-10-16",
+   "time": "18:28",
+   "title": "Independent adversarial CRITIQUE: 7 re-wordings applied",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-952"
+   ],
+   "decision_ids": [
+    "D-116"
+   ],
+   "chapter": "agent-lab",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L94"
+   ]
+  },
+  {
+   "id": "E-276",
+   "date": "2026-10-16",
+   "time": "19:01",
+   "title": "Cross-family judge (author via Codex) on existing V-para traces: Claude judge ≈ +0.10 stricter",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-230"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L72"
+   ]
+  },
+  {
+   "id": "E-271",
+   "date": "2026-10-16",
+   "time": "19:02",
+   "title": "XFAM: cross-family judge (OpenAI gpt-5.6-sol via the Codex CLI, 408 calls) on V-para traces: ≈ +0.10 vs Claude, same ranking, win-rate ≈ 0",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1202",
+    "F-1203",
+    "F-1204"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L64",
+    "T-results-L72",
+    "E-chron-late-L95"
+   ]
+  },
+  {
+   "id": "E-272",
+   "date": "2026-10-16",
+   "time": "21:00",
+   "title": "Claim v4.2 / v4.2.1: judge family named on every ratio; native comparison kept internal",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1205"
+   ],
+   "decision_ids": [
+    "D-115"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L96"
+   ]
+  },
+  {
+   "id": "E-275",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Adversarial outside critique: numbers real, internal narrative overstated; 7 re-wordings applied 18:28",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1191"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L71"
+   ]
+  },
+  {
+   "id": "E-277",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "v0.3 write kit handed to the author (items still unwritten)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1282"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L62"
+   ]
+  },
+  {
+   "id": "E-278",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Critique raises the one-seed noise rule from 0.03 to ≥ 0.05",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-1196"
+   ],
+   "decision_ids": [
+    "D-110"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L63"
+   ]
+  },
+  {
+   "id": "E-279",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Adversarial critique: lite \"= 4B\" overstated (kit −0.111), lite gap is reading too (−0.070 at identical contexts); closed loop risk",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1197"
+   ],
+   "decision_ids": [
+    "D-113"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L71"
+   ]
+  },
+  {
+   "id": "E-280",
+   "date": "2026-10-16",
+   "time": null,
+   "title": "Lite tier (Qwen3-1.7B) evaluated; LITESAFETY PASS; critique corrects \"1.7B = 4B\"",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1198"
+   ],
+   "decision_ids": [
+    "D-118"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L64"
+   ]
+  },
+  {
+   "id": "E-284",
+   "date": "2026-10-17",
+   "time": "01:09",
+   "title": "XFAM-V02: same judge on v0.2 (660 calls): offset holds (+0.10 raw / +0.13 floor-adj), deep − 4B gap identical",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1209",
+    "F-1210",
+    "F-1211"
+   ],
+   "decision_ids": [],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L97",
+    "T-method-L65",
+    "T-results-L74"
+   ]
+  },
+  {
+   "id": "E-287",
+   "date": "2026-10-17",
+   "time": "01:09",
+   "title": "Cross-family offset replicates on v0.2",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-233"
+   ],
+   "decision_ids": [],
+   "chapter": "ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L73"
+   ]
+  },
+  {
+   "id": "E-288",
+   "date": "2026-10-17",
+   "time": "04:05",
+   "title": "Submitted app (maintainer's native build) scored for the first time; maintainer-supplied traces",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1290"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-process-L74"
+   ]
+  },
+  {
+   "id": "E-291",
+   "date": "2026-10-17",
+   "time": "04:05",
+   "title": "Submitted native app scored internally on 57 public items (numbers held internal)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1291"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L75"
+   ]
+  },
+  {
+   "id": "E-281",
+   "date": "2026-10-17",
+   "time": "20:52",
+   "title": "Claim v4.2.3 / v4.2.4: wording as of 2026-10-17 (the posted claim follows the standing at closure); submitted app ports retrieval and prompts, not the health path or deterministic answers",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1293",
+    "F-491"
+   ],
+   "decision_ids": [
+    "D-120"
+   ],
+   "chapter": "walls",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L68",
+    "E-chron-late-L100"
+   ]
+  },
+  {
+   "id": "E-290",
+   "date": "2026-10-17",
+   "time": "20:52",
+   "title": "Claim v4.2.3: \"the lower judge is the headline\"; judge family named next to every ratio",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1212"
+   ],
+   "decision_ids": [
+    "D-122"
+   ],
+   "chapter": "measurer",
+   "visibility": "public",
+   "aliases": [
+    "T-method-L66"
+   ]
+  },
+  {
+   "id": "E-283",
+   "date": "2026-10-17",
+   "time": "23:07",
+   "title": "HONESTPROMPT launched (maintainer's honesty-prompt edits vs invented facts)",
+   "type": "experiment",
+   "significance": 1,
+   "fact_ids": [
+    "F-1295"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "E-chron-late-L102"
+   ]
+  },
+  {
+   "id": "E-292",
+   "date": "2026-10-17",
+   "time": null,
+   "title": "Claim draft v4.2.4: Claude Opus stays the headline (lower judge), win-rate first",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-287"
+   ],
+   "decision_ids": [],
+   "chapter": "floor-trap",
+   "visibility": "public",
+   "aliases": [
+    "T-results-L76"
+   ]
+  },
+  {
+   "id": "E-293",
+   "date": "2026-10-20",
+   "time": null,
+   "title": "Bounty deadline (moved)",
+   "type": "milestone",
+   "significance": 3,
+   "fact_ids": [
+    "F-1296"
+   ],
+   "decision_ids": [],
+   "chapter": "handoff",
+   "visibility": "public",
+   "aliases": [
+    "T-system-L69"
+   ]
+  },
+  {
+   "id": "E-451",
+   "date": "2026-10-18",
+   "time": "00:53",
+   "title": "Literature pass on prompting 1-8B models for honesty without over-refusal (PROMPT-LIT), Haiku sweep + Opus verification",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-1320"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-01"
+   ]
+  },
+  {
+   "id": "E-294",
+   "date": "2026-10-18",
+   "time": "00:55",
+   "title": "Publication reframed as living preprint v0.1 \"as of 2026-10-18\" (internal build state)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1321"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-02"
+   ]
+  },
+  {
+   "id": "E-295",
+   "date": "2026-10-18",
+   "time": "01:03",
+   "title": "HONESTPROMPT set-A audit: honest Detailed prompt cuts wrong claims 0.231 -> 0.062",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1322"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-03"
+   ]
+  },
+  {
+   "id": "E-296",
+   "date": "2026-10-18",
+   "time": "05:02",
+   "title": "HONESTPROMPT verdict: GO for Detailed honest (D1), NO for Succinct-honest (S1)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1323",
+    "F-1771"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-04",
+    "E-u-results-L24"
+   ]
+  },
+  {
+   "id": "E-297",
+   "date": "2026-10-18",
+   "time": "07:36",
+   "title": "HONESTPROMPT closed; capability sentence does not make Detailed write code (route code asks instead)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1324"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-05"
+   ]
+  },
+  {
+   "id": "E-298",
+   "date": "2026-10-18",
+   "time": "10:02",
+   "title": "CHATFAIL S1: routing fix for code/format asks PARTIAL on 4B (+0.122 detector, ~+0.10 audited), NO on 1.5B",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1325",
+    "F-1772"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-06",
+    "E-u-results-L25"
+   ]
+  },
+  {
+   "id": "E-299",
+   "date": "2026-10-18",
+   "time": "10:30",
+   "title": "D4 prompt (D1 + \"always do what the user asks\" capability rule) = D1 on v0.1 (+0.003); D4 becomes recommended Detailed prompt",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1326"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-07"
+   ]
+  },
+  {
+   "id": "E-301",
+   "date": "2026-10-18",
+   "time": "15:43",
+   "title": "NEXT-STEPS decision document: 7 open decisions, three closure paths, and a conflict between the submission date and a later app release date",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1328"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-09"
+   ]
+  },
+  {
+   "id": "E-302",
+   "date": "2026-10-18",
+   "time": "16:07",
+   "title": "Author delegates D1-D7; adopted as recommended (no v0.3; submit with claim v4.2.4; site v1.0 only at closure)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1329",
+    "F-1773"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-10",
+    "E-u-results-L26"
+   ]
+  },
+  {
+   "id": "E-303",
+   "date": "2026-10-18",
+   "time": "16:59",
+   "title": "Three engine bug fixes staged from the maintainer's plugin suite: quadratic digit regex, CO card \"in the car\", facts table currency/QID labels (r7)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1330",
+    "F-1774"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-11",
+    "E-u-results-L27"
+   ]
+  },
+  {
+   "id": "E-304",
+   "date": "2026-10-19",
+   "time": "13:04",
+   "title": "FACTSAUDIT: facts r7 vs CIA Factbook, 5 table-wrong rows; r8 fixes + emergency numbers for 195 countries",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1331",
+    "F-1775"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-12",
+    "E-u-results-L28"
+   ]
+  },
+  {
+   "id": "E-452",
+   "date": "2026-10-19",
+   "time": "13:15",
+   "title": "PROMPT-LIT-2 verified (19 claims): small models misuse offered tools; LFM2.5 card says not for knowledge QA without retrieval",
+   "type": "experiment",
+   "significance": 1,
+   "fact_ids": [
+    "F-1332"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-13"
+   ]
+  },
+  {
+   "id": "E-305",
+   "date": "2026-10-19",
+   "time": "13:30",
+   "title": "Author redirects to \"tests with sources\" (user has the matching pack): PACKREAD launched",
+   "type": "pivot",
+   "significance": 2,
+   "fact_ids": [
+    "F-1333",
+    "F-1776"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-14",
+    "E-u-results-L29"
+   ]
+  },
+  {
+   "id": "E-306",
+   "date": "2026-10-19",
+   "time": "13:51",
+   "title": "SAFEPACK: emergency pack installed, engine is safe but unhelpful (SAFE-FAIL 26/30)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1334",
+    "F-1777"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-15",
+    "E-u-results-L30"
+   ]
+  },
+  {
+   "id": "E-307",
+   "date": "2026-10-19",
+   "time": "14:12",
+   "title": "SAFEROUTE fix raises gold-page reach 1 -> 21/30 but adds unsafe verbatim extracts; frozen rule FAIL kept on record, author releases the patch anyway (later held)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1335",
+    "F-1778"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-16",
+    "E-u-results-L31"
+   ]
+  },
+  {
+   "id": "E-308",
+   "date": "2026-10-19",
+   "time": "15:08",
+   "title": "SMALLCLS: 1.7B hazard classifier; review later shows it names the right hazard on only 14/45",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1336"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-17"
+   ]
+  },
+  {
+   "id": "E-309",
+   "date": "2026-10-19",
+   "time": "15:19",
+   "title": "Independent direction review: stop opening arms, consolidate, hold saferoute",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1337",
+    "F-1779"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-18",
+    "E-u-results-L32"
+   ]
+  },
+  {
+   "id": "E-310",
+   "date": "2026-10-19",
+   "time": "17:51",
+   "title": "PACKREAD complete: 4B 0.650 > LFM2.5 0.554 > 1.7B 0.529 reading packs (D4 prompt)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1338"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-19"
+   ]
+  },
+  {
+   "id": "E-311",
+   "date": "2026-10-19",
+   "time": "19:00",
+   "title": "Engine PR updated with 8 commits (saferoute held), 1,586/1,586 tests",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1339",
+    "F-1780"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-20",
+    "E-u-results-L33"
+   ]
+  },
+  {
+   "id": "E-312",
+   "date": "2026-10-19",
+   "time": "21:29",
+   "title": "RELGATE: 4B picks the right source 72 %; per-chunk relevance and sufficiency gates FAIL",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1340"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-21"
+   ]
+  },
+  {
+   "id": "E-313",
+   "date": "2026-10-19",
+   "time": "22:20",
+   "title": "V-para diagnosis: loss split wrong 0.309 / absent 0.239 / thin 0.038; little addressable on 8 GB",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1341"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-23"
+   ]
+  },
+  {
+   "id": "E-314",
+   "date": "2026-10-19",
+   "time": "22:36",
+   "title": "PACKGAP plan: no new open corpus likely to move V-para (<= +0.01)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1342"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-24"
+   ]
+  },
+  {
+   "id": "E-315",
+   "date": "2026-10-19",
+   "time": "23:08",
+   "title": "BENCH-RULER synthesis: five misreadings of the bounty in the current bench; new public ruler design",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1343",
+    "F-1782"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-25",
+    "E-u-results-L36"
+   ]
+  },
+  {
+   "id": "E-316",
+   "date": "2026-10-19",
+   "time": "23:50",
+   "title": "NIST-crypto pack and visa pack built; both inert on self-tests (+0.008, +0.007)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1344"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-26"
+   ]
+  },
+  {
+   "id": "E-317",
+   "date": "2026-10-20",
+   "time": "00:01",
+   "title": "CHAINWHEN NO: 4B source-pick before the answer +0.019",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1345"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-27"
+   ]
+  },
+  {
+   "id": "E-318",
+   "date": "2026-10-20",
+   "time": "00:12",
+   "title": "V-exact acceptance harness baseline 0.475 (Haiku, 2 seeds), venues 6/6",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1346"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-28"
+   ]
+  },
+  {
+   "id": "E-319",
+   "date": "2026-10-20",
+   "time": "00:13",
+   "title": "v0.4 ruler candidate: 70 items (Claude 36, OpenAI gpt-5.6-sol 34), 5 disputed points for the author",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1347",
+    "F-1783"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-29",
+    "E-u-results-L37"
+   ]
+  },
+  {
+   "id": "E-320",
+   "date": "2026-10-20",
+   "time": "01:51",
+   "title": "LITE17 NO: thinking, quote-then-answer, chunk filtering leave the 1.7B at ~0.50 vs 4B ~0.61",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1348"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-30"
+   ]
+  },
+  {
+   "id": "E-321",
+   "date": "2026-10-20",
+   "time": "11:50",
+   "title": "Pivot: Qwen3-1.7B becomes the main 8 GB engine after Pixel 8a speed runs; LITE-MAIN program opened",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1349",
+    "F-1784"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-31",
+    "E-u-results-L38"
+   ]
+  },
+  {
+   "id": "E-322",
+   "date": "2026-10-20",
+   "time": "12:47",
+   "title": "LITEDECLINE PARTIAL: engine's compact-tier declines; releasing all five raises U0 +0.170 but doubles confident errors (17 -> 34)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1350"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-32"
+   ]
+  },
+  {
+   "id": "E-323",
+   "date": "2026-10-20",
+   "time": "13:04",
+   "title": "LITELAT on Pixel 8a: retrieval is 57 % of time to first token (~435 serial SQL calls)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1351"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-33"
+   ]
+  },
+  {
+   "id": "E-324",
+   "date": "2026-10-20",
+   "time": "16:14",
+   "title": "CMP30 / CMP30OFF on the Pixel 8a: 1.7B vs Qwen2.5-1.5B; with declines released 1.7B leads (correctness +0.46)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1352"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-34"
+   ]
+  },
+  {
+   "id": "E-325",
+   "date": "2026-10-20",
+   "time": "16:45",
+   "title": "v0.4 ruler item set FROZEN (75 items, sha f9ad2f2f...) before any system answered",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1353",
+    "F-1785"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-35",
+    "E-u-results-L39"
+   ]
+  },
+  {
+   "id": "E-326",
+   "date": "2026-10-20",
+   "time": "16:48",
+   "title": "BATCHRET: batched pack SQL (937 -> 48 calls, byte-identical retrieval 390/390); on the phone TTFT 9.12 -> 5.55 s",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1354"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-36"
+   ]
+  },
+  {
+   "id": "E-327",
+   "date": "2026-10-20",
+   "time": "18:28",
+   "title": "LITEPACKS NO CHANGE on MAIN; packs help only pack-matched self-tests",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1355"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-37"
+   ]
+  },
+  {
+   "id": "E-328",
+   "date": "2026-10-20",
+   "time": "19:07",
+   "title": "Author \"grill\": 1.7B stays default, 4B optional tier for 10-12 GB phones, two-stage screens, health weight 0.5 in the ruler, safety-cards-first work archived",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1356",
+    "F-1787"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-38",
+    "E-u-results-L41"
+   ]
+  },
+  {
+   "id": "E-329",
+   "date": "2026-10-20",
+   "time": "19:39",
+   "title": "Five 1.7B levers NO-GO at screen: honest prompt, short context, quote-first, greedy, vendor sampling; token confidence (AUC 0.53) and first-token entropy (0.49) do not flag errors",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1357",
+    "F-1788"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-39",
+    "E-u-results-L42"
+   ]
+  },
+  {
+   "id": "E-330",
+   "date": "2026-10-20",
+   "time": "19:47",
+   "title": "CE taxonomy: 20 of 27 1.7B confident errors had no relevant source",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1358"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-40"
+   ]
+  },
+  {
+   "id": "E-331",
+   "date": "2026-10-20",
+   "time": "20:24",
+   "title": "Author: ruler split into with-reference / no-reference parts; product refuses by default with \"show anyway\"; persona-pack arms",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1359",
+    "F-1789"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-41",
+    "E-u-results-L43"
+   ]
+  },
+  {
+   "id": "E-332",
+   "date": "2026-10-20",
+   "time": "20:39",
+   "title": "Ruler spec v1 r2 written + independent adversarial review (25 findings); verdict arm = union of persona packs",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-1360"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-42"
+   ]
+  },
+  {
+   "id": "E-333",
+   "date": "2026-10-20",
+   "time": "21:03",
+   "title": "Model-usage audit: 33 findings, 6 P0 (stale CE metric, refusals counted as CE, unscreened candidate model)",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-1361",
+    "F-1790"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-43",
+    "E-u-results-L44"
+   ]
+  },
+  {
+   "id": "E-334",
+   "date": "2026-10-20",
+   "time": "21:06",
+   "title": "REREAD: in refuse-by-default mode each old screen held only 4 visible confident errors; the 6-fix bar was unreachable; quote-first is a regression",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1362"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-44"
+   ]
+  },
+  {
+   "id": "E-335",
+   "date": "2026-10-20",
+   "time": "21:17",
+   "title": "Groundedness add-on gate (GATE17-SUPPORT, AUC 0.965) and REFUSE-UNSUPPORTED PASS: visible confident errors 7 -> 3 of 177 under the Claude Opus judge (10 -> 4 under Claude Haiku); +9.3 s p50 projected for the Pixel 8a (5.1 s measured on a desktop)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1363"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-45"
+   ]
+  },
+  {
+   "id": "E-336",
+   "date": "2026-10-20",
+   "time": "21:45",
+   "title": "Persona map v1 drafted + independently approved (not frozen; waits author veto)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1364"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-46"
+   ]
+  },
+  {
+   "id": "E-337",
+   "date": "2026-10-20",
+   "time": "22:01",
+   "title": "Judge v2 (binary key-point checklist) NO-GO by frozen test-retest rule",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1365"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-47"
+   ]
+  },
+  {
+   "id": "E-338",
+   "date": "2026-10-20",
+   "time": "22:29",
+   "title": "GATE v2: screens recalibrated against measured null runs (null alone fixes 23-31 %)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1366",
+    "F-1792"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-48",
+    "E-u-results-L46"
+   ]
+  },
+  {
+   "id": "E-339",
+   "date": "2026-10-20",
+   "time": "23:46",
+   "title": "Gemma 4 E2B: GO on all four screens, stage 2 FAIL by 0.002",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1367",
+    "F-1793"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-49",
+    "E-u-results-L47"
+   ]
+  },
+  {
+   "id": "E-340",
+   "date": "2026-10-21",
+   "time": "00:00",
+   "title": "Overnight model screens: Q8 quant, Qwen3.5-2B, OCC-RAG, FOTAPOL LoRA, Jan-v1-edge, SmolLM3, granite-1B all NO; Ministral-3-3B + citation prompt stage-2 PASS at ~3x phone time",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1368"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-50"
+   ]
+  },
+  {
+   "id": "E-341",
+   "date": "2026-10-21",
+   "time": "02:23",
+   "title": "Gemma 4 E2B on the Pixel 8a: 73/73, answer p50 11.8 s; judged = desktop, 0.083 below the 4B on the same phone",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1369"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-1820-51"
+   ]
+  },
+  {
+   "id": "E-453",
+   "date": "2026-10-21",
+   "time": "02:38",
+   "title": "Gemma 4 mobile deep research (10-agent workflow, 92 findings, 35 confirmed, 10 corrected): opt-in entry with thinking guards; 1.7B stays default",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-1478"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-01"
+   ]
+  },
+  {
+   "id": "E-342",
+   "date": "2026-10-21",
+   "time": "02:44",
+   "title": "GEMMA-VS-4B on MAIN 97 (Haiku): Gemma captures 38 % of the 4B gain",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1479"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-02"
+   ]
+  },
+  {
+   "id": "E-454",
+   "date": "2026-10-21",
+   "time": "03:06",
+   "title": "Direction proposal reviewed by a 9-agent adversarial workflow: 71 findings stand, 5 fall, no wrong number",
+   "type": "experiment",
+   "significance": 1,
+   "fact_ids": [
+    "F-1480"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-03"
+   ]
+  },
+  {
+   "id": "E-343",
+   "date": "2026-10-21",
+   "time": "03:31",
+   "title": "Pixel 8a: Qwen3-1.7B on 73 questions p50 4.2 s vs Gemma 11.8 s",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1481"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-04"
+   ]
+  },
+  {
+   "id": "E-344",
+   "date": "2026-10-21",
+   "time": "03:38",
+   "title": "HON-1/HON-2: warning line precision 0.39; \"show anyway\" button gives ~7 correct vs 35 CE per 100 reveals (liability as specified)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1482"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-05"
+   ]
+  },
+  {
+   "id": "E-345",
+   "date": "2026-10-21",
+   "time": "03:51",
+   "title": "A-union (6 packs + gazetteer) on Pixel 8a with 1.7B / Gemma / 4B: no memory cost, +2.4 s serial pack search, 0 LMK",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1483"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-06"
+   ]
+  },
+  {
+   "id": "E-346",
+   "date": "2026-10-21",
+   "time": "04:22",
+   "title": "Competitor refresh: a competitor team ships a 35B streamed model + full Wikipedia; their 65 % is on 61 maintainer questions, not comparable",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1484"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-07"
+   ]
+  },
+  {
+   "id": "E-347",
+   "date": "2026-10-21",
+   "time": "04:39",
+   "title": "RV2 separability ladder (Haiku): ruler separates 4B from 1.7B/Gemma; 1.7B level with closed-book 1.5B",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1485"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-08"
+   ]
+  },
+  {
+   "id": "E-348",
+   "date": "2026-10-21",
+   "time": "05:28",
+   "title": "CV5 ladder under Opus: 1.7B vs closed-book 1.5B becomes separable (judge-dependent sentence)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1486",
+    "F-1799"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-09",
+    "E-u-results-L53"
+   ]
+  },
+  {
+   "id": "E-349",
+   "date": "2026-10-21",
+   "time": "05:55",
+   "title": "GEMMA-OPUS-MAIN: Gemma − 1.7B +0.031 s42 under Opus, GO by 0.001",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1487",
+    "F-1800"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-10",
+    "E-u-results-L54"
+   ]
+  },
+  {
+   "id": "E-350",
+   "date": "2026-10-21",
+   "time": "07:24",
+   "title": "Morning report with 11 author decisions published (PT-BR)",
+   "type": "release",
+   "significance": 1,
+   "fact_ids": [
+    "F-1488"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-11"
+   ]
+  },
+  {
+   "id": "E-351",
+   "date": "2026-10-21",
+   "time": "12:45",
+   "title": "RULING R1: judge = judge.v1 + DECLINE2STAGE zero per detected non-answer",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1489",
+    "F-1801"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-12",
+    "E-u-results-L55"
+   ]
+  },
+  {
+   "id": "E-352",
+   "date": "2026-10-21",
+   "time": "13:12",
+   "title": "GOAL-2026-10-21 set: raise U_8GB +0.03 (Opus) with guards; cut T_8GB 7.6 → 5.0 s",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1490",
+    "F-1802"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-13",
+    "E-u-results-L56"
+   ]
+  },
+  {
+   "id": "E-353",
+   "date": "2026-10-21",
+   "time": "13:13",
+   "title": "GRILL session: honest 8 GB product + open ruler; no 35B delivery; research site; final score on the native APK",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1491",
+    "F-1803"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-14",
+    "E-u-results-L57"
+   ]
+  },
+  {
+   "id": "E-354",
+   "date": "2026-10-21",
+   "time": "13:18",
+   "title": "1.7B engine lines closed one by one at nulls (X2b, routing, keep, coverage reasons, first-aid cards, keep-E)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1492"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-15"
+   ]
+  },
+  {
+   "id": "E-355",
+   "date": "2026-10-21",
+   "time": "15:01",
+   "title": "Simplewiki pack r2 (converter fix) published to the public pack dataset",
+   "type": "release",
+   "significance": 1,
+   "fact_ids": [
+    "F-1493",
+    "F-1804"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-16",
+    "E-u-results-L58"
+   ]
+  },
+  {
+   "id": "E-356",
+   "date": "2026-10-21",
+   "time": "15:5x",
+   "title": "Author: the submission is the maintainer's native Kotlin app (E1 correction)",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1494"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-17"
+   ]
+  },
+  {
+   "id": "E-358",
+   "date": "2026-10-21",
+   "time": "16:01",
+   "title": "A1-SUCCINCT17: Succinct as small-model default saves ~24 s p50 (projection)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1496"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-19"
+   ]
+  },
+  {
+   "id": "E-360",
+   "date": "2026-10-21",
+   "time": "17:02",
+   "title": "E1-PAR on Pixel 8a (bench engine): Promise.all pack search pays (answer 10.32 → 7.39 s)",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1498",
+    "F-1806"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-21",
+    "E-u-results-L60"
+   ]
+  },
+  {
+   "id": "E-361",
+   "date": "2026-10-21",
+   "time": "17:02",
+   "title": "G1-SWA5: Gemma multi-turn KV bug hypothesis killed on the phone",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1499"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-22"
+   ]
+  },
+  {
+   "id": "E-362",
+   "date": "2026-10-21",
+   "time": "17:15",
+   "title": "RC1-PACKS: no offline route to install packs in RC1",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1500"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-23"
+   ]
+  },
+  {
+   "id": "E-364",
+   "date": "2026-10-21",
+   "time": "18:20",
+   "title": "SHIP15B-PACKS no gain; STYLE15B Succinct non-inferior (Haiku)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1502"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-25"
+   ]
+  },
+  {
+   "id": "E-367",
+   "date": "2026-10-21",
+   "time": "19:17",
+   "title": "Day close: engine rules exhausted; submission = RC1 1.5B Detailed no packs; Succinct is the lever",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1505",
+    "F-1809"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-28",
+    "E-u-results-L63"
+   ]
+  },
+  {
+   "id": "E-368",
+   "date": "2026-10-21",
+   "time": "19:28",
+   "title": "NOREPACK97: --no-repack makes two hosts byte-identical 97/97",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1506"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-29"
+   ]
+  },
+  {
+   "id": "E-369",
+   "date": "2026-10-21",
+   "time": "20:28",
+   "title": "Author ruler decisions: verdict on the app with packs, OpenAI gpt-5.6-sol second judge, headline waits for new RC",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1507",
+    "F-1810"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-30",
+    "E-u-results-L64"
+   ]
+  },
+  {
+   "id": "E-370",
+   "date": "2026-10-21",
+   "time": "20:48",
+   "title": "RULER-SPEC v1 r3 frozen (private)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1508",
+    "F-1811"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-31",
+    "E-u-results-L65"
+   ]
+  },
+  {
+   "id": "E-371",
+   "date": "2026-10-21",
+   "time": "20:58",
+   "title": "REFS-V2 Claude half frozen: 75/75 Opus+web references on v0.4 before any app answer",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1509",
+    "F-1812"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-32",
+    "E-u-results-L66"
+   ]
+  },
+  {
+   "id": "E-372",
+   "date": "2026-10-21",
+   "time": "21:18",
+   "title": "RULER-SPEC r4 frozen + FACT-AVAIL labels (19/71 AVAILABLE)",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1510",
+    "F-1813"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-33",
+    "E-u-results-L67"
+   ]
+  },
+  {
+   "id": "E-373",
+   "date": "2026-10-21",
+   "time": "22:10",
+   "title": "DECODE-GROUND closed: decoder-level grounding on the 1.7B at the null",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1511",
+    "F-1814"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-34",
+    "E-u-results-L68"
+   ]
+  },
+  {
+   "id": "E-374",
+   "date": "2026-10-21",
+   "time": "22:38",
+   "title": "QFORM: question form decides retrieval; reference kept 0.88 vs not kept 0.19",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1512",
+    "F-1815"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-35",
+    "E-u-results-L69"
+   ]
+  },
+  {
+   "id": "E-375",
+   "date": "2026-10-21",
+   "time": "23:25",
+   "title": "Local clean build of the native app with Succinct default (never pushed)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1513"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-36"
+   ]
+  },
+  {
+   "id": "E-376",
+   "date": "2026-10-22",
+   "time": "00:44",
+   "title": "RETRIEVE-SWEEP + chunk vectors: delivery up on pack questions, real-item recovery 3/25 (fail by rule)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1514",
+    "F-1816"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-37",
+    "E-u-results-L70"
+   ]
+  },
+  {
+   "id": "E-377",
+   "date": "2026-10-22",
+   "time": null,
+   "title": "KB snapshot + packs-in-catalog in both clean apps (Android, iOS): setup ~2 min vs ~280 s",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1515",
+    "F-1817"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-38",
+    "E-u-results-L71"
+   ]
+  },
+  {
+   "id": "E-378",
+   "date": "2026-10-22",
+   "time": "16:05",
+   "title": "Author direction: packs are the strategy; device day stopped",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1516",
+    "F-1818"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-39",
+    "E-u-results-L72"
+   ]
+  },
+  {
+   "id": "E-379",
+   "date": "2026-10-22",
+   "time": "16:19",
+   "title": "Device day report: only the 4B speed row ran (76 s p50, 4.77 tok/s)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1517"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-40"
+   ]
+  },
+  {
+   "id": "E-380",
+   "date": "2026-10-22",
+   "time": "17:3x",
+   "title": "Author decision: small focused packs, not giant ones",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1518"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-41"
+   ]
+  },
+  {
+   "id": "E-381",
+   "date": "2026-10-22",
+   "time": null,
+   "title": "T1 search-term extraction fails; author picks composer design \"one button + chips for what changed\"",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-1519"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-42"
+   ]
+  },
+  {
+   "id": "E-382",
+   "date": "2026-10-22",
+   "time": "17:58",
+   "title": "H4 global-IDF merge: first no-harm pack-composition gain (+6.2 pts kept)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1520",
+    "F-1819"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-43",
+    "E-u-results-L73"
+   ]
+  },
+  {
+   "id": "E-383",
+   "date": "2026-10-22",
+   "time": "18:30",
+   "title": "COMPOSE: 10-13 small packs compose without crowding; answers flat",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1521"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-44"
+   ]
+  },
+  {
+   "id": "E-384",
+   "date": "2026-10-22",
+   "time": "21:45",
+   "title": "SEFIX-ALL (search fixes incl. the F3 health fallback): pooled two-seed gain about +0.022/+0.023 with CI low at about 0 (Claude Haiku); rests on F3, withdrawn for safety; the safe set is +0.013 (-0.008..+0.035); claim set (Claude Opus) neutral",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1522",
+    "F-1820"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-45",
+    "E-u-results-L74"
+   ]
+  },
+  {
+   "id": "E-385",
+   "date": "2026-10-22",
+   "time": "22:32",
+   "title": "Opus on covered domain: where the fact arrives U 0.16 → 0.33",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1523"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-46"
+   ]
+  },
+  {
+   "id": "E-386",
+   "date": "2026-10-22",
+   "time": "22:41",
+   "title": "F3 health fallback fails safety (unsafe 9 → 13); withdrawn",
+   "type": "incident",
+   "significance": 3,
+   "fact_ids": [
+    "F-1524",
+    "F-1821"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-47",
+    "E-u-results-L75"
+   ]
+  },
+  {
+   "id": "E-387",
+   "date": "2026-10-22",
+   "time": "22:56",
+   "title": "SEFIX-124 (safe set) +0.013: not a lever",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1525"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-48"
+   ]
+  },
+  {
+   "id": "E-388",
+   "date": "2026-10-22",
+   "time": "23:16",
+   "title": "F3b and detector retrain both fail",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1526"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "T-u-2122-49"
+   ]
+  },
+  {
+   "id": "E-389",
+   "date": "2026-10-23",
+   "time": "00:11",
+   "title": "Night 10-23 program launched (kit for general questions, research 2x2 table)",
+   "type": "start",
+   "significance": 1,
+   "fact_ids": [
+    "F-1639"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L21"
+   ]
+  },
+  {
+   "id": "E-390",
+   "date": "2026-10-23",
+   "time": "00:40",
+   "title": "NIGHT B table not publishable: on real items the chunk-level \"delivered\" flag does not separate answer scores (0.420 vs 0.419)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1640",
+    "F-1822"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L22",
+    "E-u-results-L76"
+   ]
+  },
+  {
+   "id": "E-391",
+   "date": "2026-10-23",
+   "time": "00:45",
+   "title": "Detector retrains (FT, FT2) rejected: lose health recall",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1641"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L23"
+   ]
+  },
+  {
+   "id": "E-392",
+   "date": "2026-10-23",
+   "time": "02:14",
+   "title": "W98 cooking/money veto on the health route closed NO (silences real health probes)",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1642"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L24"
+   ]
+  },
+  {
+   "id": "E-393",
+   "date": "2026-10-23",
+   "time": "09:13",
+   "title": "Engine fixes branch (CO card more vehicles, linear arithmetic, wider seed-phrase cue; CO hazard in PT/ES)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1643"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L25"
+   ]
+  },
+  {
+   "id": "E-394",
+   "date": "2026-10-23",
+   "time": "09:15",
+   "title": "TOPICS27 + SUCCINCT: the app maintainer's 27 suggested topics; 1.7B Succinct cuts unsupported sentences 0.47→0.28, KEEP 7→19/27",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-1644"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L26"
+   ]
+  },
+  {
+   "id": "E-395",
+   "date": "2026-10-23",
+   "time": "09:19",
+   "title": "Facts table r11 (currency + Nobel builder root causes fixed)",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1645"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L27"
+   ]
+  },
+  {
+   "id": "E-396",
+   "date": "2026-10-23",
+   "time": "09:23",
+   "title": "False \"Not found\" banner traced to a fixed release line; bannerkept patch written",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1646"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L28"
+   ]
+  },
+  {
+   "id": "E-397",
+   "date": "2026-10-23",
+   "time": "09:41",
+   "title": "W78 reading-cost stack (1-bit sidecar, IVF lists, lists stored in the pack): 125→21 MB/question, identity 96-97/97",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1647"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L29"
+   ]
+  },
+  {
+   "id": "E-398",
+   "date": "2026-10-23",
+   "time": "10:00",
+   "title": "KEEPPIN NO, FMT1 NO, W78B NO, PIN2 HOLD (thin screen)",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1648"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L30"
+   ]
+  },
+  {
+   "id": "E-399",
+   "date": "2026-10-23",
+   "time": "11:00",
+   "title": "PARA135: answers in 1/3/5 paragraphs; support breaks at paragraph 2",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1649"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L31"
+   ]
+  },
+  {
+   "id": "E-400",
+   "date": "2026-10-23",
+   "time": "11:25",
+   "title": "Bench APK with W78 stack built, never run on a phone",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1650"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L32"
+   ]
+  },
+  {
+   "id": "E-401",
+   "date": "2026-10-23",
+   "time": "11:34",
+   "title": "UX decision page (25 feature rows) written",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-1651"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L33"
+   ]
+  },
+  {
+   "id": "E-402",
+   "date": "2026-10-23",
+   "time": "11:41",
+   "title": "DEEPMODE: Deep Research multipass on 1.7B judged worse than Detailed and Succinct, 2.6-5.6x slower",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1652"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L34"
+   ]
+  },
+  {
+   "id": "E-403",
+   "date": "2026-10-23",
+   "time": "11:53",
+   "title": "Author closes research lines; CLOSING-TESTS plan",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1653",
+    "F-1823"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L35",
+    "E-u-results-L77"
+   ]
+  },
+  {
+   "id": "E-404",
+   "date": "2026-10-23",
+   "time": "11:58",
+   "title": "Author: close with experience tests, no phone; UXMATRIX launched",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1654"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L36"
+   ]
+  },
+  {
+   "id": "E-405",
+   "date": "2026-10-23",
+   "time": "12:04",
+   "title": "Package for the app maintainer assembled and refreshed (24 files by 2026-10-23); nothing sent",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1655"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L37"
+   ]
+  },
+  {
+   "id": "E-406",
+   "date": "2026-10-23",
+   "time": "12:18",
+   "title": "STYLE-SEFIX: Detailed still loses to Succinct with search fixes on",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1656"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L38"
+   ]
+  },
+  {
+   "id": "E-407",
+   "date": "2026-10-23",
+   "time": "12:19",
+   "title": "Author states the thesis (\"right whenever the content is in a pack\") ; PACKPROOF launched",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1657"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L39"
+   ]
+  },
+  {
+   "id": "E-408",
+   "date": "2026-10-23",
+   "time": "12:20",
+   "title": "PLUGBATCH-SELF (route 85-89/110) → PLUGFIX (route 103/110, 1,645 tests)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1658"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L40"
+   ]
+  },
+  {
+   "id": "E-409",
+   "date": "2026-10-23",
+   "time": "12:36",
+   "title": "RC1-LABS baseline on the app maintainer's release (internal)",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1659"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L41"
+   ]
+  },
+  {
+   "id": "E-410",
+   "date": "2026-10-23",
+   "time": "12:49",
+   "title": "U5 follow-ups with packs: source survives 1/19 on our engine",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1660"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L42"
+   ]
+  },
+  {
+   "id": "E-411",
+   "date": "2026-10-23",
+   "time": "13:20",
+   "title": "UXMATRIX result",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1661",
+    "F-1824"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L43",
+    "E-u-results-L78"
+   ]
+  },
+  {
+   "id": "E-412",
+   "date": "2026-10-23",
+   "time": "13:27",
+   "title": "WARN-KEPT NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1662"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L44"
+   ]
+  },
+  {
+   "id": "E-413",
+   "date": "2026-10-23",
+   "time": "14:19",
+   "title": "PACKPROOF result (48 % vs 26 %; 65 % when delivered)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1663",
+    "F-1825"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L45",
+    "E-u-results-L79"
+   ]
+  },
+  {
+   "id": "E-414",
+   "date": "2026-10-23",
+   "time": "14:24",
+   "title": "Closing tests declared complete; pages republished",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-1664"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L46"
+   ]
+  },
+  {
+   "id": "E-415",
+   "date": "2026-10-23",
+   "time": "14:39",
+   "title": "PACK-GAP: 44/50 gaps are search, not missing packs",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1665"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L47"
+   ]
+  },
+  {
+   "id": "E-416",
+   "date": "2026-10-23",
+   "time": "14:58",
+   "title": "NOWIKI KEEP (Wikipedia packs stay)",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1666"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L48"
+   ]
+  },
+  {
+   "id": "E-417",
+   "date": "2026-10-23",
+   "time": "15:20",
+   "title": "QREWRITE NO-CEILING; \"research closed\" again",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1667"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L49"
+   ]
+  },
+  {
+   "id": "E-418",
+   "date": "2026-10-23",
+   "time": "15:39",
+   "title": "Author: CONTENT-FIRST, no model change; ARTCAP, D2Q, PACK-SHAPE launched",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1668"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L50"
+   ]
+  },
+  {
+   "id": "E-419",
+   "date": "2026-10-23",
+   "time": "16:28",
+   "title": "PACKSHAPE factbook LEVER-CANDIDATE, seed 43 repeats",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1669",
+    "F-1826"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L51",
+    "E-u-results-L80"
+   ]
+  },
+  {
+   "id": "E-420",
+   "date": "2026-10-23",
+   "time": "16:48",
+   "title": "ARTCAP NO, PACKSHAPE-FIRSTAID NO, D2Q NO",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1670"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L52"
+   ]
+  },
+  {
+   "id": "E-421",
+   "date": "2026-10-23",
+   "time": "17:07",
+   "title": "FACTBOOK-V2-CONFIRM (Opus) NOT-CONFIRMED by CE clause; v2 card drafted, upload waits",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1671"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L53"
+   ]
+  },
+  {
+   "id": "E-422",
+   "date": "2026-10-23",
+   "time": "17:23",
+   "title": "HEALTHKEEP-DIAG: health-pack misses mostly delivery",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1672"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L54"
+   ]
+  },
+  {
+   "id": "E-423",
+   "date": "2026-10-23",
+   "time": "17:44",
+   "title": "GOAL/HANDOFF written; session restart kills two agents; NIGHT-2026-10-24 program written",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-1673"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L55"
+   ]
+  },
+  {
+   "id": "E-424",
+   "date": "2026-10-23",
+   "time": "17:59",
+   "title": "X2B-BUDGET NO",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1674"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L56"
+   ]
+  },
+  {
+   "id": "E-425",
+   "date": "2026-10-23",
+   "time": "18:21",
+   "title": "RETBENCH v1 (0-LLM retrieval bench) done; best config candidate",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1675"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L57"
+   ]
+  },
+  {
+   "id": "E-426",
+   "date": "2026-10-23",
+   "time": "18:21",
+   "title": "Validation criterion frozen (aa08650f); ENGINE-RC build",
+   "type": "start",
+   "significance": 2,
+   "fact_ids": [
+    "F-1676"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L58"
+   ]
+  },
+  {
+   "id": "E-427",
+   "date": "2026-10-23",
+   "time": "18:50",
+   "title": "ENGINE-RC V0 identity PASS; V1 letter-FAIL (pre-existing); V3-L1, S1, S8 PASS; RETBENCH candidate closed by probes",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1677"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L59"
+   ]
+  },
+  {
+   "id": "E-428",
+   "date": "2026-10-23",
+   "time": "18:51",
+   "title": "S3 routes PASS on the engine-fix branch",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1678"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L60"
+   ]
+  },
+  {
+   "id": "E-429",
+   "date": "2026-10-23",
+   "time": "23:56",
+   "title": "VALIDATION-2026-10-24 written: 2,855 answers, 0 judge calls, judge deferred to author",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-1679",
+    "F-1827"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L61",
+    "E-u-results-L81"
+   ]
+  },
+  {
+   "id": "E-430",
+   "date": "2026-10-24",
+   "time": "09:02",
+   "title": "Morning check; one machine unreachable, nothing lost",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-1680"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L62"
+   ]
+  },
+  {
+   "id": "E-431",
+   "date": "2026-10-24",
+   "time": "14:02",
+   "title": "Author OKs judge runs (Haiku, length + follow-up)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1681"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L63"
+   ]
+  },
+  {
+   "id": "E-432",
+   "date": "2026-10-24",
+   "time": "14:15",
+   "title": "Judge: Succinct PASS and stays; follow-ups 0.46 correct with or without carry",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1682",
+    "F-1828"
+   ],
+   "decision_ids": [],
+   "chapter": "closure",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L64",
+    "E-u-results-L82"
+   ]
+  },
+  {
+   "id": "E-433",
+   "date": "2026-10-24",
+   "time": "14:25",
+   "title": "Author: closed, simple chat app, Succinct only",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-1683",
+    "F-1829"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L65",
+    "E-u-results-L83"
+   ]
+  },
+  {
+   "id": "E-434",
+   "date": "2026-10-24",
+   "time": "15:06",
+   "title": "Clean-native handoff; UI decisions applied on a local branch (9 commits, not pushed)",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1684"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L66"
+   ]
+  },
+  {
+   "id": "E-435",
+   "date": "2026-10-24",
+   "time": "16:08",
+   "title": "NATIVE-RC: the app's own engine vs ENGINE-RC (UXMATRIX, probes, factbook v2, ruler v0.4 Claude half)",
+   "type": "experiment",
+   "significance": 3,
+   "fact_ids": [
+    "F-1685"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L67"
+   ]
+  },
+  {
+   "id": "E-436",
+   "date": "2026-10-24",
+   "time": "16:51",
+   "title": "Author: BoarLite = new bounty submission (D1-D10)",
+   "type": "pivot",
+   "significance": 3,
+   "fact_ids": [
+    "F-1686",
+    "F-1831"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "E-u-2324-L68",
+    "E-u-results-L85"
+   ]
+  },
+  {
+   "id": "E-437",
+   "date": "2026-10-18",
+   "time": "00:16",
+   "title": "Publication content base built (13 chapters, data files) as v0.1 preprint",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1768"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L21"
+   ]
+  },
+  {
+   "id": "E-438",
+   "date": "2026-10-18",
+   "time": "00:41",
+   "title": "Author decisions on publication (byline, inspiration credit, cross-family judge name, no spend disclosure) applied",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-1769"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L22"
+   ]
+  },
+  {
+   "id": "E-439",
+   "date": "2026-10-18",
+   "time": "00:41",
+   "title": "HONESTPROMPT set-A interim shows refusal collapse; traced to a completion-harness artefact (no chat template) and corrected 00:53",
+   "type": "incident",
+   "significance": 2,
+   "fact_ids": [
+    "F-1770"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L23"
+   ]
+  },
+  {
+   "id": "E-440",
+   "date": "2026-10-19",
+   "time": "19:0x",
+   "title": "LESANDROID: expert-streaming engine cross-built for Android arm64, phone unmeasured",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-1781"
+   ],
+   "decision_ids": [],
+   "chapter": "deep-tier",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L34"
+   ]
+  },
+  {
+   "id": "E-441",
+   "date": "2026-10-20",
+   "time": "17:54",
+   "title": "BATCHRET on Pixel 8a: 1.7B TTFT 9.12→5.55 s",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1786"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L40"
+   ]
+  },
+  {
+   "id": "E-442",
+   "date": "2026-10-20",
+   "time": "22:09",
+   "title": "REFUSE-UNSUPPORTED PASS: groundedness gate cuts visible CEs 10→4 of 177",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1791"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L45"
+   ]
+  },
+  {
+   "id": "E-443",
+   "date": "2026-10-21",
+   "time": "02:20",
+   "title": "MIN3CITE stage 2 PASS (Ministral-3-3B + citation prompt), later shelved as dominated by the 4B",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-1794"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L48"
+   ]
+  },
+  {
+   "id": "E-444",
+   "date": "2026-10-21",
+   "time": "02:30",
+   "title": "Gemma on Pixel 8a = desktop Gemma, -0.083 vs the 4B on the same phone",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-1795"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L49"
+   ]
+  },
+  {
+   "id": "E-445",
+   "date": "2026-10-21",
+   "time": "03:17",
+   "title": "RESEARCH-PAGE-OUTLINE written (coverage × quality, 20 NEEDS markers)",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-1796"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L50"
+   ]
+  },
+  {
+   "id": "E-446",
+   "date": "2026-10-21",
+   "time": "03:54",
+   "title": "FACTPRESENT: self-test pack gain does not reproduce on real dev items",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1797"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L51"
+   ]
+  },
+  {
+   "id": "E-447",
+   "date": "2026-10-21",
+   "time": "04:01",
+   "title": "FLOOR-ANCHORS: decline arm INVALID under judge.v1 (U 0.058); true-zero judge variants NO-ADOPT",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-1798"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L52"
+   ]
+  },
+  {
+   "id": "E-448",
+   "date": "2026-10-21",
+   "time": "15:18",
+   "title": "RESEARCH-PAGE-DRAFTS: five page-ready sections",
+   "type": "build",
+   "significance": 3,
+   "fact_ids": [
+    "F-1805"
+   ],
+   "decision_ids": [],
+   "chapter": "small-engine",
+   "visibility": "public",
+   "aliases": [
+    "E-u-results-L59"
+   ]
+  },
+  {
+   "id": "E-456",
+   "date": "2026-10-24",
+   "time": "18:03",
+   "title": "Author: minimal health path, a fixed line instead of the warning line, factbook v1 stays, port the bench search before submission",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-2189"
+   ],
+   "decision_ids": [
+    "D-196"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-dec-1803"
+   ]
+  },
+  {
+   "id": "E-457",
+   "date": "2026-10-24",
+   "time": "18:07",
+   "title": "First BoarLite release APK (3.06 GB) installed on the Pixel 8a; superseded the same evening",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2190"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-apk-1751"
+   ]
+  },
+  {
+   "id": "E-458",
+   "date": "2026-10-24",
+   "time": "18:12",
+   "title": "Health gate v1 in BoarLite: 8 of 65 probes fixed text vs 41 on ENGINE-RC",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2191"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-gate-v1"
+   ]
+  },
+  {
+   "id": "E-459",
+   "date": "2026-10-24",
+   "time": "18:23",
+   "title": "Health detector B+FU: 41 of 65 probes fixed text incl. the 4 invented-dose answers; Wikipedia-only health articles not counted",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-2192",
+    "F-2193"
+   ],
+   "decision_ids": [
+    "D-197"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-gate-bfu"
+   ]
+  },
+  {
+   "id": "E-460",
+   "date": "2026-10-24",
+   "time": "18:31",
+   "title": "Health gate after retrieval: no-search tasks gated too (42 of 65); release APK build starts",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2194"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-gate-after"
+   ]
+  },
+  {
+   "id": "E-461",
+   "date": "2026-10-24",
+   "time": "18:34",
+   "title": "SEARCHPORT: baseline recorded; P1 fails its safety gate after the one fix (3 new dose-figure answers); switch off",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-2195",
+    "F-2196"
+   ],
+   "decision_ids": [
+    "D-198"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-sp-p1"
+   ]
+  },
+  {
+   "id": "E-462",
+   "date": "2026-10-24",
+   "time": "18:45",
+   "title": "BoarLite on a Pixel 8a in airplane mode: 3 GB unpacked in 14 s, 0 bytes network, PSS 3.09 GB",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-2197",
+    "F-2198"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-smoke-1"
+   ]
+  },
+  {
+   "id": "E-463",
+   "date": "2026-10-24",
+   "time": "18:51",
+   "title": "Onboarding approved; QuickMath computes conversions with no sources; model preload after unpack",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2199",
+    "F-2200"
+   ],
+   "decision_ids": [
+    "D-199"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-onboarding"
+   ]
+  },
+  {
+   "id": "E-464",
+   "date": "2026-10-24",
+   "time": "19:12",
+   "title": "Candidate APK on the Pixel 8a: model ready at 18 s, first answer 11.9 s at 14.9 tok/s",
+   "type": "result",
+   "significance": 2,
+   "fact_ids": [
+    "F-2201"
+   ],
+   "decision_ids": [],
+   "chapter": "phone",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-smoke-2"
+   ]
+  },
+  {
+   "id": "E-465",
+   "date": "2026-10-24",
+   "time": "19:13",
+   "title": "GROUNDED-DOSE rule frozen; SEARCHPORT re-gate (arm A) FAILS: ungrounded dose figures 9 vs 5",
+   "type": "experiment",
+   "significance": 2,
+   "fact_ids": [
+    "F-2202",
+    "F-2203"
+   ],
+   "decision_ids": [
+    "D-200",
+    "D-201"
+   ],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-gd-a"
+   ]
+  },
+  {
+   "id": "E-466",
+   "date": "2026-10-24",
+   "time": "19:19",
+   "title": "GROUNDED-DOSE arms B and C PASS on the bench engine; one grounded-yet-toxic misreading flagged",
+   "type": "result",
+   "significance": 1,
+   "fact_ids": [
+    "F-2205",
+    "F-2204"
+   ],
+   "decision_ids": [],
+   "chapter": "delivery",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-gd-bc"
+   ]
+  },
+  {
+   "id": "E-467",
+   "date": "2026-10-24",
+   "time": "19:32",
+   "title": "BoarLite ships with the Wikipedia-health limitation (delegated decision)",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-2206"
+   ],
+   "decision_ids": [
+    "D-202"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-wiki-limit"
+   ]
+  },
+  {
+   "id": "E-468",
+   "date": "2026-10-24",
+   "time": "19:35",
+   "title": "Search port merged as ON_NO_HEALTH: frozen criterion failed by the letter (6 vs 4 ungrounded figures), accepted under the author's prior condition",
+   "type": "decision",
+   "significance": 3,
+   "fact_ids": [
+    "F-2207",
+    "F-2209"
+   ],
+   "decision_ids": [
+    "D-203"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-onh"
+   ]
+  },
+  {
+   "id": "E-469",
+   "date": "2026-10-24",
+   "time": "19:44",
+   "title": "BoarLite final candidate b4ef94f3 (APK with no INTERNET permission); the port changes no health path",
+   "type": "milestone",
+   "significance": 3,
+   "fact_ids": [
+    "F-2210",
+    "F-2211"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-final"
+   ]
+  },
+  {
+   "id": "E-470",
+   "date": "2026-10-24",
+   "time": "20:05",
+   "title": "References of the second judge family complete: 75 of 75 on v0.4",
+   "type": "milestone",
+   "significance": 2,
+   "fact_ids": [
+    "F-2212"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-refs-codex"
+   ]
+  },
+  {
+   "id": "E-471",
+   "date": "2026-10-24",
+   "time": "20:32",
+   "title": "Two UI-only commits after the ruler engine (0 engine files); APK rebuilt from 6aa7508a",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2213"
+   ],
+   "decision_ids": [
+    "D-205"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-ui-only"
+   ]
+  },
+  {
+   "id": "E-472",
+   "date": "2026-10-24",
+   "time": "20:34",
+   "title": "Final ruler run on BoarLite's engine (desktop twin, one seed, both judge families); numbers await the author's publication decision",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-2214",
+    "F-2218"
+   ],
+   "decision_ids": [
+    "D-204"
+   ],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-rf-run"
+   ]
+  },
+  {
+   "id": "E-473",
+   "date": "2026-10-24",
+   "time": "20:34",
+   "title": "RULER-FINAL: U-total Claude 0.164, gpt-5.6-sol 0.245, min 0.164, win-rate 0 (one seed)",
+   "type": "result",
+   "significance": 3,
+   "fact_ids": [
+    "F-2215",
+    "F-2217"
+   ],
+   "decision_ids": [],
+   "chapter": "new-ruler",
+   "visibility": "public",
+   "aliases": [
+    "U2-e-rf-nums"
+   ]
+  },
+  {
+   "id": "E-474",
+   "date": "2026-10-24",
+   "time": "20:47",
+   "title": "Final BoarLite APK smoke on a Pixel 8a passes offline (0 B network, 0 crashes, PSS 3.23 GB)",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-2219"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U3-e-apk-final-smoke"
+   ]
+  },
+  {
+   "id": "E-475",
+   "date": "2026-10-24",
+   "time": "23:48",
+   "title": "BoarLite screens review: UI-only changes (no PIN lock, no long-chat summary, new About); phone smoke passes",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2220",
+    "F-2221"
+   ],
+   "decision_ids": [
+    "D-206",
+    "D-207"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-screens"
+   ]
+  },
+  {
+   "id": "E-476",
+   "date": "2026-10-25",
+   "time": "01:11",
+   "title": "Cleanup round: Expo/React Native tree, unreachable code and Portuguese removed; Settings simplified; licences in About",
+   "type": "build",
+   "significance": 2,
+   "fact_ids": [
+    "F-2222",
+    "F-2223"
+   ],
+   "decision_ids": [
+    "D-209",
+    "D-208",
+    "D-210"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-cleanup"
+   ]
+  },
+  {
+   "id": "E-477",
+   "date": "2026-10-25",
+   "time": "02:20",
+   "title": "BoarLite renamed LabRat (assistant Rat) at the app maintainer's request; the Rat persona line enters the grounding prompt after the ruler run",
+   "type": "milestone",
+   "significance": 3,
+   "fact_ids": [
+    "F-2224",
+    "F-2225"
+   ],
+   "decision_ids": [
+    "D-211"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-labrat"
+   ]
+  },
+  {
+   "id": "E-478",
+   "date": "2026-10-25",
+   "time": "03:3x",
+   "title": "DEVICE-FINAL criterion frozen and the final on-phone matrix of LabRat 7788924a started (Pixel 8a, overnight)",
+   "type": "experiment",
+   "significance": 3,
+   "fact_ids": [
+    "F-2227",
+    "F-2228"
+   ],
+   "decision_ids": [
+    "D-212"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-df-start"
+   ]
+  },
+  {
+   "id": "E-479",
+   "date": "2026-10-25",
+   "time": "11:24",
+   "title": "LabRat logo n8 (a magnifier whose ring is a rat's head); APK on the Pixel, smoke 6/6",
+   "type": "build",
+   "significance": 1,
+   "fact_ids": [
+    "F-2226",
+    "F-2235"
+   ],
+   "decision_ids": [
+    "D-213"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-logo"
+   ]
+  },
+  {
+   "id": "E-480",
+   "date": "2026-10-25",
+   "time": "11:28",
+   "title": "An APK install interrupts the DEVICE-FINAL run; the run is restarted",
+   "type": "incident",
+   "significance": 1,
+   "fact_ids": [
+    "F-2229"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-df-interrupt"
+   ]
+  },
+  {
+   "id": "E-481",
+   "date": "2026-10-25",
+   "time": null,
+   "title": "APK hosting decided: Hugging Face (GitHub assets cap 2 GiB; APK 3.04 GB); install-path risk from Android developer verification noted",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-2230",
+    "F-2231"
+   ],
+   "decision_ids": [
+    "D-214"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U4-e-hosting"
+   ]
+  },
+  {
+   "id": "E-482",
+   "date": "2026-10-25",
+   "time": null,
+   "title": "Author's publication decisions: LabRat numbers public, headline = DEVICE-FINAL on the phone, thesis restated",
+   "type": "decision",
+   "significance": 2,
+   "fact_ids": [
+    "F-2237",
+    "F-2236"
+   ],
+   "decision_ids": [
+    "D-216",
+    "D-215"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U5-e-pubdecisions-2026-10-25"
+   ]
+  },
+  {
+   "id": "E-483",
+   "date": "2026-10-25",
+   "time": "13:2x",
+   "title": "DEVICE-FINAL result: on the phone LabRat wins 0 of 71 under both judge families; U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar",
+   "type": "milestone",
+   "significance": 3,
+   "fact_ids": [
+    "F-2238",
+    "F-2239",
+    "F-2240",
+    "F-2241",
+    "F-2242",
+    "F-2243",
+    "F-2244"
+   ],
+   "decision_ids": [],
+   "chapter": "honest-number",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-df-result"
+   ]
+  },
+  {
+   "id": "E-484",
+   "date": "2026-10-25",
+   "time": "14:0x",
+   "title": "Carbon-monoxide probe answer kept as a known limitation; no gate change before the submission",
+   "type": "decision",
+   "significance": 1,
+   "fact_ids": [
+    "F-2245"
+   ],
+   "decision_ids": [
+    "D-217"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-co"
+   ]
+  },
+  {
+   "id": "E-485",
+   "date": "2026-10-25",
+   "time": "15:3x",
+   "title": "LabRat 1.0.0 (dcc515fc) hosted on Hugging Face with its sha256; bundle rebuilt from public URLs",
+   "type": "release",
+   "significance": 3,
+   "fact_ids": [
+    "F-2246",
+    "F-2248"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-labrat-final"
+   ]
+  },
+  {
+   "id": "E-486",
+   "date": "2026-10-25",
+   "time": "15:4x",
+   "title": "LabRat source public: github.com/r4topunk/labrat-boar-fork",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-2247"
+   ],
+   "decision_ids": [
+    "D-218"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-labrat-public"
+   ]
+  },
+  {
+   "id": "E-487",
+   "date": "2026-10-25",
+   "time": "16:29",
+   "title": "Submission post prepared (one post with a 60 s video); not posted as of the record",
+   "type": "milestone",
+   "significance": 1,
+   "fact_ids": [
+    "F-2251"
+   ],
+   "decision_ids": [
+    "D-219"
+   ],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-post-ready"
+   ]
+  },
+  {
+   "id": "E-488",
+   "date": "2026-10-25",
+   "time": "16:46",
+   "title": "Article live on GitHub Pages with the DEVICE-FINAL result",
+   "type": "release",
+   "significance": 2,
+   "fact_ids": [
+    "F-2252"
+   ],
+   "decision_ids": [],
+   "chapter": "submission",
+   "visibility": "public",
+   "aliases": [
+    "U6-e-article-live"
+   ]
+  }
+ ]
+}

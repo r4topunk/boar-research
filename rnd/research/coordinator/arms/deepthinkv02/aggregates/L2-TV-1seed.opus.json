@@ -1,0 +1,254 @@
+{
+  "TV": {
+    "runs": [
+      "dtv-TV-v02-s42"
+    ],
+    "n_items": 110,
+    "bootstrap": "stratified by category",
+    "decline_ratio_D": 0.306,
+    "D_source": "given",
+    "raw": {
+      "point": 0.6127,
+      "ci95": [
+        0.5796,
+        0.6462
+      ]
+    },
+    "above_min": {
+      "point": 0.5139,
+      "ci95": [
+        0.4725,
+        0.556
+      ]
+    },
+    "above_decl": {
+      "point": 0.4419,
+      "ci95": [
+        0.3943,
+        0.4901
+      ]
+    }
+  },
+  "D": {
+    "runs": [
+      "dv-D-v02-s42"
+    ],
+    "n_items": 110,
+    "bootstrap": "stratified by category",
+    "decline_ratio_D": 0.306,
+    "D_source": "given",
+    "raw": {
+      "point": 0.5643,
+      "ci95": [
+        0.53,
+        0.5977
+      ]
+    },
+    "above_min": {
+      "point": 0.4533,
+      "ci95": [
+        0.4101,
+        0.4952
+      ]
+    },
+    "above_decl": {
+      "point": 0.3721,
+      "ci95": [
+        0.3227,
+        0.4203
+      ]
+    }
+  },
+  "K": {
+    "runs": [
+      "cut6-v02-s42"
+    ],
+    "n_items": 110,
+    "bootstrap": "stratified by category",
+    "decline_ratio_D": 0.306,
+    "D_source": "given",
+    "raw": {
+      "point": 0.5192,
+      "ci95": [
+        0.4825,
+        0.5551
+      ]
+    },
+    "above_min": {
+      "point": 0.3968,
+      "ci95": [
+        0.3509,
+        0.4421
+      ]
+    },
+    "above_decl": {
+      "point": 0.3072,
+      "ci95": [
+        0.2543,
+        0.359
+      ]
+    }
+  },
+  "paired": [
+    {
+      "seed": "42",
+      "vs": "D",
+      "missing": {
+        "TV": [],
+        "D": []
+      },
+      "TV": {
+        "n": 110,
+        "ratio": 0.6127,
+        "ci": [
+          0.5773,
+          0.646
+        ],
+        "win": 0,
+        "tie": 0.0091,
+        "loss": 0.9909,
+        "posCons": 0.9909,
+        "floorAdj": 0.5139,
+        "floorAdjCI": [
+          0.4699,
+          0.5556
+        ],
+        "winRateCI": [
+          0,
+          0
+        ]
+      },
+      "D": {
+        "n": 110,
+        "ratio": 0.5643,
+        "ci": [
+          0.5267,
+          0.6012
+        ],
+        "win": 0,
+        "tie": 0,
+        "loss": 1,
+        "posCons": 1,
+        "floorAdj": 0.4533,
+        "floorAdjCI": [
+          0.407,
+          0.4989
+        ],
+        "winRateCI": [
+          0,
+          0
+        ]
+      },
+      "paired": {
+        "n": 110,
+        "dRatio": 0.0484,
+        "dRatioCI": [
+          0.0217,
+          0.0765
+        ],
+        "dFloor": 0.0606,
+        "dFloorCI": [
+          0.0267,
+          0.0971
+        ],
+        "winsVsRef": {
+          "TV": 0,
+          "D": 0
+        },
+        "tiesVsRef": {
+          "TV": 1,
+          "D": 0
+        },
+        "lossesVsRef": {
+          "TV": 109,
+          "D": 110
+        },
+        "headToHead": {
+          "aHigher": 47,
+          "same": 38,
+          "bHigher": 25
+        }
+      }
+    },
+    {
+      "seed": "42",
+      "vs": "K",
+      "missing": {
+        "TV": [],
+        "K": []
+      },
+      "TV": {
+        "n": 110,
+        "ratio": 0.6127,
+        "ci": [
+          0.5773,
+          0.646
+        ],
+        "win": 0,
+        "tie": 0.0091,
+        "loss": 0.9909,
+        "posCons": 0.9909,
+        "floorAdj": 0.5139,
+        "floorAdjCI": [
+          0.4699,
+          0.5556
+        ],
+        "winRateCI": [
+          0,
+          0
+        ]
+      },
+      "K": {
+        "n": 110,
+        "ratio": 0.5192,
+        "ci": [
+          0.4803,
+          0.56
+        ],
+        "win": 0,
+        "tie": 0,
+        "loss": 1,
+        "posCons": 1,
+        "floorAdj": 0.3968,
+        "floorAdjCI": [
+          0.3476,
+          0.4454
+        ],
+        "winRateCI": [
+          0,
+          0
+        ]
+      },
+      "paired": {
+        "n": 110,
+        "dRatio": 0.0935,
+        "dRatioCI": [
+          0.0565,
+          0.132
+        ],
+        "dFloor": 0.1172,
+        "dFloorCI": [
+          0.0716,
+          0.1663
+        ],
+        "winsVsRef": {
+          "TV": 0,
+          "K": 0
+        },
+        "tiesVsRef": {
+          "TV": 1,
+          "K": 0
+        },
+        "lossesVsRef": {
+          "TV": 109,
+          "K": 110
+        },
+        "headToHead": {
+          "aHigher": 49,
+          "same": 38,
+          "bHigher": 23
+        }
+      }
+    }
+  ]
+}

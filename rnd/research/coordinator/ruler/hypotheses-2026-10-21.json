@@ -1,0 +1,272 @@
+[
+ {
+  "score": 13.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "RJ2-FLOORANCHORS",
+  "statement": "Under the R4 judge (judge.v1, Haiku 5.5-low N=4, z override off as the spec requires), each of the three pre-registered decline variants scores U \u2264 0.05: the bare refusal, the hedged non-answer, and the length-matched fluent answer with no checkable content. A pinned ~1B instruct model, closed-book in the same prompt frame, scores at least 0.05 U below the 1.7B K0 control on the same items. So on dev data the separability chain decline < 1B < app already holds, before v0.4 is touched.",
+  "why_now": "RULER-SPEC \u00a74/\u00a78 makes 'decline arm valid' a verdict precondition: if any variant scores > 0.05 the judge is invalid and T2 must be fixed before any app result is read. The plan schedules both arms on 10-24 itself. That leaves no slack: a variant (c) failure on that day would void R4. VPARA-DIAGNOSIS already shows a 1/1/1 rubric floor of 0.206 raw, so variant (c) is a live risk.",
+  "method": "Dev v0.1, 57 ids (the existing references and checklists). Write the three decline texts exactly as the spec pre-registers them, with (c) length-matched to the v0.1 reference median. Generate the 1B arm on one mini slot: pin a GGUF sha, use the same prompt frame, no retrieval, ~15 min. This is a ruler baseline that the spec requires, not a model screen. Judge the 1B arm on all 57 and the decline variants on 30 stratified ids with the R4 judge settings. Pair the 1B arm against the existing 1.7B K0 control judgments on the same 57. Freeze the criterion before any call. If r4to has Codex time, judge the 30 variant-(c) answers under Codex as well, because validity is required under both families.",
+  "lane": "mini-gen",
+  "cost": "1 mini slot ~15 min; ~300 Haiku (57 + 90 answers \u00d7 2 orders); 0 Opus; optional ~30 Codex calls by r4to.",
+  "ceiling": "Pass/fail validity gate for the headline. A fail found now saves the whole R4 day. The 1B gap on dev also sets the expected separability at n 75: the gap must be > ~0.05 for the CIs not to overlap.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "The hypothesis is false, and T2 must be changed before 10-24, if any variant's U upper CI exceeds 0.05. Candidate changes: score generic and no-content answers by checklist points only, or make the true-zero rule explicit. The separability claim is withdrawn from the research page, and the page reports the 1B arm as 'not separable on dev', if U(1.7B) \u2212 U(1B) < 0.05 or its paired CI includes 0. In both cases, record the failure and do not tune the texts after seeing scores.",
+  "lens": "The ruler and the judges: make"
+ },
+ {
+  "score": 12.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "HON-3 CE-OPUS-RU",
+  "statement": "The headline honesty number, 'the groundedness gate cuts visible confident errors 10 to 4 of 177', survives an Opus re-judge. Under Opus judge.v1, control CE-unwarned is at least 7, the gated arm has at most half of the control count, and 0 of the 15 supported-correct answers become false refusals. CE-OPUS (10-20) found that Haiku over-calls CE (6 of 23 control CEs were not CE under Opus), so the 10 may shrink and the -60 % may not hold.",
+  "why_now": "The research-page outline and claim v5 cite the gate's 10 to 4 as the honesty number. The repo rule is Opus only for claim numbers, and this number is Haiku-only, single family, with small counts. Re-judging the existing texts before 10-25 is cheap, but it must happen before the page is written.",
+  "method": "Freeze a criterion (sha) before any call. Re-judge with Opus judge.v1 (both orders, N 4 shards) only the RU K3 items that decide the clauses: the 10 control CE-unwarned items, the 19 gate-refused items, the 15 supported-correct items, and the 4 CE-unwarned items R still shows. That is about 45 unique answers, using the existing MacBook K3 texts and no generation. Recompute clauses (a) and (b) under Opus with the frozen RU analysis code. Report the Haiku-Opus agreement on CE labels.",
+  "lane": "judge",
+  "cost": "about 90-180 Opus calls (45 items x both orders, N 4 sharded), about 1 h wall, 0 generation",
+  "ceiling": "Decides whether the claim may quote the gate number at all. It is a label-robustness check on a count, not an effect estimate, so MDE does not apply.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "If Opus control CE-unwarned is below 6, or the Opus reduction is below 40 %, or any supported-correct answer becomes a false refusal, claim v5 drops the 10 to 4 headline. The gate goes to 'post-bounty research, Haiku-only signal' and the honesty section leads with HON-1/HON-2 numbers instead.",
+  "lens": "Honesty and user-visible error"
+ },
+ {
+  "score": 12.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "HON-1 WARNCAL",
+  "statement": "With the 1.7B, the engine's warning line ('not found in the library') is a calibrated error signal. On the existing 1.7B K0/K1/K3 judgments (MAIN 97 plus the 180 self-tests), P(CE | warned) is at least 2x P(CE | unwarned shown answer), and the warning line catches at least 60 % of all confident errors. CMP30OFF also found that about half of warned answers are still CE, so warned answers keep a large share of judge-correct answers. Both numbers are what the claim and the note need to say what the warning means.",
+  "why_now": "The warning line went to the maintainer on 10-20, and the refuse-by-default plus show-anyway note (D3 item 2) is due before his roughly 10-23 freeze. Today the note cannot say how often a warned answer is right or how many CEs slip through unwarned. RU and GATE v2 suggest 8-11 % of CE are unwarned, but no precision/recall table has been written for the 1.7B.",
+  "method": "0-LLM. Pool the existing Haiku 5.5-low judge.v1-low rows for the 1.7B: LITEPACKS K0/K1/K3 on MAIN 97 and the 80 pack-matched items, plus the null-cal pool controls K0/K1 on the 180. Use tools/labels.py from null-cal for CE, warned and decline. Freeze a 10-line criterion (sha) that defines CE as corr <= 1.5 and correct as corr >= 4. Build a 2x2 of warned/unwarned against CE/correct, per pack set and per family. Report precision and recall of the warning for CE, P(correct | warned), and item-bootstrap CIs. Report the same table restricted to Haiku-Opus agreement using the CE-OPUS 47-item overlap as a sensitivity row.",
+  "lane": "analysis-0llm",
+  "cost": "about 2 h coordinator, 0 judge, 0 generation",
+  "ceiling": "Changes one claim-v5 honesty sentence and the note's wording of what the warning means. No U effect, so it is not MDE-bound.",
+  "mde_ok": true,
+  "feeds": "honesty",
+  "kill_criterion": "If precision of the warning for CE is below 0.40 or recall is below 0.50 (CI-high below the threshold), the claim and the note stop calling the warning an error signal. The text becomes 'no source found', the 'may be wrong' framing is dropped, and the WARNCAL line closes.",
+  "lens": "Honesty and user-visible error"
+ },
+ {
+  "score": 12.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "HON-2 SHOWANYWAY-VALUE",
+  "statement": "In refuse-by-default mode with the 1.7B, the answers hidden behind the show-anyway button (warned, no-source and engine-declined items that still have generated text) hold more judge-correct answers (corr >= 4) than confident errors. If so, the button returns net-useful content, and the note can state 'about X correct and Y wrong per 100 reveals'.",
+  "why_now": "r4to's 10-20 decision makes no source mean refuse by default plus a show-anyway button, and the note to the maintainer is pending. RU counts only that correct answers shown go from 37 to 32 when the gate refuses. Nobody has priced what a user gets when tapping show-anyway, and the button is the main user-visible surface for errors.",
+  "method": "0-LLM. Use the same pooled 1.7B judgments as HON-1 and the RU K3 n 177 analysis.json. Classify every default-refused item by its hidden text: correct (corr >= 4), CE (corr <= 1.5), in between, or no text (routing declines with 0 generated tokens are excluded and counted separately). Also split by pack set (K0 vs K3) and by health vs non-health. Health reveals must be listed by id against the HEALTHGAP/WARNSPEC tiers. Freeze the criterion (sha) first. Report the correct:CE ratio per 100 reveals with a bootstrap CI.",
+  "lane": "analysis-0llm",
+  "cost": "about 2 h, 0 judge, 0 generation",
+  "ceiling": "Decides one note sentence and whether the button ships with a stronger caution. Not MDE-bound (0-LLM).",
+  "mde_ok": true,
+  "feeds": "maintainer",
+  "kill_criterion": "If the correct:CE ratio among reveals has CI-high below 1.0, or any health reveal is a safety-class CE, the note recommends that show-anyway stay behind a second confirmation with the 'unverified, often wrong' text, or be removed for health. HON-2 then closes as 'button is a liability'.",
+  "lens": "Honesty and user-visible error"
+ },
+ {
+  "score": 12.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "AUNION-PIXEL",
+  "statement": "On the Pixel 8a, the 1.7B with the A-union loaded keeps the 8 GB product inside its limits. A-union = 6 text packs (435.3 MB) + gazetteer (458.3 MB). Measured against the claim kit: answer p50 +<= 3 s, TTFT p50 +<= 2 s, PSS peak <= 4.0 GB, 0 LMK kills over 10 questions. This makes A-union admissible as the R4 verdict arm on 8 GB.",
+  "why_now": "The ruler spec names A-union as the verdict arm, and the outline lists [NEEDS: pack cost on the phone with BATCHRET]. LITEPACKS measured only the desktop cost (prompt tokens 384 -> 729-792, TTFT 1.6 -> 3.9-4.4 s). On the same Pixel 8a, Gemma peaked at 4.52-4.63 GB PSS, and the 4B was killed once at 4.4 GB. R4 is on 10-24, so this must be known on 10-22/23.",
+  "method": "Bench-app batchret build (the same APK as GEMMA4-PHONE). Use the 10-question litelat-9 + lan-ref-001 set, in two configs in the same session: (a) claim kit, (b) A-union pushed to the pack dir. Medlineplus/factbook source codes are labelled Wikipedia natively, but the bench app runs the TS engine; record which packs appear in kept. Order a, b, a: a thermal gate (thermal status 0, battery <= 35 C) before each batch; re-run (a) after (b) to bound drift. Log per question: TTFT, answer wall, prefill/decode tok/s, prompt tokens, PSS sampled at 1 Hz (peak and post-load), LMK events from logcat, kept pack ids. Freeze the criterion (thresholds above) before the run. 0 judge.",
+  "lane": "pixel",
+  "cost": "About 1.5 h of phone time with r4to present (3 batches of 10 plus thermal waits); about 0.5 GB push; 0 judge, 0 paid",
+  "ceiling": "Gate measurement, no judged effect. It decides whether the verdict arm can carry all persona packs on 8 GB, or whether the R4 8 GB row must use a reduced set labelled as such.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Kill A-union as the 8 GB verdict arm on any of: an LMK kill; PSS peak >= 4.4 GB; answer p50 more than +5 s over the re-run claim kit. Then R4's 8 GB row uses the claim kit + the travel/science subset that passes, labelled, and A-union stays a 12 GB (POCO X6) row. If only medlineplus/factbook never appear in kept, flag the native PackSource enum gap for the maintainer note.",
+  "lens": "The pack thesis after INPACK-S"
+ },
+ {
+  "score": 11.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "RJ5-SPEEDPRECHECK",
+  "statement": "On the Pixel 8a, the 1.7B default tier meets the pre-registered USABLE thresholds: p50 T30 \u2264 30 s, p90 T30 \u2264 60 s, p50 complete \u2264 60 s, over answered items. The 4B tier passes T30 but fails p50 complete \u2264 60 s or p90 T30. If so, the speed verdict is a two-row result that justifies the 1.7B as the headline tier, and existing phone traces predict it within 15 % before the R4 phone-hours are spent.",
+  "why_now": "'Speed USABLE' is a verdict precondition (RULER-SPEC \u00a78). PLAN 0.2 schedules one 9-question timed run of the RC. Nobody has yet computed T30 or the complete-time percentiles from the Pixel traces we already hold, and R4 needs ~5\u20136 phone-hours that should not be spent on a tier that fails the gate. The outline's speed row is still [NEEDS].",
+  "method": "Step 1 is 0-LLM: compute TTFT, T30 and complete-time p50/p90 over answered items from the existing Pixel 8a traces: final-cut7-v01 (4B, 57), gemma73-a (Gemma, 73), cmp30-q17 (1.7B, 26 ids). Where per-token timestamps are missing, approximate T30 as TTFT + 30 / decode tok/s and flag it. Step 2: one 10-question run with thermal gates on the Pixel 8a with the maintainer's RC (1.7B entry if he takes it, else the 4B, labelled). Use dev v0.1 ids stratified by retrieval-kept vs not, and log per-token timestamps, PSS and LMK. This doubles as PLAN task 0.2. Compare the measured percentiles with the step-1 projection. Freeze thresholds and the projection rule before the phone run. 0 judge calls.",
+  "lane": "pixel",
+  "cost": "0 judge; ~2 h scripting; 1 phone-hour with r4to (10 questions, thermal gates).",
+  "ceiling": "A precondition gate for the headline rather than a U delta. It decides which tier R4 headlines and whether the 4B row is scored as 'not usable'. It can save ~2 phone-hours of R4 if a tier fails.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "The hypothesis is false if the 10-question RC run gives a 1.7B p50 T30 > 30 s or p90 T30 > 60 s; then the headline speed verdict is NOT USABLE, which goes on the page as a limit. The projection is also not used for R4 planning if trace-projected and measured p50s differ by > 15 % on either metric; R4 then measures speed on every batch. If the 4B passes all three thresholds, the 'latency constraint' rationale for the 1.7B default (DIRECTION D1) is withdrawn from the written case.",
+  "lens": "The ruler and the judges: make"
+ },
+ {
+  "score": 10.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "FC-RELABEL",
+  "statement": "On the real v0.1 57 dev items, the null from INPACK-SPLIT (matching pack loaded vs not, -0.023 on 17) comes from dilution. In most of those 17 items the key fact is not in the added pack, or is in it but not kept. On the subset where an arm adds a pack that holds the key fact AND a fact-bearing chunk is kept, the paired dU (K1/K3/K4 vs K0, 1.7B; Gemma K3 vs K0 where it exists) is >= +0.05. On fact-absent items it is about 0.",
+  "why_now": "INPACK-SPLIT \u00a75 names the missing piece: in-pack is a domain match, not fact presence ('a fact-presence split needs retrieval replay or jev F0 per item; not done here'). FACT-REACH did this only for 20 no-source errors. The research page outline needs the pack-thesis row stated as fact-conditional, not domain-conditional, before R5 on 10-25.",
+  "method": "0 LLM, 0 judge. (a) For each of the 57 v0.1 items, write the key fact from the public reference and author notes, in the FACT-REACH style. Freeze this file (sha256) before any trace is opened. (b) Locate the fact per pack with tools/factq.py (read-only FTS plus whole-article reads) over the K0..K4 kit packs, labelled Y/P/N. (c) The traces log titles only, so run replay-retrieval.sh on the MacBook (8 s, no LLM) per arm to recover the kept chunk text. Mark fact-kept items with a string or number match of the key fact against the kept chunks; also mark chunks with a PACK-HOLES fact hole. (d) Run tools/inpack_split.py's bootstrap (B 2000, seed 11) on the existing Haiku-low judgments, stratified by fact-absent / fact-present-not-kept / fact-kept. Freeze the strata rule and script sha before computing. Report the 1.7B K0-K4 arms, Gemma K0/K3 where present, and the 4B K0 cross-section. No blind/, no veil, no v0.4.",
+  "lane": "analysis-0llm",
+  "cost": "About 4-5 h agent time on the MacBook; 0 judge, 0 generation, 0 paid",
+  "ceiling": "0-LLM analysis: no MDE requirement. Expected fact-kept stratum about 10-20 items, so the CI half-width will be about 0.06-0.10. Its value is the strata counts and the direction of the effect, plus a frozen fact-label file that H3 and future arms reuse.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "The fact-conditional framing dies on either of two results. (1) The fact-kept stratum has fewer than 8 items across all arms, so on real v0.1 questions packs almost never deliver the fact: report 'fact delivery, not reading, is the binding gap'. (2) Paired dU on fact-kept items is <= 0 with a CI high < +0.05. Then the corrected thesis is not supported on real items for the 1.7B, and the page states packs as citations/coverage only.",
+  "lens": "The pack thesis after INPACK-S"
+ },
+ {
+  "score": 9.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "RJ4-REFVAR",
+  "statement": "The reference denominator is stable. For R3 we regenerate the frontier + web reference on 20 dev items with the frozen R3 protocol (Claude, web, uncapped) and re-judge existing app traces against the new draw. The app U should change by \u2264 0.03 and the system ranking (1.7B < Gemma < 4B) should not flip. If so, one reference draw per family is enough for the scoring run.",
+  "why_now": "U is a ratio to the reference, so reference variance is headline variance. R3 references v2 start on 10-22 and must be frozen before R4. Whether one or two draws are needed has to be settled before the Opus budget (~150) is spent on v0.4. A sceptical judge would also ask whether 'frontier + web' was a reproducible yardstick or one lucky sample.",
+  "method": "Dev v0.1, 20 stratified ids that have v1 references and checklists. Generate one new reference per item with the exact R3 prompt and tools: Claude, web, uncapped, logged. Score the old and new references against the checklist. Re-score the existing 1.7B K0 control and 4B K0 s42 traces against the new reference with the R4 judge settings (Haiku 5.5-low N=4). Compare per-system U and the paired U difference (new \u2212 old reference), and check whether the ranking holds. Freeze the criterion before generating. Optionally, r4to produces 10 Codex references to measure writer-family \u00d7 judge-family self-preference: does the Claude judge score the Claude reference higher than the Codex reference on the same checklist?",
+  "lane": "web",
+  "cost": "~20 Opus + web generations; ~120 Haiku judge calls; optional ~10 Codex references plus ~20 calls by r4to; 0 paid API.",
+  "ceiling": "Determines the R3 protocol: one draw vs two averaged, and whether U should be normalised by the checklist with the reference only as a cap. A denominator change of 0.05 would move the headline by about 0.03, which is the MDE.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Stop treating one reference draw as sufficient, and require two averaged draws per family in R3 (or switch U to checklist-absolute with the reference as a cap), if any of these holds: |\u0394U| > 0.03 for either system; the paired CI excludes 0 at |\u0394U| \u2265 0.02; the 1.7B-vs-4B gap changes by > 0.03. If the optional cross-family check shows the Claude judge scoring Claude references > 0.05 higher than Codex references on the same checklist, the page must publish the writer\u00d7judge table and use the cross-family pair for the verdict.",
+  "lens": "The ruler and the judges: make"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-after-10-23",
+   "run-now"
+  ],
+  "id": "HON-5 DRIFT17",
+  "statement": "With the 1.7B default, confident errors rise in later session turns: the CE-unwarned rate on follow-up turns 4-5 is at least 2x that on turn 1 on longsession-v1. LONGSESSION found no drift for the 4B over 5 turns (ratio 1.40 in favour of the session). MAINT-LS saw lost referents on turns 11-15 in the native app. A smaller model is the likeliest place for coref and referent failures to surface as confident wrong answers.",
+  "why_now": "The claim names the 1.7B as the 8 GB recommendation, but every multi-turn measurement so far used the 4B (cut 7) or the maintainer's native 4B. 'No degradation over 5 turns' is quoted without the 1.7B, and phone users chat in sessions.",
+  "method": "Freeze a criterion (sha) first. On the mini (one gen slot), run the lite 1.7B K0 config (seed 42) on longsession-v1 (10 sessions x 5 turns, agent-written dev data) in two runs: full history (A) and standalone (B), with the LONGSESSION tools unchanged. Judge with Haiku 5.5-low judge.v1-low, both orders, N 4, against the existing refs. Report CE-unwarned and warned rates by turn and by follow-up vs self-contained, plus the ratio A/B with a session-cluster bootstrap. The primary contrast is the CE-unwarned rate on follow-up turns vs turn 1, paired A vs B on the same items.",
+  "lane": "mini-gen",
+  "cost": "about 15 min mini generation (100 answers), about 100-200 Haiku calls, 0 Opus",
+  "ceiling": "MDE on 10 sessions is large (about 0.15-0.2 on the ratio, about 0.2 on a CE rate at n 20 follow-up turns). The native late-turn effect (-0.26) and the 4B session gain (+0.40) both exceed it, so a real 1.7B drift would be detectable. A null is reported as 'no drift detected at MDE about 0.2', not as 'no drift'.",
+  "mde_ok": true,
+  "feeds": "honesty",
+  "kill_criterion": "If the follow-up-turn CE-unwarned rate is not above standalone B (paired CI includes or lies below 0) and the A/B ratio on turns 2-5 has CI-low at or above 0.9, the claim keeps 'no degradation detected over 5 turns' and extends it to the 1.7B with its MDE, and HON-5 closes. If drift is detected, the note and the claim add the turn limit and a caution to start a new chat.",
+  "lens": "Honesty and user-visible error"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-after-10-23",
+   "run-now"
+  ],
+  "id": "SE-DUP",
+  "statement": "Real user questions that were not written from a pack, but whose answer the pack holds by construction, gain from loading that pack. These are Stack Exchange questions closed as duplicates of a question that is in the qa-*-se pack. For the 1.7B, the claim kit plus the site's own qa pack vs the claim kit alone gives dU >= +0.03 with CI low > 0 on about 100 duplicates. The duplicate/self-test gain ratio is >= 0.5 on the same packs in the same run.",
+  "why_now": "This is the cleanest test of 'fact present, not domain match' on non-pack-written phrasing. INPACK-SPLIT \u00a73 records that no arm ever loaded qa-cooking-se / qa-money-se, and that the qa packs' own loaded-vs-not effect was never measured. The self-test gain (+0.056 / +0.076) is called an upper bound that does not transfer, and the size of that transfer gap is unknown.",
+  "method": "Download the archive.org stackexchange 2024-04-02 7z files for travel, cooking, money, health and outdoors (the dumps the packs were built from; CC BY-SA, covered by the standing pack OK). Read PostLinks LinkTypeId=3. Keep duplicates whose own URL is NOT in the pack and whose target IS in the pack with an accepted answer. Sample 20 per site deterministically (seed 11, sorted ids). Freeze the id list (sha256) before generation. Question = the duplicate's title + body as written by its user. Reference = the target's accepted answer (human-written; the same reference for both arms, so the delta is valid; labelled 'SE-reference' and never pooled with ruler numbers). Arms on the mini (one slot each, seed 42, engine sampler, 1.7B, compact tier): K0 claim kit vs K0 + that site's qa pack. Include the existing 20 self-tests per site for the same 5 packs in the same run as the transfer control. Before generation, freeze the criterion: dU rule, ratio rule, CE-unwarned clause <= +0.02 and the replay-based fact-kept share. Judge: Haiku 5.5-low N 4, both orders. Reuse rows where the answer bytes are identical.",
+  "lane": "judge",
+  "cost": "About 1 GB of downloads; about 400 generations on the mini (about 1.5 h on one slot); about 500-700 Haiku calls (changed answers only); 0 Opus, 0 paid",
+  "ceiling": "The own-pack fact is reachable for every item by construction. The self-test gains with the matching pack loaded were +0.056 (1.7B topical) and +0.069-0.102 (K3), and ORACLE-ST was +0.095. The plausible ceiling is +0.05-0.10, above the MDE of about 0.03 at n 100.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "Kill if dU on the duplicates has CI high < +0.03, or the duplicate/self-test ratio is < 0.3 while the self-test dU in the same run is > +0.04. Either result means a pack holding the answer does not lift real-phrased questions, and the thesis survives only on pack-written items. Precondition: if replay shows the target thread kept on < 30 % of duplicates, label the result 'retrieval-bound' (not a reading verdict) and do not extend the pack line.",
+  "lens": "The pack thesis after INPACK-S"
+ },
+ {
+  "score": 9.0,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "ORACLE-REAL",
+  "statement": "On real v0.1 items whose key fact exists in some pack, placing the fact chunk in the context lifts the 1.7B by >= +0.05 U. This is the engine's prompt with the fact chunk prepended to the kept context, all else byte-identical. ORACLE-ST measured this ceiling on self-tests (+0.095). If the real-item ceiling matches, then the pack gap on real items is retrieval and routing, not reading.",
+  "why_now": "K1-COVERAGE found that with the fact kept, the 1.7B still answered wrong on 2 of the no-source errors, on 3 crypto reading failures and on hum-005. PLAN \u00a71 attributes 0.142 of the gap to reading. Nobody has measured the fact-present ceiling on non-pack-written items, and this decides what the page says packs can do at 8 GB.",
+  "method": "Items: the v0.1 items with key fact Y in any pack, using FC-RELABEL's frozen labels, or FACT-REACH plus the K1-COVERAGE reading failures (about 14 real items) as the floor if FC-RELABEL is late. The target is 30-40 items. Freeze the id list, chunk ids (from factq.py) and the injection rule (fact chunk as passage [1], the engine's kept passages after it, the same context-token cap; drop the last passage if over the cap) before generation. Contexts come from --dump-prompts of the K0 control on the mini (as RU did). Arms: 1.7B K0 as retrieved vs 1.7B K0 + oracle chunk; optional third arm Gemma E2B oracle (one slot). Seed 42, Haiku 5.5-low N 4 both orders. Also report the fraction of oracle answers that cite [1], and CE-unwarned.",
+  "lane": "judge",
+  "cost": "About 80-120 generations (about 20 min on the mini); about 160-240 Haiku calls; 0 Opus",
+  "ceiling": "ORACLE-ST self-test ceiling +0.095. For the 4 retrieved_but_wrong and 2 present-not-retrieved items, the upside is a jump from CE to correct. MDE at n 30-40 is about 0.05-0.06, so the ceiling is >= the MDE only if the real-item effect is near the self-test one. Size the set to n >= 35 or report as indicative.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "Kill if oracle dU (1.7B) has CI high < +0.05, or < half of ORACLE-ST's +0.095. Then even a present, placed fact does not lift real questions at 8 GB; the thesis is reading-bound for the 1.7B, and the page frames packs as sources/citations, not accuracy. If Gemma's oracle dU passes where the 1.7B fails, record 'model-bound' (feeds the tier note, not a default change).",
+  "lens": "The pack thesis after INPACK-S"
+ },
+ {
+  "score": 8.5,
+  "verdicts": [
+   "run-now",
+   "run-now"
+  ],
+  "id": "TILE-PATH",
+  "statement": "For travel/place items with a device location, the area-tile path is the only pack mechanism that delivers the fact. With location + the user's area tile, the engine returns >= 3 real POIs on >= 80 % of dev near-me items (VENUEGPS-2 showed 7/7 on burnt V-para). Every v0.4 item that carries location keys has a tile in the catalog, so the in-pack travel stratum of the ruler is real and not an artefact of an unbuilt tile.",
+  "why_now": "INPACK-STRATUM counts device-location items as in-pack under A-union, but the persona area tiles are 'not built (per item location, built at freeze)' (PERSONA-A-UNION \u00a74). VENUEGPS-2 is the only positive pack result on non-pack-written items, and it ran on V-para, which researchers may not reuse. The tile set must be frozen before R4 on 10-24.",
+  "method": "0 judge, 0 LLM (the places tier is deterministic). (1) Dev near-me set: the v0.1 travel/place items (trv-*, vit-trv-*, lan-exp-004/005/006) with a device location taken deterministically from the gazetteer centroid of the named city. Freeze ids, coordinates and tile ids before running. Run cut 7 config (b) + runner-location.patch on the MacBook with kit-vexact + the selected catalog tiles. Score route codes, POI counts and OSM matches with the cut6-claim-b-venues.mjs logic where a venue rubric exists; otherwise score places-hit vs coverage-none. (2) Coordinator-only, script-only over v0.4, as VENUEGPS was over V-para: map lat/lon values to tileIdOf, and output only counts and tile ids, never question text. Log one EXPOSURES row. Report tile availability, total MB, and items whose tile is missing.",
+  "lane": "analysis-0llm",
+  "cost": "About 3 h on the MacBook; tile fetch of a few MB from the HF catalog (already published); 0 judge, 0 paid",
+  "ceiling": "0-LLM / deterministic check: no MDE requirement. It validates or removes the travel in-pack stratum (a share of the 57/75 in-pack v0.4 items) and fixes the tile list and size for the verdict arm.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "Kill on either result. (1) Fewer than 60 % of dev near-me items reach places-hit with >= 3 POIs under location + tile: then the location path is not general beyond the V-para venue items, and the claim keeps the 'with device location and the user's area tile' wording only for venue lists. (2) Any v0.4 location item has no catalog tile: relabel those items off-pack in INPACK-STRATUM before R4, and do not count them as in-pack in the ruler.",
+  "lens": "The pack thesis after INPACK-S"
+ },
+ {
+  "score": 6.5,
+  "verdicts": [
+   "run-now",
+   "drop"
+  ],
+  "id": "RJ1-FAMOFFSET",
+  "statement": "The Claude vs Codex gap (about +0.10 on V-para and v0.2) is a monotone, score-band-dependent mapping. It is concentrated on answers Claude scores at or near the floor, and it is the same for compact 4B answers and long deep answers. If so, a Codex pass on a 25 % stratified subsample predicts the full-set Codex U within 0.03, and R4 can cut its planned ~3k Codex calls to ~750 while keeping the min-over-families verdict statistic.",
+  "why_now": "PLAN \u00a75 risk 2 and 4: R4 needs ~3k Codex calls on r4to's [usage detail removed], and Codex availability is a named risk. RULER-SPEC \u00a73.7 takes min(U_G1, U_G2), so the offset decides which family sets the headline. The outline also leaves [NEEDS: XFAM per cause; the Codex offset per bucket is unknown].",
+  "method": "0-LLM on the existing XFAM-V02 per-item judgments: v0.2 110 dev ids (burnt, so dev; not V-para, whose XFAM runs sit in blind/), 4B cut 6 and deep + think 512, both families, two seeds. (a) Rescore both families on the U scale (declines and generic answers = 0). (b) Compute the per-item offset by Claude score band (0-1, 1-2, 2-3, 3+) and by answer-length tercile. (c) Fit an isotonic Claude-to-Codex map on a random 25 % of items, stratified by arm and band. Predict the Codex U of the other 75 %. Repeat over 200 splits. (d) Check the length dependence: compare the offset slope on short vs long answers, as a proxy for the 1.7B's compact style. Freeze the criterion sha before computing.",
+  "lane": "analysis-0llm",
+  "cost": "0 judge calls, 0 generation; ~2 h of coordinator scripting. Locating the XFAM-V02 per-item files (the path is not in this brief) may need r4to.",
+  "ceiling": "Saves ~2.2k Codex calls and removes R4's dependence on a full Codex pass. It also gives the research page a sourced sentence on where the families disagree, which a sceptical judge asks about first.",
+  "mde_ok": true,
+  "feeds": "ruler",
+  "kill_criterion": "KILL the subsample plan (R4 runs Codex on all 75 items \u00d7 arms) if any of these holds: the median absolute error of the subsample-projected Codex U on the held-out 75 % exceeds 0.03 for either arm; or the offset differs by more than 0.03 between the short and long answer terciles, which means Codex rewards length and the offset will not transfer to the 1.7B; or Spearman of per-item offsets vs Claude score is < 0.3, which means the offset is not band-structured.",
+  "lens": "The ruler and the judges: make"
+ },
+ {
+  "score": 6.0,
+  "verdicts": [
+   "drop",
+   "drop"
+  ],
+  "id": "RJ3-FACTSTRATUM",
+  "statement": "An in-pack stratum defined by fact presence carries the pack gain that the domain-match stratum does not. Fact presence means the item's key reference fact is found by read-only FTS in a pack the arm installs. Domain-match gaps were \u22120.04\u2026\u22120.08, and K3\u2212K0 was \u22120.023 on 17 matched items. On dev items, fact-present items scored with the pack loaded should beat the same items without the pack by at least +0.03 U. A crossed split should show the same pattern: retrieval kept the fact chunk vs did not.",
+  "why_now": "INPACK-SPLIT showed that domain match is a difficulty marker, not an advantage, and FACT-REACH showed that reach is not the same as an answer. INPACK-STRATUM R1 is still unfrozen. The ruler must freeze its stratum definition before any arm answers v0.4. If the corrected pack thesis ('fact present, not domain match') has no measurable stratum, the page should not carry an in-pack column at all.",
+  "method": "0-LLM. Pool: v0.1 57 plus the 40 MAIN cooking/money items (dev). For each item, take its key fact(s) from the existing v0.1 checklist or reference (dev) and run tools/factq.py read-only FTS against the K0 and K3 pack files, pinned by sha. Label each item fact-present-K3-only, present-in-both, or absent. Use a scripted token-overlap rule frozen first; the coordinator audits 20 labels blind to scores. Cross this with whether retrieval kept the fact chunk, using the existing K0/K3 LITEPACKS traces: kept article titles and chunk text. Compute paired K3\u2212K0 U on the fact-present-K3-only items, and DiD against the absent items, from the existing Haiku judgments. Freeze the rule sha before computing. If the stratum works, the same scripted labeller is the frozen candidate for v0.4, run by script only, without researchers reading the v0.4 text.",
+  "lane": "analysis-0llm",
+  "cost": "0 judge, 0 generation; ~3 h scripting; FTS on the MacBook pack copies.",
+  "ceiling": "Decides the shape of the pack-thesis column on the page and in the ruler (fact-present stratum vs coverage-only). It is the only test of the corrected thesis on real questions without new generation.",
+  "mde_ok": true,
+  "feeds": "packs",
+  "kill_criterion": "Drop the fact-presence stratum and freeze R1 only as a descriptive family split, if K3\u2212K0 on fact-present-K3-only items is < +0.03 or its CI includes 0 when n \u2265 12. Apply the same rule if fewer than 12 dev items are fact-present-K3-only, because the stratum is then unmeasurable at this n. In either case the page states 'pack gain not detected on real questions; self-test gain is an upper bound'. If the gain appears only on the subset where retrieval kept the chunk, and not on fact-present-but-not-retrieved items, the column is relabelled 'source kept' and the stratum is not used.",
+  "lens": "The ruler and the judges: make"
+ },
+ {
+  "score": 5.0,
+  "verdicts": [
+   "run-after-10-23",
+   "run-after-10-23"
+  ],
+  "id": "HON-4 ASYNC-GATE-A1",
+  "statement": "On the Pixel 8a, running the existing GATE17 LoRA as an async 'verify after answer' pass leaves TTFT unchanged (within 0.5 s of the no-gate run). The gate verdict lands within 12 s p90 after the answer ends, with no LMK kill and PSS growth of at most 0.3 GB. If this holds, the claim can describe the gate as a measured on-device feature that flips a shown answer to 'unverified', instead of a desktop-only projection of +9.3 s blocking latency.",
+  "why_now": "The RU price is a blocking +9.3 s p50 projected on the Pixel, roughly doubling TTFT. That latency is why the gate is out of the pre-freeze sends. The async mode (PLAN A1) is the only form the maintainer could adopt later, and its phone cost is unmeasured. A0 (LoRA loading in llama.rn at b11010) is the gating feasibility check and costs 0 judge.",
+  "method": "A0 first, read-only plus a smoke: confirm that llama.rn at b11010 in the bench app loads the GATE17 f16 LoRA (no llama.cpp change). Then run one 9-question Pixel run, the litelat-9 set (dev), with thermal gates. Arm A is no gate. Arm B answers normally, then runs the gate prompt with the adapter on the same context. Log TTFT, answer end, gate end, PSS, thermal status and the gate P(FAIL) per item. Check that gate decisions match the mini's decisions on the same contexts, with at least 8 of 9 identical at t 0.919. Freeze absolute thresholds in a criterion (sha) before the run.",
+  "lane": "pixel",
+  "cost": "0 judge; A0 about 2 h; phone about 1 h with r4to present (9 questions x 2 arms); mini 0",
+  "ceiling": "Changes a claim sentence from a projected blocking 9.3 s to a measured async cost, and gives the post-freeze maintainer note a real number. This is a latency and feasibility measurement, not a judged effect, so MDE does not apply.",
+  "mde_ok": true,
+  "feeds": "maintainer",
+  "kill_criterion": "Any one of these kills it: A0 fails (LoRA not loadable without an engine change), gate end p90 more than 15 s after answer end, PSS growth above 0.5 GB or an LMK kill, or decision parity with the mini below 8/9. The claim then says 'gate measured on desktop only; on-device cost unverified', and A2/A3 are deferred to post-bounty.",
+  "lens": "Honesty and user-visible error"
+ }
+]

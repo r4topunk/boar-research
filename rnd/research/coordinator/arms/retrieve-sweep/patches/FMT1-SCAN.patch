@@ -1,0 +1,103 @@
+diff -ru a/src/rag/packs.ts b/src/rag/packs.ts
+--- a/src/rag/packs.ts	2026-10-22 19:47:17
++++ b/src/rag/packs.ts	2026-10-23 09:43:25
+@@ -285,6 +285,42 @@
+ 
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
++/** FMT1-SCAN full scan: every chunk vector of a format-1 pack, held in memory after the first query (bench-only). */
++const rsFmt1Vecs = new Map<string, { ids: number[]; vecs: Uint8Array[] }>();
++async function rsFmt1FullScan(
++  packId: string,
++  db: SQLite.SQLiteDatabase,
++  queryVec: Float32Array,
++  limit: number,
++  toChunk: (r: PackRow, score: number, matchType: RetrievedChunk["matchType"]) => RetrievedChunk
++): Promise<RetrievedChunk[]> {
++  let m = rsFmt1Vecs.get(packId);
++  if (!m) {
++    const t0 = performance.now();
++    const all = await db.getAllAsync<{ id: number; vec: Uint8Array }>("SELECT id, vec FROM chunks");
++    m = { ids: all.map((r) => r.id), vecs: all.map((r) => new Uint8Array(r.vec)) };
++    rsFmt1Vecs.set(packId, m);
++    (globalThis as any).process?.stderr?.write?.(`[fmt1] ${packId} loaded ${m.ids.length} vectors in ${Math.round(performance.now() - t0)} ms\n`);
++  }
++  const keep = Math.max(limit * 4, 50);
++  const top: { id: number; sim: number }[] = [];
++  for (let i = 0; i < m.ids.length; i++) {
++    const sim = cosineSimilarityInt8(queryVec, m.vecs[i]);
++    if (sim < MIN_SEMANTIC_SIMILARITY) continue;
++    if (top.length < keep) { top.push({ id: m.ids[i], sim }); if (top.length === keep) top.sort((a, b) => b.sim - a.sim); continue; }
++    if (sim <= top[keep - 1].sim) continue;
++    let j = keep - 1;
++    while (j > 0 && top[j - 1].sim < sim) { top[j] = top[j - 1]; j--; }
++    top[j] = { id: m.ids[i], sim };
++  }
++  if (!top.length) return [];
++  const rows = await db.getAllAsync<PackRow>(
++    `SELECT id, title, body, vec, 0 AS rank FROM chunks WHERE id IN (${top.map(() => "?").join(",")})`,
++    top.map((t) => t.id)
++  );
++  return rows.map((r) => toChunk(r, cosineSimilarityInt8(queryVec, r.vec), "semantic"));
++}
++
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+ export async function searchPacks(
+   query: string,
+@@ -301,12 +337,17 @@
+     try {
+       const db = await openPack(pack);
+       if (!db || wikiPacks.has(pack.id)) continue;
+-      const rows = await db.getAllAsync<PackRow>(
++      // FMT1-SCAN (RS_FMT1_POOL, bench-only, default off = unchanged): "2000" widens the pool the semantic list re-ranks;
++      // "full" scores every chunk vector of the pack. The keyword list always comes from the first PACK_CANDIDATES rows.
++      const fmt1Pool = String((globalThis as any).process?.env?.RS_FMT1_POOL ?? "");
++      const poolN = /^\d+$/.test(fmt1Pool) ? Math.max(PACK_CANDIDATES, Number(fmt1Pool)) : PACK_CANDIDATES;
++      const allRows = await db.getAllAsync<PackRow>(
+         `SELECT c.id, c.title, c.body, c.vec, bm25(chunks_fts) AS rank
+          FROM chunks_fts f JOIN chunks c ON c.id = f.rowid
+          WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?`,
+-        [lexicalQuery.match, PACK_CANDIDATES]
++        [lexicalQuery.match, poolN]
+       );
++      const rows = allRows.length > PACK_CANDIDATES ? allRows.slice(0, PACK_CANDIDATES) : allRows;
+       const toChunk = (r: PackRow, score: number, matchType: RetrievedChunk["matchType"]): RetrievedChunk => ({
+         similarity: cosineSimilarityInt8(queryVec, r.vec),
+         chunkId: `pack:${pack.id}:${r.id}`,
+@@ -317,7 +358,8 @@
+         matchType,
+       });
+       let lex = filterByTermCoverage(rows, lexicalQuery.terms).slice(0, limit).map((r) => toChunk(r, -r.rank, "lexical"));
+-      const scored = rows.map((r) => toChunk(r, cosineSimilarityInt8(queryVec, r.vec), "semantic"));
++      let scored = allRows.map((r) => toChunk(r, cosineSimilarityInt8(queryVec, r.vec), "semantic"));
++      if (fmt1Pool === "full") scored = await rsFmt1FullScan(pack.id, db, queryVec, limit, toChunk);
+       scored.sort((a, b) => b.score - a.score);
+       let sem = filterByMinScore(scored, MIN_SEMANTIC_SIMILARITY).slice(0, limit);
+       // A why/what-causes question: within an article, the chunk with the question's other words first (RF-1).
+diff -ru a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+--- a/src/rag/retrieve.ts	2026-10-22 19:47:17
++++ b/src/rag/retrieve.ts	2026-10-23 09:43:25
+@@ -207,6 +207,12 @@
+   return merged.map(({ c, rrf }) => ({ ...c, score: (rrf * (k + 1)) * maxOrig }));
+ }
+ 
++/** FMT1-SCAN (RS_FMT1_FLOOR, bench-only, default off = ANSWER_MIN_SIMILARITY): the relevance floor for format-1 pack chunks only. */
++function rsFmt1Floor(): number | undefined {
++  const v = Number((globalThis as any).process?.env?.RS_FMT1_FLOOR ?? NaN);
++  return Number.isFinite(v) && v > 0 ? v : undefined;
++}
++
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+ export function isDisambiguation(c: { title: string; body: string }): boolean {
+   return /\(disambiguation\)$/i.test(c.title) || /\bmay (also )?refer to\b/i.test(c.body.slice(0, 300));
+@@ -264,8 +270,8 @@
+   // attaches it).
+   const extra = opts.packDense2 === "extra" || opts.packDense2 === "append";
+   const fused = fuseRetrievalResults(
+-    [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
++    [...gateByRelevance(lexical), ...gateByRelevance(packs.lexical, rsFmt1Floor()), ...wikiLexical],
++    [...gateByRelevance(semantic), ...gateByRelevance(packs.semantic, rsFmt1Floor()), ...(extra ? [] : wikiSemantic)],
+     topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes

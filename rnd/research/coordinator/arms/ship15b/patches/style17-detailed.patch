@@ -1,0 +1,21 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-21 17:53:03
++++ b/be/adapter-litedecline.ts	2026-10-21 17:53:03
+@@ -623,7 +623,7 @@
+   if (personaSystemPrompt !== undefined) {
+     persona = { id: "literal", systemPrompt: String(personaSystemPrompt), ...(personaStyleReminder !== undefined ? { styleReminder: String(personaStyleReminder) } : {}) };
+   } else {
+-    const id = personalityId ?? PERS.DEFAULT_PERSONALITY_ID ?? "succinct";
++    const id = personalityId ?? "detailed"; // STYLE15B: the tree's own Detailed persona (native RC1 default)
+     if (!(PERS.PERSONALITIES ?? []).some((p: any) => p.id === id)) fail(`settings.personalityId "${id}" is not one of this tree's personalities`);
+     const p = PERS.getPersonality(id);
+     persona = { id, systemPrompt: p.systemPrompt, ...(p.styleReminder !== undefined ? { styleReminder: p.styleReminder } : {}) };
+@@ -814,7 +814,7 @@
+     // LITEDECLINE: eval switch for the compact-only declines (unset = engine default).
+     ...(process.env.LITEDECLINE_OFF === "3" ? { compactDeclinesOff: "three" as const } : process.env.LITEDECLINE_OFF === "5" ? { compactDeclinesOff: "all" as const } : {}),
+   });
+-  const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
++  const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 1024 }; // STYLE15B: native Detailed cap 1024 (AppSettings Auto)
+ 
+   const adapterSha = createHash("sha256").update(readFileSync(fileURLToPath(import.meta.url))).update(readFileSync(join(HERE, "trace.ts")))
+     .update(existsSync(join(HERE, "server.ts")) ? readFileSync(join(HERE, "server.ts")) : "").digest("hex").slice(0, 12);

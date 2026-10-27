@@ -1,0 +1,513 @@
+[
+ {
+  "set": "chat-v0",
+  "id": "cs-030",
+  "kind": "followup",
+  "i": 1,
+  "first": "o que é a dengue?",
+  "q": "e como previne?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v0",
+  "id": "cs-036",
+  "kind": "followup",
+  "i": 1,
+  "first": "explain how vaccines train the immune system",
+  "q": "thanks! and what about mRNA ones?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v0",
+  "id": "cs-040",
+  "kind": "followup",
+  "i": 1,
+  "first": "¿qué es la hipotermia?",
+  "q": "¿y qué hago si le pasa a alguien?",
+  "rFirst": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:hypothermia:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v0",
+  "id": "cs-053",
+  "kind": "research",
+  "single": true,
+  "turn": "how do I treat a jellyfish sting?",
+  "r": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-030",
+  "kind": "followup",
+  "i": 1,
+  "first": "como funciona uma vacina?",
+  "q": "explica como se eu tivesse 10 anos",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-031",
+  "kind": "followup",
+  "i": 1,
+  "first": "o que é escorpião amarelo?",
+  "q": "e se picar uma criança, o que eu faço?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:scorpion:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-035",
+  "kind": "followup",
+  "i": 1,
+  "first": "who painted The Night Watch?",
+  "q": "where can I see it?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-037",
+  "kind": "followup",
+  "i": 1,
+  "first": "how do I treat a bee sting?",
+  "q": "what if her face starts swelling?",
+  "rFirst": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-038",
+  "kind": "followup",
+  "i": 1,
+  "first": "¿qué es el mal de altura?",
+  "q": "¿y cómo lo evito si voy a La Paz?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-049",
+  "kind": "research",
+  "single": true,
+  "turn": "quais são os sinais de alarme da dengue?",
+  "r": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v1",
+  "id": "v1-056",
+  "kind": "research",
+  "single": true,
+  "turn": "¿cómo se trata una quemadura de segundo grado?",
+  "r": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-020",
+  "kind": "greeting",
+  "single": true,
+  "turn": "saludos!",
+  "r": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-031",
+  "kind": "followup",
+  "i": 1,
+  "first": "o que é leptospirose?",
+  "q": "andei na água da enchente ontem, o que eu faço?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup",
+    "route-gate:skip-rules"
+   ],
+   "task": "lookup"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-037",
+  "kind": "followup",
+  "i": 1,
+  "first": "what are the symptoms of carbon monoxide poisoning?",
+  "q": "my whole family has a headache and the heater is on, what now?",
+  "rFirst": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-039",
+  "kind": "followup",
+  "i": 1,
+  "first": "¿qué es una insolación?",
+  "q": "mi amigo está confundido y no suda después de caminar al sol, ¿qué hago?",
+  "rFirst": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rAlone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-046",
+  "kind": "mixed",
+  "single": true,
+  "turn": "hey, quick question: is tap water safe to drink in Mexico City?",
+  "r": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-049",
+  "kind": "research",
+  "single": true,
+  "turn": "quais os sintomas de picada de aranha-marrom?",
+  "r": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "set": "chat-v2",
+  "id": "v2-063",
+  "kind": "ambiguous",
+  "single": true,
+  "turn": "malaria",
+  "r": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ }
+]

@@ -1,0 +1,8820 @@
+[
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-001",
+  "lang": "en",
+  "text": "stepped on something spiky on the reef at gili air, now theres like 6 black dots stuck in my heel and it throbs",
+  "cond": "marinepuncture",
+  "form": "prevent",
+  "t1": "Tell me about sea urchin and stingray injuries.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:marinepuncture",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:marinepuncture:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-001",
+  "lang": "en",
+  "text": "stepped on something spiky on the reef at gili air, now theres like 6 black dots stuck in my heel and it throbs",
+  "cond": "marinepuncture",
+  "form": "act",
+  "t1": "Tell me about sea urchin and stingray injuries.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:marinepuncture",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:marinepuncture:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-003",
+  "lang": "en",
+  "text": "aunty just called, my uncle was working in the field since morning in this heat and now he is talking nonsense, skin is very hot and dry, she says he is not sweating at all. we are in village near Jodhpur, hospital is 1 hour. what she should do till then",
+  "cond": "heatstroke",
+  "form": "prevent",
+  "t1": "Tell me about heatstroke.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heatstroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-003",
+  "lang": "en",
+  "text": "aunty just called, my uncle was working in the field since morning in this heat and now he is talking nonsense, skin is very hot and dry, she says he is not sweating at all. we are in village near Jodhpur, hospital is 1 hour. what she should do till then",
+  "cond": "heatstroke",
+  "form": "act",
+  "t1": "Tell me about heatstroke.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heatstroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:heatstroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-007",
+  "lang": "en",
+  "text": "splashed bathroom cleaner in my eye scrubbing the shower, burns like hell cant open it properly",
+  "cond": "eyechem",
+  "form": "prevent",
+  "t1": "Tell me about chemical eye injuries.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:eyechem",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-007",
+  "lang": "en",
+  "text": "splashed bathroom cleaner in my eye scrubbing the shower, burns like hell cant open it properly",
+  "cond": "eyechem",
+  "form": "act",
+  "t1": "Tell me about chemical eye injuries.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:eyechem",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:eyechem:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-008",
+  "lang": "en",
+  "text": "studying for my lifeguard cert exam on friday. what are the signs someone is actually drowning vs just a weak swimmer? textbook says its silent??",
+  "cond": "drowning",
+  "form": "prevent",
+  "t1": "Tell me about drowning.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:compare"
+   ],
+   "task": "compare"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-008",
+  "lang": "en",
+  "text": "studying for my lifeguard cert exam on friday. what are the signs someone is actually drowning vs just a weak swimmer? textbook says its silent??",
+  "cond": "drowning",
+  "form": "act",
+  "t1": "Tell me about drowning.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:compare"
+   ],
+   "task": "compare"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:drowning:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-016",
+  "lang": "en",
+  "text": "jellyfish sting what do i do its burning like crazy",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:jellyfish:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-016",
+  "lang": "en",
+  "text": "jellyfish sting what do i do its burning like crazy",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:jellyfish:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-018",
+  "lang": "en",
+  "text": "Wife just WhatsApped me from the bungalow, a scorpion stung her foot, she says burning and now tingling going up her leg. I'm at the dive shop 15 min away",
+  "cond": "scorpion",
+  "form": "prevent",
+  "t1": "Tell me about scorpion stings.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:scorpionadult:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-018",
+  "lang": "en",
+  "text": "Wife just WhatsApped me from the bungalow, a scorpion stung her foot, she says burning and now tingling going up her leg. I'm at the dive shop 15 min away",
+  "cond": "scorpion",
+  "form": "act",
+  "t1": "Tell me about scorpion stings.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:scorpionadult:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-021",
+  "lang": "en",
+  "text": "my 7 month old put something in her mouth and now shes not making any sound and her lips are going blue",
+  "cond": "chokinginfant",
+  "form": "prevent",
+  "t1": "Tell me about choking in infants.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:chokinginfant:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-021",
+  "lang": "en",
+  "text": "my 7 month old put something in her mouth and now shes not making any sound and her lips are going blue",
+  "cond": "chokinginfant",
+  "form": "act",
+  "t1": "Tell me about choking in infants.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:chokinginfant:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-025",
+  "lang": "en",
+  "text": "tips of two fingers and my ear went white and numb on the chairlift, now inside the lodge and theyre turning red and stinging like mad. normal?",
+  "cond": "frostbite",
+  "form": "prevent",
+  "t1": "Tell me about frostbite.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:frostbite",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:frostbite:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-025",
+  "lang": "en",
+  "text": "tips of two fingers and my ear went white and numb on the chairlift, now inside the lodge and theyre turning red and stinging like mad. normal?",
+  "cond": "frostbite",
+  "form": "act",
+  "t1": "Tell me about frostbite.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:frostbite",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:frostbite:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-028",
+  "lang": "en",
+  "text": "my cousin got electrocuted from the water heater wire in the shower, it threw him back. hes awake and talking but theres a black mark on his palm and he says his heart is racing",
+  "cond": "electric",
+  "form": "prevent",
+  "t1": "Tell me about electric shock.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:MULTI",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-028",
+  "lang": "en",
+  "text": "my cousin got electrocuted from the water heater wire in the shower, it threw him back. hes awake and talking but theres a black mark on his palm and he says his heart is racing",
+  "cond": "electric",
+  "form": "act",
+  "t1": "Tell me about electric shock.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:MULTI",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-036",
+  "lang": "en",
+  "text": "my wife is very dizzy, sweating so much, pale and want to vomit after walk around angkor wat at noon. she sit in shade now. what we do?",
+  "cond": "heatexhaustion",
+  "form": "prevent",
+  "t1": "Tell me about heat exhaustion.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-036",
+  "lang": "en",
+  "text": "my wife is very dizzy, sweating so much, pale and want to vomit after walk around angkor wat at noon. she sit in shade now. what we do?",
+  "cond": "heatexhaustion",
+  "form": "act",
+  "t1": "Tell me about heat exhaustion.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-037",
+  "lang": "en",
+  "text": "had this crushing pressure in my chest for like 20 min on the climb this morning, went away when i sat down. just tired now. should i still do the summit tomorrow?",
+  "cond": "heartattack",
+  "form": "prevent",
+  "t1": "Tell me about heart attacks.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-037",
+  "lang": "en",
+  "text": "had this crushing pressure in my chest for like 20 min on the climb this morning, went away when i sat down. just tired now. should i still do the summit tomorrow?",
+  "cond": "heartattack",
+  "form": "act",
+  "t1": "Tell me about heart attacks.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-047",
+  "lang": "en",
+  "text": "my mother in law suddenly can't lift her right arm and her mouth is droopy on one side period her words are coming out all jumbled period started maybe 10 minutes ago",
+  "cond": "stroke",
+  "form": "prevent",
+  "t1": "Tell me about stroke.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-047",
+  "lang": "en",
+  "text": "my mother in law suddenly can't lift her right arm and her mouth is droopy on one side period her words are coming out all jumbled period started maybe 10 minutes ago",
+  "cond": "stroke",
+  "form": "act",
+  "t1": "Tell me about stroke.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:stroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-049",
+  "lang": "en",
+  "text": "my daughter is backpacking in bali, she just messaged that a street dog bit her on the calf 2 days ago, broke the skin a little. she cleaned it but no shots. she thinks its fine",
+  "cond": "animalbite",
+  "form": "prevent",
+  "t1": "Tell me about animal bites.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-049",
+  "lang": "en",
+  "text": "my daughter is backpacking in bali, she just messaged that a street dog bit her on the calf 2 days ago, broke the skin a little. she cleaned it but no shots. she thinks its fine",
+  "cond": "animalbite",
+  "form": "act",
+  "t1": "Tell me about animal bites.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-058",
+  "lang": "en",
+  "text": "this heat is killing me lol been walking round seville all day... actually kinda dizzy and nauseous now and my legs are cramping, still sweating buckets",
+  "cond": "heatexhaustion",
+  "form": "prevent",
+  "t1": "Tell me about heat exhaustion.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-058",
+  "lang": "en",
+  "text": "this heat is killing me lol been walking round seville all day... actually kinda dizzy and nauseous now and my legs are cramping, still sweating buckets",
+  "cond": "heatexhaustion",
+  "form": "act",
+  "t1": "Tell me about heat exhaustion.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-060",
+  "lang": "en",
+  "text": "spilled boiling water from the kettle on my forearm, its red and theres a blister coming up about the size of a coin",
+  "cond": "burn",
+  "form": "prevent",
+  "t1": "Tell me about burns.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:burn",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-060",
+  "lang": "en",
+  "text": "spilled boiling water from the kettle on my forearm, its red and theres a blister coming up about the size of a coin",
+  "cond": "burn",
+  "form": "act",
+  "t1": "Tell me about burns.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:burn",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-063",
+  "lang": "en",
+  "text": "tsunami sirens going off all along the beach in khao lak, people running away from the water and our phones are buzzing with some alert in thai. we're at the beach bar with a 5 yr old. which way do we go",
+  "cond": "tsunami",
+  "form": "prevent",
+  "t1": "Tell me about tsunamis.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-063",
+  "lang": "en",
+  "text": "tsunami sirens going off all along the beach in khao lak, people running away from the water and our phones are buzzing with some alert in thai. we're at the beach bar with a 5 yr old. which way do we go",
+  "cond": "tsunami",
+  "form": "act",
+  "t1": "Tell me about tsunamis.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:tsunami:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-064",
+  "lang": "en",
+  "text": "quick q, my dad's left arm went numb about 20 min ago and he's sweating a lot, he says it's nothing and wants to lie down. i'm on the phone with him from abroad",
+  "cond": "heartattack",
+  "form": "prevent",
+  "t1": "Tell me about heart attacks.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-064",
+  "lang": "en",
+  "text": "quick q, my dad's left arm went numb about 20 min ago and he's sweating a lot, he says it's nothing and wants to lie down. i'm on the phone with him from abroad",
+  "cond": "heartattack",
+  "form": "act",
+  "t1": "Tell me about heart attacks.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-065",
+  "lang": "en",
+  "text": "first aid quiz q7: casualty has a nosebleed. do you tilt the head A) back B) forward C) sideways D) lie them flat. pls just give me the letter",
+  "cond": "nosebleed",
+  "form": "prevent",
+  "t1": "Tell me about nosebleeds.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-065",
+  "lang": "en",
+  "text": "first aid quiz q7: casualty has a nosebleed. do you tilt the head A) back B) forward C) sideways D) lie them flat. pls just give me the letter",
+  "cond": "nosebleed",
+  "form": "act",
+  "t1": "Tell me about nosebleeds.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:nosebleed:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-066",
+  "lang": "en",
+  "text": "mum rang, said about an hour ago her face went numb on the left and she couldnt get her words out for maybe 10 minutes. shes fine now and doesnt want a fuss",
+  "cond": "stroke",
+  "form": "prevent",
+  "t1": "Tell me about stroke.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-066",
+  "lang": "en",
+  "text": "mum rang, said about an hour ago her face went numb on the left and she couldnt get her words out for maybe 10 minutes. shes fine now and doesnt want a fuss",
+  "cond": "stroke",
+  "form": "act",
+  "t1": "Tell me about stroke.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:stroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-071",
+  "lang": "en",
+  "text": "HE'S CHOKING on steak cant talk cant cough grabbing his throat its my dad",
+  "cond": "choking",
+  "form": "prevent",
+  "t1": "Tell me about choking.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-071",
+  "lang": "en",
+  "text": "HE'S CHOKING on steak cant talk cant cough grabbing his throat its my dad",
+  "cond": "choking",
+  "form": "act",
+  "t1": "Tell me about choking.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:choking:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-072",
+  "lang": "en",
+  "text": "found a tiny black bug stuck in my armpit after the hike, its head is in my skin and its belly is all swollen. how do i get it out",
+  "cond": "tick",
+  "form": "prevent",
+  "t1": "Tell me about tick bites.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:tick",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-072",
+  "lang": "en",
+  "text": "found a tiny black bug stuck in my armpit after the hike, its head is in my skin and its belly is all swollen. how do i get it out",
+  "cond": "tick",
+  "form": "act",
+  "t1": "Tell me about tick bites.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:tick",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:tick:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-073",
+  "lang": "en",
+  "text": "EVERYTHING IS SHAKING 9th floor hotel lima what do i dooo",
+  "cond": "earthquake",
+  "form": "prevent",
+  "t1": "Tell me about earthquakes.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-073",
+  "lang": "en",
+  "text": "EVERYTHING IS SHAKING 9th floor hotel lima what do i dooo",
+  "cond": "earthquake",
+  "form": "act",
+  "t1": "Tell me about earthquakes.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:earthquake:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-077",
+  "lang": "en",
+  "text": "bee stung me on the hand, stinger still in there, swelling a bit. no allergies that i know of",
+  "cond": "beesting",
+  "form": "prevent",
+  "t1": "Tell me about bee stings.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-077",
+  "lang": "en",
+  "text": "bee stung me on the hand, stinger still in there, swelling a bit. no allergies that i know of",
+  "cond": "beesting",
+  "form": "act",
+  "t1": "Tell me about bee stings.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:beesting:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-081",
+  "lang": "en",
+  "text": "son's nose pouring blood 5 min now, we're on a bus in kerala, he's 8. tilted his head back is that right",
+  "cond": "nosebleed",
+  "form": "prevent",
+  "t1": "Tell me about nosebleeds.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-081",
+  "lang": "en",
+  "text": "son's nose pouring blood 5 min now, we're on a bus in kerala, he's 8. tilted his head back is that right",
+  "cond": "nosebleed",
+  "form": "act",
+  "t1": "Tell me about nosebleeds.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:nosebleed:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-088",
+  "lang": "en",
+  "text": "daughter texted from summer camp, she cut her finger whittling and theres blood dripping everywhere, counselor gave her a tissue. how long should she press on it",
+  "cond": "bleeding",
+  "form": "prevent",
+  "t1": "Tell me about severe bleeding.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-088",
+  "lang": "en",
+  "text": "daughter texted from summer camp, she cut her finger whittling and theres blood dripping everywhere, counselor gave her a tissue. how long should she press on it",
+  "cond": "bleeding",
+  "form": "act",
+  "t1": "Tell me about severe bleeding.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-091",
+  "lang": "en",
+  "text": "the alarm thing next to the heater in our cabin keeps beeping in groups of 4 and all 3 of us have headaches now, my son just threw up. its freezing out tho. is it the heater??",
+  "cond": "co",
+  "form": "prevent",
+  "t1": "Tell me about carbon monoxide poisoning.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-091",
+  "lang": "en",
+  "text": "the alarm thing next to the heater in our cabin keeps beeping in groups of 4 and all 3 of us have headaches now, my son just threw up. its freezing out tho. is it the heater??",
+  "cond": "co",
+  "form": "act",
+  "t1": "Tell me about carbon monoxide poisoning.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:co:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-092",
+  "lang": "en",
+  "text": "my friend is getting pulled out past the waves at zicatela, hes swimming hard but not getting any closer and now hes waving at us. lifeguard tower is empty",
+  "cond": "drowning",
+  "form": "prevent",
+  "t1": "Tell me about drowning.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-092",
+  "lang": "en",
+  "text": "my friend is getting pulled out past the waves at zicatela, hes swimming hard but not getting any closer and now hes waving at us. lifeguard tower is empty",
+  "cond": "drowning",
+  "form": "act",
+  "t1": "Tell me about drowning.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:drowning:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-094",
+  "lang": "en",
+  "text": "if someone is choking and theyre pregnant where do you put your hands? cant do the normal heimlich right",
+  "cond": "choking",
+  "form": "prevent",
+  "t1": "Tell me about choking.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-094",
+  "lang": "en",
+  "text": "if someone is choking and theyre pregnant where do you put your hands? cant do the normal heimlich right",
+  "cond": "choking",
+  "form": "act",
+  "t1": "Tell me about choking.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:choking:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-097",
+  "lang": "en",
+  "text": "my 2 yr old had the car key fob open and now one of the little coin batteries is missing, i think she swallowed it?? shes acting totally normal",
+  "cond": "battery",
+  "form": "prevent",
+  "t1": "Tell me about button battery ingestion.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-097",
+  "lang": "en",
+  "text": "my 2 yr old had the car key fob open and now one of the little coin batteries is missing, i think she swallowed it?? shes acting totally normal",
+  "cond": "battery",
+  "form": "act",
+  "t1": "Tell me about button battery ingestion.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-100",
+  "lang": "en",
+  "text": "how do you actually treat a jellyfish sting? my mates swear peeing on it works, others say vinegar. which is it",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:jellyfish:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-en-100",
+  "lang": "en",
+  "text": "how do you actually treat a jellyfish sting? my mates swear peeing on it works, others say vinegar. which is it",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:jellyfish:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-005",
+  "lang": "pt",
+  "text": "voltei da trilha e tem um bichinho escuro grudado atras do meu joelho, parece enterrado na pele, nao sai puxando",
+  "cond": "tick",
+  "form": "prevent",
+  "t1": "Me fale sobre picada de carrapato.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:tick",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-005",
+  "lang": "pt",
+  "text": "voltei da trilha e tem um bichinho escuro grudado atras do meu joelho, parece enterrado na pele, nao sai puxando",
+  "cond": "tick",
+  "form": "act",
+  "t1": "Me fale sobre picada de carrapato.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:tick",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-008",
+  "lang": "pt",
+  "text": "pra prova de primeiros socorros amanha: qual a primeira conduta numa queimadura de segundo grau, resfriar com agua ou cobrir com gaze?",
+  "cond": "burn",
+  "form": "prevent",
+  "t1": "Me fale sobre queimaduras.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:burn:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-008",
+  "lang": "pt",
+  "text": "pra prova de primeiros socorros amanha: qual a primeira conduta numa queimadura de segundo grau, resfriar com agua ou cobrir com gaze?",
+  "cond": "burn",
+  "form": "act",
+  "t1": "Me fale sobre queimaduras.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:burn:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-009",
+  "lang": "pt",
+  "text": "dúvida rápida, nada urgente acho: a gente tá no aniversário da minha cunhada aqui em Campinas, o churrasco rolando, e meu sogro sentou no canto meio quieto. ele falou que tá com uma pressão no peito que sobe pro queixo faz uns 20 min, tá suado mesmo na sombra, mas jura que é gases da linguiça e não quer incomodar ninguém nem estragar a festa. ele tem 68 e toma remédio de pressão. deixo ele deitar um pouco no quarto?",
+  "cond": "heartattack",
+  "form": "prevent",
+  "t1": "Me fale sobre infarto.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-009",
+  "lang": "pt",
+  "text": "dúvida rápida, nada urgente acho: a gente tá no aniversário da minha cunhada aqui em Campinas, o churrasco rolando, e meu sogro sentou no canto meio quieto. ele falou que tá com uma pressão no peito que sobe pro queixo faz uns 20 min, tá suado mesmo na sombra, mas jura que é gases da linguiça e não quer incomodar ninguém nem estragar a festa. ele tem 68 e toma remédio de pressão. deixo ele deitar um pouco no quarto?",
+  "cond": "heartattack",
+  "form": "act",
+  "t1": "Me fale sobre infarto.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-019",
+  "lang": "pt",
+  "text": "o alarme de monóxido do airbnb em gramado ta apitando sem parar e meus 2 filhos acordaram com dor de cabeça e enjoo. a lareira ta acesa. desligo o alarme?",
+  "cond": "co",
+  "form": "prevent",
+  "t1": "Me fale sobre intoxicação por monóxido de carbono.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-019",
+  "lang": "pt",
+  "text": "o alarme de monóxido do airbnb em gramado ta apitando sem parar e meus 2 filhos acordaram com dor de cabeça e enjoo. a lareira ta acesa. desligo o alarme?",
+  "cond": "co",
+  "form": "act",
+  "t1": "Me fale sobre intoxicação por monóxido de carbono.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-020",
+  "lang": "pt",
+  "text": "uma abelha picou o braço do meu sobrinho, o ferrão ainda ta la. ele ta bem, sem inchaço no rosto, só chorando. tiro com pinça?",
+  "cond": "beesting",
+  "form": "prevent",
+  "t1": "Me fale sobre picada de abelha.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-020",
+  "lang": "pt",
+  "text": "uma abelha picou o braço do meu sobrinho, o ferrão ainda ta la. ele ta bem, sem inchaço no rosto, só chorando. tiro com pinça?",
+  "cond": "beesting",
+  "form": "act",
+  "t1": "Me fale sobre picada de abelha.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-021",
+  "lang": "pt",
+  "text": "o meu pai cortou-se no braço com o vidro da janela, o sangue está a sair aos jorros, já pus uma toalha e ficou logo encharcada",
+  "cond": "bleeding",
+  "form": "prevent",
+  "t1": "Me fale sobre sangramento grave.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-021",
+  "lang": "pt",
+  "text": "o meu pai cortou-se no braço com o vidro da janela, o sangue está a sair aos jorros, já pus uma toalha e ficou logo encharcada",
+  "cond": "bleeding",
+  "form": "act",
+  "t1": "Me fale sobre sangramento grave.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-036",
+  "lang": "pt",
+  "text": "me ensina rapido a manobra de heimlich pfv",
+  "cond": "choking",
+  "form": "prevent",
+  "t1": "Me fale sobre engasgo.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-036",
+  "lang": "pt",
+  "text": "me ensina rapido a manobra de heimlich pfv",
+  "cond": "choking",
+  "form": "act",
+  "t1": "Me fale sobre engasgo.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-037",
+  "lang": "pt",
+  "text": "minha bebê de 7 meses tava comendo banana e agora ta roxinha, mexendo os braços e não sai som nenhum",
+  "cond": "chokinginfant",
+  "form": "prevent",
+  "t1": "Me fale sobre engasgo em bebês.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:chokinginfant:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-037",
+  "lang": "pt",
+  "text": "minha bebê de 7 meses tava comendo banana e agora ta roxinha, mexendo os braços e não sai som nenhum",
+  "cond": "chokinginfant",
+  "form": "act",
+  "t1": "Me fale sobre engasgo em bebês.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:chokinginfant:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-042",
+  "lang": "pt",
+  "text": "acho que meu filho engoliu a bateria redondinha da balança da cozinha. ele tava brincando com ela e agora sumiu, procurei no chão todo. ele ta normal",
+  "cond": "battery",
+  "form": "prevent",
+  "t1": "Me fale sobre ingestão de pilha de botão.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-042",
+  "lang": "pt",
+  "text": "acho que meu filho engoliu a bateria redondinha da balança da cozinha. ele tava brincando com ela e agora sumiu, procurei no chão todo. ele ta normal",
+  "cond": "battery",
+  "form": "act",
+  "t1": "Me fale sobre ingestão de pilha de botão.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-049",
+  "lang": "pt",
+  "text": "kkkk esse calor de cuiabá tá me matando, sério... na real to estranho, parei de suar, a pele ta quente e seca e to meio confuso pra digitar isso",
+  "cond": "heatstroke",
+  "form": "prevent",
+  "t1": "Me fale sobre insolação.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-049",
+  "lang": "pt",
+  "text": "kkkk esse calor de cuiabá tá me matando, sério... na real to estranho, parei de suar, a pele ta quente e seca e to meio confuso pra digitar isso",
+  "cond": "heatstroke",
+  "form": "act",
+  "t1": "Me fale sobre insolação.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-058",
+  "lang": "pt",
+  "text": "oxe, minha amiga ta pálida, suando muito, tonta e com câimbra na perna depois de 3h no sol no bloco. sentou na sombra agora",
+  "cond": "heatexhaustion",
+  "form": "prevent",
+  "t1": "Me fale sobre exaustão pelo calor.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-058",
+  "lang": "pt",
+  "text": "oxe, minha amiga ta pálida, suando muito, tonta e com câimbra na perna depois de 3h no sol no bloco. sentou na sombra agora",
+  "cond": "heatexhaustion",
+  "form": "act",
+  "t1": "Me fale sobre exaustão pelo calor.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-059",
+  "lang": "pt",
+  "text": "levei um choque forte do chuveiro eletrico quando fui mexer na temperatura, o braço ficou formigando e o coração ta batendo meio descompassado",
+  "cond": "electric",
+  "form": "prevent",
+  "t1": "Me fale sobre choque elétrico.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-059",
+  "lang": "pt",
+  "text": "levei um choque forte do chuveiro eletrico quando fui mexer na temperatura, o braço ficou formigando e o coração ta batendo meio descompassado",
+  "cond": "electric",
+  "form": "act",
+  "t1": "Me fale sobre choque elétrico.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-063",
+  "lang": "pt",
+  "text": "to em Iquique na praia e começou a tocar uma sirene altíssima, o povo ta subindo correndo pro morro e o mar recuou mto. vou atras ou volto no hostel pegar minhas coisas?",
+  "cond": "tsunami",
+  "form": "prevent",
+  "t1": "Me fale sobre tsunamis.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-063",
+  "lang": "pt",
+  "text": "to em Iquique na praia e começou a tocar uma sirene altíssima, o povo ta subindo correndo pro morro e o mar recuou mto. vou atras ou volto no hostel pegar minhas coisas?",
+  "cond": "tsunami",
+  "form": "act",
+  "t1": "Me fale sobre tsunamis.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-065",
+  "lang": "pt",
+  "text": "questão do simulado de socorrista: vítima adulta engasgada, consciente, tossindo forte. conduta correta? a) tapas nas costas b) heimlich c) incentivar a tosse d) deitar a vítima",
+  "cond": "choking",
+  "form": "prevent",
+  "t1": "Me fale sobre engasgo.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-065",
+  "lang": "pt",
+  "text": "questão do simulado de socorrista: vítima adulta engasgada, consciente, tossindo forte. conduta correta? a) tapas nas costas b) heimlich c) incentivar a tosse d) deitar a vítima",
+  "cond": "choking",
+  "form": "act",
+  "t1": "Me fale sobre engasgo.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:choking",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:choking:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-066",
+  "lang": "pt",
+  "text": "ontem à noite meu tio ficou uns 10 min sem mexer o braço direito e falando estranho, agora ta normal. ele acha q foi um mini AVC mas não quer ir no médico, diz q ja passou",
+  "cond": "stroke",
+  "form": "prevent",
+  "t1": "Me fale sobre AVC.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-066",
+  "lang": "pt",
+  "text": "ontem à noite meu tio ficou uns 10 min sem mexer o braço direito e falando estranho, agora ta normal. ele acha q foi um mini AVC mas não quer ir no médico, diz q ja passou",
+  "cond": "stroke",
+  "form": "act",
+  "t1": "Me fale sobre AVC.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-068",
+  "lang": "pt",
+  "text": "pisei numa pedra cheia de espinho preto no mar em noronha, ficaram uns pontinhos pretos enfiados na sola, ta doendo pra andar",
+  "cond": "marinepuncture",
+  "form": "prevent",
+  "t1": "Me fale sobre ferimento por arraia ou ouriço-do-mar.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:marinepuncture",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:marinepuncture:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-068",
+  "lang": "pt",
+  "text": "pisei numa pedra cheia de espinho preto no mar em noronha, ficaram uns pontinhos pretos enfiados na sola, ta doendo pra andar",
+  "cond": "marinepuncture",
+  "form": "act",
+  "t1": "Me fale sobre ferimento por arraia ou ouriço-do-mar.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:marinepuncture",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:marinepuncture:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-073",
+  "lang": "pt",
+  "text": "está tudo a tremer aqui no hostel em Lima, os candeeiros a abanar e caíram coisas da prateleira. estou no 4º andar",
+  "cond": "earthquake",
+  "form": "prevent",
+  "t1": "Me fale sobre terremotos.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-073",
+  "lang": "pt",
+  "text": "está tudo a tremer aqui no hostel em Lima, os candeeiros a abanar e caíram coisas da prateleira. estou no 4º andar",
+  "cond": "earthquake",
+  "form": "act",
+  "t1": "Me fale sobre terremotos.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-074",
+  "lang": "pt",
+  "text": "um cachorro de rua mordeu a mão da Bia agora na saída do mercado em arraial, ta sangrando e ela ta tremendo",
+  "cond": "animalbite",
+  "form": "prevent",
+  "t1": "Me fale sobre mordida de animal.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-074",
+  "lang": "pt",
+  "text": "um cachorro de rua mordeu a mão da Bia agora na saída do mercado em arraial, ta sangrando e ela ta tremendo",
+  "cond": "animalbite",
+  "form": "act",
+  "t1": "Me fale sobre mordida de animal.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-079",
+  "lang": "pt",
+  "text": "socorro picada de abelha garganta estranha",
+  "cond": "anaphylaxis",
+  "form": "prevent",
+  "t1": "Me fale sobre anafilaxia.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:anaphylaxis",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:anaphylaxis:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-079",
+  "lang": "pt",
+  "text": "socorro picada de abelha garganta estranha",
+  "cond": "anaphylaxis",
+  "form": "act",
+  "t1": "Me fale sobre anafilaxia.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:anaphylaxis",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:anaphylaxis:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-083",
+  "lang": "pt",
+  "text": "se alguém tiver tendo convulsão do meu lado, tem que segurar a língua pra pessoa não engolir? sempre ouvi isso desde pequena",
+  "cond": "seizure",
+  "form": "prevent",
+  "t1": "Me fale sobre convulsões.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:seizure:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-083",
+  "lang": "pt",
+  "text": "se alguém tiver tendo convulsão do meu lado, tem que segurar a língua pra pessoa não engolir? sempre ouvi isso desde pequena",
+  "cond": "seizure",
+  "form": "act",
+  "t1": "Me fale sobre convulsões.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:seizure:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-092",
+  "lang": "pt",
+  "text": "o meu amigo está a ser puxado para fora pela corrente na praia, já não consegue voltar, está a acenar. não há nadador-salvador aqui. o que faço",
+  "cond": "drowning",
+  "form": "prevent",
+  "t1": "Me fale sobre afogamento.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-092",
+  "lang": "pt",
+  "text": "o meu amigo está a ser puxado para fora pela corrente na praia, já não consegue voltar, está a acenar. não há nadador-salvador aqui. o que faço",
+  "cond": "drowning",
+  "form": "act",
+  "t1": "Me fale sobre afogamento.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:drowning",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-093",
+  "lang": "pt",
+  "text": "a minha filha foi picada por uma alforreca na praia da Rocha, tem umas riscas vermelhas na perna e está a chorar muito",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Me fale sobre queimadura de água-viva.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-093",
+  "lang": "pt",
+  "text": "a minha filha foi picada por uma alforreca na praia da Rocha, tem umas riscas vermelhas na perna e está a chorar muito",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Me fale sobre queimadura de água-viva.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-094",
+  "lang": "pt",
+  "text": "O que se faz se uma criança engolir uma pilha de botão? Pergunto porque tenho um sobrinho de 1 ano e há pilhas por todo o lado lá em casa",
+  "cond": "battery",
+  "form": "prevent",
+  "t1": "Me fale sobre ingestão de pilha de botão.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:battery",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-094",
+  "lang": "pt",
+  "text": "O que se faz se uma criança engolir uma pilha de botão? Pergunto porque tenho um sobrinho de 1 ano e há pilhas por todo o lado lá em casa",
+  "cond": "battery",
+  "form": "act",
+  "t1": "Me fale sobre ingestão de pilha de botão.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:battery",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-097",
+  "lang": "pt",
+  "text": "espirrou lixívia para o meu olho a limpar a casa de banho, arde imenso e não consigo abrir",
+  "cond": "eyechem",
+  "form": "prevent",
+  "t1": "Me fale sobre produto químico no olho.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-097",
+  "lang": "pt",
+  "text": "espirrou lixívia para o meu olho a limpar a casa de banho, arde imenso e não consigo abrir",
+  "cond": "eyechem",
+  "form": "act",
+  "t1": "Me fale sobre produto químico no olho.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-099",
+  "lang": "pt",
+  "text": "to em chamada de video com minha mae e do nada a boca dela entortou pro lado e ela ta falando tudo embolado. ela ta rindo achando q é a internet",
+  "cond": "stroke",
+  "form": "prevent",
+  "t1": "Me fale sobre AVC.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-099",
+  "lang": "pt",
+  "text": "to em chamada de video com minha mae e do nada a boca dela entortou pro lado e ela ta falando tudo embolado. ela ta rindo achando q é a internet",
+  "cond": "stroke",
+  "form": "act",
+  "t1": "Me fale sobre AVC.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:stroke",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-100",
+  "lang": "pt",
+  "text": "como trata queimadura de agua-viva? vou pra maragogi semana q vem com as crianças e queria saber antes",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Me fale sobre queimadura de água-viva.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-100",
+  "lang": "pt",
+  "text": "como trata queimadura de agua-viva? vou pra maragogi semana q vem com as crianças e queria saber antes",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Me fale sobre queimadura de água-viva.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:MULTI",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-102",
+  "lang": "pt",
+  "text": "meu irmão ta viajando na indonésia e um macaco mordeu o braço dele num templo 3 dias atrás. ele lavou e achou q tava de boa, nao tomou vacina nenhuma. tem q fazer algo ainda ou ja passou?",
+  "cond": "animalbite",
+  "form": "prevent",
+  "t1": "Me fale sobre mordida de animal.",
+  "q": "Como posso prevenir isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-pt-102",
+  "lang": "pt",
+  "text": "meu irmão ta viajando na indonésia e um macaco mordeu o braço dele num templo 3 dias atrás. ele lavou e achou q tava de boa, nao tomou vacina nenhuma. tem q fazer algo ainda ou ja passou?",
+  "cond": "animalbite",
+  "form": "act",
+  "t1": "Me fale sobre mordida de animal.",
+  "q": "O que devo fazer se eu tiver isso?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-002",
+  "lang": "es",
+  "text": "cuantos golpes en la espalda se dan a un bebe atragantado antes de las compresiones? 5?",
+  "cond": "chokinginfant",
+  "form": "prevent",
+  "t1": "Háblame de atragantamiento en bebés.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:chokinginfant:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-002",
+  "lang": "es",
+  "text": "cuantos golpes en la espalda se dan a un bebe atragantado antes de las compresiones? 5?",
+  "cond": "chokinginfant",
+  "form": "act",
+  "t1": "Háblame de atragantamiento en bebés.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:chokinginfant:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-004",
+  "lang": "es",
+  "text": "mi hijo de 2 años se trago una pila de boton del control de la tele, de esas redonditas planas, hace como 10 min. esta normal jugando. lo llevo o espero a ver si la hace popo?",
+  "cond": "battery",
+  "form": "prevent",
+  "t1": "Háblame de ingestión de pila de botón.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:battery",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-004",
+  "lang": "es",
+  "text": "mi hijo de 2 años se trago una pila de boton del control de la tele, de esas redonditas planas, hace como 10 min. esta normal jugando. lo llevo o espero a ver si la hace popo?",
+  "cond": "battery",
+  "form": "act",
+  "t1": "Háblame de ingestión de pila de botón.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:battery",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-005",
+  "lang": "es",
+  "text": "estamos en la playa en iquique y empezo a sonar una sirena larga y la gente corre pal cerro, recien se movio el suelo harto rato. corremos o nos quedamos en el hotel q es de 4 pisos?",
+  "cond": "tsunami",
+  "form": "prevent",
+  "t1": "Háblame de tsunamis.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-005",
+  "lang": "es",
+  "text": "estamos en la playa en iquique y empezo a sonar una sirena larga y la gente corre pal cerro, recien se movio el suelo harto rato. corremos o nos quedamos en el hotel q es de 4 pisos?",
+  "cond": "tsunami",
+  "form": "act",
+  "t1": "Háblame de tsunamis.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tsunami",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:tsunami:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-012",
+  "lang": "es",
+  "text": "pregunta del examen de primeros auxilios: ante una quemadura de segundo grado lo correcto es a) hielo b) agua a temperatura ambiente 20 min c) crema d) reventar ampollas",
+  "cond": "burn",
+  "form": "prevent",
+  "t1": "Háblame de quemaduras.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:burn:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-012",
+  "lang": "es",
+  "text": "pregunta del examen de primeros auxilios: ante una quemadura de segundo grado lo correcto es a) hielo b) agua a temperatura ambiente 20 min c) crema d) reventar ampollas",
+  "cond": "burn",
+  "form": "act",
+  "t1": "Háblame de quemaduras.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:burn:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-013",
+  "lang": "es",
+  "text": "mi hija anda de mochilera en bali y me cuenta q hace 3 dias un mono la mordio en la mano en el templo, no se ha puesto ninguna vacuna xq dice q la herida se ve bien",
+  "cond": "animalbite",
+  "form": "prevent",
+  "t1": "Háblame de mordedura de animal.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-013",
+  "lang": "es",
+  "text": "mi hija anda de mochilera en bali y me cuenta q hace 3 dias un mono la mordio en la mano en el templo, no se ha puesto ninguna vacuna xq dice q la herida se ve bien",
+  "cond": "animalbite",
+  "form": "act",
+  "t1": "Háblame de mordedura de animal.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:animalbite",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-014",
+  "lang": "es",
+  "text": "mi amigo lleva todo el dia al sol en la feria y ahora dice cosas sin sentido, tiene la piel ardiendo y seca, ya no suda. lo hemos metido a la sombra",
+  "cond": "heatstroke",
+  "form": "prevent",
+  "t1": "Háblame de golpe de calor.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-014",
+  "lang": "es",
+  "text": "mi amigo lleva todo el dia al sol en la feria y ahora dice cosas sin sentido, tiene la piel ardiendo y seca, ya no suda. lo hemos metido a la sombra",
+  "cond": "heatstroke",
+  "form": "act",
+  "t1": "Háblame de golpe de calor.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-018",
+  "lang": "es",
+  "text": "le sangra la nariz a mi hija y no para",
+  "cond": "nosebleed",
+  "form": "prevent",
+  "t1": "Háblame de hemorragia nasal.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-018",
+  "lang": "es",
+  "text": "le sangra la nariz a mi hija y no para",
+  "cond": "nosebleed",
+  "form": "act",
+  "t1": "Háblame de hemorragia nasal.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:nosebleed",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed",
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:nosebleed:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-020",
+  "lang": "es",
+  "text": "llevo 25 km del camino hoy con este solazo, estoy mareada, sudando a mares, con nauseas y me tiemblan las piernas. me he sentado a la sombra de una iglesia",
+  "cond": "heatexhaustion",
+  "form": "prevent",
+  "t1": "Háblame de agotamiento por calor.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-020",
+  "lang": "es",
+  "text": "llevo 25 km del camino hoy con este solazo, estoy mareada, sudando a mares, con nauseas y me tiemblan las piernas. me he sentado a la sombra de una iglesia",
+  "cond": "heatexhaustion",
+  "form": "act",
+  "t1": "Háblame de agotamiento por calor.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatexhaustion:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-028",
+  "lang": "es",
+  "text": "estudiando pal curso de socorrista, en un ahogado se empieza con 5 insuflaciones antes de las compresiones o directo compresiones?",
+  "cond": "drowning",
+  "form": "prevent",
+  "t1": "Háblame de ahogamiento.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-028",
+  "lang": "es",
+  "text": "estudiando pal curso de socorrista, en un ahogado se empieza con 5 insuflaciones antes de las compresiones o directo compresiones?",
+  "cond": "drowning",
+  "form": "act",
+  "t1": "Háblame de ahogamiento.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:drowning",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-030",
+  "lang": "es",
+  "text": "como se trata una picadura de medusa? vinagre o agua dulce? lo pregunto pq en el grupo del viaje cada uno dice una cosa",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Háblame de picadura de medusa.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:jellyfish:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-030",
+  "lang": "es",
+  "text": "como se trata una picadura de medusa? vinagre o agua dulce? lo pregunto pq en el grupo del viaje cada uno dice una cosa",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Háblame de picadura de medusa.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:jellyfish:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-032",
+  "lang": "es",
+  "text": "me pico una aguaviva en mar del plata, me arde toda la pierna con rayas rojas, q me pongo",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Háblame de picadura de medusa.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:jellyfish:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-032",
+  "lang": "es",
+  "text": "me pico una aguaviva en mar del plata, me arde toda la pierna con rayas rojas, q me pongo",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Háblame de picadura de medusa.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:jellyfish:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-035",
+  "lang": "es",
+  "text": "pregunta rapida, a mi abuela esta mañana se le cayo la cara de un lado y no podia levantar el brazo, como 10 min, ahora ya esta normal y no quiere ir al medico. es grave?",
+  "cond": "stroke",
+  "form": "prevent",
+  "t1": "Háblame de ictus.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-035",
+  "lang": "es",
+  "text": "pregunta rapida, a mi abuela esta mañana se le cayo la cara de un lado y no podia levantar el brazo, como 10 min, ahora ya esta normal y no quiere ir al medico. es grave?",
+  "cond": "stroke",
+  "form": "act",
+  "t1": "Háblame de ictus.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:stroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-039",
+  "lang": "es",
+  "text": "mi tio toco el cable pelado de la reja electrica y quedo tirado unos segundos, ya se paro y dice q esta bien pero tiene una marca negra en la mano y otra en el pie",
+  "cond": "electric",
+  "form": "prevent",
+  "t1": "Háblame de descarga eléctrica.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-039",
+  "lang": "es",
+  "text": "mi tio toco el cable pelado de la reja electrica y quedo tirado unos segundos, ya se paro y dice q esta bien pero tiene una marca negra en la mano y otra en el pie",
+  "cond": "electric",
+  "form": "act",
+  "t1": "Háblame de descarga eléctrica.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:electric:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-040",
+  "lang": "es",
+  "text": "quedamos atrapados con el auto en la nieve subiendo a farellones, no avanza ni pa atras ni pa adelante, queda como 1/4 de bencina y esta nevando harto. dejo el motor prendido pa la calefaccion?",
+  "cond": "hypothermia",
+  "form": "prevent",
+  "t1": "Háblame de hipotermia.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:calculate"
+   ],
+   "task": "calculate"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:hypothermia:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-040",
+  "lang": "es",
+  "text": "quedamos atrapados con el auto en la nieve subiendo a farellones, no avanza ni pa atras ni pa adelante, queda como 1/4 de bencina y esta nevando harto. dejo el motor prendido pa la calefaccion?",
+  "cond": "hypothermia",
+  "form": "act",
+  "t1": "Háblame de hipotermia.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:calculate"
+   ],
+   "task": "calculate"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:hypothermia:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-045",
+  "lang": "es",
+  "text": "me ha picado un escorpión en el pie en la casa rural de jaén, duele bastante pero solo eso. ¿hielo?",
+  "cond": "scorpion",
+  "form": "prevent",
+  "t1": "Háblame de picadura de escorpión.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:scorpionadult:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-045",
+  "lang": "es",
+  "text": "me ha picado un escorpión en el pie en la casa rural de jaén, duele bastante pero solo eso. ¿hielo?",
+  "cond": "scorpion",
+  "form": "act",
+  "t1": "Háblame de picadura de escorpión.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:scorpionadult",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:scorpionadult:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-048",
+  "lang": "es",
+  "text": "mi primo se metio al mar en tulum y la corriente se lo esta llevando para adentro, nada y nada y no avanza, ya se ve lejos y no hay salvavidas en esta parte",
+  "cond": "drowning",
+  "form": "prevent",
+  "t1": "Háblame de ahogamiento.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-048",
+  "lang": "es",
+  "text": "mi primo se metio al mar en tulum y la corriente se lo esta llevando para adentro, nada y nada y no avanza, ya se ve lejos y no hay salvavidas en esta parte",
+  "cond": "drowning",
+  "form": "act",
+  "t1": "Háblame de ahogamiento.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:ripcurrent",
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-049",
+  "lang": "es",
+  "text": "a mi compi de piso le ha saltado lejia al ojo limpiando el baño, grita que le quema y no lo puede abrir",
+  "cond": "eyechem",
+  "form": "prevent",
+  "t1": "Háblame de producto químico en el ojo.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-049",
+  "lang": "es",
+  "text": "a mi compi de piso le ha saltado lejia al ojo limpiando el baño, grita que le quema y no lo puede abrir",
+  "cond": "eyechem",
+  "form": "act",
+  "t1": "Háblame de producto químico en el ojo.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:eyechem:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-056",
+  "lang": "es",
+  "text": "este calor me esta matando jajaja atacama a mediodia... bueno ya en serio, hace rato deje de sudar, me late fuerte la cabeza y me siento rara, como confundida",
+  "cond": "heatstroke",
+  "form": "prevent",
+  "t1": "Háblame de golpe de calor.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-056",
+  "lang": "es",
+  "text": "este calor me esta matando jajaja atacama a mediodia... bueno ya en serio, hace rato deje de sudar, me late fuerte la cabeza y me siento rara, como confundida",
+  "cond": "heatstroke",
+  "form": "act",
+  "t1": "Háblame de golpe de calor.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heatstroke:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-057",
+  "lang": "es",
+  "text": "si a alguien le da una convulsion hay q meterle algo en la boca pa q no se trague la lengua o eso es mito?",
+  "cond": "seizure",
+  "form": "prevent",
+  "t1": "Háblame de convulsiones.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:seizure:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-057",
+  "lang": "es",
+  "text": "si a alguien le da una convulsion hay q meterle algo en la boca pa q no se trague la lengua o eso es mito?",
+  "cond": "seizure",
+  "form": "act",
+  "t1": "Háblame de convulsiones.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:seizure",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:seizure:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-058",
+  "lang": "es",
+  "text": "despues de la subida tengo la punta de la nariz y las orejas blanquitas y adormecidas, ya estamos en la cabaña calentita",
+  "cond": "frostbite",
+  "form": "prevent",
+  "t1": "Háblame de congelación.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:frostbite",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:frostbite:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-058",
+  "lang": "es",
+  "text": "despues de la subida tengo la punta de la nariz y las orejas blanquitas y adormecidas, ya estamos en la cabaña calentita",
+  "cond": "frostbite",
+  "form": "act",
+  "t1": "Háblame de congelación.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:frostbite",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:frostbite:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-063",
+  "lang": "es",
+  "text": "AYUDA mi bebe de 8 meses se metio algo a la boca y no llora ni tose esta poniendose morado",
+  "cond": "chokinginfant",
+  "form": "prevent",
+  "t1": "Háblame de atragantamiento en bebés.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:chokinginfant:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-063",
+  "lang": "es",
+  "text": "AYUDA mi bebe de 8 meses se metio algo a la boca y no llora ni tose esta poniendose morado",
+  "cond": "chokinginfant",
+  "form": "act",
+  "t1": "Háblame de atragantamiento en bebés.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:chokinginfant",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:chokinginfant:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-078",
+  "lang": "es",
+  "text": "garrapata pegada en la pierna como la saco",
+  "cond": "tick",
+  "form": "prevent",
+  "t1": "Háblame de picadura de garrapata.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-078",
+  "lang": "es",
+  "text": "garrapata pegada en la pierna como la saco",
+  "cond": "tick",
+  "form": "act",
+  "t1": "Háblame de picadura de garrapata.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:tick",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:tick:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-084",
+  "lang": "es",
+  "text": "me pico una abeja en el brazo y quedo el aguijon clavado, no soy alergica, me duele y esta rojo",
+  "cond": "beesting",
+  "form": "prevent",
+  "t1": "Háblame de picadura de abeja.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-084",
+  "lang": "es",
+  "text": "me pico una abeja en el brazo y quedo el aguijon clavado, no soy alergica, me duele y esta rojo",
+  "cond": "beesting",
+  "form": "act",
+  "t1": "Háblame de picadura de abeja.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:beesting",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:beesting",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:beesting:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-087",
+  "lang": "es",
+  "text": "mi papá me escribe desde valencia que lleva un rato con presión en el pecho que se le va al brazo izquierdo y está sudando frío, dice que son gases y que no exagere",
+  "cond": "heartattack",
+  "form": "prevent",
+  "t1": "Háblame de infarto.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:heartattack:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-087",
+  "lang": "es",
+  "text": "mi papá me escribe desde valencia que lleva un rato con presión en el pecho que se le va al brazo izquierdo y está sudando frío, dice que son gases y que no exagere",
+  "cond": "heartattack",
+  "form": "act",
+  "t1": "Háblame de infarto.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:heartattack",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:heartattack:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-088",
+  "lang": "es",
+  "text": "oye esta pitando la alarma de monoxido del depto q arrendamos en valparaiso, la estufa a gas esta prendida y los niños estan durmiendo en la pieza. mi señora dice q es la pila nomas, q hago",
+  "cond": "co",
+  "form": "prevent",
+  "t1": "Háblame de intoxicación por monóxido de carbono.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:co:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-088",
+  "lang": "es",
+  "text": "oye esta pitando la alarma de monoxido del depto q arrendamos en valparaiso, la estufa a gas esta prendida y los niños estan durmiendo en la pieza. mi señora dice q es la pila nomas, q hago",
+  "cond": "co",
+  "form": "act",
+  "t1": "Háblame de intoxicación por monóxido de carbono.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:co",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:co:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-090",
+  "lang": "es",
+  "text": "SE ESTA MOVIENDO TODO EL EDIFICIO estoy en el piso 9 del hotel en la roma y se caen los cuadros q hago bajo x las escaleras??",
+  "cond": "earthquake",
+  "form": "prevent",
+  "t1": "Háblame de terremotos.",
+  "q": "¿Cómo puedo prevenirlo?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "emergency-dev",
+  "id": "ed-es-090",
+  "lang": "es",
+  "text": "SE ESTA MOVIENDO TODO EL EDIFICIO estoy en el piso 9 del hotel en la roma y se caen los cuadros q hago bajo x las escaleras??",
+  "cond": "earthquake",
+  "form": "act",
+  "t1": "Háblame de terremotos.",
+  "q": "¿Qué debo hacer si me pasa?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research",
+    "route-gate:skip-rules"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:earthquake",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:earthquake:from-history",
+    "task:chat"
+   ],
+   "task": "chat"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-001",
+  "lang": "en",
+  "text": "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
+  "cond": "jellyfish",
+  "form": "prevent",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:jellyfish:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-001",
+  "lang": "en",
+  "text": "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
+  "cond": "jellyfish",
+  "form": "act",
+  "t1": "Tell me about jellyfish stings.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:jellyfish",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:jellyfish:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-002",
+  "lang": "en",
+  "text": "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?",
+  "cond": "altitude",
+  "form": "prevent",
+  "t1": "Tell me about altitude sickness.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-card-condition",
+    "condition:altitude",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-002",
+  "lang": "en",
+  "text": "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?",
+  "cond": "altitude",
+  "form": "act",
+  "t1": "Tell me about altitude sickness.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-card-condition",
+    "condition:altitude",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:altitude:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-003",
+  "lang": "en",
+  "text": "Is dengue more dangerous the second time you get it?",
+  "cond": "dengue",
+  "form": "prevent",
+  "t1": "Tell me about dengue.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "vit-hlt-003",
+  "lang": "en",
+  "text": "Is dengue more dangerous the second time you get it?",
+  "cond": "dengue",
+  "form": "act",
+  "t1": "Tell me about dengue.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-001",
+  "lang": "en",
+  "text": "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?",
+  "cond": "snakebite",
+  "form": "prevent",
+  "t1": "Tell me about snakebite.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": "answer:first-aid-card-snakebite",
+   "codes": [
+    "answer:first-aid-card-snakebite",
+    "health:lexical",
+    "condition:snakebite",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:snakebite",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:snakebite:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-001",
+  "lang": "en",
+  "text": "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?",
+  "cond": "snakebite",
+  "form": "act",
+  "t1": "Tell me about snakebite.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": "answer:first-aid-card-snakebite",
+   "codes": [
+    "answer:first-aid-card-snakebite",
+    "health:lexical",
+    "condition:snakebite",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:snakebite",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:snakebite:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-002",
+  "lang": "en",
+  "text": "My hiking partner is shivering, confused and slurring words in the cold. What should I do?",
+  "cond": "hypothermia",
+  "form": "prevent",
+  "t1": "Tell me about hypothermia.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "condition:hypothermia:from-history",
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-002",
+  "lang": "en",
+  "text": "My hiking partner is shivering, confused and slurring words in the cold. What should I do?",
+  "cond": "hypothermia",
+  "form": "act",
+  "t1": "Tell me about hypothermia.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:hypothermia",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "condition:hypothermia:from-history",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-005",
+  "lang": "en",
+  "text": "After a flood the tap water might be contaminated. How do I make water safe to drink?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "bench-v0.1",
+  "id": "dng-005",
+  "lang": "en",
+  "text": "After a flood the tap water might be contaminated. How do I make water safe to drink?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-001",
+  "lang": "en",
+  "text": "how long do i need to boil water after the flood to make it safe to drink",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-001",
+  "lang": "en",
+  "text": "how long do i need to boil water after the flood to make it safe to drink",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-002",
+  "lang": "en",
+  "text": "We got a boil water notice from the city this morning. Is boiling enough or do I need to add something too?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-002",
+  "lang": "en",
+  "text": "We got a boil water notice from the city this morning. Is boiling enough or do I need to add something too?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-003",
+  "lang": "en",
+  "text": "how much bleach per gallon to disinfect drinking water? hurricane is coming and the tap might get contaminated",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-003",
+  "lang": "en",
+  "text": "how much bleach per gallon to disinfect drinking water? hurricane is coming and the tap might get contaminated",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-004",
+  "lang": "en",
+  "text": "power's been out 3 days and a water main broke. can i drink the tap water or not",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-004",
+  "lang": "en",
+  "text": "power's been out 3 days and a water main broke. can i drink the tap water or not",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-005",
+  "lang": "en",
+  "text": "my private well was under water during the flood. how do i make it drinkable again",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-005",
+  "lang": "en",
+  "text": "my private well was under water during the flood. how do i make it drinkable again",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-006",
+  "lang": "en",
+  "text": "purify stream water in an emergency, no filter, only a pot and a lighter",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-006",
+  "lang": "en",
+  "text": "purify stream water in an emergency, no filter, only a pot and a lighter",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-007",
+  "lang": "en",
+  "text": "The cistern tank got contaminated by the storm runoff. How do I disinfect it so we can drink from it?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-007",
+  "lang": "en",
+  "text": "The cistern tank got contaminated by the storm runoff. How do I disinfect it so we can drink from it?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-008",
+  "lang": "en",
+  "text": "boil advisory in effect. can I brush my teeth and make coffee with tap water, and how long should it boil",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-008",
+  "lang": "en",
+  "text": "boil advisory in effect. can I brush my teeth and make coffee with tap water, and how long should it boil",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-009",
+  "lang": "en",
+  "text": "how to treat water after hurricane with household bleach",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-009",
+  "lang": "en",
+  "text": "how to treat water after hurricane with household bleach",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-010",
+  "lang": "en",
+  "text": "is it ok to drink flood-affected tap water if I boil it for one minute?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-010",
+  "lang": "en",
+  "text": "is it ok to drink flood-affected tap water if I boil it for one minute?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:lookup"
+   ],
+   "task": "lookup"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-011",
+  "lang": "en",
+  "text": "emergency: no clean drinking water, how do I disinfect what we have? we have unscented bleach and iodine tablets",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-011",
+  "lang": "en",
+  "text": "emergency: no clean drinking water, how do I disinfect what we have? we have unscented bleach and iodine tablets",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-012",
+  "lang": "en",
+  "text": "make water drinkable after storm",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-012",
+  "lang": "en",
+  "text": "make water drinkable after storm",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-013",
+  "lang": "en",
+  "text": "they said not to drink the tap water until further notice because of e coli. what do i do to make it safe?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-013",
+  "lang": "en",
+  "text": "they said not to drink the tap water until further notice because of e coli. what do i do to make it safe?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-014",
+  "lang": "en",
+  "text": "how many drops of bleach per liter for emergency water treatment",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-014",
+  "lang": "en",
+  "text": "how many drops of bleach per liter for emergency water treatment",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:research"
+   ],
+   "task": "research"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-015",
+  "lang": "en",
+  "text": "Our basement flooded and the water supply might be contaminated. What's the rolling boil time at high altitude? we are at 7000 ft",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:altitude",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-015",
+  "lang": "en",
+  "text": "Our basement flooded and the water supply might be contaminated. What's the rolling boil time at high altitude? we are at 7000 ft",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:altitude",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-016",
+  "lang": "en",
+  "text": "do I boil first then add bleach or just one of them? flood zone, tap water unsafe",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-016",
+  "lang": "en",
+  "text": "do I boil first then add bleach or just one of them? flood zone, tap water unsafe",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-017",
+  "lang": "en",
+  "text": "camping and the only source is a creek, there was a flash flood upstream. how do i disinfect before drinking",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-017",
+  "lang": "en",
+  "text": "camping and the only source is a creek, there was a flash flood upstream. how do i disinfect before drinking",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-018",
+  "lang": "en",
+  "text": "water main break, city says boil. do i need to boil water for the dog bowl too and how long",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-018",
+  "lang": "en",
+  "text": "water main break, city says boil. do i need to boil water for the dog bowl too and how long",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-019",
+  "lang": "en",
+  "text": "can i just let the tap water sit or does it need to be purified after the hurricane",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-019",
+  "lang": "en",
+  "text": "can i just let the tap water sit or does it need to be purified after the hurricane",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-020",
+  "lang": "en",
+  "text": "steps to disinfect well after flooding, shock chlorination, and when can we drink it",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-020",
+  "lang": "en",
+  "text": "steps to disinfect well after flooding, shock chlorination, and when can we drink it",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "ui:safety-note",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-021",
+  "lang": "en",
+  "text": "boiling water emergency how long",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-021",
+  "lang": "en",
+  "text": "boiling water emergency how long",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "condition:burn",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-022",
+  "lang": "en",
+  "text": "Contaminated tap water, we have no power so no stove, how do I make it safe? solar disinfection in bottles maybe?",
+  "cond": "water",
+  "form": "prevent",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "How do I prevent it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": false,
+   "early": null,
+   "codes": [
+    "task:research"
+   ],
+   "task": "research"
+  }
+ },
+ {
+  "src": "water-safety",
+  "id": "ws-022",
+  "lang": "en",
+  "text": "Contaminated tap water, we have no power so no stove, how do I make it safe? solar disinfection in bottles maybe?",
+  "cond": "water",
+  "form": "act",
+  "t1": "Tell me about contaminated drinking water.",
+  "q": "What should I do if I get it?",
+  "rStandalone": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rTurn1": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "health:lexical",
+    "ui:safety-note",
+    "retrieve:canonical-health-terms",
+    "task:chat"
+   ],
+   "task": "chat"
+  },
+  "rFu": {
+   "health": true,
+   "early": null,
+   "codes": [
+    "grounding:health-follow-up",
+    "task:lookup"
+   ],
+   "task": "lookup"
+  }
+ }
+]

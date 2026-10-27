@@ -1,0 +1,39 @@
+# DEEPITER + MP4B: does a second retrieval pass raise the deep thinking tier, and does the engine's own multi-pass path raise the 4B? (frozen 2026-10-10 22:5x, coordinator)
+
+## Tags
+Tags: none
+
+## Question
+Two arms, one criterion, decided on v0.2 (110 ids, seed-stable ±0.01) and, for a LEVER, confirmed on V-para with two seeds.
+- **I = DEEPITER**: the recommended deep configuration (dt512 = cut 6 + deepthink + dt512; Qwen3.6-35B-A3B UD-Q2_K_XL via llama-server, thinking budget 512, succinct persona, context 400) plus a planner-driven second retrieval pass before the thinking call: a no-thinking planner call on the deep model (≤ 64 tokens, temp 0) sees the question and the kept first-pass sources (title + 160 chars each) and emits ≤ 2 follow-up queries or NONE; each follow-up runs `retrieve(q, 6)` with the same substantive/on-subject filters; sources merged first-pass-first (dedupe, ≤ 12) and the deep context cap raised 400 → 800 so the extra sources fit (DEEPCTX: 1200 vs 400 was −0.006, harmless). Thinking generation unchanged. Two implementation details fixed by the patch: (i) compressContext ranks against the question plus the follow-up queries that added passages (against the question alone its half-relevance floor would drop the follow-up passages by construction); (ii) the deep model is loaded before the planner call (the adapter's model guard refuses a generate on an unloaded model), load time carried to the usual site. `deepIterFollowups: 0` reproduces dt512 byte-identically (6/6 differential scenarios, README). Mechanism attacked: coverage (49 % of gold misses) and multi-hop synthesis. Deviation from HANDOFF-10-11 §4 step 3's sketch ("parse follow-ups from the thinking"): the engine's thinking and answer share one generation stream and `answer.ts` never sees the reasoning text, so mid-stream retrieval would need a second thinking call or reasoning prefill (neither supported by the adapter/server path); the planner call costs ≈ 2–4 s desktop and keeps the measured thinking call identical.
+- **M = MP4B**: the engine's existing multi-pass decompose → research → synthesize path (`src/services/orchestrator.ts runDeepResearch`: ≤ 5 LLM calls on the 4B, ≤ 3 retrieve calls, 600-token sub-contexts), selected by `planAnswer` when `alwaysComplete` is on and no deep model is installed; never measured on any set (the "4B side closed" verdicts are all single-pass). Engine tree = cut 7 (6d0b93b1) byte-identical; only the desktop-node adapter changes (it stubbed `runMultipass`).
+
+## Fixed inputs
+- I: mini tree `be-0cfd4a77-deepiter` = rsync of `-dt512` (be-repo adapter redeployed from boar-eval 4a22a4e) + `arms/deepiter/deepiter.vs-dt512.patch` (sha `a83bead8a0c304f5dcedd73007bdd28982a5ecb117a8614ab4e56af582cc9c68; cumulative deepiter.vs-0cfd4a77.patch ad86e920…; tree content hash 040be888… (wt/deepiter fb6d7b3a)`); runner `arms/deepiter/tools/remote-run.sh` (sha `cb60971a…`) checks the patch sha and `DEEP_ITER_FOLLOWUPS`; settings `{"quickFirst":true,"alwaysComplete":true,"deepModelId":"qwen3.6-35b-a3b-ud-q2kxl","deepIterFollowups":2}`, `noplaces` on v0.2, kit-vexact places on V-para (as H). Requests = H's v0.2 / V-para requests with runId/settings/arm rewritten (`arm.sh mkreq`).
+- I control **H** = dt512 rows: v0.2 `runs-dt512v02/dhv-H-v02-s42` (Opus rows; Haiku rows for the 20 slice ids judged once, 40 calls), V-para `runs-dt512/dh-H-vpara-s42/s43` (Opus).
+- M: MacBook, cut 7 tree (`wt/cut7`, tree hash 7c96e59e…), 4B Qwen3-4B-Instruct-2507-Q4_K_M, adapter boar-eval 4a22a4e (runMultipass wired through the tree's own `runDeepResearch`; adapter.ts sha 6298e5d3…; the dt512 rows ran on adapter 7a0282ae: the only differences are the multipass wiring, `route.mode` on always-complete configs and `timing.retrievalMs2`), settings `{"quickFirst":true,"alwaysComplete":true}`, no deep model, `noplaces` on v0.2. Requests = C's v0.2 requests rewritten.
+- M control **C** = same-backend 4B re-run `runs-deepvpara/dv-C-v02-s42` (Haiku rows, 110 ids) for L1; **K** = cut 6 claim rows `runs-cut6/cut6-v02-s42` (Opus) for L2.
+- Blind sets: coordinator-only scripts (arm.sh); researchers get aggregates.
+
+## Power
+expected_delta: I +0.02…+0.04 raw (source: HANDOFF-10-11 §2 prior from the coverage loss bucket 49 % and DEEPNORAG +0.045 for packs; retrieval oracle gap on the 4B +0.10 of which single-pass captured +0.02). M 0.00 ± 0.03 raw (source: never measured; the 4B's completeness prompt cost −0.80 correctness (COMPLETE NO) so harm is as likely as gain). At one seed on 110 ids the MDE is 0.025: for I only the upper half of the prior is detectable; a Δ in (0, 0.025) with CI low ≤ 0 is SMALL/undetermined, not NO.
+n: 110 (v0.2, decides direction); 51 × 2 seeds on V-para (confirms a LEVER)
+seeds: 1 on v0.2 (s42; v0.2 deep tier per-item r 0.90, ±0.01); 2 on V-para (42, 43)
+mde: 0.025 raw on v0.2 one seed; 0.03 on V-para two seeds (SEEDVAR)
+slice: random20-v02.ids (sha a3e43672…; never signal20)
+l1_futility: stop only if Haiku Δ ≤ 0 AND h2h ≤ control; any Haiku Δ > 0 → Opus N=4 on the same 20 ids (40 calls) before deciding
+reopen: M reopens the "4B side closed" family with a new mechanism: multi-pass decompose/synthesize was never run (all closed 4B arms were single-pass; QUEUE 10-10 15:28 "4B side stays closed" rests on THINK4B/THINK4B-V02 and earlier single-pass arms). I is a new mechanism on the deep tier (iterative retrieval; all deep retrieval arms were single-pass: DEEPNORAG, DEEPWIKI, DEEPCTX).
+
+## Stages and rules
+0. Smoke: I = 3 v0.2 slice ids on the mini (gate: deep-thinking generation, 0 errors, planner reason code present on 3/3, reasoning ≤ 522); M = 3 public v0.1 items on the MacBook (gate: mode multipass, ≥ 3 generation events, 0 errors). FAIL-INFRA → fix, re-smoke; no judging.
+1. L1 slice (random20-v02, s42): Haiku 5.5-low N=4 both orders, paired vs the control on the same ids (I vs H: 40 + 40 calls; M vs C: 40, C rows exist). Rule: futility above; near-miss (|Δ − 0.03| ≤ 0.01, or any Δ > 0 under the futility rule) → Opus N=4 on the 20 ids. A slice Δ is not an estimate of the full-set Δ.
+2. Full v0.2 110 s42 for the arm(s) that pass stage 1: Haiku vs control (220) → if Haiku Δ > 0 or near-miss: Opus N=4 vs H (I) / vs K (M), 220 calls each.
+3. Verdict on v0.2 (Opus, paired, item bootstrap): **LEVER** = CI low > 0 and Δ ≥ +0.03 raw; **SMALL** = CI low > 0 and Δ < +0.03, or Δ ≥ +0.02 with CI low > −0.01 (undetermined at MDE, labelled "not decided at MDE 0.025"); **NO** otherwise. Secondary readings: floor-adj Δ, W/T/L, p50 time, follow-up stats (I: planner NONE rate, follow-ups per item, sources added, retrievalMs2; M: generation events per item, decompose fallback rate).
+4. If I = LEVER on v0.2: V-para s42 + s43 (Opus 204) → two-seed paired vs H; adopt into the recommended configuration only if V-para Δ CI low > 0; BAR-TABLE addendum either way. M = LEVER on v0.2 → V-para 2 seeds likewise (vs K).
+5. One generation per seed and stage; rerun only on an infrastructure error before the first token. ≤ 1 post-hoc split per arm (by the planner NONE/followup reason code for I; by task type for M), labelled hypothesis.
+
+## Stop rules and budget
+Mini: disk ≥ 25 GiB, swap ≤ 8 GB, one MoE server, never restart Docker, never stop the detector :8094. MacBook: 4B generation only. Budget this week (HANDOFF §3.5: Opus ≤ 600, Haiku ≤ 400 incl. LENGTHSHARE 102 Opus): I first; M's Opus stages run only if the cap allows after I's; otherwise M stops at Haiku with "not decided (budget)". Time caps: I smoke 15 min, slice 45 min, full 3.5 h; M full ≤ 2 h on the MacBook.
+
+## Outputs and exposure
+`arms/deepiter/DEEPITER.md`, `arms/mp4b/MP4B.md` (both cite this sha), `aggregates/`, `tools/`; traces/judgments under `blind/bench-v02/runs-deepiter` and `runs-mp4b`, V-para under `blind/V-para/runs-deepiter`. One EXPOSURES.md row per set per arm plus the QUEUE entries; BAR-TABLE addendum.

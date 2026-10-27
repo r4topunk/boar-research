@@ -1,0 +1,70 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts rs-B/src/rag/retrieve.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts	2026-10-14 08:07:31
++++ rs-B/src/rag/retrieve.ts	2026-10-21 23:18:49
+@@ -10,7 +10,31 @@
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+-import { attachDenseCandidates, rankDenseCandidates } from "./denseCandidates";
++import { attachDenseCandidates, denseCandidatesOf, rankDenseCandidates } from "./denseCandidates";
++
++/** RETRIEVE-SWEEP arm B: stop, wh- and auxiliary words left out of a question's keyword form. */
++const RS_KEYQ_STOP = new Set(
++  ("a an the and or but if then than so of to in on at by for with from into onto about as over under after before during between " +
++   "what which who whom whose when where why how is are was were be been being am do does did doing done have has had having " +
++   "can could will would shall should may might must i me my mine we us our you your he him his she her it its they them their " +
++   "this that these those there here not no yes any some all each one also just very really please tell know want need get " +
++   "explain describe give show list let lets s t i'm im i've ive i'd i'll it's that's what's don't doesn't isn't up out too much " +
++   "many more most right now roughly really like ok okay")
++    .split(" ")
++);
++/** The question's content words in order (stop/wh/aux words removed), at most 6, duplicates dropped. */
++export function keywordForm(query: string): string {
++  const out: string[] = [];
++  const seen = new Set<string>();
++  for (const w of query.match(/[\p{L}\p{N}][\p{L}\p{N}'’,.-]*[\p{L}\p{N}]|[\p{L}\p{N}]/gu) ?? []) {
++    const k = w.toLowerCase().replace(/’/g, "'").replace(/'s$/, "");
++    if (k.length < 2 || RS_KEYQ_STOP.has(k) || seen.has(k)) continue;
++    seen.add(k);
++    out.push(w.replace(/['’]s$/, "").replace(/[,.]/g, (m, i, str) => (/\d/.test(str[i - 1] ?? "") && /\d/.test(str[i + 1] ?? "") ? m : "")));
++    if (out.length >= 6) break;
++  }
++  return out.join(" ");
++}
+ import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+@@ -116,8 +140,32 @@
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode; rsInner?: boolean } = {}
+ ): Promise<RetrievedChunk[]> {
++  // RS_KEYQ (RETRIEVE-SWEEP arm B, bench-only env switch, default off = unchanged): retrieve with the question and with its
++  // keyword form, merge the two lists by chunkId (max score), re-sort by score, same k; dense candidates (append mode) are
++  // the union of both, re-ranked against the merged list.
++  if ((globalThis as any).process?.env?.RS_KEYQ === "1" && !opts.rsInner) {
++    const kq = keywordForm(query);
++    if (kq && kq.toLowerCase() !== query.trim().toLowerCase()) {
++      const a = await retrieve(query, topK, { ...opts, rsInner: true });
++      const b = await retrieve(kq, topK, { ...opts, queryVec: undefined, rsInner: true });
++      const byId = new Map<string, RetrievedChunk>();
++      for (const c of [...a, ...b]) {
++        const e = byId.get(c.chunkId);
++        if (!e || c.score > e.score) byId.set(c.chunkId, c);
++      }
++      const merged = [...byId.values()].sort((x, y) => y.score - x.score).slice(0, topK);
++      const da = denseCandidatesOf(a), db = denseCandidatesOf(b);
++      if (da || db) {
++        attachDenseCandidates(merged, {
++          candidates: rankDenseCandidates(merged, [...(da?.candidates ?? []), ...(db?.candidates ?? [])]),
++          sidecar: !!(da?.sidecar || db?.sidecar),
++        });
++      }
++      return merged;
++    }
++  }
+   // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
+   // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
+   const extra = opts.packDense2 === "extra";

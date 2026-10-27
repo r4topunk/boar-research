@@ -1,0 +1,121 @@
+{
+ "pack_leads": 67636,
+ "questions": 160,
+ "questions_with_gold_lead": 42,
+ "raw": {
+  "right": {
+   "n": 42,
+   "p2": 0.4953,
+   "p5": 0.5658,
+   "median": 0.7827
+  },
+  "random": {
+   "n": 2840670,
+   "median": 0.3722,
+   "p99": 0.5292,
+   "p99_4": 0.5452
+  },
+  "gap_p5_minus_p99": 0.0366
+ },
+ "prefixed": {
+  "right": {
+   "n": 42,
+   "p2": 0.4862,
+   "p5": 0.5217,
+   "median": 0.7735
+  },
+  "random": {
+   "n": 2840670,
+   "median": 0.3699,
+   "p99": 0.5252,
+   "p99_4": 0.5409
+  },
+  "gap_p5_minus_p99": -0.0035
+ },
+ "cutoffs": {
+  "MIN_SEMANTIC_SIMILARITY": {
+   "old": 0.55,
+   "old_keeps_right": 0.9524,
+   "old_leaks_random": 0.0052,
+   "new": 0.4862,
+   "new_keeps_right": 0.9762,
+   "new_leaks_random": 0.0349,
+   "rule": "right p2 of the prefixed distribution (keep ~98% of right)"
+  },
+  "ANSWER_MIN_SIMILARITY": {
+   "old": 0.7,
+   "old_keeps_right": 0.8571,
+   "old_leaks_random": 0.0,
+   "new": 0.6785,
+   "new_keeps_right": 0.8571,
+   "new_leaks_random": 0.0,
+   "rule": "quantile match: same share of right leads kept as 0.7 keeps without the prefix"
+  },
+  "SEMANTIC_KEEP": {
+   "old": 0.7,
+   "old_keeps_right": 0.8571,
+   "old_leaks_random": 0.0,
+   "new": 0.6785,
+   "new_keeps_right": 0.8571,
+   "new_leaks_random": 0.0,
+   "rule": "quantile match: same share of right leads kept as 0.7 keeps without the prefix"
+  }
+ },
+ "robustness": {
+  "retrieval_v1": {
+   "n": 42,
+   "raw": {
+    "gap_ci95": [
+     -0.0808,
+     0.1748
+    ],
+    "rank_median": 1.0,
+    "semantic_recall_at_6": 0.9048,
+    "semantic_recall_at_1": 0.8333
+   },
+   "prefixed": {
+    "gap_ci95": [
+     -0.1045,
+     0.1668
+    ],
+    "rank_median": 1.0,
+    "semantic_recall_at_6": 0.9048,
+    "semantic_recall_at_1": 0.8095
+   },
+   "paired": {
+    "right_cos_delta_median": -0.0059,
+    "rank_better": 1,
+    "rank_worse": 6,
+    "rank_same": 35
+   }
+  },
+  "vitalik": {
+   "n": 6,
+   "raw": {
+    "gap_ci95": [
+     -0.0204,
+     0.1771
+    ],
+    "rank_median": 1.0,
+    "semantic_recall_at_6": 0.8333,
+    "semantic_recall_at_1": 0.6667
+   },
+   "prefixed": {
+    "gap_ci95": [
+     -0.0317,
+     0.196
+    ],
+    "rank_median": 1.0,
+    "semantic_recall_at_6": 0.8333,
+    "semantic_recall_at_1": 0.6667
+   },
+   "paired": {
+    "right_cos_delta_median": -0.013,
+    "rank_better": 0,
+    "rank_worse": 1,
+    "rank_same": 5
+   },
+   "questions_with_gold_lead": 6
+  }
+ }
+}

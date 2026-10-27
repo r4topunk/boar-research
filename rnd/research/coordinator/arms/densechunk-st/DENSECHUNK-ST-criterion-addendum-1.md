@@ -1,0 +1,2 @@
+# DENSECHUNK-ST criterion addendum 1 (2026-10-13 10:20, before stage 1 ran; frozen criterion sha 24793013… unchanged)
+r4to (chat, 2026-10-13): there is no Haiku cap. Stage 2 judge = Haiku 5.5-low, N=4 shards, both orders, on OFF and ON for all 180 items (720 calls), replacing the local judge as the deciding L1; the local judge (JUDGE2 shim) is at most a side calibration. Verdict rule, gates, n, MDE unchanged. Opus L2 (both orders on the 180, 720 calls) only if the Haiku verdict is LEVER and the pack-format decision needs a claim-grade number.

@@ -1,0 +1,40 @@
+
+lan-hlt-001 | Can a raw vegan diet be healthy long term?
+  trace raw: Wikivoyage: Ubud, Wikivoyage: Austria, Wikivoyage: Antarctica | trace context context:518->91 | replay compress 518->91 (budget 450)
+      Wikivoyage: Ubud §Eat > Mid-range -> COMPRESSION
+      Wikivoyage: Austria §Eat > Vegetarians -> COMPRESSION
+      Wikivoyage: Antarctica §Stay safe -> ONSUBJECT
+
+vit-hlt-001 | My friend just got stung by a jellyfish while swimming in Thailand. Sh
+  trace raw: Wikivoyage: Gulf Islands National Seashore, Wikivoyage: Vung Tau, Wikivoyage: Langkawi, Wikivoyage: Darwin | trace context context:780->476 | replay compress 780->476 (budget 700)
+      Wikivoyage: Gulf Islands National Seashore §Stay safe -> ONSUBJECT
+      Wikivoyage: Vung Tau §Stay healthy -> ONSUBJECT
+  KEY Wikivoyage: Langkawi §Stay healthy -> ONSUBJECT
+  KEY Wikivoyage: Darwin §Stay safe -> ONSUBJECT
+
+vit-hlt-002 | I'm at 4,000 m in the Andes with a headache and nausea. What should I 
+  trace raw: Wikivoyage: Altitude sickness, Wikivoyage: Altitude sickness, Wikivoyage: Altitude sickness, Wikivoyage: North Sikkim | trace context context:691->67 | replay compress 691->67 (budget 700)
+      Wikivoyage: Altitude sickness §Treatment -> COMPRESSION
+      Wikivoyage: Altitude sickness §Treatment > Oxygen and hyperbaric chambe -> COMPRESSION
+      Wikivoyage: Altitude sickness §Treatment > Acetazolamide -> COMPRESSION
+      Wikivoyage: North Sikkim §Stay safe -> ONSUBJECT
+
+lan-ref-003 | Did astronauts walk on the Moon before 1970?
+  trace raw: Wikivoyage: Moon, Wikivoyage: Webster (Texas), Wikivoyage: Moon | trace context context:425->239 | replay compress 425->239 (budget 450)
+      Wikivoyage: Moon §Eat -> ONSUBJECT
+  KEY Wikivoyage: Webster (Texas) §Cope -> COMPRESSION
+      Wikivoyage: Moon §Get in > To the surface -> ONSUBJECT
+
+lan-ref-004 | How big is Iceland in square kilometres?
+  trace raw: Wikivoyage: Driving in Iceland, Wikivoyage: South Iceland, Wikivoyage: North Iceland, Wikivoyage: European quick reference | trace context context:497->310 | replay compress 497->310 (budget 700)
+      Wikivoyage: Driving in Iceland §Vehicle and gear > Costs > Fuel -> COMPRESSION
+      Wikivoyage: South Iceland §South Iceland is the region of Iceland a -> KEPT (key cut from text)
+      Wikivoyage: North Iceland §Get around > By thumb -> KEPT (key cut from text)
+      Wikivoyage: European quick reference §Driving -> ONSUBJECT
+
+lan-exp-003 | Give me the essentials on Kenya: its location, capital, official langu
+  trace raw: Wikivoyage: Angola, Wikivoyage: Mexico, Wikivoyage: Bangladesh, Wikivoyage: Nairobi | trace context context:714->247 | replay compress 714->247 (budget 700)
+      Wikivoyage: Angola §Talk -> COMPRESSION
+      Wikivoyage: Mexico §Talk -> ONSUBJECT
+      Wikivoyage: Bangladesh §Talk -> COMPRESSION
+  KEY Wikivoyage: Nairobi §Understand > History -> ONSUBJECT

@@ -1,0 +1,151 @@
+diff -ruN rs-H4/src/rag/packs.ts rs-R1/src/rag/packs.ts
+--- rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
++++ rs-R1/src/rag/packs.ts	2026-10-22 20:29:27
+@@ -248,6 +248,38 @@
+   };
+ }
+ 
++/**
++ * RS_RERANK (RETRIEVE-SWEEP arm R1, bench-only): cosine between the question's vector and the vector of each format-2 pack
++ * chunk in `chunks` (map chunkId -> cosine): the chunk's own chunk_vecs vector when its pack has the sidecar and a row for it,
++ * else its article's lead vector; a chunk with neither (or not from a format-2 pack) is left out of the map.
++ */
++export async function rsPackCosines(chunks: RetrievedChunk[], queryVec: Float32Array): Promise<Map<string, { cos: number; kind: "chunk" | "lead" }>> {
++  const out = new Map<string, { cos: number; kind: "chunk" | "lead" }>();
++  const byPack = new Map<string, { chunkId: string; cid: number; aid: number }[]>();
++  for (const c of chunks) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    const a = /^pack:[^:]+:a(\d+)$/.exec(c.docId ?? "");
++    if (!m || !a) continue;
++    (byPack.get(m[1]) ?? byPack.set(m[1], []).get(m[1])!).push({ chunkId: c.chunkId, cid: Number(m[2]), aid: Number(a[1]) });
++  }
++  for (const [packId, rows] of byPack) {
++    const wp = wikiPacks.get(packId);
++    if (!wp) continue;
++    const cv = await wp.rsChunkVectors(rows.map((r) => r.cid));
++    const missing = rows.filter((r) => !cv.has(r.cid));
++    const lv = missing.length ? await wp.leadVectors([...new Set(missing.map((r) => r.aid))]) : new Map<number, Uint8Array>();
++    for (const r of rows) {
++      const v = cv.get(r.cid);
++      if (v) out.set(r.chunkId, { cos: cosineSimilarityInt8(queryVec, v), kind: "chunk" });
++      else {
++        const l = lv.get(r.aid);
++        if (l) out.set(r.chunkId, { cos: cosineSimilarityInt8(queryVec, l), kind: "lead" });
++      }
++    }
++  }
++  return out;
++}
++
+ /** HEADPASS-ST: kit packs (shipped with the app) never get a head pass; only user-installed format-2 packs do. */
+ const HEADPASS_KIT = new Set(["boar-crypto", "boar-wikivoyage-en"]);
+ /** HEADPASS-ST (settings.packHeadPass "a2", default off): the first passage of `raw` from a user-installed (non-kit) format-2
+diff -ruN rs-H4/src/rag/retrieve.ts rs-R1/src/rag/retrieve.ts
+--- rs-H4/src/rag/retrieve.ts	2026-10-22 17:16:18
++++ rs-R1/src/rag/retrieve.ts	2026-10-22 20:29:37
+@@ -11,7 +11,7 @@
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+ import { attachDenseCandidates, rankDenseCandidates } from "./denseCandidates";
+-import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
++import { packHitToChunk, rsPackCosines, searchPacks, searchWikiPacks } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+ import { EXPLAIN_INTENT } from "./explain";
+@@ -114,6 +114,72 @@
+  * whatever happened to be least-irrelevant.
+  */
+ export async function retrieve(
++  query: string,
++  topK = 6,
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
++): Promise<RetrievedChunk[]> {
++  const base = await retrieveBase(query, topK, opts);
++  // RS_RERANK=cos|mix (SEARCHPAR arm R1 DENSE-RERANK, bench-only, default off = unchanged): see rsRerank.
++  const mode = (globalThis as any).process?.env?.RS_RERANK;
++  if ((mode !== "cos" && mode !== "mix") || !base.length) return base;
++  const wideK = Number((globalThis as any).process?.env?.RS_RERANK_WIDE ?? 12);
++  if (topK >= wideK) return base;
++  const { packDense2: _dropped, ...wideOpts } = opts;
++  const wide = await retrieveBase(query, wideK, wideOpts);
++  return rsRerank(query, base, wide, mode, opts.queryVec);
++}
++
++/**
++ * SEARCHPAR arm R1 DENSE-RERANK (RS_RERANK=cos|mix). The candidate pool is the engine's list `raw` (k, plus any dense "extra"
++ * slots) united with the wider list `wide` (k = 12, no dense extras), one copy per chunkId. Every candidate gets the cosine
++ * between the question's vector and its own vector: the chunk_vecs vector of a format-2 pack chunk, else its article's lead
++ * vector, else (bundled corpus, format-1 packs) the similarity retrieve() already computed, else an on-the-fly embedding of
++ * "title\nbody" (first 1500 chars). cos: the pool is re-ordered by that cosine (ties: pool order). mix: 0.5 * rank in the
++ * pool order (raw in its own order, then the wide-only candidates in wide order) + 0.5 * cosine rank (ties: pool order).
++ * The first |raw| candidates of the new order are returned, so the list keeps the engine's length.
++ */
++export async function rsRerank(
++  query: string,
++  raw: RetrievedChunk[],
++  wide: RetrievedChunk[],
++  mode: "cos" | "mix",
++  queryVecIn?: Float32Array
++): Promise<RetrievedChunk[]> {
++  const queryVec = queryVecIn ?? (await embeddingEngine.embed(query));
++  const seen = new Set<string>();
++  const pool = [...raw, ...wide].filter((c) => !seen.has(c.chunkId) && (seen.add(c.chunkId), true));
++  const packCos = await rsPackCosines(pool, queryVec);
++  const cos: number[] = [];
++  const kinds: string[] = [];
++  for (const c of pool) {
++    const p = packCos.get(c.chunkId);
++    if (p) (cos.push(p.cos), kinds.push(p.kind));
++    else if (typeof c.similarity === "number" && Number.isFinite(c.similarity)) (cos.push(c.similarity), kinds.push("sim"));
++    else (cos.push(cosineSimilarity(queryVec, await embeddingEngine.embed(`${c.title}\n${c.body}`.slice(0, 1500)))), kinds.push("embed"));
++  }
++  const idx = pool.map((_, i) => i);
++  const cosOrder = [...idx].sort((a, b) => cos[b] - cos[a] || a - b);
++  let order = cosOrder;
++  if (mode === "mix") {
++    const cosRank = new Array<number>(pool.length);
++    cosOrder.forEach((i, r) => (cosRank[i] = r));
++    const mixed = idx.map((i) => 0.5 * i + 0.5 * cosRank[i]);
++    order = [...idx].sort((a, b) => mixed[a] - mixed[b] || a - b);
++  }
++  const out = order.slice(0, raw.length).map((i) => pool[i]);
++  const logPath = (globalThis as any).process?.env?.RS_RERANK_LOG;
++  if (logPath) {
++    try {
++      (globalThis as any).process.getBuiltinModule("node:fs").appendFileSync(
++        logPath,
++        JSON.stringify({ q: query, mode, raw: raw.map((c) => c.chunkId), pool: pool.map((c, i) => [c.chunkId, +cos[i].toFixed(4), kinds[i]]), out: out.map((c) => c.chunkId) }) + "\n"
++      );
++    } catch {}
++  }
++  return out;
++}
++
++async function retrieveBase(
+   query: string,
+   topK = 6,
+   opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
+diff -ruN rs-H4/src/rag/wikiPack.ts rs-R1/src/rag/wikiPack.ts
+--- rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
++++ rs-R1/src/rag/wikiPack.ts	2026-10-22 20:29:27
+@@ -1114,6 +1114,20 @@
+     return new Map([...vecs].map(([id, v]) => [id, cosineSimilarityInt8(queryVec, v)]));
+   }
+ 
++  /** RS_RERANK (RETRIEVE-SWEEP arm R1, bench-only): int8 chunk vectors for these chunk ids (empty when the pack has no chunk_vecs). */
++  async rsChunkVectors(ids: number[]): Promise<Map<number, Uint8Array>> {
++    const out = new Map<number, Uint8Array>();
++    if (!ids.length || !this.hasChunkVecs) return out;
++    const rows = await this.db
++      .getAllAsync<{ chunk_id: number; vec: Uint8Array }>(
++        `SELECT chunk_id, vec FROM chunk_vecs WHERE chunk_id IN (${ids.map(() => "?").join(",")})`,
++        ids
++      )
++      .catch(() => []);
++    for (const r of rows) out.set(r.chunk_id, new Uint8Array(r.vec));
++    return out;
++  }
++
+   /** int8 lead embeddings for these articles (only when the pack has them). */
+   async leadVectors(ids: number[]): Promise<Map<number, Uint8Array>> {
+     const out = new Map<number, Uint8Array>();

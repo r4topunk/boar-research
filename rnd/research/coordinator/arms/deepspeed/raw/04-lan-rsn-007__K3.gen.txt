@@ -1,0 +1,11 @@
+The Berlin Wall was built in 1961 [2]. It came down in 1989, following the fall of the Iron Curtain and leading to German reunification [2].
+
+generation: 40 tokens, 0.129 s/token (7.743 tok/s)
+compute: 54.6% CPU occupancy (0.2823 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 667 tokens, 21.326 s (31.3 tok/s) | model load 9.168 s | TTFT 30.495 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 5346.1 MiB (133.65 MiB/token), decode 0.129 s/token (compute 0.056 + cache mgmt 0.004 + flash I/O 0.307 s/token, 436 MiB/s)
+moe-cache: 29.1% hit, resident 1499.7 MiB
+moe-cache: 18788 evictions, 11937 re-reads (298.4/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.069 s/token (flash reads overlapped with FFN compute)
+moe-prefetch: 241.4 MiB speculative, 74/237 experts useful (31%)

@@ -1,0 +1,1382 @@
+{
+ "criterion_sha256": "4bd52b3d3971af4c2275bb3e722e8de215d519f174f122a79ea0654d2f4975e1",
+ "frozen": "4bd52b3d3971af4c2275bb3e722e8de215d519f174f122a79ea0654d2f4975e1",
+ "script_sha256": "26c87a9c72483038e882af5f416b88dbbe8f353ffd60e24b1314a40db202857b",
+ "thresholds": {
+  "p50_t30": 30.0,
+  "p90_t30": 60.0,
+  "p50_complete": 60.0
+ },
+ "phone": "Pixel 8a (8 GB, Tensor G3)",
+ "runs": [
+  {
+   "tier": "1.7B + A-union",
+   "run": "aunion73-a",
+   "primary": true,
+   "path": "rnd/research/coordinator/arms/aunion-pixel/aunion73-a",
+   "rows_sha256": "9d3cb37cc59331fc1bd458d6a314b126b8f7868989ad7f0efcf09883d505f391",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 72,
+   "classes": {
+    "llm": 16,
+    "deterministic": 30,
+    "declined": 26
+   },
+   "t30_derived_rows": 31,
+   "derivation_residual_ms_p50": 55.0,
+   "decode_tps_p50": 11.3,
+   "prefill_tps_p50": 69.5,
+   "n_completions": 34,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 30.1
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.41,
+   "sets": {
+    "S1_answered": {
+     "n": 46,
+     "ttft_p50": 4.3,
+     "ttft_p90": 9.7,
+     "t30_p50": 4.4,
+     "t30_p90": 11.7,
+     "complete_p50": 4.4,
+     "complete_p90": 13.7,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 16,
+     "ttft_p50": 8.2,
+     "ttft_p90": 10.5,
+     "t30_p50": 11.2,
+     "t30_p90": 13.0,
+     "complete_p50": 12.1,
+     "complete_p90": 15.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 16,
+     "ttft_p50": 8.2,
+     "ttft_p90": 10.5,
+     "t30_p50": 11.2,
+     "t30_p90": 13.0,
+     "complete_p50": 12.1,
+     "complete_p90": 15.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 72,
+     "ttft_p50": 5.6,
+     "ttft_p90": 10.1,
+     "t30_p50": 6.9,
+     "t30_p90": 12.5,
+     "complete_p50": 7.6,
+     "complete_p90": 15.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 26,
+     "ttft_p50": 6.9,
+     "ttft_p90": 11.4,
+     "t30_p50": 9.2,
+     "t30_p90": 14.0,
+     "complete_p50": 11.1,
+     "complete_p90": 16.8,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B + A-union",
+   "run": "aunion10-a",
+   "primary": false,
+   "path": "rnd/research/coordinator/arms/aunion-pixel/aunion10-a",
+   "rows_sha256": "ee96cd481dd98e046d1519c84fcc21145d6be05aeb12141cff55afda4d7f23d4",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 10,
+   "classes": {
+    "llm": 4,
+    "deterministic": 3,
+    "declined": 3
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 39.9,
+   "decode_tps_p50": 16.1,
+   "prefill_tps_p50": 86.1,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 30.0
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.32,
+   "sets": {
+    "S1_answered": {
+     "n": 7,
+     "ttft_p50": 6.5,
+     "ttft_p90": 8.3,
+     "t30_p50": 8.0,
+     "t30_p90": 10.2,
+     "complete_p50": 8.9,
+     "complete_p90": 12.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 4,
+     "ttft_p50": 6.6,
+     "ttft_p90": 9.5,
+     "t30_p50": 8.5,
+     "t30_p90": 11.4,
+     "complete_p50": 10.1,
+     "complete_p90": 13.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 5,
+     "ttft_p50": 6.7,
+     "ttft_p90": 9.1,
+     "t30_p50": 8.4,
+     "t30_p90": 11.0,
+     "complete_p50": 10.0,
+     "complete_p90": 13.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 10,
+     "ttft_p50": 6.6,
+     "ttft_p90": 9.6,
+     "t30_p50": 8.2,
+     "t30_p90": 11.6,
+     "complete_p50": 9.4,
+     "complete_p90": 12.2,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 3,
+     "ttft_p50": 8.1,
+     "ttft_p90": 9.2,
+     "t30_p50": 9.8,
+     "t30_p90": 11.1,
+     "complete_p50": 11.7,
+     "complete_p90": 11.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "q17b73-a",
+   "primary": true,
+   "path": "rnd/research/coordinator/arms/gemma4-e2b/phone/q17b73-a",
+   "rows_sha256": "d976d8ced79e24cefda311167b8720cd1e330dbf35eb5ea0ded558cc22494c33",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 72,
+   "classes": {
+    "llm": 17,
+    "deterministic": 30,
+    "declined": 25
+   },
+   "t30_derived_rows": 30,
+   "derivation_residual_ms_p50": 51.7,
+   "decode_tps_p50": 12.4,
+   "prefill_tps_p50": 80.2,
+   "n_completions": 34,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 26.2
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.39,
+   "sets": {
+    "S1_answered": {
+     "n": 47,
+     "ttft_p50": 2.7,
+     "ttft_p90": 7.1,
+     "t30_p50": 2.9,
+     "t30_p90": 9.9,
+     "complete_p50": 2.9,
+     "complete_p90": 11.7,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 17,
+     "ttft_p50": 6.4,
+     "ttft_p90": 7.5,
+     "t30_p50": 9.0,
+     "t30_p90": 10.7,
+     "complete_p50": 10.8,
+     "complete_p90": 13.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 17,
+     "ttft_p50": 6.4,
+     "ttft_p90": 7.5,
+     "t30_p50": 9.0,
+     "t30_p90": 10.7,
+     "complete_p50": 10.8,
+     "complete_p90": 13.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 72,
+     "ttft_p50": 3.5,
+     "ttft_p90": 7.4,
+     "t30_p50": 4.2,
+     "t30_p90": 10.1,
+     "complete_p50": 4.2,
+     "complete_p90": 12.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 25,
+     "ttft_p50": 4.7,
+     "ttft_p90": 8.5,
+     "t30_p50": 6.8,
+     "t30_p90": 11.0,
+     "complete_p50": 8.2,
+     "complete_p90": 12.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "q17b10-a",
+   "primary": false,
+   "path": "rnd/research/coordinator/arms/gemma4-e2b/phone/q17b10-a",
+   "rows_sha256": "4122252131e1b85119ba0abad5e364ff12ff6116207dc5c6b17bfefb05833383",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 10,
+   "classes": {
+    "llm": 3,
+    "deterministic": 3,
+    "declined": 4
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 47.6,
+   "decode_tps_p50": 13.9,
+   "prefill_tps_p50": 81.8,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 31.6
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.25,
+   "sets": {
+    "S1_answered": {
+     "n": 6,
+     "ttft_p50": 4.2,
+     "ttft_p90": 6.9,
+     "t30_p50": 5.2,
+     "t30_p90": 9.1,
+     "complete_p50": 6.0,
+     "complete_p90": 10.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 5.9,
+     "ttft_p90": 7.5,
+     "t30_p50": 8.3,
+     "t30_p90": 9.6,
+     "complete_p50": 9.8,
+     "complete_p90": 11.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 4,
+     "ttft_p50": 5.5,
+     "ttft_p90": 7.3,
+     "t30_p50": 7.7,
+     "t30_p90": 9.4,
+     "complete_p50": 9.3,
+     "complete_p90": 11.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 10,
+     "ttft_p50": 4.9,
+     "ttft_p90": 6.9,
+     "t30_p50": 7.1,
+     "t30_p90": 8.6,
+     "complete_p50": 8.3,
+     "complete_p90": 10.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 4,
+     "ttft_p50": 5.0,
+     "ttft_p90": 6.3,
+     "t30_p50": 7.3,
+     "t30_p90": 8.2,
+     "complete_p50": 8.4,
+     "complete_p90": 9.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "batchret-1a",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/batchret-1a",
+   "rows_sha256": "c1aa46c4eaac42411faef61d5f856a96985b33243f99c9f7a9e086dd175329e0",
+   "tree": "c407db32",
+   "arm": "cut7-cmp30off",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 9,
+   "classes": {
+    "llm": 3,
+    "deterministic": 2,
+    "declined": 4
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 40.7,
+   "decode_tps_p50": 15.6,
+   "prefill_tps_p50": 86.9,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 27.3
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.23,
+   "sets": {
+    "S1_answered": {
+     "n": 5,
+     "ttft_p50": 9.7,
+     "ttft_p90": 10.9,
+     "t30_p50": 11.2,
+     "t30_p90": 12.0,
+     "complete_p50": 12.2,
+     "complete_p90": 12.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 9.7,
+     "ttft_p90": 10.2,
+     "t30_p50": 11.6,
+     "t30_p90": 12.1,
+     "complete_p50": 12.7,
+     "complete_p90": 13.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 4,
+     "ttft_p50": 10.0,
+     "ttft_p90": 10.9,
+     "t30_p50": 11.4,
+     "t30_p90": 12.0,
+     "complete_p50": 12.5,
+     "complete_p90": 12.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 9,
+     "ttft_p50": 9.5,
+     "ttft_p90": 11.6,
+     "t30_p50": 11.2,
+     "t30_p90": 12.8,
+     "complete_p50": 12.2,
+     "complete_p90": 13.8,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 4,
+     "ttft_p50": 8.2,
+     "ttft_p90": 12.1,
+     "t30_p50": 10.0,
+     "t30_p90": 14.0,
+     "complete_p50": 11.4,
+     "complete_p90": 15.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "batchret-2b",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/batchret-2b",
+   "rows_sha256": "2225832084b175e1011552b2bb6265551d7e5ca9987f78b733914584dc8581cf",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 9,
+   "classes": {
+    "llm": 3,
+    "deterministic": 2,
+    "declined": 4
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 43.6,
+   "decode_tps_p50": 14.7,
+   "prefill_tps_p50": 84.2,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 28.4
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.22,
+   "sets": {
+    "S1_answered": {
+     "n": 5,
+     "ttft_p50": 4.9,
+     "ttft_p90": 5.2,
+     "t30_p50": 6.9,
+     "t30_p90": 7.2,
+     "complete_p50": 7.6,
+     "complete_p90": 8.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 5.0,
+     "ttft_p90": 5.2,
+     "t30_p50": 7.1,
+     "t30_p90": 7.2,
+     "complete_p50": 7.7,
+     "complete_p90": 9.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 4,
+     "ttft_p50": 5.0,
+     "ttft_p90": 5.2,
+     "t30_p50": 7.0,
+     "t30_p90": 7.2,
+     "complete_p50": 7.7,
+     "complete_p90": 9.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 9,
+     "ttft_p50": 4.9,
+     "ttft_p90": 6.2,
+     "t30_p50": 6.9,
+     "t30_p90": 8.0,
+     "complete_p50": 7.7,
+     "complete_p90": 10.2,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 4,
+     "ttft_p50": 5.2,
+     "ttft_p90": 7.0,
+     "t30_p50": 7.0,
+     "t30_p90": 9.0,
+     "complete_p50": 8.9,
+     "complete_p90": 11.2,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "batchret-3a",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/batchret-3a",
+   "rows_sha256": "ef65d767b6d4b8453017f917106cff0be6c3d4853984ce1cb944635590f75f64",
+   "tree": "c407db32",
+   "arm": "cut7-cmp30off",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 9,
+   "classes": {
+    "llm": 4,
+    "deterministic": 2,
+    "declined": 3
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 45.0,
+   "decode_tps_p50": 14.9,
+   "prefill_tps_p50": 85.9,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 30.5
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.22,
+   "sets": {
+    "S1_answered": {
+     "n": 6,
+     "ttft_p50": 9.6,
+     "ttft_p90": 12.4,
+     "t30_p50": 10.7,
+     "t30_p90": 14.2,
+     "complete_p50": 11.6,
+     "complete_p90": 15.6,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 4,
+     "ttft_p50": 9.6,
+     "ttft_p90": 12.9,
+     "t30_p50": 11.5,
+     "t30_p90": 14.9,
+     "complete_p50": 12.7,
+     "complete_p90": 16.6,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 5,
+     "ttft_p50": 10.6,
+     "ttft_p90": 12.7,
+     "t30_p50": 10.9,
+     "t30_p90": 14.6,
+     "complete_p50": 12.4,
+     "complete_p90": 16.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 9,
+     "ttft_p50": 8.8,
+     "ttft_p90": 11.5,
+     "t30_p50": 10.7,
+     "t30_p90": 13.3,
+     "complete_p50": 11.1,
+     "complete_p90": 14.1,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 3,
+     "ttft_p50": 8.8,
+     "ttft_p90": 9.4,
+     "t30_p50": 10.7,
+     "t30_p90": 11.2,
+     "complete_p50": 11.1,
+     "complete_p90": 12.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "batchret-4b",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/batchret-4b",
+   "rows_sha256": "64fb1eca3d46f4a6b054ae6c53766db6c95a993f6284bc0f18a99bd68f5459dc",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 9,
+   "classes": {
+    "llm": 3,
+    "deterministic": 2,
+    "declined": 4
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 61.0,
+   "decode_tps_p50": 12.2,
+   "prefill_tps_p50": 70.2,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 32.9
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.22,
+   "sets": {
+    "S1_answered": {
+     "n": 5,
+     "ttft_p50": 5.3,
+     "ttft_p90": 6.6,
+     "t30_p50": 7.7,
+     "t30_p90": 9.2,
+     "complete_p50": 8.8,
+     "complete_p90": 10.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 5.6,
+     "ttft_p90": 6.9,
+     "t30_p50": 8.0,
+     "t30_p90": 9.6,
+     "complete_p50": 10.3,
+     "complete_p90": 10.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 4,
+     "ttft_p50": 5.5,
+     "ttft_p90": 6.7,
+     "t30_p50": 7.8,
+     "t30_p90": 9.4,
+     "complete_p50": 9.6,
+     "complete_p90": 10.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 9,
+     "ttft_p50": 5.6,
+     "ttft_p90": 7.4,
+     "t30_p50": 8.0,
+     "t30_p90": 10.2,
+     "complete_p50": 9.2,
+     "complete_p90": 11.7,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 4,
+     "ttft_p50": 6.4,
+     "ttft_p90": 7.9,
+     "t30_p50": 8.6,
+     "t30_p90": 10.2,
+     "complete_p50": 10.3,
+     "complete_p90": 12.2,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "cmp30-q17",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/cmp30-q17",
+   "rows_sha256": "dab4cb8b040a07bc2b3ce5ce6d79a791cfc11508464a44d25af02dd4238b07fc",
+   "tree": "7c96e59e",
+   "arm": "cut7",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 30,
+   "classes": {
+    "llm": 8,
+    "deterministic": 5,
+    "declined": 17
+   },
+   "t30_derived_rows": 19,
+   "derivation_residual_ms_p50": 56.1,
+   "decode_tps_p50": 12.9,
+   "prefill_tps_p50": 72.5,
+   "n_completions": 20,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 32.8
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.12,
+   "sets": {
+    "S1_answered": {
+     "n": 13,
+     "ttft_p50": 9.7,
+     "ttft_p90": 14.7,
+     "t30_p50": 11.8,
+     "t30_p90": 15.4,
+     "complete_p50": 12.7,
+     "complete_p90": 15.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 8,
+     "ttft_p50": 9.6,
+     "ttft_p90": 12.5,
+     "t30_p50": 11.9,
+     "t30_p90": 14.9,
+     "complete_p50": 13.2,
+     "complete_p90": 15.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 8,
+     "ttft_p50": 9.6,
+     "ttft_p90": 12.5,
+     "t30_p50": 11.9,
+     "t30_p90": 14.9,
+     "complete_p50": 13.2,
+     "complete_p90": 15.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 30,
+     "ttft_p50": 9.6,
+     "ttft_p90": 13.4,
+     "t30_p50": 11.5,
+     "t30_p90": 15.5,
+     "complete_p50": 12.5,
+     "complete_p90": 16.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 17,
+     "ttft_p50": 8.7,
+     "ttft_p90": 12.8,
+     "t30_p50": 10.1,
+     "t30_p90": 14.8,
+     "complete_p50": 12.3,
+     "complete_p90": 16.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "1.7B claim kit",
+   "run": "cmp30off-q17",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/cmp30off-q17",
+   "rows_sha256": "de36ead04a37f04162929d4e096a22ece0b90c8e04e3efc9d86e1a9b1bced1f6",
+   "tree": "c407db32",
+   "arm": "cut7-cmp30off",
+   "model": "qwen3-1.7b-q4km",
+   "n_rows": 30,
+   "classes": {
+    "llm": 25,
+    "deterministic": 5,
+    "declined": 0
+   },
+   "t30_derived_rows": 24,
+   "derivation_residual_ms_p50": 53.5,
+   "decode_tps_p50": 11.7,
+   "prefill_tps_p50": 68.7,
+   "n_completions": 25,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 33.6
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 3.3,
+   "sets": {
+    "S1_answered": {
+     "n": 30,
+     "ttft_p50": 9.2,
+     "ttft_p90": 12.5,
+     "t30_p50": 11.2,
+     "t30_p90": 15.2,
+     "complete_p50": 13.3,
+     "complete_p90": 17.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 25,
+     "ttft_p50": 9.2,
+     "ttft_p90": 12.0,
+     "t30_p50": 11.3,
+     "t30_p90": 14.6,
+     "complete_p50": 13.4,
+     "complete_p90": 17.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 25,
+     "ttft_p50": 9.2,
+     "ttft_p90": 12.0,
+     "t30_p50": 11.3,
+     "t30_p90": 14.6,
+     "complete_p50": 13.4,
+     "complete_p90": 17.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 30,
+     "ttft_p50": 9.2,
+     "ttft_p90": 12.5,
+     "t30_p50": 11.2,
+     "t30_p90": 15.2,
+     "complete_p50": 13.3,
+     "complete_p90": 17.4,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    }
+   }
+  },
+  {
+   "tier": "Gemma 4 E2B",
+   "run": "gemma73-a",
+   "primary": true,
+   "path": "rnd/research/coordinator/arms/gemma4-e2b/phone/gemma73-a",
+   "rows_sha256": "25c2b2a0c60e008f0658cf1b5de233292299c6700244ec90055342219579d32a",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "gemma-4-e2b-it-q4km",
+   "n_rows": 72,
+   "classes": {
+    "llm": 42,
+    "deterministic": 30,
+    "declined": 0
+   },
+   "t30_derived_rows": 42,
+   "derivation_residual_ms_p50": 100.3,
+   "decode_tps_p50": 7.0,
+   "prefill_tps_p50": 34.1,
+   "n_completions": 42,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 33.0
+   },
+   "thermal_max": 1,
+   "pss_peak_gb": 4.52,
+   "sets": {
+    "S1_answered": {
+     "n": 72,
+     "ttft_p50": 5.8,
+     "ttft_p90": 13.8,
+     "t30_p50": 9.4,
+     "t30_p90": 18.1,
+     "complete_p50": 11.8,
+     "complete_p90": 23.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 42,
+     "ttft_p50": 9.8,
+     "ttft_p90": 15.7,
+     "t30_p50": 13.9,
+     "t30_p90": 19.9,
+     "complete_p50": 16.7,
+     "complete_p90": 25.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 42,
+     "ttft_p50": 9.8,
+     "ttft_p90": 15.7,
+     "t30_p50": 13.9,
+     "t30_p90": 19.9,
+     "complete_p50": 16.7,
+     "complete_p90": 25.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 72,
+     "ttft_p50": 5.8,
+     "ttft_p90": 13.8,
+     "t30_p50": 9.4,
+     "t30_p90": 18.1,
+     "complete_p50": 11.8,
+     "complete_p90": 23.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    }
+   }
+  },
+  {
+   "tier": "Gemma 4 E2B",
+   "run": "gemma10-b",
+   "primary": false,
+   "path": "rnd/research/coordinator/arms/gemma4-e2b/phone/gemma10-b",
+   "rows_sha256": "b8bc35f48271cfece10fe60dd3008675b8e89cb285abbc9c699592ba1cd3a0b1",
+   "tree": "0ca54d87",
+   "arm": "cut7-cmp30off-batchret",
+   "model": "gemma-4-e2b-it-q4km",
+   "n_rows": 10,
+   "classes": {
+    "llm": 7,
+    "deterministic": 3,
+    "declined": 0
+   },
+   "t30_derived_rows": 6,
+   "derivation_residual_ms_p50": 63.5,
+   "decode_tps_p50": 10.5,
+   "prefill_tps_p50": 46.4,
+   "n_completions": 7,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 28.7
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 4.63,
+   "sets": {
+    "S1_answered": {
+     "n": 10,
+     "ttft_p50": 7.2,
+     "ttft_p90": 12.0,
+     "t30_p50": 10.0,
+     "t30_p90": 14.4,
+     "complete_p50": 12.6,
+     "complete_p90": 15.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 7,
+     "ttft_p50": 7.4,
+     "ttft_p90": 12.2,
+     "t30_p50": 10.2,
+     "t30_p90": 14.5,
+     "complete_p50": 13.9,
+     "complete_p90": 15.8,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 8,
+     "ttft_p50": 7.4,
+     "ttft_p90": 12.1,
+     "t30_p50": 10.1,
+     "t30_p90": 14.5,
+     "complete_p50": 13.7,
+     "complete_p90": 15.5,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 10,
+     "ttft_p50": 7.2,
+     "ttft_p90": 12.0,
+     "t30_p50": 10.0,
+     "t30_p90": 14.4,
+     "complete_p50": 12.6,
+     "complete_p90": 15.0,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    }
+   }
+  },
+  {
+   "tier": "4B",
+   "run": "final-cut7-v01",
+   "primary": true,
+   "path": "handoff/pixel8-2026-10-20/bench/results/final-cut7-v01",
+   "rows_sha256": "9adb079a23559d9afaa2f28929c1544a968c002bd1d7b0171e4c94159c1319f3",
+   "tree": "7c96e59e",
+   "arm": "cut7",
+   "model": "qwen3-4b-instruct-2507-q4km",
+   "n_rows": 72,
+   "classes": {
+    "llm": 42,
+    "deterministic": 30,
+    "declined": 0
+   },
+   "t30_derived_rows": 41,
+   "derivation_residual_ms_p50": 229.6,
+   "decode_tps_p50": 4.2,
+   "prefill_tps_p50": 18.0,
+   "n_completions": 42,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 33.5
+   },
+   "thermal_max": 1,
+   "pss_peak_gb": 4.92,
+   "sets": {
+    "S1_answered": {
+     "n": 72,
+     "ttft_p50": 15.9,
+     "ttft_p90": 31.1,
+     "t30_p50": 20.2,
+     "t30_p90": 39.2,
+     "complete_p50": 26.0,
+     "complete_p90": 52.0,
+     "share_complete_le60": 0.972,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 42,
+     "ttft_p50": 21.3,
+     "ttft_p90": 32.6,
+     "t30_p50": 28.4,
+     "t30_p90": 39.9,
+     "complete_p50": 37.1,
+     "complete_p90": 56.5,
+     "share_complete_le60": 0.952,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 42,
+     "ttft_p50": 21.3,
+     "ttft_p90": 32.6,
+     "t30_p50": 28.4,
+     "t30_p90": 39.9,
+     "complete_p50": 37.1,
+     "complete_p90": 56.5,
+     "share_complete_le60": 0.952,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 72,
+     "ttft_p50": 15.9,
+     "ttft_p90": 31.1,
+     "t30_p50": 20.2,
+     "t30_p90": 39.2,
+     "complete_p50": 26.0,
+     "complete_p90": 52.0,
+     "share_complete_le60": 0.972,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    },
+    "S1_batchret_adjusted": {
+     "n": 72,
+     "ttft_p50": 13.3,
+     "ttft_p90": 28.1,
+     "t30_p50": 18.2,
+     "t30_p90": 35.7,
+     "complete_p50": 22.5,
+     "complete_p90": 48.5,
+     "share_complete_le60": 0.972,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "4B",
+   "run": "final-a-cut7",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/final-a-cut7",
+   "rows_sha256": "f27481f963c2af845260589b779541e78f3d607808e97bd7aac99d75dea189c3",
+   "tree": "7c96e59e",
+   "arm": "cut7",
+   "model": "qwen3-4b-instruct-2507-q4km",
+   "n_rows": 8,
+   "classes": {
+    "llm": 3,
+    "deterministic": 5,
+    "declined": 0
+   },
+   "t30_derived_rows": 3,
+   "derivation_residual_ms_p50": 123.7,
+   "decode_tps_p50": 6.2,
+   "prefill_tps_p50": 32.6,
+   "n_completions": 3,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 28.0
+   },
+   "thermal_max": 0,
+   "pss_peak_gb": 4.24,
+   "sets": {
+    "S1_answered": {
+     "n": 8,
+     "ttft_p50": 12.5,
+     "ttft_p90": 39.7,
+     "t30_p50": 14.9,
+     "t30_p90": 44.2,
+     "complete_p50": 18.8,
+     "complete_p90": 50.5,
+     "share_complete_le60": 0.875,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 29.2,
+     "ttft_p90": 57.1,
+     "t30_p50": 33.9,
+     "t30_p90": 61.3,
+     "complete_p50": 40.7,
+     "complete_p90": 66.8,
+     "share_complete_le60": 0.667,
+     "usable": false,
+     "fails": [
+      "p50 T30",
+      "p90 T30"
+     ]
+    },
+    "S2_answered_no_det_ids": {
+     "n": 6,
+     "ttft_p50": 19.9,
+     "ttft_p90": 46.6,
+     "t30_p50": 22.3,
+     "t30_p90": 51.0,
+     "complete_p50": 29.4,
+     "complete_p90": 57.0,
+     "share_complete_le60": 0.833,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 8,
+     "ttft_p50": 12.5,
+     "ttft_p90": 39.7,
+     "t30_p50": 14.9,
+     "t30_p90": 44.2,
+     "complete_p50": 18.8,
+     "complete_p90": 50.5,
+     "share_complete_le60": 0.875,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    },
+    "S1_batchret_adjusted": {
+     "n": 8,
+     "ttft_p50": 10.8,
+     "ttft_p90": 36.5,
+     "t30_p50": 13.2,
+     "t30_p90": 40.7,
+     "complete_p50": 18.8,
+     "complete_p90": 47.0,
+     "share_complete_le60": 0.875,
+     "usable": true,
+     "fails": []
+    }
+   }
+  },
+  {
+   "tier": "4B",
+   "run": "live-4b-final2",
+   "primary": false,
+   "path": "handoff/pixel8-2026-10-20/bench/results/live-4b-final2",
+   "rows_sha256": "9179c6a4b811994c825a1359a9e8275207b1f17a18ac014b2ca078811d347b50",
+   "tree": "7c96e59e",
+   "arm": "cut7",
+   "model": "qwen3-4b-instruct-2507-q4km",
+   "n_rows": 8,
+   "classes": {
+    "llm": 3,
+    "deterministic": 5,
+    "declined": 0
+   },
+   "t30_derived_rows": 3,
+   "derivation_residual_ms_p50": 174.5,
+   "decode_tps_p50": 4.6,
+   "prefill_tps_p50": 27.2,
+   "n_completions": 3,
+   "thermal_start": {
+    "status": "0",
+    "battery_c": 35.7
+   },
+   "thermal_max": 1,
+   "pss_peak_gb": 4.23,
+   "sets": {
+    "S1_answered": {
+     "n": 8,
+     "ttft_p50": 13.2,
+     "ttft_p90": 21.0,
+     "t30_p50": 13.2,
+     "t30_p90": 28.5,
+     "complete_p50": 13.2,
+     "complete_p90": 44.7,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S1_llm_only": {
+     "n": 3,
+     "ttft_p50": 18.7,
+     "ttft_p90": 24.9,
+     "t30_p50": 26.7,
+     "t30_p90": 31.5,
+     "complete_p50": 44.3,
+     "complete_p90": 45.3,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S2_answered_no_det_ids": {
+     "n": 6,
+     "ttft_p50": 14.6,
+     "ttft_p90": 22.5,
+     "t30_p50": 17.0,
+     "t30_p90": 29.7,
+     "complete_p50": 21.3,
+     "complete_p90": 44.9,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S3_all": {
+     "n": 8,
+     "ttft_p50": 13.2,
+     "ttft_p90": 21.0,
+     "t30_p50": 13.2,
+     "t30_p90": 28.5,
+     "complete_p50": 13.2,
+     "complete_p90": 44.7,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    },
+    "S4_declined": {
+     "n": 0,
+     "ttft_p50": null,
+     "ttft_p90": null,
+     "t30_p50": null,
+     "t30_p90": null,
+     "complete_p50": null,
+     "complete_p90": null,
+     "share_complete_le60": null
+    },
+    "S1_batchret_adjusted": {
+     "n": 8,
+     "ttft_p50": 12.1,
+     "ttft_p90": 17.5,
+     "t30_p50": 13.2,
+     "t30_p90": 25.0,
+     "complete_p50": 13.2,
+     "complete_p90": 41.2,
+     "share_complete_le60": 1.0,
+     "usable": true,
+     "fails": []
+    }
+   }
+  }
+ ],
+ "verdicts": {
+  "1.7B + A-union": "USABLE",
+  "1.7B claim kit": "USABLE",
+  "Gemma 4 E2B": "USABLE",
+  "4B": "USABLE"
+ },
+ "rj5_step1_holds": false
+}

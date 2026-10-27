@@ -1,0 +1,95 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 4851378..30623c5 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1947,7 +1947,7 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     expect(calls[0].messages[1].content).toBe("tell me something fun about yourself");
+     expect(retrieved).toBe(0);
+     expect(f.generations).toHaveLength(1);
+-    expect(codes(result)).toEqual(["task:conversation", "route-gate:answer", "route-gate:score-0.020", "route-gate:chat->conversation"]);
++    expect(codes(result)).toEqual(["task:conversation", "route-gate:cold-load", "route-gate:answer", "route-gate:score-0.020", "route-gate:chat->conversation"]);
+   });
+ 
+   it("SEARCH on the 4B keeps the rule's route", async () => {
+@@ -1955,7 +1955,7 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     f.activeId = qwen4.id;
+     gate([{ token: "SEARCH", prob: 0.99 }]);
+     const { result } = await collect("What is the capital of Australia?");
+-    expect(codes(result)).toEqual(["task:lookup", "route-gate:search", "route-gate:score-1.000"]);
++    expect(codes(result)).toEqual(["task:lookup", "route-gate:cold-load", "route-gate:search", "route-gate:score-1.000"]);
+   });
+ 
+   it("a health question searches even when the gate says ANSWER", async () => {
+@@ -1968,11 +1968,29 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     expect(codes(result)).not.toContain("task:conversation");
+   });
+ 
++  it("cold start: the first message loads the 4B before the gate (once), so it gets a gate verdict, not the rules", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    const order: string[] = [];
++    const load0 = f.deps.engine.load.bind(f.deps.engine);
++    f.deps.engine.load = async (fn, o) => (order.push(`load:${fn}`), load0(fn, o));
++    f.deps.engine.nextTokenProbs = async (_m, o) => (order.push(`gate:${f.loaded === o.modelFilename ? "resident" : "cold"}`), [{ token: "ANS", prob: 0.97 }, { token: "SEARCH", prob: 0.03 }]);
++    const { result } = await collect("tell me something fun about yourself");
++    expect(order).toEqual([`load:${qwen4.filename}`, "gate:resident"]);
++    expect(f.loads).toEqual([qwen4.filename]);
++    expect(codes(result)).toContain("route-gate:answer");
++    expect(codes(result)).not.toContain("route-gate:unavailable");
++    // Warm (second message): no second load, no cold-load code.
++    const second = await collect("and another fun fact?");
++    expect(f.loads).toEqual([qwen4.filename]);
++    expect(codes(second.result)).not.toContain("route-gate:cold-load");
++  });
++
+   it("rules when the engine can't run it, and never on the 1.5B", async () => {
+     f.installed = [qwen4];
+     f.activeId = qwen4.id;
+     gate(null);
+-    expect(codes((await collect("tell me something fun about yourself")).result)).toEqual(["task:chat", "route-gate:unavailable"]);
++    expect(codes((await collect("tell me something fun about yourself")).result)).toEqual(["task:chat", "route-gate:cold-load", "route-gate:unavailable"]);
+     f = makeFake();
+     const calls = gate([{ token: "ANS", prob: 1 }]);
+     expect(codes((await collect("tell me something fun about yourself")).result)).toEqual(["task:chat"]);
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 23d0491..0005675 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -702,6 +702,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // Route gate (4B only): the loaded model decides whether to search; the rules stay the fallback.
+       const ruleTaskType = classifyTask(req.query);
+       const gateCodes: string[] = [];
++      let gateLoadMs = 0;
+       let taskType = ruleTaskType;
+       if (
+         fastLlm &&
+@@ -712,6 +713,20 @@ export function createAnswerer(deps: AnswerDeps) {
+         !req.reuseSources &&
+         !req.answerAnyway
+       ) {
++        // Cold start (the first message after launch): the gate runs only on the resident model, so load the fast model
++        // now. The answer below would load the same file anyway (ensureLoaded then finds it resident); a failed load
++        // leaves the rules, as before. The time is counted in the answer's loadMs.
++        if (deps.engine.getModelInfo()?.filename !== fastLlm.filename) {
++          stage("loading_model", "fast", fastLlm.id);
++          const ls = deps.now();
++          try {
++            await deps.engine.load(fastLlm.filename, { meta: { modelId: fastLlm.id, label: fastLlm.label } });
++            gateCodes.push("route-gate:cold-load");
++          } catch (e: any) {
++            console.warn("[answer] route gate cold load failed:", e?.message ?? e);
++          }
++          gateLoadMs = deps.now() - ls;
++        }
+         const probs = await deps.engine
+           .nextTokenProbs(routeGateMessages(req.query, ctx.history), { modelFilename: fastLlm.filename, nProbs: ROUTE_GATE_N_PROBS })
+           .catch((e) => {
+@@ -1150,7 +1165,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         });
+       }
+ 
+-      let loadMs = 0;
++      let loadMs = gateLoadMs;
+       /** ModelLoadError.kind of the last failed load (memory | engine | corrupt | missing). */
+       let loadFailureKind: LoadFailureKind | undefined;
+       const ensureLoaded = async (m: InstalledLlm, tier: AnswerTier): Promise<string | null> => {

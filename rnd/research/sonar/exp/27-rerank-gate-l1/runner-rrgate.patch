@@ -1,0 +1,43 @@
+--- a/adapter.ts	2026-10-02 21:50:37
++++ b/adapter.ts	2026-10-02 21:50:37
+@@ -42,6 +42,7 @@
+   type SourceRef,
+   type TraceEvent,
+ } from "./trace";
++import { gate as rrGate } from "./rrgate";
+ import { applyData, budgetExceeded, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, rssSampler, serverVersion, sseData } from "./server";
+ 
+ const HERE = dirname(fileURLToPath(import.meta.url));
+@@ -585,6 +586,16 @@
+   // Guard: a generate may only run on the model the backend holds (a fast or verifier call would silently use it).
+   // Not with --installed: there the adapter loads whichever installed model the engine asks for.
+   const guard = modelGuard((deepEntry ?? entry).filename, (deepEntry ?? entry).id);
++  // Sonar exp-27 (L1 only, not an engine change): BOAR_RR_GATE=<bge-reranker-v2-m3 gguf> drops answer-prompt passages
++  // [2..4] whose cross-encoder score vs the question is < BOAR_RR_TAU (default 0.05); [1] is always kept, numbers kept.
++  let rrRank: ((q: string, d: string) => Promise<number>) | null = null;
++  const rrTau = Number(process.env.BOAR_RR_TAU ?? "0.05");
++  if (process.env.BOAR_RR_GATE) {
++    const { getLlama } = await import("node-llama-cpp");
++    const rrModel = await (await getLlama({ gpu: false })).loadModel({ modelPath: process.env.BOAR_RR_GATE });
++    const rrCtx = await rrModel.createRankingContext({ contextSize: 1024, threads: cli.threads });
++    rrRank = (q, d) => rrCtx.rank(q, d);
++  }
+   if (!cli.installed) {
+     const load0 = engine.load.bind(engine);
+     const gen0 = engine.generate.bind(engine);
+@@ -593,6 +604,15 @@
+     engine.generate = async (o: any) => {
+       const v = guard.check();
+       if (v) throw new Error(v);
++      if (rrRank && o.messages) {
++        const t = performance.now();
++        const { messages, info } = await rrGate(o.messages, rrRank, rrTau);
++        if (info) {
++          events.push({ tMs: at(), type: "other", kind: "rr-gate", origin: "adapter", tau: rrTau, scored: info.scored, dropped: info.dropped,
++                        ms: round1(performance.now() - t) } as any);
++          o = { ...o, messages };
++        }
++      }
+       if (cli.dumpPrompts)
+         appendFileSync(cli.dumpPrompts, JSON.stringify({ itemId: currentItem, ...(o.messages ? { messages: o.messages } : { prompt: o.prompt }),
+                                                          nPredict: o.nPredict ?? null, enableThinking: o.enableThinking ?? null }) + "\n");

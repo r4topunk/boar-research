@@ -1,0 +1,122 @@
+diff -ru be-0cfd4a77-cut7-tk2off/src/rag/packs.ts be-0cfd4a77-cut7-d2q/src/rag/packs.ts
+--- be-0cfd4a77-cut7-tk2off/src/rag/packs.ts	2026-10-07 09:27:55
++++ be-0cfd4a77-cut7-d2q/src/rag/packs.ts	2026-10-14 01:34:13
+@@ -216,6 +216,7 @@
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
++    ...(h.expansion ? { expansion: h.expansion } : {}),
+   };
+ }
+ 
+diff -ru be-0cfd4a77-cut7-tk2off/src/rag/retrieve.types.ts be-0cfd4a77-cut7-d2q/src/rag/retrieve.types.ts
+--- be-0cfd4a77-cut7-tk2off/src/rag/retrieve.types.ts	2026-10-07 09:27:55
++++ be-0cfd4a77-cut7-d2q/src/rag/retrieve.types.ts	2026-10-14 01:34:13
+@@ -15,4 +15,6 @@
+    * false for a lead or a background section; absent for sources without sections.
+    */
+   action?: boolean;
++  /** MICROD2Q X2 (research): generated questions of a pack chunk, matched by onTopic only (never in the prompt). */
++  expansion?: string;
+ }
+diff -ru be-0cfd4a77-cut7-tk2off/src/rag/wikiPack.ts be-0cfd4a77-cut7-d2q/src/rag/wikiPack.ts
+--- be-0cfd4a77-cut7-tk2off/src/rag/wikiPack.ts	2026-10-07 09:27:55
++++ be-0cfd4a77-cut7-d2q/src/rag/wikiPack.ts	2026-10-14 01:34:13
+@@ -75,6 +75,8 @@
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** MICROD2Q X2 (research): the chunk's generated questions, seen by the relevance gate and onTopic only (never shown). */
++  expansion?: string;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -334,6 +336,12 @@
+   return both / (ga.size + gb.size - both) >= threshold;
+ }
+ 
++/** MICROD2Q (research): BOAR_D2Q = "x1" (index only) | "x2" (index + gate/onTopic see the questions); anything else = off. */
++export function d2qMode(): "x1" | "x2" | null {
++  const v = typeof process !== "undefined" ? process.env?.BOAR_D2Q : undefined;
++  return v === "x1" || v === "x2" ? v : null;
++}
++
+ export function coverage(text: string, stems: Stem[]): number {
+   const low = text.toLowerCase();
+   const total = stems.reduce((s, x) => s + x.idf, 0) || 1;
+@@ -435,7 +443,9 @@
+     private hasDf: boolean,
+     private hasMeta: boolean,
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+-    private topicSources: PackSource[] = []
++    private topicSources: PackSource[] = [],
++    /** MICROD2Q (research): the copy carries fts_d2q(title, section, body, questions) + d2q(chunk_id, q). */
++    private hasD2q = false
+   ) {}
+ 
+   static async open(db: PackSql, decompress: Decompress): Promise<WikiPack> {
+@@ -458,7 +468,7 @@
+           .map((r) => SOURCES[r.source])
+           .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources);
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("fts_d2q"));
+   }
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+@@ -577,7 +587,9 @@
+ 
+   private async hit(articleId: number, chunkId: number, start: number, end: number, score: number, via: PackHit["via"], lead = false): Promise<PackHit> {
+     const a = await this.article(articleId);
++    const q = this.hasD2q && d2qMode() === "x2" ? (await this.db.getFirstAsync<{ q: string }>("SELECT q FROM d2q WHERE chunk_id = ?", [chunkId]))?.q : undefined;
+     return {
++      ...(q ? { expansion: q } : {}),
+       articleId,
+       chunkId,
+       title: a.title,
+@@ -663,9 +675,14 @@
+   async bm25Candidates(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<Candidate[]> {
+     const terms = this.queryTerms(stems);
+     if (!terms.length) return [];
++    // MICROD2Q (research, default off): BOAR_D2Q=x1|x2 matches against fts_d2q (questions column weight 1) when the pack
++    // has it; term selection/idf stay on the original index. Unset -> the original SQL, byte for byte.
++    const d2q = this.hasD2q && d2qMode() !== null;
++    const fts = d2q ? "fts_d2q" : "fts";
++    const weights = d2q ? [...this.tuning.weights, 1] : this.tuning.weights;
+     const rows = await this.db.getAllAsync<{ id: number; s: number; article_id: number; start: number; end: number; views: number }>(
+       `SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views
+-       FROM (SELECT rowid, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? ORDER BY s LIMIT ?) f
++       FROM (SELECT rowid, bm25(${fts}, ${weights.map(Number).join(", ")}) AS s FROM ${fts} WHERE ${fts} MATCH ? ORDER BY s LIMIT ?) f
+        JOIN chunks c ON c.id = f.rowid JOIN articles a ON a.id = c.article_id`,
+       [terms.map(matchTerm).join(" OR "), pool]
+     );
+@@ -855,7 +872,7 @@
+         if (seen.has(c.chunkId)) continue;
+         const h = await this.materialize(c);
+         const relevant =
+-          coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
++          coverage(`${h.title} ${h.text}${h.expansion ? ` ${h.expansion}` : ""}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
+         // A what-to-do question: at most three passages per article, so a lay manual's steps (Wikibooks First Aid)
+         // get a place next to the clinical article's sections.
+         const perArticle = hits.filter((x) => x.articleId === c.articleId).length;
+diff -ru be-0cfd4a77-cut7-tk2off/src/routing/context.ts be-0cfd4a77-cut7-d2q/src/routing/context.ts
+--- be-0cfd4a77-cut7-tk2off/src/routing/context.ts	2026-10-07 09:27:55
++++ be-0cfd4a77-cut7-d2q/src/routing/context.ts	2026-10-14 01:34:13
+@@ -701,7 +701,7 @@
+ 
+ export function onTopic(query: string, chunk: RetrievedChunk): boolean {
+   const q = new Set(tokenizeTerms(query));
+-  const text = `${chunk.title} ${chunk.body}`;
++  const text = `${chunk.title} ${chunk.body}${chunk.expansion ? ` ${chunk.expansion}` : ""}`;
+   // A year or a proper noun in the question must be in the source (Sextant, gate a9f156c:
+   // "1513 Marash earthquake" for the 1906 one, a cricketer for the 1970 World Cup).
+   if (!yearsIn(query).every((y) => yearsIn(text).includes(y))) return false;
+@@ -742,7 +742,7 @@
+     const first = new Set(tokenizeTerms(splitSentences(text.trim())[0] ?? ""));
+     return q.size > 0 && [...q].every((t) => first.has(t));
+   }
+-  return termCoverage(query, `${chunk.title} ${chunk.body}`) >= MIN_TERM_COVERAGE;
++  return termCoverage(query, text) >= MIN_TERM_COVERAGE;
+ }
+ 
+ /** Questions with fewer content words than this need a source whose title names one of them. */

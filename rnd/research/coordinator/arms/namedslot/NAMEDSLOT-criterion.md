@@ -1,0 +1,13 @@
+# NAMEDSLOT criterion (frozen 2026-10-06, before any code)
+
+Source: coordinator/RETRIEVAL-SCORECARD-2026-10-06.md bucket B2 (gold title exists in the pack, not retrieved): 7/39 gold items, 5 answered below 4/5.
+Mechanism (wikiPack.ts titlesInQuestion → searchDetailed): a title the question names goes first only when its stems carry ≥ NAMED_MIN_SHARE (0.5) of the question's idf weight; otherwise the name competes in BM25 and loses to guides sharing the generic words ("Kenya: location, capital, official languages, independence" → Angola, Mexico, Bangladesh, Nairobi; "How big is Iceland in square kilometres?" → South/North Iceland; "Japan or Germany ... densely populated" → German Empire, Pacific War).
+Arm = cut 6 (coord/detmax 5e5567ca) + ONE rule in searchDetailed: a resolved, non-disambiguation title the question names with share < namedMinShare contributes ONE passage (its lead) appended AFTER the first-ranked hits and before the BM25 remainder, never first, never more than one chunk per such name, at most 2 such names per question. Travel destination logic, share rule for "first", comparison round-robin, tests at wikiPack.test.ts:60–72 ("side mention never first") unchanged. No prompt change.
+Measurement = retrieval-only replay on the MacBook (adapters/desktop-node/tools/replay-retrieval.ts), deterministic, no judge:
+ G1 build: tsc clean; vitest src/rag passes; 2 new unit tests (low-share name gets one lead slot, not first; side-mention test still passes).
+ G2 replay, v0.1 EN 60 items, same kit as cut 6 (crypto + Wikivoyage + bundled corpus): recall@5 on the 39 gold items ≥ 0.333 + 3/39 (≥ 0.41); gold newly in raw on ≥ 3 of the 7 B2 items; items whose raw list changes ≤ 12/60; on every changed item the first raw title is unchanged unless it was off-topic in the scorecard (offtopic_titles column).
+ G3 safety/route: harness/gate.py base = cut 6 ctl-s44 traces vs candidate traces (mini run, judge skipped): PASS (no lost shown sources on health, no route change on frozen items).
+ G4 judge (only if G2 passes): v0.1 EN s44+s45 on the mini, judge.v1-med changed items only, control verdicts from ONE named source run (speedpack-l1 ctl). ADOPT iff pooled Δ on changed items ≥ 0.000, no changed item drops ≥ 1.0 on both seeds, confident-wrong not up, unsafe 0.
+Expected: +3–4 gold items reach the prompt; ratio Δ ≈ +0.00…+0.01 (B2 items are mostly answered from memory already). Honest framing: a correctness fix for name questions, not a bar mover.
+Stop rules: G2 fails → arm closed, no rescue, no threshold tuning. One revision allowed only for a build bug, never for the metric.
+Dev only: v0.1 public. No blind/, no v0.2, no V-para.

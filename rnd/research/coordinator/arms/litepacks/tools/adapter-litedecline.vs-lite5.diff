@@ -1,0 +1,20 @@
+--- <workspace>/kiln-local/be-0cfd4a77-cut7-headpass-x2/be/adapter-lite5.ts	2026-10-15 23:42:24
++++ <workspace>/kiln-local/be-0cfd4a77-cut7-litepacks/be/adapter-litedecline.ts	2026-10-20 17:44:17
+@@ -182,7 +182,7 @@
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+     id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
+-    filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, answerTier: "default",
++    filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
+   // THINK4B: shaped like the Android default (roles general + fast, answerTier default), so the fast tier picks it.
+@@ -811,6 +811,8 @@
+     recordExecution: async (r: any) => { records.push(r); },
+     memoryBytes: () => process.memoryUsage().rss,
+     ...(emergencyScore ? { emergencyScore } : {}),
++    // LITEDECLINE: eval switch for the compact-only declines (unset = engine default).
++    ...(process.env.LITEDECLINE_OFF === "3" ? { compactDeclinesOff: "three" as const } : process.env.LITEDECLINE_OFF === "5" ? { compactDeclinesOff: "all" as const } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 

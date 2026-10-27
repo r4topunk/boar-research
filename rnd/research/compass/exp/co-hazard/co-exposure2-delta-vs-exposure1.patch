@@ -1,0 +1,107 @@
+diff --git a/src/routing/coHazard.test.ts b/src/routing/coHazard.test.ts
+index fbbfa10..fac9ebc 100644
+--- a/src/routing/coHazard.test.ts
++++ b/src/routing/coHazard.test.ts
+@@ -122,13 +122,32 @@ describe("CO exposure with symptoms -> the health route's CO card (Forge shipcut
+   });
+   it("names the co condition, alone or from history, and CO's own symptoms don't make it MULTI", () => {
+     expect(conversationCondition(probe).condition).toBe("co");
+-    // Current turn only (Sonar, health13): a symptom turn after a device turn is not matched here (known gap, generic line).
+-    expect(conversationCondition("now my head is pounding and I feel sick, what do I do", ["we've had the generator running in the garage all evening"]).condition).not.toBe("co");
++    // The device in the immediately previous user turn, symptoms now: co (Sonar exp-37 follow-up c).
++    expect(conversationCondition("now my head is pounding and I feel sick, what do I do", ["we've had the generator running in the garage all evening"]).condition).toBe("co");
+     expect(conversationCondition("we ran the generator in the garage, now my head is pounding and I feel sick", ["hi"]).condition).toBe("co");
+     expect(conversationCondition("propane heater in the ice shack, my buddy has chest pain and is confused").condition).toBe("co");
+   });
+ });
+ 
++describe("CO exposure follow-ups (Sonar exp-37): CO alarm, engine exhaust, the previous turn", () => {
++  it("a CO alarm going off is exposure; a chirp alone is not", () => {
++    expect(conversationCondition("co detector beeping and we all have headaches").condition).toBe("co");
++    expect(conversationCondition("my carbon monoxide alarm is going off in the basement").condition).toBe("co");
++    expect(conversationCondition("my co detector keeps chirping every minute, how do I change the battery?").condition).not.toBe("co");
++  });
++  it("engine running or engine exhaust in a closed space with symptoms", () => {
++    expect(conversationCondition("found my brother in his car in the closed garage with the engine running. hes breathing but barely waking up").condition).toBe("co");
++    expect(conversationCondition("on the boat, my uncle was napping in the cabin near the engine exhaust, now hes dizzy and slurring").condition).toBe("co");
++  });
++  it("the device (or a CO alarm) in the immediately previous user turn, symptoms now", () => {
++    expect(conversationCondition("now my kids are complaining of headaches and feel sick", ["power is out, we have the generator running in the basement"]).condition).toBe("co");
++    expect(conversationCondition("we're outside now but my dad is still really confused and weak, what now?", ["the CO detector went off at 3am and we all got out"]).condition).toBe("co");
++    // Only the immediately previous turn, and only with symptoms now.
++    expect(conversationCondition("now my kids have headaches", ["we have the generator running in the basement", "ok thanks"]).condition).not.toBe("co");
++    expect(conversationCondition("how long can it run on one tank?", ["we have the generator running in the basement"]).condition).not.toBe("co");
++  });
++});
++
+ describe("coHazardAnswer", () => {
+   it("leads with No. on a yes/no planning question only, and ends with sources and the emergency line", () => {
+     const yesNo = coHazardAnswer("Can I run my generator in the garage?");
+diff --git a/src/routing/coHazard.ts b/src/routing/coHazard.ts
+index f6d91b2..48018c8 100644
+--- a/src/routing/coHazard.ts
++++ b/src/routing/coHazard.ts
+@@ -106,7 +106,7 @@ const SPACE = re(
+ 
+ /** Someone may already be poisoned or an alarm is sounding: that is the health route's CO card, not this answer. */
+ const ACUTE = re(
+-  `${B}(?:headaches?|head (?:hurts|is (?:pounding|killing me|splitting))|pounding head|dizz\\w*|nause\\w*|vomit\\w*|throwing up|threw up|throw(?:s|n)? up|passed out|faint\\w*|unconscious|confus\\w*|drowsy|sleepy|chest pain|can'?t breathe|short of breath|feel(?:s|ing)? (?:sick|ill|weird|woozy|weak))${E}` +
++  `${B}(?:headaches?|head (?:hurts|is (?:pounding|killing me|splitting))|pounding head|dizz\\w*|nause\\w*|vomit\\w*|throwing up|threw up|throw(?:s|n)? up|passed out|faint\\w*|unconscious|confus\\w*|drowsy|sleepy|chest pain|can'?t breathe|short of breath|barely waking|(?:won'?t|can'?t|hard to|not) wak(?:e|ing)(?: up)?|slurr\\w*|feel(?:s|ing)? (?:sick|ill|weird|woozy|weak))${E}` +
+     `|${B}(?:alarm|detector)s?${E}.{0,60}${B}(?:going off|went off|beeping|sounding|chirp\\w*|is on|says|reads|reading|shows)${E}|${B}\\d+ ?ppm${E}`
+ );
+ 
+@@ -152,12 +152,31 @@ export function isCoHazardQuestion(query: string): boolean {
+  * CO card (Forge shipcut1 sanity: "generator in the garage … my head hurts, dizzy and sick" got the generic no-source line). */
+ export function isCoExposure(query: string): boolean {
+   const q = query.replace(/[’‘]/g, "'");
++  // A CO alarm going off is CO exposure by itself (Sonar ce-0485); a chirp is usually the battery, so that needs symptoms.
++  if (CO_ALARM.test(q) && (SOUNDING.test(q) || symptoms(q))) return true;
+   if (!ACUTE.test(q)) return false;
+   if (hazardContext(query)) return true;
++  if (ENGINE_EXHAUST.test(q) && (SPACE.test(q) || BOAT.test(q))) return true;
+   // With symptoms already present, a plain "heater" or "stove" is enough when a space, an alarm or several people are
+   // involved ("my whole family has a headache and the heater is on"; "the alarm next to the heater in our cabin").
+   return BURNER.test(q) && (SPACE.test(q) || ALARM.test(q) || GROUP.test(q));
+ }
++/** Symptoms only (ACUTE without the alarm part). */
++const symptoms = (q: string) => ACUTE.test(q.replace(ALARM_SOUND, " "));
++const ALARM_SOUND = new RegExp(`${B}(?:alarm|detector)s?${E}.{0,60}${B}(?:going off|went off|beeping|sounding|chirp\\w*|is on|says|reads|reading|shows)${E}|${B}\\d+ ?ppm${E}`, "giu");
++const CO_ALARM = re(`${B}(?:co|carbon monoxide)${E} ?(?:alarms?|detectors?)${E}`);
++const SOUNDING = re(`${B}(?:going off|went off|goes off|beeping|sounding|alarming|keeps going|\\d+ ?ppm)${E}`);
++const ENGINE_EXHAUST = re(`${B}(?:(?:engine|motor|generator|car|truck|boat) exhaust|exhaust fumes|(?:engine|motor)s? (?:running|on|idling))${E}`);
++const BOAT = re(`${B}(?:boats?|cabin|below deck|yacht|cruiser)${E}`);
++
++/** Previous user turn names the device (or a CO alarm), the current turn has the symptoms ("generator running in the basement"
++ * / "now grandma is short of breath"). Sonar: the immediately previous user turn only. */
++export function isCoExposureAcrossTurns(previousTurn: string, query: string): boolean {
++  const q = query.replace(/[’‘]/g, "'"), p = previousTurn.replace(/[’‘]/g, "'");
++  if (!symptoms(q)) return false;
++  return hazardContext(previousTurn) || CO_ALARM.test(p) || isCoExposure(previousTurn) || (ENGINE_EXHAUST.test(p) && (SPACE.test(p) || BOAT.test(p)));
++}
++
+ const BURNER = re(`${B}(?:heaters?|stoves?|fireplaces?|wood ?burners?|furnaces?|boilers?|grills?|bbqs?|barbecues?)${E}`);
+ const ALARM = re(`${B}(?:alarms?|detectors?)${E}`);
+ const GROUP = re(`${B}(?:whole family|all of us|everyone|we all|we both|all (?:\\d+|two|three|four|five) of us|the kids|both kids|the family)${E}`);
+diff --git a/src/routing/conditionCards.ts b/src/routing/conditionCards.ts
+index c51c2ad..b03e745 100644
+--- a/src/routing/conditionCards.ts
++++ b/src/routing/conditionCards.ts
+@@ -16,7 +16,7 @@ import cards from "./conditionCards.v1.json";
+ import { ACTION_INTENT, emergencyLine, SHOULD_INTENT } from "./context";
+ import { emergencyNumbersLine } from "./emergencyNumbers";
+ import { snakebiteFirstAidCard } from "./firstAidCards";
+-import { isCoExposure } from "./coHazard";
++import { isCoExposure, isCoExposureAcrossTurns } from "./coHazard";
+ 
+ const BASE_TERMS: Record<string, RegExp> = {
+   co: /(?<![\p{L}\p{N}_])(carbon monoxide|(?<![\p{L}\p{N}_])co(?![\p{L}\p{N}_]) poison|mon[óo]xido de carbono|gas (heater|leak)|vazamento de g[áa]s|aquecedor a g[áa]s|generator (inside|indoors))/iu,
+@@ -159,6 +159,9 @@ export function conversationCondition(query: string, userTurns: string[] = []):
+   const all = [...userTurns, query].join(" / ");
+   const now = regexCondition(query);
+   if (now !== null || !userTurns.length) return { condition: now === "MULTI" ? now : guarded(now, all), fromHistory: false };
++  // CO across two turns (Sonar exp-37): the device or a CO alarm in the immediately previous user turn, the symptoms now,
++  // and no other condition in the current turn.
++  if (isCoExposureAcrossTurns(userTurns[userTurns.length - 1], query)) return { condition: guarded("co", all), fromHistory: true };
+   // health13 (blind hand read: wrong cards from history): a card from history only when the NEWEST earlier user turn that
+   // names a condition is itself a health turn naming exactly that one condition. Never the turns joined together (a trip
+   // turn's "a 3.000 m" + "my dad has chest pain now" gave the altitude card). Otherwise the generic emergency line.

@@ -1,0 +1,372 @@
+{
+ "criterion_sha256": "6bf666ab8205294fe374d1e4a5ab2d6c98dd481dde46dc37e3145ee8c2403752",
+ "judge": "claude-haiku-5-5 effort low, N=4, both orders",
+ "ids": [
+  "st-boar-factbook-007",
+  "st-boar-factbook-018",
+  "st-boar-firstaid-en-015",
+  "st-boar-medlineplus-en-006",
+  "st-boar-medlineplus-en-011",
+  "st-boar-medlineplus-en-013",
+  "st-boar-simplewiki-en-014",
+  "st-qa-bitcoin-se-006",
+  "st-qa-bitcoin-se-008",
+  "st-qa-ethereum-se-015",
+  "st-qa-health-se-014",
+  "st-qa-health-se-016",
+  "st-qa-health-se-018",
+  "st-qa-outdoors-se-015",
+  "st-qa-outdoors-se-019",
+  "st-qa-travel-se-004",
+  "st-qa-travel-se-005",
+  "st-qa-travel-se-009",
+  "st-qa-travel-se-010",
+  "st-qa-travel-se-017"
+ ],
+ "stats": {
+  "ON": {
+   "n": 20,
+   "raw": 0.506,
+   "raw_ci": [
+    0.437,
+    0.577
+   ],
+   "above_min": 0.366,
+   "above_min_ci": [
+    0.28,
+    0.455
+   ],
+   "win_tie_loss": [
+    0,
+    1,
+    19
+   ],
+   "pos_consistency": 0.95
+  },
+  "OFF": {
+   "n": 20,
+   "raw": 0.491,
+   "raw_ci": [
+    0.43,
+    0.55
+   ],
+   "above_min": 0.348,
+   "above_min_ci": [
+    0.269,
+    0.424
+   ],
+   "win_tie_loss": [
+    0,
+    0,
+    20
+   ],
+   "pos_consistency": 1.0
+  },
+  "X4B": {
+   "n": 20,
+   "raw": 0.577,
+   "raw_ci": [
+    0.493,
+    0.66
+   ],
+   "above_min": 0.452,
+   "above_min_ci": [
+    0.348,
+    0.559
+   ],
+   "win_tie_loss": [
+    0,
+    1,
+    19
+   ],
+   "pos_consistency": 0.95
+  }
+ },
+ "paired": {
+  "ON-OFF": {
+   "n": 20,
+   "d_raw": 0.016,
+   "d_raw_ci": [
+    -0.035,
+    0.066
+   ],
+   "d_above_min": 0.018,
+   "d_above_min_ci": [
+    -0.044,
+    0.082
+   ],
+   "items_better_worse": [
+    9,
+    7
+   ]
+  },
+  "ON-X4B": {
+   "n": 20,
+   "d_raw": -0.07,
+   "d_raw_ci": [
+    -0.117,
+    -0.023
+   ],
+   "d_above_min": -0.086,
+   "d_above_min_ci": [
+    -0.145,
+    -0.028
+   ],
+   "items_better_worse": [
+    6,
+    13
+   ]
+  },
+  "OFF-X4B": {
+   "n": 20,
+   "d_raw": -0.086,
+   "d_raw_ci": [
+    -0.133,
+    -0.04
+   ],
+   "d_above_min": -0.104,
+   "d_above_min_ci": [
+    -0.162,
+    -0.048
+   ],
+   "items_better_worse": [
+    4,
+    15
+   ]
+  }
+ },
+ "paired_changed": {
+  "n": 16,
+  "d_raw": 0.008,
+  "d_raw_ci": [
+   -0.052,
+   0.074
+  ],
+  "d_above_min": 0.007,
+  "d_above_min_ci": [
+   -0.067,
+   0.089
+  ],
+  "items_better_worse": [
+   7,
+   7
+  ]
+ },
+ "buckets": {
+  "thin": {
+   "n": 12,
+   "on": 0.558,
+   "off": 0.551,
+   "d": 0.007,
+   "up_same_down": [
+    6,
+    1,
+    5
+   ]
+  },
+  "rest": {
+   "n": 8,
+   "on": 0.443,
+   "off": 0.401,
+   "d": 0.042,
+   "up_same_down": [
+    4,
+    1,
+    3
+   ]
+  },
+  "changed": {
+   "n": 16,
+   "on": 0.551,
+   "off": 0.539,
+   "d": 0.012,
+   "up_same_down": [
+    8,
+    1,
+    7
+   ]
+  }
+ },
+ "per_item": {
+  "st-boar-factbook-007": {
+   "bucket": "thin",
+   "on": 0.846,
+   "off": 0.778,
+   "changed": true
+  },
+  "st-boar-factbook-018": {
+   "bucket": "identical",
+   "on": 0.214,
+   "off": 0.231,
+   "changed": false
+  },
+  "st-boar-firstaid-en-015": {
+   "bucket": "thin",
+   "on": 0.615,
+   "off": 0.615,
+   "changed": true
+  },
+  "st-boar-medlineplus-en-006": {
+   "bucket": "identical",
+   "on": 0.444,
+   "off": 0.269,
+   "changed": false
+  },
+  "st-boar-medlineplus-en-011": {
+   "bucket": "identical",
+   "on": 0.4,
+   "off": 0.4,
+   "changed": false
+  },
+  "st-boar-medlineplus-en-013": {
+   "bucket": "thin",
+   "on": 0.621,
+   "off": 0.633,
+   "changed": true
+  },
+  "st-boar-simplewiki-en-014": {
+   "bucket": "thin",
+   "on": 0.571,
+   "off": 0.367,
+   "changed": true
+  },
+  "st-qa-bitcoin-se-006": {
+   "bucket": "small_more_complete",
+   "on": 0.5,
+   "off": 0.6,
+   "changed": true
+  },
+  "st-qa-bitcoin-se-008": {
+   "bucket": "small_more_complete",
+   "on": 0.593,
+   "off": 0.571,
+   "changed": true
+  },
+  "st-qa-ethereum-se-015": {
+   "bucket": "thin",
+   "on": 0.5,
+   "off": 0.667,
+   "changed": true
+  },
+  "st-qa-health-se-014": {
+   "bucket": "thin",
+   "on": 0.5,
+   "off": 0.464,
+   "changed": true
+  },
+  "st-qa-health-se-016": {
+   "bucket": "thin",
+   "on": 0.5,
+   "off": 0.593,
+   "changed": true
+  },
+  "st-qa-health-se-018": {
+   "bucket": "identical",
+   "on": 0.357,
+   "off": 0.286,
+   "changed": false
+  },
+  "st-qa-outdoors-se-015": {
+   "bucket": "thin",
+   "on": 0.31,
+   "off": 0.467,
+   "changed": true
+  },
+  "st-qa-outdoors-se-019": {
+   "bucket": "thin",
+   "on": 0.519,
+   "off": 0.464,
+   "changed": true
+  },
+  "st-qa-travel-se-004": {
+   "bucket": "big_error",
+   "on": 0.2,
+   "off": 0.333,
+   "changed": true
+  },
+  "st-qa-travel-se-005": {
+   "bucket": "not_read",
+   "on": 0.833,
+   "off": 0.517,
+   "changed": true
+  },
+  "st-qa-travel-se-009": {
+   "bucket": "thin",
+   "on": 0.542,
+   "off": 0.435,
+   "changed": true
+  },
+  "st-qa-travel-se-010": {
+   "bucket": "thin",
+   "on": 0.63,
+   "off": 0.571,
+   "changed": true
+  },
+  "st-qa-travel-se-017": {
+   "bucket": "thin",
+   "on": 0.538,
+   "off": 0.556,
+   "changed": true
+  }
+ },
+ "profile_r20": {
+  "on": {
+   "words_p50": 44.5,
+   "gt2": 15,
+   "hedged": 1,
+   "total_p50_s": 6.31,
+   "ttft_p50_s": 4.66
+  },
+  "off": {
+   "words_p50": 31.0,
+   "gt2": 2,
+   "hedged": 0,
+   "total_p50_s": 6.48,
+   "ttft_p50_s": 5.45
+  }
+ },
+ "gate7": {
+  "pass": {
+   "G0": true,
+   "G1": true,
+   "G2": true,
+   "G3": true,
+   "G4": true,
+   "G5": true,
+   "G6": true,
+   "G7": true
+  },
+  "profile_180": {
+   "on": {
+    "n": 180,
+    "gt2_share": 0.7,
+    "words_p50": 46.0,
+    "sent_p50": 3.0,
+    "ends_open": 0,
+    "out_tokens_p50": 58.0,
+    "out_tokens_max": 114
+   },
+   "off": {
+    "n": 180,
+    "gt2_share": 0.167,
+    "words_p50": 34.5,
+    "sent_p50": 2.0,
+    "ends_open": 0,
+    "out_tokens_p50": 44.0,
+    "out_tokens_max": 76
+   }
+  },
+  "latency_llm_p50_s": {
+   "total": [
+    6.358,
+    7.3980999999999995
+   ],
+   "ttft": [
+    4.90301781250001,
+    5.99145470799999
+   ]
+  }
+ },
+ "verdict": "DIRECTION-POSITIVE",
+ "licenses_180": false
+}

@@ -1,0 +1,47 @@
+diff --git a/adapters/desktop-node/runner/adapter.ts b/adapters/desktop-node/runner/adapter.ts
+index e82ebc3..9510924 100644
+--- a/adapters/desktop-node/runner/adapter.ts
++++ b/adapters/desktop-node/runner/adapter.ts
+@@ -164,6 +164,10 @@ const MODELS: Record<string, { file: string; sha256: string }> = {
+   // GEMMATHINK: unsloth/gemma-4-26B-A4B-it-GGUF (rnd/kiln/MODELS.md; MOESCREEN-gemma4). --backend server, --deep-model only;
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
++  // BONSAI2 (2026-10-15): prism-ml/Ternary-Bonsai-2-4B-gguf @ 8d655716 (Apache-2.0; base Qwen3.5-4B, ternary PTQ1_0).
++  // PTQ1_0 loads only in PrismML's llama.cpp fork (prism-b10777-e3de715): --backend server --server-bin <fork>; fast tier,
++  // thinking OFF via the engine's enable_thinking:false (chat_template_kwargs, server.ts).
++  "bonsai2-4b-ptq1_0": { file: "bonsai2/Ternary-Bonsai-2-4B-PTQ1_0.gguf", sha256: "56711263ec9a9ffeaa74a3a0e58dece8127cf9268404746c721113ca76994d60" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -179,6 +183,12 @@ if (argv.includes("--print-model")) {
+ }
+ 
+ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
++  // BONSAI2: shaped like the Android default (roles general + fast, answerTier default), so the fast tier picks it.
++  "bonsai2-4b-ptq1_0": {
++    id: "bonsai2-4b-ptq1_0", kind: "llm", label: "Ternary-Bonsai-2-4B (PTQ1_0)",
++    filename: "models/bonsai2-4b-ptq1_0.gguf", sizeBytes: 949549920, answerTier: "default",
++    capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
++  },
+   // THINK4B: shaped like the Android default (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-4b-thinking-2507-q4km": {
+     id: "qwen3-4b-thinking-2507-q4km", kind: "llm", label: "Qwen3-4B-Thinking-2507 (Q4_K_M)",
+@@ -428,7 +438,9 @@ async function makeServerEngine(modelPath: string, fileName: string, seed: numbe
+   const base = external ?? `http://127.0.0.1:${port}`;
+   const args = ["-m", modelPath, "-t", String(cli.threads), "-tb", String(cli.threads), "-c", process.env.BOAR_SERVER_CTX ?? "4096", "-ngl", "0", "-np", "1", "--jinja",
+                 "--no-webui", "--cache-ram", "0", "--reasoning-format", "deepseek", "--host", "127.0.0.1", "--port", String(port),
+-                ...(process.env.BOAR_KV_TYPE ? ["--cache-type-k", process.env.BOAR_KV_TYPE, "--cache-type-v", process.env.BOAR_KV_TYPE] : [])]; // KVQ8 arm: KV cache type (unset = llama-server default f16)
++                ...(process.env.BOAR_KV_TYPE ? ["--cache-type-k", process.env.BOAR_KV_TYPE, "--cache-type-v", process.env.BOAR_KV_TYPE] : []), // KVQ8 arm: KV cache type (unset = llama-server default f16)
++                // BONSAI2: extra llama-server args, whitespace-split, appended last (unset = byte-identical args); recorded in versions["server.extra_args"].
++                ...(process.env.BOAR_SERVER_EXTRA_ARGS ? process.env.BOAR_SERVER_EXTRA_ARGS.trim().split(/\s+/) : [])];
+   const logPath = `${cli.out!.replace(/\.jsonl$/, "")}.server.log`;
+   mkdirSync(dirname(logPath), { recursive: true });
+   writeFileSync(logPath, `${bin} ${args.join(" ")}\n`);
+@@ -829,6 +841,7 @@ async function main() {
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
++    ...(server && process.env.BOAR_SERVER_EXTRA_ARGS ? { "server.extra_args": process.env.BOAR_SERVER_EXTRA_ARGS.trim() } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+     ...(shard ? { parallel: String(shard.n), "parallel.timing": PARALLEL ? "invalid (null; raw in other/timing-raw)" : "valid" } : {}),

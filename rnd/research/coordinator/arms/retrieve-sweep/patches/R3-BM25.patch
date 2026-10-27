@@ -1,0 +1,112 @@
+--- rs-H4/src/rag/wikiPack.ts
++++ rs-R34/src/rag/wikiPack.ts
+@@ -441,13 +441,34 @@
+ export function rsFts5Idf(nRow: number, nHit: number): number {
+   const v = Math.log((nRow - nHit + 0.5) / (nHit + 0.5));
+   return v > 0 ? v : 1e-6;
++}
++
++/** FTS5 varints (1-9 bytes, big-endian 7-bit groups, high bit = more; a 9th byte carries 8 bits). Values here stay below 2^53. */
++export function rsVarints(b: Uint8Array): number[] {
++  const out: number[] = [];
++  for (let i = 0; i < b.length; ) {
++    let v = 0;
++    for (let k = 0; k < 9 && i < b.length; k++) {
++      const c = b[i++];
++      if (k === 8) { v = v * 256 + c; break; }
++      v = v * 128 + (c & 0x7f);
++      if (!(c & 0x80)) break;
++    }
++    out.push(v);
++  }
++  return out;
+ }
+ 
++/** FTS5's bm25 constants (fts5_aux.c). RS_BM25_K1 / RS_BM25_B (SEARCHPAR arm R3, bench-only, read inside the RS_MERGE=gidf re-score). */
++const RS_K1_DEFAULT = 1.2;
++const RS_B_DEFAULT = 0.75;
++
+ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
+   /** RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only): collection statistics across the installed packs, set by searchWikiPacks around a search. */
+   rsGlobal: { nRow: number; df: Map<string, number> } | null = null;
+   private rsRows = new Map<string, number>();
++  private rsStats: { nRow: number; nTok: number } | null = null;
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+   private resolved = new Lru<string, number | null>(512);
+@@ -494,6 +515,15 @@
+   /** RS_MERGE=gidf: rows of this pack's index (FTS5's nRow). */
+   get rsNRow(): number {
+     return this.nIndexed;
++  }
++
++  /** SEARCHPAR R3: FTS5's own collection statistics for this pack (averages record, fts_data id 1: rows, then tokens per column). */
++  async rsFtsStats(): Promise<{ nRow: number; nTok: number }> {
++    if (this.rsStats) return this.rsStats;
++    const r = await this.db.getFirstAsync<{ block: Uint8Array }>("SELECT block FROM fts_data WHERE id = 1", []);
++    const v = rsVarints(r?.block ?? new Uint8Array());
++    this.rsStats = { nRow: v[0] ?? 0, nTok: v.slice(1).reduce((x, y) => x + y, 0) };
++    return this.rsStats;
+   }
+ 
+   /** RS_MERGE=gidf: rows of this pack's index that match the FTS term of `stem` (FTS5's nHit: exact term from df / the vocab view, a prefix term counted). */
+@@ -739,6 +769,23 @@
+       const g = this.rsGlobal;
+       const ids = rows.map((r) => Number(r.id)).join(",");
+       rescored = new Map();
++      // SEARCHPAR R3 (RS_BM25_K1 / RS_BM25_B, default 1.2 / 0.75 = this block is skipped, byte-identical to gidf): FTS5's one-term score is
++      // idf x f, f = tf(k1+1)/(tf + k1 K), K = 1 - b + b D/avgdl (tf = weighted term frequency, D = passage tokens, avgdl = this pack's own
++      // average). tf is recovered from f with the stock constants and the score is rebuilt with k1' and b'; idf stays the global one.
++      const envv = (globalThis as any).process?.env;
++      const k1x = Number(envv?.RS_BM25_K1 ?? RS_K1_DEFAULT);
++      const bx = Number(envv?.RS_BM25_B ?? RS_B_DEFAULT);
++      const check = envv?.RS_BM25_CHECK === "1";
++      const custom = k1x !== RS_K1_DEFAULT || bx !== RS_B_DEFAULT || check;
++      let rsDl: Map<number, number> | null = null;
++      let rsAvgLocal = 0;
++      if (custom) {
++        const st = await this.rsFtsStats();
++        rsAvgLocal = st.nTok / st.nRow;
++        rsDl = new Map();
++        for (const d of await this.db.getAllAsync<{ id: number; sz: Uint8Array }>(`SELECT id, sz FROM fts_docsize WHERE id IN (${ids})`, []))
++          rsDl.set(d.id, rsVarints(d.sz).reduce((x, y) => x + y, 0));
++      }
+       for (const t of terms) {
+         const nl = await this.rsTermRows(t);
+         const ratio = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) / rsFts5Idf(this.nIndexed, nl);
+@@ -746,7 +793,33 @@
+           `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
+           [matchTerm(t)]
+         );
+-        for (const r of part) rescored.set(r.id, (rescored.get(r.id) ?? 0) + -r.s * ratio);
++        // R3: the same query with all column weights doubled doubles tf; r = s2/s1 = 2(tf + c)/(2 tf + c), c = k1 K, so tf = c(2 - r)/(2(r - 1))
++        // without knowing the idf FTS5 used (a prefix term's row count is not the plain one-term count).
++        const part2 = custom
++          ? new Map(
++              (
++                await this.db.getAllAsync<{ id: number; s: number }>(
++                  `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map((w) => 2 * Number(w)).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
++                  [matchTerm(t)]
++                )
++              ).map((x) => [x.id, x.s])
++            )
++          : null;
++        for (const r of part) {
++          let sc = -r.s * ratio;
++          if (custom && rsDl && part2) {
++            const D = rsDl.get(r.id) ?? 0;
++            const rr = (part2.get(r.id) ?? 0) / r.s;
++            const K0 = 1 - RS_B_DEFAULT + (RS_B_DEFAULT * D) / rsAvgLocal;
++            const c0 = RS_K1_DEFAULT * K0;
++            const tf = (c0 * (2 - rr)) / (2 * (rr - 1));
++            const f0 = (tf * (RS_K1_DEFAULT + 1)) / (tf + c0);
++            const f1 = (tf * (k1x + 1)) / (tf + k1x * (1 - bx + (bx * D) / rsAvgLocal));
++            if (check) console.error(`[rs-bm25-check] tf=${tf} f0=${f0} t=${t} D=${D}`);
++            else sc = sc * (f1 / f0);
++          }
++          rescored.set(r.id, (rescored.get(r.id) ?? 0) + sc);
++        }
+       }
+       if ((globalThis as any).process?.env?.RS_MERGE_CHECK === "1") {
+         // dev check: the unscaled sum of the one-term scores must equal the query's bm25 (done for the first pass only)

@@ -1,0 +1,203 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/packs.ts rs-H4/src/rag/packs.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/packs.ts	2026-10-14 08:06:52
++++ rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
+@@ -159,16 +159,43 @@
+ /** Searches every installed format-2 pack (a failing pack is skipped). */
+ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}): Promise<WikiPackResult[]> {
+   const out: WikiPackResult[] = [];
+-  for (const pack of await knowledgePacks()) {
+-    try {
+-      if (!(await openPack(pack))) continue;
+-      const wp = wikiPacks.get(pack.id);
+-      if (!wp) continue;
+-      const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
+-      out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
+-    } catch (e: any) {
+-      console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
++  const catalog = await knowledgePacks();
++  // RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only, default off = unchanged): collection statistics over all installed
++  // format-2 packs for the terms the packs will search (each pack still picks its own terms), so bm25 is comparable across packs.
++  const gidf = (globalThis as any).process?.env?.RS_MERGE === "gidf";
++  const ready: WikiPack[] = [];
++  if (gidf) {
++    for (const pack of catalog) {
++      try {
++        if (!(await openPack(pack))) continue;
++        const wp = wikiPacks.get(pack.id);
++        if (wp) ready.push(wp);
++      } catch {}
+     }
++    const terms = new Set<string>();
++    for (const wp of ready) for (const t of wp.queryTerms(await wp.stems(query))) terms.add(t);
++    const df = new Map<string, number>();
++    let nRow = 0;
++    for (const wp of ready) {
++      nRow += wp.rsNRow;
++      for (const t of terms) df.set(t, (df.get(t) ?? 0) + (await wp.rsTermRows(t)));
++    }
++    for (const wp of ready) wp.rsGlobal = { nRow, df };
++  }
++  try {
++    for (const pack of catalog) {
++      try {
++        if (!(await openPack(pack))) continue;
++        const wp = wikiPacks.get(pack.id);
++        if (!wp) continue;
++        const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
++        out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
++      } catch (e: any) {
++        console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
++      }
++    }
++  } finally {
++    for (const wp of ready) wp.rsGlobal = null;
+   }
+   return out;
+ }
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts rs-H4/src/rag/retrieve.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/retrieve.ts	2026-10-14 08:07:31
++++ rs-H4/src/rag/retrieve.ts	2026-10-22 17:16:18
+@@ -189,6 +189,20 @@
+   return add.length ? [...list, ...add] : list;
+ }
+ 
++/**
++ * RETRIEVE-SWEEP arm H4 (RS_MERGE=rrf): reciprocal rank fusion (k = 60, RS_RRF_K) of the per-pack keyword lists. Each pack keeps its
++ * top `topK` hits by its own rank; a hit scores 1/(k + rank). The pack lists share no chunk, so the fusion is a rank interleave
++ * (ties: the hit with the higher original score first). Scores are then put back on the scale the concatenated list had (the best
++ * original score is given to a rank-1 hit) so they stay comparable with the bundled corpus and format-1 pack lists in the fusion.
++ */
++export function rsRrfMerge(lists: RetrievedChunk[][], topK: number): RetrievedChunk[] {
++  const k = Number((globalThis as any).process?.env?.RS_RRF_K ?? 60);
++  const maxOrig = Math.max(...lists.flat().map((c) => c.score), 1e-9);
++  const merged = lists.flatMap((l) => l.slice(0, topK).map((c, i) => ({ c, rrf: 1 / (k + i + 1) })));
++  merged.sort((a, b) => b.rrf - a.rrf || b.c.score - a.c.score);
++  return merged.map(({ c, rrf }) => ({ ...c, score: (rrf * (k + 1)) * maxOrig }));
++}
++
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+ export function isDisambiguation(c: { title: string; body: string }): boolean {
+   return /\(disambiguation\)$/i.test(c.title) || /\bmay (also )?refer to\b/i.test(c.body.slice(0, 300));
+@@ -224,7 +238,15 @@
+   const named = wiki
+     .flatMap((w) => w.hits.filter((h) => h.via === "title").map((h) => packHitToChunk(w.packId, h)))
+     .filter((c) => !isDisambiguation(c));
+-  const wikiLexical = wiki.flatMap((w) => w.hits.filter((h) => h.via !== "title").map((h) => packHitToChunk(w.packId, h)));
++  let wikiLexical = wiki.flatMap((w) => w.hits.filter((h) => h.via !== "title").map((h) => packHitToChunk(w.packId, h)));
++  // RS_MERGE=rrf (RETRIEVE-SWEEP arm H4, bench-only, default off = unchanged): the packs' keyword lists are merged by rank, not by
++  // each pack's own bm25 score (see rsRrfMerge).
++  if ((globalThis as any).process?.env?.RS_MERGE === "rrf") {
++    wikiLexical = rsRrfMerge(
++      wiki.map((w) => w.hits.filter((h) => h.via !== "title").map((h) => packHitToChunk(w.packId, h))),
++      topK
++    );
++  }
+   // The bundled corpus and format-1 packs pass the relevance gate first (their chunks carry the
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+   // take the top-K or per-article slots before the gate sees the rest. Large-pack hits have their
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts rs-H4/src/rag/wikiPack.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/wikiPack.ts	2026-10-14 08:06:52
++++ rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
+@@ -437,8 +437,17 @@
+ // weight 8 and prior 2 cost 6 points of test recall@1 on these questions.
+ export const DEFAULT_TUNING: PackTuning = { weights: [2, 1, 1], prior: 0.5, namedMinShare: NAMED_MIN_SHARE, pool: 80, semanticWeight: 0 };
+ 
++/** FTS5's own idf (fts5_aux.c bm25): log((nRow - nHit + 0.5) / (nHit + 0.5)), 1e-6 when not positive. */
++export function rsFts5Idf(nRow: number, nHit: number): number {
++  const v = Math.log((nRow - nHit + 0.5) / (nHit + 0.5));
++  return v > 0 ? v : 1e-6;
++}
++
+ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
++  /** RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only): collection statistics across the installed packs, set by searchWikiPacks around a search. */
++  rsGlobal: { nRow: number; df: Map<string, number> } | null = null;
++  private rsRows = new Map<string, number>();
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+   private resolved = new Lru<string, number | null>(512);
+@@ -482,6 +491,28 @@
+     return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"));
+   }
+ 
++  /** RS_MERGE=gidf: rows of this pack's index (FTS5's nRow). */
++  get rsNRow(): number {
++    return this.nIndexed;
++  }
++
++  /** RS_MERGE=gidf: rows of this pack's index that match the FTS term of `stem` (FTS5's nHit: exact term from df / the vocab view, a prefix term counted). */
++  async rsTermRows(stem: string): Promise<number> {
++    const hit = this.rsRows.get(stem);
++    if (hit !== undefined) return hit;
++    let n: number;
++    if (stem.endsWith("i") && stem.length > 4) {
++      n = (await this.db.getFirstAsync<{ doc: number }>("SELECT count(*) AS doc FROM fts WHERE fts MATCH ?", [matchTerm(stem)]))?.doc ?? 0;
++    } else {
++      const row =
++        (this.hasDf ? await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM df WHERE term = ?", [stem]) : null) ??
++        (await this.db.getFirstAsync<{ doc: number }>("SELECT doc FROM temp.fts_v WHERE term = ?", [stem]));
++      n = row?.doc ?? 0;
++    }
++    this.rsRows.set(stem, n);
++    return n;
++  }
++
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+   async stems(text: string): Promise<Stem[]> {
+     const words = (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter((w) => w.length > 1 && !STOPWORDS.has(w));
+@@ -699,8 +730,34 @@
+        JOIN chunks c ON c.id = f.rowid JOIN articles a ON a.id = c.article_id`,
+       [terms.map(matchTerm).join(" OR "), pool]
+     );
++    // RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only, default off = unchanged): FTS5's bm25 is the sum over the query terms of
++    // idf(term) x saturation(term, passage). Each term's contribution is read back with a one-term query on these passages, divided
++    // by the pack's own idf and multiplied by the idf computed over all installed packs (same formula, summed row counts), so the
++    // scores of different packs share one scale. The pool, the terms, the prior and the per-article cap are unchanged.
++    let rescored: Map<number, number> | null = null;
++    if (this.rsGlobal && rows.length) {
++      const g = this.rsGlobal;
++      const ids = rows.map((r) => Number(r.id)).join(",");
++      rescored = new Map();
++      for (const t of terms) {
++        const nl = await this.rsTermRows(t);
++        const ratio = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) / rsFts5Idf(this.nIndexed, nl);
++        const part = await this.db.getAllAsync<{ id: number; s: number }>(
++          `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
++          [matchTerm(t)]
++        );
++        for (const r of part) rescored.set(r.id, (rescored.get(r.id) ?? 0) + -r.s * ratio);
++      }
++      if ((globalThis as any).process?.env?.RS_MERGE_CHECK === "1") {
++        // dev check: the unscaled sum of the one-term scores must equal the query's bm25 (done for the first pass only)
++        let md = 0;
++        const plain = await this.rsPlain(terms, ids);
++        for (const r of rows) md = Math.max(md, Math.abs((plain.get(r.id) ?? 0) - -r.s));
++        console.error(`[rs-merge-check] max|sum of one-term bm25 - query bm25| = ${md}`);
++      }
++    }
+     const sorted = rows
+-      .map((r) => ({ chunkId: r.id, articleId: r.article_id, start: r.start, end: r.end, score: -r.s + prior * Math.log10(1 + r.views) }))
++      .map((r) => ({ chunkId: r.id, articleId: r.article_id, start: r.start, end: r.end, score: (rescored?.get(r.id) ?? -r.s) + prior * Math.log10(1 + r.views) }))
+       .sort((a, b) => b.score - a.score || b.articleId - a.articleId || b.start - a.start);
+     const per = new Map<number, number>();
+     return sorted.filter((c) => {
+@@ -708,6 +765,19 @@
+       per.set(c.articleId, n + 1);
+       return n < perArticle;
+     });
++  }
++
++  /** RS_MERGE_CHECK only: sum over `terms` of the one-term bm25 (no idf change) per rowid. */
++  private async rsPlain(terms: string[], ids: string): Promise<Map<number, number>> {
++    const out = new Map<number, number>();
++    for (const t of terms) {
++      const part = await this.db.getAllAsync<{ id: number; s: number }>(
++        `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
++        [matchTerm(t)]
++      );
++      for (const r of part) out.set(r.id, (out.get(r.id) ?? 0) + -r.s);
++    }
++    return out;
+   }
+ 
+   private materialize(c: Candidate): Promise<PackHit> {

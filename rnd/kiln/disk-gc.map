@@ -1,0 +1,140 @@
+# disk-gc.map: Kiln's class map for rnd/DISK-POLICY.md, read by disk-gc.sh. Built 2026-10-02 by Kiln.
+# One TAB-separated line per path: host  path  class  kind  queue  restore
+#   host  mini (path relative to ~ on MINI_HOST, must be under boar/) | macbook (absolute, under <workspace>/{builds,wt})
+#   class A closed line · B reproducible build output · D active (kept) · E unknown (kept, listed for r4to). Only A/B are ever deleted.
+#   kind  rm (rm -rf) · apk (sha256 logged, the .apk only, sidecar .sha256 kept) · archive-rm (tar the tree's own scripts/runs to
+#         <runner>/kiln/gc-archive/<name>.tgz, then rm -rf) · wt (git worktree remove --force; the diff must still hash to the patch sha) · keep
+#   queue the rnd/research/QUEUE.md line (Lnnn as of 2026-10-02) or why the class applies
+#   restore how to get it back (recipe in git). kind wt only: a 7th column = the expected sha256 prefix of `git diff HEAD --binary`
+# Arm-tree restore: boar-eval/adapters/desktop-node/setup.sh 0cfd4a77 --patch adapters/desktop-node/arms/<arm>.patch --arm <arm>
+# (every patch below is committed in boar-eval with its .sha256 and matched the tree's PATCH_SHA256 on 2026-10-02).
+#
+# ---------------------------------------------------------------- mini: class A (closed lines)
+mini	boar/shared-models/maple-preview-TQ2_0-head-Q4_K.gguf	A	rm	L246 #15 Maple FAIL -> K4 fired	rnd/kiln/MODELS.md (deepgrove/maple-preview-GGUF@f5466f918e, sha256 221f792c...)
+mini	boar/kiln/p7	A	rm	L301 P-7 step 0 FAIL on criterion 3 (size), 8 KB blocks	rnd/kiln/recipes/p7-build.sh on the mini (knowledge-build + shared-data/dumps); result shas in recipes/p7-build.result.txt
+mini	boar/kiln/be-0cfd4a77-sitroute	A	rm	L202 #13 sitroute: not adopted alongside A1 (adds nothing stacked)	setup.sh arm sitroute (b0d09263)
+mini	boar/kiln/be-0cfd4a77-sitroute+a1	A	rm	L202 #13 stacked on A1: adds nothing, 2 cards -> plain declines	setup.sh arm sitroute+a1 (b8adb65d)
+mini	boar/kiln/be-0cfd4a77-cmpsplit	A	rm	L73 #3 cmpsplit v1 NOT ADOPTED	setup.sh arm cmpsplit (9928cd28)
+mini	boar/kiln/be-0cfd4a77-cmpsplit-v2	A	rm	L74 #3b v2 full gate FAIL, superseded by v2.1	setup.sh arm cmpsplit-v2 (27d8dd79)
+mini	boar/kiln/be-0cfd4a77-fa-cards	A	rm	L203 #14 per-condition cards FAIL	setup.sh arm fa-cards (cb326911)
+mini	boar/kiln/be-0cfd4a77-d1a-unconfirmed	A	rm	L89 Decision 1: A REJECTED	setup.sh arm d1a-unconfirmed (3dd08ccc)
+mini	boar/kiln/be-0cfd4a77-d1c-pt-keywords	A	rm	L89 Decision 1: C REJECTED	setup.sh arm d1c-pt-keywords (31ece3fe)
+mini	boar/kiln/be-0cfd4a77-leadgate	A	rm	L75 #5 leadgate NOT ADOPTED	setup.sh arm leadgate (93e6258b)
+mini	boar/kiln/be-0cfd4a77-bigpack-g1plus	A	rm	L235 #17 G1+ FAIL at replay, K1 fires	setup.sh arm bigpack-g1plus (a3ffcd69)
+mini	boar/kiln/be-0cfd4a77-enwiki-namedcap	A	rm	L186 #6b verdict invalidated + L238 K1: knowledge front closed for this bounty	setup.sh arm enwiki-namedcap (df25549d)
+# ---------------------------------------------------------------- mini: class B (reproducible build output)
+mini	boar/kiln/be-0cfd4a77-a1-danger-v1	B	rm	L110 #4b A1 WIN (adopted arm, patch committed)	setup.sh arm a1-danger-v1 (038c27c3)
+mini	boar/kiln/be-0cfd4a77-p5-fromto	B	rm	L300 P-5 ADOPTABLE	setup.sh arm p5-fromto (f9a58bb0)
+mini	boar/kiln/be-0cfd4a77-p1-keepkey	B	rm	L289 P-1 ADOPTABLE	setup.sh arm p1-keepkey (5f5307a6)
+mini	boar/kiln/be-0cfd4a77-p1p5-stack	B	rm	L291/L300 P-1+P-5 stack, candidate PR	setup.sh arm p1p5-stack (51e0fc20)
+mini	boar/kiln/be-0cfd4a77-main+46	B	rm	L104 H3 main+46: PR complete	setup.sh arm main+46 (88df66f3, sha in desktop-node README)
+mini	boar/kiln/app-14de107	B	archive-rm	old engine commit 14de107 (main is 0cfd4a77)	rnd/kiln/exp-06-desktop-answerer/setup-tree.sh 14de107; scripts+runs in gc-archive
+mini	boar/kiln/app-14de107-t2	B	archive-rm	old engine commit 14de107 + T2	setup-tree.sh 14de107 + rnd/kiln/exp-07-expansion-on-miss/t2-expansion-on-miss.patch
+mini	boar/kiln/app-611a4b92	B	archive-rm	old engine commit 611a4b92 + O2 v2	setup-tree.sh 611a4b92 + rnd/kiln/exp-08-o2v2/o2v2.patch
+mini	boar/kiln/app-611a4b92-h1	B	archive-rm	old engine commit 611a4b92 + H1	setup-tree.sh 611a4b92 + rnd/kiln/exp-09-instant-tier-gap/h1-subject-check.patch
+mini	boar/kiln/app-611a4b92-h2	B	archive-rm	old engine commit 611a4b92 + H1 + H2	setup-tree.sh 611a4b92 + exp-09 h1-subject-check.patch + h2-snippet-answers.patch
+mini	boar/kiln/app-6b53ee83	B	archive-rm	old engine commit 6b53ee83	setup-tree.sh 6b53ee83 (exp-10)
+mini	boar/kiln/app-6b53ee83-hg	B	archive-rm	old engine commit 6b53ee83 + health guard	setup-tree.sh 6b53ee83 + rnd/kiln/exp-10-main-baseline/main-health-guard.patch
+mini	boar/android/apk/boar-integration-1928502d-offline-arm64.apk	B	apk	superseded APK (offline: latest kept = 4f170bb9)	rebuild at integration 1928502d; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-31cca81-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at 31cca81; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-69083c7c-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at 69083c7c; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-7aa67d5a-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at 7aa67d5a; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-8b244ba3-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at 8b244ba3; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-d7a127b8-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at d7a127b8; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-e61ef185-offline-arm64.apk	B	apk	superseded APK (offline)	rebuild at e61ef185; sha256 in sidecar + DISK-LOG
+mini	boar/android/apk/boar-integration-8ae9d444-downloader-arm64.apk	B	apk	superseded APK (downloader: latest kept = b543dce9)	rebuild at 8ae9d444; sha256 in sidecar + DISK-LOG
+mini	boar/android/e2e-out	B	rm	e2e-out (policy B)	re-run android/run-e2e.sh
+# ---------------------------------------------------------------- mini: class D (active, kept)
+mini	boar/kiln/be-0cfd4a77	D	keep	base tree (current main) + runner dirs	-
+mini	boar/kiln/be-0cfd4a77-p8-sqlbatch	D	keep	L317 P-8: phone steps open	-
+mini	boar/kiln/be-0cfd4a77-cmpsplit-v21	D	keep	L114 #3b v2.1: no effect on 1.5B, re-test on the Android 4B suggested (open)	setup.sh arm cmpsplit-v21 (2430f5bf)
+mini	boar/kiln/p7b	D	keep	L306 P-7b: phone steps open	rnd/kiln/recipes/p7b-build.sh
+mini	boar/kiln/deep35-probe	D	keep	deep tier (option 6) open	-
+mini	boar/shared-models/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf	D	keep	deep tier open	rnd/kiln/MODELS.md
+mini	boar/shared-models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf	D	keep	model in use	rnd/kiln/MODELS.md
+mini	boar/shared-models/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf	D	keep	model in use	rnd/kiln/MODELS.md
+mini	boar/shared-models/bge-small-en-v1.5-q8_0.gguf	D	keep	model in use	rnd/kiln/MODELS.md
+mini	boar/shared-data	D	keep	current packs (incl. enwiki top-100k: r4to "the enwiki pack stays") + dumps the pack builders read	-
+mini	boar/official-6c3d6c6	D	keep	node_modules target of every engine tree	-
+mini	boar/eval-runner	D	keep	node_modules target of every runner dir (node-llama-cpp, tsx)	-
+mini	boar/knowledge-build	D	keep	pack builder (P-7b recipe)	-
+mini	boar/spikes/llama-b11010	D	keep	llama-server for --backend server / deep tier	-
+mini	boar/spikes/bmoe	D	keep	deep35 bmoe memory probe (desktop-node scripts/bmoe-probe.sh)	-
+mini	boar/android/boar-app	D	keep	android/boar-app (policy D)	-
+mini	boar/android/apk/boar-integration-4f170bb9-offline-arm64.apk	D	keep	latest offline APK	-
+mini	boar/android/apk/boar-integration-b543dce9-downloader-arm64.apk	D	keep	latest downloader APK	-
+mini	boar/android/apk/boar-0cfd4a77-debug-arm64.apk	D	keep	latest debug APK (current main)	-
+mini	boar/ci	D	keep	ci-test checkout	-
+mini	boar/wda	D	keep	iPhone WDA automation	-
+mini	boar/wda-dd	D	keep	WDA DerivedData (iPhone automation)	-
+mini	boar/bin	D	keep	heavy lock + tools	-
+# ---------------------------------------------------------------- mini: class E (unknown, kept; ask r4to)
+mini	boar/kiln/be-0cfd4a77-title-prf	A	rm	L334 #10b title-prf FAIL (QUEUE line added 2026-10-02)	setup.sh arm title-prf (41ce600b)
+mini	boar/gate	A	rm	r4to approved deletion 2026-10-02 (was E: 7 gate candidate trees (Sep 27-28) + .cache 394 MB; own eval/ + run.sh, no recipe in git)	-
+mini	boar/ios-gui	A	rm	r4to approved deletion 2026-10-02 (was E: iOS device/sim run outputs, prints, smoke (Harbor))	-
+mini	boar/android/upgrade	A	rm	r4to approved deletion 2026-10-02 (was E: v1.0.0/v1.1.0 upgrade-path APKs (release fixtures?))	-
+mini	boar/android/chatkb	A	rm	r4to approved deletion 2026-10-02 (was E: unknown)	-
+mini	boar/android-mai2	A	rm	r4to approved deletion 2026-10-02 (was E: 1.1.0 offline/downloader APK build tree)	-
+mini	boar/spikes/bmoe-v028	A	rm	r4to approved deletion 2026-10-02 (was E: older bmoe spike)	-
+mini	boar/spikes/.venv	E	keep	spike python env	-
+mini	boar/eval-runner-kn	A	rm	r4to approved deletion 2026-10-02 (was E: older eval runner)	-
+mini	boar/eval-runner-pc	E	keep	older eval runner	-
+mini	boar/nosource	A	rm	r4to approved deletion 2026-10-02 (was E: unknown eval tree)	-
+mini	boar/reel30	A	rm	r4to approved deletion 2026-10-02 (was E: motion reel (render outputs))	-
+mini	boar/air15	A	rm	r4to approved deletion 2026-10-02 (was E: motion piece (render outputs))	-
+mini	boar/kiln/tree	A	rm	r4to approved deletion 2026-10-02 (was E: older app tree (KILN_SOURCE app=3bb0a3f eval=0a024db))	-
+mini	boar/kiln/poi	A	rm	r4to approved deletion 2026-10-02 (was E: places packs (berlin, world-places))	-
+mini	boar/kiln/leadvecs-top100k.sqlite	A	rm	r4to approved deletion 2026-10-02 (was E: lead vectors for the top-100k pack (#17 closed by K1; no build recipe in git))	-
+mini	boar/kiln/leadvecs-top100k.MISLABELED.backup.sqlite	A	rm	r4to approved deletion 2026-10-02 (was E: known-bad lead vectors (L186))	-
+mini	boar/kiln/exp-05	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/p0b	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/exp-04-jev	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/probeA	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/capture	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/enwiki-build	D	keep	researchers reuse it (r4to 2026-10-02)	-
+mini	boar/kiln/runs	D	keep	researchers reuse it (r4to 2026-10-02)	-
+# ---------------------------------------------------------------- macbook: class A / B (worktree diff == committed patch, detached at 0cfd4a77)
+macbook	<workspace>/wt/sitroute	A	wt	L202	setup: git -C boar-app worktree add --detach wt/sitroute 0cfd4a77 && git -C wt/sitroute apply ../../boar-eval/adapters/desktop-node/arms/sitroute.patch	b0d092636b76
+macbook	<workspace>/wt/sitroute-a1	A	wt	L202	worktree add + apply arms/sitroute+a1.patch	b8adb65da44a
+macbook	<workspace>/wt/cmpsplit	A	wt	L73	worktree add + apply arms/cmpsplit.patch	9928cd28f13a
+macbook	<workspace>/wt/cmpsplit-v2	A	wt	L74	worktree add + apply arms/cmpsplit-v2.patch	27d8dd799a9b
+macbook	<workspace>/wt/fa-cards	A	wt	L203	worktree add + apply arms/fa-cards.patch	cb3269115c34
+macbook	<workspace>/wt/leadgate	A	wt	L75	worktree add + apply arms/leadgate.patch	93e6258bb8fd
+macbook	<workspace>/wt/bigpack-g1plus	A	wt	L235	worktree add + apply arms/bigpack-g1plus.patch	a3ffcd690214
+macbook	<workspace>/wt/enwiki-namedcap	A	wt	L186+L238	worktree add + apply arms/enwiki-namedcap.patch	df25549d4dfd
+macbook	<workspace>/wt/a1-danger-v1	B	wt	L110	worktree add + apply arms/a1-danger-v1.patch	038c27c3521b
+macbook	<workspace>/wt/p5-fromto	B	wt	L300	worktree add + apply arms/p5-fromto.patch	f9a58bb0387e
+macbook	<workspace>/wt/p1-keepkey	B	wt	L289	worktree add + apply arms/p1-keepkey.patch	5f5307a6e02b
+macbook	<workspace>/wt/p1p5-stack	B	wt	L291/L300	worktree add + apply arms/p1p5-stack.patch	51e0fc20a108
+macbook	<workspace>/builds/android/boar-integration-1ca4eb7-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-338b19b-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-377d9bf-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-4025613-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-4b25507-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-55b2c165-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-69083c7c-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-6e92921-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-6eb9ca7-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-8b244ba3-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-becc5191-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-c17af1d5-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-ce4fe83-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-d88f85b7-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-dcdab04-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-ecb83d3-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+macbook	<workspace>/builds/android/boar-integration-f7e8eb2e-offline-arm64.apk	B	apk	superseded APK (offline: latest kept here = 1928502d)	rebuild at that commit; sha256 in DISK-LOG
+# ---------------------------------------------------------------- macbook: class D / E (kept)
+macbook	<workspace>/wt/cmpsplit-v21	D	keep	L114 open (re-test on 4B)	-
+macbook	<workspace>/wt/p8-sqlbatch	D	keep	L317 phone steps open	-
+macbook	<workspace>/wt/fit-repack	D	keep	Fix 1 (fit-repack) open	-
+macbook	<workspace>/wt/fit-repack-android	D	keep	Fix 1 Android-only variant frozen, run open	-
+macbook	<workspace>/builds/android/boar-integration-1928502d-offline-arm64.apk	D	keep	latest offline APK on the MacBook	-
+macbook	<workspace>/builds/android/boar-integration-b7e31b7-downloader-arm64.apk	D	keep	only downloader APK on the MacBook	-
+macbook	<workspace>/builds/android/boar-main-9898b35-release-arm64.apk	D	keep	only release APK on the MacBook	-
+macbook	<workspace>/builds/android/boar-0cfd4a77-debug-arm64.apk	D	keep	current main debug APK	-
+macbook	<workspace>/shared-models/bge-reranker-v2-m3-q4km.gguf	D	keep	Sonar L0 off-topic rater (out of GC scope; listed for completeness)	rnd/kiln/MODELS.md
+macbook	<workspace>/wt/d1a	E	keep	L89 rejected, but the worktree diff != committed patch (+2 untracked files)	-
+macbook	<workspace>/wt/d1c	E	keep	L89 rejected, but the worktree diff != committed patch (+1 untracked file)	-
+macbook	<workspace>/wt/title-prf	E	keep	FAIL only in the report, no QUEUE verdict line	-
+macbook	<workspace>/builds/ios	E	keep	iOS device/sim builds + run outputs (4.2 GB; Harbor)	-
+macbook	<workspace>/wt/*	E	keep	the other 30 worktrees (devicelab 4.1 GB, plumb-and-0cfd4a77 1.8 GB, release-110 1.6 GB, eval 0.5 GB, moe 0.4 GB, ...): not Kiln arms	-

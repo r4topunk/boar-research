@@ -1,0 +1,150 @@
+{
+ "rule": "share_kept <= 0.40 and resolvable gold raw6/kept not lower than baseline (both sets)",
+ "tree": "wt/packs",
+ "config": "--deep --gate rules --k 6 --pool 20; v02 --tasks-from dt512 s42 traces",
+ "sets": {
+  "v01": {
+   "n": 60,
+   "retrieving": 54,
+   "gold_items": 39,
+   "gold_strings": 46,
+   "gold_resolvable_strings": 22,
+   "base": {
+    "kept_slots": 111,
+    "empty_kept": 15,
+    "p50_ms": 269.9,
+    "gold": {
+     "res_raw6": 16,
+     "res_kept": 14,
+     "all_raw6": 16,
+     "all_kept": 14
+    },
+    "kept_slots_by_pack": {
+     "boar-wikivoyage-en": 73,
+     "seed": 1,
+     "boar-crypto": 37
+    }
+   },
+   "runs": {
+    "nist": {
+     "kept_slots": 111,
+     "pack_kept_slots": 0,
+     "share_kept": 0.0,
+     "items_pack_ge1": 0,
+     "pack_raw6_slots": 16,
+     "share_raw6": 0.058,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 15,
+     "changed_kept": 0,
+     "changed_raw": 9,
+     "retrieving": 54,
+     "p50_ms": 191.5,
+     "category": {
+      "matching": [
+       "crypto"
+      ],
+      "in": {
+       "items": 7,
+       "pack_slots": 0,
+       "kept_slots": 26,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "out": {
+       "items": 53,
+       "pack_slots": 0,
+       "kept_slots": 85,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 0,
+        "kept_slots": 12,
+        "items_pack_ge1": 0
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    }
+   }
+  }
+ },
+ "verdict": {
+  "nist": "default-eligible"
+ }
+}

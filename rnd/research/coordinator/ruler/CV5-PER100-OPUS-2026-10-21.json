@@ -1,0 +1,1135 @@
+{
+ "criterion_sha256": "04752105158ad95d9c413da8440c46cc469b676467f213deb8ac4deeba75159c",
+ "hon67_sha256": "9718fe371ddcbee4173cc91370f18d6ea420abdbc2b7be7d2c9bd24b2ffab9a0",
+ "n_units": 130,
+ "reused_units": 88,
+ "sref_offset_opus_minus_haiku": 0.174,
+ "sref_imputation_rows": {
+  "item_opus_sref": 71,
+  "haiku_sref_plus_offset": 60
+ },
+ "refuse_by_default": {
+  "all": {
+   "n": 97,
+   "tiers": {
+    "4B": {
+     "haiku": {
+      "correct": 16.495,
+      "ce": 2.062,
+      "partial": 13.402,
+      "hidden": 68.041,
+      "U": 0.186,
+      "U_fa": 0.15
+     },
+     "opus": {
+      "correct": 22.68,
+      "ce": 1.031,
+      "partial": 8.247,
+      "hidden": 68.041,
+      "U": 0.217,
+      "U_fa": 0.191
+     },
+     "opus_minus_haiku": {
+      "correct": 6.185,
+      "ce": -1.031,
+      "partial": -5.155,
+      "hidden": 0.0,
+      "U": 0.031,
+      "U_fa": 0.041
+     }
+    },
+    "Gemma": {
+     "haiku": {
+      "correct": 14.433,
+      "ce": 2.062,
+      "partial": 21.649,
+      "hidden": 61.856,
+      "U": 0.196,
+      "U_fa": 0.146
+     },
+     "opus": {
+      "correct": 23.711,
+      "ce": 0.0,
+      "partial": 14.433,
+      "hidden": 61.856,
+      "U": 0.225,
+      "U_fa": 0.184
+     },
+     "opus_minus_haiku": {
+      "correct": 9.278,
+      "ce": -2.062,
+      "partial": -7.216,
+      "hidden": 0.0,
+      "U": 0.029,
+      "U_fa": 0.038
+     }
+    },
+    "1.7B": {
+     "haiku": {
+      "correct": 16.495,
+      "ce": 4.124,
+      "partial": 12.371,
+      "hidden": 67.01,
+      "U": 0.175,
+      "U_fa": 0.133
+     },
+     "opus": {
+      "correct": 18.557,
+      "ce": 2.062,
+      "partial": 12.371,
+      "hidden": 67.01,
+      "U": 0.203,
+      "U_fa": 0.17
+     },
+     "opus_minus_haiku": {
+      "correct": 2.062,
+      "ce": -2.062,
+      "partial": 0.0,
+      "hidden": 0.0,
+      "U": 0.028,
+      "U_fa": 0.037
+     }
+    }
+   },
+   "paired": {
+    "4B - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": 0.0,
+       "ce": -2.062,
+       "partial": 1.031,
+       "hidden": 1.031,
+       "U": 0.011,
+       "U_fa": 0.017
+      },
+      "ci": {
+       "correct": [
+        -4.124,
+        4.124
+       ],
+       "ce": [
+        -6.186,
+        2.062
+       ],
+       "partial": [
+        -4.124,
+        6.186
+       ],
+       "hidden": [
+        -4.124,
+        6.186
+       ],
+       "U": [
+        -0.01,
+        0.033
+       ],
+       "U_fa": [
+        0.001,
+        0.035
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 4.123,
+       "ce": -1.031,
+       "partial": -4.124,
+       "hidden": 1.031,
+       "U": 0.014,
+       "U_fa": 0.021
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        9.278
+       ],
+       "ce": [
+        -5.155,
+        2.062
+       ],
+       "partial": [
+        -10.309,
+        2.062
+       ],
+       "hidden": [
+        -4.124,
+        6.186
+       ],
+       "U": [
+        -0.009,
+        0.039
+       ],
+       "U_fa": [
+        0.001,
+        0.041
+       ]
+      }
+     }
+    },
+    "4B - Gemma": {
+     "haiku": {
+      "point": {
+       "correct": 2.062,
+       "ce": 0.0,
+       "partial": -8.247,
+       "hidden": 6.185,
+       "U": -0.01,
+       "U_fa": 0.004
+      },
+      "ci": {
+       "correct": [
+        -2.062,
+        6.186
+       ],
+       "ce": [
+        -4.124,
+        4.124
+       ],
+       "partial": [
+        -15.464,
+        -1.031
+       ],
+       "hidden": [
+        0.0,
+        12.371
+       ],
+       "U": [
+        -0.041,
+        0.02
+       ],
+       "U_fa": [
+        -0.02,
+        0.029
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": -1.031,
+       "ce": 1.031,
+       "partial": -6.186,
+       "hidden": 6.185,
+       "U": -0.008,
+       "U_fa": 0.007
+      },
+      "ci": {
+       "correct": [
+        -7.216,
+        5.155
+       ],
+       "ce": [
+        0.0,
+        3.093
+       ],
+       "partial": [
+        -13.402,
+        1.031
+       ],
+       "hidden": [
+        0.0,
+        12.371
+       ],
+       "U": [
+        -0.041,
+        0.025
+       ],
+       "U_fa": [
+        -0.022,
+        0.036
+       ]
+      }
+     }
+    },
+    "Gemma - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": -2.062,
+       "ce": -2.062,
+       "partial": 9.278,
+       "hidden": -5.154,
+       "U": 0.021,
+       "U_fa": 0.013
+      },
+      "ci": {
+       "correct": [
+        -7.216,
+        3.093
+       ],
+       "ce": [
+        -6.186,
+        2.062
+       ],
+       "partial": [
+        2.062,
+        16.495
+       ],
+       "hidden": [
+        -12.371,
+        2.062
+       ],
+       "U": [
+        -0.009,
+        0.054
+       ],
+       "U_fa": [
+        -0.009,
+        0.037
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 5.154,
+       "ce": -2.062,
+       "partial": 2.062,
+       "hidden": -5.154,
+       "U": 0.022,
+       "U_fa": 0.014
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        11.34
+       ],
+       "ce": [
+        -5.155,
+        0.0
+       ],
+       "partial": [
+        -6.186,
+        10.309
+       ],
+       "hidden": [
+        -12.371,
+        2.062
+       ],
+       "U": [
+        -0.009,
+        0.055
+       ],
+       "U_fa": [
+        -0.01,
+        0.041
+       ]
+      }
+     }
+    }
+   }
+  },
+  "divergent": {
+   "n": 77,
+   "tiers": {
+    "4B": {
+     "haiku": {
+      "correct": 7.792,
+      "ce": 2.597,
+      "partial": 12.987,
+      "hidden": 76.623,
+      "U": 0.116,
+      "U_fa": 0.084
+     },
+     "opus": {
+      "correct": 11.688,
+      "ce": 1.299,
+      "partial": 10.39,
+      "hidden": 76.623,
+      "U": 0.128,
+      "U_fa": 0.1
+     },
+     "opus_minus_haiku": {
+      "correct": 3.896,
+      "ce": -1.298,
+      "partial": -2.597,
+      "hidden": 0.0,
+      "U": 0.012,
+      "U_fa": 0.016
+     }
+    },
+    "Gemma": {
+     "haiku": {
+      "correct": 5.195,
+      "ce": 2.597,
+      "partial": 23.377,
+      "hidden": 68.831,
+      "U": 0.128,
+      "U_fa": 0.079
+     },
+     "opus": {
+      "correct": 12.987,
+      "ce": 0.0,
+      "partial": 18.182,
+      "hidden": 68.831,
+      "U": 0.138,
+      "U_fa": 0.093
+     },
+     "opus_minus_haiku": {
+      "correct": 7.792,
+      "ce": -2.597,
+      "partial": -5.195,
+      "hidden": 0.0,
+      "U": 0.01,
+      "U_fa": 0.014
+     }
+    },
+    "1.7B": {
+     "haiku": {
+      "correct": 7.792,
+      "ce": 5.195,
+      "partial": 11.688,
+      "hidden": 75.325,
+      "U": 0.102,
+      "U_fa": 0.063
+     },
+     "opus": {
+      "correct": 6.494,
+      "ce": 2.597,
+      "partial": 15.584,
+      "hidden": 75.325,
+      "U": 0.11,
+      "U_fa": 0.075
+     },
+     "opus_minus_haiku": {
+      "correct": -1.298,
+      "ce": -2.598,
+      "partial": 3.896,
+      "hidden": 0.0,
+      "U": 0.008,
+      "U_fa": 0.012
+     }
+    }
+   },
+   "paired": {
+    "4B - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": 0.0,
+       "ce": -2.598,
+       "partial": 1.299,
+       "hidden": 1.298,
+       "U": 0.014,
+       "U_fa": 0.021
+      },
+      "ci": {
+       "correct": [
+        -5.195,
+        5.195
+       ],
+       "ce": [
+        -7.792,
+        2.597
+       ],
+       "partial": [
+        -5.195,
+        7.792
+       ],
+       "hidden": [
+        -5.195,
+        7.792
+       ],
+       "U": [
+        -0.013,
+        0.043
+       ],
+       "U_fa": [
+        0.0,
+        0.043
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 5.194,
+       "ce": -1.298,
+       "partial": -5.194,
+       "hidden": 1.298,
+       "U": 0.018,
+       "U_fa": 0.025
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        11.688
+       ],
+       "ce": [
+        -6.494,
+        2.597
+       ],
+       "partial": [
+        -12.987,
+        2.597
+       ],
+       "hidden": [
+        -5.195,
+        7.792
+       ],
+       "U": [
+        -0.011,
+        0.049
+       ],
+       "U_fa": [
+        0.001,
+        0.051
+       ]
+      }
+     }
+    },
+    "4B - Gemma": {
+     "haiku": {
+      "point": {
+       "correct": 2.597,
+       "ce": 0.0,
+       "partial": -10.39,
+       "hidden": 7.792,
+       "U": -0.012,
+       "U_fa": 0.005
+      },
+      "ci": {
+       "correct": [
+        -2.597,
+        7.792
+       ],
+       "ce": [
+        -5.195,
+        5.195
+       ],
+       "partial": [
+        -19.481,
+        -2.597
+       ],
+       "hidden": [
+        0.0,
+        15.584
+       ],
+       "U": [
+        -0.049,
+        0.022
+       ],
+       "U_fa": [
+        -0.024,
+        0.034
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": -1.299,
+       "ce": 1.299,
+       "partial": -7.792,
+       "hidden": 7.792,
+       "U": -0.01,
+       "U_fa": 0.007
+      },
+      "ci": {
+       "correct": [
+        -10.39,
+        6.494
+       ],
+       "ce": [
+        0.0,
+        5.195
+       ],
+       "partial": [
+        -16.883,
+        1.299
+       ],
+       "hidden": [
+        0.0,
+        15.584
+       ],
+       "U": [
+        -0.051,
+        0.029
+       ],
+       "U_fa": [
+        -0.028,
+        0.044
+       ]
+      }
+     }
+    },
+    "Gemma - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": -2.597,
+       "ce": -2.598,
+       "partial": 11.689,
+       "hidden": -6.494,
+       "U": 0.026,
+       "U_fa": 0.016
+      },
+      "ci": {
+       "correct": [
+        -9.091,
+        3.896
+       ],
+       "ce": [
+        -7.792,
+        2.597
+       ],
+       "partial": [
+        2.597,
+        20.779
+       ],
+       "hidden": [
+        -15.584,
+        2.597
+       ],
+       "U": [
+        -0.01,
+        0.064
+       ],
+       "U_fa": [
+        -0.012,
+        0.044
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 6.493,
+       "ce": -2.597,
+       "partial": 2.598,
+       "hidden": -6.494,
+       "U": 0.028,
+       "U_fa": 0.018
+      },
+      "ci": {
+       "correct": [
+        -1.299,
+        14.286
+       ],
+       "ce": [
+        -6.494,
+        0.0
+       ],
+       "partial": [
+        -7.792,
+        12.987
+       ],
+       "hidden": [
+        -15.584,
+        2.597
+       ],
+       "U": [
+        -0.011,
+        0.069
+       ],
+       "U_fa": [
+        -0.013,
+        0.05
+       ]
+      }
+     }
+    }
+   }
+  },
+  "deterministic": {
+   "n": 20,
+   "tiers": {
+    "4B": {
+     "haiku": {
+      "correct": 50.0,
+      "ce": 0.0,
+      "partial": 15.0,
+      "hidden": 35.0,
+      "U": 0.467,
+      "U_fa": 0.415
+     },
+     "opus": {
+      "correct": 65.0,
+      "ce": 0.0,
+      "partial": 0.0,
+      "hidden": 35.0,
+      "U": 0.571,
+      "U_fa": 0.55
+     },
+     "opus_minus_haiku": {
+      "correct": 15.0,
+      "ce": 0.0,
+      "partial": -15.0,
+      "hidden": 0.0,
+      "U": 0.104,
+      "U_fa": 0.135
+     }
+    },
+    "Gemma": {
+     "haiku": {
+      "correct": 50.0,
+      "ce": 0.0,
+      "partial": 15.0,
+      "hidden": 35.0,
+      "U": 0.467,
+      "U_fa": 0.415
+     },
+     "opus": {
+      "correct": 65.0,
+      "ce": 0.0,
+      "partial": 0.0,
+      "hidden": 35.0,
+      "U": 0.571,
+      "U_fa": 0.55
+     },
+     "opus_minus_haiku": {
+      "correct": 15.0,
+      "ce": 0.0,
+      "partial": -15.0,
+      "hidden": 0.0,
+      "U": 0.104,
+      "U_fa": 0.135
+     }
+    },
+    "1.7B": {
+     "haiku": {
+      "correct": 50.0,
+      "ce": 0.0,
+      "partial": 15.0,
+      "hidden": 35.0,
+      "U": 0.467,
+      "U_fa": 0.415
+     },
+     "opus": {
+      "correct": 65.0,
+      "ce": 0.0,
+      "partial": 0.0,
+      "hidden": 35.0,
+      "U": 0.571,
+      "U_fa": 0.55
+     },
+     "opus_minus_haiku": {
+      "correct": 15.0,
+      "ce": 0.0,
+      "partial": -15.0,
+      "hidden": 0.0,
+      "U": 0.104,
+      "U_fa": 0.135
+     }
+    }
+   },
+   "paired": {
+    "4B - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     }
+    },
+    "4B - Gemma": {
+     "haiku": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     }
+    },
+    "Gemma - 1.7B": {
+     "haiku": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     },
+     "opus": {
+      "point": {
+       "correct": 0.0,
+       "ce": 0.0,
+       "partial": 0.0,
+       "hidden": 0.0,
+       "U": 0.0,
+       "U_fa": 0.0
+      },
+      "ci": {
+       "correct": [
+        0.0,
+        0.0
+       ],
+       "ce": [
+        0.0,
+        0.0
+       ],
+       "partial": [
+        0.0,
+        0.0
+       ],
+       "hidden": [
+        0.0,
+        0.0
+       ],
+       "U": [
+        0.0,
+        0.0
+       ],
+       "U_fa": [
+        0.0,
+        0.0
+       ]
+      }
+     }
+    }
+   }
+  }
+ },
+ "decision_hon67_rule": {
+  "haiku": {
+   "pair": "4B - 1.7B",
+   "dCE_refuse": -2.062,
+   "dCE_refuse_ci": [
+    -6.186,
+    2.062
+   ],
+   "dK_refuse": 0.0,
+   "dK_refuse_ci": [
+    -4.124,
+    4.124
+   ],
+   "show_dK": 3.093,
+   "show_dCE": -7.216,
+   "show_dominates": true,
+   "verdict": "MIXED"
+  },
+  "opus_refuse_fields_only": {
+   "pair": "4B - 1.7B",
+   "dCE_refuse": -1.031,
+   "dCE_refuse_ci": [
+    -5.155,
+    2.062
+   ],
+   "dK_refuse": 4.123,
+   "dK_refuse_ci": [
+    0.0,
+    9.278
+   ]
+  }
+ },
+ "hidden": {
+  "4B": {
+   "hidden_text_rows": 59,
+   "sample": 20,
+   "correct_hidden_per100": {
+    "haiku_census": 10.31,
+    "opus_est": 21.91,
+    "opus_ci": [
+     9.45,
+     34.36
+    ]
+   },
+   "ce_hidden_per100": {
+    "haiku_census": 14.43,
+    "opus_est": 2.89,
+    "opus_ci": [
+     0.0,
+     8.66
+    ]
+   },
+   "show_all_est_per100": {
+    "opus_correct": 44.59,
+    "opus_ce": 3.92,
+    "haiku_correct": 26.8,
+    "haiku_ce": 16.49
+   },
+   "sample_agreement": {
+    "n": 20,
+    "ce_agree": 16,
+    "correct_agree": 14,
+    "haiku_ce": 5,
+    "opus_ce": 1,
+    "haiku_correct": 3,
+    "opus_correct": 7
+   }
+  },
+  "Gemma": {
+   "hidden_text_rows": 51,
+   "sample": 20,
+   "correct_hidden_per100": {
+    "haiku_census": 7.22,
+    "opus_est": 12.66,
+    "opus_ci": [
+     4.81,
+     20.72
+    ]
+   },
+   "ce_hidden_per100": {
+    "haiku_census": 11.34,
+    "opus_est": 8.51,
+    "opus_ci": [
+     2.84,
+     11.34
+    ]
+   },
+   "show_all_est_per100": {
+    "opus_correct": 36.37,
+    "opus_ce": 8.51,
+    "haiku_correct": 21.65,
+    "haiku_ce": 13.4
+   },
+   "sample_agreement": {
+    "n": 20,
+    "ce_agree": 19,
+    "correct_agree": 16,
+    "haiku_ce": 4,
+    "opus_ce": 3,
+    "haiku_correct": 3,
+    "opus_correct": 5
+   }
+  },
+  "1.7B": {
+   "hidden_text_rows": 58,
+   "sample": 20,
+   "correct_hidden_per100": {
+    "haiku_census": 7.22,
+    "opus_est": 19.01,
+    "opus_ci": [
+     10.22,
+     28.21
+    ]
+   },
+   "ce_hidden_per100": {
+    "haiku_census": 19.59,
+    "opus_est": 11.19,
+    "opus_ci": [
+     2.8,
+     16.79
+    ]
+   },
+   "show_all_est_per100": {
+    "opus_correct": 37.57,
+    "opus_ce": 13.25,
+    "haiku_correct": 23.71,
+    "haiku_ce": 23.71
+   },
+   "sample_agreement": {
+    "n": 20,
+    "ce_agree": 17,
+    "correct_agree": 16,
+    "haiku_ce": 7,
+    "opus_ce": 4,
+    "haiku_correct": 2,
+    "opus_correct": 6
+   }
+  }
+ },
+ "shown_agreement": {
+  "4B": {
+   "n": 31,
+   "ce_agree": 30,
+   "correct_agree": 23,
+   "haiku_only_ce": [
+    "vit-cry-001"
+   ],
+   "opus_only_ce": [],
+   "corr_mean_opus_minus_haiku": 0.452
+  },
+  "Gemma": {
+   "n": 37,
+   "ce_agree": 35,
+   "correct_agree": 28,
+   "haiku_only_ce": [
+    "lan-cmp-004",
+    "vit-cry-005"
+   ],
+   "opus_only_ce": [],
+   "corr_mean_opus_minus_haiku": 0.419
+  },
+  "1.7B": {
+   "n": 32,
+   "ce_agree": 30,
+   "correct_agree": 28,
+   "haiku_only_ce": [
+    "lan-exp-007",
+    "vit-cry-009"
+   ],
+   "opus_only_ce": [],
+   "corr_mean_opus_minus_haiku": 0.344
+  }
+ },
+ "rules": {
+  "ce_move_per_tier": {
+   "4B": -1.031,
+   "Gemma": -2.062,
+   "1.7B": -2.062
+  },
+  "correct_rise_per_tier": {
+   "4B": 6.185,
+   "Gemma": 9.278,
+   "1.7B": 2.062
+  },
+  "dCE_4B_minus_17B_opus": -1.031,
+  "dCE_ci": [
+   -5.155,
+   2.062
+  ],
+  "dK_pairs_opus": {
+   "4B - 1.7B": 4.123,
+   "4B - Gemma": -1.031,
+   "Gemma - 1.7B": 5.154
+  },
+  "kill_ce_move": true,
+  "kill_ce_order": false,
+  "kill_tie": true,
+  "pred_correct_rise_ge3_all": false,
+  "ce_order_4B_le_17B_opus": true,
+  "verdict": "KILLED"
+ }
+}

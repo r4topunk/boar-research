@@ -1,0 +1,374 @@
+{
+ "arm": "LITE5",
+ "date": "2026-10-15",
+ "criterion_sha256": "9ba8bbf30eb4ec32633429046a3a0717cdd42900a8b4aec92dc11fe944388f16",
+ "criterion_v1_sha256": "077b1dbd63ff05ba7619e9fd30ea70cbdfa3a397ffb83404ef3cbe6897bd18f8",
+ "x2b_addendum_sha256": "4b3578e786cafb56dd1230912cb4699ae9ec5219a708fe1f13218157be25d38e",
+ "adapter_lite5_sha256": "5785ffc48240f8397e6e999fd3134f938c4fc516946180119ce8a5511aff36f2",
+ "model": {
+  "id": "qwen3-1.7b-q4km",
+  "sha256": "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897"
+ },
+ "judge": "Haiku 5.5-low N=4 both orders",
+ "calls": {
+  "haiku": 40,
+  "opus": 0,
+  "paid": 0,
+  "reserved_unspent": 40
+ },
+ "on_minus_off": {
+  "ON": {
+   "n": 20,
+   "ratio": 0.5103,
+   "ci": [
+    0.4583,
+    0.5638
+   ],
+   "win": 0,
+   "tie": 0,
+   "loss": 1,
+   "posCons": 1,
+   "floorAdj": 0.3687,
+   "floorAdjCI": [
+    0.3064,
+    0.4343
+   ],
+   "winRateCI": [
+    0,
+    0
+   ]
+  },
+  "OFF": {
+   "n": 20,
+   "ratio": 0.4304,
+   "ci": [
+    0.3759,
+    0.4918
+   ],
+   "win": 0,
+   "tie": 0,
+   "loss": 1,
+   "posCons": 1,
+   "floorAdj": 0.27,
+   "floorAdjCI": [
+    0.2004,
+    0.3489
+   ],
+   "winRateCI": [
+    0,
+    0
+   ]
+  },
+  "paired": {
+   "n": 20,
+   "dRatio": 0.0799,
+   "dRatioCI": [
+    0.0333,
+    0.1303
+   ],
+   "dFloor": 0.0987,
+   "dFloorCI": [
+    0.0409,
+    0.1613
+   ],
+   "winsVsRef": {
+    "L5st": 0,
+    "Lst": 0
+   },
+   "tiesVsRef": {
+    "L5st": 0,
+    "Lst": 0
+   },
+   "lossesVsRef": {
+    "L5st": 20,
+    "Lst": 20
+   },
+   "headToHead": {
+    "aHigher": 11,
+    "same": 6,
+    "bHigher": 3
+   }
+  }
+ },
+ "on_minus_4b_plain": {
+  "n": 20,
+  "dRatio": -0.0079,
+  "dRatioCI": [
+   -0.0736,
+   0.0637
+  ],
+  "dFloor": -0.015,
+  "dFloorCI": [
+   -0.1039,
+   0.0747
+  ],
+  "winsVsRef": {
+   "L5st": 0,
+   "C4B": 0
+  },
+  "tiesVsRef": {
+   "L5st": 0,
+   "C4B": 0
+  },
+  "lossesVsRef": {
+   "L5st": 20,
+   "C4B": 20
+  },
+  "headToHead": {
+   "aHigher": 4,
+   "same": 5,
+   "bHigher": 11
+  }
+ },
+ "on_minus_4b_x2b": {
+  "n": 20,
+  "dRatio": -0.072,
+  "dRatioCI": [
+   -0.1136,
+   -0.0331
+  ],
+  "dFloor": -0.0945,
+  "dFloorCI": [
+   -0.1453,
+   -0.0461
+  ],
+  "winsVsRef": {
+   "L5st": 0,
+   "X2b4B": 0
+  },
+  "tiesVsRef": {
+   "L5st": 0,
+   "X2b4B": 0
+  },
+  "lossesVsRef": {
+   "L5st": 20,
+   "X2b4B": 20
+  },
+  "headToHead": {
+   "aHigher": 2,
+   "same": 3,
+   "bHigher": 15
+  }
+ },
+ "ratio_means_lite3_estimator": {
+  "ON": 0.5123,
+  "OFF": 0.4302,
+  "C4B": 0.5221,
+  "X2b4B": 0.5867
+ },
+ "fact_in_context": {
+  "off": 6,
+  "on": 12,
+  "newly_present": [
+   "st-boar-factbook-001",
+   "st-boar-factbook-004",
+   "st-boar-medlineplus-en-008",
+   "st-qa-bitcoin-se-019",
+   "st-qa-outdoors-se-020",
+   "st-qa-travel-se-017"
+  ],
+  "fired": 17,
+  "appended_chunks": 40
+ },
+ "splits": {
+  "by_lite3_bucket": {
+   "health_safety": {
+    "n": 3,
+    "OFF": 0.368,
+    "ON": 0.379,
+    "C4B": 0.371,
+    "X2b4B": 0.377,
+    "d_on_off": 0.011,
+    "up_same_down": [
+     1,
+     2,
+     0
+    ]
+   },
+   "invented": {
+    "n": 7,
+    "OFF": 0.356,
+    "ON": 0.5,
+    "C4B": 0.447,
+    "X2b4B": 0.62,
+    "d_on_off": 0.144,
+    "up_same_down": [
+     6,
+     0,
+     1
+    ]
+   },
+   "not_read": {
+    "n": 3,
+    "OFF": 0.395,
+    "ON": 0.561,
+    "C4B": 0.579,
+    "X2b4B": 0.563,
+    "d_on_off": 0.166,
+    "up_same_down": [
+     3,
+     0,
+     0
+    ]
+   },
+   "other": {
+    "n": 1,
+    "OFF": 0.36,
+    "ON": 0.423,
+    "C4B": 0.48,
+    "X2b4B": 0.577,
+    "d_on_off": 0.063,
+    "up_same_down": [
+     1,
+     0,
+     0
+    ]
+   },
+   "thin": {
+    "n": 6,
+    "OFF": 0.577,
+    "ON": 0.584,
+    "C4B": 0.664,
+    "X2b4B": 0.667,
+    "d_on_off": 0.006,
+    "up_same_down": [
+     2,
+     1,
+     3
+    ]
+   }
+  },
+  "by_reach": {
+   "absent": {
+    "n": 8,
+    "OFF": 0.459,
+    "ON": 0.486,
+    "C4B": 0.518,
+    "X2b4B": 0.557,
+    "d_on_off": 0.027,
+    "up_same_down": [
+     3,
+     3,
+     2
+    ]
+   },
+   "newly_present": {
+    "n": 6,
+    "OFF": 0.367,
+    "ON": 0.521,
+    "C4B": 0.506,
+    "X2b4B": 0.658,
+    "d_on_off": 0.154,
+    "up_same_down": [
+     6,
+     0,
+     0
+    ]
+   },
+   "present_off": {
+    "n": 6,
+    "OFF": 0.455,
+    "ON": 0.539,
+    "C4B": 0.544,
+    "X2b4B": 0.555,
+    "d_on_off": 0.084,
+    "up_same_down": [
+     4,
+     0,
+     2
+    ]
+   }
+  }
+ },
+ "gate": {
+  "criterion_sha256": "9ba8bbf30eb4ec32633429046a3a0717cdd42900a8b4aec92dc11fe944388f16",
+  "G0": {
+   "errors": 0,
+   "empty": 0,
+   "reasoning_tokens": 0,
+   "think_tag": 0
+  },
+  "G1": {
+   "codes_same_as_4b_x2b": 20,
+   "kept_same_as_4b_x2b": 20
+  },
+  "G2": {
+   "n_llm_both": 17,
+   "max_growth": 633,
+   "p50_growth": 400,
+   "over_600_server_count": 1,
+   "growth_equal_4b_x2b": 17
+  },
+  "G3": {
+   "changed": 17,
+   "share": 0.85
+  },
+  "G4": {
+   "on_present": 12,
+   "off_present": 6,
+   "newly_present": [
+    "st-boar-factbook-001",
+    "st-boar-factbook-004",
+    "st-boar-medlineplus-en-008",
+    "st-qa-bitcoin-se-019",
+    "st-qa-outdoors-se-020",
+    "st-qa-travel-se-017"
+   ]
+  },
+  "answers_identical_on_off": 3,
+  "p50": {
+   "promptTokens_on": 815,
+   "promptTokens_off": 438,
+   "totalMs_on": 5501.35,
+   "totalMs_off_mini": 3194.75,
+   "answerWords_on": 38.5,
+   "answerWords_off": 33.5
+  },
+  "pass": {
+   "G0": true,
+   "G1": true,
+   "G2": true,
+   "G3": true,
+   "G4": true
+  },
+  "verdict": "PASS"
+ },
+ "host_identity": {
+  "answer": 5,
+  "kept": 20,
+  "promptTokens": 20,
+  "reasonCodes": 14,
+  "tier": 20,
+  "error": 20,
+  "answer_diff_ids": [
+   "st-boar-factbook-001",
+   "st-boar-factbook-004",
+   "st-boar-medlineplus-en-008",
+   "st-boar-simplewiki-en-004",
+   "st-boar-simplewiki-en-018",
+   "st-qa-bitcoin-se-003",
+   "st-qa-ethereum-se-002",
+   "st-qa-ethereum-se-014",
+   "st-qa-health-se-001",
+   "st-qa-health-se-003",
+   "st-qa-outdoors-se-007",
+   "st-qa-outdoors-se-008",
+   "st-qa-outdoors-se-020",
+   "st-qa-travel-se-001",
+   "st-qa-travel-se-017"
+  ],
+  "errors_mac": 0,
+  "n": 20
+ },
+ "kit_slice_identity": {
+  "n": 20,
+  "errors_on": 0,
+  "reasoning_tokens_on": 0,
+  "kept_same": 20,
+  "promptTokens_same": 20,
+  "headpass_add_items": 0,
+  "headpass_any_code_items": 15,
+  "answer_same": 6
+ },
+ "verdict": "LEVER-shaped"
+}

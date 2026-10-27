@@ -1,0 +1,352 @@
+{
+ "ids": 51,
+ "cost": {
+  "C": {
+   "out_tokens_p50": 44.0,
+   "out_tokens_mean": 44.0,
+   "out_tokens_p50_generated": 44.5,
+   "generated_rows": 50,
+   "at_cap": 0,
+   "wall_p50_s": 1.68,
+   "wall_sum_s": 86.3,
+   "words_p50": 40.0,
+   "kept_sources_items": 0,
+   "persona": "succinct",
+   "model_sha": "1adf0b11",
+   "host": "Apple M4 cpu x4 (darwin 25.6.0, cpu generation, llama-server)"
+  },
+  "P": {
+   "out_tokens_p50": 48.0,
+   "out_tokens_mean": 49.0,
+   "out_tokens_p50_generated": 49.0,
+   "generated_rows": 50,
+   "at_cap": 0,
+   "wall_p50_s": 5.87,
+   "wall_sum_s": 291.7,
+   "words_p50": 41.0,
+   "kept_sources_items": 48,
+   "persona": "succinct",
+   "model_sha": "1adf0b11",
+   "host": "Apple M4 cpu x4 (darwin 25.6.0, cpu generation, llama-server)"
+  },
+  "D15": {
+   "out_tokens_p50": 552.0,
+   "out_tokens_mean": 556.0,
+   "out_tokens_p50_generated": 556.5,
+   "generated_rows": 50,
+   "at_cap": 0,
+   "wall_p50_s": 16.01,
+   "wall_sum_s": 834.4,
+   "words_p50": 454.0,
+   "kept_sources_items": 48,
+   "persona": "detailed",
+   "model_sha": "1adf0b11",
+   "host": "Apple M4 cpu x4 (darwin 25.6.0, cpu generation, llama-server)"
+  },
+  "S17": {
+   "out_tokens_p50": 41.0,
+   "out_tokens_mean": 38.1,
+   "out_tokens_p50_generated": 46.0,
+   "generated_rows": 42,
+   "at_cap": 0,
+   "wall_p50_s": 4.34,
+   "wall_sum_s": 189.9,
+   "words_p50": 40.0,
+   "kept_sources_items": 41,
+   "persona": "succinct",
+   "model_sha": "b139949c",
+   "host": "Apple M4 cpu x4 (darwin 25.6.0, cpu generation, llama-server)"
+  },
+  "D17": {
+   "out_tokens_p50": 392.0,
+   "out_tokens_mean": 341.2,
+   "out_tokens_p50_generated": 400.0,
+   "generated_rows": 42,
+   "at_cap": 0,
+   "wall_p50_s": 16.93,
+   "wall_sum_s": 749.7,
+   "words_p50": 303.0,
+   "kept_sources_items": 41,
+   "persona": "detailed",
+   "model_sha": "b139949c",
+   "host": "Apple M4 cpu x4 (darwin 25.6.0, cpu generation, llama-server)"
+  }
+ },
+ "opus_sources": {
+  "C": {
+   "pool": 51
+  },
+  "P": {
+   "pool": 51
+  },
+  "S17": {
+   "pool": 20
+  }
+ },
+ "ship15b": {
+  "opus_d2s": {
+   "P": {
+    "n": 51,
+    "U": 0.2697,
+    "U_ci": [
+     0.1995,
+     0.3498
+    ],
+    "U_raw": 0.4187,
+    "U_net": 0.2247,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 25.49,
+    "declined": 0
+   },
+   "C": {
+    "n": 51,
+    "U": 0.2546,
+    "U_ci": [
+     0.1839,
+     0.3358
+    ],
+    "U_raw": 0.4062,
+    "U_net": 0.2087,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 31.37,
+    "declined": 2
+   },
+   "P-C": {
+    "dU": 0.0151,
+    "dU_ci": [
+     -0.0363,
+     0.0678
+    ],
+    "dU_raw": 0.0124,
+    "better_worse": [
+     20,
+     15
+    ],
+    "d_ce_shown_per100": -5.88,
+    "d_ce_ci": [
+     -17.6471,
+     5.8824
+    ],
+    "changed_text": 48
+   }
+  },
+  "opus_v1": {
+   "P": {
+    "n": 51,
+    "U": 0.2697,
+    "U_ci": [
+     0.1995,
+     0.3498
+    ],
+    "U_raw": 0.4187,
+    "U_net": 0.2247,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 25.49,
+    "declined": 0
+   },
+   "C": {
+    "n": 51,
+    "U": 0.2613,
+    "U_ci": [
+     0.189,
+     0.3419
+    ],
+    "U_raw": 0.4116,
+    "U_net": 0.2158,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 31.37,
+    "declined": 0
+   },
+   "P-C": {
+    "dU": 0.0084,
+    "dU_ci": [
+     -0.0409,
+     0.0601
+    ],
+    "dU_raw": 0.0071,
+    "better_worse": [
+     19,
+     15
+    ],
+    "d_ce_shown_per100": -5.88,
+    "d_ce_ci": [
+     -17.6471,
+     5.8824
+    ],
+    "changed_text": 48
+   }
+  },
+  "verdict": "NO-GAIN",
+  "d2s_not_attempted": {
+   "P": 0,
+   "C": 2
+  },
+  "haiku": {
+   "P": {
+    "n": 51,
+    "U": 0.2203,
+    "U_ci": [
+     0.1652,
+     0.2884
+    ],
+    "U_raw": 0.3848,
+    "U_net": 0.1723,
+    "win_rate": 0.0,
+    "correct_shown_per100": 19.61,
+    "ce_shown_per100": 35.29,
+    "declined": 0
+   },
+   "C": {
+    "n": 51,
+    "U": 0.2092,
+    "U_ci": [
+     0.1542,
+     0.2715
+    ],
+    "U_raw": 0.3752,
+    "U_net": 0.1605,
+    "win_rate": 0.0,
+    "correct_shown_per100": 21.57,
+    "ce_shown_per100": 37.25,
+    "declined": 0
+   },
+   "P-C": {
+    "dU": 0.0111,
+    "dU_ci": [
+     -0.0317,
+     0.0546
+    ],
+    "dU_raw": 0.0097,
+    "better_worse": [
+     20,
+     18
+    ],
+    "d_ce_shown_per100": -1.96,
+    "d_ce_ci": [
+     -15.6863,
+     11.7647
+    ],
+    "changed_text": 48
+   },
+   "S17": {
+    "n": 51,
+    "U": 0.2625,
+    "U_ci": [
+     0.2014,
+     0.3333
+    ],
+    "U_raw": 0.4187,
+    "U_net": 0.2171,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 27.45,
+    "declined": 0
+   }
+  },
+  "S17_opus_pool_coverage": 20
+ },
+ "style15b": {
+  "1.5B": {
+   "S": {
+    "n": 51,
+    "U": 0.2203,
+    "U_ci": [
+     0.1652,
+     0.2884
+    ],
+    "U_raw": 0.3848,
+    "U_net": 0.1723,
+    "win_rate": 0.0,
+    "correct_shown_per100": 19.61,
+    "ce_shown_per100": 35.29,
+    "declined": 0
+   },
+   "D": {
+    "n": 51,
+    "U": 0.1332,
+    "U_ci": [
+     0.0976,
+     0.1718
+    ],
+    "U_raw": 0.3165,
+    "U_net": 0.0798,
+    "win_rate": 0.0,
+    "correct_shown_per100": 0.0,
+    "ce_shown_per100": 70.59,
+    "declined": 0
+   },
+   "S-D": {
+    "dU": 0.0871,
+    "dU_ci": [
+     0.0384,
+     0.1425
+    ],
+    "dU_raw": 0.0683,
+    "better_worse": [
+     28,
+     11
+    ],
+    "d_ce_shown_per100": -35.29,
+    "d_ce_ci": [
+     -50.9804,
+     -19.6078
+    ],
+    "changed_text": 50
+   },
+   "verdict": "NONINFERIOR"
+  },
+  "1.7B": {
+   "S": {
+    "n": 51,
+    "U": 0.2625,
+    "U_ci": [
+     0.2014,
+     0.3333
+    ],
+    "U_raw": 0.4187,
+    "U_net": 0.2171,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 27.45,
+    "ce_shown_per100": 27.45,
+    "declined": 0
+   },
+   "D": {
+    "n": 51,
+    "U": 0.2243,
+    "U_ci": [
+     0.1653,
+     0.2931
+    ],
+    "U_raw": 0.3874,
+    "U_net": 0.1766,
+    "win_rate": 0.0196,
+    "correct_shown_per100": 17.65,
+    "ce_shown_per100": 52.94,
+    "declined": 0
+   },
+   "S-D": {
+    "dU": 0.0382,
+    "dU_ci": [
+     -0.0049,
+     0.0838
+    ],
+    "dU_raw": 0.0313,
+    "better_worse": [
+     21,
+     11
+    ],
+    "d_ce_shown_per100": -25.49,
+    "d_ce_ci": [
+     -39.2157,
+     -11.7647
+    ],
+    "changed_text": 42
+   },
+   "verdict": "NONINFERIOR"
+  }
+ }
+}

@@ -1,0 +1,11 @@
+# HFU-FIX criterion (frozen 2026-10-06, after the HFU diagnostic, before any code)
+
+HFU (rnd 5571353): 69% of synthetic health follow-up forms lose the health route their standalone form gets (EN 33/58). Mechanism: only `isHealthFollowUp` reads history and it needs closed word lists + FOLLOW_INTENT; in 41/69 losses the condition is already recovered from history (`conversationCondition`) but used only inside the health branch.
+Arm = cut 5 + one general rule: if the current user turn is a short follow-up (FOLLOWQ's deterministic follow-up rule, verbatim) AND `conversationCondition` recovers a condition from the last 2 user turns AND the current turn has no other named topic, route the turn exactly as the standalone question "<current turn with the pronoun replaced by the condition>" would be routed (same health route / card / safety guards). No new card text, no new health content, no word-list growth beyond what the rule needs. English is primary; PT/ES are reported but not gated (English-only scope).
+Gates:
+G1 build: patch vs 0cfd4a77 applies to a fresh archive, tsc clean, all tests pass, new tests for the rule.
+G2 identity: v0.1 EN s44 identical 60/60 vs same-day cut 5; on the 192 dev chat messages, routing changes only where the rule fires (list them), and 0 changes on conversations without a health condition.
+G3 recall on HELD-OUT templates frozen here (never used by HFU, never shown to the builder before G1 passes; the coordinator scores): for the same EN dev standalone health questions, 2-turn forms "Tell me about <condition>." → T, T ∈ {"Is it contagious?", "How is it treated?", "What are the symptoms?", "Can you get it twice?", "When should I see a doctor about it?"}. Bar: among items whose standalone form of T routes to health, ≥ 90% of follow-up forms get the same route (reason-code class).
+G4 HFU synthetic set (the diagnostic templates, descriptive): report recovery, no bar (the rule was motivated by it).
+G5 false fire: on the dev chat slices, 0 new health routes on turns whose conversation has no health condition; on 20 non-health two-turn pairs built now from v0.1 EN non-health items with T ∈ the G3 templates ("Tell me about <topic>." → T), 0 health routes.
+No generation-quality judge (routing only; cards are already reviewed text). Dev only; never blind/, rnd/veil/, health-fresh*, chat-v3.

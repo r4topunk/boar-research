@@ -1,0 +1,25 @@
+[node-llama-cpp] load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+[node-llama-cpp] Using this model ("~/Script/boar/boar-eval/runs/replay-cache/appdir/cb2f82a5073cde89/models/embedding.gguf") to tokenize text and then detokenize it resulted in a different text. There might be an issue with the model or the tokenizer implementation. Using this model may not work as intended
+[replay] app dir <workspace>/boar-eval/runs/replay-cache/appdir/cb2f82a5073cde89 (cached) embed load 814 ms, seed 0.1 s
+[replay] DIFF lan-cmp-001: task lookup->null k 3->null query "Does Brazil have more people than Russia?" -> "undefined"
+    ref    ["Wikivoyage: Brazil","Wikivoyage: Russia","Wikivoyage: Russia"]
+    replay []
+[replay] DIFF lan-ref-001: task lookup->null k 3->null query "Who received the Nobel Prize in Literature in 2017?" -> "undefined"
+    ref    ["Wikivoyage: Nobel tourism","Wikivoyage: Nobel tourism","Wikivoyage: Lübeck"]
+    replay []
+[replay] DIFF lan-ref-004: task research->null k 4->null query "How big is Iceland in square kilometres?" -> "undefined"
+    ref    ["Wikivoyage: Driving in Iceland","Wikivoyage: South Iceland","Wikivoyage: North Iceland","Wikivoyage: European quick reference"]
+    replay []
+[replay] DIFF lan-exp-006: task lookup->null k 3->null query "What is Kilimanjaro, how high is it, and is it a volcano?" -> "undefined"
+    ref    ["Wikivoyage: Volcanoes","Wikivoyage: Volcanoes","Wikivoyage: Mount Kilimanjaro"]
+    replay []
+[replay] DIFF lan-rsn-007: task chat->null k 4->null query "In which year was the Berlin Wall built, and in which year did it come down?" -> "undefined"
+    ref    ["Wikivoyage: Berlin Wall","Wikivoyage: Berlin Wall","Wikivoyage: Berlin Wall","Wikivoyage: Berlin"]
+    replay []
+[replay] DIFF lan-ref-005: task lookup->null k 3->null query "Which city hosted the 2016 Summer Olympics?" -> "undefined"
+    ref    ["Wikivoyage: Olympic Games","Wikivoyage: Olympic Games","Wikivoyage: Sarajevo"]
+    replay []
+[replay] DIFF trv-002: task lookup->null k 3->null query "What plug type and voltage does Brazil use?" -> "undefined"
+    ref    ["Wikivoyage: Brazil","Wikivoyage: Brazil","Wikivoyage: Brazil"]
+    replay []
+{"n":60,"retrieved":46,"recall@5":0.2308,"goldItems":39,"identicalRaw":"53/60","gate":"trace","detector":"trace","runSeconds":6.49,"totalSeconds":7.75,"tree":"<workspace>/wt/facts"}

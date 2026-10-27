@@ -1,0 +1,331 @@
+{
+ "summary": {
+  "snapshot_commit_resolves": true,
+  "apk_precondition": true,
+  "verified": [
+   1,
+   2,
+   3,
+   4,
+   6
+  ],
+  "failed": [],
+  "not_established": [
+   5
+  ],
+  "negative_controls_failed_as_required": true,
+  "ledger_sha256": "d743b1d4fc64b12d9d292876bc12a92fe7ad3cca74cd4d23b2cf1e646038ae4b",
+  "pass": true
+ },
+ "rows": [
+  {
+   "row": 1,
+   "cause": "model",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "sha",
+     "where": "android-native/app/src/main/assets/boar-data/catalog.json",
+     "ok": true,
+     "why": "18406c60"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/assets/boar-data/catalog.json:65",
+     "ok": true,
+     "why": "found at [65]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/assets/boar-data/catalog.json:44",
+     "ok": true,
+     "why": "found at [44]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "absent",
+     "where": "android-native/app/src/main/assets",
+     "ok": true,
+     "why": "0 hits"
+    },
+    {
+     "side": "device",
+     "kind": "json_contains",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-17b/summary.json",
+     "ok": true,
+     "why": "value \"model \\\"qwen3-1.7b\\\" matches no installed model\""
+    },
+    {
+     "side": "device",
+     "kind": "json_eq",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-17b/summary.json",
+     "ok": true,
+     "why": "value [\"qwen2.5-1.5b-instruct-q4km\"]"
+    },
+    {
+     "side": "device",
+     "kind": "sha",
+     "where": "rnd/research/coordinator/arms/rc1-pixel/RC1-SPEED.md",
+     "ok": true,
+     "why": "sha ok"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "verified"
+  },
+  {
+   "row": 2,
+   "cause": "style",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/assets/boar-data/personalities.json:37",
+     "ok": true,
+     "why": "found at [37]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/java/team/sopa/boar/eval/DeviceEvalRunner.kt:164",
+     "ok": true,
+     "why": "found at [164]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/java/team/sopa/boar/eval/DeviceEvalRunner.kt:203",
+     "ok": true,
+     "why": "found at [203]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/settings/AppSettings.kt:99",
+     "ok": true,
+     "why": "found at [99]"
+    },
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": true,
+     "why": "50/51"
+    },
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": true,
+     "why": "51/51"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "verified"
+  },
+  {
+   "row": 3,
+   "cause": "packs",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "count",
+     "where": "android-native/app/src/main/AndroidManifest.xml",
+     "ok": true,
+     "why": "count 1"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/AndroidManifest.xml:31",
+     "ok": true,
+     "why": "found at [31]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/java/team/sopa/boar/ui/documents/DocumentsScreen.kt:60",
+     "ok": true,
+     "why": "found at [60]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/app/src/main/java/team/sopa/boar/ui/documents/DocumentsScreen.kt:78",
+     "ok": true,
+     "why": "found at [78]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "absent",
+     "where": "android-native/app/src/main/assets",
+     "ok": true,
+     "why": "0 hits"
+    },
+    {
+     "side": "device",
+     "kind": "line",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-15b/logcat.txt:836",
+     "ok": true,
+     "why": "found at [836]"
+    },
+    {
+     "side": "device",
+     "kind": "sha",
+     "where": "rnd/research/coordinator/arms/rc1-pixel/RC1-PACKS.md",
+     "ok": true,
+     "why": "sha ok"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "verified"
+  },
+  {
+   "row": 4,
+   "cause": "warning line",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "absent",
+     "where": "android-native",
+     "ok": true,
+     "why": "0 hits"
+    },
+    {
+     "side": "device",
+     "kind": "json_eq",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-15b/note2-rc-ref-aunion73a.json",
+     "ok": true,
+     "why": "value \"0/3\""
+    },
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": true,
+     "why": "0/51"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "verified"
+  },
+  {
+   "row": 5,
+   "cause": "deterministic layers",
+   "checks": [
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": true,
+     "why": "8/8"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "not established"
+  },
+  {
+   "row": 6,
+   "cause": "KB similarity cutoff",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt:41",
+     "ok": true,
+     "why": "found at [41]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/Retriever.kt:72",
+     "ok": true,
+     "why": "found at [72]"
+    },
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/Retriever.kt:73",
+     "ok": true,
+     "why": "found at [73]"
+    },
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": true,
+     "why": "1/51"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": true,
+   "verdict": "verified"
+  }
+ ],
+ "negative_controls": [
+  {
+   "row": 901,
+   "cause": "planted wrong line (RagPure cutoff cited at line 35)",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt:35",
+     "ok": false,
+     "why": "not within 35+-3"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": false,
+   "verdict": "FAILED"
+  },
+  {
+   "row": 902,
+   "cause": "planted verb (claims packs ship by default)",
+   "checks": [
+    {
+     "side": "snapshot",
+     "kind": "line",
+     "where": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt:41",
+     "ok": true,
+     "why": "found at [41]"
+    }
+   ],
+   "verb_hits": 1,
+   "label_ok": true,
+   "evidence_ok": false,
+   "verdict": "FAILED"
+  },
+  {
+   "row": 903,
+   "cause": "planted wrong device sha",
+   "checks": [
+    {
+     "side": "device",
+     "kind": "rows_count",
+     "where": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl",
+     "ok": false,
+     "why": "sha df26ed79 != 00000000"
+    }
+   ],
+   "verb_hits": 0,
+   "label_ok": true,
+   "evidence_ok": false,
+   "verdict": "FAILED"
+  }
+ ]
+}

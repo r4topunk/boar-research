@@ -1,0 +1,134 @@
+{
+ "criterion_sha256": "5c9b0852b72ccb542be2576634f5df6b0d8e47cde72580bca26cf616a3e88135",
+ "verdict": "STOPPED: 0-call gate FAIL (G3), 0 Haiku",
+ "gate": {
+  "pass": {
+   "G0": true,
+   "G1": true,
+   "G2": true,
+   "G3": false,
+   "G4": true,
+   "G5": true,
+   "G6": true,
+   "G7": true
+  },
+  "gates": {
+   "G0": {
+    "on": {
+     "errors": 0,
+     "empty": 0,
+     "reasoning_tokens": 0,
+     "think_tag": 0
+    }
+   },
+   "G1": {
+    "gt2_on": 0.7,
+    "gt2_off": 0.167
+   },
+   "G2": {
+    "words_p50_on": 46.0,
+    "words_p50_off": 34.5
+   },
+   "G3": {
+    "ends_open_on": 5,
+    "ends_open_off": 0,
+    "cap_hits_on": 0
+   },
+   "G4": {
+    "hedged_on": 3,
+    "hedged_off": 1,
+    "n": 152
+   },
+   "G5": {
+    "det_n": 28,
+    "det_identical": 28,
+    "lite_style_llm": 152,
+    "lite_style_det": 0
+   },
+   "G6": {
+    "pt_p50_on": 886.0,
+    "pt_p50_off": 876.0,
+    "growth_max": 10,
+    "growth_min": 10,
+    "growth_p50": 10.0
+   },
+   "G7": {
+    "kept_and_hp_same": 180
+   }
+  }
+ },
+ "profile_180": {
+  "on": {
+   "n": 180,
+   "gt2_share": 0.7,
+   "words_p50": 46.0,
+   "sent_p50": 3.0,
+   "ends_open": 5,
+   "out_tokens_p50": 58.0,
+   "out_tokens_max": 114
+  },
+  "off": {
+   "n": 180,
+   "gt2_share": 0.167,
+   "words_p50": 34.5,
+   "sent_p50": 2.0,
+   "ends_open": 0,
+   "out_tokens_p50": 44.0,
+   "out_tokens_max": 76
+  }
+ },
+ "profile_llm152": {
+  "on": {
+   "n": 152,
+   "gt2_share": 0.776,
+   "words_p50": 46.0,
+   "sent_p50": 3.0,
+   "ends_open": 5,
+   "out_tokens_p50": 62.0,
+   "out_tokens_max": 114
+  },
+  "off": {
+   "n": 152,
+   "gt2_share": 0.145,
+   "words_p50": 35.0,
+   "sent_p50": 2.0,
+   "ends_open": 0,
+   "out_tokens_p50": 46.0,
+   "out_tokens_max": 76
+  }
+ },
+ "answer_changed_llm": 150,
+ "latency_llm_p50_s": {
+  "total": [
+   6.358,
+   7.3980999999999995
+  ],
+  "ttft": [
+   4.90301781250001,
+   5.99145470799999
+  ]
+ },
+ "g3_diagnosis": {
+  "ends_open_ids": [
+   "st-boar-medlineplus-en-004",
+   "st-boar-medlineplus-en-009",
+   "st-qa-bitcoin-se-012",
+   "st-qa-ethereum-se-013",
+   "st-qa-health-se-007"
+  ],
+  "pattern": "complete final sentence followed by a trailing citation '. [n]' (lite3 ends_open counts ']' as open); 0 cap hits, out tokens max 114",
+  "ends_open_excluding_trailing_citation_on": 0,
+  "note": "descriptive only, not a frozen gate"
+ },
+ "calls": {
+  "haiku": 0,
+  "opus": 0,
+  "paid": 0
+ },
+ "smoke": [
+  10,
+  10,
+  10,
+  10
+ ]
+}

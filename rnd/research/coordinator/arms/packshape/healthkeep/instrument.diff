@@ -1,0 +1,91 @@
+--- <workspace>/kiln-local/rs-SEFIX/src/routing/answer.ts	2026-10-22 19:47:17
++++ routing/answer.ts	2026-10-23 17:14:53
+@@ -120,6 +120,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { onHealthTopicWhy, r3Probe } from "./context";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+@@ -1097,6 +1098,10 @@
+         const compressedSources = sources;
+         const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
++        reasonCodes.push("HK:topic:" + [...topic].join(","));
++        for (const c of compressedSources) reasonCodes.push("HK:why:" + c.chunkId + "=" + onHealthTopicWhy(topic, c) + "|R3:" + r3Probe(req.query, c) + "|" + c.title.slice(0, 40));
++        reasonCodes.push("HK:pre:" + compressedSources.map((c) => c.chunkId).join("|"));
++        reasonCodes.push("HK:drop:" + compressedSources.filter((c) => !onTopicHealth.includes(c)).map((c) => c.chunkId).join("|"));
+         sources = onTopicHealth;
+         // The best source to quote may have been cut by compression (relative relevance): a
+         // first-aid book's section loses to the clinical article's wording. Bring it back.
+@@ -1147,6 +1152,7 @@
+             if (health && !healthFallback) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = add.filter((c) => onHealthTopic(topic, c));
++              for (const c of add) reasonCodes.push("HK:why:" + c.chunkId + "=" + onHealthTopicWhy(topic, c) + "|R3:" + r3Probe(req.query, c) + "|" + c.title.slice(0, 40)); reasonCodes.push("HK:x1all:" + add.map((c) => c.chunkId).join("|")); reasonCodes.push("HK:x1drop:" + add.filter((c) => !ok.includes(c)).map((c) => c.chunkId).join("|"));
+               if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
+               add = ok;
+             } else if (healthFallback === 2) add = add.filter((c) => onSubject(c));
+@@ -1159,6 +1165,7 @@
+         }
+         if (denseAppend) {
+           const dense = denseCandidatesOf(retrievedRaw);
++          reasonCodes.push("HK:densecand:" + (dense?.candidates ?? []).map((c) => c.chunkId).join("|"));
+           // SEFIX F1 (RS_SE_LEAD): the Stack Exchange thread's answers go first among the dense appends, inside the same cap and budget.
+           if (dense?.seLead?.length) {
+             const have = new Set([...sources, ...pendX1, ...retrievedRaw].map((c) => c.chunkId));
+@@ -1166,6 +1173,7 @@
+             if (health && !healthFallback) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = se.filter((c) => onHealthTopic(topic, c));
++              reasonCodes.push("HK:sedrop:" + se.filter((c) => !ok.includes(c)).map((c) => c.chunkId).join("|"));
+               if (ok.length < se.length) reasonCodes.push(`headpass:selead:health-dropped-${se.length - ok.length}`);
+               se = ok;
+             } else if (healthFallback === 2) se = se.filter((c) => onSubject(c));
+@@ -1178,6 +1186,7 @@
+             if (health && !healthFallback && add.length) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = add.filter((c) => onHealthTopic(topic, c));
++              for (const c of add) reasonCodes.push("HK:why:" + c.chunkId + "=" + onHealthTopicWhy(topic, c) + "|R3:" + r3Probe(req.query, c) + "|" + c.title.slice(0, 40)); reasonCodes.push("HK:denseall:" + add.map((c) => c.chunkId).join("|")); reasonCodes.push("HK:densedrop:" + add.filter((c) => !ok.includes(c)).map((c) => c.chunkId).join("|"));
+               if (ok.length < add.length) reasonCodes.push(`headpass:dense:health-dropped-${add.length - ok.length}`);
+               add = ok;
+             } else if (healthFallback === 2) add = add.filter((c) => onSubject(c));
+--- <workspace>/kiln-local/rs-SEFIX/src/routing/context.ts	2026-10-22 19:47:17
++++ routing/context.ts	2026-10-23 17:14:53
+@@ -560,6 +560,35 @@
+   return (action === true || layHealth) && titleNames(chunk.body.replace(/\p{L}+(?:-\p{L}+)+/gu, " "), topic);
+ }
+ 
++
++export function onHealthTopicWhy(topic: Set<string>, chunk: RetrievedChunk): string {
++  if (NON_HEALTH_SOURCE.test(chunk.title)) return "FAIL:non-health-source";
++  const action = (chunk as { action?: boolean }).action;
++  const act = action === true ? "T" : action === false ? "F" : "U";
++  const waterSafety = [...topic].some((t) => /^(contaminat|purif|disinfect|boil)/.test(t));
++  if (!waterSafety && [...topic].some((t) => DISASTER_TOPIC.test(t))) {
++    if (genericDisasterTitle(chunk.title, topic)) return "OK:disaster-generic-title";
++    return (action === true && titleNames(`${sectionHeading(chunk)} ${chunk.body}`, topic)) ? "OK:disaster-action-text" : `FAIL:disaster-not-generic(act=${act})`;
++  }
++  if (topic.size === 0) return `FAIL:topic-empty(act=${act})`;
++  if (titleNames(chunk.title, topic)) return "OK:title";
++  if (Object.keys(COMPOUNDS).some((c) => !topic.has(c) && new RegExp(`\\b${c}s?\\b`, "i").test(chunk.title))) return "FAIL:other-compound-title";
++  if ((action !== false || LAY_SOURCE.test(chunk.title)) && titleNames(sectionHeading(chunk), topic)) return "OK:section-heading";
++  const layHealth = FIRST_AID_SOURCE.test(chunk.title) || HEALTH_SECTION.test(sectionHeading(chunk)) || imperativeSteps(chunk.body) >= 1;
++  const textNames = titleNames(chunk.body.replace(/\p{L}+(?:-\p{L}+)+/gu, " "), topic);
++  if ((action === true || layHealth) && textNames) return `OK:text(act=${act},lay=${layHealth ? 1 : 0})`;
++  return `FAIL:no-title-no-section(act=${act},lay=${layHealth ? 1 : 0},textNames=${textNames ? 1 : 0},sec=${sectionHeading(chunk).slice(0, 30)})`;
++}
++
++
++export function r3Probe(query: string, chunk: RetrievedChunk): string {
++  const terms = new Set(tokenizeTerms(query).filter((t) => !GENERIC_TOPIC.has(t)));
++  const fam = /^pack:local-(boar-firstaid-en|boar-medlineplus-en|qa-health-se):/.test(chunk.chunkId) ? 1 : 0;
++  const ti = titleNames(chunk.title.replace(/^[^:]{1,30}:\s*/, ""), terms) ? 1 : 0;
++  const se = titleNames(sectionHeading(chunk), terms) ? 1 : 0;
++  return `fam=${fam},title=${ti},sec=${se},terms=${[...terms].slice(0, 8).join("/")}`;
++}
++
+ /** Next to the question (small models follow instructions there, s32): health answers stay inside the sources. */
+ export const HEALTH_GROUNDING_INSTRUCTION =
+   "This is a health or first-aid question. State only what the numbered sources say, and cite the source of each step. " +

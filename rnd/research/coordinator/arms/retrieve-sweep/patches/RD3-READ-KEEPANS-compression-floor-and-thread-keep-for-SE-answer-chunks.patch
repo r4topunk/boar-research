@@ -1,0 +1,172 @@
+diff -ruN -x node_modules -x .cache rs-H4/be/adapter-litedecline.ts rs-RD3/be/adapter-litedecline.ts
+--- rs-H4/be/adapter-litedecline.ts	2026-10-20 17:44:17
++++ rs-RD3/be/adapter-litedecline.ts	2026-10-22 21:04:12
+@@ -834,6 +834,7 @@
+     persona: persona.id,
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
++    ...(process.env.BOAR_READ_KEEPANS === "1" ? { "engine.read_keepans": "1", "engine.read_keepans_tokens": String(Number(process.env.BOAR_READ_KEEPANS_TOKENS || 250)) } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
+     ...(server && process.env.BOAR_SERVER_EXTRA_ARGS ? { "server.extra_args": process.env.BOAR_SERVER_EXTRA_ARGS.trim() } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+diff -ruN -x node_modules -x .cache rs-H4/be/adapter.ts rs-RD3/be/adapter.ts
+--- rs-H4/be/adapter.ts	2026-10-14 15:36:47
++++ rs-RD3/be/adapter.ts	2026-10-22 21:04:13
+@@ -822,6 +822,7 @@
+     persona: persona.id,
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
++    ...(process.env.BOAR_READ_KEEPANS === "1" ? { "engine.read_keepans": "1", "engine.read_keepans_tokens": String(Number(process.env.BOAR_READ_KEEPANS_TOKENS || 250)) } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+diff -ruN -x node_modules -x .cache rs-H4/src/rag/compress.ts rs-RD3/src/rag/compress.ts
+--- rs-H4/src/rag/compress.ts	2026-10-07 09:27:55
++++ rs-RD3/src/rag/compress.ts	2026-10-22 21:03:25
+@@ -298,3 +298,51 @@
+   const tokenBudget = taskType === "lookup" ? FAST_CONTEXT_TOKENS.lookup : FAST_CONTEXT_TOKENS.other;
+   return compressContext(query, chunks, { tokenBudget });
+ }
++
++/** READ-KEEPANS: a Stack Exchange answer chunk of a pack (chunk ids "pack:local-qa-*", body opening "Answers >"). */
++export const isSeAnswer = (c: { chunkId: string; body: string }): boolean => /^pack:local-qa-/.test(c.chunkId) && /^Answers >/.test(c.body);
++
++/** READ-KEEPANS: only answer chunks up to this many characters are restored (a long answer is not worth the prefill). */
++export const KEEPANS_MAX_CHARS = 1000;
++
++/**
++ * READ-KEEPANS (RD3, experimental, bench-only switch BOAR_READ_KEEPANS=1; default off = never called): compression floor and
++ * thread keep for Stack Exchange answer chunks. The sentence compressor can cut a short SE answer below its fact sentence, or
++ * drop the answer chunk of a thread whose question chunk it kept. With a budget of `cap` extra tokens (engine approxTokens):
++ *  (1) WHOLE: each kept SE answer chunk (in kept order) whose raw version is <= KEEPANS_MAX_CHARS and was cut gets its full body back;
++ *  (2) THREAD: each raw SE answer chunk (raw order) that is not kept, is <= KEEPANS_MAX_CHARS and shares its docId with a kept chunk
++ *      is inserted right after the last kept chunk of that docId.
++ * Pure; the kept order and every other chunk are untouched. `codes` (optional) receives keepans:whole:<chunkId> / keepans:thread:<chunkId>.
++ */
++export function restoreSeAnswers(
++  sources: RetrievedChunk[],
++  raw: RetrievedChunk[],
++  count: (s: string) => number = approxTokens,
++  cap = 250,
++  codes?: string[]
++): RetrievedChunk[] {
++  let extra = 0;
++  const out = sources.map((k) => {
++    const r = raw.find((x) => x.chunkId === k.chunkId);
++    if (!r || !isSeAnswer(r) || r.body.length > KEEPANS_MAX_CHARS || k.body === r.body) return k;
++    const delta = count(r.body) - count(k.body);
++    if (extra + delta > cap) return k;
++    extra += delta;
++    codes?.push(`keepans:whole:${k.chunkId}`);
++    return { ...k, body: r.body };
++  });
++  const have = new Set(out.map((c) => c.chunkId));
++  for (const r of raw) {
++    if (have.has(r.chunkId) || !isSeAnswer(r) || r.body.length > KEEPANS_MAX_CHARS) continue;
++    let at = -1;
++    out.forEach((c, i) => { if (c.docId === r.docId) at = i; });
++    if (at < 0) continue;
++    const cost = count(r.title + r.body);
++    if (extra + cost > cap) continue;
++    extra += cost;
++    out.splice(at + 1, 0, r);
++    have.add(r.chunkId);
++    codes?.push(`keepans:thread:${r.chunkId}`);
++  }
++  return out;
++}
+diff -ruN -x node_modules -x .cache rs-H4/src/rag/keepans.test.ts rs-RD3/src/rag/keepans.test.ts
+--- rs-H4/src/rag/keepans.test.ts	1969-12-31 21:00:00
++++ rs-RD3/src/rag/keepans.test.ts	2026-10-22 21:11:56
+@@ -0,0 +1,58 @@
++import { describe, it, expect } from "vitest";
++import type { RetrievedChunk } from "./retrieve.types";
++import { approxTokens, isSeAnswer, restoreSeAnswers } from "./compress";
++
++const ch = (chunkId: string, docId: string, title: string, body: string): RetrievedChunk => ({ chunkId, docId, title, body, score: 1, matchType: "lexical" });
++const FACT = "Answers > Answer (score 3): Whole life is a poor deal. The insurer keeps $430K of your premiums in fees over the term. " + "Filler sentence about nothing. ".repeat(30);
++
++describe("restoreSeAnswers (READ-KEEPANS)", () => {
++  it("isSeAnswer needs the pack prefix and the Answers > opening", () => {
++    expect(isSeAnswer(ch("pack:local-qa-money-se:1", "d", "t", "Answers > Answer (score 1): x"))).toBe(true);
++    expect(isSeAnswer(ch("pack:local-qa-money-se:2", "d", "t", "Tags: a\n\nquestion"))).toBe(false);
++    expect(isSeAnswer(ch("pack:wiki-vital5:3", "d", "t", "Answers > x"))).toBe(false);
++  });
++  it("a cut SE answer (881 chars <= 1000) comes back whole, within the cap", () => {
++    const body = FACT.slice(0, 881);
++    expect(body.length).toBe(881);
++    const full = ch("pack:local-qa-money-se:68994", "a1", "Whole life?", body);
++    const cut = { ...full, body: body.slice(0, 120) };
++    const codes: string[] = [];
++    const out = restoreSeAnswers([cut], [full], approxTokens, 250, codes);
++    expect(out[0].body).toBe(body);
++    expect(codes).toEqual(["keepans:whole:pack:local-qa-money-se:68994"]);
++    expect(approxTokens(out[0].body) - approxTokens(cut.body)).toBeLessThanOrEqual(250);
++  });
++  it("respects the cap and the 1000-char limit", () => {
++    const long = ch("pack:local-qa-money-se:1", "a", "t", "Answers > " + "x".repeat(1100));
++    expect(restoreSeAnswers([{ ...long, body: "Answers > xx" }], [long], approxTokens, 250)[0].body).toBe("Answers > xx");
++    const mid = ch("pack:local-qa-money-se:2", "b", "t", "Answers > " + "y".repeat(900));
++    const out = restoreSeAnswers([{ ...mid, body: "Answers > y" }], [mid], approxTokens, 10);
++    expect(out[0].body).toBe("Answers > y");
++  });
++  it("a non-SE chunk is untouched and keeps its order", () => {
++    const wiki = ch("pack:wiki-vital5:1", "w", "Fed", "Answers > looks like one but is wiki");
++    const wikiCut = { ...wiki, body: "Answers >" };
++    const out = restoreSeAnswers([wikiCut], [wiki], approxTokens, 250);
++    expect(out).toEqual([wikiCut]);
++  });
++  it("thread: an unkept short SE answer of a kept docId is inserted after the last chunk of that doc", () => {
++    const q = ch("pack:local-qa-money-se:10", "t1", "I bonds", "Tags: x\n\nWhy did the rate drop?");
++    const other = ch("pack:wiki-vital5:5", "w", "Fed", "The Fed.");
++    const a = ch("pack:local-qa-money-se:11", "t1", "I bonds", "Answers > Answer (score 12, accepted): I Bond rates are linked to inflation.");
++    const unrelated = ch("pack:local-qa-money-se:99", "t9", "Other", "Answers > Answer (score 1): other thread");
++    const codes: string[] = [];
++    const out = restoreSeAnswers([q, other], [other, a, unrelated, q], approxTokens, 250, codes);
++    expect(out.map((c) => c.chunkId)).toEqual([q.chunkId, a.chunkId, other.chunkId]);
++    expect(codes).toEqual(["keepans:thread:pack:local-qa-money-se:11"]);
++  });
++  it("thread restore stops at the cap", () => {
++    const q = ch("pack:local-qa-money-se:10", "t1", "T", "Tags: x");
++    const a = ch("pack:local-qa-money-se:11", "t1", "T", "Answers > " + "z".repeat(800));
++    expect(restoreSeAnswers([q], [q, a], approxTokens, 100)).toEqual([q]);
++    expect(restoreSeAnswers([q], [q, a], approxTokens, 250)).toHaveLength(2);
++  });
++  it("nothing to restore returns the same chunks", () => {
++    const q = ch("pack:local-qa-money-se:10", "t1", "T", "Tags: x");
++    expect(restoreSeAnswers([q], [q], approxTokens, 250)).toEqual([q]);
++  });
++});
+diff -ruN -x node_modules -x .cache rs-H4/src/routing/answer.ts rs-RD3/src/routing/answer.ts
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-RD3/src/routing/answer.ts	2026-10-22 21:03:25
+@@ -119,6 +119,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { restoreSeAnswers, approxTokens as keepAnsTokens } from "../rag/compress";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+@@ -271,6 +272,9 @@
+ 
+ /** Max <think> tokens before an answer (reasoning models only; see LlamaEngine thinkingBudget). */
+ export const FAST_THINKING_BUDGET = 256;
++/** READ-KEEPANS (RD3, bench-only, default off = byte-identical): BOAR_READ_KEEPANS=1 restores cut / dropped short SE answer chunks after compression (see restoreSeAnswers). */
++const READ_KEEPANS = typeof process !== "undefined" && process.env?.BOAR_READ_KEEPANS === "1";
++const KEEPANS_TOKENS = Number((typeof process !== "undefined" && process.env?.BOAR_READ_KEEPANS_TOKENS) || 250);
+ export const DEEP_THINKING_BUDGET = 1024;
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+@@ -1063,6 +1067,11 @@
+       const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
++      if (READ_KEEPANS && !health && gen?.mode !== "multipass") {
++        const keepCodes: string[] = [];
++        sources = restoreSeAnswers(sources, raw, keepAnsTokens, KEEPANS_TOKENS, keepCodes);
++        reasonCodes.push(...keepCodes);
++      }
+ 
+       // Grounding: sources must be on topic in absolute terms, not just the best of what came back.
+       // Always on (Quill, 014c054: the chat reads "passages found, none cited" from a non-empty sources

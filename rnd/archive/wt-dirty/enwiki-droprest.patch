@@ -1,0 +1,36 @@
+diff --git a/scripts/build-wiki-pack.mjs b/scripts/build-wiki-pack.mjs
+index f56c58d1..e4c7db53 100644
+--- a/scripts/build-wiki-pack.mjs
++++ b/scripts/build-wiki-pack.mjs
+@@ -46,6 +46,7 @@ const USAGE = `usage: node scripts/build-wiki-pack.mjs --out FILE --shards A.par
+   --pageviews TSV         page_id<TAB>views; ranks articles for --full-top and the popularity signal
+   --pageview-days N       days the pageviews TSV covers (views are scaled to a month), default 30
+   --full-top N            articles kept in full, by views (others keep their lead), default 1000000
++  --drop-rest             leave out the articles past --full-top instead of keeping their lead (a top-N subset pack)
+   --lead-chars N          lead size cap for the other articles, default 2500
+   --chunk-chars N         target chunk size, default 1000
+   --redirects SQL.GZ      enwiki-*-redirect.sql.gz        (with --index)
+@@ -97,6 +98,7 @@ function options() {
+       "work-dir": { type: "string" },
+       "min-free-gb": { type: "string", default: "0" },
+       "no-optimize": { type: "boolean", default: false },
++      "drop-rest": { type: "boolean", default: false },
+       "wait-for-shards": { type: "boolean", default: false },
+       manifest: { type: "string" },
+       name: { type: "string" },
+@@ -136,6 +138,7 @@ function options() {
+     workDir: values["work-dir"] ?? dirname(values.out),
+     minFreeGb: Number(values["min-free-gb"]),
+     optimize: !values["no-optimize"],
++    dropRest: values["drop-rest"],
+     waitForShards: values["wait-for-shards"],
+     manifest: values.manifest,
+     name: values.name,
+@@ -270,6 +273,7 @@ async function addWikipedia(w, opts, views, fullIds) {
+     if (opts.limit && w.stats.articles >= opts.limit) return;
+     seen.add(pid);
+     const full = !fullIds || fullIds.has(pid);
++    if (!full && opts.dropRest) return;
+     const body = full ? r.text : leadOf(r.text, opts.leadChars);
+     const box = infoboxText(r.infoboxes);
+     // "# Title" heading first, then infobox facts, then the body without its own title heading

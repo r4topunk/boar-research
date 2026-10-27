@@ -1,0 +1,24 @@
+<|im_start|>system
+You are Boar, a concise offline research assistant. Answer in 2-3 short, direct sentences or a brief paragraph, no preamble. Do not default to a bulleted list or a single takeaway sentence followed by three bullet points — use bullets only when the content is genuinely a list of distinct items. Use the context below when relevant, and cite a source you used by its number, like [1] or [2]. If the context doesn't cover the question, say so and answer from general knowledge. You are BOAR, an offline AI research app running on this phone; "Boar" is the app's name, never the animal, so never describe yourself as one. You have no ability to control real-world devices or take physical actions — no alarms, lights, thermostats, timers, or any other device or system. You can only respond with text. Treat greetings and casual small talk conversationally and briefly, not as a command or task. Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you don't actually have the ability to do.
+
+Context:
+[1] Ethereum EIPs/ERCs: EIP-7594: PeerDAS - Peer Data Availability Sampling
+Abstract: PeerDAS (Peer Data Availability Sampling) is a networking protocol that allows nodes to perform data availability sampling (DAS) to ensure that blob data has been made available while downloading only a subset of the data. PeerDAS utilizes gossip for distribution, discovery for finding peers of particular data custody, and peer requests for sampling.
+
+[2] ethereum.org: PeerDAS
+Data availability sampling: A different approach to storing the data and ensure its availability is **data availability sampling (DAS)**. Blobs are divided into pieces and each node only downloads a few pieces using a mechanism for uniform random distribution across all nodes. How can the network guarantee that the data is available and it’s all correct when individual nodes hold only small pieces? A malicious node could serve fake data and easily break strong data availability guarantees!
+
+[3] ethereum.org: PeerDAS
+PeerDAS: PeerDAS (EIP-7594) is a specific proposal that implements the DAS mechanism in Ethereum, marking probably the biggest upgrade since The Merge. PeerDAS is designed to extend blob data, dividing it into columns and distributing a subset to nodes. This added redundancy enables erasure recovery: even if some evaluations are missing, the original blob can be reconstructed as long as at least half of the total data, including extended pieces are available. Every node holding enough data points can efficiently reconstruct a full set of blob data.
+
+[4] ethereum.org: PeerDAS
+Learn about PeerDAS as part of the Fusaka Ethereum protocol upgrade The Ethereum protocol is undergoing its most significant scaling upgrade since the introduction of blob transactions with EIP-4844. As part of the Fusaka upgrade, PeerDAS introduces a new way of handling blob data, delivering roughly an order-of-magnitude increase in **data availability (DA)** capacity for L2s. More on blob scaling roadmap<|im_end|>
+<|im_start|>user
+What is PeerDAS, and how can a node check that blob data is available without downloading all of it?
+
+(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+

@@ -1,0 +1,112 @@
+{
+ "label": "JUDGE2: Gemma 4 26B-A4B UD-Q2_K_XL judge.v1-gemma4q2 vs Opus judge.v1 (and Sonnet-low), v0.1 EN 57 — PARTIAL leg A (disk stop rule at 56/114 calls)",
+ "legs": {
+  "deep35": {
+   "x": {
+    "n": 28,
+    "ratio": 0.722,
+    "ratioCI": [
+     0.6702,
+     0.7751
+    ],
+    "win": 0,
+    "tie": 0.1071,
+    "loss": 0.8929,
+    "posCons": 0.8929,
+    "rubricBoar": {
+     "correctness": 4.6429,
+     "completeness": 2.9464,
+     "usefulness": 3.2143
+    },
+    "rubricRef": {
+     "correctness": 4.9643,
+     "completeness": 5,
+     "usefulness": 5
+    }
+   },
+   "opus": {
+    "n": 57,
+    "ratio": 0.6345,
+    "ratioCI": [
+     0.5898,
+     0.6828
+    ],
+    "win": 0.0175,
+    "tie": 0.0526,
+    "loss": 0.9298,
+    "posCons": 0.9649,
+    "rubricBoar": {
+     "correctness": 3.8947,
+     "completeness": 2.6579,
+     "usefulness": 2.7807
+    },
+    "rubricRef": {
+     "correctness": 4.7982,
+     "completeness": 4.9386,
+     "usefulness": 4.9737
+    }
+   },
+   "vsOpus": {
+    "n": 28,
+    "sameWinner": 26,
+    "sameWinnerPct": 92.8571,
+    "kappaCorr4": 0.3553,
+    "pearsonBoarMean": 0.8697,
+    "ratioX": 0.722,
+    "ratioRef": 0.6056,
+    "dRatio": 0.1164,
+    "dRatioCI": [
+     0.0837,
+     0.1487
+    ]
+   },
+   "telemetry": {
+    "calls": 56,
+    "ok": 56,
+    "failures": {},
+    "thinkLeaks": 0,
+    "reasoningChars": 0,
+    "sPerCallMed": 44.455,
+    "sPerCallMean": 43.7878,
+    "sPerCallMax": 56.174,
+    "wallSumMin": 40.8686,
+    "promptTokMed": 901,
+    "outTokMed": 144,
+    "cachedTokMed": 265,
+    "prefillTokSMed": 21.7863,
+    "decodeTokSMed": 8.8397,
+    "finish": {
+     "stop": 56
+    }
+   },
+   "vsSonnetLow": {
+    "n": 28,
+    "sameWinner": 27,
+    "sameWinnerPct": 96.4286,
+    "kappaCorr4": 0.1884,
+    "pearsonBoarMean": 0.8238,
+    "ratioX": 0.722,
+    "ratioRef": 0.558,
+    "dRatio": 0.164,
+    "dRatioCI": [
+     0.1272,
+     0.1999
+    ]
+   },
+   "sonnetLowVsOpus": {
+    "n": 57,
+    "sameWinner": 54,
+    "sameWinnerPct": 94.7368,
+    "kappaCorr4": 0.6824,
+    "pearsonBoarMean": 0.93,
+    "ratioX": 0.5973,
+    "ratioRef": 0.6345,
+    "dRatio": -0.0371,
+    "dRatioCI": [
+     -0.0566,
+     -0.0193
+    ]
+   }
+  }
+ }
+}

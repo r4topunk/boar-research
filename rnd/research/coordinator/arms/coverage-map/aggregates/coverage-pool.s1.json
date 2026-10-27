@@ -1,0 +1,809 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-002": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "How did Mozi's idea of universal love differ from the Confucian view, and how did Mencius attack it?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:155796",
+       "title": "Mohism",
+       "share": 1.0,
+       "anchor": 0.526,
+       "bm25_rank": 9,
+       "text": "The moral guide must then promote and encourage social behaviours that maximize the general utility of all the people in that society.\nThe concept of Ai (\u611b) was developed by the Chinese philosopher Mozi in the 4th century BC in reaction to Confucianism's benevolent love. Mozi tried to replace what he considered to be the long-entrenched Chinese over-attachment to family and clan structures with th"
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-002": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "What are the key facts about Montenegro: capital, currency, coastline and how it became independent?",
+   "K1": "S4",
+   "K3": "S5",
+   "packs": {
+    "boar-factbook": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:7481",
+       "title": "Montenegro",
+       "share": 1.0,
+       "anchor": 0.597,
+       "bm25_rank": 0,
+       "text": "Key facts:\nCapital: Podgorica\nTime zone: UTC+1\nLocation: Southeastern Europe, between the Adriatic Sea and Serbia\nArea: 13,812 sq km\nPopulation: 599,849 (2024 est.)\nLanguages: Serbian 42.9%, Montenegrin (official) 37%, Bosnian 5.3%, Albanian 5.3%, Serbo-Croat 2%, other 3.5%, unspecified 4% (2011 est.)\nReligions: Orthodox 72.1%, Muslim 19.1%, Catholic 3.4%, atheist 1.2%, other 1.5%, unspecified 2.6"
+      },
+      {
+       "chunk": "pack:boar-factbook:7854",
+       "title": "Serbia",
+       "share": 1.0,
+       "anchor": 0.597,
+       "bm25_rank": 7,
+       "text": "Key facts:\nOfficial name: Republic of Serbia\nCapital: Belgrade (Beograd)\nTime zone: UTC+1\nLocation: Southeastern Europe, between Macedonia and Hungary\nArea: 77,474 sq km\nPopulation: 6,652,212 (2024 est.)\nLanguages: Serbian (official) 88.1%, Hungarian 3.4%, Bosnian 1.9%, Romani 1.4%, other 3.4%, undeclared or unknown 1.8% (2011 est.)\nReligions: Serbian Orthodox 81.1%, unknown 5.3%, Islam 4.2%, Cath"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 6,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1457288",
+       "title": "Kingdom of Montenegro",
+       "share": 1.0,
+       "anchor": 0.597,
+       "bm25_rank": 0,
+       "text": "Key facts: Capital: Cetinje; Capital-in-exile: Bordeaux \u00b7 Neuilly-sur-Seine; Common languages: Serbian; Religion: Serbian Orthodox (official); Demonym(s): Montenegrin; Government: Constitutional monarchy; \u2022 1910\u20131918: Nicholas I; \u2022 1910\u20131912 (first): Lazar Tomanovi\u0107; \u2022 1917\u20131918 (last): Evgenije Popovi\u0107; Legislature: Popular Assembly; \u2022 Elevation from principality: 28 August 1910; \u2022 Balkan Wars: 1"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1402921",
+       "title": "Montenegro",
+       "share": 1.0,
+       "anchor": 0.513,
+       "bm25_rank": 1,
+       "text": "Montenegro is a country in Southeast Europe, on the Balkan Peninsula. Its 25 municipalities have a total population of 633,158 people in an area of 13,883\u00a0km2 (5,360 sq mi). It is bordered by Serbia to the northeast, Bosnia and Herzegovina to the northwest, Kosovo to the east, Albania to the southeast, and Croatia to the west, and has a coastline along the Adriatic Sea to the southwest. The capita"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1457292",
+       "title": "Kingdom of Montenegro",
+       "share": 1.0,
+       "anchor": 0.5,
+       "bm25_rank": 37,
+       "text": "Prince Nicholas of Montenegro proclaimed the Kingdom of Montenegro in Cetinje on 28 August 1910, elevating the country from the rank of Principality. King Nicholas I had ruled the country as prince since 1860, and had initiated several modernising reforms at the beginning of the 20th century, such as introducing a constitution and a new currency, the Montenegrin perper. Although independent, Monte"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:11389",
+       "title": "Montenegro",
+       "share": 1.0,
+       "anchor": 0.513,
+       "bm25_rank": 1,
+       "text": "Montenegro is a country in Southeast Europe, on the Balkan Peninsula. Its 25 municipalities have a total population of 633,158 people in an area of 13,883 km2 (5,360 sq mi). It is bordered by Serbia to the northeast, Bosnia and Herzegovina to the northwest, Kosovo to the east, Albania to the southeast, and Croatia to the west, and has a coastline along the Adriatic Sea to the southwest. The capita"
+      },
+      {
+       "chunk": "pack:wiki-vital5:42909",
+       "title": "Podgorica",
+       "share": 1.0,
+       "anchor": 0.505,
+       "bm25_rank": 0,
+       "text": "The city's original name was restored in 1992, and it became a capital of independent Montenegro in 2006. During the Yugoslav era, Podgorica economy developed around heavy industries and manufacturing, which have since gave way to service based economy. Owing to its central location within the country, Podgorica is a hub of Montenegro rail and road network, while Podgorica Airport is country's mai"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:941971",
+       "title": "Fauna of Montenegro",
+       "share": 1.0,
+       "anchor": 0.519,
+       "bm25_rank": 37,
+       "text": "Montenegro is the smallest Balkan nation in population and second smallest in land mass. The land mass is 13,812 square kilometres with 360 square kilometres of water. Montenegro's geography ranges from mountainous forested regions in the north where larger mammals are most common. Mediterranean coastline makes up the south end of the country, forested area makes up 40.4% of the nation's landmass."
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:491718",
+       "title": "Montenegrin Navy",
+       "share": 1.0,
+       "anchor": 0.506,
+       "bm25_rank": 3,
+       "text": "Key facts: Active: 2007; Country: Montenegro; Type: Navy; Role: Control, protect and defend territorial sea; Size: 13 vessels; Part of: Armed Forces of Montenegro; H/Q: Naval base Bar; Engagements: Operation ATALANTA; Commander: Captain Goran \u0110urkovi\u0107; Ensign: Ensign of Montenegrin Navy\n\nThe Montenegrin Navy (Montenegrin: Mornarica Vojske Crne Gore) is the naval branch of the military of Montenegr"
+      }
+     ]
+    }
+   }
+  },
+  "lan-hlt-001": {
+   "set": "v0.1",
+   "tag": "health",
+   "question": "Can a raw vegan diet be healthy long term?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:384046",
+       "title": "Buffalo/Downtown",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 33,
+       "text": "It was at the Williamsville location of Fresh Catch Poke Co. where the Buffalo area was first introduced to the namesake Hawaiian specialty, and locals took to the dish with enough zeal that they opened a second outlet only a year later, attached to the Aloft Hotel downtown. The menu is the same at both locations \u2014 a wide variety of specialty or build-your-own poke bowls with varying grain or vegg"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:403401",
+       "title": "Amherst (New York)",
+       "share": 1.0,
+       "anchor": 0.609,
+       "bm25_rank": 25,
+       "text": "It was here in January 2018 where the Buffalo area was introduced to the namesake Hawaiian specialty: for the uninitiated, poke in the most traditional sense is a sort of salad of diced raw fish dressed with a customizable range of native condiments and vegetable toppings, though Fresh Catch's Americanized definition is a bit looser with respect to the protein (grilled chicken and tofu are also av"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:15581",
+       "title": "Vegetarianism",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 6,
+       "text": "It takes work to put together a healthy vegetarian diet that has everything the human body needs. When people decide to become vegetarian, they usually think carefully about what they eat and choose healthy food. They also go to the trouble of finding fresh food more often. Vegetarians eat lots of antioxidants and natural fiber. A vegetarian diet or a diet very low in meat has proven good effects "
+      }
+     ]
+    },
+    "qa-health-se": {
+     "n_qualifying": 11,
+     "top": [
+      {
+       "chunk": "pack:qa-health-se:5552",
+       "title": "List of foods for a low carb diet",
+       "share": 1.0,
+       "anchor": 0.802,
+       "bm25_rank": 3,
+       "text": "I recommend vegan and gluten-free salads from HomeJuice. Most salads are highly nutritious as they contain proteins, omega 3, proteins and fibre. Some raw vegetables and fruits also contain antioxidants like Vitamin C and Vitamin A that protects against health problems like cancer and heart disease.\n\nYou can also try juice detox. They are so refreshing and guaranteed to help you lose weight. I use"
+      },
+      {
+       "chunk": "pack:qa-health-se:8740",
+       "title": "Can I use take pills to prevent micronutrient deficiencies and not worry about my diet too much?",
+       "share": 1.0,
+       "anchor": 0.725,
+       "bm25_rank": 17,
+       "text": "Calcium: Calcium helps bones to grow and stay healthy. It also helps muscles to contract, including making the heart beat. Good sources of calcium include: soy yogurt, fortified soy beverages and other fortified non-dairy beverages like rice and almond beverage, soybeans, navy beans, white beans and tofu prepared with calcium sulfate, almonds, sesame butter (tahini), blackstrap molasses, some vege"
+      },
+      {
+       "chunk": "pack:qa-health-se:6157",
+       "title": "Are there objective criteria to define if a diet is \"healthy\"?",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 2,
+       "text": "Tags: nutrition, diet\n\nRecently in Italy there is quite some discussion around a proposed law that concerns the vegan diet.\n\nI am not here to discuss the merits or the demerits neither of the law nor of the vegan diet.\n\nI am here because among the arguments that I have seen thrown around there is one that states (with links to the American Dietetic Association position on vegetarian/vegan diets an"
+      }
+     ]
+    },
+    "qa-outdoors-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-outdoors-se:2554",
+       "title": "A list of suitable foods for a long hike",
+       "share": 1.0,
+       "anchor": 0.903,
+       "bm25_rank": 0,
+       "text": "I find tahini paste to be a useful trip food. According to wikipedia:\n\nTahini is an excellent source of copper, manganese and the amino acid methionine. Tahini is a source of the healthy fatty acids omega-3 and omega-6.\n\nTahini made from raw sesame seeds is lower in fat than tahini made from roasted seeds.\n\nTahini's relatively high levels of calcium and protein make it a useful addition to vegetar"
+      }
+     ]
+    },
+    "qa-cooking-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:63321",
+       "title": "Vegan patty binders",
+       "share": 1.0,
+       "anchor": 0.525,
+       "bm25_rank": 59,
+       "text": "Legume flours (eg chickpea flour - inexpensively available at asian grocers, soybean flour, lentil flour ...) are strong protein based binders; at least chickpea flour (made into a batter with water) is strong enough to yield a usable pancake on its own (as is done in indian cuisine). Mind that these will need various degrees of cooking to be palatable (not long for chickpea flour, but it really d"
+      },
+      {
+       "chunk": "pack:qa-cooking-se:33738",
+       "title": "Is it bad to boil milk?",
+       "share": 1.0,
+       "anchor": 0.555,
+       "bm25_rank": 34,
+       "text": "Look at it this way: What happens if you boil it, and what happens if you don't?\n\nIf you boil, you reduce the risk of getting food poisoning. If you don't boil, you reduce the risk of getting malnourished.\n\nNow, if the temperature-sensitive nutrients in milk are all that stands between a healthy you and a malnourished you, then you are doing something wrong. There are other, better sources of vita"
+      }
+     ]
+    },
+    "qa-money-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:85838",
+       "title": "Vegan hedge (shorting non-vegan, long vegan)",
+       "share": 1.0,
+       "anchor": 0.532,
+       "bm25_rank": 0,
+       "text": "I'm surprised at the extent to which some of these answers are making assumptions about OP's motivations in asking this question and that he/she must personally be vegan and want to use this \"fund\" as a vector for impressing this opinion upon the world. I see zero evidence for this in OP's post.\n\nFor all we know, OP could be an enthusiastic meat-eater who has 5 big macs for breakfast every day - b"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 16,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1413185",
+       "title": "Veganism",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 11,
+       "text": "Some vegans use plant-derived pet food to feed their pets. Motivation for this can be the impact on food animals and the environmental impact of meat-based pet food. This is particularly true for domesticated cats and dogs, for which vegan pet food is available.\nThis practice has been met with caution and criticism, especially regarding vegan cat diets because, unlike omnivorous dogs, felids are o"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3841748",
+       "title": "Cardiovascular disease",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 1,
+       "text": "A diet high in fruits and vegetables decreases the risk of cardiovascular disease and death.\nA 2021 review found that plant-based diets can provide a risk reduction for CVD if a healthy plant-based diet is consumed. Unhealthy plant-based diets do not provide benefits over diets including meat. A similar meta-analysis and systematic review also looked into dietary patterns and found \"that diets low"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1413192",
+       "title": "Veganism",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 3,
+       "text": "The Academy of Nutrition and Dietetics and Dietitians of Canada claim that properly planned vegetarian or vegan diets are appropriate for all life stages, including pregnancy and lactation. The Australian National Health and Medical Research Council similarly believe a well-planned vegan diet is viable for any age, as does the British Dietetic Association, British National Health Service and the C"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:86154",
+       "title": "Healthy diet",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 0,
+       "text": "A healthy diet (or healthful diet) is a diet that maintains or improves overall health, providing the body with essential nutrition: water, macronutrients such as protein, micronutrients such as vitamins, and adequate fibre and food energy. A healthy diet may contain fruits, vegetables, and whole grains, and may include little to no ultra-processed foods or sweetened beverages. The requirements fo"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 5,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2297990",
+       "title": "Buffalo/Downtown",
+       "share": 1.0,
+       "anchor": 0.625,
+       "bm25_rank": 82,
+       "text": "It was at the Williamsville location of Fresh Catch Poke Co. where the Buffalo area was first introduced to the namesake Hawaiian specialty, and locals took to the dish with enough zeal that they opened a second outlet only a year later, attached to the Aloft Hotel downtown. The menu is the same at both locations \u2014 a wide variety of specialty or build-your-own poke bowls with varying grain or vegg"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1706142",
+       "title": "Taurine",
+       "share": 1.0,
+       "anchor": 0.609,
+       "bm25_rank": 4,
+       "text": "Taurine occurs naturally in fish and meat. The mean daily intake from omnivore diets was determined to be around 58\u00a0mg (range 9\u2013372\u00a0mg), and to be low or negligible from a vegan diet. Typical taurine consumption in the American diet is about 123\u2013178\u00a0mg per day.\nTaurine is partially destroyed by heat in processes such as baking and boiling. This is a concern for cat food, as cats have a dietary req"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:907633",
+       "title": "Cookie",
+       "share": 1.0,
+       "anchor": 0.609,
+       "bm25_rank": 19,
+       "text": "Other types of cookies are classified for other reasons, such as their ingredients, size, or intended time of serving:\n- Breakfast cookies are typically larger, lower-sugar cookies filled with \"heart-healthy nuts and fiber-rich oats\" that are eaten as a quick breakfast snack.[20]\n- Lactation cookies are cookies that are said to stimulate a breastfeeding parent\u2019s milk production.[21]\n- Low-fat cook"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-002": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is FOCIL (EIP-7805) and what problem does it solve?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 44,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:19607",
+       "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)",
+       "share": 1.0,
+       "anchor": 0.718,
+       "bm25_rank": 0,
+       "text": "Copyright and related rights waived via CC0."
+      },
+      {
+       "chunk": "pack:boar-crypto:19581",
+       "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)",
+       "share": 1.0,
+       "anchor": 0.718,
+       "bm25_rank": 2,
+       "text": "This section outlines the workflow of FOCIL, detailing the roles and responsibilities of various participants: IL committee members, validators, builders, proposers and attesters."
+      },
+      {
+       "chunk": "pack:boar-crypto:19600",
+       "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)",
+       "share": 1.0,
+       "anchor": 0.718,
+       "bm25_rank": 3,
+       "text": "Instead, we rely on altruistic behavior, as FOCIL requires only a `1-out-of-N` honesty assumption from IL committee members for the mechanism to work as intended."
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-008": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is Glamsterdam and what are its headline features?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 15,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:41305",
+       "title": "Glamsterdam",
+       "share": 1.0,
+       "anchor": 0.843,
+       "bm25_rank": 0,
+       "text": "The headline feature is ePBS (EIP-7732), which separates the heavy task of validating network transactions from the task of reaching consensus. This expands the data propagation window from 2 seconds to roughly 9 seconds, unblocking Ethereum's ability to safely handle much higher transaction throughput and accommodate more data blobs for layer 2 networks."
+      },
+      {
+       "chunk": "pack:boar-crypto:41274",
+       "title": "Glamsterdam",
+       "share": 1.0,
+       "anchor": 0.696,
+       "bm25_rank": 7,
+       "text": "**Enshrined Proposer-Builder Separation (ePBS, or EIP-7732)** formally separates the job of the proposer (who selects the consensus block) from the builder (who assembles the execution payload), enshrining this hand-off directly into the protocol.\n\nBuilding the trustless exchange of a block payload for payment directly into the protocol removes the need for third-party middleware (like MEV-Boost)."
+      },
+      {
+       "chunk": "pack:boar-crypto:41275",
+       "title": "Glamsterdam",
+       "share": 1.0,
+       "anchor": 0.539,
+       "bm25_rank": 2,
+       "text": "By replacing off-protocol middleware and relays with in-protocol mechanics, ePBS reduces trust dependencies and allows Ethereum to safely process much larger amounts of data (like more blobs for layer 2s) without stressing the network.\n\n**Resources**: EIP-7732 technical specification"
+      }
+     ]
+    }
+   }
+  },
+  "vit-sci-003": {
+   "set": "v0.1",
+   "tag": "science-tech",
+   "question": "My phone generates 10 tokens per second and processes the prompt at 30 tokens per second. With 1,300 tokens of sources and a 400-token answer, how long until the answer is finished?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "lan-rsn-003": {
+   "set": "v0.1",
+   "tag": "nature",
+   "question": "Which land animal runs fastest, and for how long can it keep up its top speed?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:374662",
+       "title": "Wuxi",
+       "share": 0.5,
+       "anchor": 0.645,
+       "bm25_rank": 18,
+       "text": "There's a paid parking lot inside, which is about \u00a510 to 15 each time, and you can enjoy the flowers inside: there are azaleas, begonias, and green cherry blossoms.\n- Wuxi Zoo: \u65e0\u9521\u52a8\u7269\u56ed. No.99 Qianrong Road, Binhu District. self-drive or taxi. 08:30-16:30. \u00a5100. It is a landmark zoo, suitable for playing with small children, with internal sightseeing buses and full facilities. There are animal zoning"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:447470",
+       "title": "North American wildlife",
+       "share": 0.5,
+       "anchor": 0.545,
+       "bm25_rank": 3,
+       "text": "The pronghorn, Antilocapra americana, often called \"antelope\" and sometimes \"speed goat\", is the fastest land animal in the Western Hemisphere. While the cheetah of Africa and Asia is faster, the pronghorn can sustain its maximum speed for much longer. It can be found in open country throughout the western Great Plains, the Great Basin, and into northern Mexico. Pronghorns are about the size of sm"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:56214",
+       "title": "Pronghorn",
+       "share": 0.5,
+       "anchor": 0.679,
+       "bm25_rank": 0,
+       "text": "The pronghorn is the fastest land mammal in the Western Hemisphere, with running speeds of up to . It is often called the second-fastest land animal, second only to the African cheetah, and it can keep up high speeds longer than cheetahs."
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:20505",
+       "title": "Ostrich",
+       "share": 0.5,
+       "anchor": 0.55,
+       "bm25_rank": 33,
+       "text": "Ostriches normally spend the winter months in pairs or alone. During breeding season and sometimes during extreme rainless periods Ostriches live in nomadic groups of five to 50 birds (led by a top hen) that often travel together with other grazing animals, such as zebras or antelopes.\n\nWith their acute eyesight and hearing, Ostriches can sense predators such as cheetahs from far away. When being "
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:22703",
+       "title": "Cheetah",
+       "share": 0.5,
+       "anchor": 0.511,
+       "bm25_rank": 17,
+       "text": "A cheetah (Acinonyx jubatus) is a medium large cat which lives in Africa and Asia. It is the fastest land animal and can run up to , and accelerate from 0 to in less than 3 seconds. Most cheetahs live in the savannas of Africa. There are a few in Iran. Cheetahs are active during the day, and hunt in the early morning or late evening."
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 21,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3232663",
+       "title": "Fastest animals",
+       "share": 1.0,
+       "anchor": 0.545,
+       "bm25_rank": 6,
+       "text": "| 12   | Cheetah                         | 109.4\u2013120.7 km/h (68.0\u201375.0 mph)                    | Land            | Fastest land animal, fastest feline, the cheetah can accelerate from 0 to 97 km/h (60 mph) in less than three seconds, \"faster than a Ferrari\", though endurance is limited. The highest speed reliably recorded for the species is 104 km/h (65 mph).                                       "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2176236",
+       "title": "Common ostrich",
+       "share": 1.0,
+       "anchor": 0.756,
+       "bm25_rank": 5,
+       "text": "It is distinctive in its appearance, with a long neck and legs, and can run for a long time at a speed of 55\u00a0km/h (34\u00a0mph) with short bursts up to about 97\u00a0km/h (60\u00a0mph), the fastest land speed of any bipedal animal and the second fastest of all land animals after the cheetah. The common ostrich is the largest living species of bird and thus the largest living dinosaur. It lays the largest eggs of"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1778294",
+       "title": "Pronghorn",
+       "share": 1.0,
+       "anchor": 0.66,
+       "bm25_rank": 30,
+       "text": "The pronghorn is the fastest land mammal in the Western Hemisphere, being built for maximum predator evasion through running. Their top speed is dependent upon the length of time over which it is measured. It can run 56\u00a0km/h (35\u00a0mph) for 6.5\u00a0km (4\u00a0mi), 68\u00a0km/h (42\u00a0mph) for 1.5\u00a0km (1\u00a0mi), and 88.5\u00a0km/h (55\u00a0mph) for 800\u00a0m (0.5\u00a0mi). Although it is slower than the African cheetah, it can sustain top s"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:22515",
+       "title": "Cheetah",
+       "share": 1.0,
+       "anchor": 0.645,
+       "bm25_rank": 1,
+       "text": "The cheetah (Acinonyx jubatus) is a species of large feline and the only living member of the genus Acinonyx. The cheetah is a pursuit predator and the fastest land animal, capable of running at 93\u2013104 km/h (58\u201365 mph); it has evolved for speed, having powerful hindlimb muscles and a long lumbar spine. The cheetah has a tawny to creamy white or pale buff fur that is marked with evenly spaced, soli"
+      },
+      {
+       "chunk": "pack:wiki-vital5:105763",
+       "title": "Pronghorn",
+       "share": 0.5,
+       "anchor": 0.538,
+       "bm25_rank": 28,
+       "text": "During the Pleistocene epoch, about 11 other antilocaprid species existed in North America, many with long or spectacularly twisted horns. Three other genera (Capromeryx, Stockoceros and Tetrameryx) existed when humans entered North America, but are now extinct. The pronghorn's closest living relatives are the giraffe and okapi. The antilocaprids are part of the infraorder Pecora, making them dist"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 11,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1420847",
+       "title": "Common ostrich",
+       "share": 1.0,
+       "anchor": 0.756,
+       "bm25_rank": 0,
+       "text": "It is distinctive in its appearance, with a long neck and legs, and can run for a long time at a speed of 55\u00a0km/h (34\u00a0mph) with short bursts up to about 97\u00a0km/h (60\u00a0mph), the fastest land speed of any bipedal animal and the second fastest of all land animals after the cheetah. The common ostrich is the largest living species of bird and thus the largest living dinosaur. It lays the largest eggs of"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1696372",
+       "title": "Cheetah",
+       "share": 1.0,
+       "anchor": 0.656,
+       "bm25_rank": 5,
+       "text": "The cheetah is the world's fastest land animal. Estimates of the maximum speed attained range from 80 to 128\u00a0km/h (50 to 80\u00a0mph). A commonly quoted value is 112\u00a0km/h (70\u00a0mph), recorded in 1957, but this measurement is disputed. In 2012, an 11-year-old cheetah from the Cincinnati Zoo set a world record by running 100\u00a0m (330\u00a0ft) in 5.95 seconds over a set run, recording a maximum speed of 98\u00a0km/h (6"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1696343",
+       "title": "Cheetah",
+       "share": 1.0,
+       "anchor": 0.645,
+       "bm25_rank": 12,
+       "text": "The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67\u201394\u00a0cm (26\u201337\u00a0in) at the shoulder, and the head-and-body length is between 1.1 and 1.5\u00a0m (3\u00a0ft 7\u00a0in and 4\u00a0ft 11\u00a0in). Adults "
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-005": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "K1": "S4",
+   "K3": "S5",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:39833",
+       "title": "Mali",
+       "share": 0.667,
+       "anchor": 0.506,
+       "bm25_rank": 4,
+       "text": "untry. The area of the country is 1,240,000 km\u00b2 (478,734 mi\u00b2). Mali and South Africa are about the same size. It is two times bigger than Texas.\n\nMost of Mali is part of the Sahara Desert. Mali is does not have any sea coast. It is landlocked. Mali does not have many mountains. Flat areas in the north are covered by sand. Savanna is around the Niger River in the south. The climate is dry. The dry "
+      }
+     ]
+    }
+   }
+  },
+  "lan-rsn-007": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "In which year was the Berlin Wall built, and in which year did it come down?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 8,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:531076",
+       "title": "Berlin Wall",
+       "share": 1.0,
+       "anchor": 0.52,
+       "bm25_rank": 6,
+       "text": "Construction started on August 13 of 1961 at midnight when tens of thousands of military and security forces encircled West Berlin and started spreading barbed wire in what became known as the \"Barbed Wire Sunday\". It was the last day when significant number of people managed to escape East Germany. A few days later first wall was constructed using concrete blocks.\n\nWall was continuously expanding"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:44698",
+       "title": "Brocken",
+       "share": 1.0,
+       "anchor": 0.603,
+       "bm25_rank": 106,
+       "text": "- 1890: Professor Albert Peter from G\u00f6ttingen opens the Brockengarten.\n\n- 1895: The first weather station is set up.\n\n- 27 March 1899: The Brockenbahn opens.\n\n- 1935: A mobile transmitter with a power of 10 kW transmits the first television broadcasts from Brocken.\n\n- 1937: Brocken becomes part of the nature protected area \"Oberharz\".\n\n- 1939: The present weather station is built.\n\n- 17. April 194"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:429321",
+       "title": "Cold War Europe",
+       "share": 1.0,
+       "anchor": 0.596,
+       "bm25_rank": 5,
+       "text": "- Berlin: Berlin symbolizes the Cold War more than any other city. The Berlin Wall was erected in 1961, and most of it was torn down in the 1989 revolution. Bits and pieces of it have been sold around the world and you can still buy postcards with an \"original\" piece of Berlin Wall in it. However, some parts were deliberately left standing or re-erected at certain sites to serve as memorials or ar"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 44,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:4760",
+       "title": "Berlin",
+       "share": 1.0,
+       "anchor": 0.848,
+       "bm25_rank": 2,
+       "text": "Berlin is an important city for the history of Germany. The King of Prussia and the Emperor of Germany lived in Berlin. The government of Germany was in Berlin for many years. Bombs destroyed many buildings in the city in World War Two. The city was split into West Berlin and East Berlin after World War Two. After the Berlin Wall was built in 1961 very few people were allowed to cross from East Be"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:43483",
+       "title": "Berlin Wall",
+       "share": 1.0,
+       "anchor": 0.764,
+       "bm25_rank": 0,
+       "text": "Key facts: name: Berlin Wall; location country: *East Germany *border|20px East Berlin; size: 155 km 1; start date: 13 August 1961; building type: Wall; demolition date: 9 November 1989\n\nThe Berlin Wall (German: Berliner Mauer) was a wall that separated the city of Berlin in Germany from 1961 to 1989. It separated the eastern half from the western half. Many people believed it was a symbol of the "
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:471017",
+       "title": "Topography of Terror",
+       "share": 1.0,
+       "anchor": 0.603,
+       "bm25_rank": 81,
+       "text": "The buildings that were the headquarters of the SS and Gestapo were destroyed in 1945. For several decades, these buildings were somewhat forgotten. The location was a dump site. East Germany built the Berlin Wall in 1961 that went along the Niederkirchnerstrasse. The site was in East Germany and next to the wall.\n\nDieter Hoffmann-Axthelm wrote about the importance of the site in 1978. However, th"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 72,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2878475",
+       "title": "Berlin Wall",
+       "share": 1.0,
+       "anchor": 0.688,
+       "bm25_rank": 14,
+       "text": "The Berlin Wall was more than 140 kilometres (87\u00a0mi) long. In June 1962, a second, parallel fence, also known as a \"hinterland\" wall (inner wall), was built some 100\u00a0m (110\u00a0yd) farther into East German territory. The houses contained between the wall and fences were razed and the inhabitants relocated, thus establishing what later became known as the death strip. The death strip was covered with r"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:477354",
+       "title": "West Berlin",
+       "share": 1.0,
+       "anchor": 0.603,
+       "bm25_rank": 62,
+       "text": "West Berlin had great symbolic significance during the Cold War, as it was widely considered by westerners an \"island of freedom.\" It was heavily subsidized by West Germany as a \"showcase of the West.\" A wealthy city, West Berlin was noted for its distinctly cosmopolitan character, and as a centre of education, research and culture. With about two million inhabitants, West Berlin had the largest p"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2355371",
+       "title": "Tear down this wall!",
+       "share": 1.0,
+       "anchor": 0.596,
+       "bm25_rank": 12,
+       "text": "Key facts: Date: June 12, 1987; Venue: Near the Brandenburg Gate at the presently named Platz des 18. M\u00e4rz; Location: West Berlin; Participants: Ronald Reagan\n\nOn June 12, 1987, at the Brandenburg Gate, then-United States president Ronald Reagan delivered a speech commonly known by a key line from the middle part: \"Mr. Gorbachev, tear down this wall!\" Reagan called for Soviet leader Mikhail Gorbac"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:27803",
+       "title": "Walter Ulbricht",
+       "share": 0.5,
+       "anchor": 0.52,
+       "bm25_rank": 19,
+       "text": "As the leader of a significant Communist satellite, Ulbricht had a degree of bargaining power with the Kremlin that he used effectively. For example, he demanded the building of the Berlin Wall in 1961 when the Kremlin was reluctant. Ulbricht began his political life during the German Empire, when he joined first the Social Democratic Party of Germany (SPD) in 1912 later joining the anti-World War"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 28,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2445175",
+       "title": "Berlin Wall",
+       "share": 1.0,
+       "anchor": 0.52,
+       "bm25_rank": 15,
+       "text": "Construction started on August 13 of 1961 at midnight when tens of thousands of military and security forces encircled West Berlin and started spreading barbed wire in what became known as the \"Barbed Wire Sunday\". It was the last day when significant number of people managed to escape East Germany. A few days later first wall was constructed using concrete blocks.\n\nWall was continuously expanding"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:603339",
+       "title": "Rosenthaler Platz",
+       "share": 1.0,
+       "anchor": 0.603,
+       "bm25_rank": 31,
+       "text": "Rosenthaler Platz in Berlin's Mitte district, district Mitte, forms a crossroads where Rosenthaler Strasse, Brunnenstrasse and Weinbergsweg meet Torstrasse, and is therefore not a square in the true sense of the word. It is located on the site of the former Rosenthaler Tor of the Berlin Customs Wall, from which a road led to the village of Rosenthal. This gate was one of the few through which Jews"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1958324",
+       "title": "Brocken",
+       "share": 1.0,
+       "anchor": 0.603,
+       "bm25_rank": 137,
+       "text": "- 1890: Professor Albert Peter from G\u00f6ttingen opens the Brockengarten.\n\n- 1895: The first weather station is set up.\n\n- 27 March 1899: The Brockenbahn opens.\n\n- 1935: A mobile transmitter with a power of 10 kW transmits the first television broadcasts from Brocken.\n\n- 1937: Brocken becomes part of the nature protected area \"Oberharz\".\n\n- 1939: The present weather station is built.\n\n- 17. April 194"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-004": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "I am rendering a large batch of beef fat and have no fridge space left. Will the tallow keep in jars in a cool basement for a year?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-010": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Suggest what I could season sushi rice with if someone at the table is allergic to rice vinegar.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-016": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "When a recipe says to bring the pot to a boil, which stage of bubbling counts?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-002": {
+   "set": "cm",
+   "tag": "money",
+   "question": "I always settle my credit card statement the day it arrives instead of waiting for the due date. Am I losing anything?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-008": {
+   "set": "cm",
+   "tag": "money",
+   "question": "I am moving a pre-tax 401(k) from an old job. Can it go into a Roth IRA, and which destination makes more sense?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 7,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:121540",
+       "title": "Paying taxes on a converted old retirement account to a Roth IRA from a 401K loan from current employer?",
+       "share": 0.5,
+       "anchor": 0.574,
+       "bm25_rank": 25,
+       "text": "A conversion to ROTH is a bet that your current marginal tax rate is less than what your future marginal tax rate will be at retirement. The [usage detail removed]K you pay in tax now is essentially a [usage detail removed]k opportunity cost from your 401(k). You're paying [usage detail removed]k to get [usage detail removed]k tax-free.\n\nLet's say that the future growth of either account is 8%.\n\nAfter 10 years, that [usage detail removed]k would have grown to [usage detail removed]K The [usage detail removed]k would have gr"
+      },
+      {
+       "chunk": "pack:qa-money-se:131201",
+       "title": "How to choose between Roth IRA and Traditional IRA",
+       "share": 0.5,
+       "anchor": 0.573,
+       "bm25_rank": 142,
+       "text": "Tags: united-states, roth-ira, retirement\n\nI have been contributing to Roth IRA for several years now. At this point my income have jumped up so I cannot contribute to Roth IRA anymore, unless I use the backdoor. Currently, my tax rate is 24%. I am already contributing to Traditional IRA for this year on monthly basis.\n\nShould I convert my traditional IRA to Roth IRA? If so when should I do this s"
+      },
+      {
+       "chunk": "pack:qa-money-se:103797",
+       "title": "Should I contribute more to my 401(k) or IRA?",
+       "share": 0.5,
+       "anchor": 0.565,
+       "bm25_rank": 141,
+       "text": "It sounds like your question can be boiled down to: is it worth contributing to a potentially less tax-optimal Roth account (versus a pre-tax account) in order to access better investment options?\n\nYou are probably the only one that can answer that. But some points to consider:\n\n- How superior would pre-tax versus Roth contributions be for you? The main factor here is tax rate now versus tax rate "
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-014": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Explain whether a basket ETF rises when one of its stocks jumps 10%, even with nobody buying the ETF itself.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-020": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Explain why the Series I savings bond rate fell while the Federal Reserve was raising interest rates.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

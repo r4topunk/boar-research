@@ -1,0 +1,409 @@
+{
+ "ranked": [
+  {
+   "id": "A2-CLAIM-STATE-MATRIX",
+   "statement": "A precomputed claim v5 \u00a70 and tier-label matrix covers all four adoption states before 10-24 18:00. The states are {NOTE-1 adopted y/n} \u00d7 {NOTE-5 catalog packs listed y/n}, each read off the catalog of the installed RC at runsheet row 0b. Each state maps to exactly one headline sentence and one 8 GB tier label. Run over all four state texts, recompute_page_numbers.py finds 0 unsourced or mismatched numbers in \u00a70, and 0 sentences describe a proposal (1.7B, Succinct, packs) as shipped.",
+   "why_now": "RESEARCH-PAGE-DRAFTS item 12 already demands a catalog re-read at every RC install, and the 1.7B/Gemma tier labels currently say 'proposed unless a later RC lists them'. The freeze is about 10-23 and r4to decides by 10-24 18:00, so the text for each outcome has to exist before the RC changes. Otherwise the final edit happens under deadline pressure, which is where the B3/variant-A inaccuracy came from.",
+   "method": "Write RESEARCH-PAGE \u00a70 fallback block v2 with four variants. S00: neither note adopted, so 'shipped = 1.5B Detailed, built-in KB only' plus A1's number or 'unmeasured'. S10: 1.7B listed, so the 1.7B row is labelled RC only if a 1.7B RC row exists, else 'listed, not measured by us'. S01: packs listed, so 'packs downloadable in-app (network once)'; still no offline import. S11: both. Each variant names its source row (A1 / runsheet row 2 / a later RC row) and its judge family. Run ruler/tools/recompute_page_numbers.py (CV5-RECOMPUTE criterion 78f43da6 rules) over each variant. Use variant B wording as the base: the page review found A inaccurate as written.",
+   "lane": "writing",
+   "ids": "none (text only; numbers from CV5-LADDER-OPUS, RC1-SPEED, RC1-PARITY, A1 when it lands)",
+   "cost": "0 LLM judge calls; 0 phone min; one recompute script pass; the review is folded into A3",
+   "ceiling": "Removes the main wording risk: a bench-engine or proposed-config number being read as the submitted app's. It lets the 10-24 decision be a lookup instead of a rewrite.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Written before any RC2 install. The text fails if recompute finds \u2265 1 unsourced \u00a70 number or \u2265 1 'ships/default' verb attached to the 1.7B, Succinct or packs in S00. In that case the failing variant is withdrawn and \u00a70 falls back to bare variant B. If no RC newer than RC1 exists by 10-24 12:00, only S00 is published and the other three stay in the draft file.",
+   "ships_before_freeze": true,
+   "lens": "Lens A: the 8 GB tier story and claim v5 given RC1 (2.0.0-rc1 ships only Qwen2.5-1.5B, Detailed/1024, Standard KB only, 0 packs, no offline pack import; the 1.7B entry (NOTE-1), the Succinct default and the catalog packs (NOTE-5) are all still proposals). The point: RC1 drops runsheet rows 1, 3, 4, 5 and 7 (no 4B, no 1.7B, no Gemma in RC1), so phone minutes are free on 10-22. The cheapest claim-grade fact we lack is the shipped configuration's own U on the CV5 frame (51 v0.1 dev ids, Opus judge.v1). Today the only 1.5B number is a desktop closed-book rung in our 1.7B K0 frame: Opus 0.261, with 1.7B \u2212 1.5B +0.090 and 4B \u2212 1.5B +0.199. That rung is a proxy, not the app. Every page sentence about the submission has to hang on one measured RC row or say 'unmeasured'. A two-claims framing (engine research vs shipped app) is defensible only if the shipped claim has its own measured row and every number carries its tag (bench / RC).",
+   "p": 0.85,
+   "value": 4,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "It is text only, with a mechanical recompute check and a concrete no-'ships'-verb rule, so it cuts the deadline wording risk at almost no cost. S10/S01 must label the 4B catalog presence the same way.",
+    "A text-only, 0-LLM note paragraph to write today on the variant-B base; it turns the 10-24 decision into a lookup, but should add a fifth axis: 4B downloadable from RC1's own catalog (the snapshot catalog lists qwen3-4b and wiki-vital5)."
+   ],
+   "score": 3.4
+  },
+  {
+   "id": "DD2-CODEX-LADDER",
+   "statement": "Under the cross-family Codex judge (judge.v1, same blinding) on the 51 v0.1 ladder traces, the Qwen3-4B (cut 7, Pixel) minus Qwen3-1.7B K0 gap is >= +0.05 U with bootstrap CI low > 0, and the per-rung offset U_codex - U_haiku spreads <= 0.03 across the 4 rungs. If so, S1 of claim v5 (headline variant B) becomes a two-family sentence.",
+   "why_now": "0 phone minutes and 0 Claude calls; the criterion is already frozen (CV5 89f2b173); its NOT-RUN deadline is 10-23 18:00, and claim v5 / headline B is due 10-24. XFAM/XFAM-V02 show a stable ~+0.10 offset with the ranking preserved, so the prior is favourable.",
+   "method": "r4to on the laptop: cd ruler/codex-ladder; codex login status; bash run.sh pilot; bash run.sh all (408 calls = 4 rungs x 51 ids x 2 orders, gpt-5.6-sol, reasoning high, no tools). Coordinator: ruler/tools/cv5_ladder_codex.py, item-cluster bootstrap B 2000 rng 11, Haiku and Opus columns from the existing rows. Start before the first phone row so it runs in parallel. No new prediction file: the CV5-LADDER-CODEX criterion is the frozen file; add one line today confirming it is unchanged.",
+   "lane": "scripting",
+   "ids": "ruler/codex-ladder/in/ids51.txt (= ruler/cv5-ladder/in/set.json RV2 primary 51, v0.1 dev)",
+   "cost": "0 phone min; ~15 min of r4to attention, 1-2 h wall; 408 Codex calls on r4to's [usage detail removed]; 0 Claude, 0 paid API",
+   "ceiling": "Claim v5 S1 stated by two judge families (headline B with Claude + OpenAI numbers side by side); R4 gains a judge-family column",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "Codex 4B - 1.7B CI includes 0, OR offset spread across the 4 rungs > 0.03 -> page states S1 as 'Claude-family result; the OpenAI judge disagrees' with numbers, and R4 reports arm-specific offsets. Not run by 10-23 18:00 -> S1 single-family.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: the 10-22 device day re-cut against what RC1 actually is. Three facts set the plan. (1) The RC1 catalog in snapshot 5f8cc8f4 (assets/boar-data/catalog.json) lists qwen3-4b-instruct-2507-q4km (2.50 GB) and wiki-vital5.sqlite (164 MB, format-1). One Wi-Fi window by r4to installs the 4B and one pack without the maintainer, so the 4B rows (speed, layers, pressure) run on RC1 itself. Only the 1.7B rows (NOTE-1) and our boar-packs (NOTE-5 catalog entries) stay blocked on him. UNKNOWN: whether the installed RC1 catalog equals the snapshot. Check it in the Model Catalog screen during setup. (2) DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId = \"detailed\", and l.190 loads with `EngineTweaks()` default (MMAP), not the user's preset. So every RC1 eval-hook row is Detailed/1024 at default load. DD1022 \u00a71 (frozen as Succinct vs succinct bench refs) cannot be read as written: a new prediction file must judge decode tok/s and TTFT, not answer p50. The \"Run Boar Run\" MMAP_MLOCK preset can only be reached by hand through the chat UI. (3) No bench-app row earns phone minutes on 10-22. E1-PAR is settled (B PAYS, E KILL, D measured), and native retrieval is ~1 % of an answer. The Succinct-vs-Detailed question for NOTE-1 can be answered with 0 LLM calls by comparing RC1 1.5B Detailed rows against bench cmp30-q15 1.5B succinct rows on the 6 shared ids. E1-PAR A2 (12 min) is a filler only if the RC rows finish early. C and REPACK16 get 0 min. Day order (fixed by thermal rules, not by rank): Codex ladder starts on the laptop \u2192 Wi-Fi window 1 (4B) \u2192 H3 speed (cool, \u2264 31.0 C) \u2192 H2 layers + warning (ungated) \u2192 Wi-Fi window 2 (wiki-vital5) \u2192 H5 \u2192 H4 pressure last (\u2264 34.0 C per cycle). Total \u2248 105 phone min + 2 downloads, inside the \u2264 3 h budget. Whatever the maintainer ships, these items are his to supply and none of the five runs needs them: the NOTE-1 1.7B catalog entry (revives rc-speed9-17b and rc-press-17b), NOTE-5 catalog entries for boar-crypto/wikivoyage/A-union (revives any RC pack run), a debuggable RC or a .sqlite picker (revives rc-aunion10), and a Succinct default (revives the S1b style pair). Prediction files to write today, sha'd before 10-22: arms/device-day-1022/{RC1-SPEED4B,RC1-LAYERWARN,RC1-PRESS,RC1-VITAL5}-prediction.md. New requests: rc-warn10-4b, rc-layer10-15b (fallback) and rc-vital9-15b, appended to SHA256SUMS.dd1022.",
+   "p": 0.675,
+   "value": 4,
+   "costscore": 1,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "The criterion is already frozen (CV5 89f2b173), it costs 0 phone minutes and 0 Claude calls, and the XFAM priors favour it. Start it before the phone rows; the 0.03 offset-spread clause is the likeliest failure, not the 4B\u22121.7B gap.",
+    "The criterion is already frozen, it costs 0 Claude calls and 0 phone, and the NOT-RUN deadline is 10-23 18:00; ask r4to to start it today, not wait for device day, since XFAM shows the ranking is preserved but the 0.03 offset-spread clause is the risk."
+   ],
+   "score": 2.7
+  },
+  {
+   "id": "DD2-RC1-VITAL5",
+   "statement": "With one catalog pack installed in RC1 (his own wiki-vital5, format-1), the 1.5B on the same 9 speed ids retrieves on >= 4/9 (vs 1/9 with 0 packs), with retrievalMs p50 <= 0.6 s and the bench key string present on >= 7/9 (vs 6/9). That shows RC1's 1/9 retrieval comes from missing packs, not from the 0.7 similarity gate, and backs NOTE-5 (list our packs in the catalog) with a measurement on his own binary.",
+   "why_now": "NOTE-5 is the most consequential maintainer ask before 10-25. Its premise ('packs are what is missing') currently rests on RC1-PARITY's inference from 0 packs. This is the only pack path RC1 allows without his catalog entries.",
+   "method": "Today: write request rc-vital9-15b (same ids as rc-speed9-15b, 1.5B) and arms/device-day-1022/RC1-VITAL5-prediction.md. 10-22, after H3 and H2: Wi-Fi window 2, Knowledge -> Wikipedia Vital Articles -> Download (record size/sha), airplane on. thermal_gate 310, python3 rc_eval.py run rc-vital9-15b. Diff 0 LLM against results/rc-speed9-15b (retrievalUsed, retrievalMs, contextTokens, key-string regex from RC1-PARITY aggregates/parity.json) and check logcat for 'knowledge base + 1 packs'. Leave the pack installed so H4 runs with a realistic install.",
+   "lane": "pixel",
+   "ids": "ruler/ids/dd1022-speed9.ids (paired with results/rc-speed9-15b)",
+   "cost": "~3 min download (164 MB) + ~6 min run + cool-down = ~12 phone min; 0 judge",
+   "ceiling": "NOTE-5 opens with 'on your RC1, one catalog pack moves retrieval from 1/9 to k/9'. The page can show a measured RC retrieval delta instead of a bench-only one.",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Frozen today. Retrieval <= 2/9 with the pack installed (logcat confirms 1 pack) -> the gate/routing, not missing packs, binds: NOTE-5 must add a gate line, and RC1-PARITY's '0 packs' explanation is marked incomplete. Pack not in RC1's catalog or download fails -> NOT RUNNABLE, NOTE-5 keeps the bench-only argument.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: the 10-22 device day re-cut against what RC1 actually is. Three facts set the plan. (1) The RC1 catalog in snapshot 5f8cc8f4 (assets/boar-data/catalog.json) lists qwen3-4b-instruct-2507-q4km (2.50 GB) and wiki-vital5.sqlite (164 MB, format-1). One Wi-Fi window by r4to installs the 4B and one pack without the maintainer, so the 4B rows (speed, layers, pressure) run on RC1 itself. Only the 1.7B rows (NOTE-1) and our boar-packs (NOTE-5 catalog entries) stay blocked on him. UNKNOWN: whether the installed RC1 catalog equals the snapshot. Check it in the Model Catalog screen during setup. (2) DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId = \"detailed\", and l.190 loads with `EngineTweaks()` default (MMAP), not the user's preset. So every RC1 eval-hook row is Detailed/1024 at default load. DD1022 \u00a71 (frozen as Succinct vs succinct bench refs) cannot be read as written: a new prediction file must judge decode tok/s and TTFT, not answer p50. The \"Run Boar Run\" MMAP_MLOCK preset can only be reached by hand through the chat UI. (3) No bench-app row earns phone minutes on 10-22. E1-PAR is settled (B PAYS, E KILL, D measured), and native retrieval is ~1 % of an answer. The Succinct-vs-Detailed question for NOTE-1 can be answered with 0 LLM calls by comparing RC1 1.5B Detailed rows against bench cmp30-q15 1.5B succinct rows on the 6 shared ids. E1-PAR A2 (12 min) is a filler only if the RC rows finish early. C and REPACK16 get 0 min. Day order (fixed by thermal rules, not by rank): Codex ladder starts on the laptop \u2192 Wi-Fi window 1 (4B) \u2192 H3 speed (cool, \u2264 31.0 C) \u2192 H2 layers + warning (ungated) \u2192 Wi-Fi window 2 (wiki-vital5) \u2192 H5 \u2192 H4 pressure last (\u2264 34.0 C per cycle). Total \u2248 105 phone min + 2 downloads, inside the \u2264 3 h budget. Whatever the maintainer ships, these items are his to supply and none of the five runs needs them: the NOTE-1 1.7B catalog entry (revives rc-speed9-17b and rc-press-17b), NOTE-5 catalog entries for boar-crypto/wikivoyage/A-union (revives any RC pack run), a debuggable RC or a .sqlite picker (revives rc-aunion10), and a Succinct default (revives the S1b style pair). Prediction files to write today, sha'd before 10-22: arms/device-day-1022/{RC1-SPEED4B,RC1-LAYERWARN,RC1-PRESS,RC1-VITAL5}-prediction.md. New requests: rc-warn10-4b, rc-layer10-15b (fallback) and rc-vital9-15b, appended to SHA256SUMS.dd1022.",
+   "p": 0.55,
+   "value": 3.5,
+   "costscore": 1,
+   "verdicts": [
+    "device-day",
+    "device-day"
+   ],
+   "reasons": [
+    "At 12 minutes it is a minimal paired test of 'missing packs vs gate' on his own binary, but n=9 on reasoning/compare ids is noisy (mde_ok false). Wiki-vital5 is format-1 and not one of our packs, so it backs the NOTE-5 premise only indirectly.",
+    "For about 12 phone minutes, it gives NOTE-5 a measured pack-vs-no-pack retrieval delta on his own binary (wiki-vital5 confirmed in the catalog); the main risk is that vital-article coverage of the lan-* speed ids is thin, so \u22654/9 is uncertain."
+   ],
+   "score": 1.9250000000000003
+  },
+  {
+   "id": "DD2-RC1-LAYERWARN",
+   "statement": "On RC1, at most 1 of the 5 deterministic-layer probes (trv-002 facts, vit-sci-003 arithmetic, saf-004 card, vit-hlt-002 health path, epi-1021 epinephrine 'thigh') answers with 0 generated tokens and text identical to cut 7 Pixel rows, and geo-dev-1022 is refuse/generic. On 10 ids where the bench 4B shows the warning line (P2), RC1 4B shows it on <= 1/10. Together these confirm NOTE-1's 13-row port list as 'missing in RC' and make NOTE-2's premise fail on RC1 as installed (DD1022 N2 RC clause <= 3/10).",
+   "why_now": "NOTE-1 and NOTE-2 go to the maintainer 10-22/10-23 before his ~10-23 freeze. The warning-line premise rests today on 0/3 ids (1.5B, Detailed), below the N2 clause's minimum of 10 bench-warn ids in one dir. Best value per phone minute of the day.",
+   "method": "Today (0 LLM): (a) grep the native snapshot engine/answer + app strings for the bench warning-line text. If absent, write it in the prediction as the mechanism. (b) Pick 10 ids with P2-warn on q4ba73-a rows via note2_apply.py, write ruler/ids/dd1022-warn10.ids + requests rc-warn10-4b and rc-layer10-15b, and sha both. (c) Write arms/device-day-1022/RC1-LAYERWARN-prediction.md. 10-22, after Wi-Fi window 1 has installed the catalog 4B: python3 rc_eval.py run rc-layer10-4b (or rc-layer10-15b if the 4B is not in RC1's catalog: layers fire before the LLM, so the match is model-agnostic), then rc_eval.py run rc-warn10-4b. Score with dd_check.py layer and note2_apply.py --rc. Ungated, temperature recorded. Optional ~16 Haiku calls on the 4 divergent answers, descriptive only.",
+   "lane": "pixel",
+   "ids": "ruler/ids/dd1022-layer10.ids (trv-002, vit-sci-003, saf-004, vit-hlt-002, epi-1021, geo-dev-1022 + 4 divergent); new ruler/ids/dd1022-warn10.ids (10 bench-P2-warn ids from q4ba73-a, written today)",
+   "cost": "~25 phone min (layer10 on 1.5B ~5 min, or ~13 min on the 4B; warn10 on the 4B Detailed ~13 min; no cool-down); 0-16 Haiku; 0 Opus",
+   "ceiling": "NOTE-1 leads with the missing layers (port list confirmed on the shipped binary). NOTE-2 is rewritten as 'add the warning line first' instead of assuming it exists. R4 headline row labelled 'RC without layers X, Y'.",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Frozen today in RC1-LAYERWARN-prediction.md. >= 4/5 layer matches -> those rows are struck from NOTE-1 as 'already in RC' and the prediction is wrong. Warning line on >= 4/10 -> NOTE-2's premise holds on RC1 and the 'add the line' rewrite is withdrawn. geo-dev-1022 answered with a place list -> TILE-PATH reopens. If the 4B is not downloadable, the warn10 part runs on the 1.5B and is labelled 'small-model prompt, not the 4B NOTE-2 scope'.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: the 10-22 device day re-cut against what RC1 actually is. Three facts set the plan. (1) The RC1 catalog in snapshot 5f8cc8f4 (assets/boar-data/catalog.json) lists qwen3-4b-instruct-2507-q4km (2.50 GB) and wiki-vital5.sqlite (164 MB, format-1). One Wi-Fi window by r4to installs the 4B and one pack without the maintainer, so the 4B rows (speed, layers, pressure) run on RC1 itself. Only the 1.7B rows (NOTE-1) and our boar-packs (NOTE-5 catalog entries) stay blocked on him. UNKNOWN: whether the installed RC1 catalog equals the snapshot. Check it in the Model Catalog screen during setup. (2) DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId = \"detailed\", and l.190 loads with `EngineTweaks()` default (MMAP), not the user's preset. So every RC1 eval-hook row is Detailed/1024 at default load. DD1022 \u00a71 (frozen as Succinct vs succinct bench refs) cannot be read as written: a new prediction file must judge decode tok/s and TTFT, not answer p50. The \"Run Boar Run\" MMAP_MLOCK preset can only be reached by hand through the chat UI. (3) No bench-app row earns phone minutes on 10-22. E1-PAR is settled (B PAYS, E KILL, D measured), and native retrieval is ~1 % of an answer. The Succinct-vs-Detailed question for NOTE-1 can be answered with 0 LLM calls by comparing RC1 1.5B Detailed rows against bench cmp30-q15 1.5B succinct rows on the 6 shared ids. E1-PAR A2 (12 min) is a filler only if the RC rows finish early. C and REPACK16 get 0 min. Day order (fixed by thermal rules, not by rank): Codex ladder starts on the laptop \u2192 Wi-Fi window 1 (4B) \u2192 H3 speed (cool, \u2264 31.0 C) \u2192 H2 layers + warning (ungated) \u2192 Wi-Fi window 2 (wiki-vital5) \u2192 H5 \u2192 H4 pressure last (\u2264 34.0 C per cycle). Total \u2248 105 phone min + 2 downloads, inside the \u2264 3 h budget. Whatever the maintainer ships, these items are his to supply and none of the five runs needs them: the NOTE-1 1.7B catalog entry (revives rc-speed9-17b and rc-press-17b), NOTE-5 catalog entries for boar-crypto/wikivoyage/A-union (revives any RC pack run), a debuggable RC or a .sqlite picker (revives rc-aunion10), and a Succinct default (revives the S1b style pair). Prediction files to write today, sha'd before 10-22: arms/device-day-1022/{RC1-SPEED4B,RC1-LAYERWARN,RC1-PRESS,RC1-VITAL5}-prediction.md. New requests: rc-warn10-4b, rc-layer10-15b (fallback) and rc-vital9-15b, appended to SHA256SUMS.dd1022.",
+   "p": 0.7,
+   "value": 4,
+   "costscore": 2,
+   "verdicts": [
+    "device-day",
+    "device-day"
+   ],
+   "reasons": [
+    "It is cheap and ungated, and it checks NOTE-1's port list and NOTE-2's premise on the shipped binary. The 0-LLM grep step today may already settle the warning-line half, so do the grep before spending phone minutes. The layer half is model-agnostic, so it can fall back to the 1.5B.",
+    "It is the best phone-minute value for NOTE-1/NOTE-2 before the freeze; the model-agnostic layer10-15b half can run now on the free Pixel, while warn10 needs the 4B from window 1; grep the warning-line string in the snapshot today."
+   ],
+   "score": 1.4
+  },
+  {
+   "id": "DD2-RC1-SPEED4B",
+   "statement": "RC1 with the catalog Qwen3-4B (Detailed/1024, default MMAP, 0 our packs) on the 9 speed ids gives an answer p50 of 55-95 s, decode 5.0-7.0 tok/s, tokens p50 350-480, TTFT p50 <= 3 s, 0 LMK. DD1022's answer-p50 clause therefore reads FAIL (> 2x the bench 23.0 s), but decode tok/s is within +/-20 % of the bench 4B's 5.6. The T_8GB-native gap on the shipped default is style length, not the engine.",
+   "why_now": "T_8GB-native has only a closed-book 1.5B number (25.2 s); the R4 8 GB row and the NOTE-1 speed rationale need the 4B on the APK. The 1.7B row is moot unless NOTE-1 ships. The 4B sits in his catalog, so no maintainer input is needed. It must run first on a cool phone.",
+   "method": "Today: write arms/device-day-1022/RC1-SPEED4B-prediction.md, which re-bases DD1022 \u00a71. RC1 runs Detailed (personalities.json defaultId), so the decisive numbers are decode tok/s vs 5.6 and TTFT, while answer p50 vs 23.0 s is reported with its style caveat. 10-22: Wi-Fi window 1, Model Catalog -> download qwen3-4b-instruct-2507-q4km (record sha + catalog version), airplane on. thermal_gate.py rc-speed9-4b 310 (<= 31.0 C, status 0), python3 rc_eval.py run rc-speed9-4b, dd_check.py speed vs q4ba73-a. Also log the battery charge counter and the first-third vs last-third decode, per the pre-flight T8.3/T6.4. Readout 0 LLM.",
+   "lane": "pixel",
+   "ids": "ruler/ids/dd1022-speed9.ids (warmup + 9: lan-rsn-004, lan-cmp-005, lan-rsn-006, lan-rsn-005, lan-cmp-002, lan-cmp-004, lan-hlt-003, lan-exp-003, lan-exp-005)",
+   "cost": "~10 min download (Wi-Fi window, 2.5 GB) + ~15 min run (9 x ~75 s + cold load) + up to 10 min cool-down = ~25 phone min; 0 judge",
+   "ceiling": "First measured T_8GB-native number for the 4B on the submitted APK (R4 8 GB row). NOTE-1 gains a measured 'Detailed costs X s on the 4B' sentence alongside SUCCINCT17's -24 s projection.",
+   "mde_ok": true,
+   "feeds": "T_8GB-native",
+   "kill_criterion": "Frozen today. Decode < 4.5 tok/s, OR TTFT p50 > 5 s on <= 80-token prompts, OR any LMK -> the gap is engine/load, not style: NOTE-1 gets an engine addendum and 'all tiers usable' is withdrawn for the APK. 4B absent from RC1's catalog -> arm NOT RUNNABLE, R4 8 GB row = RC1 1.5B 25.2 s labelled 'only model shipped', 0 extra min. Fallback if the RC does not change: this run is itself the fallback (no 1.7B needed).",
+   "ships_before_freeze": true,
+   "lens": "Lens B: the 10-22 device day re-cut against what RC1 actually is. Three facts set the plan. (1) The RC1 catalog in snapshot 5f8cc8f4 (assets/boar-data/catalog.json) lists qwen3-4b-instruct-2507-q4km (2.50 GB) and wiki-vital5.sqlite (164 MB, format-1). One Wi-Fi window by r4to installs the 4B and one pack without the maintainer, so the 4B rows (speed, layers, pressure) run on RC1 itself. Only the 1.7B rows (NOTE-1) and our boar-packs (NOTE-5 catalog entries) stay blocked on him. UNKNOWN: whether the installed RC1 catalog equals the snapshot. Check it in the Model Catalog screen during setup. (2) DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId = \"detailed\", and l.190 loads with `EngineTweaks()` default (MMAP), not the user's preset. So every RC1 eval-hook row is Detailed/1024 at default load. DD1022 \u00a71 (frozen as Succinct vs succinct bench refs) cannot be read as written: a new prediction file must judge decode tok/s and TTFT, not answer p50. The \"Run Boar Run\" MMAP_MLOCK preset can only be reached by hand through the chat UI. (3) No bench-app row earns phone minutes on 10-22. E1-PAR is settled (B PAYS, E KILL, D measured), and native retrieval is ~1 % of an answer. The Succinct-vs-Detailed question for NOTE-1 can be answered with 0 LLM calls by comparing RC1 1.5B Detailed rows against bench cmp30-q15 1.5B succinct rows on the 6 shared ids. E1-PAR A2 (12 min) is a filler only if the RC rows finish early. C and REPACK16 get 0 min. Day order (fixed by thermal rules, not by rank): Codex ladder starts on the laptop \u2192 Wi-Fi window 1 (4B) \u2192 H3 speed (cool, \u2264 31.0 C) \u2192 H2 layers + warning (ungated) \u2192 Wi-Fi window 2 (wiki-vital5) \u2192 H5 \u2192 H4 pressure last (\u2264 34.0 C per cycle). Total \u2248 105 phone min + 2 downloads, inside the \u2264 3 h budget. Whatever the maintainer ships, these items are his to supply and none of the five runs needs them: the NOTE-1 1.7B catalog entry (revives rc-speed9-17b and rc-press-17b), NOTE-5 catalog entries for boar-crypto/wikivoyage/A-union (revives any RC pack run), a debuggable RC or a .sqlite picker (revives rc-aunion10), and a Succinct default (revives the S1b style pair). Prediction files to write today, sha'd before 10-22: arms/device-day-1022/{RC1-SPEED4B,RC1-LAYERWARN,RC1-PRESS,RC1-VITAL5}-prediction.md. New requests: rc-warn10-4b, rc-layer10-15b (fallback) and rc-vital9-15b, appended to SHA256SUMS.dd1022.",
+   "p": 0.675,
+   "value": 4,
+   "costscore": 2,
+   "verdicts": [
+    "device-day",
+    "device-day"
+   ],
+   "reasons": [
+    "The 4B is in the snapshot catalog (qwen3-4b-instruct-2507-q4km), so this gives the first native 4B row on the submitted APK. Re-basing the verdict on decode tok/s and TTFT is correct because DeviceEvalRunner forces Detailed. The 55-95 s band is wide but honest; it must run first on a cool phone.",
+    "Verified: the snapshot catalog lists qwen3-4b-instruct-2507-q4km, so it needs r4to's Wi-Fi window and a cool phone first; it gives the first 4B number on the submitted APK, re-based on decode tok/s and TTFT since the eval hook is Detailed/1024."
+   ],
+   "score": 1.35
+  },
+  {
+   "id": "A1-RC1-SHIPPED-U",
+   "statement": "RC1 as installed (Qwen2.5-1.5B, Detailed, maxTokens 1024, Standard KB only, 0 packs) on the CV5 frame (51 v0.1 dev ids) scores U_Opus within \u00b10.05 of the desktop closed-book 1.5B rung (0.261), and at least 0.05 below the 1.7B K0 rung (0.351). Retrieval fires on \u2264 5/51 rows. The prior is effectively closed-book: RC1-PARITY retrieval 1/9, and LENGTH-SLOPE puts the 1.5B's Opus length slope \u2264 0, so Detailed does not lift the 1.5B.",
+   "why_now": "RC1 has no 4B, 1.7B or Gemma, so runsheet rows 1 (S1a 4B), 3 (L2 layer10-4b), 4/5 (PRESS) and 7 (T1 Gemma) cannot run as written. Those ~80 phone minutes are free on 10-22. The shipped configuration is the only thing the submission will be judged as, and it has 0 judged answers. Without this row, the page can only use headline variant B ('unmeasured') and the two-claims framing has an empty second half.",
+   "method": "First freeze arms/rc1-pixel/RC1-SHIPPED-criterion.md (sha in QUEUE) before any call, with these outcomes. (a) PROXY-HOLDS if |U_RC1 \u2212 0.261| \u2264 0.05. (b) BELOW-ENGINE if 1.7B rung \u2212 U_RC1 \u2265 +0.05 (paired, item-cluster bootstrap). (c) Report the CE-shown per 100 with the Opus judge named. Build request rc-v01-51-15b from the CV5 ids (arms/gemma4-e2b/phone/judge/v01-57.ids minus FLOOR's 6 nonmodel ids) with the same request64 path as rc-speed9-15b. Run handoff/pixel8-2026-10-20/bench/rc_eval.py run rc-v01-51-15b on RC1 as installed. Do not change the style. Thermal gate \u2264 31.0 C, Wi-Fi off. Record reasonCodes, ctx tokens, retrieval hits and per-row tokens. Judge with Opus judge.v1, both orders, refs as CV5. Score U with the CV5 ladder scorer, paired against the existing Opus L0/L1/4B rung rows. 0 generation on the desktop.",
+   "lane": "opus-claim",
+   "ids": "CV5 frame: v0.1 dev 51 = arms/gemma4-e2b/phone/judge/v01-57.ids minus FLOOR-criterion nonmodel_path_items (6); dev only, no blind/, rnd/veil or v0.4",
+   "cost": "\u2248 35 phone min (51 \u00d7 p50 25 s + tails up to 1024 tokens + cool-downs) inside r4to's 3 h; 102 Opus judge.v1 calls (cap 300); 0 Haiku; 0 paid API",
+   "ceiling": "Gives the claim v5 its only measured statement about the submitted app: 'the submitted app as shipped scores U X (Opus, 51 dev ids)', which sits next to the bench-engine headline. It also settles whether the closed-book 1.5B rung can stand in for the app on the page. The level is decisive vs the 0.50 bar at n 51 (expected gap \u2248 0.24). Separating it from the 1.7B rung is not decisive: the MDE is \u2248 0.10 at n 51.",
+   "mde_ok": true,
+   "feeds": "claim",
+   "kill_criterion": "New runsheet row 1s (after 0b, replacing the dead rows 1/3/4). Partial cases: fewer than 45/51 rows, any LMK, or the thermal gate failing twice \u2192 partial run, no claim number, and the page keeps variant B 'submitted app unmeasured on the ruler'. If the run is not started by 10-22 18:00 \u2192 NOT RUN, logged in QUEUE. If retrieval fires on > 10/51, the 'effectively closed-book' wording is dropped and the result is reported as 'KB-assisted'. If Opus calls would exceed 102, stop at 102.",
+   "ships_before_freeze": true,
+   "lens": "Lens A: the 8 GB tier story and claim v5 given RC1 (2.0.0-rc1 ships only Qwen2.5-1.5B, Detailed/1024, Standard KB only, 0 packs, no offline pack import; the 1.7B entry (NOTE-1), the Succinct default and the catalog packs (NOTE-5) are all still proposals). The point: RC1 drops runsheet rows 1, 3, 4, 5 and 7 (no 4B, no 1.7B, no Gemma in RC1), so phone minutes are free on 10-22. The cheapest claim-grade fact we lack is the shipped configuration's own U on the CV5 frame (51 v0.1 dev ids, Opus judge.v1). Today the only 1.5B number is a desktop closed-book rung in our 1.7B K0 frame: Opus 0.261, with 1.7B \u2212 1.5B +0.090 and 4B \u2212 1.5B +0.199. That rung is a proxy, not the app. Every page sentence about the submission has to hang on one measured RC row or say 'unmeasured'. A two-claims framing (engine research vs shipped app) is defensible only if the shipped claim has its own measured row and every number carries its tag (bench / RC).",
+   "p": 0.75,
+   "value": 5,
+   "costscore": 3,
+   "verdicts": [
+    "device-day",
+    "run-now"
+   ],
+   "reasons": [
+    "This is the only claim-grade row measured on the shipped system. The test is minimal and the kill rules are real. Two caveats: the \u00b10.05 proxy check against a desktop rung run in a different style and frame is descriptive only, and the 4B can be downloaded from the RC1 catalog, so the result should be labelled 'default install', not 'only model'.",
+    "The Pixel is free now with RC1 exactly as shipped and needs no Wi-Fi window, so freeze the criterion and run the 51 ids before any device-day download changes the install; it is the claim's only measured shipped-app row (102 Opus); the 1.7B-separation part is underpowered (MDE 0.10), so the level-vs-0.261 readout is the deliverable."
+   ],
+   "score": 1.25
+  },
+  {
+   "id": "A3-TWO-CLAIMS-REVIEW",
+   "statement": "A 'two claims' \u00a70 passes an independent Opus content review with \u2264 3 required edits and 0 findings of the type 'a bench number readable as the app's'. Claim E is engine research: bench engine 1.7B/4B rows, both judge families, win-rate first. Claim S is the submitted app as shipped: A1's measured U and RC1-SPEED's 25.2 s p50, 'native timings internal' unless r4to lifts decision 4. The reviewer also judges the combination 'S below E by \u2265 0.05' as accurately disclosed with no hedging verbs.",
+   "why_now": "Variant A (native gap from pre-release 4B builds, \u22120.089 Haiku) was judged inaccurate as written. RC1 replaces those builds with a different model, so the old gap figure no longer describes the submission at all. If A1 lands BELOW-ENGINE, the page must say that the submission scores below our engine. The safe way to say it is two separately labelled claims, and the rules require that the wording goes to an Opus reviewer, not r4to.",
+   "method": "After A1's readout (or with 'unmeasured' if it was killed), draft \u00a70 as two labelled blocks: E with the 'Our engine' prefix and S with the 'Submitted app (RC1, as installed)' prefix. Each number carries a tag (bench / RC), judge family, n, seeds and phone. Rule: no number is ever compared across blocks unless it comes from the same ids and the same judge. The A1 paired deltas are the only allowed bridge. Spawn one independent Opus reviewer agent (opus/high: a wrong verdict here is public) with the RESEARCH-PAGE review checklist plus three questions. Q1: can a reader attribute any E number to the app? Q2: is the S-below-E gap stated with its CI and judge? Q3: are the proposals (NOTE-1/5, Succinct) marked as proposals? Apply the edits and re-review once.",
+   "lane": "writing",
+   "ids": "none (text); numbers from A1 + CV5-LADDER-OPUS + CLAIM-RESULTS",
+   "cost": "1 Opus reviewer agent pass + 1 re-review (not judge calls, outside the 300 judge cap); 0 phone",
+   "ceiling": "Decides whether the 'two claims' framing is defensible in public. If it is, the page can lead with the stronger engine research without misrepresenting the submission; if not, \u00a70 collapses to S plus a pointer to the research.",
+   "mde_ok": true,
+   "feeds": "research-page",
+   "kill_criterion": "Frozen before drafting. The two-claims framing is dropped and \u00a70 uses single-claim variant B in any of these cases: the reviewer returns > 3 required edits; or any 'E readable as S' finding survives the re-review; or A1 is NOT RUN, so S has no measured U. Deadline: review done by 10-24 12:00, else variant B.",
+   "ships_before_freeze": true,
+   "lens": "Lens A: the 8 GB tier story and claim v5 given RC1 (2.0.0-rc1 ships only Qwen2.5-1.5B, Detailed/1024, Standard KB only, 0 packs, no offline pack import; the 1.7B entry (NOTE-1), the Succinct default and the catalog packs (NOTE-5) are all still proposals). The point: RC1 drops runsheet rows 1, 3, 4, 5 and 7 (no 4B, no 1.7B, no Gemma in RC1), so phone minutes are free on 10-22. The cheapest claim-grade fact we lack is the shipped configuration's own U on the CV5 frame (51 v0.1 dev ids, Opus judge.v1). Today the only 1.5B number is a desktop closed-book rung in our 1.7B K0 frame: Opus 0.261, with 1.7B \u2212 1.5B +0.090 and 4B \u2212 1.5B +0.199. That rung is a proxy, not the app. Every page sentence about the submission has to hang on one measured RC row or say 'unmeasured'. A two-claims framing (engine research vs shipped app) is defensible only if the shipped claim has its own measured row and every number carries its tag (bench / RC).",
+   "p": 0.6,
+   "value": 4,
+   "costscore": 2,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It depends on A1's readout and is due 10-24. The kill rules are frozen with a fallback to variant B, and the opus/high reviewer is justified for public wording. Run it once A1 lands, not before.",
+    "It depends on A1's readout, so draft and run the Opus review 10-23/24; the kill rule falls back cleanly to variant B and the framing must tag every number bench/RC."
+   ],
+   "score": 1.2
+  },
+  {
+   "id": "C1-NOTE5-CATALOG",
+   "statement": "Our A-union packs go in as catalog.json corpus entries that copy wiki-vital5's schema: kind corpus, format sqlite-pack, filename corpus/<id>.sqlite, sizeBytes, sha256, and a sourceUrl pinned to the HF revision of r4topunk/boar-packs. This needs 0 Kotlin lines, and his existing downloader (BoarServices.kt:106 maps the asset to files/<filename>) plus DeviceEvalRunner.kt:244 (which reads files/corpus/*.sqlite) open them with no code change. Prediction on a debuggable build of the snapshot with only catalog.json edited, on the Pixel 8a after one network window: logcat shows 'knowledge base + N packs' with N >= 5, retrievalUsed rises from 1/9 (RC1) to >= 6/9 on the dd1022-speed9 ids and to >= 50 % on the 73-question set, and retrievalMs p50 stays <= 2.0 s (NATIVE-PARTIME projects 1.0-2.0 s).",
+   "why_now": "RC1-PACKS shows that the submitted app has no offline route for a pack (only the txt/md/csv/json/pdf import, no intent filter, no Download scan). Without catalog entries the 10-25 submission ships with 0 of our packs, and every pack result (R46 +0.042 single pack, the native gap of -0.089 raw in DEVICE-X6) never reaches the judged app. It is a JSON-only change, so it can ship before the ~10-23 engine freeze.",
+   "method": "(a) Scripting, 0 LLM: generate the entries from shared-data/packs manifests. For each pack, run sha256 and a size check against the pinned HF file, and open it read-only with python3 -I sqlite3 to confirm it has the tables his OpenPack expects for format 2 (header/meta, blocks, titles index), compared with a known-good format-2 pack that his X6 10-19 Big Boar run opened. (b) Pixel lane, device day: install a devtest build of a copy of the snapshot that differs only in assets/boar-data/catalog.json (diff = catalog only, no Kotlin, no llama.cpp). Download the packs in one network window, then run the 9 speed ids plus the 73 set with airplane mode on and the 1.5B (the 1.7B if the NOTE-1 entry is present). Read retrievalUsed, retrievalMs and the logcat pack count. The note paragraph gives catalog.json (entries after wiki-vital5, plus an optional 'tiers' row), the gain source (RC1-SPEED 1/9 retrieval; R46 +0.042; DEVICE-X6 -0.089), the risk (download size and storage budget against storageBudgetBytes; a format-2 pack failing to open is skipped by Retriever.kt:54, so no crash), and how he verifies: run his own eval and check retrievalUsed and the pack count in logcat.",
+   "lane": "pixel",
+   "ids": "dd1022-speed9 (9 ids, warmup excluded) + the 73-question device set; packs = the A-union set (6 packs)",
+   "cost": "About 1 h scripting (entries plus sha/size/schema checks); about 25 min of the Pixel 8a slot plus one network window for the downloads; 0 LLM calls, 0 judge",
+   "ceiling": "Turns retrieval on in the submitted app: from 1/9 to >= 6/9 of answers. U ceiling on his eval is +0.04 (R46 single pack) to +0.09 (the DEVICE-X6 native gap, if that gap comes from the corpus as DD-PARITY-NATIVE posits). It also enables C4 and C3's pack branch.",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run: KILL if any pack fails the sha/size/schema check that cannot be fixed by re-pinning, or if on the device the logcat pack count is < 5, or retrievalUsed is <= 3/9 on speed9, or retrievalMs p50 is > 3.0 s, or any LMK/app death occurs. In those cases NOTE-5 asks for the picker to accept .sqlite instead (a Kotlin change, after the freeze).",
+   "ships_before_freeze": true,
+   "lens": "Lens C: maintainer asks for after the freeze, ranked by seconds or U gained per line of Kotlin changed. I read the snapshot wt/native-qa/android-native @5f8cc8f4. Ranking by (ceiling x probability) / cost: (1) catalog entries for our packs (NOTE-5). This is 0 Kotlin lines, only catalog.json entries that copy the wiki-vital5 schema (kind corpus, format sqlite-pack, filename corpus/<id>.sqlite). It unlocks every retrieval lever, and today RC1 has 0 packs and 1/9 retrieval. (2) A Succinct default for answer models under 2 GB, about 3 lines at ChatViewModel.kt:480-486. It saves about 16 s p50 on RC1's 1.5B. NOTE-1 (the 1.7B catalog entry, 0 Kotlin) goes with it as the second model the rule covers. (3) The KB similarity cutoff ANSWER_MIN_SIMILARITY 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73), 1 constant. It is the only quality lever on his KB-only path if NOTE-5 is refused. It cannot be replayed on his exports, because the exports carry no similarity, so we replay it on our side with 0 LLM. (4) A parallel per-pack search (Retriever.kt:58) plus accessOrder=true and cache 64 (WikiPack.kt:309/700), about 10 lines. It saves 0.45-1.3 s per retrieving answer, only once packs exist, and it goes after the freeze. (5) Eval-export fields (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code): per-pack ms, blocks, installed pack ids and top KB similarity. These turn every later ask into a check he can run on his own exports. Deprioritized: NOTE-2's warning line, because its premise failed on RC1 (0/3, different model, n tiny). PAGE16K/#88, because it is a compliance issue (Play 16 KB pages), not seconds or U. Cache 64 on its own, because natively it saves only 0.03-0.10 s; I folded it into item 4. Ships before the freeze: 1, 2 and 3 (catalog, style default, constant). After the freeze: 4 and 5.",
+   "p": 0.525,
+   "value": 5,
+   "costscore": 3,
+   "verdicts": [
+    "run-now",
+    "run-now"
+   ],
+   "reasons": [
+    "Highest-value maintainer ask, needing 0 Kotlin lines. Run the 0-LLM sha/size/format-2 schema checks now. The device half needs a rebuilt devtest APK, not RC1, and competes for an already full slot, so it should run only if the RC rows finish early. The pack-count \u22655 and retrieval \u22656/9 clauses are real kills.",
+    "Generating the entries plus the sha/size/format-2 schema checks is 0-LLM scripting to do today, since it is the one JSON-only ask that can put our packs into the submission before the freeze; the devtest-build device validation rides device day or the free Pixel if the build installs side by side with RC1."
+   ],
+   "score": 0.875
+  },
+  {
+   "id": "DD2-RC1-PRESS-MLOCK",
+   "statement": "RC1 4B at the eval hook's default load (MMAP) survives 3/3 cold loads with the bg_set.sh background apps, with TOTAL PSS peak <= 4.5 GB and 0 LMK lines naming team.sopa.aoair. One manual chat cycle under his 'Run Boar Run' preset (MMAP_MLOCK) gives PSS within +/-0.2 GB of the default cycle and 0 kills, because Android refuses the lock (0 MB locked, as on the X6 10-15).",
+   "why_now": "NOTE-1's 8 GB argument and the claim's R4 8 GB row need the shipped default under realistic memory pressure on the 8 GB phone. His preset asks for mlock, which our runsheet rule forbids enabling blind, so one bounded check settles whether NOTE-1 must warn about that preset.",
+   "method": "Today: write arms/device-day-1022/RC1-PRESS-prediction.md. It notes that DeviceEvalRunner.kt l.190 loads with EngineTweaks() default, so the preset arm is manual (DEVICE-DAY \u00a7F sheet). 10-22, last: per cycle Wi-Fi ON for bash bg_set.sh press-4b-cN, airplane ON, thermal_gate 340 (<= 34.0 C), python3 rc_eval.py run rc-press-4b-c1..c3. Sample dumpsys meminfo every 5 s (Private Dirty, Private Clean, Native Heap, .gguf mmap row, SwapPss), then dd_check.py press. Preset arm, only with r4to's explicit OK on the day: Settings -> Run Boar Run, background apps re-opened, 3 typed questions from press-c1, the same meminfo sampling plus logcat grep for mlock, then switch back to Auto. Force-stop the background apps at the end.",
+   "lane": "pixel",
+   "ids": "ruler/ids/dd1022-press-c1.ids, dd1022-press-c2.ids, dd1022-press-c3.ids (3 x 3); preset arm = the 3 press-c1 questions typed by hand",
+   "cost": "~27 phone min (3 cycles x 9 incl. cool) + ~10 min manual preset cycle = ~37 phone min; 0 judge",
+   "ceiling": "Gates-table row 'the 4B fits 8 GB with background apps, 3/3, Pixel 8a, RC1'. NOTE-1 8 GB argument either confirmed or amended. NOTE-1 adds one line on Run Boar Run if it hurts.",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Frozen today (DD1022 \u00a75 kill event: LMK line naming the package, process gone >= 3 consecutive 10 s polls, or fewer rows than questions). >= 1/3 default cycles killed -> R4 8 GB row carries 'killed in k/3 cold loads with background apps'. The 1.7B cannot be the fallback (not in RC1), so NOTE-1's amendment asks for the 1.7B entry on memory grounds (r4to OK). Preset cycle kills or PSS > default +0.3 GB -> NOTE-1 adds 'Run Boar Run unsafe on 8 GB'. No 4B in RC1 -> run the 3 cycles on the 1.5B, labelled 'only shipped model', and drop the preset arm.",
+   "ships_before_freeze": true,
+   "lens": "Lens B: the 10-22 device day re-cut against what RC1 actually is. Three facts set the plan. (1) The RC1 catalog in snapshot 5f8cc8f4 (assets/boar-data/catalog.json) lists qwen3-4b-instruct-2507-q4km (2.50 GB) and wiki-vital5.sqlite (164 MB, format-1). One Wi-Fi window by r4to installs the 4B and one pack without the maintainer, so the 4B rows (speed, layers, pressure) run on RC1 itself. Only the 1.7B rows (NOTE-1) and our boar-packs (NOTE-5 catalog entries) stay blocked on him. UNKNOWN: whether the installed RC1 catalog equals the snapshot. Check it in the Model Catalog screen during setup. (2) DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId = \"detailed\", and l.190 loads with `EngineTweaks()` default (MMAP), not the user's preset. So every RC1 eval-hook row is Detailed/1024 at default load. DD1022 \u00a71 (frozen as Succinct vs succinct bench refs) cannot be read as written: a new prediction file must judge decode tok/s and TTFT, not answer p50. The \"Run Boar Run\" MMAP_MLOCK preset can only be reached by hand through the chat UI. (3) No bench-app row earns phone minutes on 10-22. E1-PAR is settled (B PAYS, E KILL, D measured), and native retrieval is ~1 % of an answer. The Succinct-vs-Detailed question for NOTE-1 can be answered with 0 LLM calls by comparing RC1 1.5B Detailed rows against bench cmp30-q15 1.5B succinct rows on the 6 shared ids. E1-PAR A2 (12 min) is a filler only if the RC rows finish early. C and REPACK16 get 0 min. Day order (fixed by thermal rules, not by rank): Codex ladder starts on the laptop \u2192 Wi-Fi window 1 (4B) \u2192 H3 speed (cool, \u2264 31.0 C) \u2192 H2 layers + warning (ungated) \u2192 Wi-Fi window 2 (wiki-vital5) \u2192 H5 \u2192 H4 pressure last (\u2264 34.0 C per cycle). Total \u2248 105 phone min + 2 downloads, inside the \u2264 3 h budget. Whatever the maintainer ships, these items are his to supply and none of the five runs needs them: the NOTE-1 1.7B catalog entry (revives rc-speed9-17b and rc-press-17b), NOTE-5 catalog entries for boar-crypto/wikivoyage/A-union (revives any RC pack run), a debuggable RC or a .sqlite picker (revives rc-aunion10), and a Succinct default (revives the S1b style pair). Prediction files to write today, sha'd before 10-22: arms/device-day-1022/{RC1-SPEED4B,RC1-LAYERWARN,RC1-PRESS,RC1-VITAL5}-prediction.md. New requests: rc-warn10-4b, rc-layer10-15b (fallback) and rc-vital9-15b, appended to SHA256SUMS.dd1022.",
+   "p": 0.625,
+   "value": 3,
+   "costscore": 3,
+   "verdicts": [
+    "device-day",
+    "device-day"
+   ],
+   "reasons": [
+    "The 3 default-load cycles are a sound 8 GB gate on the shipped APK and should run last, as planned. Drop or shorten the manual mlock arm (n=3 typed questions, needs r4to's OK on the day) if the 3 h budget is tight, because the day already totals more than 130 phone minutes.",
+    "It runs last by the thermal rule and backs the 8 GB row and NOTE-1; the manual MMAP_MLOCK arm needs r4to's explicit OK and is the first item to cut if the 3 h budget runs short after A1-related overruns."
+   ],
+   "score": 0.625
+  },
+  {
+   "id": "C5-EXPORT-FIELDS",
+   "statement": "Adding 5 fields to the eval export (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code: installedPackIds, perPackMs map, blocksDecompressed, zstdMs, kbTopSimilarity) lets 100 % of rows in his next export attribute retrievalMs to the KB vs each pack within +/-10 %. It also lets C3's cutoff and C4's search be replayed on his own exports without logcat. Today 0 % of rows can be attributed, and RC1's '1/9 retrieval' needed logcat to find out that 0 packs were installed.",
+   "why_now": "Every remaining ask (C1/C3/C4) needs a check he can run in his own eval, and today his exports cannot show which packs were installed or why retrieval did not fire (PAGE-DRAFTS open item 13). This is eval-only code with no user-path risk, so it is the cheapest way to make post-freeze notes self-verifying.",
+   "method": "Scripting: write the field spec and a reference readout script (python3 -I) that checks the export against the spec. Validate it on our own debuggable snapshot build with the patch applied (no llama.cpp change): one 9-id run with packs, where sum(perPackMs) + KB time is within +/-10 % of retrievalMs on >= 90 % of rows and installedPackIds matches the logcat pack count. Ride the C4 device session (no extra phone time beyond about 5 min). The note paragraph gives the line numbers, the schema, the readout script, the risk (timing overhead < 1 ms per pack; export column order is consumed by rc_eval.py, so append only), and how he verifies: run the readout script on his export.",
+   "lane": "scripting",
+   "ids": "dd1022-speed9 (9 ids, with packs from C1)",
+   "cost": "About 1.5 h scripting and patch; about 5 min of the Pixel slot riding C4; 0 LLM",
+   "ceiling": "No U or seconds directly. It turns C1/C3/C4 from projections into numbers he measures himself, and removes logcat from future attribution.",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run: KILL if the attribution residual is > 10 % on > 10 % of rows, or if adding the fields shifts retrievalMs p50 by > 20 ms. In that case the note asks only for installedPackIds and kbTopSimilarity.",
+   "ships_before_freeze": false,
+   "lens": "Lens C: maintainer asks for after the freeze, ranked by seconds or U gained per line of Kotlin changed. I read the snapshot wt/native-qa/android-native @5f8cc8f4. Ranking by (ceiling x probability) / cost: (1) catalog entries for our packs (NOTE-5). This is 0 Kotlin lines, only catalog.json entries that copy the wiki-vital5 schema (kind corpus, format sqlite-pack, filename corpus/<id>.sqlite). It unlocks every retrieval lever, and today RC1 has 0 packs and 1/9 retrieval. (2) A Succinct default for answer models under 2 GB, about 3 lines at ChatViewModel.kt:480-486. It saves about 16 s p50 on RC1's 1.5B. NOTE-1 (the 1.7B catalog entry, 0 Kotlin) goes with it as the second model the rule covers. (3) The KB similarity cutoff ANSWER_MIN_SIMILARITY 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73), 1 constant. It is the only quality lever on his KB-only path if NOTE-5 is refused. It cannot be replayed on his exports, because the exports carry no similarity, so we replay it on our side with 0 LLM. (4) A parallel per-pack search (Retriever.kt:58) plus accessOrder=true and cache 64 (WikiPack.kt:309/700), about 10 lines. It saves 0.45-1.3 s per retrieving answer, only once packs exist, and it goes after the freeze. (5) Eval-export fields (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code): per-pack ms, blocks, installed pack ids and top KB similarity. These turn every later ask into a check he can run on his own exports. Deprioritized: NOTE-2's warning line, because its premise failed on RC1 (0/3, different model, n tiny). PAGE16K/#88, because it is a compliance issue (Play 16 KB pages), not seconds or U. Cache 64 on its own, because natively it saves only 0.03-0.10 s; I folded it into item 4. Ships before the freeze: 1, 2 and 3 (catalog, style default, constant). After the freeze: 4 and 5.",
+   "p": 0.6,
+   "value": 2,
+   "costscore": 2,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "It is eval-only and useful to make later notes self-verifying, but it has no U or seconds of its own and needs a patched debuggable build. Write the spec now and validate after the freeze.",
+    "It is eval-only code and useful to make later asks self-verifying, but has no U or seconds before 10-25; write the field spec as a note paragraph today and validate it after the freeze."
+   ],
+   "score": 0.6
+  },
+  {
+   "id": "C2-SUCCINCT-SMALL-DEFAULT",
+   "statement": "Making Succinct the default style when the answer model is smaller than SMALL_MODEL_BYTES (2 GB) and the user has not picked a style is about 3 lines at ChatViewModel.kt:480-486: chosenStyle = settings.personalityId ?: (if smallModel 'succinct' else defaultId), with smallModel computed before it. On RC1's Qwen2.5-1.5B on the Pixel 8a, it cuts answer p50 by >= 12 s (prediction about 16 s: 376 -> <= 80 tokens at 18.6 tok/s). Haiku N=4 U on the changed answers moves by >= -0.02 (CI low >= -0.05), and confident errors shown do not rise.",
+   "why_now": "RC1-SPEED shows that generation is about 95 % of a native answer, at 376 tokens p50 under Detailed/1024. SUCCINCT17 measures +348 tokens for Detailed (-24 s projected for the 1.7B), and CAP512 shows that the token cap is not the lever. The note needs a measured number on his own code path, not a projection. LENGTH-SLOPE flags a real risk: within an item, Opus scores the 1.7B +0.31 per doubling of length. So the quality guard has to be measured too.",
+   "method": "Freeze the criterion first (sha256). Pixel lane: build a debuggable devtest copy of the snapshot (no llama.cpp change). Set the persona through the app settings file with run-as, because his DeviceEvalRunner reads the style from that file. Run 20 ids (the 9 speed ids plus 11 from the 73 set, chosen by script with seed 11), 1.5B (and the 1.7B if the NOTE-1 entry is present), Detailed vs Succinct, maxTokens 1024, cool phone, alternating order. Compare tokens generated, decode tok/s and answer total. Judge with Haiku N=4 in both orders on the changed answers (all 40), and screen confident errors shown with DECLINE2STAGE. The note paragraph gives ChatViewModel.kt:480/486 and Personalities.kt:51, the gain source (RC1-SPEED plus this pair), the risk (shorter answers lose completeness on the 1.7B within an item; health already forces Succinct through ShortAnswer, so nothing changes there), and how he verifies: one eval run with personality succinct against his Detailed RC1 run on the same ids.",
+   "lane": "pixel",
+   "ids": "dd1022-speed9 + 11 ids from the 73 device set (seed 11, listed in ruler/ids before the run)",
+   "cost": "About 30 min of the Pixel 8a slot (20 x 25 s Detailed + 20 x about 5 s Succinct + install); 160 Haiku calls; 0 Opus",
+   "ceiling": "-16 s p50 per answer on the 1.5B (about -24 s on the 1.7B, SUCCINCT17). That is the largest seconds-per-line item in the native app.",
+   "mde_ok": true,
+   "feeds": "T_8GB-native",
+   "kill_criterion": "Written before the run: KILL if answer p50 saving is < 10 s, or if Haiku U delta on the changed answers is < -0.02 with CI low < -0.05, or if confident errors shown per 100 rise by >= 2. In that case NOTE-1 keeps Detailed and asks for nothing about style.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: maintainer asks for after the freeze, ranked by seconds or U gained per line of Kotlin changed. I read the snapshot wt/native-qa/android-native @5f8cc8f4. Ranking by (ceiling x probability) / cost: (1) catalog entries for our packs (NOTE-5). This is 0 Kotlin lines, only catalog.json entries that copy the wiki-vital5 schema (kind corpus, format sqlite-pack, filename corpus/<id>.sqlite). It unlocks every retrieval lever, and today RC1 has 0 packs and 1/9 retrieval. (2) A Succinct default for answer models under 2 GB, about 3 lines at ChatViewModel.kt:480-486. It saves about 16 s p50 on RC1's 1.5B. NOTE-1 (the 1.7B catalog entry, 0 Kotlin) goes with it as the second model the rule covers. (3) The KB similarity cutoff ANSWER_MIN_SIMILARITY 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73), 1 constant. It is the only quality lever on his KB-only path if NOTE-5 is refused. It cannot be replayed on his exports, because the exports carry no similarity, so we replay it on our side with 0 LLM. (4) A parallel per-pack search (Retriever.kt:58) plus accessOrder=true and cache 64 (WikiPack.kt:309/700), about 10 lines. It saves 0.45-1.3 s per retrieving answer, only once packs exist, and it goes after the freeze. (5) Eval-export fields (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code): per-pack ms, blocks, installed pack ids and top KB similarity. These turn every later ask into a check he can run on his own exports. Deprioritized: NOTE-2's warning line, because its premise failed on RC1 (0/3, different model, n tiny). PAGE16K/#88, because it is a compliance issue (Play 16 KB pages), not seconds or U. Cache 64 on its own, because natively it saves only 0.03-0.10 s; I folded it into item 4. Ships before the freeze: 1, 2 and 3 (catalog, style default, constant). After the freeze: 4 and 5.",
+   "p": 0.45,
+   "value": 3.5,
+   "costscore": 3,
+   "verdicts": [
+    "drop",
+    "run-now"
+   ],
+   "reasons": [
+    "It needs a rebuilt debuggable APK, and the runner ignores the settings file (style comes from the asset defaultId), so the run-as method as written would not change the style. It also overlaps SUCCINCT17 and the 0-LLM 1.5B Detailed-vs-succinct comparison. Keep NOTE-1's projection wording plus the LENGTH-SLOPE risk instead of spending 30 phone minutes.",
+    "A devtest copy with personalities.json defaultId=succinct (an asset-only change) gives the same-model, same-phone pair that A4 cannot; run it on the free Pixel now only if the devtest app installs without disturbing RC1, otherwise the note uses the 0-LLM RC1-Detailed vs bench-succinct comparison."
+   ],
+   "score": 0.525
+  },
+  {
+   "id": "A5-RC2-ADOPTED-RERUN",
+   "statement": "If a later RC lists the boar-packs catalog entries (NOTE-5) and/or the Qwen3-1.7B entry (NOTE-1) before 10-24 12:00, the same 51-id run on that RC (packs downloaded in one network window, then airplane mode) fires retrieval on \u2265 40 % of rows. It also lifts U_Opus by \u2265 +0.05 over A1's RC1-shipped row (paired). In that case the claim S block may say 'with the catalog packs installed' as a measured row, not a proposal.",
+   "why_now": "RC1-PACKS showed that the catalog downloader is the only way a pack reaches files/corpus. So the gain from NOTE-5 can only be shown on an RC that lists the packs. Our bench rows (packs +0.042 single pack, CV5 1.7B \u2212 1.5B +0.090) are engine numbers, not app numbers. Pre-registering the rerun now means an adopted note becomes a claim-grade row in one phone session, with no improvisation after the freeze.",
+   "method": "Freeze RC2-ADOPTED-criterion.md now, conditional on a new RC sha. At install: read catalog.json (runsheet 0b), record which entries are listed, download the listed packs on Wi-Fi, log installed pack ids (logcat 'knowledge base + N packs'), switch airplane mode on. Run rc-v01-51-rc2 on the same 51 ids with the shipped default style, and if a 1.7B is listed also rc-v01-51-rc2-17b. Opus judge.v1, both orders, paired vs A1 rows. Report retrieval-fire rate and CE-shown per 100 with the judge named.",
+   "lane": "opus-claim",
+   "ids": "CV5 51 v0.1 dev ids (same as A1)",
+   "cost": "\u2248 40 phone min incl. download window (second device session, r4to); 102 Opus per arm (A1 102 + one RC2 arm 102 stays \u2264 300; the 1.7B arm only if the cap allows, else Haiku N=4 screen)",
+   "ceiling": "Turns NOTE-1/NOTE-5 from proposals into measured shipped rows. That is the only way the page can credit our packs or the 1.7B to the submission. If the RC has neither, this costs 0.",
+   "mde_ok": false,
+   "feeds": "claim",
+   "kill_criterion": "Tied to runsheet row 0b of the next RC install. No RC newer than RC1 listing either entry by 10-24 12:00 \u2192 NOT RUN (0 cost) and A2's S00 variant is used. Packs listed but the download fails offline-later, or installed packs = 0 \u2192 NOT RUN, and 'packs listed but not verified installed' is stated. If retrieval fires on < 40 % of rows, the claim may not say 'with packs' as a quality lever, only that they are listed. An Opus total over 300 \u2192 the 1.7B arm drops to a Haiku screen and is never quoted as claim grade.",
+   "ships_before_freeze": false,
+   "lens": "Lens A: the 8 GB tier story and claim v5 given RC1 (2.0.0-rc1 ships only Qwen2.5-1.5B, Detailed/1024, Standard KB only, 0 packs, no offline pack import; the 1.7B entry (NOTE-1), the Succinct default and the catalog packs (NOTE-5) are all still proposals). The point: RC1 drops runsheet rows 1, 3, 4, 5 and 7 (no 4B, no 1.7B, no Gemma in RC1), so phone minutes are free on 10-22. The cheapest claim-grade fact we lack is the shipped configuration's own U on the CV5 frame (51 v0.1 dev ids, Opus judge.v1). Today the only 1.5B number is a desktop closed-book rung in our 1.7B K0 frame: Opus 0.261, with 1.7B \u2212 1.5B +0.090 and 4B \u2212 1.5B +0.199. That rung is a proxy, not the app. Every page sentence about the submission has to hang on one measured RC row or say 'unmeasured'. A two-claims framing (engine research vs shipped app) is defensible only if the shipped claim has its own measured row and every number carries its tag (bench / RC).",
+   "p": 0.2,
+   "value": 4,
+   "costscore": 3,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "Pre-registering is correct and it costs 0 if no RC2 lists our entries. It is conditional on the maintainer, mde_ok is false, and it needs a second device session after 10-23, so the realistic probability is low.",
+    "It depends entirely on the maintainer listing NOTE-1/NOTE-5 entries in a newer RC; freeze the criterion now at 0 cost and run only if an RC2 appears before 10-24 12:00."
+   ],
+   "score": 0.26666666666666666
+  },
+  {
+   "id": "C3-KB-CUTOFF",
+   "statement": "On his KB-only path (built-in KB + corpus-standard, no packs), lowering ANSWER_MIN_SIMILARITY from 0.7 to 0.6 (RagPure.kt:41, applied at Retriever.kt:72-73, one constant) raises the share of questions with >= 1 KB chunk sent to the model from <= 15 % (RC1: 1/9) to >= 35 % on the 73 set + v0.1 51, with on-topic precision >= 70 % for the newly admitted chunks. On the changed answers, U moves by >= +0.02 under Haiku N=4 (1.5B, desktop llama-server, his prompt).",
+   "why_now": "8 of 9 RC1 questions got no context: only Sahara passed 0.7. If NOTE-5 is refused or lands late, the KB is the whole retrieval of the submitted app, and this constant is its only cheap lever. His exports carry no similarity, so it cannot be replayed on them. The answer has to come from our 0-LLM replay of his gate, and the note says that.",
+   "method": "Freeze the criterion first. Scripting/replay, 0 LLM: embed the built-in KB and corpus-standard.json with bge-small-en-v1.5 q8 (his embedding GGUF from the catalog) through llama-embedding on the MacBook. Then reimplement in Python his lexical+semantic gateByRelevance + RagPure.fuse ordering at thresholds 0.60/0.65/0.70, and check it reproduces RC1's 1/9 (Sahara) at 0.7 as a parity gate. Count admitted questions and label each newly admitted top chunk on-topic/off-topic with a Haiku low single-shot classifier, then spot-check by hand. Only if the gate passes: generate the 1.5B answers for the changed items at 0.7 vs the best threshold on desktop with his system prompt, then judge with Haiku N=4 in both orders on the changed answers. The note paragraph gives RagPure.kt:41 and Retriever.kt:72-73, the replay numbers, the risk (off-topic context crowds the answer; the pack crowding effect was -0.019 in R47, and the personal-files comment at RagPure.kt:45 shows that the gate also guards user notes), and how he verifies: a one-line flag, then rerun his eval and compare retrievalUsed and his judge on the changed ids.",
+   "lane": "replay-0-llm",
+   "ids": "73-question device set + v0.1 public 51 (dev); never blind/ or bench/v0.4",
+   "cost": "About 2 h replay scripting, 0 LLM. If it passes, about 40 local generations plus <= 320 Haiku calls",
+   "ceiling": "About +0.02-0.03 U on the KB-only configuration (the shipped default if NOTE-5 slips). It is 0 if packs ship, because pack hits are not gated.",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run: KILL with no judged run if the parity gate fails (0.7 does not reproduce 1/9 on speed9), or if at 0.6 admission is < 30 % or on-topic precision of the new chunks is < 70 %. After judging, KILL if U delta on changed answers is < +0.01 or confident errors shown rise. In that case the note says the 0.7 cutoff is correct and keeps it.",
+   "ships_before_freeze": true,
+   "lens": "Lens C: maintainer asks for after the freeze, ranked by seconds or U gained per line of Kotlin changed. I read the snapshot wt/native-qa/android-native @5f8cc8f4. Ranking by (ceiling x probability) / cost: (1) catalog entries for our packs (NOTE-5). This is 0 Kotlin lines, only catalog.json entries that copy the wiki-vital5 schema (kind corpus, format sqlite-pack, filename corpus/<id>.sqlite). It unlocks every retrieval lever, and today RC1 has 0 packs and 1/9 retrieval. (2) A Succinct default for answer models under 2 GB, about 3 lines at ChatViewModel.kt:480-486. It saves about 16 s p50 on RC1's 1.5B. NOTE-1 (the 1.7B catalog entry, 0 Kotlin) goes with it as the second model the rule covers. (3) The KB similarity cutoff ANSWER_MIN_SIMILARITY 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73), 1 constant. It is the only quality lever on his KB-only path if NOTE-5 is refused. It cannot be replayed on his exports, because the exports carry no similarity, so we replay it on our side with 0 LLM. (4) A parallel per-pack search (Retriever.kt:58) plus accessOrder=true and cache 64 (WikiPack.kt:309/700), about 10 lines. It saves 0.45-1.3 s per retrieving answer, only once packs exist, and it goes after the freeze. (5) Eval-export fields (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code): per-pack ms, blocks, installed pack ids and top KB similarity. These turn every later ask into a check he can run on his own exports. Deprioritized: NOTE-2's warning line, because its premise failed on RC1 (0/3, different model, n tiny). PAGE16K/#88, because it is a compliance issue (Play 16 KB pages), not seconds or U. Cache 64 on its own, because natively it saves only 0.03-0.10 s; I folded it into item 4. Ships before the freeze: 1, 2 and 3 (catalog, style default, constant). After the freeze: 4 and 5.",
+   "p": 0.25,
+   "value": 2,
+   "costscore": 3,
+   "verdicts": [
+    "run-after-freeze",
+    "drop"
+   ],
+   "reasons": [
+    "The parity gate against 1/9 is good method, but one Sahara hit gives a very weak parity signal. The ceiling is small (+0.02) and only matters if NOTE-5 is refused, and R47 crowding is a known risk. It is not worth 2 h before the device day.",
+    "With a ~1,000-topic KB, lowering 0.7 to 0.6 mostly admits off-topic chunks (R47 crowding \u22120.019); the parity-gate plus \u226570 % precision bar is unlikely, and it only matters if NOTE-5 is refused."
+   ],
+   "score": 0.16666666666666666
+  },
+  {
+   "id": "C4-PARSEARCH-LRU",
+   "statement": "With the A-union packs installed (C1), one coroutine per Format2 pack on Dispatchers.IO.limitedParallelism(min(nPacks,4)) at Retriever.kt:58, plus accessOrder=true and capacity 64 for the blocks cache (WikiPack.kt:309 and :700), about 10 Kotlin lines, cuts native retrievalMs p50 on the Pixel 8a by >= 0.4 s per retrieving answer (projection 0.45-1.3 s, NATIVE-PARTIME). Hit titles stay identical on >= 95 % of rows, and PSS rises by <= 32 MB.",
+   "why_now": "On the bench engine, DEVICE-E1PAR measured Promise.all at -1.96 s search and -2.93 s answer, with identical titles. W45 (FIFO lru) and W47 are open web actions. Natively the gain is small (retrieval is about 1 % of an answer), so this goes after the freeze. The note still needs a native number instead of a bench projection.",
+   "method": "Freeze the criterion first. Pixel lane, after C1 has installed packs: build two debuggable copies of the snapshot (A = serial, B = the patch, with no llama.cpp change and the catalog from C1). Run 10 retrieving ids each on a cool phone with alternating order. Read retrievalMs, the top-k hit titles and PSS from telemetry. The note paragraph gives Retriever.kt:58 and WikiPack.kt:309/700, the gain source (DEVICE-E1PAR bench, plus this native pair), the risk (SQLite connections opened per pack in parallel; keep runCatching per pack; ordering must stay deterministic, so sort by pack id after awaitAll), and how he verifies: compare retrievalMs in his own export plus a title diff.",
+   "lane": "pixel",
+   "ids": "10 retrieving ids from the 73 device set (chosen after C1 by retrievalUsed=true, seed 11)",
+   "cost": "About 1 h for the Kotlin patch and two builds in our worktree copy; about 20 min of the Pixel slot; 0 LLM, 0 judge",
+   "ceiling": "0.45-1.3 s per retrieving answer (3-9 % of a Succinct answer, about 1-5 % of a Detailed one)",
+   "mde_ok": true,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Written before the run: KILL if the retrievalMs p50 drop is < 0.4 s, or titles are identical on < 95 % of rows, or PSS rises by > 32 MB, or any app death occurs. If C1 is killed, this is not run and the note drops the ask.",
+   "ships_before_freeze": false,
+   "lens": "Lens C: maintainer asks for after the freeze, ranked by seconds or U gained per line of Kotlin changed. I read the snapshot wt/native-qa/android-native @5f8cc8f4. Ranking by (ceiling x probability) / cost: (1) catalog entries for our packs (NOTE-5). This is 0 Kotlin lines, only catalog.json entries that copy the wiki-vital5 schema (kind corpus, format sqlite-pack, filename corpus/<id>.sqlite). It unlocks every retrieval lever, and today RC1 has 0 packs and 1/9 retrieval. (2) A Succinct default for answer models under 2 GB, about 3 lines at ChatViewModel.kt:480-486. It saves about 16 s p50 on RC1's 1.5B. NOTE-1 (the 1.7B catalog entry, 0 Kotlin) goes with it as the second model the rule covers. (3) The KB similarity cutoff ANSWER_MIN_SIMILARITY 0.7 (RagPure.kt:41, applied at Retriever.kt:72-73), 1 constant. It is the only quality lever on his KB-only path if NOTE-5 is refused. It cannot be replayed on his exports, because the exports carry no similarity, so we replay it on our side with 0 LLM. (4) A parallel per-pack search (Retriever.kt:58) plus accessOrder=true and cache 64 (WikiPack.kt:309/700), about 10 lines. It saves 0.45-1.3 s per retrieving answer, only once packs exist, and it goes after the freeze. (5) Eval-export fields (DeviceEvalRunner.kt:302-333, about 20 lines, eval-only code): per-pack ms, blocks, installed pack ids and top KB similarity. These turn every later ask into a check he can run on his own exports. Deprioritized: NOTE-2's warning line, because its premise failed on RC1 (0/3, different model, n tiny). PAGE16K/#88, because it is a compliance issue (Play 16 KB pages), not seconds or U. Cache 64 on its own, because natively it saves only 0.03-0.10 s; I folded it into item 4. Ships before the freeze: 1, 2 and 3 (catalog, style default, constant). After the freeze: 4 and 5.",
+   "p": 0.5,
+   "value": 1,
+   "costscore": 3,
+   "verdicts": [
+    "run-after-freeze",
+    "run-after-freeze"
+   ],
+   "reasons": [
+    "Natively retrieval is about 1 % of an answer, so the 0.45-1.3 s ceiling is marginal. It needs C1 plus two Kotlin builds, and DEVICE-E1PAR already settled the direction on the bench engine.",
+    "Natively retrieval is about 1 % of an answer and the change is about 10 Kotlin lines after the freeze; it is conditional on C1 and worth a note paragraph citing DEVICE-E1PAR, not phone minutes this week."
+   ],
+   "score": 0.16666666666666666
+  },
+  {
+   "id": "A4-RC1-SUCCINCT-PAIR",
+   "statement": "On RC1's 1.5B, switching the style to Succinct in the app UI cuts answer p50 by \u2265 12 s on the 9 speed ids (dd1022-speed9) vs rc-speed9-15b (25.2 s), and on the 51 CV5 ids leaves U within \u22120.02 of Detailed. Haiku N=4 screens the changed answers; Opus confirms only if the Haiku result clears the bar. LENGTH-SLOPE predicts Succinct \u2265 Detailed for the 1.5B under Opus. If true, NOTE-1's Succinct-default ask stands on the shipped model too, not only on the 1.7B projection.",
+   "why_now": "The NOTE-1 Succinct ask (decision 2 for r4to) rests on a 4B cross-phone token pair (SUCCINCT17) plus a decode-rate projection. RC1 Detailed generates 376 tokens p50 at 18.6 tok/s, so the generation-time component is about 20 s. A same-phone, same-model pair is the evidence the maintainer would actually believe before his freeze. GOAL says the pair is impossible without a new APK because the runner reads the style from the app file. Runsheet row 3's 'style back to shipped default first' implies a UI toggle exists, so this is testable at row 0b in 1 minute.",
+   "method": "Freeze arms/rc1-pixel/RC1-SUCCINCT-criterion.md first. At 0b, set Succinct in the UI and run 1 warm-up row. If generated tokens are < 150, the toggle reaches the runner. Then run rc-speed9-15b-succ (9 ids, thermal gate \u2264 31.0 C), and if time allows rc-v01-51-15b-succ (51 ids). Restore Detailed afterwards. Speed: paired p50 per id vs rc-speed9-15b rows. Quality: Haiku 5.5-low judge.v1, N=4 shards, both orders, on the 51 changed answers (102 Haiku). Opus 102 only if the Haiku U delta is \u2265 \u22120.02 and the result goes into the claim, within the shared cap of 300 with A1.",
+   "lane": "pixel",
+   "ids": "dd1022-speed9.ids (9) for speed; CV5 51 v0.1 dev ids for quality",
+   "cost": "\u2248 8 phone min (speed) + \u2248 15 phone min (51 ids, Succinct is short); 102 Haiku; Opus 0 or 102 (conditional)",
+   "ceiling": "Turns the NOTE-1 Succinct sentence from a projection into a measured same-model number, and if he flips the default it becomes the shipped-config speed. For the page it is the honest 'what one setting change does' row.",
+   "mde_ok": false,
+   "feeds": "maintainer-note",
+   "kill_criterion": "Runsheet row 0b: the warm-up row has \u2265 150 tokens, or the style change needs a new APK \u2192 NOT RUNNABLE, logged, and NOTE-1 keeps the projection wording. Speed kill: paired p50 saving < 12 s \u2192 NOTE-1 drops the '\u2248 \u221216 s on the 1.5B' sentence. Quality kill: Haiku U delta < \u22120.02 \u2192 no Succinct-default ask for the 1.5B. The Haiku-only result is never quoted as claim grade.",
+   "ships_before_freeze": true,
+   "lens": "Lens A: the 8 GB tier story and claim v5 given RC1 (2.0.0-rc1 ships only Qwen2.5-1.5B, Detailed/1024, Standard KB only, 0 packs, no offline pack import; the 1.7B entry (NOTE-1), the Succinct default and the catalog packs (NOTE-5) are all still proposals). The point: RC1 drops runsheet rows 1, 3, 4, 5 and 7 (no 4B, no 1.7B, no Gemma in RC1), so phone minutes are free on 10-22. The cheapest claim-grade fact we lack is the shipped configuration's own U on the CV5 frame (51 v0.1 dev ids, Opus judge.v1). Today the only 1.5B number is a desktop closed-book rung in our 1.7B K0 frame: Opus 0.261, with 1.7B \u2212 1.5B +0.090 and 4B \u2212 1.5B +0.199. That rung is a proxy, not the app. Every page sentence about the submission has to hang on one measured RC row or say 'unmeasured'. A two-claims framing (engine research vs shipped app) is defensible only if the shipped claim has its own measured row and every number carries its tag (bench / RC).",
+   "p": 0.07500000000000001,
+   "value": 2.5,
+   "costscore": 2,
+   "verdicts": [
+    "drop",
+    "drop"
+   ],
+   "reasons": [
+    "The premise is false: DeviceEvalRunner.kt l.161-203 takes the style from the personalities.json defaultId asset (only ShortAnswer forces succinct), not from the UI setting, so a UI toggle cannot reach the eval hook. Lens B's 0-LLM comparison against cmp30-q15 1.5B succinct rows covers the question.",
+    "DeviceEvalRunner.kt l.164/203 takes the style from personalities.json defaultId, not the UI setting, so a UI toggle cannot reach eval rows; C2's devtest asset pair or the 0-LLM RC1-Detailed vs bench cmp30-q15 comparison replaces it."
+   ],
+   "score": 0.09375000000000001
+  }
+ ]
+}

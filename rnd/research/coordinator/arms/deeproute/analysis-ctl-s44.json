@@ -1,0 +1,521 @@
+{
+ "n": 57,
+ "bucketRun": "ctl-s44",
+ "medLen": 13,
+ "shas": {
+  "boar-eval/runs/night-2026-10-01/deep35/and-deep35-s42.judgments.jsonl": "65611af004a2",
+  "boar-eval/runs/night-2026-10-01/deep35/and-deep35-s43.judgments.jsonl": "f2cff05d8b92",
+  "boar-eval/runs/night-2026-10-01/and-qwen-s42.judgments.jsonl": "1a9e8a7d72da",
+  "boar-eval/runs/night-2026-10-01/and-qwen-s43.judgments.jsonl": "27dd92b77317",
+  "boar-eval/runs/and-qwen-s44/and-qwen-s44.judgments.jsonl": "363b156bba70",
+  "boar-eval/runs/night-2026-10-01/deep35/and-deep35-s42.traces.jsonl": "5868fea6a37b",
+  "boar-eval/runs/night-2026-10-01/deep35/and-deep35-s43.traces.jsonl": "52cef4879fe1",
+  "boar-eval/runs/night-2026-10-01/and-qwen-s42.traces.jsonl": "df1fb5158074",
+  "boar-eval/runs/night-2026-10-01/and-qwen-s43.traces.jsonl": "77ca7f740ce2",
+  "boar-eval/runs/and-qwen-s44/and-qwen-s44.traces.jsonl": "d387995ba1a9",
+  "rnd/research/coordinator/RETRIEVAL-SCORECARD-2026-10-06.items.csv": "4afb630f907e",
+  "boar-eval/bench/v0.1/questions.public.jsonl": "568b3ececd8a"
+ },
+ "router": [
+  {
+   "name": "all-4B",
+   "note": "",
+   "deepN": 0,
+   "deepPct": 0,
+   "ratio": 0.5074,
+   "dRatio": 0,
+   "ci": [
+    0,
+    0
+   ],
+   "captured": 0,
+   "wallX": 1
+  },
+  {
+   "name": "all-deep",
+   "note": "",
+   "deepN": 57,
+   "deepPct": 100,
+   "ratio": 0.5648,
+   "dRatio": 0.0574,
+   "ci": [
+    0.0211,
+    0.0936
+   ],
+   "captured": 1,
+   "wallX": 7.12
+  },
+  {
+   "name": "oracle (per-item best)",
+   "note": "uses judgments",
+   "deepN": 36,
+   "deepPct": 63.2,
+   "ratio": 0.5897,
+   "dRatio": 0.0823,
+   "ci": [
+    0.0545,
+    0.1128
+   ],
+   "captured": 1.433,
+   "wallX": 4.94
+  },
+  {
+   "name": "R1 task:research",
+   "note": "",
+   "deepN": 15,
+   "deepPct": 26.3,
+   "ratio": 0.5225,
+   "dRatio": 0.0152,
+   "ci": [
+    0.0017,
+    0.0295
+   ],
+   "captured": 0.264,
+   "wallX": 2.69
+  },
+  {
+   "name": "R2 no on-topic source (no-good-source | no-source-memory)",
+   "note": "",
+   "deepN": 15,
+   "deepPct": 26.3,
+   "ratio": 0.5404,
+   "dRatio": 0.033,
+   "ci": [
+    0.0095,
+    0.0611
+   ],
+   "captured": 0.575,
+   "wallX": 2.41
+  },
+  {
+   "name": "R3 instant:off-topic",
+   "note": "",
+   "deepN": 22,
+   "deepPct": 38.6,
+   "ratio": 0.5309,
+   "dRatio": 0.0235,
+   "ci": [
+    0.0016,
+    0.045
+   ],
+   "captured": 0.41,
+   "wallX": 3.79
+  },
+  {
+   "name": "R4 weakSources (post-gen escalate)",
+   "note": "",
+   "deepN": 33,
+   "deepPct": 57.9,
+   "ratio": 0.546,
+   "dRatio": 0.0386,
+   "ci": [
+    0.0067,
+    0.0712
+   ],
+   "captured": 0.673,
+   "wallX": 5.07
+  },
+  {
+   "name": "R5 category in reasoning/comparison/synthesis/explanation",
+   "note": "",
+   "deepN": 32,
+   "deepPct": 56.1,
+   "ratio": 0.527,
+   "dRatio": 0.0197,
+   "ci": [
+    -0.0071,
+    0.0465
+   ],
+   "captured": 0.342,
+   "wallX": 4.65
+  },
+  {
+   "name": "R6 question ≥ 13 words",
+   "note": "",
+   "deepN": 29,
+   "deepPct": 50.9,
+   "ratio": 0.5307,
+   "dRatio": 0.0234,
+   "ci": [
+    -0.001,
+    0.0498
+   ],
+   "captured": 0.407,
+   "wallX": 3.96
+  },
+  {
+   "name": "R7 no-gold (scorecard; not on device)",
+   "note": "",
+   "deepN": 18,
+   "deepPct": 31.6,
+   "ratio": 0.5257,
+   "dRatio": 0.0184,
+   "ci": [
+    0.0029,
+    0.0374
+   ],
+   "captured": 0.32,
+   "wallX": 2.74
+  },
+  {
+   "name": "R8 R2 or R3 (any pre-gen retrieval-miss signal)",
+   "note": "",
+   "deepN": 37,
+   "deepPct": 64.9,
+   "ratio": 0.564,
+   "dRatio": 0.0566,
+   "ci": [
+    0.0242,
+    0.09
+   ],
+   "captured": 0.986,
+   "wallX": 5.2
+  }
+ ],
+ "overall": {
+  "r4": 0.5074,
+  "rD": 0.5648,
+  "meanItemD": 0.0576,
+  "sumD": 3.2849,
+  "better": 36,
+  "worse": 17,
+  "cw4": 17,
+  "cwD": 9,
+  "pass4": 15,
+  "passD": 26,
+  "wall": {
+   "b4MeanMs": 8956,
+   "deepMeanMs": 63787,
+   "b4TtftMs": 5604,
+   "deepTtftMs": 42946
+  },
+  "instantBoth": [
+   "dng-001:instant",
+   "dng-002:instant",
+   "dng-005:instant"
+  ],
+  "declinedAny": 0
+ },
+ "byCat": {
+  "comparison": {
+   "n": 7,
+   "meanD": 0.0431,
+   "share": 0.092,
+   "ci": [
+    -0.076,
+    0.153
+   ],
+   "dRatio": 0.042
+  },
+  "crypto": {
+   "n": 7,
+   "meanD": 0.0618,
+   "share": 0.132,
+   "ci": [
+    -0.019,
+    0.144
+   ],
+   "dRatio": 0.0617
+  },
+  "danger": {
+   "n": 2,
+   "meanD": 0.1611,
+   "share": 0.098,
+   "ci": [
+    -0.006,
+    0.328
+   ],
+   "dRatio": 0.1611
+  },
+  "danger-situation": {
+   "n": 3,
+   "meanD": 0.0019,
+   "share": 0.002,
+   "ci": [
+    -0.006,
+    0.011
+   ],
+   "dRatio": 0.0019
+  },
+  "explanation": {
+   "n": 11,
+   "meanD": 0.0384,
+   "share": 0.128,
+   "ci": [
+    -0.032,
+    0.115
+   ],
+   "dRatio": 0.0385
+  },
+  "health": {
+   "n": 4,
+   "meanD": 0.0667,
+   "share": 0.081,
+   "ci": [
+    0.022,
+    0.111
+   ],
+   "dRatio": 0.0667
+  },
+  "honesty-refusal": {
+   "n": 6,
+   "meanD": 0.136,
+   "share": 0.248,
+   "ci": [
+    -0.02,
+    0.307
+   ],
+   "dRatio": 0.1406
+  },
+  "reasoning": {
+   "n": 11,
+   "meanD": 0.0072,
+   "share": 0.024,
+   "ci": [
+    -0.062,
+    0.076
+   ],
+   "dRatio": 0.0059
+  },
+  "synthesis": {
+   "n": 3,
+   "meanD": 0.1148,
+   "share": 0.105,
+   "ci": [
+    -0.011,
+    0.283
+   ],
+   "dRatio": 0.1158
+  },
+  "travel-local": {
+   "n": 1,
+   "meanD": 0.0768,
+   "share": 0.023,
+   "ci": [
+    0.077,
+    0.077
+   ],
+   "dRatio": 0.0768
+  },
+  "travel-practical": {
+   "n": 2,
+   "meanD": 0.1084,
+   "share": 0.066,
+   "ci": [
+    0.017,
+    0.2
+   ],
+   "dRatio": 0.1112
+  }
+ },
+ "byBucket": {
+  "ambiguous": {
+   "n": 4,
+   "meanD": 0.2077,
+   "share": 0.253,
+   "ci": [
+    0.156,
+    0.257
+   ],
+   "dRatio": 0.2079
+  },
+  "coverage": {
+   "n": 19,
+   "meanD": 0.0902,
+   "share": 0.522,
+   "ci": [
+    0.029,
+    0.157
+   ],
+   "dRatio": 0.0911
+  },
+  "dropped": {
+   "n": 1,
+   "meanD": -0.0056,
+   "share": -0.002,
+   "ci": [
+    -0.006,
+    -0.006
+   ],
+   "dRatio": -0.0056
+  },
+  "no-gold": {
+   "n": 18,
+   "meanD": 0.0578,
+   "share": 0.316,
+   "ci": [
+    0.013,
+    0.107
+   ],
+   "dRatio": 0.0577
+  },
+  "ranking": {
+   "n": 7,
+   "meanD": -0.0039,
+   "share": -0.008,
+   "ci": [
+    -0.068,
+    0.055
+   ],
+   "dRatio": -0.0041
+  },
+  "reader-fail": {
+   "n": 2,
+   "meanD": 0.1722,
+   "share": 0.105,
+   "ci": [
+    0.144,
+    0.2
+   ],
+   "dRatio": 0.1722
+  },
+  "reader-ok": {
+   "n": 6,
+   "meanD": -0.1019,
+   "share": -0.186,
+   "ci": [
+    -0.191,
+    -0.015
+   ],
+   "dRatio": -0.1019
+  }
+ },
+ "wins": [
+  [
+   "lan-ref-001",
+   "honesty-refusal",
+   "coverage",
+   0.467,
+   2,
+   5
+  ],
+  [
+   "lan-ref-003",
+   "honesty-refusal",
+   "coverage",
+   0.344,
+   1,
+   3.5
+  ],
+  [
+   "vit-hlt-001",
+   "danger",
+   "no-gold",
+   0.328,
+   1.667,
+   4.5
+  ],
+  [
+   "vit-hum-006",
+   "synthesis",
+   "coverage",
+   0.283,
+   2,
+   4.25
+  ],
+  [
+   "lan-exp-007",
+   "explanation",
+   "ambiguous",
+   0.278,
+   4,
+   5
+  ],
+  [
+   "lan-cmp-003",
+   "comparison",
+   "coverage",
+   0.249,
+   1.667,
+   4.25
+  ],
+  [
+   "vit-cry-002",
+   "crypto",
+   "no-gold",
+   0.233,
+   1,
+   2.5
+  ],
+  [
+   "vit-hum-002",
+   "comparison",
+   "coverage",
+   0.226,
+   2,
+   4
+  ],
+  [
+   "lan-rsn-001",
+   "reasoning",
+   "ambiguous",
+   0.225,
+   3.333,
+   5
+  ],
+  [
+   "trv-002",
+   "travel-practical",
+   "reader-fail",
+   0.2,
+   1.5,
+   2.5
+  ],
+  [
+   "lan-exp-006",
+   "explanation",
+   "ambiguous",
+   0.194,
+   2.667,
+   4.75
+  ],
+  [
+   "vit-cry-001",
+   "crypto",
+   "no-gold",
+   0.15,
+   2.167,
+   3.25
+  ]
+ ],
+ "losses": [
+  [
+   "lan-cmp-001",
+   "comparison",
+   "reader-ok",
+   -0.25,
+   4.5,
+   2.75
+  ],
+  [
+   "lan-rsn-007",
+   "reasoning",
+   "reader-ok",
+   -0.217,
+   5,
+   3.5
+  ]
+ ],
+ "signals": {
+  "research": {
+   "on": 15,
+   "sumDon": 0.884,
+   "sumDoff": 2.401
+  },
+  "noSource": {
+   "on": 15,
+   "sumDon": 1.856,
+   "sumDoff": 1.429
+  },
+  "offTopicInstant": {
+   "on": 22,
+   "sumDon": 1.341,
+   "sumDoff": 1.944
+  },
+  "weak": {
+   "on": 33,
+   "sumDon": 2.203,
+   "sumDoff": 1.082
+  }
+ }
+}

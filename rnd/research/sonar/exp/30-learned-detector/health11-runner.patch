@@ -1,0 +1,45 @@
+--- be-0cfd4a77/be/adapter.ts	2026-10-02 22:10:50
++++ be-0cfd4a77-health11/be/adapter.ts	2026-10-03 11:43:06
+@@ -549,6 +549,34 @@
+   const PLA: any = await import(join(ROOT, "src/rag/ptLexiconAsset.ts"));
+   const LE: any = await import(join(ROOT, "src/inference/LlamaEngine.ts"));
+   const PERS: any = await import(join(ROOT, "src/constants/personalities.ts"));
++  // Sonar exp-30 (health11): learned emergency detector. Desktop stand-in for llama.rn: a llama-server built from
++  // llama.rn's vendored llama.cpp (b11010 + converter patch), pooling mean, -np 1; the head runs in JS (emergencyHead.ts).
++  // BOAR_DETECTOR=mmbert|e5, BOAR_DETECTOR_URL, BOAR_DETECTOR_HEAD (json), BOAR_DETECTOR_THR. Unset -> lexical (health10).
++  let emergencyScore: ((q: string, turns: string[]) => Promise<{ p: number; fire: boolean } | null>) | undefined;
++  if (process.env.BOAR_DETECTOR) {
++    const EH: any = await import(join(ROOT, "src/routing/emergencyHead.ts"));
++    const head = JSON.parse(readFileSync(process.env.BOAR_DETECTOR_HEAD!, "utf8"));
++    const url = process.env.BOAR_DETECTOR_URL!, thr = process.env.BOAR_DETECTOR_THR ? Number(process.env.BOAR_DETECTOR_THR) : EH.DETECTOR_THRESHOLD;
++    const embed = async (content: string, norm: number): Promise<number[]> => {
++      const r = await fetch(`${url}/embedding`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ content, embd_normalize: norm }) });
++      if (!r.ok) throw new Error(`detector ${r.status}`);
++      const j: any = await r.json(); const e = Array.isArray(j) ? j[0].embedding : j.embedding;
++      return Array.isArray(e[0]) ? e[0] : e;
++    };
++    const countTokens = async (content: string): Promise<number> => {
++      const r = await fetch(`${url}/tokenize`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ content, add_special: false }) });
++      if (!r.ok) throw new Error(`detector tokenize ${r.status}`);
++      return ((await r.json()) as any).tokens.length;
++    };
++    // Any failure throws -> answer.ts catches -> null -> the lexical predicate (fail safe, never "not emergency").
++    emergencyScore = async (q, turns) => {
++      const text = await EH.detectorText(turns, q, countTokens);
++      const p = head.kind === "mmbert-cls"
++        ? EH.mmbertProbability(head, await embed(text, -1))
++        : EH.e5Probability(head, await embed(`query: ${q.replace(/\s+/g, " ").trim()}`, 2), await embed(`query: ${text}`, 2));
++      return { p, fire: p >= thr };
++    };
++  }
+   // The answer persona, as the chat passes it (ChatScreen: the saved personality's systemPrompt + styleReminder).
+   // settings.personalityId: one of the tree's own PERSONALITIES; settings.personaSystemPrompt (+ personaStyleReminder):
+   // a literal override (a persona under test). Default: the app's DEFAULT_PERSONALITY_ID ("succinct"). Neither key
+@@ -667,6 +695,7 @@
+     getModelSpeeds: async () => new Map(),
+     recordExecution: async (r: any) => { records.push(r); },
+     memoryBytes: () => process.memoryUsage().rss,
++    ...(emergencyScore ? { emergencyScore } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 

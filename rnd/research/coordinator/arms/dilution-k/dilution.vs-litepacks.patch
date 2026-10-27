@@ -1,0 +1,92 @@
+diff -ru a/src/rag/packs.ts b/src/rag/packs.ts
+--- a/src/rag/packs.ts	2026-10-21 05:21:04
++++ b/src/rag/packs.ts	2026-10-21 05:21:04
+@@ -207,6 +207,17 @@
+ }
+ 
+ /** A format-2 pack hit in the shape the chat's retrieval uses. */
++/** ORACLE-REAL (eval only): pack `packId`'s chunk `chunkId` in the shape of a retrieved pack passage (null when absent). */
++export async function packOracleChunkById(packId: string, chunkId: number): Promise<RetrievedChunk | null> {
++  // A pack file outside the catalog is listed as "local-<file name>" (knowledgePacks).
++  const pack = (await knowledgePacks()).find((p) => p.id === packId || p.id === `local-${packId}`);
++  if (!pack || !(await openPack(pack))) return null;
++  const wp = wikiPacks.get(pack.id);
++  if (!wp) return null;
++  const h = await wp.oracleChunkById(chunkId);
++  return h ? packHitToChunk(pack.id, h) : null;
++}
++
+ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+   const label = SOURCE_LABEL[h.source] ?? "Source";
+   return {
+diff -ru a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+--- a/src/rag/wikiPack.ts	2026-10-21 05:21:04
++++ b/src/rag/wikiPack.ts	2026-10-21 05:21:04
+@@ -596,6 +596,12 @@
+     return score / total;
+   }
+ 
++  /** ORACLE-REAL (eval only): chunk `id` of this pack as a passage (null when absent). */
++  async oracleChunkById(id: number): Promise<PackHit | null> {
++    const r = await this.db.getFirstAsync<{ article_id: number; start: number; end: number }>("SELECT article_id, start, end FROM chunks WHERE id = ?", [id]);
++    return r ? this.hit(r.article_id, id, r.start, r.end, 0, "bm25") : null;
++  }
++
+   private async hit(articleId: number, chunkId: number, start: number, end: number, score: number, via: PackHit["via"], lead = false): Promise<PackHit> {
+     const a = await this.article(articleId);
+     return {
+diff -ru a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-21 05:21:04
++++ b/src/routing/answer.ts	2026-10-21 05:21:13
+@@ -272,6 +272,22 @@
+ /** Max <think> tokens before an answer (reasoning models only; see LlamaEngine thinkingBudget). */
+ export const FAST_THINKING_BUDGET = 256;
+ export const DEEP_THINKING_BUDGET = 1024;
++/** ORACLE-REAL (eval only, default off): BOAR_ORACLE_FILE = JSON {itemId: {question, pack, chunk_id}}; the named pack chunk becomes passage [1]
++ *  of the kept context (moved there if already kept), the engine's kept passages follow in their order; while the kept passages exceed
++ *  the context cap (compress budget + HEADPASS_BUDGET_TOKENS, ceil(chars / 4) per passage) the last non-oracle passage is dropped. Absent = shipped path. */
++const ORACLE_FILE: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_ORACLE_FILE || undefined : undefined;
++/** DILUTION-K (eval only, default off): BOAR_ORACLE_K = k >= 1 keeps only the first k passages after the oracle placement (gold + k-1 kept); no refill, no prompt change. */
++const ORACLE_K: number = typeof process !== "undefined" ? Number(process.env?.BOAR_ORACLE_K || 0) || 0 : 0;
++type OracleEntry = { question: string; pack: string; chunk_id: number };
++let oracleByQuestion: Map<string, OracleEntry> | undefined;
++async function oracleFor(query: string): Promise<OracleEntry | undefined> {
++  if (!oracleByQuestion) {
++    const fs = await import("node:fs");
++    const m = JSON.parse(fs.readFileSync(ORACLE_FILE!, "utf8")) as Record<string, OracleEntry>;
++    oracleByQuestion = new Map(Object.values(m).map((e) => [e.question, e]));
++  }
++  return oracleByQuestion.get(query);
++}
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
+@@ -1165,6 +1181,28 @@
+           for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];
++        }
++      }
++      // ORACLE-REAL (eval only, off unless BOAR_ORACLE_FILE): the item's fact chunk first, the kept passages after it, same context cap.
++      if (ORACLE_FILE && gen?.mode !== "multipass") {
++        const o = await oracleFor(req.query);
++        if (!o) reasonCodes.push("oracle:no-entry");
++        else {
++          const fact = await (await import("../rag/packs")).packOracleChunkById(o.pack, o.chunk_id);
++          if (!fact) reasonCodes.push("oracle:missing");
++          else {
++            const had = sources.some((c) => c.chunkId === fact.chunkId);
++            let rest = sources.filter((c) => c.chunkId !== fact.chunkId);
++            const cap = budget + HEADPASS_BUDGET_TOKENS;
++            const tok = (cs: RetrievedChunk[]) => cs.reduce((n, c) => n + Math.ceil((c.text ?? "").length / 4), 0);
++            let dropped = 0;
++            while (rest.length && tok([fact, ...rest]) > cap) { rest = rest.slice(0, -1); dropped++; }
++            let kcut = 0;
++            if (ORACLE_K >= 1 && 1 + rest.length > ORACLE_K) { kcut = 1 + rest.length - ORACLE_K; rest = rest.slice(0, ORACLE_K - 1); }
++            sources = [fact, ...rest];
++            reasonCodes.push(`oracle:first:${fact.chunkId}:had-${had ? 1 : 0}:dropped-${dropped}`);
++            if (ORACLE_K >= 1) reasonCodes.push(`oracle:k:${ORACLE_K}:cut-${kcut}`);
++          }
+         }
+       }
+       if (sources.length && gen?.mode !== "multipass") {

@@ -1,0 +1,129 @@
+{
+ "metrics": {
+  "S|on": {
+   "n": 60,
+   "unlabelled": 0,
+   "correct_with_source": 0.3,
+   "correct_any": 0.433,
+   "wrong_unwarned": 0.117,
+   "wrong_warned": 0.333,
+   "refused_wrongly": 0.0,
+   "honest_unknown": 0.117,
+   "counts": {
+    "CORRECT_FROM_MEMORY": 8,
+    "HONEST_UNKNOWN": 7,
+    "WRONG_WARNED": 20,
+    "CORRECT_WITH_SOURCE": 18,
+    "WRONG_CONFIDENT": 7
+   },
+   "out_tokens_p50": 44,
+   "out_tokens_p90": 61,
+   "cap_hits_512": 0,
+   "time_ms_p50": 5623
+  },
+  "S|off": {
+   "n": 60,
+   "unlabelled": 0,
+   "correct_with_source": 0.033,
+   "correct_any": 0.217,
+   "wrong_unwarned": 0.1,
+   "wrong_warned": 0.567,
+   "refused_wrongly": 0.0,
+   "honest_unknown": 0.117,
+   "counts": {
+    "CORRECT_FROM_MEMORY": 11,
+    "HONEST_UNKNOWN": 7,
+    "WRONG_WARNED": 34,
+    "WRONG_CONFIDENT": 6,
+    "CORRECT_WITH_SOURCE": 2
+   },
+   "out_tokens_p50": 44,
+   "out_tokens_p90": 59,
+   "cap_hits_512": 0,
+   "time_ms_p50": 4710.8
+  },
+  "SP|on": {
+   "n": 60,
+   "unlabelled": 0,
+   "correct_with_source": 0.3,
+   "correct_any": 0.417,
+   "wrong_unwarned": 0.233,
+   "wrong_warned": 0.233,
+   "refused_wrongly": 0.0,
+   "honest_unknown": 0.117,
+   "counts": {
+    "CORRECT_FROM_MEMORY": 7,
+    "HONEST_UNKNOWN": 7,
+    "WRONG_WARNED": 14,
+    "CORRECT_WITH_SOURCE": 18,
+    "WRONG_CONFIDENT": 14
+   },
+   "out_tokens_p50": 93,
+   "out_tokens_p90": 113,
+   "cap_hits_512": 0,
+   "time_ms_p50": 6538.9
+  },
+  "SP|off": {
+   "n": 60,
+   "unlabelled": 0,
+   "correct_with_source": 0.05,
+   "correct_any": 0.267,
+   "wrong_unwarned": 0.133,
+   "wrong_warned": 0.483,
+   "refused_wrongly": 0.0,
+   "honest_unknown": 0.117,
+   "counts": {
+    "CORRECT_FROM_MEMORY": 13,
+    "HONEST_UNKNOWN": 7,
+    "WRONG_WARNED": 29,
+    "WRONG_CONFIDENT": 8,
+    "CORRECT_WITH_SOURCE": 3
+   },
+   "out_tokens_p50": 87,
+   "out_tokens_p90": 108,
+   "cap_hits_512": 0,
+   "time_ms_p50": 5287.3
+  }
+ },
+ "S_PASS": {
+  "cws_on": 0.3,
+  "wu_off": 0.1,
+  "verdict": "PASS"
+ },
+ "SPLUS_ADOPT": {
+  "rules": {
+   "correct_any_on": {
+    "better": 3,
+    "worse": 4,
+    "ok": false
+   },
+   "wrong_unwarned_on": {
+    "delta": 7,
+    "ok": false
+   },
+   "wrong_unwarned_off": {
+    "delta": 2,
+    "ok": false
+   },
+   "confident_wrong_pooled": {
+    "delta": -2,
+    "ok": true
+   },
+   "health_worse": {
+    "items": [
+     "on|lan-hlt-001"
+    ],
+    "health_ids": [
+     "lan-hlt-001",
+     "lan-hlt-002"
+    ],
+    "ok": false
+   },
+   "paired_n": {
+    "on": 60,
+    "off": 60
+   }
+  },
+  "verdict": "S STAYS"
+ }
+}

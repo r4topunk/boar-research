@@ -1,0 +1,6 @@
+smoke df-smoke-F2 (v0.1 vit-hum-001, lan-exp-001), deepfull tree, persona detailed, --deep-model qwen3.6-35b (try 2; try 1 at 06:43 ran without --deep-model because the driver passed arm F2 to a runner that adds the flag only for D: 0 generations, generation_failed 2/2, infra error before the first token, archived in smoke1-noarm/)
+try 2 06:45–06:50, rc 0, traces sha a0608977acaf, llama-server b11010, deep model sha 96b9c0af5c77
+gate: 2/2 generate:deep-thinking, reasoning 1034/1034 (budget hit), 0 errors PASS; answers 326 / 304 words (T smoke 87 / 65), output tokens 1424 = 1034 + 390 (cap 400 nearly bound) PASS
+gate: context grew: engine context codes 684->419 and 976->397 vs T smoke 684->368 and 976->380 (cap 400 → 1200; compression is relevance-driven so the growth is modest); generation promptTokens 242/599 vs T 275/614 (prefix-cache accounting differs by persona; the engine's own context count is the reading) PASS
+gate: peak RSS 8,464 MB ≤ 13 GB PASS; total 110.5 / 125.8 s (T 136 / 163 s with the shorter answers; same machine, different load)
+V-para context stats (counts only): T s42 context-after median 273, max 389, ≥ 380 on 5/51 (cap binds on ≈ 10 %); 4B cut 6 after median 223 (max 678).

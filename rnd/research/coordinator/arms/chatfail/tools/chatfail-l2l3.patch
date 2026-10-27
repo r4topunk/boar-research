@@ -1,0 +1,80 @@
+diff -ruN a/src/routing/classify.ts b/src/routing/classify.ts
+--- a/src/routing/classify.ts	2026-10-18 00:43:52
++++ b/src/routing/classify.ts	2026-10-18 00:45:40
+@@ -64,6 +64,38 @@
+ const YES_NO =
+   /^(is|are|was|were|do|does|did|can|could|should|will|would|has|have|é|e|são|sao|era|foi|posso|pode|podem|devo|deve|precisa|preciso|tem|há|ha|existe|vale)(?![\p{L}])[^?]*\?\s*$/iu;
+ 
++// CHATFAIL L2 (prototype): intent for follow-ups that ask for code or an example. The base regex only knew "write (a|some) code", so
++// "write it", "show me the code", "not even an example?" and "what does it look like?" (after a technical turn) fell to lookup/chat,
++// with retrieval and the Succinct 2-3 sentence cap. Explicit code nouns need no context; the ambiguous words ("it", "an example",
++// "look like") need a technical word in this message or an earlier user turn, so "an example of a supervolcano" and "what does the
++// road look like in January" stay lookups.
++const CODE_CONTEXT =
++  /\b(smart contracts?|solidity|erc-?\d+|merkle|hash(?:es|ing)?|algorithms?|programs?|programming|code|coding|scripts?|software|functions?|apis?|compiler|sql|database|python|javascript|typescript|rust|numpy|neural networks?|backpropagation|simulations?|data structures?)\b/i;
++const CODE_EXPLICIT = [
++  // show/see/give/paste + (the|some|a) code|program|script|snippet
++  /\b(?:show|see|view|give|get|have|paste|print|display|read)\b(?:\s+(?:me|us))?(?:\s+(?:the|its|that|this|some|a|an|your|full))?\s+(?:source\s+)?(?:code|program|script|snippet)\b/i,
++  // "in code", "in Python", "as code"
++  /\b(?:in|as|using|with)\s+(?:code|python|javascript|js|typescript|solidity|rust|c\+\+|numpy|sql|bash)\b/i,
++];
++const CODE_NEEDS_CONTEXT = [
++  // write it / write one for me (not "write it down")
++  /\bwrite\s+(?:me\s+)?(?:it|that|this|one|them)\b(?!\s+down)/i,
++  // an example / not even an example (not "an example of ...")
++  /\b(?:an?|one|some|another|any)\s+(?:(?:small|short|simple|quick|minimal|tiny|code)\s+)*examples?\b(?!\s+of\b)/i,
++  // what/how does it look like
++  /\b(?:what|how)\b[^?]*\blooks?\s+like\b/i,
++];
++
++/** Like classifyTask, with the user's earlier turns (oldest first) as context for the code-intent rule. */
++export function classifyTaskInContext(query: string, priorUserTurns: string[] = []): TaskType {
++  const base = classifyTask(query);
++  if (base !== "lookup" && base !== "research" && base !== "chat" && base !== "unknown") return base;
++  const q = query.trim();
++  if (CODE_EXPLICIT.some((re) => re.test(q))) return "code";
++  if (CODE_NEEDS_CONTEXT.some((re) => re.test(q)) && (CODE_CONTEXT.test(q) || priorUserTurns.some((t) => CODE_CONTEXT.test(t)))) return "code";
++  return base;
++}
++
+ export function classifyTask(query: string): TaskType {
+   const trimmed = query.trim();
+   if (!trimmed) return "unknown";
+diff -ruN a/src/routing/followUp.ts b/src/routing/followUp.ts
+--- a/src/routing/followUp.ts	2026-10-18 00:43:52
++++ b/src/routing/followUp.ts	2026-10-18 00:45:40
+@@ -58,15 +58,31 @@
+   fallback?: string;
+ }
+ 
+-/** The latest earlier question, never the current one (a history that already holds it would make it its own subject). */
++/**
++ * A question that names its own subject by the rule below (no pointing back, and either a name of its own or more than
++ * SHORT_FOLLOW_UP_TERMS content words). A bare "I" does not count as a name here.
++ */
++function selfContained(text: string): boolean {
++  if (POINTS_BACK.test(text) || thereAsPlace(text)) return false;
++  return tokenizeTerms(text).length > SHORT_FOLLOW_UP_TERMS || namesItsOwnSubject(text.replace(/(^|\s)I(?:['\u2019][a-z]+)?(?=[\s?.!,]|$)/g, "$1"));
++}
++
++/**
++ * CHATFAIL L3 (prototype): the earlier question that carries the conversation's subject, never the current one. Was: the
++ * latest earlier user turn, which from the third turn on is itself a follow-up with no subject ("what it look like?"), so the
++ * anchor was lost. Now: the latest earlier user turn that names its own subject; if none does, the first user turn (the root).
++ */
+ function previousQuestion(query: string, history?: ConversationHistory): string | null {
+   const turns = history?.turns ?? [];
+   const current = query.trim();
++  let root: string | null = null;
+   for (let i = turns.length - 1; i >= 0; i--) {
+     const text = turns[i].text.trim();
+-    if (turns[i].role === "user" && text && text !== current) return text;
++    if (turns[i].role !== "user" || !text || text === current) continue;
++    root = text;
++    if (selfContained(text)) return text;
+   }
+-  return null;
++  return root;
+ }
+ 
+ /** Words a question or request starts with, capitalized only because they open it (English and Portuguese). */

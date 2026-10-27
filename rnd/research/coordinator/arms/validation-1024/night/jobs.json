@@ -1,0 +1,221 @@
+{
+ "order": [
+  "v2-s",
+  "v2-splus",
+  "s4-main-s42",
+  "s4-main-s43",
+  "v3-s",
+  "v3-splus",
+  "s5-packproof",
+  "s7-uxm-on-s44",
+  "s10-topics",
+  "b-k4comp40-19"
+ ],
+ "rc_kit": {
+  "boar-crypto": "ae9fbd2c7a46a46a815d46d0283e7b192adb4c342b38a2adc4881e8f9d8831fb",
+  "boar-wikivoyage-en": "ff8595e32f56b8b84e20464afd8bf88532d47d2d82d799e3df8489440004b66e",
+  "boar-simplewiki-en": "9c316ff28d29a02f69024e68d9e6b654357dc6555e06a30af18be2fbd7bc5596",
+  "qa-cooking-se": "81990fa938ecf7d467a31efacdd58cd6f98392261e5e06ba92fcd0174b3dba35",
+  "qa-money-se": "374112341f2aa92f136b37fd3855d90710936cd158fb46f0f639de7b33ed5a88",
+  "boar-factbook": "981f7b4bbfa4ddf38bd7e09a037be6f065e252a5ce9e23f2ea07e4ee3f422eaa",
+  "boar-medlineplus-en": "e805ccea3aa7d75224a81fa44e60d881161c6a6029255b461f8ff6ee5399ebd0",
+  "boar-firstaid-en": "0a7dffa614490199477cc469a06aa92561f89713d16d1ab43d1a0d53f813e9c6",
+  "boar-visa-en": "d1dd0ffb58a8e4f9b50a6a21cb164bdb314a7181eb2803c952db21e21359ad20",
+  "qa-health-se": "f1ba1a4b2253f0f7ff2c643ff3eb2f4f3768036efaf646a776c61978ec390eaf",
+  "qa-travel-se": "6c7221a6ba0b9ed72ba3fe9c7fa8304877e91a03a98bdbf2fcf470698a178cbf",
+  "qa-outdoors-se": "11bcb96f6bf42ff043665c9b9bd7fe49a5ab206205ba326edde5b9d06918291d",
+  "wiki-vital5": "d3b87d562baba3489f6878bf99783f50d504db94c347029771e53f6d1aecc666"
+ },
+ "rc_settings": {
+  "quickFirst": true,
+  "alwaysComplete": false,
+  "packHeadPass": "a2",
+  "packDense2": "append-budget",
+  "personalityId": "succinct"
+ },
+ "splus_sha": "4c2773b5dd5d88d4b5edde45cc9ed0a0d579fd04b8a964efcc1dd3391d8d5de9",
+ "jobs": [
+  {
+   "name": "v2-s",
+   "suite": "V2",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/uxmatrix/gen/succinct",
+   "stage2": null,
+   "groups": [
+    "00-on",
+    "01-off-boar-crypto",
+    "02-off-boar-factbook+boar-simplewiki-en",
+    "03-off-boar-factbook+boar-simplewiki-en+boar-wikivoyage-en",
+    "04-off-boar-medlineplus-en",
+    "05-off-boar-simplewiki-en",
+    "06-off-boar-simplewiki-en+qa-health-se+wiki-vital5",
+    "07-off-boar-simplewiki-en+wiki-vital5",
+    "08-off-qa-cooking-se",
+    "09-off-qa-money-se",
+    "10-off-qa-travel-se",
+    "11-off-wiki-vital5"
+   ],
+   "n_requests": 115
+  },
+  {
+   "name": "v2-splus",
+   "suite": "V2",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "SP",
+   "reference": "<workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/v2-s",
+   "stage2": null,
+   "groups": [
+    "00-on",
+    "01-off-boar-crypto",
+    "02-off-boar-factbook+boar-simplewiki-en",
+    "03-off-boar-factbook+boar-simplewiki-en+boar-wikivoyage-en",
+    "04-off-boar-medlineplus-en",
+    "05-off-boar-simplewiki-en",
+    "06-off-boar-simplewiki-en+qa-health-se+wiki-vital5",
+    "07-off-boar-simplewiki-en+wiki-vital5",
+    "08-off-qa-cooking-se",
+    "09-off-qa-money-se",
+    "10-off-qa-travel-se",
+    "11-off-wiki-vital5"
+   ],
+   "n_requests": 115
+  },
+  {
+   "name": "s4-main-s42",
+   "suite": "S4",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-traces/sefix124-main-s42.traces.jsonl",
+   "stage2": null,
+   "groups": [
+    "00-main"
+   ],
+   "n_requests": 97
+  },
+  {
+   "name": "s4-main-s43",
+   "suite": "S4",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-traces/sefix124-main-s43.traces.jsonl",
+   "stage2": null,
+   "groups": [
+    "00-main"
+   ],
+   "n_requests": 97
+  },
+  {
+   "name": "v3-s",
+   "suite": "V3L2",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": null,
+   "stage2": {
+    "template": "turn2.template.jsonl",
+    "from_group": "00-turn1",
+    "group": "01-turn2",
+    "n": 48
+   },
+   "groups": [
+    "00-turn1"
+   ],
+   "n_requests": 96
+  },
+  {
+   "name": "v3-splus",
+   "suite": "V3L2",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "SP",
+   "reference": "<workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/v3-s",
+   "stage2": {
+    "template": "turn2.template.jsonl",
+    "from_group": "00-turn1",
+    "group": "01-turn2",
+    "n": 48
+   },
+   "groups": [
+    "00-turn1"
+   ],
+   "n_requests": 96
+  },
+  {
+   "name": "s5-packproof",
+   "suite": "S5",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/packproof/gen",
+   "stage2": null,
+   "groups": [
+    "00-on-k13",
+    "01-off-boar-factbook",
+    "02-off-boar-firstaid-en",
+    "03-off-boar-medlineplus-en",
+    "04-off-boar-simplewiki-en",
+    "05-off-k13",
+    "06-off-qa-health-se",
+    "07-off-qa-outdoors-se",
+    "08-off-qa-travel-se",
+    "09-on-k13+qa-bitcoin-se",
+    "10-on-k13+qa-ethereum-se"
+   ],
+   "n_requests": 360
+  },
+  {
+   "name": "s7-uxm-on-s44",
+   "suite": "S7",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/v2-s/00-on",
+   "stage2": null,
+   "groups": [
+    "00-on"
+   ],
+   "n_requests": 60
+  },
+  {
+   "name": "s10-topics",
+   "suite": "S10",
+   "tree": "rs-RC",
+   "packdir": "packs-rc",
+   "env": "rc",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/topics27/gen-succinct/traces.jsonl",
+   "stage2": null,
+   "groups": [
+    "00-topics"
+   ],
+   "n_requests": 27
+  },
+  {
+   "name": "b-k4comp40-19",
+   "suite": "B-k4comp40",
+   "tree": "rs-RETBENCH",
+   "packdir": "packs-k13",
+   "env": "rb",
+   "persona": "S",
+   "reference": "<workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-traces/sefix124-main-s42.traces.jsonl",
+   "stage2": null,
+   "groups": [
+    "00-main19"
+   ],
+   "n_requests": 19
+  }
+ ]
+}

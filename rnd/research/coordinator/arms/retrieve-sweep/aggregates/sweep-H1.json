@@ -1,0 +1,181 @@
+{
+ "n_qform": 432,
+ "junk_set_n": 206,
+ "qform_dropped_n": 25,
+ "arms": {
+  "B0": {
+   "label": "stock (QFORM replay)",
+   "hit_kept": 0.41435185185185186,
+   "hit_kept_n": 179,
+   "delta_vs_B0": 0.0,
+   "ci_item": [
+    0.0,
+    0.0
+   ],
+   "ci_fact_cluster": [
+    0.0,
+    0.0
+   ],
+   "gained": 0,
+   "lost": 0,
+   "by_form": {
+    "0": 0.5,
+    "1": 0.10416666666666667,
+    "2": 0.625,
+    "3": 0.25,
+    "4": 0.4166666666666667,
+    "5": 0.8333333333333334,
+    "6": 0.5,
+    "7": 0.4166666666666667,
+    "8": 0.08333333333333333
+   },
+   "junk_kept": 1.5339805825242718,
+   "mean_kept": 1.8310185185185186,
+   "ctx_tokens_after_compression": 276.0093023255814,
+   "kept_tokens": 191.36805555555554,
+   "wall_ms_mean": 87.7912037037037,
+   "wall_ms_p50": 76.0,
+   "retrieve_ms_mean": 93.95116279069768,
+   "dropped_recovered": 0,
+   "kept_ids_changed": 0,
+   "main_recovery": 0,
+   "main_recovery_ids": [],
+   "main_losses": 0,
+   "main_loss_ids": [],
+   "main_S2S3_present": 0,
+   "main_S4S5_present": 22,
+   "main_kept_changed": 0,
+   "main_mean_kept": 2.7731958762886597,
+   "main_wall_ms_mean": 409.96494845360826
+  },
+  "B1": {
+   "label": "K1 settings (head pass a2 + dense append-budget)",
+   "hit_kept": 0.4537037037037037,
+   "hit_kept_n": 196,
+   "delta_vs_B0": 0.03935185185185185,
+   "ci_item": [
+    0.020833333333333332,
+    0.05787037037037037
+   ],
+   "ci_fact_cluster": [
+    0.020833333333333332,
+    0.06018518518518518
+   ],
+   "gained": 17,
+   "lost": 0,
+   "by_form": {
+    "0": 0.5416666666666666,
+    "1": 0.20833333333333334,
+    "2": 0.625,
+    "3": 0.2708333333333333,
+    "4": 0.4583333333333333,
+    "5": 0.8333333333333334,
+    "6": 0.6041666666666666,
+    "7": 0.4583333333333333,
+    "8": 0.08333333333333333
+   },
+   "junk_kept": 3.0242718446601944,
+   "mean_kept": 3.2546296296296298,
+   "ctx_tokens_after_compression": 276.0093023255814,
+   "kept_tokens": 437.60185185185185,
+   "wall_ms_mean": 92.24398148148148,
+   "wall_ms_p50": 80.6,
+   "retrieve_ms_mean": 64.24023255813954,
+   "dropped_recovered": 7,
+   "kept_ids_changed": 365
+  },
+  "H1": {
+   "label": "HP-SLATE (RS_HP_SLATE=1 on K1 settings)",
+   "hit_kept": 0.4375,
+   "hit_kept_n": 189,
+   "delta_vs_B0": 0.023148148148148147,
+   "ci_item": [
+    0.009259259259259259,
+    0.037037037037037035
+   ],
+   "ci_fact_cluster": [
+    0.009259259259259259,
+    0.03935185185185185
+   ],
+   "gained": 10,
+   "lost": 0,
+   "by_form": {
+    "0": 0.5416666666666666,
+    "1": 0.125,
+    "2": 0.625,
+    "3": 0.2708333333333333,
+    "4": 0.4583333333333333,
+    "5": 0.8333333333333334,
+    "6": 0.5416666666666666,
+    "7": 0.4583333333333333,
+    "8": 0.08333333333333333
+   },
+   "junk_kept": 2.29126213592233,
+   "mean_kept": 2.761574074074074,
+   "ctx_tokens_after_compression": 276.0093023255814,
+   "kept_tokens": 358.21527777777777,
+   "wall_ms_mean": 621.7465277777778,
+   "wall_ms_p50": 256.4,
+   "retrieve_ms_mean": 578.5874418604651,
+   "dropped_recovered": 0,
+   "kept_ids_changed": 257,
+   "main_recovery": 5,
+   "main_recovery_ids": [
+    "vit-hum-003",
+    "vit-sci-001",
+    "lan-cmp-004",
+    "lan-rsn-005",
+    "st-qa-money-se-012"
+   ],
+   "main_losses": 1,
+   "main_loss_ids": [
+    "lan-rsn-004"
+   ],
+   "main_S2S3_present": 5,
+   "main_S4S5_present": 21,
+   "main_kept_changed": 75,
+   "main_mean_kept": 3.443298969072165,
+   "main_wall_ms_mean": 337.5556701030928,
+   "rule": {
+    "hit_ge_8pt_ci_gt_0": false,
+    "recovery_ge_5": true,
+    "losses_le_2": true,
+    "junk_le_1.25xB0": false
+   },
+   "verdict": "no"
+  }
+ },
+ "main_baseline": {
+  "n": 97,
+  "S2S3_present_in_baseline_replay": 0,
+  "S4S5_present_in_baseline_replay": 22,
+  "S2S3_ids_absent_in_baseline": [
+   "vit-hum-002",
+   "vit-hum-003",
+   "vit-hum-005",
+   "lan-cmp-001",
+   "lan-cmp-002",
+   "lan-rsn-002",
+   "lan-ref-001",
+   "lan-hlt-002",
+   "vit-cry-001",
+   "vit-cry-005",
+   "vit-cry-007",
+   "vit-cry-009",
+   "vit-cry-010",
+   "vit-sci-001",
+   "vit-hlt-001",
+   "vit-hlt-002",
+   "vit-hlt-003",
+   "lan-cmp-003",
+   "lan-exp-006",
+   "lan-cmp-004",
+   "lan-cmp-005",
+   "lan-rsn-005",
+   "lan-rsn-007",
+   "lan-ref-005",
+   "st-qa-money-se-012"
+  ],
+  "S4S5_ids_absent_in_baseline": []
+ }
+}

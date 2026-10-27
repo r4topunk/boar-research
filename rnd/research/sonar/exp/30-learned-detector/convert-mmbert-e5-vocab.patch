@@ -1,0 +1,57 @@
+diff --git a/conversion/bert.py b/conversion/bert.py
+index 8ea6c42..d47083e 100644
+--- a/conversion/bert.py
++++ b/conversion/bert.py
+@@ -38,6 +38,10 @@ class BertModel(TextModel):
+             self.gguf_writer.add_classifier_output_labels([v for k, v in sorted(self.cls_out_labels.items())])
+ 
+     def set_vocab(self):
++        # Sonar exp-30: multilingual-e5-small is a BertModel with an XLM-R SentencePiece (unigram) tokenizer.
++        if (self.dir_model / "sentencepiece.bpe.model").is_file() and not (self.dir_model / "vocab.txt").is_file():
++            self._xlmroberta_set_vocab()
++            return
+         tokens, toktypes, tokpre = self.get_vocab_base()
+         self.vocab_size = len(tokens)
+ 
+@@ -604,7 +608,40 @@ class ModernBertModel(BertModel):
+         self.gguf_writer.add_add_bos_token(True)
+         self.gguf_writer.add_add_eos_token(True)
+         self.gguf_writer.add_add_sep_token(True)
+-        self._set_vocab_gpt2()
++        try:
++            self._set_vocab_gpt2()
++        except NotImplementedError:
++            # mmBERT: Gemma-style SentencePiece BPE (Metaspace + byte_fallback) stored only as tokenizer.json
++            self._set_vocab_bpe_merges_as_spm()
++
++    def _set_vocab_bpe_merges_as_spm(self):
++        # Sonar exp-30: LlamaHfVocab gives every token the placeholder score -1000, so llama.cpp's SPM tokenizer
++        # (which merges the adjacent pair whose result has the highest score) splits rare words differently from
++        # HF's BPE (merge rank order): 55/300 identical. Score = -(rank of the merge that produces the token).
++        import json as _json
++        vocab = gguf.LlamaHfVocab(self.dir_model)
++        tokens, scores, toktypes = [], [], []
++        for text, score, toktype in vocab.all_tokens():
++            tokens.append(text); scores.append(score); toktypes.append(toktype)
++        tj = _json.load(open(self.dir_model / "tokenizer.json", encoding="utf-8"))
++        v = tj["model"]["vocab"]; rank = {}
++        for r, m in enumerate(tj["model"]["merges"]):
++            a, b = m.split(" ", 1) if isinstance(m, str) else m
++            i = v.get(a + b)
++            if i is not None and i not in rank:
++                rank[i] = r
++        inv = {i: t for t, i in v.items()}
++        for i in range(len(tokens)):
++            if toktypes[i] != gguf.TokenType.NORMAL or i not in inv:
++                continue
++            assert tokens[i] == inv[i].encode("utf-8"), (i, tokens[i], inv[i])
++            scores[i] = -float(rank[i]) if i in rank else (0.0 if len(inv[i]) == 1 else -1e9)
++        self.gguf_writer.add_tokenizer_model("llama")
++        self.gguf_writer.add_tokenizer_pre("default")
++        self.gguf_writer.add_token_list(tokens)
++        self.gguf_writer.add_token_scores(scores)
++        self.gguf_writer.add_token_types(toktypes)
++        gguf.SpecialVocab(self.dir_model, n_vocab=len(tokens)).add_to_gguf(self.gguf_writer)
+ 
+     def set_gguf_parameters(self):
+         super().set_gguf_parameters()

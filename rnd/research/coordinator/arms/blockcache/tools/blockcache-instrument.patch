@@ -1,0 +1,65 @@
+diff -ru a/src/rag/packs.ts b/src/rag/packs.ts
+--- a/src/rag/packs.ts	2026-10-21 14:04:26
++++ b/src/rag/packs.ts	2026-10-21 14:04:26
+@@ -1,3 +1,4 @@
++import { appendFileSync as bcAppend } from "node:fs";
+ /**
+  * Knowledge packs: SQLite files built on a computer by
+  * scripts/build-knowledge-pack.mjs (docs/KNOWLEDGE_PACKS.md), each with its
+@@ -129,7 +130,7 @@
+   }
+   if (meta.formatVersion === "2") {
+     try {
+-      wikiPacks.set(pack.id, await WikiPack.open(db, decompress));
++      { const wp = await WikiPack.open(db, decompress); (wp as any).__packId = pack.id; wikiPacks.set(pack.id, wp); }
+     } catch (e: any) {
+       console.warn(`[packs] ${pack.filename} failed to open:`, e?.message ?? e);
+       rejected.set(pack.id, size);
+@@ -160,6 +161,7 @@
+  * serial loop produced.
+  */
+ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}): Promise<WikiPackResult[]> {
++  if (process.env.BOAR_BLOCKLOG) bcAppend(process.env.BOAR_BLOCKLOG, JSON.stringify({ e: "search", query }) + "\n");
+   const perPack = await Promise.all(
+     (await knowledgePacks()).map(async (pack): Promise<WikiPackResult | null> => {
+       try {
+diff -ru a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+--- a/src/rag/wikiPack.ts	2026-10-21 14:04:26
++++ b/src/rag/wikiPack.ts	2026-10-21 14:04:26
+@@ -1,3 +1,4 @@
++import { appendFileSync as bcAppend } from "node:fs";
+ /**
+  * Search over a large knowledge pack (format 2, built by
+  * scripts/build-wiki-pack.mjs): Wikipedia + Wikivoyage text in zstd blocks, a
+@@ -249,7 +250,18 @@
+ );
+ 
+ const HEADING = /^(#{1,6})\s+(.*)$/gm;
+-const BLOCK_CACHE = 16;
++// BLOCKCACHE instrumentation (scratch only): size from env (0 = unbounded), misses + held bytes logged.
++const BLOCK_CACHE = ((n) => (n > 0 ? n : Number.POSITIVE_INFINITY))(Number(process.env.BOAR_BLOCK_CACHE ?? 16));
++const BC_LOG: string | undefined = process.env.BOAR_BLOCKLOG;
++const BC_ALL: Set<any> = ((globalThis as any).__bcAll ??= new Set());
++function bcLog(line: string): void {
++  if (BC_LOG) bcAppend(BC_LOG, line + "\n");
++}
++function bcHeld(): number {
++  let t = 0;
++  for (const wp of BC_ALL) for (const v of (wp.blocks as Map<number, Uint8Array>).values()) t += v.length;
++  return t;
++}
+ const ARTICLE_CACHE = 16;
+ // Batched lookups (BATCHRET): on the phone every SQL call is a JS<->native round trip (7-9 ms for a one-row read on a
+ // Pixel 8a, LITELAT), so per-term, per-title and per-article lookups are fetched with one IN (...) query each and kept
+@@ -581,7 +593,10 @@
+     if (!this.zblocks.has(id)) await this.fetchBlocks(id);
+     const z = this.zblocks.get(id);
+     if (!z) throw new Error(`pack block ${id} missing`);
+-    return this.blocks.put(id, this.decompress(new Uint8Array(z)));
++    BC_ALL.add(this);
++    const out = this.blocks.put(id, this.decompress(new Uint8Array(z)));
++    bcLog(JSON.stringify({ e: "miss", pack: (this as any).__packId ?? null, id, bytes: out.length, held: bcHeld() }));
++    return out;
+   }
+ 
+   /** Block `id` (compressed) and, in one query, the next BLOCK_WINDOW - 1 the current search's candidates will read. */

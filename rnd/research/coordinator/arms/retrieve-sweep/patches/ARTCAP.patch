@@ -1,0 +1,143 @@
+diff -ruN rs-SEFIX/src/rag/packs.ts rs-ARTCAP/src/rag/packs.ts
+--- rs-SEFIX/src/rag/packs.ts	2026-10-22 19:47:17
++++ rs-ARTCAP/src/rag/packs.ts	2026-10-23 15:44:03
+@@ -283,6 +283,24 @@
+   return null;
+ }
+ 
++/** ARTCAP cap4lead (RS_ARTCAP, bench-only): for the first of `kept` from a user-installed (non-kit) format-2 pack, a short header chunk
++ *  (article title + first sentence of its lead chunk), unless that lead chunk is already in `kept`; null when none. */
++export async function packLeadHeader(kept: RetrievedChunk[]): Promise<RetrievedChunk | null> {
++  for (const c of kept) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    if (!m) continue;
++    const packId = m[1];
++    if (HEADPASS_KIT.has(packId.replace(/^local-/, ""))) continue;
++    const wp = wikiPacks.get(packId);
++    if (!wp) continue;
++    const h = await wp.rsLeadHeaderOf(Number(m[2]));
++    if (!h) return null;
++    const chunk = packHitToChunk(packId, h);
++    return kept.some((x) => x.chunkId === chunk.chunkId) ? null : chunk;
++  }
++  return null;
++}
++
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+diff -ruN rs-SEFIX/src/rag/wikiPack.ts rs-ARTCAP/src/rag/wikiPack.ts
+--- rs-SEFIX/src/rag/wikiPack.ts	2026-10-22 20:14:31
++++ rs-ARTCAP/src/rag/wikiPack.ts	2026-10-23 15:44:03
+@@ -849,6 +849,68 @@
+     });
+   }
+ 
++  /**
++   * ARTCAP (RS_ARTCAP, bench-only): `pool` is the uncapped keyword list in rank order. Each of the first `maxArticles` distinct
++   * articles keeps its first chunk at its own rank, followed immediately by up to `cap - 1` other chunks of the same article chosen by
++   * the within-article ranker (chunk_vecs pack with a question vector: cosine of every other chunk of the article; else the article's
++   * other pool rows in rank order); later rows of that article are dropped. Articles past `maxArticles` keep the base cap of 2.
++   * The extra chunks carry the first chunk's score.
++   */
++  async rsArtcapGroup(pool: Candidate[], queryVec: Float32Array | undefined, cap: number, maxArticles = 12): Promise<Candidate[]> {
++    const out: Candidate[] = [];
++    const done = new Map<number, boolean>(); // article -> grouped (true) or base-capped (false)
++    const per = new Map<number, number>();
++    let grouped = 0;
++    for (const c of pool) {
++      const g = done.get(c.articleId);
++      if (g === true) continue;
++      if (g === false) {
++        const n = per.get(c.articleId) ?? 0;
++        if (n < 2) (out.push(c), per.set(c.articleId, n + 1));
++        continue;
++      }
++      if (grouped >= maxArticles) {
++        done.set(c.articleId, false);
++        out.push(c);
++        per.set(c.articleId, 1);
++        continue;
++      }
++      grouped++;
++      done.set(c.articleId, true);
++      out.push(c);
++      let extra: Candidate[];
++      if (this.hasChunkVecs && queryVec) {
++        const rows = await this.db.getAllAsync<{ id: number; start: number; end: number; vec: Uint8Array }>(
++          `SELECT c.id, c.start, c.end, v.vec FROM chunks c JOIN chunk_vecs v ON v.chunk_id = c.id WHERE c.article_id = ? AND c.id != ?`,
++          [c.articleId, c.chunkId]
++        );
++        extra = rows
++          .map((r) => ({ r, s: cosineSimilarityInt8(queryVec, new Uint8Array(r.vec)) }))
++          .sort((a, b) => b.s - a.s || a.r.id - b.r.id)
++          .slice(0, cap - 1)
++          .map(({ r }) => ({ chunkId: r.id, articleId: c.articleId, start: r.start, end: r.end, score: c.score }));
++      } else {
++        extra = pool.filter((x) => x.articleId === c.articleId && x.chunkId !== c.chunkId).slice(0, cap - 1).map((x) => ({ ...x, score: c.score }));
++      }
++      out.push(...extra);
++    }
++    return out;
++  }
++
++  /** ARTCAP cap4lead: the lead chunk of the article holding `chunkId` (lowest start), its title and first sentence (<= 240 chars). */
++  async rsLeadHeaderOf(chunkId: number): Promise<PackHit | null> {
++    const row = await this.db.getFirstAsync<{ article_id: number }>("SELECT article_id FROM chunks WHERE id = ?", [chunkId]);
++    if (!row) return null;
++    const lead = await this.db.getFirstAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start LIMIT 1", [row.article_id]);
++    if (!lead) return null;
++    const h = await this.hit(row.article_id, lead.id, lead.start, lead.end, 0, "bm25", true);
++    const t = h.text.replace(/\s+/g, " ").trim();
++    const m = /^.{20,}?[.!?](?=\s|$)/.exec(t);
++    let first = (m ? m[0] : t).slice(0, 240);
++    if (first.length === 240 && t.length > 240) first = first.replace(/\s+\S*$/, "") + "…";
++    return { ...h, section: "", text: first };
++  }
++
+   /** RS_MERGE_CHECK only: sum over `terms` of the one-term bm25 (no idf change) per rowid. */
+   private async rsPlain(terms: string[], ids: string): Promise<Map<number, number>> {
+     const out = new Map<number, number>();
+@@ -1018,8 +1080,10 @@
+     const topic = titles.length ? await this.stems(titles.join(" ")) : stems;
+     const seen = new Set(hits.map((h) => h.chunkId));
+     let keyword: Candidate[] | null = null;
++    // ARTCAP (RS_ARTCAP=cap4|capfact|cap4lead, bench-only, default off = unchanged): the keyword pool is read uncapped and re-grouped below.
++    const rsArtcap = (globalThis as any).process?.env?.RS_ARTCAP as string | undefined;
+     if (hits.length < limit) {
+-      keyword = await this.bm25Candidates(stems);
++      keyword = await this.bm25Candidates(stems, this.tuning.pool, this.tuning.prior, rsArtcap ? Number.MAX_SAFE_INTEGER : 2);
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {
+@@ -1031,6 +1095,7 @@
+         const blended = (c: Candidate) => (1 - w) * (c.score / max) + w * (sem.get(c.articleId) ?? median);
+         keyword = [...keyword].sort((a, b) => blended(b) - blended(a));
+       }
++      if (rsArtcap) keyword = await this.rsArtcapGroup(keyword, queryVec, rsArtcap === "capfact" ? 2 : 4);
+       // Text is read only for candidates in rank order, until the result is full.
+       for (const c of keyword) {
+         if (hits.length >= limit) break;
+diff -ruN rs-SEFIX/src/routing/answer.ts rs-ARTCAP/src/routing/answer.ts
+--- rs-SEFIX/src/routing/answer.ts	2026-10-22 19:47:17
++++ rs-ARTCAP/src/routing/answer.ts	2026-10-23 15:44:03
+@@ -1210,6 +1210,19 @@
+           sources = [...sources, ...kept];
+         }
+       }
++      // ARTCAP cap4lead (RS_ARTCAP=cap4lead, bench-only, default off): one short header chunk (title + lead sentence) for the article of
++      // the first kept user-pack passage, appended after the head pass; health-strict questions keep it only if it passes onHealthTopic.
++      if ((globalThis as any).process?.env?.RS_ARTCAP === "cap4lead" && gen?.mode !== "multipass" && sources.length) {
++        let lead = await (await import("../rag/packs")).packLeadHeader(sources);
++        if (lead && health && !healthFallback && !onHealthTopic(healthTopicTerms(req.query, english), lead)) {
++          reasonCodes.push("artcap:lead:health-dropped");
++          lead = null;
++        }
++        if (lead) {
++          reasonCodes.push(`artcap:lead:add:${lead.chunkId}`);
++          sources = [...sources, lead];
++        }
++      }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }

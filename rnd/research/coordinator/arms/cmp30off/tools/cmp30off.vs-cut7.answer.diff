@@ -1,0 +1,188 @@
+--- a/src/routing/answer.ts	2026-10-20 16:25:30
++++ b/src/routing/answer.ts	2026-10-20 16:31:03
+@@ -228,6 +228,11 @@
+   emergencyScore?(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean } | null>;
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
++  /** LITEDECLINE (eval-only switch, default unset): "three" = the three compact-only declines named in LITEDECLINE-criterion.md
++   * skip (the compact model takes the 4B's path there); "all" = also the two uncited compact declines (OFF5).
++   * CMP30OFF: a released decline is recorded (grounding:compact-decline-released-<rule>) and the answer starts with
++   * COMPACT_DECLINE_RELEASED_WARNING. Unset (the default) = the engine as is. */
++  compactDeclinesOff?: "three" | "all";
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -362,6 +367,15 @@
+   /(?<![\p{L}\p{N}])(ethereum|ether|eth|bitcoin|btc|blockchains?|cripto\p{L}*|crypto\p{L}*|tokens?|nfts?|erc-?\d*|eip-?\d*|bip-?\d*|carteiras?( digita\p{L}*| cripto\p{L}*)?|wallets?|billeteras?|staking|stake|validador\p{L}*|validator\p{L}*|rollups?|l2s?|layer ?2|camada ?2|capa ?2|defi|smart contracts?|contratos? inteligentes?|solidity|minera\p{L}*|mining|hash\p{L}*|merkle|zk\p{L}*|sharding|consenso|consensus|privacy pools?|tornado cash|stablecoins?|usdc|usdt|uniswap|airdrops?|chave privada|private keys?|seed phrase|frase semente|mempool|satoshis?|lightning network|proof of (stake|work)|prova de (participa\p{L}+|trabalho)|prueba de (participaci\p{L}+|trabajo)|vitalik|buterin|nakamoto|dapps?|web3)(?![\p{L}\p{N}])/iu;
+ 
+ const NOT_A_MODEL = new Set(["grounding-guard", "extractive", "none", "places", "calculator"]);
++
++/** CMP30OFF: the fixed first line of an answer a released compact decline would have declined. */
++export const COMPACT_DECLINE_RELEASED_WARNING = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++/** CMP30OFF bench switch (BOAR Bench engineOverrides.compactDeclinesOff, per request): true = OFF5 ("all") for every
++ * answerer whose deps leave compactDeclinesOff unset. Default false = the engine as is. */
++let benchCompactDeclinesOff = false;
++export function setBenchCompactDeclinesOff(on: boolean): void {
++  benchCompactDeclinesOff = on;
++}
+ 
+ export function createAnswerer(deps: AnswerDeps) {
+   let current: AnswerHandle | null = null;
+@@ -905,6 +919,14 @@
+       });
+       /** Set when the text differs from the streamed tokens (citations removed, CT-1). */
+       let finalText: string | undefined;
++      /** CMP30OFF: the compact-only declines skipped for this answer (none unless the eval switch is on). */
++      const declinesOff = deps.compactDeclinesOff ?? (benchCompactDeclinesOff ? ("all" as const) : undefined);
++      const released: string[] = [];
++      const release = (rule: string) => {
++        reasonCodes.push(`grounding:compact-decline-released-${rule}`);
++        if (!released.length) emit({ type: "warning", answerId, code: "weak_sources", message: COMPACT_DECLINE_RELEASED_WARNING });
++        released.push(rule);
++      };
+       /** The instant answer is a source's own sentence without "[n]": it cites that source. */
+       let citedOverride: number[] | undefined;
+       const finish = (
+@@ -1203,7 +1225,8 @@
+         finalText = message;
+         return finish(genTier, "success", message, [], receipt({ retrievalMs }));
+       }
+-      if (fromMemory && genLlm && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (fromMemory && genLlm && isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("no-source");
++      else if (fromMemory && genLlm && isCompactModel(genLlm) && !req.answerAnyway) {
+         // Product decision (Iris/Boar): the compact model doesn't answer from memory unless asked to.
+         reasonCodes.push("grounding:declined-compact");
+         markVisible();
+@@ -1445,7 +1468,8 @@
+       // model declines; the 4B loses the sentence. Deterministic, whatever the sampling seed.
+       const falseClaims = !health && gen.mode !== "multipass" ? falseQuantumClaims(text) : [];
+       if (falseClaims.length) {
+-        if (isCompactModel(genLlm) && !req.answerAnyway) {
++        if (isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("false-claim");
++        else if (isCompactModel(genLlm) && !req.answerAnyway) {
+           reasonCodes.push("grounding:false-claim-declined-compact");
+           const message = sources.length
+             ? pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer."
+@@ -1483,7 +1507,8 @@
+         }
+       }
+       if (stopRequested) return finish(genTier, "stopped", text, sources, baseReceipt);
+-      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
++      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && declinesOff && !req.answerAnyway && gen.mode !== "multipass") release("all-citations-removed");
++      else if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
+         reasonCodes.push("grounding:all-citations-removed-declined-compact");
+         // Passages were found (and shown): "didn't find this" would be false (Quill 892c049).
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+@@ -1501,7 +1526,8 @@
+       // nothing, (A) never fired and the compact model's PT confident errors went 5 -> 9. A compact answer with
+       // sources in its prompt and no [n] at all (after attribution) is treated like "every citation removed":
+       // the decline, unless asked to answer anyway. The 4B is unchanged.
+-      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) release("uncited-with-sources");
++      else if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
+         reasonCodes.push("grounding:uncited-with-sources-declined-compact");
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+         emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+@@ -1521,7 +1547,10 @@
+         // Sources that passed the topic guard are on topic.
+         const onTopicSources = guarded ? sources.length : 0;
+         if (onTopicSources > 0) reasonCodes.push("grounding:uncited-on-topic");
+-        else if (sources.length && isCompactModel(genLlm) && !req.answerAnyway) {
++        else if (sources.length && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) {
++          release("uncited");
++          if (sources.length) emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
++        } else if (sources.length && isCompactModel(genLlm) && !req.answerAnyway) {
+           reasonCodes.push("grounding:uncited-declined-compact");
+           const message = pt ? "Não encontrei isso no acervo deste celular." : "I didn't find this in this phone's library.";
+           emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+@@ -1531,10 +1560,18 @@
+           reasonCodes.push("grounding:uncited-preface");
+           // No source: the weak_sources warning already went out before generation.
+           if (sources.length) emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
+-          text = `${uncitedPreface(pt)}\n\n${text.trim()}`;
+-          finalText = text;
++          // CMP30OFF: a released decline's warning line (below) is the one notice.
++          if (!released.length) {
++            text = `${uncitedPreface(pt)}\n\n${text.trim()}`;
++            finalText = text;
++          }
+         }
+       }
++      // CMP30OFF: an answer a released compact decline would have declined starts with the fixed warning line.
++      if (released.length && text.trim()) {
++        text = `${COMPACT_DECLINE_RELEASED_WARNING}\n${text.trim()}`;
++        finalText = text;
++      }
+ 
+       // 4. Verification (complete answers only, distinct verifier).
+       if (plan.verify && text.trim() && sources.length) {
+--- <workspace>/wt/cut7/src/routing/answer.test.ts	2026-10-07 09:27:48
++++ answer.test.new.ts	2026-10-20 16:31:03
+@@ -1,7 +1,7 @@
+-import { describe, it, expect, beforeEach } from "vitest";
++import { describe, it, expect, beforeEach, afterEach } from "vitest";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { answerPromptPrefix, assemblePrompt, assembleChatMessages } from "../rag/pure";
+-import { AnswerDeps, createAnswerer, InstalledLlm } from "./answer";
++import { AnswerDeps, createAnswerer, InstalledLlm, setBenchCompactDeclinesOff } from "./answer";
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+@@ -2194,5 +2194,57 @@
+     expect((await collect("What is the capital of Australia?")).result.receipt.reasonCodes).not.toContain("answer:facts-capital");
+     f.deps.facts = undefined;
+     expect((await collect("What is the capital of Australia?")).result.receipt.reasonCodes).toEqual(["answer:facts-capital"]);
++  });
++});
++
++describe("CMP30OFF: bench switch releases the five compact-only declines with a fixed warning line", () => {
++  const W = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++  const PQC = chunk("pqc", "Post-quantum cryptography", "Open Quantum Safe project: The Open Quantum Safe (OQS) project has the goal of developing and prototyping quantum-resistant cryptography.");
++  const WALIPINI = chunk("wp", "Walipini", "A Walipini is an earth-sheltered cold frame. A greenhouse can be built by digging a hole in the ground. This takes advantage of the heat stored in the earth during the cold season.");
++  afterEach(() => setBenchCompactDeclinesOff(false));
++  it("no on-topic source (rule 1): answers from memory behind the warning, no uncited preface", async () => {
++    setBenchCompactDeclinesOff(true);
++    f.retrieved = [WALIPINI];
++    f.deps.engine.generate = async () => "Because Earth's axis is tilted.";
++    const { events, result } = await collect("Why do we have seasons on Earth?");
++    expect(result.text).toBe(`${W}\nBecause Earth's axis is tilted.`);
++    expect(result.receipt.reasonCodes).toContain("grounding:compact-decline-released-no-source");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:declined-compact");
++    expect(events.some((e) => e.type === "warning" && (e as any).declined)).toBe(false);
++  });
++  it("uncited with sources (rule 4) and all citations removed (rules 3+4)", async () => {
++    setBenchCompactDeclinesOff(true);
++    f.retrieved = [CANBERRA];
++    f.deps.engine.generate = async () => "It was chosen by a referendum in 1911.";
++    const a = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(a.result.text).toBe(`${W}\nIt was chosen by a referendum in 1911.`);
++    expect(a.result.receipt.reasonCodes).toContain("grounding:compact-decline-released-uncited-with-sources");
++    f = makeFake();
++    f.retrieved = [CANBERRA];
++    f.deps.engine.generate = async () => "Mold grows in damp bathrooms [1].";
++    const b = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(b.result.text).toBe(`${W}\nMold grows in damp bathrooms.`);
++    expect(b.result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:compact-decline-released-all-citations-removed", "grounding:compact-decline-released-uncited-with-sources"]));
+   });
++  it("false claim (rule 2): the 4B's path (sentence removed) behind the warning", async () => {
++    setBenchCompactDeclinesOff(true);
++    f.retrieved = [PQC];
++    f.deps.engine.generate = async () => "Quantum-resistant signature algorithms include those based on elliptic curve cryptography (ECC) or lattice-based cryptography, such as those in the Open Quantum Safe (OQS) project.";
++    const { result } = await collect("Which signature algorithms are quantum resistant?");
++    expect(result.receipt.reasonCodes).toContain("grounding:compact-decline-released-false-claim");
++    expect(result.receipt.reasonCodes.some((c) => /declined/.test(c))).toBe(false);
++  });
++  it("a grounded answer is unchanged with the switch on; switch off = the decline as before", async () => {
++    setBenchCompactDeclinesOff(true);
++    f.retrieved = [CANBERRA];
++    f.deps.engine.generate = async () => "Canberra is the capital city of Australia [1].";
++    const on = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(on.result.text).toBe("Canberra is the capital city of Australia [1].");
++    expect(on.result.receipt.reasonCodes.some((c) => c.includes("released"))).toBe(false);
++    setBenchCompactDeclinesOff(false);
++    f = makeFake();
++    f.retrieved = [WALIPINI];
++    const off = await collect("Why do we have seasons on Earth?");
++    expect(off.result.text).toBe("I didn't find this in this phone's library.");
++  });
+ });

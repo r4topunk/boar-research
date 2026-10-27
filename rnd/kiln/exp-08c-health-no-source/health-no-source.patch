@@ -1,0 +1,115 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 2b79f5ab..a03f3f5a 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -525,6 +525,25 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+     }
+   });
+ 
++  it("exp-08b: a symptom or a decision about an injury, with only off-topic sources, never gets a memory answer", async () => {
++    // Before, neither was a health question: the travel guide was dropped as off-topic and the model
++    // answered from memory ("Vinegar and fresh water are not effective…", "take a pain reliever").
++    for (const [q, off] of [
++      [
++        "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
++        chunk("t", "Wikivoyage: Thailand", "Thailand is a country in Southeast Asia with beaches and temples."),
++      ],
++      ["I'm at 4,000 m in the Andes with a headache and nausea. What should I do?", chunk("a", "Wikivoyage: Andes", "The Andes run the length of South America.")],
++    ] as const) {
++      f = makeFake();
++      f.retrieved = [off];
++      const { result } = await collect(q);
++      expect(f.generations, q).toHaveLength(0);
++      expect(result.text, q).toMatch(/won't give health advice from memory/);
++      expect(result.receipt.reasonCodes, q).toContain("grounding:health-no-source");
++    }
++  });
++
+   it("leaves Portuguese questions alone (English sources can't be matched word for word)", async () => {
+     f.retrieved = [CANBERRA];
+     const { result } = await collect("Por que Canberra virou a capital da Austrália?");
+diff --git a/src/routing/context.test.ts b/src/routing/context.test.ts
+index 663a49a0..b8a64ab3 100644
+--- a/src/routing/context.test.ts
++++ b/src/routing/context.test.ts
+@@ -322,6 +322,39 @@ describe("isHealthQuestion", () => {
+       expect(isHealthQuestion(q), q).toBe(false);
+     }
+   });
++
++  it("symptoms, environmental illnesses and decisions about an injury are health (exp-08b: answered from memory before)", () => {
++    for (const q of [
++      "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
++      "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?",
++      "I burned my hand on a hot pan. Should I put ice or butter on it?",
++      "My toes look frostbitten after a cold hike. Should I rub them or warm them by the fire?",
++      "My friend collapsed in the heat, is confused and very hot. What should I do right now?",
++      "An earthquake just started and I'm indoors. Should I stand in a doorway or run outside?",
++      "Is dengue more dangerous the second time you get it?",
++      "I've been vomiting and dizzy since lunch.",
++      "Acho que estou com intoxicação por monóxido de carbono em casa. O que faço?",
++      "Estou com dor de cabeça e enjoo a 4.000 metros. O que faço?",
++      "Uma água-viva queimou meu braço na praia. Devo passar vinagre?",
++    ]) {
++      expect(isHealthQuestion(q), q).toBe(true);
++    }
++  });
++
++  it("a yes/no decision alone, a collapse that isn't a person, or a hazard without an injury is not health", () => {
++    for (const q of [
++      "Should I take the bus or the train from Chiang Mai to Pai?",
++      "Devo levar um casaco para Lisboa em outubro?",
++      "Should I buy ETH or BTC?",
++      "Why did the Roman Empire collapse?",
++      "Are there jellyfish in Lake Tahoe?",
++      "What eats scorpions in the desert?",
++      "Is carbon monoxide lighter than air?",
++      "Which is more densely populated, Japan or Germany, and by how much?",
++    ]) {
++      expect(isHealthQuestion(q), q).toBe(false);
++    }
++  });
+ });
+ 
+ describe("riskyHealthInstruction", () => {
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 71f464a6..14ad929a 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -250,14 +250,33 @@ export const ACTION_INTENT =
+ // "derramou água fervendo no braço", "got bitten", "está sangrando"): health when the
+ // question asks what to do (gate ee1f2b7: 20/20 free answers, one said "medicinal oil").
+ const INJURY_DESCRIBED =
+-  /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico)(?![\p{L}])/iu;
++  /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|collaps\p{L}*|desabou|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico)(?![\p{L}])/iu;
++
++// Symptoms and illnesses named without a HEALTH word (exp-08b, R&D: "headache and nausea at
++// 4,000 m" missed the health path, found no on-topic source and was answered from the model's
++// memory). Health on their own, like HEALTH.
++const SYMPTOMS =
++  /(^|[^\p{L}])(headaches?|migraines?|nause\p{L}*|vomit\p{L}*|throwing up|diarrh\p{L}*|dizz\p{L}*|vertigo|chest pains?|short(ness)? of breath|(can't|cannot|trouble|difficulty|hard to) breath\p{L}*|numbness|slurr\p{L}*|altitude sickness|mountain sickness|heat exhaustion|sunstroke|sunburn\p{L}*|frostbit\p{L}*|rabies|dengue|malaria|cholera|typhoid|yellow fever|zika|chikungunya|tetanus|leptospirosis|dor de cabe[çc]a|enxaqueca|n[áa]use\p{L}*|enjo[oô]\p{L}*|v[ôo]mit\p{L}*|diarr?eia|tontura|falta de ar|dor no peito|mal de altitude|mal da montanha|insola[çc][ãa]o|intoxica\p{L}*|ferroad\p{L}*|mal[áa]ria|c[óo]lera|febre amarela|t[ée]tano|leptospirose)(?![\p{L}])/iu;
++
++// Hazards (an animal, a gas) are health only with an injury or a what-to-do question: "stung by a
++// jellyfish… should I…" is, "Are there jellyfish in Lake Tahoe?" is not (CodeRabbit, exp-08c).
++const HAZARDS =
++  /(^|[^\p{L}])(jellyfish|box jellyfish|scorpions?|carbon monoxide|[áa]guas?-vivas?|escorpi[ãa]o|escorpi[õo]es|mon[óo]xido de carbono)(?![\p{L}])/iu;
++
++// A described injury or a disaster asked as a yes/no decision ("got stung… Should I pour vinegar
++// on it?", "Should I stand in a doorway?", "devo colocar gelo?") is as much a what-to-do question
++// as ACTION_INTENT. Only with INJURY_DESCRIBED or DISASTER: "Should I take the bus?" alone is not health.
++const DECISION_INTENT =
++  /(^|[^\p{L}])(should (i|we|you|he|she|they)|do (i|we) (need|have) to|is it (ok|okay|safe|fine|bad) to|can (i|we) (give|put|use|apply|pour|take|move)|devo|devemos|posso|podemos|[ée] seguro)(?![\p{L}])/iu;
+ 
+ export function isHealthQuestion(query: string): boolean {
+   return (
+     HEALTH.test(query) ||
+     HEALTH_PT.test(query) ||
+-    (DISASTER.test(query) && ACTION_INTENT.test(query)) ||
+-    (INJURY_DESCRIBED.test(query) && ACTION_INTENT.test(query)) ||
++    SYMPTOMS.test(query) ||
++    (HAZARDS.test(query) && (INJURY_DESCRIBED.test(query) || ACTION_INTENT.test(query) || DECISION_INTENT.test(query))) ||
++    (DISASTER.test(query) && (ACTION_INTENT.test(query) || DECISION_INTENT.test(query))) ||
++    (INJURY_DESCRIBED.test(query) && (ACTION_INTENT.test(query) || DECISION_INTENT.test(query))) ||
+     // Health for the content, translation for the form (Sextant lng-009, gate 52a2310: the 4B wrote "Je suis
+     // allergique au peanut" for a phrase the traveller shows a waiter): a phrase to translate that carries
+     // health content stays on the health path, and without a source it declines.

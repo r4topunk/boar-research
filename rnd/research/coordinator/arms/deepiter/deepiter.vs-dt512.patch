@@ -1,0 +1,391 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf1..7e4ef127 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -489,6 +489,8 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** DEEPITER arm: follow-up searches on the deep thinking tier (answer.ts DEEP_ITER_FOLLOWUPS when unset; 0 = off). */
++  deepIterFollowups?: number;
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 35877fca..1aebd519 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -40,6 +40,7 @@ import {
+   sentenceNamesSubject,
+   falseQuantumClaims,
+   isSubstantive,
++  mergeSources,
+   identifiersIn,
+   titleHasIdentifier,
+   sourceLanguageLead,
+@@ -87,6 +88,7 @@ import { DepthModel, planAnswer, resolveDeepModel, AnswerPlan, deepAutoIneligibi
+ import { isCompactModel, pickDefaultAnswerModel, tooBigForLowRam } from "./defaultModel";
+ import { buildVerificationInput, parseVerificationVerdict, VERIFICATION_INSTRUCTION } from "./verify";
+ import { taskRequest } from "../inference/format";
++import { DEEP_ITER_MAX_SOURCES, DEEP_ITER_PLANNER_SYSTEM, deepIterPlannerInput, parseDeepIterQueries } from "./deepIter";
+ import {
+   detectGeoIntent,
+   distanceMeters,
+@@ -263,6 +265,16 @@ export const PLACES_LIMIT = 10;
+ export const FAST_THINKING_BUDGET = 256;
+ // DT512 arm: half the deep thinking budget (DEEPTHINK measured 1024; DEEPTHINK-2 found no gain at 3072).
+ export const DEEP_THINKING_BUDGET = 512;
++/**
++ * DEEPITER arm: follow-up searches the deep thinking tier's planner may add after the first retrieval (src/routing/deepIter.ts).
++ * 0 = off (exactly the DT512 path). settings.deepIterFollowups overrides it.
++ */
++export const DEEP_ITER_FOLLOWUPS = 2;
++/** DEEPITER: the deep tier's source budget while follow-ups are on (DEEP_CONTEXT_TOKENS 400 otherwise), so the extra sources fit. */
++export const DEEP_ITER_CONTEXT_TOKENS = 800;
++/** DEEPITER planner call: a short list, greedy, no thinking. */
++const DEEP_ITER_PLANNER_TOKENS = 64;
++const DEEP_ITER_PLANNER_TIMEOUT_MS = 20_000;
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
+@@ -988,12 +1000,18 @@ export function createAnswerer(deps: AnswerDeps) {
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+ 
++      // DEEPITER: the deep model's thinking answer (never health, never the fast model's deep fallback) may search again.
++      const iterFollowups =
++        gen && genLlm && deepModel && gen.modelId === deepModel.id && genTier === "deep" && gen.mode === "single" && gen.thinking &&
++        !health && plan.retrieve
++          ? Math.max(0, Math.floor(settings.deepIterFollowups ?? DEEP_ITER_FOLLOWUPS))
++          : 0;
+       // Never let sources + answer overflow the context window (2048 on 4GB phones).
+       const ctxSize = deps.contextSize?.() ?? 4096;
+       const budget = Math.max(
+         256,
+         Math.min(
+-          gen?.contextTokens ?? 1200,
++          iterFollowups > 0 ? DEEP_ITER_CONTEXT_TOKENS : gen?.contextTokens ?? 1200,
+           ctxSize -
+             Math.min(ctx.maxTokens, gen?.maxTokens ?? Infinity) -
+             PROMPT_OVERHEAD_TOKENS -
+@@ -1005,10 +1023,80 @@ export function createAnswerer(deps: AnswerDeps) {
+       const substantive = raw.filter(isSubstantive);
+       if (substantive.length < raw.length) reasonCodes.push(`context:no-content-dropped-${raw.length - substantive.length}`);
+       raw = substantive;
++      /** DEEPITER: follow-up passages kept on their own query's topic (the subject filter below keeps them too). */
++      const iterAccepted = new Set<string>();
++      /**
++       * DEEPITER: the follow-up queries that added passages. Compression ranks against the question plus these: against the
++       * question alone its half-relevance floor drops the follow-up passages, which by design cover what the question's
++       * words do not.
++       */
++      let iterQueries: string[] = [];
++      /** DEEPITER: the deep model loaded early for the planner (residency and load time as if loaded below). */
++      let iterResidentBefore: string | null | undefined;
++      let iterLoadMs = 0;
++      if (iterFollowups > 0 && gen && genLlm && !stopRequested) {
++        iterResidentBefore = deps.engine.getModelInfo()?.filename ?? null;
++        let loaded = iterResidentBefore === genLlm.filename;
++        if (!loaded) {
++          stage("loading_model", genTier, genLlm.id);
++          const ls = deps.now();
++          sampleMemory();
++          try {
++            const r = await deps.engine.load(genLlm.filename, { meta: { modelId: genLlm.id, label: genLlm.label } });
++            if (r.warning) emit({ type: "warning", answerId, code: "model_streams_from_storage", message: r.warning });
++            if (r.backend?.kind === "cpu-fallback") reasonCodes.push("backend:cpu-fallback");
++            loaded = true;
++          } catch {
++            // The load below fails the same way and reports it.
++            reasonCodes.push("deepiter:planner-load-failed");
++          }
++          iterLoadMs = deps.now() - ls;
++          sampleMemory();
++        }
++        if (loaded && !stopRequested) {
++          const firstKept = raw.filter((c) => onSubject(c));
++          let plannerText = "";
++          try {
++            plannerText = await deps.engine.generate({
++              ...taskRequest(DEEP_ITER_PLANNER_SYSTEM, deepIterPlannerInput(req.query, firstKept, iterFollowups), "Queries:", deps.engine.hasEmbeddedChatTemplate()),
++              nPredict: DEEP_ITER_PLANNER_TOKENS,
++              temperature: 0,
++              enableThinking: false,
++              timeoutMs: DEEP_ITER_PLANNER_TIMEOUT_MS,
++            });
++          } catch (e: any) {
++            console.warn("[answer] deepiter planner failed:", e?.message ?? e);
++            reasonCodes.push("deepiter:planner-error");
++          }
++          const followups = parseDeepIterQueries(plannerText, [searchQuery, req.query], iterFollowups);
++          reasonCodes.push(followups.length ? `deepiter:followups-${followups.length}` : "deepiter:planner-none");
++          const extra: RetrievedChunk[] = [];
++          for (const q of followups) {
++            if (stopRequested) break;
++            const got = await deps.retrieve(q, 6).catch((e) => {
++              console.warn("[answer] deepiter retrieval failed:", e?.message ?? e);
++              return [] as RetrievedChunk[];
++            });
++            for (const c of got.filter(isSubstantive)) {
++              if (onSubject(c)) extra.push(c);
++              else if (!cryptoBlocked(c) && onTopic(q, c)) {
++                extra.push(c);
++                iterAccepted.add(c.chunkId);
++              }
++            }
++          }
++          if (followups.length) {
++            const merged = mergeSources([raw, extra]).sources.slice(0, Math.max(DEEP_ITER_MAX_SOURCES, raw.length));
++            reasonCodes.push(`deepiter:added-${merged.length - raw.length}`);
++            if (merged.length > raw.length) iterQueries = followups;
++            raw = merged;
++          }
++        }
++      }
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
+-      const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
++      const compressed = compressContext(iterQueries.length ? [matchQuery, ...iterQueries].join(" ") : matchQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
+ 
+@@ -1019,7 +1107,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        const kept = sources.filter((c) => onSubject(c));
++        const kept = sources.filter((c) => onSubject(c) || iterAccepted.has(c.chunkId));
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");
+         sources = kept;
+@@ -1224,7 +1312,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         });
+       }
+ 
+-      let loadMs = gateLoadMs;
++      let loadMs = gateLoadMs + iterLoadMs;
+       /** ModelLoadError.kind of the last failed load (memory | engine | corrupt | missing). */
+       let loadFailureKind: LoadFailureKind | undefined;
+       const ensureLoaded = async (m: InstalledLlm, tier: AnswerTier): Promise<string | null> => {
+@@ -1243,7 +1331,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         }
+       };
+ 
+-      const residentBefore = deps.engine.getModelInfo()?.filename ?? null;
++      const residentBefore = iterResidentBefore !== undefined ? iterResidentBefore : deps.engine.getModelInfo()?.filename ?? null;
+       const residency: ModelResidency = residentBefore === genLlm.filename ? "resident" : residentBefore === null ? "cold" : "switched";
+       sampleMemory();
+       const loadError = await ensureLoaded(genLlm, genTier);
+diff --git a/src/routing/deepIter.test.ts b/src/routing/deepIter.test.ts
+new file mode 100644
+index 00000000..83dd3bc5
+--- /dev/null
++++ b/src/routing/deepIter.test.ts
+@@ -0,0 +1,154 @@
++import { describe, it, expect } from "vitest";
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { assemblePrompt, assembleChatMessages } from "../rag/pure";
++import { AnswerDeps, createAnswerer, InstalledLlm, DEEP_ITER_FOLLOWUPS, DEEP_THINKING_BUDGET } from "./answer";
++import type { AnswerEvent } from "./events";
++import type { GenerateOptions } from "../inference/LlamaEngine";
++import { approxTokens } from "./context";
++import { DEEP_ITER_PLANNER_SYSTEM, deepIterPlannerInput, parseDeepIterQueries } from "./deepIter";
++
++const chunk = (chunkId: string, title: string, body: string): RetrievedChunk => ({
++  chunkId, docId: chunkId, title, body, score: 1, source: "wikipedia", matchType: "hybrid",
++} as RetrievedChunk);
++
++const CANBERRA = chunk("c1", "Canberra",
++  "Canberra is the capital city of Australia. The site of Canberra was selected for the location of the nation's capital in 1908 " +
++  "as a compromise between Sydney and Melbourne. The city was designed after an international design contest.");
++const CANBERRA_2 = chunk("c2", "Canberra",
++  "History: Canberra was chosen as the capital of Australia because neither Sydney nor Melbourne would accept the other as capital.");
++const GRIFFIN = chunk("g1", "Walter Burley Griffin",
++  "Walter Burley Griffin was an American architect who, with Marion Mahony Griffin, won the 1912 design contest for the plan of Canberra.");
++const OFF = chunk("x1", "Mold", "A mold is one of the structures that certain fungi can form. Mold growth needs moisture.");
++
++const GB = 1024 ** 3;
++const fast: InstalledLlm = { id: "fast4b", label: "Fast 4B", filename: "models/fast.gguf", sizeBytes: 2.5 * GB, roles: ["general", "fast"], isDefault: true };
++const deep: InstalledLlm = { id: "deep35", label: "Deep 35B", filename: "models/deep.gguf", sizeBytes: 12 * GB, roles: ["reasoning"] };
++
++function makeDeps(opts: { followups?: number; planner?: string; byQuery?: Record<string, RetrievedChunk[]> }) {
++  let clock = 0;
++  const gens: GenerateOptions[] = [];
++  const retrieves: { q: string; k: number }[] = [];
++  const loads: string[] = [];
++  let loaded: string | null = null;
++  const deps: AnswerDeps = {
++    now: () => (clock += 5),
++    engine: {
++      async load(filename) { loads.push(filename); loaded = filename; return { fit: null, warning: null }; },
++      async generate(o) {
++        gens.push(o);
++        if (o.messages?.[0]?.content === DEEP_ITER_PLANNER_SYSTEM) return opts.planner ?? "NONE";
++        const out = ["Canberra ", "was ", "a ", "compromise ", "[1]."];
++        for (const p of out) o.onToken?.(p);
++        const promptText = o.messages?.map((m) => m.content).join("\n") ?? o.prompt ?? "";
++        o.onTimings?.({ promptTokens: approxTokens(promptText), promptMs: 100, predictedTokens: out.length, predictedMs: 50 });
++        return out.join("");
++      },
++      async stop() {},
++      getModelInfo: () => (loaded ? { filename: loaded } : null),
++      hasEmbeddedChatTemplate: () => true,
++      async estimateFit() { return null; },
++    },
++    retrieve: async (q, k) => {
++      retrieves.push({ q, k });
++      return opts.byQuery?.[q] ?? [CANBERRA, OFF];
++    },
++    getSettings: async () => ({
++      quickFirst: true, alwaysComplete: true, deepModelId: deep.id,
++      ...(opts.followups !== undefined ? { deepIterFollowups: opts.followups } : {}),
++    }),
++    listInstalledLlms: async () => [fast, deep],
++    getActiveModelId: async () => fast.id,
++    runMultipass: async () => { throw new Error("no multipass in these tests"); },
++    assemblePrompt,
++    assembleChatMessages,
++  };
++  return { deps, gens, retrieves, loads };
++}
++
++async function run(deps: AnswerDeps, query: string) {
++  const events: AnswerEvent[] = [];
++  const result = await createAnswerer(deps).answer({ query }, (e) => events.push(e), { maxTokens: 512 }).done;
++  return { events, result };
++}
++
++const Q = "Why was Canberra chosen as the capital of Australia?";
++
++describe("deepIter helpers", () => {
++  it("parses Q: lines, drops duplicates, the original query and NONE, keeps at most max", () => {
++    const text = "Q: Walter Burley Griffin design\nq:  walter burley griffin design \nQ: " + Q + "\nNONE\n- Q: `Sydney Melbourne rivalry`\nQ: third one";
++    expect(parseDeepIterQueries(text, [Q], 2)).toEqual(["Walter Burley Griffin design", "Sydney Melbourne rivalry"]);
++    expect(parseDeepIterQueries("NONE", [Q], 2)).toEqual([]);
++    expect(parseDeepIterQueries("Q: a b c", [Q], 0)).toEqual([]);
++  });
++  it("shows each source as title — first 160 chars, and the instruction", () => {
++    const input = deepIterPlannerInput(Q, [CANBERRA], 2);
++    expect(input).toContain(`- Canberra — ${CANBERRA.body.slice(0, 160)}\n`);
++    expect(input).not.toContain(CANBERRA.body.slice(0, 161));
++    expect(input).toContain("List up to 2 additional short search queries (one per line, prefixed `Q: `)");
++    expect(input).toContain("If the sources already suffice, output `NONE`.");
++    expect(deepIterPlannerInput(Q, [], 2)).toContain("Sources:\n(none)");
++  });
++});
++
++describe("answer(): DEEPITER on the deep thinking tier", () => {
++  it("defaults to DEEP_ITER_FOLLOWUPS = 2", () => expect(DEEP_ITER_FOLLOWUPS).toBe(2));
++
++  it("followups 0: no planner call, one retrieval, no deepiter codes (the DT512 path)", async () => {
++    const t = makeDeps({ followups: 0, planner: "Q: Walter Burley Griffin design" });
++    const { result } = await run(t.deps, Q);
++    expect(result.tier).toBe("deep");
++    expect(t.gens.some((g) => g.messages?.[0]?.content === DEEP_ITER_PLANNER_SYSTEM)).toBe(false);
++    expect(t.retrieves).toHaveLength(1);
++    expect(result.receipt.reasonCodes.filter((c) => c.startsWith("deepiter:"))).toEqual([]);
++    expect(t.gens).toHaveLength(1);
++    expect(t.gens[0].thinkingBudget).toBe(DEEP_THINKING_BUDGET);
++  });
++
++  it("planner NONE: one planner call (greedy, no thinking), no extra retrieval", async () => {
++    const t = makeDeps({ planner: "NONE" });
++    const { result } = await run(t.deps, Q);
++    const planner = t.gens.filter((g) => g.messages?.[0]?.content === DEEP_ITER_PLANNER_SYSTEM);
++    expect(planner).toHaveLength(1);
++    expect(planner[0]).toMatchObject({ nPredict: 64, temperature: 0, enableThinking: false, timeoutMs: 20_000 });
++    expect(planner[0].onToken).toBeUndefined();
++    expect(planner[0].messages![1].content).toContain("- Canberra — ");
++    expect(planner[0].messages![1].content).not.toContain("- Mold — "); // only on-subject first-pass sources
++    expect(t.retrieves).toHaveLength(1);
++    expect(result.receipt.reasonCodes).toContain("deepiter:planner-none");
++    // The answer is still one thinking generation on the deep model, loaded once, before the planner.
++    expect(t.loads).toEqual([deep.filename]);
++    expect(t.gens.at(-1)!.thinkingBudget).toBe(DEEP_THINKING_BUDGET);
++  });
++
++  it("follow-ups: retrieves each (k 6), keeps on-topic new passages after the first pass's, logs counts", async () => {
++    const t = makeDeps({
++      planner: `Q: Walter Burley Griffin design contest\nQ: ${Q}\nQ: Canberra site selection 1908`,
++      byQuery: {
++        [Q]: [CANBERRA, OFF],
++        "Walter Burley Griffin design contest": [GRIFFIN, OFF, CANBERRA],
++        "Canberra site selection 1908": [CANBERRA_2],
++      },
++    });
++    const { events, result } = await run(t.deps, Q);
++    expect(t.retrieves).toEqual([{ q: Q, k: 6 }, { q: "Walter Burley Griffin design contest", k: 6 }, { q: "Canberra site selection 1908", k: 6 }]);
++    expect(result.receipt.reasonCodes).toContain("deepiter:followups-2");
++    expect(result.receipt.reasonCodes).toContain("deepiter:added-2"); // GRIFFIN + CANBERRA_2 (CANBERRA dup, OFF off-topic)
++    const ids = result.sources.map((s) => s.chunkId);
++    expect(ids).toContain("g1");
++    expect(ids).not.toContain("x1");
++    const prompt = t.gens.at(-1)!.messages!.map((m) => m.content).join("\n");
++    expect(prompt).toContain("Walter Burley Griffin");
++    const sourcesEvents = events.filter((e) => e.type === "sources");
++    expect(sourcesEvents.length).toBeGreaterThan(0);
++  });
++
++  it("never runs for health questions or the fast tier", async () => {
++    const t = makeDeps({ planner: "Q: something else" });
++    t.deps.getSettings = async () => ({ quickFirst: true, alwaysComplete: false, deepModelId: deep.id, deepIterFollowups: 2 });
++    await run(t.deps, "Tell me about Canberra's design");
++    expect(t.gens.some((g) => g.messages?.[0]?.content === DEEP_ITER_PLANNER_SYSTEM)).toBe(false);
++    const h = makeDeps({ planner: "Q: something else" });
++    await run(h.deps, "How do I treat a snake bite?");
++    expect(h.gens.some((g) => g.messages?.[0]?.content === DEEP_ITER_PLANNER_SYSTEM)).toBe(false);
++  });
++});
+diff --git a/src/routing/deepIter.ts b/src/routing/deepIter.ts
+new file mode 100644
+index 00000000..c4a4086e
+--- /dev/null
++++ b/src/routing/deepIter.ts
+@@ -0,0 +1,46 @@
++/**
++ * DEEPITER arm: one planner-driven second retrieval pass on the deep thinking tier (answer.ts, deep single branch).
++ * The deep model reads the question and the first pass's on-subject sources ("title — first 160 chars") and names up to
++ * N short follow-up searches for facts those sources lack; answer.ts runs them, filters them like the first pass and
++ * merges them after the first-pass sources (mergeSources, first-pass first) before compression. Pure helpers here.
++ */
++import type { RetrievedChunk } from "../rag/retrieve.types";
++
++export const DEEP_ITER_PLANNER_SYSTEM = "You plan searches for an offline library.";
++/** Characters of each source's body the planner sees. */
++export const DEEP_ITER_SNIPPET_CHARS = 160;
++/** Sources (first pass + follow-ups) kept before compression. */
++export const DEEP_ITER_MAX_SOURCES = 12;
++
++const oneLine = (s: string) => s.replace(/\s+/g, " ").trim();
++
++/** The planner's user message: the question, the kept first-pass sources, the instruction. */
++export function deepIterPlannerInput(query: string, sources: RetrievedChunk[], maxFollowups: number): string {
++  const lines = sources.map((c) => `- ${oneLine(c.title)} — ${oneLine(c.body).slice(0, DEEP_ITER_SNIPPET_CHARS)}`);
++  return (
++    `Question: ${query}\n\nSources:\n${lines.length ? lines.join("\n") : "(none)"}\n\n` +
++    `List up to ${maxFollowups} additional short search queries (one per line, prefixed \`Q: \`) that would retrieve facts ` +
++    "the sources above lack and the question needs. If the sources already suffice, output `NONE`."
++  );
++}
++
++/**
++ * The planner's `Q:` lines: trimmed (surrounding quotes/backticks dropped), empty ones and duplicates removed
++ * (case-insensitive), any equal to the first-pass query or the question removed, at most `max`. NONE or no Q: line -> [].
++ */
++export function parseDeepIterQueries(text: string, exclude: string[], max: number): string[] {
++  if (max <= 0) return [];
++  const seen = new Set(exclude.map((q) => oneLine(q).toLowerCase()));
++  const out: string[] = [];
++  for (const line of text.split("\n")) {
++    const m = line.match(/^\s*(?:[-*]\s*)?Q:\s*(.+)$/i);
++    if (!m) continue;
++    const q = oneLine(m[1].replace(/^["'`]+|["'`]+$/g, ""));
++    const key = q.toLowerCase();
++    if (!q || key === "none" || seen.has(key)) continue;
++    seen.add(key);
++    out.push(q);
++    if (out.length >= max) break;
++  }
++  return out;
++}

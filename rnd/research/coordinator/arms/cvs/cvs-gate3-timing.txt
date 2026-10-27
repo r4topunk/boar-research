@@ -1,0 +1,6 @@
+CV desktop timing (Mac mini, node-llama-cpp, 4 threads; totalMs per answer; cut 3 = cut 3 arm, CV = cut 3 + CV arm; same seed 44)
+all items                          n=120  cut3 median 12.57 s  CV median 12.74 s  paired diff median 0.34 s  mean 0.39 s
+items CV answered                  n= 58  cut3 median 13.10 s  CV median 12.66 s  paired diff median -0.12 s  mean -0.42 s
+items the normal path answered     n= 62  cut3 median 12.22 s  CV median 12.84 s  paired diff median 0.61 s  mean 1.14 s
+criterion: median added time on the 4B path <= +2 s (paired diff median on the items CV answered: -0.12 s)
+model calls per CV answer (median): 2; cut 3 on the same items: 1

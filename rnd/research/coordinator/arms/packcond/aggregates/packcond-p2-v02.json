@@ -1,0 +1,8805 @@
+{
+ "set": "v02",
+ "arm": "H",
+ "seed": 42,
+ "threshold": 0.7,
+ "cap_chunks": 40,
+ "cap_chars": 2000,
+ "batch": 8,
+ "model": "typesafe-ai/jev",
+ "packs": {
+  "vital5": "shared-data/packs/wiki-vital5.sqlite",
+  "prep": "shared-data/preparedness-v3/boar-preparedness.sqlite",
+  "shard07": "shared-data/gate-ref/boar-wiki-en-07.sqlite",
+  "top100k": "shared-data/packs/boar-wiki-en-top100k.sqlite"
+ },
+ "gateway_cost_usd_cumulative": 0.24133,
+ "runtime_s": 146,
+ "n": 110,
+ "items": [
+  {
+   "id": "v02-comparison-A01",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.2,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.83,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1719308,
+       "article": "Contiguous United States",
+       "p": 0.83,
+       "q": 0.66
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-comparison-A02",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.2143,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.25,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.3,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.47,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-comparison-A03",
+   "category": "comparison",
+   "mode": "answer-support",
+   "ratio": 0.7667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Antibiotic",
+      "Self-replication"
+     ],
+     "hits": [
+      {
+       "chunk": 16352,
+       "article": "Self-replication",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 800,
+       "article": "Antibiotic",
+       "p": 0.84,
+       "q": 0.84
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.4,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.27,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Infection",
+      "Organism",
+      "Parasitism",
+      "Plankton",
+      "Reproduction"
+     ],
+     "hits": [
+      {
+       "chunk": 1847902,
+       "article": "Plankton",
+       "p": 0.79,
+       "q": 0.79
+      },
+      {
+       "chunk": 2346469,
+       "article": "Biology",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 3108805,
+       "article": "Organism",
+       "p": 0.82,
+       "q": 0.82
+      },
+      {
+       "chunk": 3951182,
+       "article": "Unicellular organism",
+       "p": 0.62,
+       "q": 0.62
+      },
+      {
+       "chunk": 2833534,
+       "article": "Reproduction",
+       "p": 0.75,
+       "q": 0.75
+      },
+      {
+       "chunk": 1570873,
+       "article": "Parasitism",
+       "p": 0.85,
+       "q": 0.85
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-A04",
+   "category": "comparison",
+   "mode": "answer-support",
+   "ratio": 0.75,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Mont Blanc",
+      "Mount Fuji"
+     ],
+     "hits": [
+      {
+       "chunk": 22881,
+       "article": "Mount Fuji",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 22151,
+       "article": "Mont Blanc",
+       "p": 0.97,
+       "q": 0.97
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.01,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.92,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "French Alps"
+     ],
+     "hits": [
+      {
+       "chunk": 128351,
+       "article": "French Alps",
+       "p": 0.92,
+       "q": 0.92
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Chamonix",
+      "Honshu",
+      "Mont Blanc",
+      "Mont Blanc massif",
+      "Mount Fuji",
+      "Orders of magnitude (length)"
+     ],
+     "hits": [
+      {
+       "chunk": 2811731,
+       "article": "Orders of magnitude (length)",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 2645538,
+       "article": "Mont Blanc",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2463761,
+       "article": "Mount Fuji",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 984142,
+       "article": "Honshu",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 2463762,
+       "article": "Mount Fuji",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2754199,
+       "article": "Via ferrata",
+       "p": 0.69,
+       "q": 0.69
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-A05",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.73,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 94001,
+       "article": "War of Actium",
+       "p": 0.73,
+       "q": 0.69
+      },
+      {
+       "chunk": 14158,
+       "article": "Roman Empire",
+       "p": 0.6,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.63,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 280486,
+       "article": "History of the Roman Empire",
+       "p": 0.63,
+       "q": 0.81
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Augustus",
+      "Roman Republic",
+      "War of Actium"
+     ],
+     "hits": [
+      {
+       "chunk": 2542454,
+       "article": "War of Actium",
+       "p": 0.78,
+       "q": 0.81
+      },
+      {
+       "chunk": 291173,
+       "article": "Roman Republic",
+       "p": 0.7,
+       "q": 0.85
+      },
+      {
+       "chunk": 1682876,
+       "article": "Augustus",
+       "p": 0.83,
+       "q": 0.84
+      },
+      {
+       "chunk": 1351642,
+       "article": "Roman Empire",
+       "p": 0.61,
+       "q": 0.82
+      },
+      {
+       "chunk": 291169,
+       "article": "Roman Republic",
+       "p": 0.88,
+       "q": 0.89
+      },
+      {
+       "chunk": 216195,
+       "article": "Classical antiquity",
+       "p": 0.69,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-A06",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.75,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 26527,
+       "article": "Fusion power",
+       "p": 0.75,
+       "q": 0.66
+      },
+      {
+       "chunk": 11892,
+       "article": "Nuclear fusion",
+       "p": 0.66,
+       "q": 0.61
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.66,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 859118,
+       "article": "Fuel",
+       "p": 0.66,
+       "q": 0.45
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.63,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 35935,
+       "article": "Tritium",
+       "p": 0.63,
+       "q": 0.68
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-comparison-A07",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.66,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 8397,
+       "article": "Impeachment",
+       "p": 0.66,
+       "q": 0.22
+      },
+      {
+       "chunk": 8396,
+       "article": "Impeachment",
+       "p": 0.66,
+       "q": 0.37
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.77,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Head of state"
+     ],
+     "hits": [
+      {
+       "chunk": 1146161,
+       "article": "Impeachment in the United Kingdom",
+       "p": 0.64,
+       "q": 0.27
+      },
+      {
+       "chunk": 1533625,
+       "article": "Head of state",
+       "p": 0.64,
+       "q": 0.48
+      },
+      {
+       "chunk": 1533519,
+       "article": "Head of state",
+       "p": 0.77,
+       "q": 0.77
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Semi-presidential republic"
+     ],
+     "hits": [
+      {
+       "chunk": 2716619,
+       "article": "Motion of no confidence",
+       "p": 0.69,
+       "q": 0.19
+      },
+      {
+       "chunk": 2716625,
+       "article": "Motion of no confidence",
+       "p": 0.84,
+       "q": 0.14
+      },
+      {
+       "chunk": 1686502,
+       "article": "Semi-presidential republic",
+       "p": 0.75,
+       "q": 0.24
+      },
+      {
+       "chunk": 1686496,
+       "article": "Semi-presidential republic",
+       "p": 0.62,
+       "q": 0.43
+      },
+      {
+       "chunk": 1686495,
+       "article": "Semi-presidential republic",
+       "p": 0.85,
+       "q": 0.78
+      },
+      {
+       "chunk": 2716632,
+       "article": "Motion of no confidence",
+       "p": 0.66,
+       "q": 0.72
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-B01",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.5714,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.64,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 13775,
+       "article": "Panama Canal",
+       "p": 0.64,
+       "q": 0.69
+      },
+      {
+       "chunk": 34135,
+       "article": "Omar Torrijos",
+       "p": 0.61,
+       "q": 0.65
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.5,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.57,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-comparison-B02",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.77,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Battle of Karbala"
+     ],
+     "hits": [
+      {
+       "chunk": 63785,
+       "article": "Battle of Karbala",
+       "p": 0.77,
+       "q": 0.71
+      },
+      {
+       "chunk": 65300,
+       "article": "Ali al-Hadi",
+       "p": 0.62,
+       "q": 0.42
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.49,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.57,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-B03",
+   "category": "comparison",
+   "mode": "answer-support",
+   "ratio": 0.7857,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Australian feral camel",
+      "Bactrian camel"
+     ],
+     "hits": [
+      {
+       "chunk": 94059,
+       "article": "Australian feral camel",
+       "p": 0.7,
+       "q": 0.7
+      },
+      {
+       "chunk": 65598,
+       "article": "Bactrian camel",
+       "p": 0.93,
+       "q": 0.93
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.87,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Dromedary"
+     ],
+     "hits": [
+      {
+       "chunk": 1341346,
+       "article": "Dromedary",
+       "p": 0.77,
+       "q": 0.77
+      },
+      {
+       "chunk": 1341367,
+       "article": "Dromedary",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 1341342,
+       "article": "Dromedary",
+       "p": 0.87,
+       "q": 0.87
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bactrian camel",
+      "Camel",
+      "Camelidae",
+      "Dromedary"
+     ],
+     "hits": [
+      {
+       "chunk": 2153270,
+       "article": "Dromedary",
+       "p": 0.78,
+       "q": 0.78
+      },
+      {
+       "chunk": 2492050,
+       "article": "Bactrian camel",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 2472964,
+       "article": "Camel",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2492075,
+       "article": "Bactrian camel",
+       "p": 0.83,
+       "q": 0.83
+      },
+      {
+       "chunk": 2848277,
+       "article": "Camelidae",
+       "p": 0.82,
+       "q": 0.82
+      },
+      {
+       "chunk": 2153266,
+       "article": "Dromedary",
+       "p": 0.86,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-B04",
+   "category": "comparison",
+   "mode": "answer-support",
+   "ratio": 0.8571,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Chimborazo",
+      "Elevation",
+      "Mauna Kea",
+      "Mount Everest"
+     ],
+     "hits": [
+      {
+       "chunk": 54402,
+       "article": "Mauna Kea",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 20981,
+       "article": "Mount Everest",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 61480,
+       "article": "Chimborazo",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 87698,
+       "article": "Elevation",
+       "p": 0.79,
+       "q": 0.79
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Geography of China",
+      "Khumbu"
+     ],
+     "hits": [
+      {
+       "chunk": 1491898,
+       "article": "Mars",
+       "p": 0.6,
+       "q": 0.6
+      },
+      {
+       "chunk": 816610,
+       "article": "Gardner Pinnacles",
+       "p": 0.67,
+       "q": 0.67
+      },
+      {
+       "chunk": 1135524,
+       "article": "Tharsis Montes",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 902293,
+       "article": "Geography of China",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 496201,
+       "article": "Khumbu",
+       "p": 0.94,
+       "q": 0.94
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Extremes on Earth",
+      "Hawaii",
+      "Hawai\u02bbi (island)",
+      "Mauna Kea",
+      "Mount Everest",
+      "Mountain",
+      "Topographic isolation",
+      "Topographic prominence"
+     ],
+     "hits": [
+      {
+       "chunk": 3280596,
+       "article": "Extremes on Earth",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2957271,
+       "article": "Mount Everest",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 2703500,
+       "article": "Mauna Kea",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 2703496,
+       "article": "Mauna Kea",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 911147,
+       "article": "Mountain",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 3347630,
+       "article": "Topographic prominence",
+       "p": 0.74,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-comparison-B05",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.44,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.21,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.54,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.49,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-comparison-B06",
+   "category": "comparison",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.73,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1762572,
+       "article": "Categorical imperative",
+       "p": 0.73,
+       "q": 0.69
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A01",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.57,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A02",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A03",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.52,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A04",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.42,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A05",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.28,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-A06",
+   "category": "crypto",
+   "mode": "answer-support",
+   "ratio": 0.7586,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.41,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.87,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Cryptocurrency"
+     ],
+     "hits": [
+      {
+       "chunk": 1613805,
+       "article": "Cryptocurrency",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 1613795,
+       "article": "Cryptocurrency",
+       "p": 0.71,
+       "q": 0.71
+      },
+      {
+       "chunk": 1613796,
+       "article": "Cryptocurrency",
+       "p": 0.73,
+       "q": 0.73
+      },
+      {
+       "chunk": 696930,
+       "article": "Variety Jones and Smedley",
+       "p": 0.64,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.91,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bitcoin",
+      "Cryptocurrency",
+      "Pig butchering scam",
+      "Ross Ulbricht"
+     ],
+     "hits": [
+      {
+       "chunk": 1247844,
+       "article": "Bitcoin",
+       "p": 0.91,
+       "q": 0.91
+      },
+      {
+       "chunk": 2235866,
+       "article": "Cryptocurrency",
+       "p": 0.86,
+       "q": 0.86
+      },
+      {
+       "chunk": 1513980,
+       "article": "Ross Ulbricht",
+       "p": 0.77,
+       "q": 0.77
+      },
+      {
+       "chunk": 1247836,
+       "article": "Bitcoin",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 2626581,
+       "article": "Pig butchering scam",
+       "p": 0.72,
+       "q": 0.72
+      },
+      {
+       "chunk": 2235856,
+       "article": "Cryptocurrency",
+       "p": 0.75,
+       "q": 0.75
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-crypto-B01",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.17,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.76,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bitcoin"
+     ],
+     "hits": [
+      {
+       "chunk": 1247825,
+       "article": "Bitcoin",
+       "p": 0.76,
+       "q": 0.83
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-crypto-B02",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.5714,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.18,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1230631,
+       "article": "Ethereum",
+       "p": 0.61,
+       "q": 0.69
+      },
+      {
+       "chunk": 1230635,
+       "article": "Ethereum",
+       "p": 0.69,
+       "q": 0.59
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-B03",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.2,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.12,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-B04",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.4333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-B05",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.34,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-B06",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.27,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-crypto-B07",
+   "category": "crypto",
+   "mode": "missing-fact",
+   "ratio": 0.6429,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.44,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.74,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Khufu and Khafre"
+     ],
+     "hits": [
+      {
+       "chunk": 1891657,
+       "article": "Khufu and Khafre",
+       "p": 0.74,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.79,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Merkle tree"
+     ],
+     "hits": [
+      {
+       "chunk": 1301683,
+       "article": "Merkle tree",
+       "p": 0.79,
+       "q": 0.87
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-A01",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.9,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.92,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Rip current"
+     ],
+     "hits": [
+      {
+       "chunk": 57832,
+       "article": "Rip current",
+       "p": 0.62,
+       "q": 0.62
+      },
+      {
+       "chunk": 57831,
+       "article": "Rip current",
+       "p": 0.8,
+       "q": 0.8
+      },
+      {
+       "chunk": 57833,
+       "article": "Rip current",
+       "p": 0.92,
+       "q": 0.92
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.54,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Undertow (water waves)"
+     ],
+     "hits": [
+      {
+       "chunk": 1189139,
+       "article": "Undertow (water waves)",
+       "p": 0.94,
+       "q": 0.94
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Rip current",
+      "Surfing"
+     ],
+     "hits": [
+      {
+       "chunk": 3658985,
+       "article": "Rip current",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 3658984,
+       "article": "Rip current",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 1423481,
+       "article": "Surfing",
+       "p": 0.85,
+       "q": 0.85
+      },
+      {
+       "chunk": 3658986,
+       "article": "Rip current",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 3658974,
+       "article": "Rip current",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 1423476,
+       "article": "Surfing",
+       "p": 0.7,
+       "q": 0.7
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-A02",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.9333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.58,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "#WinterReady Social Media Toolkit (Ready.gov)",
+      "Carbon monoxide poisoning",
+      "Home Fires (Ready.gov)",
+      "Local area emergency",
+      "Power Outages (Ready.gov)",
+      "US Army Survival Manual FM 21-76: CHAPTER 15 - COLD WEATHER SURVIVAL ",
+      "Winter Weather (Ready.gov)"
+     ],
+     "hits": [
+      {
+       "chunk": 19847,
+       "article": "Home Fires (Ready.gov)",
+       "p": 0.86,
+       "q": 0.86
+      },
+      {
+       "chunk": 19879,
+       "article": "Power Outages (Ready.gov)",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 20596,
+       "article": "#WinterReady Social Media Toolkit (Ready.gov)",
+       "p": 0.75,
+       "q": 0.75
+      },
+      {
+       "chunk": 13232,
+       "article": "Carbon monoxide poisoning",
+       "p": 0.74,
+       "q": 0.74
+      },
+      {
+       "chunk": 19772,
+       "article": "Winter Weather (Ready.gov)",
+       "p": 0.77,
+       "q": 0.77
+      },
+      {
+       "chunk": 21420,
+       "article": "US Army Survival Manual FM 21-76: CHAPTER 15 - COLD WEATHER SURVIVAL ",
+       "p": 0.74,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.24,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 23,
+     "max_p": 0.7,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Carbon monoxide"
+     ],
+     "hits": [
+      {
+       "chunk": 3028071,
+       "article": "Carbon monoxide poisoning",
+       "p": 0.6,
+       "q": 0.6
+      },
+      {
+       "chunk": 3220135,
+       "article": "Hurricane Ike",
+       "p": 0.6,
+       "q": 0.6
+      },
+      {
+       "chunk": 152358,
+       "article": "Carbon monoxide",
+       "p": 0.66,
+       "q": 0.66
+      },
+      {
+       "chunk": 152385,
+       "article": "Carbon monoxide",
+       "p": 0.7,
+       "q": 0.7
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-A03",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.8333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 38248,
+       "article": "Hypothermia",
+       "p": 0.69,
+       "q": 0.69
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.84,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Avalanche (Ready.gov)",
+      "Cold weather",
+      "First Aid/Cold-Related Illness & Injury",
+      "Hypothermia",
+      "Winter Weather (Ready.gov)"
+     ],
+     "hits": [
+      {
+       "chunk": 13512,
+       "article": "First Aid/Cold-Related Illness & Injury",
+       "p": 0.84,
+       "q": 0.84
+      },
+      {
+       "chunk": 19773,
+       "article": "Winter Weather (Ready.gov)",
+       "p": 0.84,
+       "q": 0.84
+      },
+      {
+       "chunk": 19932,
+       "article": "Avalanche (Ready.gov)",
+       "p": 0.84,
+       "q": 0.84
+      },
+      {
+       "chunk": 909,
+       "article": "Hypothermia",
+       "p": 0.6,
+       "q": 0.6
+      },
+      {
+       "chunk": 14043,
+       "article": "Cold weather",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 936,
+       "article": "Hypothermia",
+       "p": 0.75,
+       "q": 0.75
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.17,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.84,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Hypothermia",
+      "Malnutrition"
+     ],
+     "hits": [
+      {
+       "chunk": 1868899,
+       "article": "Malnutrition",
+       "p": 0.81,
+       "q": 0.81
+      },
+      {
+       "chunk": 2490554,
+       "article": "Hypothermia",
+       "p": 0.78,
+       "q": 0.78
+      },
+      {
+       "chunk": 2490580,
+       "article": "Hypothermia",
+       "p": 0.84,
+       "q": 0.84
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-A04",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.79,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Choking",
+      "First Aid/Obstructed Airway"
+     ],
+     "hits": [
+      {
+       "chunk": 13446,
+       "article": "First Aid/Emergency First Aid & Initial Action Steps",
+       "p": 0.64,
+       "q": 0.64
+      },
+      {
+       "chunk": 13826,
+       "article": "First Aid/Obstructed Airway",
+       "p": 0.74,
+       "q": 0.74
+      },
+      {
+       "chunk": 115,
+       "article": "Choking",
+       "p": 0.79,
+       "q": 0.79
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.42,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-A05",
+   "category": "danger",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.9,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Flood Safety Social Media Toolkit (Ready.gov)",
+      "Thunderstorms & Lightning (Ready.gov)"
+     ],
+     "hits": [
+      {
+       "chunk": 20621,
+       "article": "Flood Safety Social Media Toolkit (Ready.gov)",
+       "p": 0.89,
+       "q": 0.87
+      },
+      {
+       "chunk": 19761,
+       "article": "Thunderstorms & Lightning (Ready.gov)",
+       "p": 0.9,
+       "q": 0.87
+      },
+      {
+       "chunk": 17724,
+       "article": "Are You Ready?/Floods",
+       "p": 0.77,
+       "q": 0.68
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.19,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 22,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-B01",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.8,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.64,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 38107,
+       "article": "Emergency service",
+       "p": 0.64,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.9,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Tsunami",
+      "Tsunamis (Ready.gov)"
+     ],
+     "hits": [
+      {
+       "chunk": 8664,
+       "article": "Tsunami warning system",
+       "p": 0.62,
+       "q": 0.62
+      },
+      {
+       "chunk": 19790,
+       "article": "Tsunamis (Ready.gov)",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 12995,
+       "article": "Tsunami",
+       "p": 0.86,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.76,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Robinson Crusoe Island"
+     ],
+     "hits": [
+      {
+       "chunk": 460388,
+       "article": "Robinson Crusoe Island",
+       "p": 0.76,
+       "q": 0.76
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 22,
+     "max_p": 0.56,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-B02",
+   "category": "danger",
+   "mode": "answer-support",
+   "ratio": 0.75,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.68,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 104538,
+       "article": "Rabies",
+       "p": 0.68,
+       "q": 0.68
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.91,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Dog bite",
+      "Rabies"
+     ],
+     "hits": [
+      {
+       "chunk": 12545,
+       "article": "Dog bite",
+       "p": 0.84,
+       "q": 0.84
+      },
+      {
+       "chunk": 12673,
+       "article": "Rabies",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 12654,
+       "article": "Rabies",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 12655,
+       "article": "Rabies",
+       "p": 0.91,
+       "q": 0.91
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.73,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Rabies immunoglobulin"
+     ],
+     "hits": [
+      {
+       "chunk": 784680,
+       "article": "Rabies immunoglobulin",
+       "p": 0.73,
+       "q": 0.73
+      },
+      {
+       "chunk": 784685,
+       "article": "Rabies immunoglobulin",
+       "p": 0.66,
+       "q": 0.66
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.89,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Prevalence of rabies",
+      "Rabies"
+     ],
+     "hits": [
+      {
+       "chunk": 2638752,
+       "article": "Rabies",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 2638732,
+       "article": "Rabies",
+       "p": 0.72,
+       "q": 0.72
+      },
+      {
+       "chunk": 3010576,
+       "article": "Prevalence of rabies",
+       "p": 0.71,
+       "q": 0.71
+      },
+      {
+       "chunk": 705220,
+       "article": "Free-ranging dog",
+       "p": 0.6,
+       "q": 0.6
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-danger-B03",
+   "category": "danger",
+   "mode": "missing-fact",
+   "ratio": 0.3704,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.14,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.83,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 225,
+       "article": "Recovery position",
+       "p": 0.83,
+       "q": 0.35
+      },
+      {
+       "chunk": 1242,
+       "article": "Heat exhaustion",
+       "p": 0.62,
+       "q": 0.47
+      },
+      {
+       "chunk": 8344,
+       "article": "Emergency procedure",
+       "p": 0.64,
+       "q": 0.54
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.25,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-danger-B04",
+   "category": "danger",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.36,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-danger-B05",
+   "category": "danger",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.39,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-A01",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.82,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 14537,
+       "article": "Rayleigh scattering",
+       "p": 0.82,
+       "q": 0.58
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.68,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 733680,
+       "article": "Tyndall effect",
+       "p": 0.68,
+       "q": 0.54
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.8,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 2618469,
+       "article": "Rayleigh scattering",
+       "p": 0.8,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-A02",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.4667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.36,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Moon",
+      "Tide"
+     ],
+     "hits": [
+      {
+       "chunk": 234293,
+       "article": "Moon",
+       "p": 0.79,
+       "q": 0.8
+      },
+      {
+       "chunk": 3220273,
+       "article": "Ocean",
+       "p": 0.69,
+       "q": 0.57
+      },
+      {
+       "chunk": 107516,
+       "article": "Tide",
+       "p": 0.85,
+       "q": 0.88
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A03",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.65,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 30478,
+       "article": "Hot spring",
+       "p": 0.65,
+       "q": 0.3
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.53,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.33,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-A04",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.58,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.2,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.61,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1213752,
+       "article": "Jezreel Valley",
+       "p": 0.61,
+       "q": 0.22
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.79,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Dead Sea"
+     ],
+     "hits": [
+      {
+       "chunk": 146580,
+       "article": "Jordan River",
+       "p": 0.78,
+       "q": 0.58
+      },
+      {
+       "chunk": 2483889,
+       "article": "Dead Sea",
+       "p": 0.65,
+       "q": 0.6
+      },
+      {
+       "chunk": 2483863,
+       "article": "Dead Sea",
+       "p": 0.79,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A05",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.5,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 29,
+     "max_p": 0.8,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1652392,
+       "article": "Allegory of the cave",
+       "p": 0.65,
+       "q": 0.61
+      },
+      {
+       "chunk": 1652403,
+       "article": "Allegory of the cave",
+       "p": 0.71,
+       "q": 0.47
+      },
+      {
+       "chunk": 1652397,
+       "article": "Allegory of the cave",
+       "p": 0.61,
+       "q": 0.42
+      },
+      {
+       "chunk": 1652399,
+       "article": "Allegory of the cave",
+       "p": 0.64,
+       "q": 0.15
+      },
+      {
+       "chunk": 2378627,
+       "article": "Nous",
+       "p": 0.8,
+       "q": 0.41
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-A06",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.62,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 240231,
+       "article": "Geography of Bhutan",
+       "p": 0.62,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-A07",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.66,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 73065,
+       "article": "Moment magnitude scale",
+       "p": 0.66,
+       "q": 0.41
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Earthquake",
+      "Earthquake safety"
+     ],
+     "hits": [
+      {
+       "chunk": 12937,
+       "article": "Earthquake",
+       "p": 0.93,
+       "q": 0.92
+      },
+      {
+       "chunk": 14202,
+       "article": "Earthquake safety",
+       "p": 0.77,
+       "q": 0.78
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Earthquake"
+     ],
+     "hits": [
+      {
+       "chunk": 1660984,
+       "article": "Earthquake",
+       "p": 0.95,
+       "q": 0.93
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A08",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.4333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.87,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Dawn"
+     ],
+     "hits": [
+      {
+       "chunk": 45734,
+       "article": "Dawn",
+       "p": 0.87,
+       "q": 0.81
+      },
+      {
+       "chunk": 85567,
+       "article": "Fasting in Islam",
+       "p": 0.61,
+       "q": 0.39
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.75,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Hurry Up Tomorrow"
+     ],
+     "hits": [
+      {
+       "chunk": 1227180,
+       "article": "Hurry Up Tomorrow",
+       "p": 0.75,
+       "q": 0.7
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.73,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Five Pillars of Islam",
+      "Islamic holidays",
+      "Twelver Shi'ism"
+     ],
+     "hits": [
+      {
+       "chunk": 302268,
+       "article": "Twilight",
+       "p": 0.64,
+       "q": 0.61
+      },
+      {
+       "chunk": 2349794,
+       "article": "Five Pillars of Islam",
+       "p": 0.73,
+       "q": 0.83
+      },
+      {
+       "chunk": 1931052,
+       "article": "Eid al-Fitr",
+       "p": 0.63,
+       "q": 0.51
+      },
+      {
+       "chunk": 39371,
+       "article": "Islamic holidays",
+       "p": 0.73,
+       "q": 0.74
+      },
+      {
+       "chunk": 1124913,
+       "article": "Twelver Shi'ism",
+       "p": 0.73,
+       "q": 0.76
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A09",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.52,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.4,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.89,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Season"
+     ],
+     "hits": [
+      {
+       "chunk": 1227502,
+       "article": "Season",
+       "p": 0.62,
+       "q": 0.2
+      },
+      {
+       "chunk": 1227504,
+       "article": "Season",
+       "p": 0.89,
+       "q": 0.91
+      },
+      {
+       "chunk": 1227501,
+       "article": "Season",
+       "p": 0.62,
+       "q": 0.6
+      },
+      {
+       "chunk": 1227519,
+       "article": "Season",
+       "p": 0.75,
+       "q": 0.84
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Apsis",
+      "Earth's orbit",
+      "List of common misconceptions about science, technology, and mathematics"
+     ],
+     "hits": [
+      {
+       "chunk": 2121209,
+       "article": "Season",
+       "p": 0.73,
+       "q": 0.35
+      },
+      {
+       "chunk": 2954131,
+       "article": "Earth's orbit",
+       "p": 0.7,
+       "q": 0.79
+      },
+      {
+       "chunk": 2121211,
+       "article": "Season",
+       "p": 0.62,
+       "q": 0.75
+      },
+      {
+       "chunk": 1733166,
+       "article": "Winter",
+       "p": 0.73,
+       "q": 0.54
+      },
+      {
+       "chunk": 1898523,
+       "article": "List of common misconceptions about science, technology, and mathematics",
+       "p": 0.7,
+       "q": 0.83
+      },
+      {
+       "chunk": 2121208,
+       "article": "Season",
+       "p": 0.62,
+       "q": 0.77
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A10",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.5667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.57,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.59,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.74,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Anglicanism"
+     ],
+     "hits": [
+      {
+       "chunk": 3191862,
+       "article": "Magna Carta",
+       "p": 0.71,
+       "q": 0.65
+      },
+      {
+       "chunk": 3191861,
+       "article": "Magna Carta",
+       "p": 0.64,
+       "q": 0.59
+      },
+      {
+       "chunk": 1740179,
+       "article": "Pope Innocent III",
+       "p": 0.62,
+       "q": 0.43
+      },
+      {
+       "chunk": 3547843,
+       "article": "Anglicanism",
+       "p": 0.74,
+       "q": 0.82
+      },
+      {
+       "chunk": 3191899,
+       "article": "Magna Carta",
+       "p": 0.68,
+       "q": 0.68
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-A11",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.46,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.27,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 998826,
+       "article": "British Museum",
+       "p": 0.69,
+       "q": 0.73
+      },
+      {
+       "chunk": 932325,
+       "article": "Egyptian hieroglyphs",
+       "p": 0.64,
+       "q": 0.71
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-B01",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.4286,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.19,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.72,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Northeast India"
+     ],
+     "hits": [
+      {
+       "chunk": 884717,
+       "article": "Northeast India",
+       "p": 0.72,
+       "q": 0.91
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.81,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Climate of India",
+      "Monsoon"
+     ],
+     "hits": [
+      {
+       "chunk": 1508017,
+       "article": "Climate of India",
+       "p": 0.81,
+       "q": 0.91
+      },
+      {
+       "chunk": 1850376,
+       "article": "Monsoon",
+       "p": 0.7,
+       "q": 0.92
+      },
+      {
+       "chunk": 2373413,
+       "article": "South Asia",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 2045924,
+       "article": "Northeast India",
+       "p": 0.62,
+       "q": 0.85
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-B02",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Silk Road"
+     ],
+     "hits": [
+      {
+       "chunk": 3476169,
+       "article": "Silk Road",
+       "p": 0.95,
+       "q": 0.94
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-B03",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.25,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.57,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.64,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 285177,
+       "article": "Pound sterling",
+       "p": 0.64,
+       "q": 0.69
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-B04",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.5667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.42,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.47,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-B05",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.72,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Noble Eightfold Path"
+     ],
+     "hits": [
+      {
+       "chunk": 12061,
+       "article": "Noble Eightfold Path",
+       "p": 0.72,
+       "q": 0.7
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.36,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 800178,
+       "article": "Buddhism",
+       "p": 0.69,
+       "q": 0.68
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-B06",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.6552,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.2,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 26,
+     "max_p": 0.87,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1698560,
+       "article": "Global Positioning System",
+       "p": 0.86,
+       "q": 0.56
+      },
+      {
+       "chunk": 1698567,
+       "article": "Global Positioning System",
+       "p": 0.83,
+       "q": 0.51
+      },
+      {
+       "chunk": 1698517,
+       "article": "Global Positioning System",
+       "p": 0.71,
+       "q": 0.51
+      },
+      {
+       "chunk": 1698515,
+       "article": "Global Positioning System",
+       "p": 0.74,
+       "q": 0.5
+      },
+      {
+       "chunk": 1698512,
+       "article": "Global Positioning System",
+       "p": 0.87,
+       "q": 0.55
+      },
+      {
+       "chunk": 1698514,
+       "article": "Global Positioning System",
+       "p": 0.84,
+       "q": 0.53
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 30,
+     "max_p": 0.9,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Global Positioning System"
+     ],
+     "hits": [
+      {
+       "chunk": 1946962,
+       "article": "Global Positioning System",
+       "p": 0.87,
+       "q": 0.56
+      },
+      {
+       "chunk": 1946917,
+       "article": "Global Positioning System",
+       "p": 0.74,
+       "q": 0.59
+      },
+      {
+       "chunk": 1946969,
+       "article": "Global Positioning System",
+       "p": 0.88,
+       "q": 0.61
+      },
+      {
+       "chunk": 1946961,
+       "article": "Global Positioning System",
+       "p": 0.6,
+       "q": 0.36
+      },
+      {
+       "chunk": 1946919,
+       "article": "Global Positioning System",
+       "p": 0.72,
+       "q": 0.54
+      },
+      {
+       "chunk": 1946914,
+       "article": "Global Positioning System",
+       "p": 0.9,
+       "q": 0.71
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-B07",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.87,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Skull mexican make-up"
+     ],
+     "hits": [
+      {
+       "chunk": 115842,
+       "article": "Skull mexican make-up",
+       "p": 0.87,
+       "q": 0.71
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.76,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 2845249,
+       "article": "Day of the Dead",
+       "p": 0.76,
+       "q": 0.52
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-explanation-B08",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.4667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.17,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.25,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-B09",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.5667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.67,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 46015,
+       "article": "\u014ckubo Toshimichi",
+       "p": 0.67,
+       "q": 0.77
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.28,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-explanation-B10",
+   "category": "explanation",
+   "mode": "missing-fact",
+   "ratio": 0.7143,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.53,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.18,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.63,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 598282,
+       "article": "Mass production",
+       "p": 0.63,
+       "q": 0.82
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.3,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-A01",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.1,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.33,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-A02",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.33,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.25,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 22,
+     "max_p": 0.47,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-A03",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.32,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.33,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 538335,
+       "article": "Caffeine",
+       "p": 0.69,
+       "q": 0.19
+      },
+      {
+       "chunk": 538340,
+       "article": "Caffeine",
+       "p": 0.68,
+       "q": 0.23
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-A04",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.15,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.18,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-B01",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.14,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Water"
+     ],
+     "hits": [
+      {
+       "chunk": 190728,
+       "article": "Water",
+       "p": 0.85,
+       "q": 0.89
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-health-B02",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.78,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 69022,
+       "article": "Cardiovascular disease",
+       "p": 0.78,
+       "q": 0.62
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.2,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.84,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 261397,
+       "article": "Alcohol (drug)",
+       "p": 0.84,
+       "q": 0.39
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-B03",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.2333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.43,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.56,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.55,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-health-B04",
+   "category": "health",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.67,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 835114,
+       "article": "Sunscreen",
+       "p": 0.67,
+       "q": 0.65
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-honesty-refusal-A01",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.4,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.3,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.56,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-honesty-refusal-A02",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.43,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.1,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.89,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Vikings"
+     ],
+     "hits": [
+      {
+       "chunk": 421615,
+       "article": "Vikings",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 421701,
+       "article": "Vikings",
+       "p": 0.89,
+       "q": 0.89
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-A03",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.17,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.8,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Technology",
+      "Wheel"
+     ],
+     "hits": [
+      {
+       "chunk": 1581543,
+       "article": "Wheel",
+       "p": 0.8,
+       "q": 0.81
+      },
+      {
+       "chunk": 634522,
+       "article": "Technology",
+       "p": 0.76,
+       "q": 0.76
+      },
+      {
+       "chunk": 2788912,
+       "article": "Chariot",
+       "p": 0.64,
+       "q": 0.74
+      },
+      {
+       "chunk": 1581542,
+       "article": "Wheel",
+       "p": 0.7,
+       "q": 0.75
+      },
+      {
+       "chunk": 2788934,
+       "article": "Chariot",
+       "p": 0.68,
+       "q": 0.84
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-A04",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.6786,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.32,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.12,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.23,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-honesty-refusal-A05",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Elizabeth II"
+     ],
+     "hits": [
+      {
+       "chunk": 102856,
+       "article": "Elizabeth II",
+       "p": 0.95,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "European Research Group",
+      "Joy Morrissey",
+      "Julia Lopez (politician)",
+      "Rachel Maclean, Baroness Maclean of Redditch",
+      "September 2022 United Kingdom mini-budget"
+     ],
+     "hits": [
+      {
+       "chunk": 701155,
+       "article": "Rachel Maclean, Baroness Maclean of Redditch",
+       "p": 0.73,
+       "q": 0.73
+      },
+      {
+       "chunk": 728081,
+       "article": "Andrew Stephenson",
+       "p": 0.61,
+       "q": 0.61
+      },
+      {
+       "chunk": 1371689,
+       "article": "Byron Davies, Baron Davies of Gower",
+       "p": 0.6,
+       "q": 0.6
+      },
+      {
+       "chunk": 1362958,
+       "article": "Zac Goldsmith",
+       "p": 0.67,
+       "q": 0.67
+      },
+      {
+       "chunk": 838184,
+       "article": "Jake Berry",
+       "p": 0.61,
+       "q": 0.61
+      },
+      {
+       "chunk": 1273049,
+       "article": "September 2022 United Kingdom mini-budget",
+       "p": 0.86,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 30,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "2020s",
+      "2022",
+      "Balmoral Castle",
+      "Chris Philp",
+      "Death and state funeral of Elizabeth II",
+      "Jacob Rees-Mogg",
+      "List of prime ministers of the United Kingdom",
+      "Liz Truss"
+     ],
+     "hits": [
+      {
+       "chunk": 3266835,
+       "article": "Liz Truss",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 736518,
+       "article": "Chris Philp",
+       "p": 0.68,
+       "q": 0.68
+      },
+      {
+       "chunk": 1932622,
+       "article": "Kemi Badenoch",
+       "p": 0.62,
+       "q": 0.62
+      },
+      {
+       "chunk": 3266876,
+       "article": "Liz Truss",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 3266838,
+       "article": "Liz Truss",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 1099453,
+       "article": "Foreign Secretary (United Kingdom)",
+       "p": 0.64,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-A06",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Burj Khalifa",
+      "Taipei 101"
+     ],
+     "hits": [
+      {
+       "chunk": 47559,
+       "article": "Taipei 101",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 76526,
+       "article": "Burj Khalifa",
+       "p": 0.83,
+       "q": 0.83
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Timeline of architecture",
+      "Twin Towers 2"
+     ],
+     "hits": [
+      {
+       "chunk": 162176,
+       "article": "Timeline of architecture",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 1222857,
+       "article": "Twin Towers 2",
+       "p": 0.86,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 23,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "2000s",
+      "Alain Robert",
+      "Burj Khalifa",
+      "History of the world's tallest buildings",
+      "List of tallest buildings",
+      "Pagoda",
+      "Skyscraper",
+      "Taipei"
+     ],
+     "hits": [
+      {
+       "chunk": 2881083,
+       "article": "Taipei 101",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 2881096,
+       "article": "Taipei 101",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 3460926,
+       "article": "Skyscraper",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 2881095,
+       "article": "Taipei 101",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 513540,
+       "article": "2000s",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 38178,
+       "article": "History of the world's tallest buildings",
+       "p": 0.9,
+       "q": 0.9
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-B01",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Albert Einstein"
+     ],
+     "hits": [
+      {
+       "chunk": 153,
+       "article": "Albert Einstein",
+       "p": 0.95,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 22,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Einstein's thought experiments"
+     ],
+     "hits": [
+      {
+       "chunk": 1486261,
+       "article": "Einstein's thought experiments",
+       "p": 0.85,
+       "q": 0.85
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 32,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Albert Einstein",
+      "ETH Zurich",
+      "Electricity",
+      "List of Nobel laureates in Physics",
+      "Nobel Prize controversies",
+      "Photoelectric effect",
+      "Photon",
+      "Planck constant"
+     ],
+     "hits": [
+      {
+       "chunk": 3877553,
+       "article": "Nobel Prize controversies",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 586879,
+       "article": "Albert Einstein",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 2356546,
+       "article": "Planck constant",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 586795,
+       "article": "Albert Einstein",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 586775,
+       "article": "Albert Einstein",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 3447100,
+       "article": "Photoelectric effect",
+       "p": 0.92,
+       "q": 0.92
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-B02",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.1,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-honesty-refusal-B03",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8621,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Astana"
+     ],
+     "hits": [
+      {
+       "chunk": 27082,
+       "article": "Astana",
+       "p": 0.96,
+       "q": 0.96
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "2020 Nur-Sultan Challenger",
+      "AirPods",
+      "Astana",
+      "Astana-Nurly Zhol station",
+      "Nursultan Nazarbayev"
+     ],
+     "hits": [
+      {
+       "chunk": 1103931,
+       "article": "Astana",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 1587620,
+       "article": "Nursultan Nazarbayev",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 1103968,
+       "article": "Astana",
+       "p": 0.65,
+       "q": 0.65
+      },
+      {
+       "chunk": 136391,
+       "article": "Astana-Nurly Zhol station",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 1103937,
+       "article": "Astana",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 1103927,
+       "article": "Astana",
+       "p": 0.92,
+       "q": 0.92
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Astana",
+      "Central Asia",
+      "Kassym-Jomart Tokayev",
+      "Kazakhstan",
+      "List of countries whose capital is not their largest city",
+      "Nursultan Nazarbayev"
+     ],
+     "hits": [
+      {
+       "chunk": 2090325,
+       "article": "Astana",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 1467988,
+       "article": "Nursultan Nazarbayev",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 2090362,
+       "article": "Astana",
+       "p": 0.69,
+       "q": 0.69
+      },
+      {
+       "chunk": 3265916,
+       "article": "Kassym-Jomart Tokayev",
+       "p": 0.86,
+       "q": 0.86
+      },
+      {
+       "chunk": 3361027,
+       "article": "Central Asia",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 2593678,
+       "article": "List of countries whose capital is not their largest city",
+       "p": 0.93,
+       "q": 0.93
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-B04",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.7,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.15,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.58,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-honesty-refusal-B05",
+   "category": "honesty-refusal",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bras\u00edlia"
+     ],
+     "hits": [
+      {
+       "chunk": 2327,
+       "article": "Bras\u00edlia",
+       "p": 0.94,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.13,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 24,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bras\u00edlia"
+     ],
+     "hits": [
+      {
+       "chunk": 724644,
+       "article": "Bras\u00edlia",
+       "p": 0.94,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 23,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bras\u00edlia",
+      "Rio de Janeiro"
+     ],
+     "hits": [
+      {
+       "chunk": 2894258,
+       "article": "Rio de Janeiro",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2021508,
+       "article": "Bras\u00edlia",
+       "p": 0.92,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-honesty-refusal-B06",
+   "category": "honesty-refusal",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.94,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Ban Ki-moon",
+      "Paris Agreement",
+      "Pre-industrial society"
+     ],
+     "hits": [
+      {
+       "chunk": 91148,
+       "article": "Ban Ki-moon",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 111137,
+       "article": "Paris Agreement",
+       "p": 0.83,
+       "q": 0.83
+      },
+      {
+       "chunk": 91149,
+       "article": "Ban Ki-moon",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 91150,
+       "article": "Ban Ki-moon",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 96110,
+       "article": "Pre-industrial society",
+       "p": 0.89,
+       "q": 0.89
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.45,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "United Nations Security Council Resolution 1715"
+     ],
+     "hits": [
+      {
+       "chunk": 9639,
+       "article": "United Nations Security Council Resolution 1715",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 654259,
+       "article": "Jan Eliasson",
+       "p": 0.61,
+       "q": 0.61
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 22,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Ban Ki-moon",
+      "Paris Agreement",
+      "South Korea",
+      "United Nations Climate Change Conference"
+     ],
+     "hits": [
+      {
+       "chunk": 3289250,
+       "article": "United Nations Climate Change Conference",
+       "p": 0.91,
+       "q": 0.91
+      },
+      {
+       "chunk": 1111077,
+       "article": "Ban Ki-moon",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 3813553,
+       "article": "Paris Agreement",
+       "p": 0.84,
+       "q": 0.84
+      },
+      {
+       "chunk": 1111109,
+       "article": "Ban Ki-moon",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 1111078,
+       "article": "Ban Ki-moon",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 1111079,
+       "article": "Ban Ki-moon",
+       "p": 0.89,
+       "q": 0.89
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-A01",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 1.0,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Earth's orbit",
+      "Sun"
+     ],
+     "hits": [
+      {
+       "chunk": 14806,
+       "article": "Sun",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 77898,
+       "article": "Earth's orbit",
+       "p": 0.95,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 22,
+     "max_p": 0.55,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Earth",
+      "List of numbers",
+      "Speed of light",
+      "Sun"
+     ],
+     "hits": [
+      {
+       "chunk": 1400061,
+       "article": "Sun",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 856889,
+       "article": "Earth",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 2868476,
+       "article": "Speed of light",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2868494,
+       "article": "Speed of light",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 523704,
+       "article": "List of numbers",
+       "p": 0.83,
+       "q": 0.83
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-A02",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.43,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A03",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.37,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.36,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.34,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.4,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A04",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.22,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.34,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A05",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.7667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.61,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 99306,
+       "article": "System time",
+       "p": 0.61,
+       "q": 0.61
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.9,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "1,000,000,000"
+     ],
+     "hits": [
+      {
+       "chunk": 3701645,
+       "article": "1,000,000,000",
+       "p": 0.9,
+       "q": 0.9
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-A06",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.3333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.18,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.21,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A07",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 35,
+     "max_p": 0.62,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 98822,
+       "article": "Monty Hall problem",
+       "p": 0.62,
+       "q": 0.7
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 33,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 40,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 40,
+     "max_p": 0.61,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1394914,
+       "article": "Monty Hall problem",
+       "p": 0.61,
+       "q": 0.64
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A08",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.4667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-A09",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.92,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Apollo program",
+      "Exploration of the Moon",
+      "Great Pyramid of Giza",
+      "Moon landing"
+     ],
+     "hits": [
+      {
+       "chunk": 85921,
+       "article": "Moon landing",
+       "p": 0.91,
+       "q": 0.91
+      },
+      {
+       "chunk": 96648,
+       "article": "Exploration of the Moon",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 641,
+       "article": "Apollo program",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 642,
+       "article": "Apollo program",
+       "p": 0.92,
+       "q": 0.92
+      },
+      {
+       "chunk": 6482,
+       "article": "Great Pyramid of Giza",
+       "p": 0.91,
+       "q": 0.91
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.85,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Timeline of ancient history"
+     ],
+     "hits": [
+      {
+       "chunk": 915656,
+       "article": "Timeline of ancient history",
+       "p": 0.85,
+       "q": 0.85
+      },
+      {
+       "chunk": 432796,
+       "article": "Apollo: Atmospheres and Soundtracks",
+       "p": 0.6,
+       "q": 0.6
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Giza pyramid complex",
+      "List of oldest extant buildings",
+      "Moon",
+      "Timeline of religion"
+     ],
+     "hits": [
+      {
+       "chunk": 778992,
+       "article": "List of oldest extant buildings",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 712900,
+       "article": "Timeline of religion",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 2272343,
+       "article": "Giza pyramid complex",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 234317,
+       "article": "Moon",
+       "p": 0.9,
+       "q": 0.9
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-A10",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Aristarchus of Samos",
+      "Solar radius",
+      "Sun"
+     ],
+     "hits": [
+      {
+       "chunk": 14806,
+       "article": "Sun",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 32207,
+       "article": "Aristarchus of Samos",
+       "p": 0.91,
+       "q": 0.91
+      },
+      {
+       "chunk": 69708,
+       "article": "Solar radius",
+       "p": 0.95,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.95,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Eratosthenes"
+     ],
+     "hits": [
+      {
+       "chunk": 253728,
+       "article": "Eratosthenes",
+       "p": 0.95,
+       "q": 0.95
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B01",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.12,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.07,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.15,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.74,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Horizon"
+     ],
+     "hits": [
+      {
+       "chunk": 1647431,
+       "article": "Horizon",
+       "p": 0.74,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B02",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.77,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 58360,
+       "article": "International Date Line",
+       "p": 0.77,
+       "q": 0.25
+      },
+      {
+       "chunk": 9607,
+       "article": "Line Islands",
+       "p": 0.61,
+       "q": 0.34
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 29,
+     "max_p": 0.22,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 34,
+     "max_p": 0.74,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 2459451,
+       "article": "International Date Line",
+       "p": 0.74,
+       "q": 0.52
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-B03",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.4643,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.3,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.74,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 289821,
+       "article": "Mercator projection",
+       "p": 0.66,
+       "q": 0.37
+      },
+      {
+       "chunk": 289822,
+       "article": "Mercator projection",
+       "p": 0.74,
+       "q": 0.49
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-B04",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.42,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.14,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.69,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 3984684,
+       "article": "Birthday problem",
+       "p": 0.69,
+       "q": 0.77
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-B05",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.8,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.91,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Compound interest"
+     ],
+     "hits": [
+      {
+       "chunk": 1096037,
+       "article": "Compound interest",
+       "p": 0.91,
+       "q": 0.91
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 25,
+     "max_p": 0.91,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Compound interest"
+     ],
+     "hits": [
+      {
+       "chunk": 2088770,
+       "article": "Compound interest",
+       "p": 0.91,
+       "q": 0.91
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B06",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.7667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.6,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 60658,
+       "article": "Mediterranean climate",
+       "p": 0.6,
+       "q": 0.6
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.45,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.38,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.79,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Lazio",
+      "Vatican City"
+     ],
+     "hits": [
+      {
+       "chunk": 2610981,
+       "article": "Lazio",
+       "p": 0.79,
+       "q": 0.79
+      },
+      {
+       "chunk": 2812211,
+       "article": "Vatican City",
+       "p": 0.72,
+       "q": 0.72
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B07",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.4667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.05,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.68,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 1421202,
+       "article": "Leap year",
+       "p": 0.68,
+       "q": 0.59
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.86,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Friday the 13th"
+     ],
+     "hits": [
+      {
+       "chunk": 394959,
+       "article": "Friday the 13th",
+       "p": 0.86,
+       "q": 0.84
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B08",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.7857,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.96,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Gregorian calendar",
+      "Leap year"
+     ],
+     "hits": [
+      {
+       "chunk": 108741,
+       "article": "Gregorian calendar",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 9702,
+       "article": "Leap year",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 108740,
+       "article": "Gregorian calendar",
+       "p": 0.69,
+       "q": 0.69
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.08,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 21,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Leap year"
+     ],
+     "hits": [
+      {
+       "chunk": 1421201,
+       "article": "Leap year",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 1421202,
+       "article": "Leap year",
+       "p": 0.94,
+       "q": 0.94
+      },
+      {
+       "chunk": 1257864,
+       "article": "Year",
+       "p": 0.66,
+       "q": 0.66
+      },
+      {
+       "chunk": 1421197,
+       "article": "Leap year",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 1421217,
+       "article": "Leap year",
+       "p": 0.74,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 21,
+     "max_p": 0.97,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "1796 United States presidential election",
+      "2000",
+      "Ethiopian calendar",
+      "Gregorian calendar",
+      "Japanese calendar",
+      "Julian calendar",
+      "Leap year",
+      "Year"
+     ],
+     "hits": [
+      {
+       "chunk": 2176356,
+       "article": "Leap year",
+       "p": 0.97,
+       "q": 0.97
+      },
+      {
+       "chunk": 201803,
+       "article": "Gregorian calendar",
+       "p": 0.96,
+       "q": 0.96
+      },
+      {
+       "chunk": 2176357,
+       "article": "Leap year",
+       "p": 0.95,
+       "q": 0.95
+      },
+      {
+       "chunk": 94084,
+       "article": "Ethiopian calendar",
+       "p": 0.88,
+       "q": 0.88
+      },
+      {
+       "chunk": 201848,
+       "article": "Gregorian calendar",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 1568552,
+       "article": "Year 2000 problem",
+       "p": 0.94,
+       "q": 0.94
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B09",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.2143,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.92,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Cyclone"
+     ],
+     "hits": [
+      {
+       "chunk": 4063,
+       "article": "Coriolis force",
+       "p": 0.77,
+       "q": 0.42
+      },
+      {
+       "chunk": 98380,
+       "article": "Ekman transport",
+       "p": 0.62,
+       "q": 0.25
+      },
+      {
+       "chunk": 4061,
+       "article": "Coriolis force",
+       "p": 0.63,
+       "q": 0.31
+      },
+      {
+       "chunk": 21211,
+       "article": "Cyclone",
+       "p": 0.92,
+       "q": 0.77
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Tropical cyclone"
+     ],
+     "hits": [
+      {
+       "chunk": 13054,
+       "article": "Tornado",
+       "p": 0.83,
+       "q": 0.61
+      },
+      {
+       "chunk": 13276,
+       "article": "Tropical cyclone",
+       "p": 0.88,
+       "q": 0.72
+      }
+     ],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.84,
+     "f0": false,
+     "f0_loose": true,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 504872,
+       "article": "Extratropical cyclone",
+       "p": 0.84,
+       "q": 0.59
+      },
+      {
+       "chunk": 58500,
+       "article": "Positive vorticity advection",
+       "p": 0.72,
+       "q": 0.4
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.91,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Cyclone"
+     ],
+     "hits": [
+      {
+       "chunk": 2695897,
+       "article": "Tornado",
+       "p": 0.85,
+       "q": 0.58
+      },
+      {
+       "chunk": 3789817,
+       "article": "Cyclone",
+       "p": 0.91,
+       "q": 0.55
+      },
+      {
+       "chunk": 1978380,
+       "article": "Coriolis force",
+       "p": 0.88,
+       "q": 0.44
+      },
+      {
+       "chunk": 1869070,
+       "article": "Tropical cyclone",
+       "p": 0.87,
+       "q": 0.62
+      },
+      {
+       "chunk": 3789832,
+       "article": "Cyclone",
+       "p": 0.63,
+       "q": 0.42
+      },
+      {
+       "chunk": 1978357,
+       "article": "Coriolis force",
+       "p": 0.61,
+       "q": 0.41
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-reasoning-B10",
+   "category": "reasoning",
+   "mode": "answer-support",
+   "ratio": 0.8667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.21,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-reasoning-B11",
+   "category": "reasoning",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.3,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 40,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 40,
+     "max_p": 0.48,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-synthesis-A01",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.7333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.29,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.13,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.82,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Aral Sea"
+     ],
+     "hits": [
+      {
+       "chunk": 1684139,
+       "article": "Aral Sea",
+       "p": 0.82,
+       "q": 0.85
+      },
+      {
+       "chunk": 1684121,
+       "article": "Aral Sea",
+       "p": 0.68,
+       "q": 0.37
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-synthesis-A02",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.5,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.1,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.14,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.5,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-synthesis-A03",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.54,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.24,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.45,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.6,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 3835667,
+       "article": "Maya civilization",
+       "p": 0.6,
+       "q": 0.5
+      },
+      {
+       "chunk": 3835651,
+       "article": "Maya civilization",
+       "p": 0.6,
+       "q": 0.66
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-synthesis-B01",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.56,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.65,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 915665,
+       "article": "Timeline of ancient history",
+       "p": 0.65,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.76,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Christianity as the Roman state religion",
+      "Timeline of ancient history"
+     ],
+     "hits": [
+      {
+       "chunk": 2051545,
+       "article": "Timeline of ancient history",
+       "p": 0.72,
+       "q": 0.79
+      },
+      {
+       "chunk": 1351639,
+       "article": "Roman Empire",
+       "p": 0.68,
+       "q": 0.8
+      },
+      {
+       "chunk": 1351648,
+       "article": "Roman Empire",
+       "p": 0.61,
+       "q": 0.71
+      },
+      {
+       "chunk": 3641246,
+       "article": "Christianity as the Roman state religion",
+       "p": 0.76,
+       "q": 0.78
+      },
+      {
+       "chunk": 3641266,
+       "article": "Christianity as the Roman state religion",
+       "p": 0.71,
+       "q": 0.74
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-synthesis-B02",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.67,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 39394,
+       "article": "Mount Tambora",
+       "p": 0.64,
+       "q": 0.76
+      },
+      {
+       "chunk": 110842,
+       "article": "1815 eruption of Mount Tambora",
+       "p": 0.67,
+       "q": 0.82
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.02,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.65,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 592075,
+       "article": "1815",
+       "p": 0.65,
+       "q": 0.82
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.88,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "1815 eruption of Mount Tambora",
+      "Stratovolcano",
+      "Year Without a Summer"
+     ],
+     "hits": [
+      {
+       "chunk": 2840440,
+       "article": "1815 eruption of Mount Tambora",
+       "p": 0.71,
+       "q": 0.52
+      },
+      {
+       "chunk": 2840444,
+       "article": "1815 eruption of Mount Tambora",
+       "p": 0.64,
+       "q": 0.53
+      },
+      {
+       "chunk": 1217859,
+       "article": "Year Without a Summer",
+       "p": 0.88,
+       "q": 0.84
+      },
+      {
+       "chunk": 3830965,
+       "article": "Stratovolcano",
+       "p": 0.85,
+       "q": 0.87
+      },
+      {
+       "chunk": 810336,
+       "article": "Mount Tambora",
+       "p": 0.69,
+       "q": 0.58
+      },
+      {
+       "chunk": 2840426,
+       "article": "1815 eruption of Mount Tambora",
+       "p": 0.72,
+       "q": 0.82
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-synthesis-B03",
+   "category": "synthesis",
+   "mode": "missing-fact",
+   "ratio": 0.6538,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.86,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Bridgewater Canal",
+      "George Stephenson",
+      "Manchester Ship Canal"
+     ],
+     "hits": [
+      {
+       "chunk": 46132,
+       "article": "Manchester Ship Canal",
+       "p": 0.8,
+       "q": 0.78
+      },
+      {
+       "chunk": 57871,
+       "article": "Bridgewater Canal",
+       "p": 0.84,
+       "q": 0.82
+      },
+      {
+       "chunk": 57873,
+       "article": "Bridgewater Canal",
+       "p": 0.63,
+       "q": 0.37
+      },
+      {
+       "chunk": 46131,
+       "article": "Manchester Ship Canal",
+       "p": 0.66,
+       "q": 0.46
+      },
+      {
+       "chunk": 57872,
+       "article": "Bridgewater Canal",
+       "p": 0.75,
+       "q": 0.52
+      },
+      {
+       "chunk": 6729,
+       "article": "George Stephenson",
+       "p": 0.86,
+       "q": 0.9
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.04,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.9,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Cottonopolis",
+      "History of Liverpool",
+      "Salford",
+      "Warehouse"
+     ],
+     "hits": [
+      {
+       "chunk": 261062,
+       "article": "Cottonopolis",
+       "p": 0.69,
+       "q": 0.66
+      },
+      {
+       "chunk": 261061,
+       "article": "Cottonopolis",
+       "p": 0.69,
+       "q": 0.79
+      },
+      {
+       "chunk": 261063,
+       "article": "Cottonopolis",
+       "p": 0.8,
+       "q": 0.81
+      },
+      {
+       "chunk": 1390278,
+       "article": "Salford",
+       "p": 0.87,
+       "q": 0.86
+      },
+      {
+       "chunk": 1271064,
+       "article": "Lancashire",
+       "p": 0.63,
+       "q": 0.5
+      },
+      {
+       "chunk": 548945,
+       "article": "Listed buildings in Manchester-M3",
+       "p": 0.68,
+       "q": 0.37
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.89,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Cheshire",
+      "History of rail transport",
+      "Industrial Revolution",
+      "Manchester",
+      "North West England",
+      "Salford",
+      "Steam engine"
+     ],
+     "hits": [
+      {
+       "chunk": 2487159,
+       "article": "North West England",
+       "p": 0.78,
+       "q": 0.78
+      },
+      {
+       "chunk": 3781407,
+       "article": "Industrial Revolution",
+       "p": 0.72,
+       "q": 0.71
+      },
+      {
+       "chunk": 1684675,
+       "article": "Intermodal container",
+       "p": 0.6,
+       "q": 0.7
+      },
+      {
+       "chunk": 2168136,
+       "article": "Salford",
+       "p": 0.7,
+       "q": 0.79
+      },
+      {
+       "chunk": 584385,
+       "article": "Liverpool F.C.\u2013Manchester United F.C. rivalry",
+       "p": 0.73,
+       "q": 0.69
+      },
+      {
+       "chunk": 912974,
+       "article": "History of rail transport",
+       "p": 0.7,
+       "q": 0.71
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-travel-local-A01",
+   "category": "travel-local",
+   "mode": "missing-fact",
+   "ratio": 0.4,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.67,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 3725124,
+       "article": "Machu Picchu",
+       "p": 0.67,
+       "q": 0.73
+      },
+      {
+       "chunk": 3725123,
+       "article": "Machu Picchu",
+       "p": 0.62,
+       "q": 0.71
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-travel-local-B01",
+   "category": "travel-local",
+   "mode": "missing-fact",
+   "ratio": 0.5333,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.46,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.41,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.51,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.62,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 176156,
+       "article": "Adriatic Sea",
+       "p": 0.62,
+       "q": 0.53
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-travel-practical-A01",
+   "category": "travel-practical",
+   "mode": "missing-fact",
+   "ratio": 0.5,
+   "p1_F0": false,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.09,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.16,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.13,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.14,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  },
+  {
+   "id": "v02-travel-practical-A02",
+   "category": "travel-practical",
+   "mode": "answer-support",
+   "ratio": 0.75,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.26,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.03,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Visa requirements for Venezuelan citizens"
+     ],
+     "hits": [
+      {
+       "chunk": 891333,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.93,
+       "q": 0.93
+      },
+      {
+       "chunk": 891340,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 891349,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.89,
+       "q": 0.89
+      },
+      {
+       "chunk": 891366,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 891370,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.9,
+       "q": 0.9
+      },
+      {
+       "chunk": 891379,
+       "article": "Visa requirements for Venezuelan citizens",
+       "p": 0.89,
+       "q": 0.89
+      }
+     ],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 28,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Schengen Area",
+      "Visa policy of mainland China",
+      "Visa policy of the Schengen Area",
+      "Visa requirements for Singapore citizens",
+      "Visa requirements for United States citizens"
+     ],
+     "hits": [
+      {
+       "chunk": 2545361,
+       "article": "Visa policy of the Schengen Area",
+       "p": 0.64,
+       "q": 0.64
+      },
+      {
+       "chunk": 3054306,
+       "article": "Visa requirements for United States citizens",
+       "p": 0.87,
+       "q": 0.87
+      },
+      {
+       "chunk": 2545363,
+       "article": "Visa policy of the Schengen Area",
+       "p": 0.81,
+       "q": 0.81
+      },
+      {
+       "chunk": 664369,
+       "article": "Visa requirements for Singapore citizens",
+       "p": 0.86,
+       "q": 0.86
+      },
+      {
+       "chunk": 2545502,
+       "article": "Visa policy of the Schengen Area",
+       "p": 0.82,
+       "q": 0.82
+      },
+      {
+       "chunk": 664378,
+       "article": "Visa requirements for Singapore citizens",
+       "p": 0.86,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-travel-practical-B01",
+   "category": "travel-practical",
+   "mode": "missing-fact",
+   "ratio": 0.6667,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.67,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 68076,
+       "article": "Utility frequency",
+       "p": 0.67,
+       "q": 0.6
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.06,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 28,
+     "max_p": 0.42,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 36,
+     "max_p": 0.93,
+     "f0": true,
+     "f0_loose": true,
+     "hit_articles": [
+      "Mains electricity by country"
+     ],
+     "hits": [
+      {
+       "chunk": 2488972,
+       "article": "Mains electricity by country",
+       "p": 0.69,
+       "q": 0.69
+      },
+      {
+       "chunk": 2488983,
+       "article": "Mains electricity by country",
+       "p": 0.72,
+       "q": 0.73
+      },
+      {
+       "chunk": 2488990,
+       "article": "Mains electricity by country",
+       "p": 0.74,
+       "q": 0.56
+      },
+      {
+       "chunk": 2489075,
+       "article": "Mains electricity by country",
+       "p": 0.67,
+       "q": 0.52
+      },
+      {
+       "chunk": 2489048,
+       "article": "Mains electricity by country",
+       "p": 0.93,
+       "q": 0.86
+      }
+     ],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": true
+  },
+  {
+   "id": "v02-travel-practical-B02",
+   "category": "travel-practical",
+   "mode": "missing-fact",
+   "ratio": 0.6,
+   "p1_F0": true,
+   "packs": {
+    "vital5": {
+     "n_chunks": 20,
+     "max_p": 0.61,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [
+      {
+       "chunk": 46698,
+       "article": "Madrid Metro",
+       "p": 0.61,
+       "q": 0.27
+      }
+     ],
+     "budget_truncated": false
+    },
+    "prep": {
+     "n_chunks": 20,
+     "max_p": 0.11,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "shard07": {
+     "n_chunks": 20,
+     "max_p": 0.4,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    },
+    "top100k": {
+     "n_chunks": 20,
+     "max_p": 0.55,
+     "f0": false,
+     "f0_loose": false,
+     "hit_articles": [],
+     "hits": [],
+     "budget_truncated": false
+    }
+   },
+   "F0_any": false
+  }
+ ],
+ "replay_f1f2": {
+  "top2": [
+   "top100k",
+   "shard07"
+  ],
+  "k": 6,
+  "pool": 20,
+  "tree": "wt/cut7",
+  "gate": "rules",
+  "kit": "crypto+wikivoyage+pack",
+  "result": {
+   "top100k": {
+    "n_covered": 47,
+    "n_covered_gate": 47,
+    "F1_raw": 28,
+    "F2_kept": 23,
+    "F1_pool20": 31,
+    "kept_slots": 102,
+    "pack_attributed_kept_slots": 100,
+    "pack_share_of_kept": 0.98,
+    "base_replay_attributed_slots": 32,
+    "items": [
+     {
+      "id": "v02-comparison-A03",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-comparison-A04",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-comparison-A05",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-comparison-A07",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-comparison-B03",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 5,
+      "n_kept": 5
+     },
+     {
+      "id": "v02-comparison-B04",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-crypto-A06",
+      "category": "crypto",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-crypto-B01",
+      "category": "crypto",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-crypto-B07",
+      "category": "crypto",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-danger-A01",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-danger-A02",
+      "category": "danger",
+      "retrieved": false,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-danger-A03",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-danger-B02",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-explanation-A02",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-explanation-A04",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-explanation-A07",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 0,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-explanation-A08",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-explanation-A09",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-explanation-A10",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-explanation-B01",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-explanation-B02",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-explanation-B06",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-health-B01",
+      "category": "health",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-honesty-refusal-A02",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-honesty-refusal-A03",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-honesty-refusal-A05",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-honesty-refusal-A06",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-honesty-refusal-B01",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 6,
+      "n_kept": 6
+     },
+     {
+      "id": "v02-honesty-refusal-B03",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-honesty-refusal-B05",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-honesty-refusal-B06",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-reasoning-A01",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-reasoning-A05",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-reasoning-A09",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-reasoning-A10",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-reasoning-B01",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-reasoning-B05",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-reasoning-B06",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-reasoning-B07",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-reasoning-B08",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-reasoning-B09",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 1,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-synthesis-A01",
+      "category": "synthesis",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-synthesis-B01",
+      "category": "synthesis",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-synthesis-B02",
+      "category": "synthesis",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-synthesis-B03",
+      "category": "synthesis",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-travel-practical-A02",
+      "category": "travel-practical",
+      "retrieved": false,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-travel-practical-B01",
+      "category": "travel-practical",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     }
+    ]
+   },
+   "shard07": {
+    "n_covered": 24,
+    "n_covered_gate": 24,
+    "F1_raw": 9,
+    "F2_kept": 5,
+    "F1_pool20": 11,
+    "kept_slots": 54,
+    "pack_attributed_kept_slots": 25,
+    "pack_share_of_kept": 0.463,
+    "base_replay_attributed_slots": 3,
+    "items": [
+     {
+      "id": "v02-comparison-A04",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 0,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-comparison-A07",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 1,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-comparison-B03",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-comparison-B04",
+      "category": "comparison",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-crypto-A06",
+      "category": "crypto",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-crypto-B07",
+      "category": "crypto",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-danger-A01",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-danger-B01",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-danger-B02",
+      "category": "danger",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-explanation-A08",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-explanation-A09",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-explanation-B01",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-explanation-B07",
+      "category": "explanation",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 5
+     },
+     {
+      "id": "v02-honesty-refusal-A05",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-honesty-refusal-A06",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 4,
+      "n_kept": 5
+     },
+     {
+      "id": "v02-honesty-refusal-B01",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-honesty-refusal-B03",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 0,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-honesty-refusal-B05",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": false,
+      "F1_pool20": true,
+      "pack_kept_slots": 0,
+      "n_kept": 1
+     },
+     {
+      "id": "v02-honesty-refusal-B06",
+      "category": "honesty-refusal",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-reasoning-A09",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     },
+     {
+      "id": "v02-reasoning-B05",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 2,
+      "n_kept": 2
+     },
+     {
+      "id": "v02-reasoning-B08",
+      "category": "reasoning",
+      "retrieved": true,
+      "F1_raw": true,
+      "F2_kept": true,
+      "F1_pool20": true,
+      "pack_kept_slots": 3,
+      "n_kept": 3
+     },
+     {
+      "id": "v02-synthesis-B03",
+      "category": "synthesis",
+      "retrieved": true,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 4
+     },
+     {
+      "id": "v02-travel-practical-A02",
+      "category": "travel-practical",
+      "retrieved": false,
+      "F1_raw": false,
+      "F2_kept": false,
+      "F1_pool20": false,
+      "pack_kept_slots": 0,
+      "n_kept": 0
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,37 @@
+<|im_start|>system
+You are Boar, a concise offline research assistant. Answer in 2-3 short, direct sentences or a brief paragraph, no preamble. Do not default to a bulleted list or a single takeaway sentence followed by three bullet points — use bullets only when the content is genuinely a list of distinct items. Use the context below when relevant, and cite a source you used by its number, like [1] or [2]. If the context doesn't cover the question, say so and answer from general knowledge. You are BOAR, an offline AI research app running on this phone; "Boar" is the app's name, never the animal, so never describe yourself as one. You have no ability to control real-world devices or take physical actions — no alarms, lights, thermostats, timers, or any other device or system. You can only respond with text. Treat greetings and casual small talk conversationally and briefly, not as a command or task. Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you don't actually have the ability to do.
+
+Context:
+[1] Ethereum EIPs/ERCs: EIP-7594: PeerDAS - Peer Data Availability Sampling
+Abstract: PeerDAS (Peer Data Availability Sampling) is a networking protocol that allows nodes to perform data availability sampling (DAS) to ensure that blob data has been made available while downloading only a subset of the data.
+
+[2] Ethereum EIPs/ERCs: EIP-7594: PeerDAS - Peer Data Availability Sampling
+Rationale > Why use DAS to scale the DA layer?: PeerDAS is a DAS scheme that requires nodes to only download a small constant fraction of the data to satisfy a local availability check. In this way, PeerDAS allows for securely scaling the blob throughput of the network without compromising decentralization, i.e., without increasing node's bandwidth and storage requirements.
+
+[3] ethereum.org: PeerDAS
+Data availability sampling: A different approach to storing the data and ensure its availability is **data availability sampling (DAS)**. Blobs are divided into pieces and each node only downloads a few pieces using a mechanism for uniform random distribution across all nodes. This is where cryptography comes to help.
+
+[4] ethereum.org: PeerDAS
+Proto-Danksharding: The first major step towards scaling L2 was the Dencun upgrade, which introduced Proto-Danksharding (EIP-4844). In the current protocol, every node in the network still needs to download every blob.
+
+[5] ethereum.org: PeerDAS
+PeerDAS: PeerDAS (EIP-7594) is a specific proposal that implements the DAS mechanism in Ethereum, marking probably the biggest upgrade since The Merge.<|im_end|>
+<|im_start|>user
+What is PeerDAS, and how can a node check that blob data is available without downloading all of it?
+
+(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+PeerDAS (EIP-7594) is a networking protocol that enables nodes to perform data availability sampling, ensuring blob data is accessible while downloading only a small subset [1]. It achieves this by dividing blobs into pieces and using cryptographic mechanisms for uniform random distribution, allowing each node to verify availability by checking
+
+generation: 64 tokens, 0.117 s/token (8.579 tok/s)
+compute: 60.4% CPU occupancy (0.2814 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 650 tokens, 21.304 s (30.5 tok/s) | model load 8.918 s | TTFT 30.222 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 7057.8 MiB (110.28 MiB/token), decode 0.117 s/token (compute 0.060 + cache mgmt 0.003 + flash I/O 0.234 s/token, 472 MiB/s)
+moe-cache: 38.5% hit, resident 1499.4 MiB
+moe-cache: 19798 evictions, 12998 re-reads (203.1/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.054 s/token (flash reads overlapped with FFN compute)

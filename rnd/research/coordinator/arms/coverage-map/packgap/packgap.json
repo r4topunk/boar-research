@@ -1,0 +1,976 @@
+{
+ "task": "PACK-GAP 2026-10-23",
+ "method": "0 LLM/judge/paid/phone. 50 = MAIN 92 keyed minus the 42 chunk-level delivered under SEFIX-124 (sefix/chunklevel-124.json arm 'sefix F1F2F4'). Class by FTS probe (packgap/probe.py, probes.json: FTS query + regex that must all hit one chunk) over 15 packs on the MacBook + grep of the Vitalik blog source jsonl (copied from the mini work dir) + COVERAGE-MAP rows. Expected delivered facts = items x 0.54 (PACKPROOF kept) x 0.65 (read right when kept).",
+ "classes": {
+  "a": "fact in a permitted text not installed (built-but-uninstalled or unbuilt)",
+  "b": "fact only in a text outside PD/CC0/CC BY/CC BY-SA",
+  "c": "fact in a K13 pack, not delivered (search)",
+  "d": "not coverable as a stated fact",
+  "e": "unknown"
+ },
+ "counts": {
+  "c": 44,
+  "b": 2,
+  "a": 3,
+  "d": 1
+ },
+ "counts_v01": {
+  "a": 3,
+  "b": 2,
+  "c": 18,
+  "d": 1,
+  "e": 0
+ },
+ "cv5": {
+  "n": 51,
+  "delivered_124": 28,
+  "unkeyed": [
+   "trv-002",
+   "trv-004",
+   "dng-005"
+  ],
+  "undelivered_by_class": {
+   "c": 16,
+   "b": 1,
+   "a": 3
+  }
+ },
+ "packs": [
+  {
+   "id": "boar-philosophy-en (new)",
+   "corpus": "English Wikipedia philosophy subset (WikiProject Philosophy / Chinese philosophy titles) cut from the 15 FineWiki shards",
+   "licence": "CC BY-SA 4.0 (standing OK)",
+   "size": "est. 15-25k articles, 150-300 MB (UNKNOWN until the title list exists)",
+   "effort_h": "4-6 (title list needs a categorylinks/PetScan download; 18 GB shard pass one at a time as in B3 ~1 h; filter + builder + embeddings ~1-2 h; card/self-test/probes ~1 h)",
+   "items": [
+    "vit-hum-002",
+    "vit-hum-003",
+    "vit-hum-006"
+   ],
+   "licence_ok_needed": false,
+   "n_items": 3,
+   "expected_raw": 1.05,
+   "expected": 1,
+   "worth": false
+  },
+  {
+   "id": "boar-vitalik-blog-en (built)",
+   "corpus": "vitalik.eth.limo, 166 posts (wave4)",
+   "licence": "WTFPL (outside the list: needs r4to)",
+   "size": "8.8 MB",
+   "effort_h": "0 build; ~0.5 card fix (Chinese posts) + install",
+   "items": [
+    "vit-cry-007",
+    "vit-trv-004"
+   ],
+   "licence_ok_needed": true,
+   "note": "also enriches vit-cry-005 (c)",
+   "n_items": 2,
+   "expected_raw": 0.7,
+   "expected": 1,
+   "worth": false
+  },
+  {
+   "id": "full English Wikipedia (15 shards)",
+   "corpus": "FineWiki enwiki, published wiki/en",
+   "licence": "CC BY-SA 4.0 (standing OK)",
+   "size": "~18 GB",
+   "effort_h": "0 build (published); install measured in B3: coverage without delivery, 22-37 pct slots per shard",
+   "items": [
+    "vit-hum-002",
+    "vit-hum-003",
+    "vit-hum-006"
+   ],
+   "licence_ok_needed": false,
+   "note": "same 3 items as the philosophy subset, with crowding",
+   "n_items": 3,
+   "expected_raw": 1.05,
+   "expected": 1,
+   "worth": false
+  },
+  {
+   "id": "boar-wiki-en-top100k (built)",
+   "corpus": "enwiki top 100k",
+   "licence": "CC BY-SA 4.0",
+   "size": "2.54 GB",
+   "effort_h": "0 build; crowds (DEEPWIKI -0.034; K3W +7/-5)",
+   "items": [
+    "vit-hum-003",
+    "vit-hum-006"
+   ],
+   "licence_ok_needed": false,
+   "note": "partial for hum-003; also states vit-sci-002 336/km2 (already class c)",
+   "n_items": 2,
+   "expected_raw": 0.7,
+   "expected": 1,
+   "worth": false
+  },
+  {
+   "id": "gutenberg-on-liberty (new, tiny)",
+   "corpus": "Project Gutenberg PD philosophy classics (On Liberty etc.)",
+   "licence": "PD (standing OK; strip the Gutenberg trademark header)",
+   "size": "< 5 MB",
+   "effort_h": "1-2 (pdf/txt converter path exists)",
+   "items": [
+    "vit-hum-006"
+   ],
+   "licence_ok_needed": false,
+   "n_items": 1,
+   "expected_raw": 0.35,
+   "expected": 0,
+   "worth": false
+  }
+ ],
+ "items": {
+  "vit-hum-001": {
+   "cls": "c",
+   "topic": "Mozi universal love",
+   "domain": "humanities",
+   "evidence": "wiki-vital5 'Mozi' intro states universal love (K13); fuller jian ai / benefit text in top100k 'Mohism' and full enwiki 'Mozi'",
+   "source": "enwiki CC BY-SA",
+   "in_cv5": true,
+   "nkept_124": 4,
+   "probe_hits": {
+    "wiki-vital5": {
+     "chunk": 46570,
+     "title": "Mozi"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 636962,
+     "title": "Meaning of life"
+    }
+   }
+  },
+  "lan-ref-001": {
+   "cls": "c",
+   "topic": "2017 literature Nobel",
+   "domain": "humanities",
+   "evidence": "simplewiki + vital5 'Kazuo Ishiguro' (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-simplewiki-en": {
+     "chunk": 246536,
+     "title": "Kazuo Ishiguro"
+    },
+    "wiki-vital5": {
+     "chunk": 33723,
+     "title": "Kazuo Ishiguro"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 777736,
+     "title": "Kazuo Ishiguro"
+    }
+   }
+  },
+  "vit-cry-007": {
+   "cls": "b",
+   "topic": "what is d/acc",
+   "domain": "crypto",
+   "evidence": "only in Vitalik blog (techno-optimism / d/acc posts; verified on the source jsonl); 0 hits in the 15 packs on disk",
+   "source": "Vitalik blog WTFPL",
+   "in_cv5": true,
+   "nkept_124": 2,
+   "probe_hits": {
+    "vit-cry-007": {}
+   }
+  },
+  "vit-sci-002": {
+   "cls": "c",
+   "topic": "Japan vs Germany density",
+   "domain": "law/ref",
+   "evidence": "factbook area + population (K13, derivable); the stated 336/km2 only in top100k 'Demographics of Japan'",
+   "source": "K13 factbook CC0; top100k",
+   "in_cv5": true,
+   "nkept_124": 4,
+   "probe_hits": {
+    "wiki-vital5": {
+     "chunk": 28883,
+     "title": "Aomori"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 3903891,
+     "title": "Demographics of Japan"
+    }
+   }
+  },
+  "st-qa-cooking-se-003": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 4,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-015": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-001": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 6,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-007": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-013": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 8,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-019": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "vit-hum-002": {
+   "cls": "a",
+   "topic": "Mencius attack on Mozi",
+   "domain": "humanities",
+   "evidence": "no pack on disk holds Mencius' 'no father' charge (0 FTS hits in 15 packs); full enwiki 'Mencius'/'Mohism' not on disk (B3 union: kept gained in some shard, lexical); depth cited from SEP (all rights reserved)",
+   "source": "full enwiki CC BY-SA (not verified); SEP = (b) all rights reserved",
+   "in_cv5": true,
+   "nkept_124": 4,
+   "probe_hits": {
+    "vit-hum-002": {}
+   }
+  },
+  "vit-cry-002": {
+   "cls": "c",
+   "topic": "FOCIL EIP-7805",
+   "domain": "crypto",
+   "evidence": "boar-crypto 'EIP-7805' (K13; article-level delivered, the fact chunk is not the kept one)",
+   "source": "K13 EIPs CC0",
+   "in_cv5": true,
+   "nkept_124": 4,
+   "probe_hits": {
+    "boar-crypto": {
+     "chunk": 19607,
+     "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)"
+    }
+   }
+  },
+  "vit-sci-003": {
+   "cls": "d",
+   "topic": "phone tokens time arithmetic",
+   "domain": "science",
+   "evidence": "arithmetic from the question's own numbers",
+   "source": "none",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "lan-rsn-007": {
+   "cls": "c",
+   "topic": "Berlin Wall dates",
+   "domain": "humanities",
+   "evidence": "simplewiki/wikivoyage/vital5 'Berlin Wall' 1961-1989 (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 531074,
+     "title": "Berlin Wall"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 43483,
+     "title": "Berlin Wall"
+    },
+    "wiki-vital5": {
+     "chunk": 1661,
+     "title": "Berlin Wall"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 2878443,
+     "title": "Berlin Wall"
+    }
+   }
+  },
+  "st-qa-cooking-se-004": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-008": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 7,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-014": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 4,
+   "probe_hits": {}
+  },
+  "vit-hum-003": {
+   "cls": "a",
+   "topic": "Mozi reply on reciprocity",
+   "domain": "humanities",
+   "evidence": "top100k (built, not in K13) 'Love' chunk: Mozi 'emphasizing reciprocity' = partial; 'Mohism' chunk says the opposite framing; the 'loved in return' quote is SEP/full enwiki 'Mozi' depth",
+   "source": "top100k / full enwiki CC BY-SA; SEP (b)",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wiki-en-top100k": {
+     "chunk": 155796,
+     "title": "Mohism"
+    }
+   }
+  },
+  "vit-cry-009": {
+   "cls": "c",
+   "topic": "EIP-7251 validator count",
+   "domain": "crypto",
+   "evidence": "boar-crypto 'Pectra' 2048 ETH max effective balance (K13) + arithmetic",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 5,
+   "probe_hits": {
+    "boar-crypto": {
+     "chunk": 41393,
+     "title": "Pectra"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 1230633,
+     "title": "Ethereum"
+    }
+   }
+  },
+  "vit-hlt-001": {
+   "cls": "c",
+   "topic": "jellyfish sting vinegar",
+   "domain": "health",
+   "evidence": "wikivoyage 'Jellyfish': douse 30 s with vinegar (K13)",
+   "source": "K13",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 156152,
+     "title": "Jellyfish"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 34992,
+     "title": "Jellyfish"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 2145409,
+     "title": "Jellyfish"
+    }
+   }
+  },
+  "lan-cmp-003": {
+   "cls": "c",
+   "topic": "countries bigger than India",
+   "domain": "law/ref",
+   "evidence": "wikivoyage 'India' seventh-largest + factbook areas (K13; list needs synthesis)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 5,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 147111,
+     "title": "India"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 1684,
+     "title": "India"
+    },
+    "boar-factbook": {
+     "chunk": 10236,
+     "title": "India"
+    },
+    "boar-firstaid-en": {
+     "chunk": 15291,
+     "title": "Drought"
+    },
+    "wiki-vital5": {
+     "chunk": 14601,
+     "title": "Rajasthan"
+    },
+    "boar-preparedness-en": {
+     "chunk": 7375,
+     "title": "Drought"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 3350990,
+     "title": "List of companies of India"
+    }
+   }
+  },
+  "lan-exp-006": {
+   "cls": "c",
+   "topic": "Kilimanjaro height, volcano",
+   "domain": "law/ref",
+   "evidence": "wikivoyage/simplewiki/factbook/vital5 5,895 m (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 222732,
+     "title": "Mount Kilimanjaro"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 62983,
+     "title": "Mount Kilimanjaro"
+    },
+    "boar-factbook": {
+     "chunk": 2166,
+     "title": "Tanzania"
+    },
+    "qa-outdoors-se": {
+     "chunk": 30468,
+     "title": "What is the highest \"hikeable\" mountain in the world?"
+    },
+    "wiki-vital5": {
+     "chunk": 40508,
+     "title": "Mount Kilimanjaro"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 3705563,
+     "title": "Mount Kilimanjaro"
+    }
+   }
+  },
+  "lan-ref-005": {
+   "cls": "c",
+   "topic": "2016 Summer Olympics host",
+   "domain": "humanities",
+   "evidence": "wikivoyage 'Olympic Games' list + simplewiki (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 400844,
+     "title": "Olympic Games"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 597271,
+     "title": "Swimming at the 2016 Summer Olympics"
+    },
+    "boar-factbook": {
+     "chunk": 9543,
+     "title": "Brazil"
+    },
+    "boar-firstaid-en": {
+     "chunk": 18008,
+     "title": "Harmful algal bloom"
+    },
+    "qa-travel-se": {
+     "chunk": 126583,
+     "title": "Passenger flew to Brazil and was refused entry during The Olympics in Rio 2016"
+    },
+    "wiki-vital5": {
+     "chunk": 78879,
+     "title": "Kim Rhode"
+    },
+    "qa-ethereum-se": {
+     "chunk": 35113,
+     "title": "Overview of Ethereum Milestones?"
+    },
+    "boar-preparedness-en": {
+     "chunk": 10092,
+     "title": "Harmful algal bloom"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 2194934,
+     "title": "Brazilian real"
+    }
+   }
+  },
+  "st-qa-cooking-se-005": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-011": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 6,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-017": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-009": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 7,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-015": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 3,
+   "probe_hits": {}
+  },
+  "lan-cmp-001": {
+   "cls": "c",
+   "topic": "Brazil vs Russia population",
+   "domain": "law/ref",
+   "evidence": "factbook Brazil + Russia population rows (K13); simplewiki/vital5 too",
+   "source": "K13 factbook CC0",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "lan-cmp-001a": {
+     "boar-simplewiki-en": {
+      "chunk": 558,
+      "title": "Brazil"
+     },
+     "boar-factbook": {
+      "chunk": 9551,
+      "title": "Brazil"
+     },
+     "wiki-vital5": {
+      "chunk": 1542,
+      "title": "Brazil"
+     },
+     "boar-wiki-en-top100k": {
+      "chunk": 793014,
+      "title": "Demographics of Brazil"
+     }
+    },
+    "lan-cmp-001b": {
+     "boar-wikivoyage-en": {
+      "chunk": 155577,
+      "title": "Java"
+     },
+     "boar-simplewiki-en": {
+      "chunk": 337363,
+      "title": "Demographics of Russia"
+     },
+     "boar-factbook": {
+      "chunk": 4817,
+      "title": "Russia"
+     },
+     "wiki-vital5": {
+      "chunk": 14056,
+      "title": "Russia"
+     },
+     "boar-wiki-en-top100k": {
+      "chunk": 2250969,
+      "title": "Russia"
+     }
+    }
+   }
+  },
+  "vit-cry-010": {
+   "cls": "c",
+   "topic": "2016 DAO hack lessons",
+   "domain": "crypto",
+   "evidence": "boar-crypto 'EIP-7705' DAO hack + reentrancy (K13, partial); qa-ethereum-se thread (built, not in K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 6,
+   "probe_hits": {
+    "boar-crypto": {
+     "chunk": 18016,
+     "title": "EIP-7705: NONREENTRANT and REENTRANT opcodes"
+    },
+    "qa-ethereum-se": {
+     "chunk": 7351,
+     "title": "In simple terms, how did the DAO get hacked and funds removed from it?"
+    },
+    "qa-bitcoin-se": {
+     "chunk": 56802,
+     "title": "How does using a Turing-complete programming language compromise the security of the network?"
+    }
+   }
+  },
+  "vit-hlt-002": {
+   "cls": "c",
+   "topic": "altitude sickness at 4,000 m",
+   "domain": "health",
+   "evidence": "simplewiki 'Altitude sickness', qa-health-se, firstaid (K13)",
+   "source": "K13",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 345757,
+     "title": "Trekking in Nepal"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 471781,
+     "title": "Altitude sickness"
+    },
+    "boar-firstaid-en": {
+     "chunk": 21580,
+     "title": "Wilderness backpacking"
+    },
+    "qa-health-se": {
+     "chunk": 2953,
+     "title": "Avoiding acute mountain sickness, high altitude pulmonary & cerebral edema"
+    },
+    "qa-outdoors-se": {
+     "chunk": 11880,
+     "title": "Case example on Altitude Mountain Sickness: How to detect and react properly?"
+    },
+    "qa-travel-se": {
+     "chunk": 149912,
+     "title": "Flights and altitude sickness"
+    },
+    "boar-preparedness-en": {
+     "chunk": 14132,
+     "title": "Wilderness backpacking"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 3262355,
+     "title": "Altitude sickness"
+    }
+   }
+  },
+  "st-qa-cooking-se-006": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 6,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-018": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-004": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-016": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 7,
+   "probe_hits": {}
+  },
+  "lan-cmp-002": {
+   "cls": "c",
+   "topic": "polar vs grizzly size",
+   "domain": "science",
+   "evidence": "wikivoyage 'Dangerous animals' (largest bear alive), vital5/simplewiki 'Polar bear' (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 5,
+   "probe_hits": {
+    "boar-wikivoyage-en": {
+     "chunk": 398161,
+     "title": "Dangerous animals"
+    },
+    "boar-simplewiki-en": {
+     "chunk": 35009,
+     "title": "Polar bear"
+    },
+    "wiki-vital5": {
+     "chunk": 13541,
+     "title": "Polar bear"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 1702407,
+     "title": "Polar bear"
+    }
+   }
+  },
+  "vit-cry-005": {
+   "cls": "c",
+   "topic": "Privacy Pools vs Tornado Cash",
+   "domain": "crypto",
+   "evidence": "boar-crypto 'ERC-8262' Privacy Pools paragraph (K13, partial); fuller in Vitalik blog 2025-04 privacy post (WTFPL)",
+   "source": "K13; Vitalik blog WTFPL",
+   "in_cv5": true,
+   "nkept_124": 6,
+   "probe_hits": {
+    "boar-crypto": {
+     "chunk": 27414,
+     "title": "ERC-8262: Zero-Knowledge Compliance Oracle"
+    }
+   }
+  },
+  "lan-ref-004": {
+   "cls": "c",
+   "topic": "Iceland area",
+   "domain": "law/ref",
+   "evidence": "factbook 'Iceland' area 103,000 sq km (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "boar-simplewiki-en": {
+     "chunk": 4986,
+     "title": "Iceland"
+    },
+    "boar-factbook": {
+     "chunk": 7032,
+     "title": "Iceland"
+    },
+    "qa-travel-se": {
+     "chunk": 109090,
+     "title": "How fast is the Internet on board Iceland Air flights?"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 65803,
+     "title": "Northrop Grumman RQ-4 Global Hawk"
+    }
+   }
+  },
+  "lan-cmp-005": {
+   "cls": "c",
+   "topic": "saltwater vs Nile crocodile",
+   "domain": "science",
+   "evidence": "wiki-vital5 'Saltwater crocodile': largest living reptile (K13)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 5,
+   "probe_hits": {
+    "wiki-vital5": {
+     "chunk": 70968,
+     "title": "Saltwater crocodile"
+    },
+    "boar-wiki-en-top100k": {
+     "chunk": 2440053,
+     "title": "Saltwater crocodile"
+    }
+   }
+  },
+  "st-qa-cooking-se-001": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 7,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-013": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-005": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-011": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 4,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-017": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 6,
+   "probe_hits": {}
+  },
+  "vit-hum-006": {
+   "cls": "a",
+   "topic": "Mill harm principle objections",
+   "domain": "humanities",
+   "evidence": "top100k 'John Stuart Mill' quotes the principle (core fact, verified); objections need full enwiki 'Harm principle' (not on disk); Gutenberg On Liberty (PD) holds the principle text",
+   "source": "top100k / full enwiki CC BY-SA; Gutenberg PD",
+   "in_cv5": true,
+   "nkept_124": 5,
+   "probe_hits": {
+    "boar-wiki-en-top100k": {
+     "chunk": 1472063,
+     "title": "John Stuart Mill"
+    }
+   }
+  },
+  "lan-rsn-002": {
+   "cls": "c",
+   "topic": "Burj Khalifa in Baikal",
+   "domain": "law/ref",
+   "evidence": "simplewiki 'Lake Baikal' 1642 m + 'Burj Khalifa' 828 m (K13; two articles)",
+   "source": "K13",
+   "in_cv5": true,
+   "nkept_124": 0,
+   "probe_hits": {
+    "lan-rsn-002a": {
+     "boar-simplewiki-en": {
+      "chunk": 40991,
+      "title": "Lake Baikal"
+     },
+     "wiki-vital5": {
+      "chunk": 27181,
+      "title": "Lake Baikal"
+     },
+     "boar-wiki-en-top100k": {
+      "chunk": 3645456,
+      "title": "Lake Baikal"
+     }
+    },
+    "lan-rsn-002b": {
+     "boar-wikivoyage-en": {
+      "chunk": 13377,
+      "title": "Architecture"
+     },
+     "boar-simplewiki-en": {
+      "chunk": 96015,
+      "title": "Burj Khalifa"
+     },
+     "wiki-vital5": {
+      "chunk": 76526,
+      "title": "Burj Khalifa"
+     },
+     "boar-wiki-en-top100k": {
+      "chunk": 230235,
+      "title": "Burj Khalifa"
+     }
+    }
+   }
+  },
+  "vit-trv-004": {
+   "cls": "b",
+   "topic": "Paris-Rome walk round trip",
+   "domain": "travel",
+   "evidence": "the stated 2768 km is in Vitalik's 2026-04-02 secure_llms post (verified on the source jsonl; it is the item's own source, so circular); otherwise a route distance (OSM routing, ODbL) = (d)",
+   "source": "Vitalik blog WTFPL; else (d)",
+   "in_cv5": false,
+   "nkept_124": 0,
+   "probe_hits": {
+    "vit-trv-004": {}
+   }
+  },
+  "st-qa-cooking-se-014": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "st-qa-cooking-se-020": {
+   "cls": "c",
+   "topic": "cooking self-test",
+   "domain": "cooking",
+   "evidence": "own source thread in qa-cooking-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-cooking-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 5,
+   "probe_hits": {}
+  },
+  "st-qa-money-se-018": {
+   "cls": "c",
+   "topic": "money self-test",
+   "domain": "money",
+   "evidence": "own source thread in qa-money-se (K13; quotes verified by construction, COVERAGE-MAP); not kept at chunk level",
+   "source": "K13 qa-money-se CC BY-SA",
+   "in_cv5": false,
+   "nkept_124": 4,
+   "probe_hits": {}
+  }
+ }
+}

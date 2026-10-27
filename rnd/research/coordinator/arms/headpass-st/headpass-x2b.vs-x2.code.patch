@@ -1,0 +1,154 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -119,7 +119,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+-import { denseCandidatesOf, pickDenseAppend, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND } from "../rag/denseCandidates";
++import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+ import type { MemoryFit } from "../inference/memoryFit";
+@@ -1004,8 +1004,9 @@
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await (settings.packDense2 === true || settings.packDense2 === "extra" || settings.packDense2 === "append"
+-          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 })
++        raw = await (settings.packDense2 === true || settings.packDense2 === "extra" || settings.packDense2 === "append" || settings.packDense2 === "append-budget"
++          // HEADPASS-X2b retrieves as "append" (the budget applies in the append path below).
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 === "append-budget" ? "append" : settings.packDense2 })
+           : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
+         ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+@@ -1079,8 +1080,15 @@
+       // HEADPASS_DENSE_D of the two-stage dense chunk candidates that retrieve() attached beside the raw list (best cosine
+       // first, none already in raw, kept or appended above), at most HEADPASS_MAX_APPEND appended chunks in all; same
+       // health-strict rule; no sidecar in any searched pack -> nothing appended (headpass:dense:nosidecar).
+-      const denseAppend = settings.packDense2 === "append";
++      // HEADPASS-X2b (settings.packDense2 "append-budget", experimental, default off): as "append", but the chunks to append
++      // (X1 neighbours first, then dense in cosine order) are kept only while the prompt stays within HEADPASS_BUDGET_TOKENS
++      // (engine approxTokens) of the prompt without them; the first chunk over the budget is dropped and the loop stops
++      // (headpass:budget:dropped:<chunkId> for it and every later one).
++      const budgeted = settings.packDense2 === "append-budget";
++      const denseAppend = settings.packDense2 === "append" || budgeted;
+       const hpBefore = sources.length;
++      let pendX1: RetrievedChunk[] = [];
++      let pendDense: RetrievedChunk[] = [];
+       if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
+         if (settings.packHeadPass === "a2") {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+@@ -1094,15 +1102,18 @@
+               if (ok.length < add.length) reasonCodes.push(`headpass:health-dropped-${add.length - ok.length}`);
+               add = ok;
+             }
+-            for (const c of add) reasonCodes.push(`headpass:add:${c.chunkId}`);
+-            sources = [...sources, ...add];
++            if (budgeted) pendX1 = add;
++            else {
++              for (const c of add) reasonCodes.push(`headpass:add:${c.chunkId}`);
++              sources = [...sources, ...add];
++            }
+           }
+         }
+         if (denseAppend) {
+           const dense = denseCandidatesOf(retrievedRaw);
+           if (!dense?.sidecar) reasonCodes.push("headpass:dense:nosidecar");
+           else {
+-            let add = pickDenseAppend(dense.candidates, sources, sources.length - hpBefore, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
++            let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+             if (health && add.length) {
+               const topic = healthTopicTerms(req.query, english);
+@@ -1110,10 +1121,29 @@
+               if (ok.length < add.length) reasonCodes.push(`headpass:dense:health-dropped-${add.length - ok.length}`);
+               add = ok;
+             }
+-            for (const c of add) reasonCodes.push(`headpass:dense:add:${c.chunkId}`);
+-            sources = [...sources, ...add];
++            if (budgeted) pendDense = add;
++            else {
++              for (const c of add) reasonCodes.push(`headpass:dense:add:${c.chunkId}`);
++              sources = [...sources, ...add];
++            }
+           }
+         }
++        if (budgeted && (pendX1.length || pendDense.length)) {
++          let template = true;
++          try { template = deps.engine.hasEmbeddedChatTemplate(); } catch { /* the chat form, as the replay records it */ }
++          const base = sources;
++          const chars = (extra: RetrievedChunk[]) => {
++            const s = [...base, ...extra];
++            return (template
++              ? JSON.stringify(deps.assembleChatMessages(req.query, s, ctx.systemPrompt, ctx.history))
++              : deps.assemblePrompt(req.query, s, ctx.systemPrompt, ctx.history)).length;
++          };
++          const x1Ids = new Set(pendX1.map((c) => c.chunkId));
++          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
++          for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
++          sources = [...sources, ...kept];
++        }
+       }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -47,8 +47,9 @@
+   /** HEADPASS-ST (experimental, default off): "a2" appends, after grounding, the chunks at positions 1-2 of the top user-installed pack article. */
+   packHeadPass?: "off" | "a2";
+   /** DENSECHUNK-ST: chunk-vector two-stage search in packs that carry chunk_vecs (default off); "extra" = DENSECHUNK-ST2 appended slots;
+-   *  "append" = HEADPASS-X2 (the dense candidates go to the post-grounding head-pass append path, not to the raw list). */
+-  packDense2?: boolean | "extra" | "append";
++   *  "append" = HEADPASS-X2 (the dense candidates go to the post-grounding head-pass append path, not to the raw list);
++   *  "append-budget" = HEADPASS-X2b (as "append", every appended chunk within a per-answer prompt-work budget). */
++  packDense2?: boolean | "extra" | "append" | "append-budget";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -499,8 +500,9 @@
+   packHeadPass?: "off" | "a2";
+   /** DENSECHUNK-ST (default off): a pack's chunk-vector sidecar adds a two-stage semantic list to its search (true: fused;
+    *  "extra": DENSECHUNK-ST2, its best hits appended after the list; "append": HEADPASS-X2, its best new hits are appended
+-   *  after grounding through the head-pass path, the retrieved list itself unchanged). */
+-  packDense2?: boolean | "extra" | "append";
++   *  after grounding through the head-pass path, the retrieved list itself unchanged; "append-budget": HEADPASS-X2b, as
++   *  "append" with the appended chunks (X1 first, then dense) kept only within HEADPASS_BUDGET_TOKENS of added prompt). */
++  packDense2?: boolean | "extra" | "append" | "append-budget";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -513,7 +515,7 @@
+     largeModelConfirmedIds: s.largeModelConfirmedIds ?? [],
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
+     ...(s.packHeadPass === "a2" ? { packHeadPass: "a2" as const } : {}),
+-    ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : s.packDense2 === "append" ? { packDense2: "append" as const } : {}),
++    ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : s.packDense2 === "append" ? { packDense2: "append" as const } : s.packDense2 === "append-budget" ? { packDense2: "append-budget" as const } : {}),
+   };
+ }
+ 
+--- a/src/rag/denseCandidates.ts
++++ b/src/rag/denseCandidates.ts
+@@ -58,3 +58,22 @@
+   const have = new Set(present.map((c) => c.chunkId));
+   return candidates.filter((c) => !have.has(c.chunkId)).slice(0, n);
+ }
++
++/** HEADPASS-X2b (settings.packDense2 "append-budget"): prompt tokens (engine approxTokens) the head-pass append may add. */
++export const HEADPASS_BUDGET_TOKENS = 600;
++
++/**
++ * HEADPASS-X2b: keeps `adds` in order while `measure(prefix)` (the prompt's length in characters with that prefix of
++ * `adds` appended) stays within `maxChars` of `measure([])`; the first chunk that would exceed it is dropped and the loop
++ * stops (it and every later chunk are returned in `dropped`). Characters, not tokens: approxTokens = ceil(chars / 4), so a
++ * delta of at most 4 x budget characters keeps the token delta within the budget whatever the rounding.
++ */
++export function applyAppendBudget<T>(adds: T[], measure: (prefix: T[]) => number, maxChars: number): { kept: T[]; dropped: T[] } {
++  const base = measure([]);
++  const kept: T[] = [];
++  for (let i = 0; i < adds.length; i++) {
++    if (measure([...kept, adds[i]]) - base > maxChars) return { kept, dropped: adds.slice(i) };
++    kept.push(adds[i]);
++  }
++  return { kept, dropped: [] };
++}

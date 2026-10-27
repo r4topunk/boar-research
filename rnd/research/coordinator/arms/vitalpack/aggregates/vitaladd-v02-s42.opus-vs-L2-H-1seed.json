@@ -1,0 +1,192 @@
+{
+  "stage": "VITALADD stage 3 (v0.2 full 110 s42, Opus judge.v1 N=4, both orders)",
+  "arm": "va-A-v02-s42 (judgments.opus)",
+  "control": "L2-H-1seed = dhv-H-v02-s42.judgments.jsonl (Opus)",
+  "primary_paired_gap": {
+    "a": [
+      "va-A-v02-s42"
+    ],
+    "b": [
+      "dhv-H-v02-s42"
+    ],
+    "n_items": 110,
+    "decline_ratio_D": 0.306,
+    "bootstrap": "stratified two-level",
+    "raw": {
+      "gap_a_minus_b": 0.0012,
+      "ci95": [
+        -0.012,
+        0.0147
+      ]
+    },
+    "above_min": {
+      "gap_a_minus_b": 0.0017,
+      "ci95": [
+        -0.0147,
+        0.0188
+      ]
+    },
+    "above_decl": {
+      "gap_a_minus_b": 0.0017,
+      "ci95": [
+        -0.0173,
+        0.0212
+      ]
+    }
+  },
+  "floor_metrics": {
+    "A": {
+      "runs": [
+        "va-A-v02-s42"
+      ],
+      "n_items": 110,
+      "bootstrap": "stratified by category",
+      "decline_ratio_D": 0.306,
+      "D_source": "given",
+      "raw": {
+        "point": 0.6091,
+        "ci95": [
+          0.5768,
+          0.6413
+        ]
+      },
+      "above_min": {
+        "point": 0.5096,
+        "ci95": [
+          0.4694,
+          0.55
+        ]
+      },
+      "above_decl": {
+        "point": 0.4367,
+        "ci95": [
+          0.3902,
+          0.4832
+        ]
+      }
+    },
+    "H": {
+      "runs": [
+        "dhv-H-v02-s42"
+      ],
+      "n_items": 110,
+      "bootstrap": "stratified by category",
+      "decline_ratio_D": 0.306,
+      "D_source": "given",
+      "raw": {
+        "point": 0.6079,
+        "ci95": [
+          0.5752,
+          0.6414
+        ]
+      },
+      "above_min": {
+        "point": 0.5079,
+        "ci95": [
+          0.4671,
+          0.5497
+        ]
+      },
+      "above_decl": {
+        "point": 0.4351,
+        "ci95": [
+          0.3879,
+          0.4833
+        ]
+      }
+    }
+  },
+  "paired_mjs": {
+    "missing": {
+      "A": [],
+      "H": []
+    },
+    "A": {
+      "n": 110,
+      "ratio": 0.6091,
+      "ci": [
+        0.5751,
+        0.6419
+      ],
+      "win": 0,
+      "tie": 0.0182,
+      "loss": 0.9818,
+      "posCons": 0.9818,
+      "floorAdj": 0.5096,
+      "floorAdjCI": [
+        0.4651,
+        0.5517
+      ],
+      "winRateCI": [
+        0,
+        0
+      ]
+    },
+    "H": {
+      "n": 110,
+      "ratio": 0.6079,
+      "ci": [
+        0.5729,
+        0.6416
+      ],
+      "win": 0,
+      "tie": 0.0091,
+      "loss": 0.9909,
+      "posCons": 0.9909,
+      "floorAdj": 0.5079,
+      "floorAdjCI": [
+        0.464,
+        0.5488
+      ],
+      "winRateCI": [
+        0,
+        0
+      ]
+    },
+    "paired": {
+      "n": 110,
+      "dRatio": 0.0012,
+      "dRatioCI": [
+        -0.0117,
+        0.014
+      ],
+      "dFloor": 0.0017,
+      "dFloorCI": [
+        -0.0147,
+        0.0191
+      ],
+      "winsVsRef": {
+        "A": 0,
+        "H": 0
+      },
+      "tiesVsRef": {
+        "A": 2,
+        "H": 1
+      },
+      "lossesVsRef": {
+        "A": 108,
+        "H": 109
+      },
+      "headToHead": {
+        "aHigher": 35,
+        "same": 45,
+        "bHigher": 30
+      }
+    }
+  },
+  "haiku_L1_full": {
+    "control": "TV (deep+think 1024, Haiku full 110; no H Haiku full rows)",
+    "A": 0.5455,
+    "TV": 0.5344,
+    "dRatio": 0.011,
+    "dRatioCI": [
+      -0.0072,
+      0.0289
+    ],
+    "h2h": {
+      "aHigher": 44,
+      "same": 28,
+      "bHigher": 38
+    }
+  }
+}

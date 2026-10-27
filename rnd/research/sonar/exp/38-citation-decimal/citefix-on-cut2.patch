@@ -1,0 +1,35 @@
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/citations.decimal.test.ts be-0cfd4a77-citefix/src/routing/citations.decimal.test.ts
+--- be-0cfd4a77-cut2norv2/src/routing/citations.decimal.test.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-citefix/src/routing/citations.decimal.test.ts	2026-10-03 19:08:51
+@@ -0,0 +1,18 @@
++import { describe, expect, it } from "vitest";
++import { attributeCitations } from "./citations";
++
++const src = (body: string) => ({ chunkId: "c1", docId: "d1", title: "Sahara", body, score: 1, matchType: "lexical" as const });
++
++describe("attributeCitations keeps a decimal number whole", () => {
++  it("cites after the sentence, never inside 9.4", () => {
++    const s = src("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres of North Africa.");
++    const out = attributeCitations("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres.", [s]);
++    expect(out.text).not.toMatch(/\d \[\d+\]\.\d/);
++    expect(out.text).toBe("The Sahara is the largest hot desert in the world, covering about 9.4 million square kilometres [1].");
++  });
++  it("still treats a period before a new sentence as its end", () => {
++    const s = src("The Sahara covers about 9.4 million square kilometres. It spans eleven countries of North Africa.");
++    const out = attributeCitations("The Sahara covers about 9.4 million square kilometres. It spans eleven countries of North Africa.", [s]);
++    expect(out.text).toBe("The Sahara covers about 9.4 million square kilometres [1]. It spans eleven countries of North Africa [1].");
++  });
++});
+diff -ruN be-0cfd4a77-cut2norv2/src/routing/citations.ts be-0cfd4a77-citefix/src/routing/citations.ts
+--- be-0cfd4a77-cut2norv2/src/routing/citations.ts	2026-10-01 17:51:39
++++ be-0cfd4a77-citefix/src/routing/citations.ts	2026-10-03 19:08:51
+@@ -118,7 +118,8 @@
+ export function attributeCitations(answer: string, sources: RetrievedChunk[]): AttributedCitations {
+   const added: number[] = [];
+   if (!sources.length) return { text: answer, added };
+-  const text = answer.replace(/[^.!?\n]+[.!?]*/g, (sentence: string, at: number) => {
++  // A "." between digits is a decimal point, not a sentence end: "9.4 million" got "9 [2].4 million" (Anvil, exp-35 traces).
++  const text = answer.replace(/(?:[^.!?\n]|(?<=\d)\.(?=\d))+[.!?]*/g, (sentence: string, at: number) => {
+     if (/\[\d+\]/.test(sentence)) return sentence;
+     // A citation right after the sentence's punctuation ("… Zone. [1]") is its own (Prism CIT-2: "[1]. [1]").
+     if (/^\s*\[\d+\]/.test(answer.slice(at + sentence.length))) return sentence;

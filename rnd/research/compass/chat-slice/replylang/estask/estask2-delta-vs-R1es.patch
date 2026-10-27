@@ -1,0 +1,138 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index ed40bdf..088dd74 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -787,12 +787,14 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     expect(f.generations[0].messages!.at(-1)!.content).toContain(NO_SOURCE_INSTRUCTION);
+   });
+ 
+-  it("R1+ES: an ES question gets the ES decline line on the compact model; the larger model with a cited source is untouched", async () => {
++  it("R1+ES + ES task rules: an ES question gets the ES decline line on the compact model; the larger model with a cited source is untouched", async () => {
+     f.retrieved = [];
+     const { result } = await collect("¿Por qué tenemos estaciones en la Tierra?");
+     // The compact model's uncited answer is declined (gate ea5978c path); the decline line is now in Spanish.
+-    expect(result.receipt.reasonCodes).toContain("grounding:all-citations-removed-declined-compact");
+-    expect(result.text).toBe("Los fragmentos encontrados no respaldan esta respuesta.");
++    // With ES task rules the question is "research", like its EN twin: the compact model declines with no model call.
++    expect(f.generations).toHaveLength(0);
++    expect(result.receipt.reasonCodes).toContain("grounding:declined-compact");
++    expect(result.text).toBe("No encontré esto en la biblioteca de este teléfono.");
+     // Larger model, same question with an on-topic cited source: no decline, no fixed line, the model's text stands.
+     f = makeFake();
+     f.installed = [lfm];
+@@ -803,6 +805,15 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     expect(second.result.text).not.toMatch(/No encontré|Los fragmentos encontrados|I didn't find|The passages found/);
+   });
+ 
++  it("ES task rules: an uncited ES knowledge answer on the larger model gets the ES 'not from an offline source' line", async () => {
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    f.retrieved = [];
++    f.deps.engine.generate = async () => "Fue un compromiso entre Sídney y Melbourne.";
++    const { events } = await collect("¿Por qué se eligió Canberra como capital de Australia?");
++    expect((events.find((e) => e.type === "done") as any).finalText).toBe("Esta respuesta no viene de una fuente offline de este teléfono; verifícala antes de confiar en ella.\n\nFue un compromiso entre Sídney y Melbourne.");
++  });
++
+   it("compact model, no on-topic source: declines (no model call), and answers when asked anyway", async () => {
+     f.retrieved = [WALIPINI];
+     const { events, result } = await collect("Why do we have seasons on Earth?");
+diff --git a/src/routing/classify.ts b/src/routing/classify.ts
+index 03b89e3..e3219ae 100644
+--- a/src/routing/classify.ts
++++ b/src/routing/classify.ts
+@@ -24,7 +24,10 @@ const PATTERNS: Array<{ type: TaskType; test: RegExp }> = [
+     type: "research",
+     test: /^(why|how)\b|\b(explain|caused?|causes|effects? of|impacts?|relate[sd]?|relationship|contrast|implications?)\b/i,
+   },
+-  { type: "research", test: /^(por ?qu[eê]|como)\s|\b(explique|explica|explicar|causou|causas?|efeitos? d[eao]s?|impactos?)\b/i },
++  { type: "research", test: /^(por ?qu[eê]|como)\s|\b(explique|explica|explicar|causou|causas?|efeitos? d[eao]s?|impactos?)\b/i },  // Spanish (Compass, chat-v3 follow-up: "¿Por qué se eligió Canberra…?" was "chat", so an uncited 4B answer got no
++  // "not from an offline source" line). A leading ¿ is allowed; accents spelled out (\b doesn't see them).
++  { type: "compare", test: /(?<![\p{L}])(diferencia entre|cu[áa]l es mejor|comparar|comparaci[óo]n)(?![\p{L}])/iu },
++  { type: "research", test: /^¿?\s*(por ?qu[ée]|c[óo]mo)(?![\p{L}])|(?<![\p{L}])(expl[ií]ca(me|nos)?|explicar|caus[óo]|causas?|efectos? de|impactos?)(?![\p{L}])/iu },
+ ];
+ 
+ // Matches ONE greeting phrase, trailing punctuation only — not the whole
+@@ -61,8 +64,15 @@ function isGreeting(trimmed: string): boolean {
+ const CONVERSATION_RE =
+   /^(?:what'?s?\s+(?:is\s+)?your\s+name|who\s+are\s+you|what\s+are\s+you|what\s+can\s+you\s+do|(?:how\s+)?can\s+you\s+help(?:\s+me)?|who\s+(?:made|built|created|trained)\s+you|are\s+you\s+(?:an?\s+)?(?:ai|bot|robot|human|real|person|chatgpt|online|offline)|how\s+do\s+you\s+work|(?:tell\s+me\s+)?(?:a\s+)?joke|what\s+time\s+is\s+it|what'?s?\s+(?:is\s+)?the\s+time|what\s+day\s+is\s+(?:it|today)|what'?s?\s+(?:is\s+)?today'?s\s+date)(?:\s+(?:please|again|now|today))?[\s!.?~]*$/i;
+ 
++/** Spanish questions to or about the assistant, and "¿qué tal?" small talk (Compass, chat-v3 follow-up: the 1.5B searched
++ * an ES meta question and answered with a decline). Anchored on the whole message, like CONVERSATION_RE. */
++const CONVERSATION_ES_RE =
++  /^¿?\s*(?:qui[ée]n\s+eres|qu[ée]\s+eres|c[óo]mo\s+te\s+llamas|qui[ée]n\s+te\s+(?:cre[óo]|hizo|program[óo]|entren[óo]|desarroll[óo])|qu[ée]\s+(?:puedes|sabes)\s+hacer|eres\s+(?:una?\s+)?(?:ia|robot|bot|humano|persona|chat\s?gpt)|qu[ée]\s+(?:onda|tal|pasa|haces|cuentas|hay|m[áa]s|hubo|hubole|tranza)(?:\s+todo)?|c[óo]mo\s+(?:est[áa]s?|est[áa]n|est[áa]\s+usted|and[áa]s|andan?|te\s+va|le\s+va|va(?:\s+todo)?|vas|amaneciste|amaneci[óo]|sigues|has\s+estado|te\s+encuentras)|todo\s+bien)(?:\s+(?:boar|amigo|amiga|che|g[üu]ey|t[íi]o|t[íi]a|hermano|mano|bro|po|parce|pana|vos|t[úu]|usted))?(?![\p{L}])[\s?!.,]*$/iu;
++
+ const YES_NO =
+   /^(is|are|was|were|do|does|did|can|could|should|will|would|has|have|é|e|são|sao|era|foi|posso|pode|podem|devo|deve|precisa|preciso|tem|há|ha|existe|vale)(?![\p{L}])[^?]*\?\s*$/iu;
++/** Spanish yes/no: "¿Es seguro nadar en Tulum?", "¿Hay que dar propina…?". */
++const YES_NO_ES = /^¿\s*(es|son|era|fue|hay|puedo|puede|pueden|debo|debe|necesito|necesita|tiene|tengo|vale|existe|se puede)(?![\p{L}])[^?]*\?\s*$/iu;
+ 
+ export function classifyTask(query: string): TaskType {
+   const trimmed = query.trim();
+@@ -70,13 +80,18 @@ export function classifyTask(query: string): TaskType {
+ 
+   if (isGreeting(trimmed)) return "greeting";
+   if (CONVERSATION_RE.test(trimmed)) return "conversation";
++  if (CONVERSATION_ES_RE.test(trimmed)) return "conversation";
+ 
+   for (const { type, test } of PATTERNS) {
+     if (test.test(trimmed)) return type;
+   }
+ 
+   const wordCount = trimmed.split(/\s+/).length;
+-  if (/^(who|what|when|where|which|quem|o que|qual|quais|quando|onde|quantos?|quantas?)\s/i.test(`${trimmed} `) && wordCount <= 12) {
++  if (
++    (/^(who|what|when|where|which|quem|o que|qual|quais|quando|onde|quantos?|quantas?)\s/i.test(`${trimmed} `) ||
++      /^¿?\s*(qui[ée]n(es)?|qu[ée]|cu[áa]ndo|d[óo]nde|cu[áa]l(es)?|cu[áa]ntos?|cu[áa]ntas?)(?![\p{L}])/iu.test(trimmed)) &&
++    wordCount <= 12
++  ) {
+     return "lookup";
+   }
+   if (wordCount > 25 || /\b(research|analyze|analyse|investigate|explore|explain in depth)\b/i.test(trimmed)) {
+@@ -85,7 +100,7 @@ export function classifyTask(query: string): TaskType {
+   // A yes/no question is a question about the world ("Is tipping expected in restaurants in Portugal?", "É esperado
+   // dar gorjeta…?"): as "chat" the compact model answered it from memory with no source (Sextant trv-009: "tão ou
+   // tãozinho, 10%"); as a lookup it declines when the library has nothing on topic. Unicode boundaries ("É").
+-  if (YES_NO.test(trimmed)) return "lookup";
++  if (YES_NO.test(trimmed) || YES_NO_ES.test(trimmed)) return "lookup";
+   return "chat";
+ }
+ 
+diff --git a/src/routing/classifyEs.test.ts b/src/routing/classifyEs.test.ts
+new file mode 100644
+index 0000000..aeb5e2b
+--- /dev/null
++++ b/src/routing/classifyEs.test.ts
+@@ -0,0 +1,33 @@
++import { describe, expect, it } from "vitest";
++import { classifyTask } from "./classify";
++
++// Compass, chat-v3 follow-up: ES questions were all "chat" (no ES patterns; a leading ¿ defeated the anchored ones), so an
++// uncited ES knowledge answer got no "not from an offline source" line and the 1.5B searched ES meta questions.
++describe("classifyTask: Spanish", () => {
++  it("knowledge questions get the same task types as their PT/EN twins", () => {
++    expect(classifyTask("¿Por qué se eligió Canberra como capital de Australia?")).toBe("research");
++    expect(classifyTask("¿Cómo funciona un torniquete?")).toBe("research");
++    expect(classifyTask("¿Qué es el Camino de Santiago?")).toBe("lookup");
++    expect(classifyTask("¿Cuál es la capital de Bolivia?")).toBe("lookup");
++    expect(classifyTask("diferencia entre infarto y paro cardiaco")).toBe("compare");
++    expect(classifyTask("¿Es seguro nadar en Tulum en julio?")).toBe("lookup");
++    expect(classifyTask("¿Hay que dar propina en Madrid?")).toBe("lookup");
++  });
++  it("questions to the assistant and ES small talk are conversation", () => {
++    for (const q of ["¿quién eres?", "¿Quién te programó?", "qué onda boar", "¿qué tal?", "¿eres una IA?", "¿cómo te llamas?"]) expect(classifyTask(q), q).toBe("conversation");
++  });
++  it("ES how-are-you small talk (tú/vos/usted) is conversation, not a knowledge question; real questions are not", () => {
++    for (const q of ["¿Cómo estás?", "como estas", "¿Cómo está usted?", "¿cómo andás?", "¿cómo te va?", "¿qué haces?", "que tal todo", "¿qué cuentas?", "¿todo bien?", "¿qué más?", "¿qué hubo?", "¿cómo amaneciste?"])
++      expect(classifyTask(q), q).toBe("conversation");
++    expect(classifyTask("¿Cómo está el clima en Lima en julio?")).toBe("research");
++    expect(classifyTask("¿Qué hay para hacer en Cusco?")).toBe("lookup");
++    expect(classifyTask("¿Qué haces cuando te pica una medusa?")).toBe("lookup");
++    expect(classifyTask("como vai?")).toBe("research");
++  });
++  it("PT and EN are unchanged", () => {
++    expect(classifyTask("Por que existem as estações do ano?")).toBe("research");
++    expect(classifyTask("Who won the 2014 World Cup?")).toBe("lookup");
++    expect(classifyTask("o que é a fotossíntese?")).toBe("lookup");
++    expect(classifyTask("tudo bem?")).not.toBe("conversation");
++  });
++});

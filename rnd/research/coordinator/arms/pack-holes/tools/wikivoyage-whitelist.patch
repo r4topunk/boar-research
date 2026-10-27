@@ -1,0 +1,72 @@
+--- a/scripts/lib/wiki-pack-lib.mjs	2026-10-21 03:18:56
++++ b/scripts/lib/wiki-pack-lib.mjs	2026-10-21 03:18:56
+@@ -145,10 +145,59 @@
+   return parts;
+ }
+ 
++// WIKIVOYAGE-REBUILD whitelist (arms/pack-holes/WIKIVOYAGE-REBUILD.md): the ~40 inline templates that, when dropped, left
++// "an area of ." / "Airport ()" holes. Everything not listed here is still dropped as before.
++const WV_CUR = {
++  eur: "€", usd: "$", gbp: "£", jpy: "¥", cny: "¥", rub: "₽", inr: "₹", php: "₱", egp: "E£", krw: "₩", thb: "฿",
++  aud: "A$", cad: "C$", nzd: "NZ$", chf: "CHF ", idr: "Rp ", sek: "SEK ", nok: "NOK ", dkk: "DKK ", huf: "HUF ",
++  mxn: "MX$", brl: "R$", zar: "R", try: "₺", czk: "CZK ", pln: "PLN ",
++};
++const WV_UNITS = {
++  km: "km", m: "m", mi: "mi", mile: "mi", ft: "ft", feet: "ft", foot: "ft", metre: "m", meter: "m", kg: "kg", lb: "lb",
++  km2: "km²", mi2: "sq mi", m2: "m²", sqm: "m²", ha: "ha", acre: "acres", kmh: "km/h", mph: "mph", mm: "mm", cm: "cm",
++  in: "in", c: "°C", celsius: "°C", f: "°F", fahrenheit: "°F",
++};
++const WV_CONVERT_UNIT = { c: "°C", f: "°F", m2: "m²", km2: "km²", m3: "m³", sqft: "sq ft", sqmi: "sq mi", sqkm: "km²", acre: "acres" };
++const WV_CONNECT = new Set(["to", "and", "or", "-", "–", "+", "&", "by", "×", "x"]);
++const wvNamed = (p) => /^\s*[A-Za-z][A-Za-z0-9_ -]{0,19}=/.test(p);
++
++function renderWhitelisted(rawName, parts) {
++  const name = rawName.replace(/_/g, " ");
++  const pos = parts.slice(1).filter((p) => !wvNamed(p)).map((p) => cleanInline(p.trim()));
++  const first = pos[0] ?? "";
++  if (name === "convert" || name === "cvt") {
++    if (!first) return "";
++    let v = first;
++    let i = 0;
++    while (WV_CONNECT.has(pos[i + 1]) && pos[i + 2]) {
++      v += ` ${pos[i + 1]} ${pos[i + 2]}`;
++      i += 2;
++    }
++    const u = pos[i + 1] ?? "";
++    return `${v} ${WV_CONVERT_UNIT[u.toLowerCase()] ?? u}`.trim();
++  }
++  if (WV_UNITS[name] !== undefined) return first ? `${first} ${WV_UNITS[name]}` : "";
++  if (WV_CUR[name] !== undefined) return first ? `${WV_CUR[name]}${first}` : "";
++  if (name === "currency") {
++    const sym = WV_CUR[first.toLowerCase()] ?? `${first.toUpperCase()} `;
++    return pos[1] ? `${sym}${pos[1]}` : "";
++  }
++  if (name === "lang") return pos[1] ?? "";
++  if (name === "unesco" || name === "unesco world heritage site") return "UNESCO World Heritage Site";
++  if (name === "rint") return pos[1] ?? "";
++  if (name === "european road") return pos.length >= 3 ? `${pos[1]}${pos[2]}` : pos.join("");
++  if (name === "time") return pos.filter(Boolean).join("–");
++  if (name === "isbn") return first ? `ISBN ${first}` : "";
++  if (name === "w") return pos[pos.length - 1] ?? "";
++  if (name === "ipa") return first ? `/${first}/` : "";
++  if (/^(iata|icao|faa lid|phone|email|station|routebox entry|rbe|aur|nycs|nowrap|nobr)$/.test(name)) return first;
++  return "";
++}
++
+ function renderTemplate(body) {
+   const parts = splitTop(body);
+   const name = parts[0].trim().toLowerCase();
+-  if (!LISTINGS.has(name)) return "";
++  if (!LISTINGS.has(name)) return renderWhitelisted(name, parts);
+   const fields = {};
+   for (const p of parts.slice(1)) {
+     const eq = p.indexOf("=");
+@@ -224,6 +273,8 @@
+     .replace(/\[?https?:\/\/\S+\]?/g, "")
+     .replace(/'{2,}/g, "")
+     .replace(/<[^>]+>/g, "")
++    .replace(/\(\s*[;,]\s*/g, "(")
++    .replace(/\s*\(\s*\)/g, "")
+     .replace(/[ \t]+/g, " ")
+     .trim();
+ }

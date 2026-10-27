@@ -1,0 +1,548 @@
+diff --git a/src/inference/LlamaEngine.test.ts b/src/inference/LlamaEngine.test.ts
+index 6ca7d853..c8b8e31c 100644
+--- a/src/inference/LlamaEngine.test.ts
++++ b/src/inference/LlamaEngine.test.ts
+@@ -449,7 +449,7 @@ describe("answer prefix kept in the KV cache (iPhone 13: 4-5 s to the first toke
+       (created[0] as any).isJinjaSupported = () => false;
+       await engine.generate({ prompt: "Title: q" });
+       await vi.advanceTimersByTimeAsync(PREFIX_WARM_IDLE_MS + 20);
+-      expect(warms(seen)[2]).toEqual({ prompt: PREFIX.prompt, n_predict: 0 });
++      expect(warms(seen)[2]).toEqual({ prompt: PREFIX.prompt, n_predict: 0, n_probs: 0 });
+     } finally {
+       vi.useRealTimers();
+     }
+@@ -495,4 +495,31 @@ describe("answer prefix kept in the KV cache (iPhone 13: 4-5 s to the first toke
+       vi.useRealTimers();
+     }
+   });
++
++  it("route gate: reads the last probabilities entry (rc.4 never clears them) and resets n_probs for the answer", async () => {
++    try {
++      const { engine, seen } = await loadedEngine();
++      Object.assign(created[0] as any, {
++        completion: (p: any) => {
++          seen.push(p);
++          // rc.4: completion_probabilities keeps every earlier gate's token; this call's is the last one.
++          const stale = { probs: [{ tok_str: "SEARCH", prob: 1 }] };
++          const fresh = { probs: [{ tok_str: "ANS", prob: 0.8 }, { tok_str: "SEARCH", prob: 0.2 }] };
++          return Promise.resolve({ text: "", completion_probabilities: p.n_probs ? [stale, fresh] : undefined, timings: { prompt_n: 9 } });
++        },
++        saveSession: vi.fn(async () => 1),
++        loadSession: vi.fn(async () => ({})),
++      });
++      const gateMsgs = [{ role: "system", content: "router" }, { role: "user", content: "oi" }];
++      const probs = await engine.nextTokenProbs(gateMsgs, { modelFilename: "models/a.gguf", nProbs: 20 });
++      expect(probs).toEqual([{ token: "ANS", prob: 0.8 }, { token: "SEARCH", prob: 0.2 }]);
++      expect(seen.at(-1)).toEqual({ messages: gateMsgs, jinja: true, n_predict: 1, n_probs: 20, temperature: 1 });
++      // Another model than the loaded one: no gate (the answer path keeps the rules).
++      expect(await engine.nextTokenProbs(gateMsgs, { modelFilename: "models/other.gguf", nProbs: 20 })).toBeNull();
++      await engine.generate({ messages: answerMsgs });
++      expect(seen.at(-1)).toMatchObject({ n_probs: 0, temperature: 0.7 });
++    } finally {
++      vi.useRealTimers();
++    }
++  });
+ });
+diff --git a/src/inference/LlamaEngine.ts b/src/inference/LlamaEngine.ts
+index 4d4dca4c..e6a176a1 100644
+--- a/src/inference/LlamaEngine.ts
++++ b/src/inference/LlamaEngine.ts
+@@ -100,6 +100,13 @@ export interface GenerationTimings {
+  * inventing new "User:" turns rather than stopping. These match our own
+  * template's role markers so generation halts the moment it tries to do that.
+  */
++/** FNV-1a, hex: names a session file after the prompt text it holds. */
++function hash32(s: string): string {
++  let h = 0x811c9dc5;
++  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 0x01000193);
++  return (h >>> 0).toString(16).padStart(8, "0");
++}
++
+ const DEFAULT_STOP_SEQUENCES = ["\nUser:", "\n\nUser:", "\nQuestion:", "\n\nQuestion:"];
+ 
+ export interface LoadedModelInfo {
+@@ -189,6 +196,10 @@ export class LlamaEngine {
+   private prefix: PromptPrefix | null = null;
+   /** Whether the KV cache holds `prefix` (a load or another prompt drops it). */
+   private prefixCached = false;
++  // Route gate (Anvil B4 arm, anvil/specs/probe-gate-prefix-cache.md): the gate's fixed prompt and the answer prefix
++  // take turns in the one KV sequence, so each is restored from a llama.rn session file (saveSession/loadSession)
++  // instead of re-prefilled: ~260 tokens of the 4B are 15-20 s on an 8 GB Android phone. Null = neither is in the cache.
++  private gateCachedKey: string | null = null;
+   private warmTimer: ReturnType<typeof setTimeout> | null = null;
+   /** generate() calls not settled yet: a prefix refill never waits in front of one of them. */
+   private pending = 0;
+@@ -373,6 +384,7 @@ export class LlamaEngine {
+     const context = this.context;
+     this.context = null;
+     this.prefixCached = false;
++    this.gateCachedKey = null;
+     this.modelInfo = null;
+     this.loadedMeta = null;
+     this.lastLoad = { fit: null, warning: null };
+@@ -456,13 +468,17 @@ export class LlamaEngine {
+     if (!prefix || !context || this.prefixCached || this.pending > 0) return;
+     const params = context.isJinjaSupported()
+       ? // The empty user turn keeps templates that require one (Qwen3) rendering; the prefix ends before it.
+-        { messages: [{ role: "system", content: prefix.system }, { role: "user", content: "" }], jinja: true, n_predict: 0 }
+-      : { prompt: prefix.prompt, n_predict: 0 };
++        { messages: [{ role: "system", content: prefix.system }, { role: "user", content: "" }], jinja: true, n_predict: 0, n_probs: 0 }
++      : { prompt: prefix.prompt, n_predict: 0, n_probs: 0 };
+     const completion = context.completion(params);
+     this.inFlight = completion;
+     try {
+       const result = (await completion) as { timings?: { prompt_n?: number; prompt_ms?: number } };
+-      if (this.prefix === prefix && this.context === context) this.prefixCached = true;
++      if (this.prefix === prefix && this.context === context) {
++        this.prefixCached = true;
++        this.gateCachedKey = null;
++        await this.saveKv(context, this.answerKvKey(prefix)).catch((e: any) => console.warn("[engine] answer prefix save failed:", e?.message ?? e));
++      }
+       const t = result?.timings;
+       if (t) console.log(`[engine] answer prefix prefilled: ${t.prompt_n} tokens in ${Math.round(t.prompt_ms ?? 0)} ms`);
+     } catch (e: any) {
+@@ -512,6 +528,8 @@ export class LlamaEngine {
+           jinja: true,
+           n_predict: nPredict + (enableThinking === false ? 0 : thinkingBudget ?? 0),
+           temperature,
++          // Sampling params persist on the llama.rn context (rc.4 JSIParams): reset what the route gate set.
++          n_probs: 0,
+           stop: stop ?? [],
+           // llama.rn only enforces the budget when it knows the block's tags; when the budget
+           // runs out it forces the end tag and generation continues with the answer.
+@@ -525,8 +543,16 @@ export class LlamaEngine {
+             : {}),
+           ...(enableThinking === false ? { enable_thinking: false } : {}),
+         }
+-      : { prompt: prompt!, n_predict: nPredict, temperature, stop: stop ?? DEFAULT_STOP_SEQUENCES };
++      : { prompt: prompt!, n_predict: nPredict, temperature, n_probs: 0, stop: stop ?? DEFAULT_STOP_SEQUENCES };
+ 
++    if (this.prefix && !this.prefixCached && this.sharesPrefix({ prompt, messages })) {
++      const ms = await this.loadKv(this.context, this.answerKvKey(this.prefix));
++      if (ms !== null) {
++        this.prefixCached = true;
++        console.warn(`[gate] answer prefix restored in ${ms} ms`);
++      }
++    }
++    this.gateCachedKey = null;
+     let full = "";
+     const completion = this.context.completion(completionParams, (data) => {
+       full += data.token;
+@@ -552,6 +578,103 @@ export class LlamaEngine {
+     }
+   }
+ 
++  /**
++   * Route gate (src/routing/routeGate.ts): the top-N next-token probabilities after `messages`, without generating.
++   * The system message is the fixed part, kept in a session file and restored instead of re-prefilled.
++   * llama.rn rc.4 (anvil llamarn-nprobs.md): probabilities are post-sampling (fine for the 0.5 threshold) and
++   * `completion_probabilities` is never cleared between completions, so this call's token is the LAST entry.
++   */
++  nextTokenProbs(
++    messages: ChatMessageInput[],
++    opts: { modelFilename: string; nProbs: number }
++  ): Promise<{ token: string; prob: number }[] | null> {
++    const run = this.genQueue.then(() => this.nextTokenProbsNow(messages, opts));
++    this.genQueue = run.catch(() => {});
++    return run;
++  }
++
++  private async nextTokenProbsNow(
++    messages: ChatMessageInput[],
++    { modelFilename, nProbs }: { modelFilename: string; nProbs: number }
++  ): Promise<{ token: string; prob: number }[] | null> {
++    const context = this.context;
++    // Only on the resident model: a load here would put seconds before the rule fallback could answer.
++    if (!context || this.modelInfo?.filename !== modelFilename || !context.isJinjaSupported()) return null;
++    const key = `${modelFilename}.${hash32(messages[0]?.content ?? "")}.gate`;
++    let loadGateMs: number | null = null;
++    if (this.gateCachedKey !== key) {
++      loadGateMs = await this.loadKv(context, key);
++      if (loadGateMs === null) {
++        // First gate on this model: prefill the fixed part once, the same way warmNow does the answer prefix.
++        const warm = context.completion({ messages: [messages[0], { role: "user", content: "" }], jinja: true, n_predict: 0, n_probs: 0 });
++        this.inFlight = warm;
++        try {
++          await warm;
++        } finally {
++          if (this.inFlight === warm) this.inFlight = null;
++        }
++        await this.saveKv(context, key).catch((e: any) => console.warn("[gate] session save failed:", e?.message ?? e));
++      }
++    }
++    this.prefixCached = false;
++    this.gateCachedKey = key;
++    const t0 = Date.now();
++    const completion = context.completion({ messages, jinja: true, n_predict: 1, n_probs: nProbs, temperature: 1 });
++    this.inFlight = completion;
++    try {
++      const result = (await completion) as {
++        completion_probabilities?: { probs?: { tok_str: string; prob: number }[] }[];
++        timings?: { prompt_n?: number };
++        tokens_cached?: number;
++      };
++      const all = result.completion_probabilities ?? [];
++      const last = all[all.length - 1]?.probs ?? [];
++      console.warn(
++        `[gate] model=${modelFilename} newTok=${result.timings?.prompt_n ?? "?"} cachedTok=${result.tokens_cached ?? "?"} ` +
++          `loadGateMs=${loadGateMs ?? "-"} gateMs=${Date.now() - t0} probsLen=${all.length} top=${last.slice(0, 3).map((p) => `${p.tok_str}:${p.prob.toFixed(3)}`).join(",")}`
++      );
++      return last.map((p) => ({ token: p.tok_str, prob: p.prob }));
++    } finally {
++      if (this.inFlight === completion) this.inFlight = null;
++    }
++  }
++
++  private answerKvKey(prefix: PromptPrefix): string {
++    return `${this.modelInfo?.filename}.${hash32(prefix.system || prefix.prompt)}.answer`;
++  }
++
++  /** `<cache>/kv/<key>.bin` as a file:// URI (expo-file-system) and as a plain path (llama.rn saveSession takes no URI). */
++  private kvPath(key: string): { uri: string; path: string } {
++    const uri = `${FileSystem.cacheDirectory}kv/${key}.bin`;
++    return { uri, path: uri.replace(/^file:\/\//, "") };
++  }
++
++  private async saveKv(context: LlamaContext, key: string): Promise<void> {
++    try {
++      await FileSystem.makeDirectoryAsync(`${FileSystem.cacheDirectory}kv/`, { intermediates: true });
++    } catch {}
++    await context.saveSession(this.kvPath(key).path);
++  }
++
++  /** Restores a saved prefix into the KV cache; the ms it took, or null when there is no file (or it failed). */
++  private async loadKv(context: LlamaContext, key: string): Promise<number | null> {
++    let uri = "";
++    try {
++      const kv = this.kvPath(key);
++      uri = kv.uri;
++      if (!(await FileSystem.getInfoAsync(uri)).exists) return null;
++      const t0 = Date.now();
++      await context.loadSession(kv.path);
++      return Date.now() - t0;
++    } catch (e: any) {
++      console.warn(`[gate] session load failed (${key}):`, e?.message ?? e);
++      try {
++        if (uri) await FileSystem.deleteAsync(uri, { idempotent: true });
++      } catch {}
++      return null;
++    }
++  }
++
+   /**
+    * Signals the native completion loop to stop. The in-flight generate()
+    * call's completion() promise resolves normally with whatever text was
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..8bc0c0b9 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1906,3 +1906,60 @@ describe("answer(): multi-pass answer language", () => {
+     expect(seen).toEqual([PT_ANSWER_LANGUAGE, undefined]);
+   });
+ });
++
++describe("answer(): route gate (Anvil B4 arm)", () => {
++  const qwen4: InstalledLlm = { id: "qwen3-4b-instruct-2507-q4km", label: "Qwen3 4B", filename: "models/q4b.gguf", sizeBytes: 2.5 * GB, roles: ["general", "fast"], isDefault: true };
++  const gate = (probs: { token: string; prob: number }[] | null) => {
++    const calls: { messages: { role: string; content: string }[]; opts: { modelFilename: string; nProbs: number } }[] = [];
++    f.deps.engine.nextTokenProbs = async (messages, opts) => {
++      calls.push({ messages, opts });
++      return probs;
++    };
++    return calls;
++  };
++  const codes = (r: { receipt: { reasonCodes: string[] } }) => r.receipt.reasonCodes.filter((c) => c.startsWith("route-gate") || c.startsWith("task:"));
++
++  it("ANSWER on the 4B: no retrieval, the model answers", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    let retrieved = 0;
++    f.deps.retrieve = async () => (retrieved++, f.retrieved);
++    const calls = gate([{ token: "ANS", prob: 0.97 }, { token: "SEARCH", prob: 0.02 }]);
++    const { result } = await collect("tell me something fun about yourself");
++    expect(calls).toHaveLength(1);
++    expect(calls[0].opts).toEqual({ modelFilename: "models/q4b.gguf", nProbs: 20 });
++    expect(calls[0].messages[1].content).toBe("tell me something fun about yourself");
++    expect(retrieved).toBe(0);
++    expect(f.generations).toHaveLength(1);
++    expect(codes(result)).toEqual(["task:conversation", "route-gate:answer", "route-gate:score-0.020", "route-gate:chat->conversation"]);
++  });
++
++  it("SEARCH on the 4B keeps the rule's route", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    gate([{ token: "SEARCH", prob: 0.99 }]);
++    const { result } = await collect("What is the capital of Australia?");
++    expect(codes(result)).toEqual(["task:lookup", "route-gate:search", "route-gate:score-1.000"]);
++  });
++
++  it("a health question searches even when the gate says ANSWER", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    gate([{ token: "ANS", prob: 0.9 }, { token: "SEARCH", prob: 0.1 }]);
++    const { result } = await collect("what should I do for a burn on my hand?");
++    expect(codes(result)).toContain("route-gate:health-guard");
++    expect(codes(result)).toContain("route-gate:search");
++    expect(codes(result)).not.toContain("task:conversation");
++  });
++
++  it("rules when the engine can't run it, and never on the 1.5B", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    gate(null);
++    expect(codes((await collect("tell me something fun about yourself")).result)).toEqual(["task:chat", "route-gate:unavailable"]);
++    f = makeFake();
++    const calls = gate([{ token: "ANS", prob: 1 }]);
++    expect(codes((await collect("tell me something fun about yourself")).result)).toEqual(["task:chat"]);
++    expect(calls).toHaveLength(0);
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..e3e97665 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -11,6 +11,7 @@
+  * a double send can never run two completions on one context.
+  */
+ import { classifyTask } from "./classify";
++import { gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_CONFIG, ROUTE_GATE_MODEL_IDS, ROUTE_GATE_N_PROBS, type GateMessage, type TokenProb } from "./routeGate";
+ import {
+   compressContext,
+   selectInstant,
+@@ -139,6 +140,11 @@ export interface AnswerEngine {
+   estimateFit(filename: string): Promise<MemoryFit | null>;
+   /** Keeps this prompt start prefilled in the KV cache between answers (LlamaEngine.setAnswerPrefix). */
+   setAnswerPrefix?(prefix: PromptPrefix | null): void;
++  /**
++   * Top-N probabilities of the next token after `messages` (chat template applied), on the model in `modelFilename`.
++   * Null when that model isn't the loaded one (the route gate then keeps the rules).
++   */
++  nextTokenProbs?(messages: GateMessage[], opts: { modelFilename: string; nProbs: number }): Promise<TokenProb[] | null>;
+ }
+ 
+ export interface AnswerDeps {
+@@ -645,7 +651,36 @@ export function createAnswerer(deps: AnswerDeps) {
+       );
+       const depthModels = deepCandidates.map((m) => toDepth(m, fits.get(m.id)));
+       const deepModel = resolveDeepModel(depthModels, fastLlm?.id, settings.deepModelId);
+-      const taskType = classifyTask(req.query);
++      // Route gate (4B only): the loaded model decides whether to search; the rules stay the fallback.
++      const ruleTaskType = classifyTask(req.query);
++      const gateCodes: string[] = [];
++      let taskType = ruleTaskType;
++      if (
++        fastLlm &&
++        deps.engine.nextTokenProbs &&
++        !ROUTE_GATE_CONFIG.off &&
++        (ROUTE_GATE_CONFIG.anyModel || ROUTE_GATE_MODEL_IDS.has(fastLlm.id)) &&
++        (req.tier ?? "auto") === "auto" &&
++        !req.reuseSources &&
++        !req.answerAnyway
++      ) {
++        const probs = await deps.engine
++          .nextTokenProbs(routeGateMessages(req.query, ctx.history), { modelFilename: fastLlm.filename, nProbs: ROUTE_GATE_N_PROBS })
++          .catch((e) => {
++            console.warn("[answer] route gate failed:", e?.message ?? e);
++            return null;
++          });
++        if (!probs) gateCodes.push("route-gate:unavailable");
++        else {
++          const v = routeGateVerdict(probs);
++          // A health question always searches: the gate may only skip a search where a wrong skip is harmless.
++          const decision = v.decision === "answer" && isHealthQuestion(req.query) ? "search" : v.decision;
++          taskType = gatedTaskType(ruleTaskType, decision);
++          gateCodes.push(`route-gate:${decision}`, `route-gate:score-${v.score === null ? "none" : v.score.toFixed(3)}`);
++          if (decision !== v.decision) gateCodes.push("route-gate:health-guard");
++          if (taskType !== ruleTaskType) gateCodes.push(`route-gate:${ruleTaskType}->${taskType}`);
++        }
++      }
+       const plan: AnswerPlan = planAnswer({
+         taskType,
+         requestedTier: req.tier ?? "auto",
+@@ -658,7 +693,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         verifiers: depthModels.filter((m) => m.roles.includes("verifier") && deepAutoIneligibility(m) === null),
+         hasReusedSources: !!req.reuseSources?.length,
+       });
+-      const reasonCodes = [`task:${taskType}`, ...plan.reasonCodes, ...(lowRamNote ? [lowRamNote] : [])];
++      const reasonCodes = [`task:${taskType}`, ...gateCodes, ...plan.reasonCodes, ...(lowRamNote ? [lowRamNote] : [])];
+       if (!deepModel && !settings.deepModelId) {
+         for (const m of depthModels.filter((d) => d.roles.includes("reasoning"))) {
+           const why = deepAutoIneligibility(m);
+diff --git a/src/routing/routeGate.test.ts b/src/routing/routeGate.test.ts
+new file mode 100644
+index 00000000..f36339ac
+--- /dev/null
++++ b/src/routing/routeGate.test.ts
+@@ -0,0 +1,60 @@
++import { describe, it, expect } from "vitest";
++import { gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_SYSTEM } from "./routeGate";
++
++describe("routeGateMessages", () => {
++  it("sends a single message as is, after the B4 system prompt", () => {
++    expect(routeGateMessages("boa noite 🙂")).toEqual([
++      { role: "system", content: ROUTE_GATE_SYSTEM },
++      { role: "user", content: "boa noite 🙂" },
++    ]);
++    expect(ROUTE_GATE_SYSTEM.length).toBe(923);
++    expect(ROUTE_GATE_SYSTEM.endsWith("Reply with exactly one word: SEARCH or ANSWER.")).toBe(true);
++  });
++
++  it("folds history into one user message (the measured format)", () => {
++    const m = routeGateMessages("e quanto custa?", { turns: [{ role: "user", text: "como ir a Pai?" }, { role: "assistant", text: "De ônibus." }] });
++    expect(m[1].content).toBe("Conversation so far:\nuser: como ir a Pai?\nassistant: De ônibus.\n\nLast message: e quanto custa?");
++  });
++
++  it("caps history to the last 6 turns and 280 characters a turn", () => {
++    const turns = Array.from({ length: 8 }, (_, i) => ({ role: (i % 2 ? "assistant" : "user") as "user" | "assistant", text: `t${i} ${"x".repeat(400)}` }));
++    const user = routeGateMessages("ok?", { turns })[1].content;
++    expect(user).not.toContain("t0 ");
++    expect(user).not.toContain("t1 ");
++    expect(user).toContain("t2 ");
++    expect(user.split("\n").filter((l) => l.startsWith("user:") || l.startsWith("assistant:")).every((l) => l.length <= 292)).toBe(true);
++  });
++});
++
++describe("routeGateVerdict", () => {
++  it("scores p(SEARCH) / (p(SEARCH) + p(ANS)) at 0.5", () => {
++    expect(routeGateVerdict([{ token: "ANS", prob: 0.9 }, { token: "SEARCH", prob: 0.05 }])).toMatchObject({ decision: "answer" });
++    expect(routeGateVerdict([{ token: "SEARCH", prob: 0.6 }, { token: "ANS", prob: 0.3 }]).score).toBeCloseTo(2 / 3);
++    expect(routeGateVerdict([{ token: "SEARCH", prob: 0.5 }, { token: "ANS", prob: 0.5 }]).decision).toBe("search");
++  });
++
++  it("reads llama.rn rc.4 one-hot / truncated probabilities the same way", () => {
++    expect(routeGateVerdict([{ token: "ANS", prob: 1 }, { token: "SEARCH", prob: 0 }]).decision).toBe("answer");
++    expect(routeGateVerdict([{ token: "SEARCH", prob: 1 }]).decision).toBe("search");
++  });
++
++  it("searches when neither label is in the top N", () => {
++    expect(routeGateVerdict([{ token: "Hello", prob: 0.9 }])).toEqual({ decision: "search", score: null, labelMass: 0 });
++    expect(routeGateVerdict([])).toEqual({ decision: "search", score: null, labelMass: 0 });
++  });
++});
++
++describe("gatedTaskType", () => {
++  it("answer: conversation, unless the rule type already skips retrieval", () => {
++    expect(gatedTaskType("chat", "answer")).toBe("conversation");
++    expect(gatedTaskType("lookup", "answer")).toBe("conversation");
++    expect(gatedTaskType("translate", "answer")).toBe("translate");
++    expect(gatedTaskType("greeting", "answer")).toBe("greeting");
++  });
++  it("search: the rule type, as chat when that type would skip retrieval", () => {
++    expect(gatedTaskType("lookup", "search")).toBe("lookup");
++    expect(gatedTaskType("compare", "search")).toBe("compare");
++    expect(gatedTaskType("greeting", "search")).toBe("chat");
++    expect(gatedTaskType("conversation", "search")).toBe("chat");
++  });
++});
+diff --git a/src/routing/routeGate.ts b/src/routing/routeGate.ts
+new file mode 100644
+index 00000000..b02a92ce
+--- /dev/null
++++ b/src/routing/routeGate.ts
+@@ -0,0 +1,106 @@
++/**
++ * Route gate: the loaded model decides whether a message needs a search (Anvil chat-routing B4,
++ * rnd/research/anvil/exp/chat-routing). One prefill of a fixed router prompt + the conversation, then the
++ * next-token probabilities of "SEARCH" vs "ANS" (first token of "ANSWER"); no text is generated.
++ * Compass chat-slice v0 on the 4B: 95% (false search 3/34, missed search 0/23); the 1.5B misses 8/23
++ * searches, so it keeps the rules (ROUTE_GATE_MODEL_IDS).
++ */
++import { isRetrievalIrrelevant } from "./classify";
++import type { TaskType } from "./types";
++import type { ConversationHistory } from "../rag/pure";
++
++/** Models the gate runs on. The 1.5B answered world questions from memory behind it. */
++export const ROUTE_GATE_MODEL_IDS: ReadonlySet<string> = new Set(["qwen3-4b-instruct-2507-q4km"]);
++
++/** Device probe switches (anvil/specs/probe-gate-prefix-cache.md): edit in place, never shipped on. */
++export const ROUTE_GATE_CONFIG = { anyModel: false, off: false };
++
++/** B4: search by default + 13 examples (written before the slice existed). Changing it invalidates the measurement. */
++export const ROUTE_GATE_SYSTEM = [
++  "You are BOAR's router. BOAR answers questions about the world only from its offline library, never from memory.",
++  "SEARCH: the last message asks for any fact, explanation, advice, place, route, rule, health, safety or travel information, even if you think you know the answer.",
++  "ANSWER: the last message is a greeting, thanks, small talk, a question about BOAR itself, arithmetic, or a request to rewrite or translate text already in the conversation.",
++  "",
++  "Examples:",
++  '"oi!" -> ANSWER',
++  '"good evening" -> ANSWER',
++  '"obrigado!" -> ANSWER',
++  '"who made you?" -> ANSWER',
++  '"what is 12 times 7?" -> ANSWER',
++  '"make that shorter" -> ANSWER',
++  '"lol" -> ANSWER',
++  '"capital da Austrália" -> SEARCH',
++  '"how tall is the Eiffel Tower?" -> SEARCH',
++  '"como chegar em Ouro Preto de ônibus?" -> SEARCH',
++  '"is it safe to swim after eating?" -> SEARCH',
++  '"what is a rollup?" -> SEARCH',
++  '"e quanto custa?" (after a travel answer) -> SEARCH',
++  "",
++  "Reply with exactly one word: SEARCH or ANSWER.",
++].join("\n");
++
++/** Top-N next-token probabilities asked of the engine; both labels sat in the top 2 on the desktop (mass ≥ 0.93). */
++export const ROUTE_GATE_N_PROBS = 20;
++/** Label first tokens as llama.cpp prints them (Qwen2.5 and Qwen3 tokenizers: "SEARCH" = 1 token, "ANSWER" = "ANS"+"WER"). */
++const SEARCH_PIECE = "SEARCH";
++const ANSWER_PIECE = "ANS";
++/** History cap: a follow-up pays a prefill for every new token, and the gate sits before the first visible text. */
++const MAX_TURNS = 6;
++const MAX_TURN_CHARS = 280;
++
++export interface TokenProb {
++  token: string;
++  prob: number;
++}
++
++export interface GateMessage {
++  role: "system" | "user";
++  content: string;
++}
++
++const clip = (s: string) => (s.length > MAX_TURN_CHARS ? `${s.slice(0, MAX_TURN_CHARS).trimEnd()}…` : s);
++
++/**
++ * The gate prompt. History is folded into one user message: as separate chat turns the label mass fell to
++ * ~0.001 on follow-ups. The system message is the cacheable prefix.
++ */
++export function routeGateMessages(query: string, history?: ConversationHistory | null): GateMessage[] {
++  const turns = (history?.turns ?? []).slice(-MAX_TURNS);
++  const user = turns.length
++    ? `Conversation so far:\n${turns.map((t) => `${t.role}: ${clip(t.text)}`).join("\n")}\n\nLast message: ${query}`
++    : query;
++  return [
++    { role: "system", content: ROUTE_GATE_SYSTEM },
++    { role: "user", content: user },
++  ];
++}
++
++export interface GateVerdict {
++  decision: "search" | "answer";
++  /** p(SEARCH) / (p(SEARCH) + p(ANS)); null when neither label is in the top N (then: search). */
++  score: number | null;
++  labelMass: number;
++}
++
++/**
++ * Threshold 0.5. Also right on llama.rn rc.4's post-sampling probabilities: the ratio keeps the sign of the
++ * logit gap at any temperature, and truncation can only drop the lower label (anvil llamarn-nprobs.md).
++ */
++export function routeGateVerdict(probs: readonly TokenProb[]): GateVerdict {
++  const pS = probs.find((p) => p.token === SEARCH_PIECE)?.prob ?? 0;
++  const pA = probs.find((p) => p.token === ANSWER_PIECE)?.prob ?? 0;
++  const labelMass = pS + pA;
++  if (!(labelMass > 0)) return { decision: "search", score: null, labelMass: 0 };
++  const score = pS / labelMass;
++  return { decision: score >= 0.5 ? "search" : "answer", score, labelMass };
++}
++
++/**
++ * The gate decides only whether to search. "answer" keeps a rule type that already skips retrieval
++ * (translate, code, …) and otherwise answers as a conversation; "search" retrieves, as "chat" when the rule
++ * type would skip it.
++ */
++export function gatedTaskType(rule: TaskType, decision: GateVerdict["decision"]): TaskType {
++  if (decision === "answer") return isRetrievalIrrelevant(rule) ? rule : "conversation";
++  return isRetrievalIrrelevant(rule) ? "chat" : rule;
++}

@@ -1,0 +1,7 @@
+# Q4B-AUNION addendum to AUNION-PIXEL-criterion.md (frozen 2026-10-21, before the run)
+
+Question: memory of the 8 GB default model of the app maintainer's RC (Qwen3-4B) with the A-union installed. Run q4ba73-a = q17b73-a request with requestId changed and models [qwen3-4b-instruct-2507-q4km] (final-3-bench 73; sha d6268af0...). Same phone, installed APK (gemma2 build, tree 0ca54d87 = cut7-cmp30off-batchret), A-union kit installed (6 packs + gazetteer). Thermal gate before the run (status 0, battery <= 34.0 C), waited out. Measures and script as in the main criterion (summarize_aunion.py, same sha). 0 judge calls.
+
+Baseline: final-cut7-v01 (10-20, same phone, 4B, claim kit, cut 7 APK tree 7c96e59e; one LMK kill on attempt 1 at PSS ~4.4 GB, run completed after a reboot, PSS peak 4.92 GB). Engine caveat: cut 7 vs cut7-cmp30off-batchret (same answers with no override; batched pack lookups, byte-identical retrieval, faster), so retrieval-time deltas mix the A-union cost and the batchret saving.
+
+Rule: PASS if 0 LMK kills AND PSS peak < 5.2 GB; else FAIL. A kill is a valid data point: record the question it died on, the last PSS sample before, meminfo-after-first; bring the app back with am start and let boar_bench.py resume; nothing uninstalled. Reported vs final-cut7-v01: answer p50/p90, TTFT p50, retrieval p50 (if the baseline timeline carries it), promptN, pack hits, PSS peak, thermal.

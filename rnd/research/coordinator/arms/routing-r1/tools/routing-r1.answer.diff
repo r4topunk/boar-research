@@ -1,0 +1,57 @@
+--- ../../../be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ answer.ts	2026-10-21 13:15:45
+@@ -83,6 +83,12 @@
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard as cut2SnakebiteCard } from "./firstAidCards";
+ import { DETECTOR_FLOOR } from "./emergencyHead";
++/** ROUTING-R1 (eval-only, arms/routing-r1): comma list of rule flags read from the env; unset = the engine as is.
++ *  P = the places route never takes a question the lexical health regex flags; T = a detector-only health fire
++ *  (lexical regex silent) needs p >= 0.5; H = a detector-only health fire with no card condition and no on-topic health
++ *  source anywhere in the retrieved list is answered as a normal question instead of the no-source health decline. */
++const ROUTING_R1 = new Set(((typeof process !== "undefined" && process.env?.ROUTING_R1) || "").split(",").map((x) => x.trim()).filter(Boolean));
++const R1_T_MIN = 0.5;
+ import type { LoadFailureKind } from "../inference/loadError";
+ import { DepthModel, planAnswer, resolveDeepModel, AnswerPlan, deepAutoIneligibility } from "./depth";
+ import { isCompactModel, pickDefaultAnswerModel, tooBigForLowRam } from "./defaultModel";
+@@ -762,8 +768,11 @@
+           : detectGeoIntent(req.query);
+       // health13 (blind hand read): "choking at a restaurant" got "the places pack is not installed". The places pack is
+       // food/venue search only, so a health message never takes this path.
+-      const healthNow = learned ? learned.fire || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query)) : isHealthQuestion(req.query);
+-      if (geoIntent && !healthNow && !isCardEmergency(req.query)) return runGeo(geoIntent as GeoIntent, t0, markVisible, () => firstVisibleAt);
++      const r1Fire = (l: { p: number; fire: boolean }) => l.fire && !(ROUTING_R1.has("T") && l.p < R1_T_MIN && !isHealthQuestion(req.query));
++      const healthNow = learned ? r1Fire(learned) || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query)) : isHealthQuestion(req.query);
++      const r1PlacesVeto = ROUTING_R1.has("P") && !!geoIntent && !healthNow && isHealthQuestion(req.query);
++      if (r1PlacesVeto) detectorCodes.push("routing-r1:places-health-veto");
++      if (geoIntent && !healthNow && !isCardEmergency(req.query) && !r1PlacesVeto) return runGeo(geoIntent as GeoIntent, t0, markVisible, () => firstVisibleAt);
+       if (geoIntent) detectorCodes.push("places:skipped-health");
+ 
+       const { settings, installed, speeds, fastLlm, lowRamNote, lowRamBlocked } = await selectAnswerModel(deps);
+@@ -865,9 +874,10 @@
+       // health11: the learned detector replaces the broad regex (15/57 hard-negative fires on Sonar's dev). The broad
+       // regex still counts with weak detector evidence (DETECTOR_FLOOR), and the precise lexical parts stay: card-condition
+       // triggers and the health follow-up.
+-      const lexicalHealth = learned ? learned.fire || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query)) : isHealthQuestion(req.query);
++      const lexicalHealth = learned ? r1Fire(learned) || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query)) : isHealthQuestion(req.query);
++      if (learned && learned.fire && !r1Fire(learned)) reasonCodes.push("routing-r1:detector-below-t");
+       const cardEmergency = !lexicalHealth && !healthFollowUp && isCardEmergency(req.query);
+-      const health = lexicalHealth || healthFollowUp || cardEmergency;
++      let health = lexicalHealth || healthFollowUp || cardEmergency;
+       if (cardEmergency) reasonCodes.push("grounding:health-card-condition");
+       if (healthFollowUp) reasonCodes.push("grounding:health-follow-up");
+       const gen =
+@@ -1070,6 +1080,14 @@
+       // by its own words: English sources rarely name them, so its noise ("Estrela, Lisbon") is dropped.
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
++      if (ROUTING_R1.has("H") && health && learned?.fire && !isHealthQuestion(req.query) && !healthFollowUp && !cardEmergency && gen?.mode !== "multipass"
++          && conversationCondition(req.query, userTurns).condition === null) {
++        const r1Topic = healthTopicTerms(req.query, english);
++        if (!raw.some((c) => onHealthTopic(r1Topic, c))) {
++          health = false;
++          reasonCodes.push("routing-r1:health-released");
++        }
++      }
+       if (guarded && !health && sources.length) {
+         const kept = sources.filter((c) => onSubject(c));
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);

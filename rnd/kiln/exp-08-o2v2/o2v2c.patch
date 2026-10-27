@@ -1,0 +1,60 @@
+# exp-08 O2 v2 against boar-app 611a4b92 (feat/o2-compact-offsubject + eval arm). LOCAL BRANCH ONLY (rule 0).
+# Variant by EXPO_PUBLIC_O2_V2: '' = v1 (unchanged), 'a' = concept-title + one-side comparative, 'c' = concept-title + one-side only without a third-entity passage.
+
+diff -ruN o2-a/src/routing/o2WeakSupport.ts o2-b/src/routing/o2WeakSupport.ts
+--- a/src/routing/o2WeakSupport.ts	2026-09-30 19:22:02
++++ b/src/routing/o2WeakSupport.ts	2026-10-01 04:55:13
+@@ -22,6 +22,32 @@
+   return override ?? O2_COMPACT;
+ }
+ 
++/**
++ * O2 v2 (exp-08, local branch): the two false refusals of the iPhone A/B (rnd/veil/o2-ab-labels).
++ * - "concept": a single-subject question is also covered by a multi-word concept title the question itself names
++ *   ("When did Ethereum switch … to proof of stake?" + "Proof-of-stake vs proof-of-work").
++ * - "one-side": a comparative with ONE side covered keeps (Brazil passages for "Indonesia or Brazil?").
++ * - "one-side-clean": the same, only when every passage is about the covered side; a passage about a third entity
++ *   (Fukuoka for "Japan vs Nigeria", Fin whale for "blue whale vs dinosaur") is the distractor O2 exists for.
++ * EXPO_PUBLIC_O2_V2 = "" (v1) | "a" (concept + one-side) | "c" (concept + one-side-clean).
++ */
++export function o2Variant(): "" | "a" | "c" {
++  const v = process.env.EXPO_PUBLIC_O2_V2 ?? "";
++  return v === "a" || v === "c" ? v : "";
++}
++
++const CONCEPT_STOP = new Set(["the", "a", "an", "of", "and", "or", "vs", "in", "on", "to", "for"]);
++/** A multi-word title segment the question names as written (normalized, plural-stemmed, contiguous). */
++function conceptTitleNamed(question: string, title: string): boolean {
++  const q = words(norm(question)).map(stem);
++  for (const seg of title.replace(PREFIX, "").split(/\s+(?:vs\.?|versus|and)\s+|[,;:()/]/i)) {
++    const t = words(norm(seg)).map(stem);
++    if (t.filter((w) => !CONCEPT_STOP.has(w)).length < 2) continue;
++    for (let i = 0; i + t.length <= q.length; i++) if (t.every((w, j) => q[i + j] === w)) return true;
++  }
++  return false;
++}
++
+ export type O2Kind = "list" | "superlative" | "comparative" | "numeric";
+ export type O2Passage = { title: string; text?: string | null };
+ export type O2Decision = {
+@@ -328,6 +354,9 @@
+   if (subj.mode === "any") {
+     if (!terms.length) return { ...base, action: "keep", reason: "no subject extracted (fail-open)" };
+     const ok = terms.some((t) => titles.some((ti) => titleCovers(t, ti)));
++    if (!ok && o2Variant() && titles.some((ti) => conceptTitleNamed(question, ti))) {
++      return { ...base, action: "keep", reason: "o2v2:concept-title named by the question" };
++    }
+     return ok
+       ? { ...base, action: "keep", reason: "subject covered" }
+       : { ...base, action: "refuse", reason: `no passage is about ${terms.join(", ")} (o2:no-alias-table)`, questionSubject: display(terms[0]) };
+@@ -337,6 +366,10 @@
+     if (!missing.length) return { ...base, action: "keep", reason: "all sides covered" };
+     const dims = dimsFor(question);
+     const covered = terms.filter((t) => !missing.includes(t));
++    const v = o2Variant();
++    if (covered.length && (v === "a" || (v === "c" && titles.every((ti) => covered.some((c) => titleCovers(c, ti)))))) {
++      return { ...base, action: "keep", reason: `o2v2:one-side (${covered.join(", ")} covered${v === "c" ? ", no third-entity passage" : ""})` };
++    }
+     for (const p of passages) {
+       for (const c of covered) {
+         if (titleCovers(c, p.title) && dominates(p.text, c, dims)) {

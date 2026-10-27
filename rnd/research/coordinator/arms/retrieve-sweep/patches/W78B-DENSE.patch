@@ -1,0 +1,141 @@
+diff -ruN rs-W78/src/rag/wikiPack.ts rs-W78B/src/rag/wikiPack.ts
+--- rs-W78/src/rag/wikiPack.ts	2026-10-23 10:14:55
++++ rs-W78B/src/rag/wikiPack.ts	2026-10-23 10:14:55
+@@ -1228,7 +1228,11 @@
+   async denseChunks(queryVec: Float32Array, m = DENSE2_ARTICLES, k = DENSE2_K, floor = DENSE2_FLOOR): Promise<PackHit[]> {
+     const t0 = Date.now();
+     let loadMs = 0;
+-    if (!this.leadMatrix) {
++    // W78B-DENSE (RS_DENSE_BIN=<N>, bench-only, default off): stage 1 through the 1-bit sidecar (Hamming top-N, exact int8 rescore, top min(m, N)).
++    const denseBinN = Number((globalThis as any).process?.env?.RS_DENSE_BIN ?? 0);
++    let binStage: { top: Array<{ id: number; s: number }>; scanMs: number; hamMs: number; loadMs: number; scanBytes: number; residentBytes: number; rows: number; rescoreRows: number } | null = null;
++    if (denseBinN > 0) binStage = await this.rsDenseStage1Bin(queryVec, m, denseBinN);
++    if (!binStage && !this.leadMatrix) {
+       const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []);
+       const dims = queryVec.length;
+       const ids = new Int32Array(rows.length);
+@@ -1246,13 +1250,13 @@
+       loadMs = Date.now() - t0;
+     }
+     const t1 = Date.now();
+-    const { ids, vecs, norms } = this.leadMatrix;
++    const { ids, vecs, norms } = binStage ? { ids: new Int32Array(0), vecs: new Int8Array(0), norms: new Float32Array(0) } : this.leadMatrix!;
+     const dims = queryVec.length;
+     let qn = 0;
+     for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
+     qn = Math.sqrt(qn) || 1;
+     // Top-m by lead cosine (ties: lower article id first, the scan order).
+-    const top: Array<{ id: number; s: number }> = [];
++    const top: Array<{ id: number; s: number }> = binStage ? binStage.top : [];
+     for (let i = 0; i < ids.length; i++) {
+       let dot = 0;
+       const o = i * dims;
+@@ -1266,6 +1270,9 @@
+       }
+     }
+     const t2 = Date.now();
++    await this.rsDenseLog(binStage
++      ? { mode: `bin${denseBinN}`, ...binStage, leadMs: t2 - t1 }
++      : { mode: "int8", rows: ids.length, scanMs: t2 - t1, hamMs: 0, loadMs, scanBytes: ids.length * dims, residentBytes: vecs.byteLength + norms.byteLength + ids.byteLength, rescoreRows: 0, top });
+     const art = top.map((t) => t.id);
+     const rows = art.length
+       ? await this.db.getAllAsync<{ id: number; article_id: number; start: number; end: number; vec: Uint8Array }>(
+@@ -1285,6 +1292,98 @@
+     denseScans.push({ leadMs: t2 - t1, chunkMs: t3 - t2, ms: Date.now() - t0, leads: ids.length, candidates: rows.length, kept: hits.length, loadMs });
+     if (denseScans.length > 32) denseScans.shift();
+     return hits;
++  }
++
++  /** W78B (bench-only): RS_DENSE_LOG=<file> appends one JSON line per denseChunks stage-1 scan (top = the article ids kept, best first). */
++  private async rsDenseLog(rec: Record<string, unknown>): Promise<void> {
++    const f = (globalThis as any).process?.env?.RS_DENSE_LOG;
++    if (!f) return;
++    const fs = await import("node:fs");
++    const { top, ...rest } = rec as { top?: Array<{ id: number; s: number }> } & Record<string, unknown>;
++    fs.appendFileSync(f, JSON.stringify({ pack: this.meta.name, ...rest, art: (top ?? []).map((t) => t.id) }) + "\n");
++  }
++
++  /** W78B: loads the 1-bit sidecar of this pack (null: no sidecar file, the caller falls back to the exact scan). */
++  private async rsLeadBitsEnsure(dims: number): Promise<{ loadMs: number } | null> {
++    if (this.rsLeadBits) return { loadMs: 0 };
++    const env = (globalThis as any).process?.env;
++    const fs = await import("node:fs");
++    const path = `${env?.RS_SE_LEAD_BIN_DIR ?? "."}/${String(this.meta.manifestSha256 ?? "").slice(0, 16)}.leadbits`;
++    if (!fs.existsSync(path)) return null;
++    const t = Date.now();
++    const W = dims >> 5;
++    const buf = fs.readFileSync(path);
++    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
++    const hdr = new DataView(ab, 8, 8);
++    const n = hdr.getUint32(0, true);
++    if (hdr.getUint32(4, true) !== dims) throw new Error(`W78B: ${path} dims mismatch`);
++    this.rsLeadBits = { ids: new Int32Array(ab, 16, n), words: new Uint32Array(ab, 16 + 4 * n, n * W), n, fileBytes: buf.byteLength };
++    return { loadMs: Date.now() - t };
++  }
++
++  /**
++   * W78B-DENSE: stage 1 of denseChunks through the sign sidecar: Hamming distance of sign(query) to every article's sign bits, the `binN` nearest
++   * (ties: lower row), exact int8 cosine of only those rows (same arithmetic as the exact scan), top min(m, binN) of them (ties: scan order).
++   */
++  private async rsDenseStage1Bin(queryVec: Float32Array, m: number, binN: number) {
++    const dims = queryVec.length;
++    const W = dims >> 5;
++    const ld = await this.rsLeadBitsEnsure(dims);
++    if (!ld) return null;
++    const tScan = Date.now();
++    const { ids, words, n } = this.rsLeadBits!;
++    const q = new Uint32Array(W);
++    for (let d = 0; d < dims; d++) if (queryVec[d] > 0) q[d >> 5] |= 1 << (d & 31);
++    const dist = new Uint16Array(n);
++    const hist = new Uint32Array(dims + 1);
++    for (let i = 0; i < n; i++) {
++      let h = 0;
++      const o = i * W;
++      for (let w = 0; w < W; w++) {
++        let x = (words[o + w] ^ q[w]) >>> 0;
++        x = x - ((x >>> 1) & 0x55555555);
++        x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
++        h += (((x + (x >>> 4)) & 0x0f0f0f0f) * 0x01010101) >>> 24;
++      }
++      dist[i] = h;
++      hist[h]++;
++    }
++    const want = Math.min(binN, n);
++    let thr = 0;
++    for (let acc = 0; thr <= dims; thr++) if ((acc += hist[thr]) >= want) break;
++    const below = want - (thr > 0 ? hist.slice(0, thr).reduce((a, b) => a + b, 0) : 0);
++    const cand: number[] = [];
++    let atThr = 0;
++    for (let i = 0; i < n; i++) if (dist[i] < thr || (dist[i] === thr && atThr++ < below)) cand.push(i);
++    const tHam = Date.now();
++    const candIds = cand.map((i) => ids[i]);
++    const rows = candIds.length
++      ? await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>(`SELECT article_id, vec FROM lead_vecs WHERE article_id IN (${candIds.map(() => "?").join(",")})`, candIds)
++      : [];
++    const byId = new Map(rows.map((r) => [r.article_id, r.vec]));
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const keep = Math.min(m, binN);
++    const top: Array<{ id: number; s: number }> = [];
++    for (const id of candIds) {
++      const raw = byId.get(id);
++      if (!raw) continue;
++      const vv = new Int8Array(raw.buffer, raw.byteOffset, dims);
++      let nn = 0;
++      for (let d = 0; d < dims; d++) nn += vv[d] * vv[d];
++      const norm = Math.fround(Math.sqrt(nn));
++      let dot = 0;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vv[d];
++      const s = norm ? dot / (qn * norm) : 0;
++      if (top.length < keep || s > top[top.length - 1].s) {
++        let j = top.length < keep ? top.length : top.length - 1;
++        if (top.length < keep) top.push({ id, s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id, s };
++      }
++    }
++    return { top, scanMs: Date.now() - tScan, hamMs: tHam - tScan, loadMs: ld.loadMs, scanBytes: n * W * 4 + rows.length * dims, residentBytes: this.rsLeadBits!.fileBytes, rows: n, rescoreRows: rows.length };
+   }
+ 
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {

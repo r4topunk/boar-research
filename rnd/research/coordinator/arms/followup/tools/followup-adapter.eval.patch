@@ -1,0 +1,22 @@
+--- kiln-local/be-cut7-warn/be/adapter.ts	2026-10-16 02:12:32
++++ kiln-local/be-cut7-followup/be/adapter.ts	2026-10-16 10:16:31
+@@ -804,6 +804,8 @@
+     // HEALTHGAP / WARN (engine deps.healthgap, deps.warn; src/routing/healthGap.ts, warn.ts): the eval-side switches; the engine reads deps only.
+     ...(process.env.HEALTHGAP === "1" ? { healthgap: true } : {}),
+     ...(process.env.WARN === "1" ? { warn: true } : {}),
++    // FOLLOWUP (engine deps.followupContext, src/routing/followup.ts): eval-side switch.
++    ...(process.env.FOLLOWUP === "1" ? { followupContext: true } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 
+--- kiln-local/be-cut7-warn/be/trace.ts	2026-10-15 13:04:10
++++ kiln-local/be-cut7-followup/be/trace.ts	2026-10-16 10:16:31
+@@ -126,7 +126,7 @@
+  * verbatim, as ChatScreen sends them before a chat is long enough to summarise); a single-turn item gets `ctx` unchanged.
+  */
+ export function answerContext<C extends object>(ctx: C, item: { history?: { turns: { role: "user" | "assistant"; text: string }[] } }): C | (C & { history: { summary: null; turns: { role: "user" | "assistant"; text: string }[] } }) {
+-  return item.history ? { ...ctx, history: { summary: null, turns: item.history.turns.map((t) => ({ role: t.role, text: t.text })) } } : ctx;
++  return item.history ? { ...ctx, history: { summary: null, turns: item.history.turns.map((t: any) => ({ role: t.role, text: t.text, ...(Array.isArray(t.sources) ? { sources: t.sources } : {}) })) } } : ctx; // FOLLOWUP: assistant turns may carry sources
+ }
+ 
+ /** "--shard i/N" → { i, n } (0 ≤ i < n). */

@@ -1,0 +1,118 @@
+--- <workspace>/kiln-local/be-0cfd4a77-cut7-headpass-x2/src/routing/answer.ts	2026-10-14 14:04:53
++++ <workspace>/kiln-local/be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
+@@ -230,6 +230,11 @@
+   emergencyScore?(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean } | null>;
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
++  /** LITEDECLINE (eval-only switch, default unset): "three" = the three compact-only declines named in LITEDECLINE-criterion.md
++   * skip (the compact model takes the 4B's path there); "all" = also the two uncited compact declines (OFF5).
++   * CMP30OFF: a released decline is recorded (grounding:compact-decline-released-<rule>) and the answer starts with
++   * COMPACT_DECLINE_RELEASED_WARNING. Unset (the default) = the engine as is. */
++  compactDeclinesOff?: "three" | "all";
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -370,6 +375,15 @@
+   /(?<![\p{L}\p{N}])(ethereum|ether|eth|bitcoin|btc|blockchains?|cripto\p{L}*|crypto\p{L}*|tokens?|nfts?|erc-?\d*|eip-?\d*|bip-?\d*|carteiras?( digita\p{L}*| cripto\p{L}*)?|wallets?|billeteras?|staking|stake|validador\p{L}*|validator\p{L}*|rollups?|l2s?|layer ?2|camada ?2|capa ?2|defi|smart contracts?|contratos? inteligentes?|solidity|minera\p{L}*|mining|hash\p{L}*|merkle|zk\p{L}*|sharding|consenso|consensus|privacy pools?|tornado cash|stablecoins?|usdc|usdt|uniswap|airdrops?|chave privada|private keys?|seed phrase|frase semente|mempool|satoshis?|lightning network|proof of (stake|work)|prova de (participa\p{L}+|trabalho)|prueba de (participaci\p{L}+|trabajo)|vitalik|buterin|nakamoto|dapps?|web3)(?![\p{L}\p{N}])/iu;
+ 
+ const NOT_A_MODEL = new Set(["grounding-guard", "extractive", "none", "places", "calculator"]);
++
++/** CMP30OFF: the fixed first line of an answer a released compact decline would have declined. */
++export const COMPACT_DECLINE_RELEASED_WARNING = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++/** CMP30OFF bench switch (BOAR Bench engineOverrides.compactDeclinesOff, per request): true = OFF5 ("all") for every
++ * answerer whose deps leave compactDeclinesOff unset. Default false = the engine as is. */
++let benchCompactDeclinesOff = false;
++export function setBenchCompactDeclinesOff(on: boolean): void {
++  benchCompactDeclinesOff = on;
++}
+ 
+ export function createAnswerer(deps: AnswerDeps) {
+   let current: AnswerHandle | null = null;
+@@ -913,6 +927,14 @@
+       });
+       /** Set when the text differs from the streamed tokens (citations removed, CT-1). */
+       let finalText: string | undefined;
++      /** CMP30OFF: the compact-only declines skipped for this answer (none unless the eval switch is on). */
++      const declinesOff = deps.compactDeclinesOff ?? (benchCompactDeclinesOff ? ("all" as const) : undefined);
++      const released: string[] = [];
++      const release = (rule: string) => {
++        reasonCodes.push(`grounding:compact-decline-released-${rule}`);
++        if (!released.length) emit({ type: "warning", answerId, code: "weak_sources", message: COMPACT_DECLINE_RELEASED_WARNING });
++        released.push(rule);
++      };
+       /** The instant answer is a source's own sentence without "[n]": it cites that source. */
+       let citedOverride: number[] | undefined;
+       const finish = (
+@@ -1290,7 +1312,8 @@
+         finalText = message;
+         return finish(genTier, "success", message, [], receipt({ retrievalMs }));
+       }
+-      if (fromMemory && genLlm && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (fromMemory && genLlm && isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("no-source");
++      else if (fromMemory && genLlm && isCompactModel(genLlm) && !req.answerAnyway) {
+         // Product decision (Iris/Boar): the compact model doesn't answer from memory unless asked to.
+         reasonCodes.push("grounding:declined-compact");
+         markVisible();
+@@ -1539,7 +1562,8 @@
+       // model declines; the 4B loses the sentence. Deterministic, whatever the sampling seed.
+       const falseClaims = !health && gen.mode !== "multipass" ? falseQuantumClaims(text) : [];
+       if (falseClaims.length) {
+-        if (isCompactModel(genLlm) && !req.answerAnyway) {
++        if (isCompactModel(genLlm) && declinesOff && !req.answerAnyway) release("false-claim");
++        else if (isCompactModel(genLlm) && !req.answerAnyway) {
+           reasonCodes.push("grounding:false-claim-declined-compact");
+           const message = sources.length
+             ? pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer."
+@@ -1577,7 +1601,8 @@
+         }
+       }
+       if (stopRequested) return finish(genTier, "stopped", text, sources, baseReceipt);
+-      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
++      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && declinesOff && !req.answerAnyway && gen.mode !== "multipass") release("all-citations-removed");
++      else if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
+         reasonCodes.push("grounding:all-citations-removed-declined-compact");
+         // Passages were found (and shown): "didn't find this" would be false (Quill 892c049).
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+@@ -1595,7 +1620,8 @@
+       // nothing, (A) never fired and the compact model's PT confident errors went 5 -> 9. A compact answer with
+       // sources in its prompt and no [n] at all (after attribution) is treated like "every citation removed":
+       // the decline, unless asked to answer anyway. The 4B is unchanged.
+-      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) release("uncited-with-sources");
++      else if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
+         reasonCodes.push("grounding:uncited-with-sources-declined-compact");
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+         emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+@@ -1615,7 +1641,10 @@
+         // Sources that passed the topic guard are on topic.
+         const onTopicSources = guarded ? sources.length : 0;
+         if (onTopicSources > 0) reasonCodes.push("grounding:uncited-on-topic");
+-        else if (sources.length && isCompactModel(genLlm) && !req.answerAnyway) {
++        else if (sources.length && isCompactModel(genLlm) && declinesOff === "all" && !req.answerAnyway) {
++          release("uncited");
++          if (sources.length) emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
++        } else if (sources.length && isCompactModel(genLlm) && !req.answerAnyway) {
+           reasonCodes.push("grounding:uncited-declined-compact");
+           const message = pt ? "Não encontrei isso no acervo deste celular." : "I didn't find this in this phone's library.";
+           emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+@@ -1625,10 +1654,18 @@
+           reasonCodes.push("grounding:uncited-preface");
+           // No source: the weak_sources warning already went out before generation.
+           if (sources.length) emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
+-          text = `${uncitedPreface(pt)}\n\n${text.trim()}`;
+-          finalText = text;
++          // CMP30OFF: a released decline's warning line (below) is the one notice.
++          if (!released.length) {
++            text = `${uncitedPreface(pt)}\n\n${text.trim()}`;
++            finalText = text;
++          }
+         }
+       }
++      // CMP30OFF: an answer a released compact decline would have declined starts with the fixed warning line.
++      if (released.length && text.trim()) {
++        text = `${COMPACT_DECLINE_RELEASED_WARNING}\n${text.trim()}`;
++        finalText = text;
++      }
+ 
+       // 4. Verification (complete answers only, distinct verifier).
+       if (plan.verify && text.trim() && sources.length) {

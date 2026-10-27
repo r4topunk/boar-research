@@ -1,0 +1,61 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -81,6 +81,7 @@
+ import { numericGuard } from "./numguard";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
++import { dedupeArticleCopies } from "../rag/dedupe";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard as cut2SnakebiteCard } from "./firstAidCards";
+ import { DETECTOR_FLOOR } from "./emergencyHead";
+@@ -254,6 +255,14 @@
+    * answers a fired message. Default off; true = on.
+    */
+   numguard?: boolean;
++  /**
++   * QMERGE (arms/qmerge): a second search query for the single-pass retrieve (e.g. a model-written 3-8 word query). When
++   * rewrite() returns a query that differs from the engine's search query, retrieve() runs for it with the same k and its
++   * results are appended after the engine's own (de-duplicated by chunk id, then one copy per article passage); the keep
++   * step (compressContext against the engine's matchQuery, grounding, health filter) then chooses as usual. Codes
++   * qmerge:candidates:<n>, qmerge:kept-from-rewrite:<m>. Absent = off; a failing rewrite or second search = off.
++   */
++  queryMerge?: { rewrite(question: string): Promise<string | null> };
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -1048,6 +1057,8 @@
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+       let retrievalMs: number | undefined;
++      /** QMERGE: chunk ids that only the second query's search found (null = no merge). */
++      let fromRewrite: Set<string> | null = null;
+       if (plan.retrieve && gen?.mode !== "multipass") {
+         stage("retrieving", plan.instant !== "off" ? "instant" : genTier);
+         const rs = deps.now();
+@@ -1061,6 +1072,18 @@
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
++        if (deps.queryMerge && !req.reuseSources) {
++          const norm = (q: string) => q.trim().toLowerCase().replace(/\s+/g, " ");
++          const rw = await deps.queryMerge.rewrite(req.query).catch(() => null);
++          if (rw && rw.trim() && norm(rw) !== norm(searchQuery)) {
++            const raw2 = await deps.retrieve(rw.trim(), gen?.retrieveK ?? 6).catch(() => [] as RetrievedChunk[]);
++            const seen = new Set(raw.map((c) => c.chunkId));
++            const merged = dedupeArticleCopies([...raw, ...raw2.filter((c) => !seen.has(c.chunkId) && (seen.add(c.chunkId), true))]);
++            fromRewrite = new Set(merged.filter((c) => !raw.some((x) => x.chunkId === c.chunkId)).map((c) => c.chunkId));
++            raw = merged;
++            reasonCodes.push(`qmerge:candidates:${raw.length}`);
++          }
++        }
+         retrievalMs = deps.now() - rs;
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+@@ -1119,6 +1142,7 @@
+           }
+         }
+       }
++      if (fromRewrite) reasonCodes.push(`qmerge:kept-from-rewrite:${sources.filter((c) => fromRewrite!.has(c.chunkId)).length}`);
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }

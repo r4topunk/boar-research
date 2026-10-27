@@ -1,0 +1,136 @@
+diff -ruN rs-SEFIX/src/rag/wikiPack.ts rs-W78/src/rag/wikiPack.ts
+--- rs-SEFIX/src/rag/wikiPack.ts	2026-10-22 20:14:31
++++ rs-W78/src/rag/wikiPack.ts	2026-10-23 09:20:35
+@@ -532,6 +532,11 @@
+     const tau = v > 0 && v < 1 ? v : 0.78;
+     const nThreads = Math.max(1, Number(env?.RS_SE_LEAD_N ?? 1));
+     const dims = queryVec.length;
++    // W78-BINARY (RS_SE_LEAD_BIN=<N>, bench-only, default off): Hamming top-N over a 1-bit sign sidecar, int8 rescore of those N rows only.
++    const binN = Number(env?.RS_SE_LEAD_BIN ?? 0);
++    if (binN > 0) return this.rsSeLeadOut(await this.rsSeLeadBin(queryVec, tau, nThreads, binN));
++    const tS = Date.now();
++    let loadMs = 0;
+     if (!this.leadMatrix) {
+       const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []).catch(() => []);
+       const ids = new Int32Array(rows.length);
+@@ -546,7 +551,9 @@
+         norms[i] = Math.sqrt(n);
+       });
+       this.leadMatrix = { ids, vecs, norms };
++      loadMs = Date.now() - tS;
+     }
++    const tScan = Date.now();
+     const { ids, vecs, norms } = this.leadMatrix;
+     let qn = 0;
+     for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
+@@ -565,12 +572,110 @@
+         top[j] = { id: ids[i], s };
+       }
+     }
++    await this.rsSeLeadLog({ mode: "int8", rows: ids.length, scanMs: Date.now() - tScan, loadMs, scanBytes: ids.length * dims, residentBytes: vecs.byteLength + norms.byteLength + ids.byteLength, top });
++    return this.rsSeLeadOut(top);
++  }
++
++  /** SEFIX F1: the picked thread(s) as their answer chunks (positions 1-2 by start). */
++  private async rsSeLeadOut(top: Array<{ id: number; s: number }>): Promise<PackHit[]> {
+     const out: PackHit[] = [];
+     for (const t of top) {
+       const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [t.id]);
+       for (const r of rows.slice(1, 3)) out.push({ ...(await this.hit(t.id, r.id, r.start, r.end, t.s, "semantic")), score: t.s });
+     }
+     return out;
++  }
++
++  /** W78 (bench-only): RS_SE_LEAD_LOG=<file> appends one JSON line per F1 scan. */
++  private async rsSeLeadLog(rec: Record<string, unknown>): Promise<void> {
++    const f = (globalThis as any).process?.env?.RS_SE_LEAD_LOG;
++    if (!f) return;
++    const fs = await import("node:fs");
++    fs.appendFileSync(f, JSON.stringify({ pack: this.meta.name, ...rec }) + "\n");
++  }
++
++  private rsLeadBits: { ids: Int32Array; words: Uint32Array; n: number; fileBytes: number } | null = null;
++
++  /**
++   * W78-BINARY: the F1 thread pick through a 1-bit sidecar (<RS_SE_LEAD_BIN_DIR>/<manifestSha256[:16]>.leadbits, w78/tools/build_leadbits.py):
++   * Hamming distance of sign(query) to every thread's sign bits, the N nearest (ties: lower row = lower article id), then the exact int8 cosine
++   * of only those N rows (same arithmetic as the int8 scan), then the unchanged rule (cosine >= tau, best nThreads, scan order on ties).
++   */
++  private async rsSeLeadBin(queryVec: Float32Array, tau: number, nThreads: number, binN: number): Promise<Array<{ id: number; s: number }>> {
++    const env = (globalThis as any).process?.env;
++    const dims = queryVec.length;
++    const W = dims >> 5;
++    const tS = Date.now();
++    let loadMs = 0;
++    if (!this.rsLeadBits) {
++      const fs = await import("node:fs");
++      const path = `${env?.RS_SE_LEAD_BIN_DIR ?? "."}/${String(this.meta.manifestSha256 ?? "").slice(0, 16)}.leadbits`;
++      const buf = fs.readFileSync(path);
++      const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
++      const hdr = new DataView(ab, 8, 8);
++      const n = hdr.getUint32(0, true);
++      if (hdr.getUint32(4, true) !== dims) throw new Error(`W78: ${path} dims mismatch`);
++      this.rsLeadBits = { ids: new Int32Array(ab, 16, n), words: new Uint32Array(ab, 16 + 4 * n, n * W), n, fileBytes: buf.byteLength };
++      loadMs = Date.now() - tS;
++    }
++    const tScan = Date.now();
++    const { ids, words, n } = this.rsLeadBits;
++    const q = new Uint32Array(W);
++    for (let d = 0; d < dims; d++) if (queryVec[d] > 0) q[d >> 5] |= 1 << (d & 31);
++    const dist = new Uint16Array(n);
++    const hist = new Uint32Array(dims + 1);
++    for (let i = 0; i < n; i++) {
++      let h = 0;
++      const o = i * W;
++      for (let w = 0; w < W; w++) {
++        let x = (words[o + w] ^ q[w]) >>> 0;
++        x = x - ((x >>> 1) & 0x55555555);
++        x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
++        h += (((x + (x >>> 4)) & 0x0f0f0f0f) * 0x01010101) >>> 24;
++      }
++      dist[i] = h;
++      hist[h]++;
++    }
++    const want = Math.min(binN, n);
++    let thr = 0;
++    for (let acc = 0; thr <= dims; thr++) if ((acc += hist[thr]) >= want) break;
++    const below = want - (thr > 0 ? hist.slice(0, thr).reduce((a, b) => a + b, 0) : 0);
++    const cand: number[] = [];
++    let atThr = 0;
++    for (let i = 0; i < n; i++) if (dist[i] < thr || (dist[i] === thr && atThr++ < below)) cand.push(i);
++    const tHam = Date.now();
++    const candIds = cand.map((i) => ids[i]);
++    const rows = candIds.length
++      ? await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>(`SELECT article_id, vec FROM lead_vecs WHERE article_id IN (${candIds.map(() => "?").join(",")})`, candIds)
++      : [];
++    const byId = new Map(rows.map((r) => [r.article_id, r.vec]));
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const top: Array<{ id: number; s: number }> = [];
++    for (const id of candIds) {
++      const raw = byId.get(id);
++      if (!raw) continue;
++      const vv = new Int8Array(raw.buffer, raw.byteOffset, dims);
++      let nn = 0;
++      for (let d = 0; d < dims; d++) nn += vv[d] * vv[d];
++      const norm = Math.fround(Math.sqrt(nn));
++      let dot = 0;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vv[d];
++      const s = norm ? dot / (qn * norm) : 0;
++      if (s < tau) continue;
++      if (top.length < nThreads || s > top[top.length - 1].s) {
++        let j = top.length < nThreads ? top.length : top.length - 1;
++        if (top.length < nThreads) top.push({ id, s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id, s };
++      }
++    }
++    await this.rsSeLeadLog({
++      mode: `bin${binN}`, rows: n, scanMs: Date.now() - tScan, hamMs: tHam - tScan, loadMs, scanBytes: n * W * 4 + rows.length * dims,
++      residentBytes: this.rsLeadBits.fileBytes, rescoreRows: rows.length, hamThr: thr, top,
++    });
++    return top;
+   }
+ 
+   /** RS_MERGE=gidf: rows of this pack's index (FTS5's nRow). */

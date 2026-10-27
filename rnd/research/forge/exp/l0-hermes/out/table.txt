@@ -1,0 +1,41 @@
+
+node-jit (reps 3, n 68, TextDecoder native)
+  zstd      p50     36.3  p90     79.4  mean     45.3  share  74.1%
+  utf8      p50      0.9  p90      2.6  mean      1.3  share   2.0%
+  js        p50     10.7  p90     16.4  mean     14.4  share  23.6%
+  compress  p50      0.2  p90      0.3  mean      0.2  share   0.3%
+  total     p50     49.8  p90     96.8  mean     61.1  share 100.0%
+
+node-jit-poly (reps 3, n 68, TextDecoder Expo JS polyfill)
+  zstd      p50     36.9  p90     73.2  mean     44.4  share  61.4%
+  utf8      p50      8.6  p90     26.1  mean     11.7  share  16.1%
+  js        p50     13.0  p90     22.3  mean     16.1  share  22.2%
+  compress  p50      0.2  p90      0.2  mean      0.2  share   0.2%
+  total     p50     58.3  p90    119.3  mean     72.3  share 100.0%
+
+node-jitless (reps 3, n 68, TextDecoder native)
+  zstd      p50    755.9  p90   1554.6  mean    858.6  share  78.7%
+  utf8      p50      1.5  p90      3.9  mean      1.8  share   0.2%
+  js        p50    222.2  p90    246.0  mean    229.9  share  21.1%
+  compress  p50      0.3  p90      0.5  mean      0.3  share   0.0%
+  total     p50    980.0  p90   1789.0  mean   1090.6  share 100.0%
+
+hermes-hbc-O (reps 3, n 68, TextDecoder Expo JS polyfill)
+  zstd      p50    499.0  p90   1084.0  mean    632.0  share  76.3%
+  utf8      p50     32.0  p90     93.0  mean     42.6  share   5.1%
+  js        p50    146.0  p90    178.0  mean    153.7  share  18.5%
+  compress  p50      0.0  p90      1.0  mean      0.4  share   0.0%
+  total     p50    677.0  p90   1333.0  mean    828.7  share 100.0%
+
+hermes-src-lazy (reps 3, n 68, TextDecoder Expo JS polyfill)
+  zstd      p50    727.0  p90   1485.0  mean    886.0  share  74.3%
+  utf8      p50     59.0  p90    132.0  mean     70.8  share   5.9%
+  js        p50    216.0  p90    266.0  mean    234.8  share  19.7%
+  compress  p50      0.0  p90      1.0  mean      0.5  share   0.0%
+  total     p50    999.0  p90   1851.0  mean   1192.0  share 100.0%
+
+ratios (sum over questions):
+  hermes-hbc-O / node-jit: total 13.6x  zstd 14.0x  js 10.7x
+  hermes-hbc-O / node-jit-poly: total 11.5x  zstd 14.2x  js 9.6x
+  hermes-src-lazy / hermes-hbc-O: total 1.4x  zstd 1.4x  js 1.5x
+  node-jitless / node-jit: total 17.9x  zstd 19.0x  js 16.0x

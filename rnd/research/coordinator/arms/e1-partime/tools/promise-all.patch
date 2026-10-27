@@ -1,0 +1,45 @@
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -154,21 +154,27 @@
+   stems: Stem[];
+ }
+ 
+-/** Searches every installed format-2 pack (a failing pack is skipped). */
++/**
++ * Searches every installed format-2 pack (a failing pack is skipped). The per-pack searches run concurrently
++ * (Promise.all); results come back in catalog order, so the caller's merge and tie-breaks see the same list as the
++ * serial loop produced.
++ */
+ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {}): Promise<WikiPackResult[]> {
+-  const out: WikiPackResult[] = [];
+-  for (const pack of await knowledgePacks()) {
+-    try {
+-      if (!(await openPack(pack))) continue;
+-      const wp = wikiPacks.get(pack.id);
+-      if (!wp) continue;
+-      const { hits, stems } = await wp.searchDetailed(query, opts);
+-      out.push({ packId: pack.id, pack: wp, hits, stems });
+-    } catch (e: any) {
+-      console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+-    }
+-  }
+-  return out;
++  const perPack = await Promise.all(
++    (await knowledgePacks()).map(async (pack): Promise<WikiPackResult | null> => {
++      try {
++        if (!(await openPack(pack))) return null;
++        const wp = wikiPacks.get(pack.id);
++        if (!wp) return null;
++        const { hits, stems } = await wp.searchDetailed(query, opts);
++        return { packId: pack.id, pack: wp, hits, stems };
++      } catch (e: any) {
++        console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
++        return null;
++      }
++    })
++  );
++  return perPack.filter((r): r is WikiPackResult => r !== null);
+ }
+ 
+ const SOURCE_LABEL: Record<PackHit["source"], string> = {

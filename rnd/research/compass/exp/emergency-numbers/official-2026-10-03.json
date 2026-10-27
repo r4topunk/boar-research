@@ -1,0 +1,346 @@
+{
+  "meta": {
+    "fetched": "2026-10-03",
+    "method": "curl -sSL (Chrome UA) -> snapshots-official/<slug>.raw.html -> fetch_official.py stdlib HTML-to-text -> snapshots-official/<slug>.txt. Every quote with a `snapshot` must be an exact substring of that .txt (check: node check_official.mjs). Quotes may contain \\n where the page puts the items in separate blocks.",
+    "status_legend": {
+      "VERIFIED": "number appears verbatim on an official government page, fetched raw, quote is a substring of the local snapshot",
+      "†": "only readable via a summarising fetch (WebFetch); no local snapshot; check by hand",
+      "NOT FOUND": "no official source found"
+    },
+    "alias_boundary": "Alias regexes use explicit letter-class lookarounds [A-Za-zÀ-ÖØ-öø-ÿ] instead of \\b, because \\b fails after a trailing accented letter (e.g. /\\bcanad[áa]\\b/i does not match 'Canadá?'), and avoid \\p{L}/u for Hermes portability (UNKNOWN whether the target runtime supports Unicode property escapes).",
+    "excluded_sources": "No Wikipedia, no news. Nothing under blind/ or rnd/veil/ was read."
+  },
+  "countries": [
+    {
+      "country": "Argentina",
+      "iso": "AR",
+      "numbers": {
+        "ambulance": "107 (CABA and 21 provinces); 911 in Provincia de Buenos Aires; 106 in Neuquén",
+        "fire": "100",
+        "police": "911",
+        "unified": "911 (Central de Emergencias Nacional: ambulance or police)"
+      },
+      "quote": "911 Central de Emergencias Nacional\nLlamalos si necesitás pedir una ambulancia de emergencias o presencia de la policía.",
+      "source_org": "Gobierno de la República Argentina (argentina.gob.ar, tema Emergencias)",
+      "url": "https://www.argentina.gob.ar/tema/emergencias",
+      "snapshot": "snapshots-official/ar-tema-emergencias.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "fire 100",
+          "quote": "100 Bomberos\nLlamalos si se produce un incendio en una vivienda, un comercio o un establecimiento industrial.",
+          "source_org": "Gobierno de la República Argentina (argentina.gob.ar)",
+          "url": "https://www.argentina.gob.ar/tema/emergencias",
+          "snapshot": "snapshots-official/ar-tema-emergencias.txt",
+          "status": "VERIFIED"
+        },
+        {
+          "what": "107 SAME is not national",
+          "quote": "107 SAME emergencias médicas\nPedí una ambulancia ante una emergencia. Servicio disponible en Ciudad de Buenos Aires y localidades de la provincia de Buenos Aires.",
+          "source_org": "Gobierno de la República Argentina (argentina.gob.ar)",
+          "url": "https://www.argentina.gob.ar/tema/emergencias",
+          "snapshot": "snapshots-official/ar-tema-emergencias.txt",
+          "status": "VERIFIED"
+        },
+        {
+          "what": "medical emergency number per province",
+          "quote": "Ciudad de Buenos Aires, Catamarca, Chaco, Chubut, Córdoba, Corrientes, Entre Ríos, Formosa, Jujuy, La Pampa, Misiones, La Rioja, Mendoza, Río Negro, Salta, San Juan, San Luis, Santa Cruz, Santa Fe, Santiago del Estero, Tierra del Fuego, Tucumán: 107\nProvincia de Buenos Aires: 911\nNeuquén: 106",
+          "source_org": "Ministerio de Salud de la Nación, DINESA (argentina.gob.ar/salud)",
+          "url": "https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica",
+          "snapshot": "snapshots-official/ar-msal-via-publica.txt",
+          "status": "VERIFIED"
+        },
+        {
+          "what": "CABA SAME 107 covers the whole city",
+          "quote": "Servicio gratuito de ambulancias y atención médica de urgencia que cubre toda la Ciudad.",
+          "source_org": "Gobierno de la Ciudad de Buenos Aires",
+          "url": "https://www.buenosaires.gob.ar/laciudad/telefonosutiles",
+          "snapshot": "snapshots-official/ar-caba-telefonos.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "Provincial variation is real and official: the national portal says 107 SAME is only CABA + localities of Buenos Aires province; the Health Ministry page gives the medical number per province (107 in 22 jurisdictions, 911 in Provincia de Buenos Aires, 106 in Neuquén). Conflict to know: the national portal also lists 106 as 'Emergencia náutica' (Prefectura); the Health Ministry page is undated. UNKNOWN: whether 911 is answered in every province (no official per-province 911 coverage list found; some provinces historically used 101 for police, not verified). The current engine line ('911 (police), ambulance 107, fire 100') is correct but omits the Buenos Aires-province / Neuquén exceptions.",
+      "proposed": {
+        "en": "Argentina: ambulance 107 (Buenos Aires Province: 911; Neuquén: 106), police 911, fire 100.",
+        "pt": "Argentina: ambulância 107 (província de Buenos Aires: 911; Neuquén: 106), polícia 911, bombeiros 100.",
+        "es": "Argentina: ambulancia 107 (provincia de Buenos Aires: 911; Neuquén: 106), policía 911, bomberos 100."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(argentina|buenos aires|bariloche|ushuaia)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "Córdoba (also Spain), Mendoza (surname), Iguazú (shared with Brazil), Patagonia (shared with Chile)",
+        "should_match": ["números de emergencia en Argentina", "emergency numbers in Buenos Aires?", "estou em Bariloche, números de emergência"],
+        "should_not_match": ["argentinos", "Córdoba, España"]
+      }
+    },
+    {
+      "country": "Colombia",
+      "iso": "CO",
+      "numbers": { "ambulance": null, "fire": null, "police": null, "unified": "123" },
+      "quote": "El 123 es la línea única de emergencias Nacional, que permite que en un sólo número los colombianos puedan acceder a todos los servicios de emergencia y seguridad que ofrece el Estado gratuitamente las 24 horas del día todos los días del año.",
+      "source_org": "Departamento Administrativo de la Función Pública (funcionpublica.gov.co)",
+      "url": "https://www1.funcionpublica.gov.co/preguntas-frecuentes/-/asset_publisher/sqxafjubsrEu/content/linea-unica-de-emergencias-nacional-123/28585938",
+      "snapshot": "snapshots-official/co-funcionpublica-123.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [],
+      "note": "Source is a national government department FAQ (undated). Per-service numbers (ambulance/fire/police) were not verified from an official source, so only 123 is proposed. A Ministerio de Salud / MinTIC page was not found in this pass.",
+      "proposed": {
+        "en": "Colombia: 123 (all emergencies).",
+        "pt": "Colômbia: 123 (todas as emergências).",
+        "es": "Colombia: 123 (todas las emergencias)."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(col[ôo]mbia|bogot[áa]|medell[íi]n)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "Cartagena (also Spain), Cali (ambiguous short token)",
+        "should_match": ["números de emergencia en Colombia", "telefones de emergência na Colômbia", "emergency numbers in Bogotá?", "estoy en Medellín"],
+        "should_not_match": ["colombiano", "Cartagena, Murcia"]
+      }
+    },
+    {
+      "country": "Chile",
+      "iso": "CL",
+      "numbers": { "ambulance": "131 (SAMU)", "fire": "132", "police": "133 (Carabineros)", "unified": null },
+      "quote": "Servicio de Atención Médico de Urgencias (SAMU) 131\nBomberos 132.\nCarabineros 133",
+      "source_org": "Ministerio de Relaciones Exteriores de Chile, portal 'Chile en el Exterior' (chile.gob.cl)",
+      "url": "https://www.chile.gob.cl/chile/sobre-chile/informacion-turistica/condiciones-de-seguridad/condiciones-de-seguridad",
+      "snapshot": "snapshots-official/cl-chilegob-seguridad.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [],
+      "note": "Page is the Foreign Ministry's tourist-safety page (also lists PDI 134, Socorro Andino 136, maritime SAR 137). minsal.cl (degreyd.minsal.cl) and gob.cl news returned HTTP 403 to curl, so no MINSAL-level snapshot.",
+      "proposed": {
+        "en": "Chile: ambulance (SAMU) 131, fire 132, police (Carabineros) 133.",
+        "pt": "Chile: ambulância (SAMU) 131, bombeiros 132, polícia (Carabineros) 133.",
+        "es": "Chile: ambulancia (SAMU) 131, bomberos 132, policía (Carabineros) 133."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(Chile|CHILE|Valpara[íi]so|valpara[íi]so|Punta Arenas|San Pedro de Atacama|Isla de Pascua|Easter Island|Ilha de P[áa]scoa)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "",
+        "excluded": "lowercase 'chile' (chili pepper in ES/EN: 'me cayó chile en los ojos'), Santiago (Compostela, Cuba, etc.), Patagonia/Atacama alone (shared with Argentina). Residual risk: sentence-initial 'Chile en los ojos…' still matches.",
+        "should_match": ["números de emergencia en Chile", "emergency numbers in Chile?", "estou em Valparaíso"],
+        "should_not_match": ["me cayó chile en los ojos, qué hago", "chilean food", "Santiago de Compostela"]
+      }
+    },
+    {
+      "country": "Peru",
+      "iso": "PE",
+      "numbers": { "ambulance": "106 (SAMU)", "fire": "116", "police": "105", "unified": null },
+      "quote": "central de emergencias PNP: 105, central SAMU: 106, central bomberos: 116 o central EsSalud 117",
+      "source_org": "Ministerio de Salud del Perú (MINSA), gob.pe",
+      "url": "https://www.gob.pe/16784",
+      "snapshot": "snapshots-official/pe-minsa-16784.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "police 105 and fire 116 on the PNP page",
+          "quote": "Números de emergencia\nPolicía Nacional del Perú\n105\nPolicía Nacional del Perú\nBomberos\n116",
+          "source_org": "Policía Nacional del Perú (gob.pe)",
+          "url": "https://www.gob.pe/institucion/pnp/contacto-y-numeros-de-emergencias",
+          "snapshot": "snapshots-official/pe-pnp-contacto.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "MINSA page also names EsSalud 117 (social-security ambulance line; not proposed). PNP page also lists highway police 110 and Defensa Civil 115.",
+      "proposed": {
+        "en": "Peru: ambulance (SAMU) 106, fire 116, police 105.",
+        "pt": "Peru: ambulância (SAMU) 106, bombeiros 116, polícia 105.",
+        "es": "Perú: ambulancia (SAMU) 106, bomberos 116, policía 105."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(Peru|Perú|PERU|PERÚ|perú|Cusco|Cuzco|cusco|cuzco|Machu Picchu|machu picchu|Arequipa|arequipa)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "",
+        "excluded": "lowercase 'peru' (PT: turkey the bird/meat — 'engasgou com osso de peru'), Lima (lime/file in PT/ES: 'suco de lima'). Residual risk: sentence-initial 'Peru assado…' still matches.",
+        "should_match": ["números de emergencia en Perú", "emergency numbers in Peru?", "telefones de emergência no Peru", "estoy en Cusco"],
+        "should_not_match": ["engasgou com osso de peru", "suco de lima com sal", "comi peru no natal"]
+      }
+    },
+    {
+      "country": "Spain",
+      "iso": "ES",
+      "numbers": { "ambulance": null, "fire": null, "police": null, "unified": "112" },
+      "quote": "In Spain, 112 is the general number for contacting the emergency services.",
+      "source_org": "Gobierno de España, Punto de Acceso General (administracion.gob.es)",
+      "url": "https://administracion.gob.es/en/tu-espacio-europeo/derechos-obligaciones/ciudadanos/asistencia-sanitaria/numeros-urgencia",
+      "snapshot": "snapshots-official/es-pag-112-en.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "112 covers health and other emergencies",
+          "quote": "In Spain, as in the rest of the European Union, the emergency services, including health and other services (accidents, situations of risk, etc.), can be accessed via the single emergency number 112.",
+          "source_org": "Gobierno de España, Punto de Acceso General",
+          "url": "https://administracion.gob.es/en/tu-espacio-europeo/derechos-obligaciones/ciudadanos/asistencia-sanitaria/numeros-urgencia",
+          "snapshot": "snapshots-official/es-pag-112-en.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "English version of the PAG page (the Spanish pag_Home URL returned 404). Current engine row is correct. BUG in current alias: /\\b(spain|espanha)\\b/i does not match 'España', so ES-language users asking about Spain get no row.",
+      "proposed": {
+        "en": "Spain: 112 (all emergencies).",
+        "pt": "Espanha: 112 (todas as emergências).",
+        "es": "España: 112 (todas las emergencias)."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(spain|espanha|espa[ñn]a)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "Barcelona (also Venezuela / football club), Madrid (football club); add only if wanted",
+        "should_match": ["números de emergencia en España", "emergency numbers in Spain", "números de emergência na Espanha"],
+        "should_not_match": ["español", "espanhol"]
+      }
+    },
+    {
+      "country": "Mexico",
+      "iso": "MX",
+      "numbers": { "ambulance": null, "fire": null, "police": null, "unified": "911" },
+      "quote": "911 is Mexico’s national emergency number and will give you the fastest response.",
+      "source_org": "Gobierno de la Ciudad de México (mexicocity.cdmx.gob.mx, visitor guide)",
+      "url": "https://mexicocity.cdmx.gob.mx/e/emergency/?lang=en",
+      "snapshot": "snapshots-official/mx-cdmx.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "federal definition of 9-1-1 (gob.mx serves a JS proof-of-work challenge to curl; read only via WebFetch)",
+          "quote": "El Número Único de Llamadas de Emergencia en el país, por medio del cual se homologan todos los números de atención de emergencias médicas, de seguridad y protección civil",
+          "source_org": "Centro Nacional de Información / 911 Emergencias, Gobierno de México (gob.mx/911)",
+          "url": "https://www.gob.mx/911/articulos/que-es-el-911emergencias",
+          "snapshot": null,
+          "status": "†"
+        }
+      ],
+      "note": "Raw-verified source is the Mexico City government; the federal gob.mx page is † (check by hand). edomex.gob.mx and tamaulipas.gob.mx timed out. Current engine row is correct.",
+      "proposed": {
+        "en": "Mexico: 911.",
+        "pt": "México: 911.",
+        "es": "México: 911."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(mexico|m[ée]xico|ciudad de m[ée]xico|cdmx|canc[úu]n)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "'New Mexico' (US) also matches; harmless, both are 911",
+        "should_match": ["números de emergencia en México", "estou em Cancún"],
+        "should_not_match": ["mexicano"]
+      }
+    },
+    {
+      "country": "Brazil",
+      "iso": "BR",
+      "numbers": { "ambulance": "192 (SAMU)", "fire": "193", "police": "190", "unified": null },
+      "quote": "192 – SAMU\nServiço de Atendimento Móvel de Urgência, destinado ao atendimento de situações de urgência e emergência médica que necessitem de atendimento especializado.\n193 – Corpo de Bombeiros",
+      "source_org": "Ministério das Comunicações, Governo Federal (gov.br/mcom), 11/09/2026",
+      "url": "https://www.gov.br/mcom/pt-br/noticias/noticias_alt/2026/setembro/emergencia-voce-sabe-para-quem-ligar-quando-precisa-de-ajuda",
+      "snapshot": "snapshots-official/br-mcom-emergencia.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "police 190",
+          "quote": "190 – Polícia Militar\nNúmero destinado ao atendimento de ocorrências relacionadas à segurança pública",
+          "source_org": "Ministério das Comunicações (gov.br)",
+          "url": "https://www.gov.br/mcom/pt-br/noticias/noticias_alt/2026/setembro/emergencia-voce-sabe-para-quem-ligar-quando-precisa-de-ajuda",
+          "snapshot": "snapshots-official/br-mcom-emergencia.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "Closes the reviewer's gap on police 190. Same page lists Defesa Civil 199. Current engine row is correct.",
+      "proposed": {
+        "en": "Brazil: police 190, ambulance (SAMU) 192, fire 193.",
+        "pt": "Brasil: polícia 190, ambulância (SAMU) 192, bombeiros 193.",
+        "es": "Brasil: policía 190, ambulancia (SAMU) 192, bomberos 193."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(brazil|brasil)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "unchanged from engine",
+        "should_match": ["emergency numbers in Brazil"],
+        "should_not_match": ["brasileiro"]
+      }
+    },
+    {
+      "country": "Portugal",
+      "iso": "PT",
+      "numbers": { "ambulance": null, "fire": null, "police": null, "unified": "112" },
+      "quote": "Emergência médica - 112\nDisponível 24h por dia, todos os dias.\nO 112 é o número de telefone de emergência único europeu, disponível em toda a União Europeia. As chamadas são gratuitas.",
+      "source_org": "Governo de Portugal, gov.pt (guia 'Contactos de emergência em Portugal', atualizado 29/04/2026)",
+      "url": "https://www.gov.pt/guias/contactos-de-emergencia-em-portugal",
+      "snapshot": "snapshots-official/pt-govpt-contactos.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "112 is Portugal's only national emergency number (so it covers police and fire too)",
+          "quote": "Denmark, Estonia, Finland, Malta, the Netherlands, Portugal, Romania and Sweden have opted for 112 as their only national emergency number.",
+          "source_org": "European Commission, Shaping Europe's digital future (digital-strategy.ec.europa.eu)",
+          "url": "https://digital-strategy.ec.europa.eu/en/policies/112",
+          "snapshot": "snapshots-official/eu-digital-112.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "gov.pt labels 112 'Emergência médica'; the police/fire coverage comes from the EC page. 112.pt timed out. Current engine row is correct.",
+      "proposed": {
+        "en": "Portugal: 112 (police, ambulance and fire).",
+        "pt": "Portugal: 112 (polícia, ambulância e bombeiros).",
+        "es": "Portugal: 112 (policía, ambulancia y bomberos)."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(portugal|lisboa|lisbon)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "Porto (ambiguous: 'porto' = port in PT)",
+        "should_match": ["números de emergência em Portugal", "emergency numbers in Lisbon"],
+        "should_not_match": ["português"]
+      }
+    },
+    {
+      "country": "European Union",
+      "iso": "EU",
+      "numbers": { "ambulance": null, "fire": null, "police": null, "unified": "112" },
+      "quote": "You can call 112 from fixed and mobile phones to contact any emergency service: an ambulance, the fire brigade or the police.",
+      "source_org": "European Commission, Shaping Europe's digital future (digital-strategy.ec.europa.eu)",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/112",
+      "snapshot": "snapshots-official/eu-digital-112.txt",
+      "fetched": "2026-10-03",
+      "status": "VERIFIED",
+      "extra_quotes": [
+        {
+          "what": "available everywhere in the EU, free",
+          "quote": "112 is the European emergency phone number, available everywhere in the EU, free of charge.",
+          "source_org": "European Commission (digital-strategy.ec.europa.eu)",
+          "url": "https://digital-strategy.ec.europa.eu/en/policies/112",
+          "snapshot": "snapshots-official/eu-digital-112.txt",
+          "status": "VERIFIED"
+        },
+        {
+          "what": "Your Europe (EU portal)",
+          "quote": "But 112 is the only number you can use to access the emergency services in all EU countries and many other countries in Europe and worlwide.",
+          "source_org": "European Union, Your Europe (europa.eu)",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm",
+          "snapshot": "snapshots-official/eu-youreurope-112.txt",
+          "status": "VERIFIED"
+        }
+      ],
+      "note": "Upgrades reviewer's EU PARTIAL to VERIFIED. 'worlwide' is the page's own typo. EC page: 112 'functions alongside existing national emergency numbers', so country rows (e.g. Germany police 110) should win over the EU row.",
+      "proposed": {
+        "en": "European Union: 112 works in every EU country (police, ambulance, fire).",
+        "pt": "União Europeia: 112 funciona em todos os países da UE (polícia, ambulância, bombeiros).",
+        "es": "Unión Europea: 112 funciona en todos los países de la UE (policía, ambulancia, bomberos)."
+      },
+      "aliases": {
+        "regex": "(?<![A-Za-zÀ-ÖØ-öø-ÿ])(european union|uni[ãa]o europeia|uni[óo]n europea|europe|europa)(?![A-Za-zÀ-ÖØ-öø-ÿ])",
+        "flags": "i",
+        "excluded": "Put this row LAST so a named country wins; 'Europe' is broader than the EU (UK 999/112, Switzerland 112 per EC page).",
+        "should_match": ["emergency numbers in Europe", "números de emergência na Europa"],
+        "should_not_match": ["europeu", "europeo"]
+      }
+    }
+  ],
+  "not_found": [],
+  "engine_alias_bugs_found": [
+    "/\\b(spain|espanha)\\b/i misses 'España' (ES users).",
+    "/\\b(canada|canad[áa])\\b/i misses 'Canadá' followed by space/punctuation (\\b after a non-ASCII letter). Same pattern risk for any alias ending in an accented letter.",
+    "/\\b(turkey|t[üu]rkiye|turquia)\\b/i matches the food ('choked on a turkey bone') — emergencyNumbersLine() scans arbitrary text, so a food mention attaches Turkey's numbers."
+  ]
+}

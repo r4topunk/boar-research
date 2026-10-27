@@ -1,0 +1,254 @@
+diff -ruN -x node_modules -x modules -x assets rs-SEFIX/src/rag/packs.ts rs-RETBENCH/src/rag/packs.ts
+--- rs-SEFIX/src/rag/packs.ts	2026-10-22 19:47:17
++++ rs-RETBENCH/src/rag/packs.ts	2026-10-23 16:10:09
+@@ -11,7 +11,7 @@
+ import * as SQLite from "expo-sqlite";
+ import * as FileSystem from "expo-file-system/legacy";
+ import { CORPUS_CATALOG, MODEL_CATALOG, CatalogModel } from "../models/manifest";
+-import { buildLexicalQuery, cosineSimilarityInt8, filterByMinScore, filterByTermCoverage, MIN_SEMANTIC_SIMILARITY } from "./pure";
++import { buildLexicalQuery, cosineSimilarityInt8, filterByMinScore, filterByTermCoverage, MIN_SEMANTIC_SIMILARITY, rbBytes } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+ import { decompress } from "fzstd";
+ import { WikiPack, type PackHit, type PackSearchOptions, type Stem } from "./wikiPack";
+@@ -283,6 +283,24 @@
+   return null;
+ }
+ 
++/** RETBENCH RS_RB_LEAD (bench-only; ARTCAP cap4lead's header): for the first of `kept` from a user-installed (non-kit) format-2 pack, a short header
++ *  chunk (article title + first sentence of its lead chunk), unless that lead chunk is already in `kept`; null when none. */
++export async function packLeadHeader(kept: RetrievedChunk[]): Promise<RetrievedChunk | null> {
++  for (const c of kept) {
++    const m = /^pack:([^:]+):(\d+)$/.exec(c.chunkId);
++    if (!m) continue;
++    const packId = m[1];
++    if (HEADPASS_KIT.has(packId.replace(/^local-/, ""))) continue;
++    const wp = wikiPacks.get(packId);
++    if (!wp) continue;
++    const h = await wp.rsLeadHeaderOf(Number(m[2]));
++    if (!h) return null;
++    const chunk = packHitToChunk(packId, h);
++    return kept.some((x) => x.chunkId === chunk.chunkId) ? null : chunk;
++  }
++  return null;
++}
++
+ type PackRow = { id: number; title: string; body: string; vec: Uint8Array; rank: number };
+ 
+ /** Lexical and semantic candidates from every installed pack, scored like the built-in ones. */
+@@ -305,8 +323,9 @@
+         `SELECT c.id, c.title, c.body, c.vec, bm25(chunks_fts) AS rank
+          FROM chunks_fts f JOIN chunks c ON c.id = f.rowid
+          WHERE chunks_fts MATCH ? ORDER BY rank LIMIT ?`,
+-        [lexicalQuery.match, PACK_CANDIDATES]
++        [lexicalQuery.match, Number((globalThis as any).process?.env?.RS_RB_POOL) > 0 ? Number((globalThis as any).process?.env?.RS_RB_POOL) : PACK_CANDIDATES] // RETBENCH RS_RB_POOL
+       );
++      rbBytes("f1-pool", rows.reduce((n, r) => n + (r.vec?.length ?? 0), 0));
+       const toChunk = (r: PackRow, score: number, matchType: RetrievedChunk["matchType"]): RetrievedChunk => ({
+         similarity: cosineSimilarityInt8(queryVec, r.vec),
+         chunkId: `pack:${pack.id}:${r.id}`,
+diff -ruN -x node_modules -x modules -x assets rs-SEFIX/src/rag/pure.ts rs-RETBENCH/src/rag/pure.ts
+--- rs-SEFIX/src/rag/pure.ts	2026-10-07 09:27:55
++++ rs-RETBENCH/src/rag/pure.ts	2026-10-23 16:10:09
+@@ -259,6 +259,8 @@
+   chunks: T[],
+   minSimilarity = ANSWER_MIN_SIMILARITY
+ ): T[] {
++  // RETBENCH floor (RS_RB_FLOOR, bench-only, default off = 0.7): the cosine relevance floor of the fused lists.
++  if (minSimilarity === ANSWER_MIN_SIMILARITY && Number((globalThis as any).process?.env?.RS_RB_FLOOR) > 0) minSimilarity = Number((globalThis as any).process?.env?.RS_RB_FLOOR);
+   return chunks.filter((c) => c.similarity !== undefined && c.similarity >= minSimilarity);
+ }
+ 
+@@ -439,3 +441,10 @@
+   "Treat greetings and casual small talk conversationally and briefly, not as a command or task. " +
+   "Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you " +
+   "don't actually have the ability to do.";
++
++/** RETBENCH (bench-only): RS_BYTES_LOG=<file> appends one JSON line per vector read {k: kind, b: bytes}. */
++export function rbBytes(kind: string, bytes: number): void {
++  const f = (globalThis as any).process?.env?.RS_BYTES_LOG;
++  if (!f || !bytes) return;
++  (globalThis as any).process.getBuiltinModule("node:fs").appendFileSync(f, JSON.stringify({ k: kind, b: bytes }) + "\n");
++}
+diff -ruN -x node_modules -x modules -x assets rs-SEFIX/src/rag/wikiPack.ts rs-RETBENCH/src/rag/wikiPack.ts
+--- rs-SEFIX/src/rag/wikiPack.ts	2026-10-22 20:14:31
++++ rs-RETBENCH/src/rag/wikiPack.ts	2026-10-23 16:10:09
+@@ -15,7 +15,7 @@
+  * that's only used when the keyword search comes back thin.
+  */
+ 
+-import { cosineSimilarityInt8, MIN_SEMANTIC_SIMILARITY } from "./pure";
++import { cosineSimilarityInt8, MIN_SEMANTIC_SIMILARITY, rbBytes } from "./pure";
+ import { EXPLAIN_INTENT } from "./explain";
+ 
+ export interface PackSql {
+@@ -565,6 +565,7 @@
+         top[j] = { id: ids[i], s };
+       }
+     }
++    rbBytes("selead", ids.length * dims);
+     const out: PackHit[] = [];
+     for (const t of top) {
+       const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [t.id]);
+@@ -849,6 +850,68 @@
+     });
+   }
+ 
++  /**
++   * RETBENCH cap/pick (bench-only; = ARTCAP's rsArtcapGroup): `pool` is the uncapped keyword list in rank order. Each of the first `maxArticles`
++   * distinct articles keeps its first chunk at its own rank, followed immediately by up to `cap - 1` other chunks of the same article chosen by
++   * the within-article pick (queryVec given and the pack has chunk_vecs: cosine of every other chunk of the article; else the article's other
++   * pool rows in rank order); later rows of that article are dropped. Articles past `maxArticles` keep the base cap of 2.
++   */
++  async rsArtcapGroup(pool: Candidate[], queryVec: Float32Array | undefined, cap: number, maxArticles = 12): Promise<Candidate[]> {
++    const out: Candidate[] = [];
++    const done = new Map<number, boolean>();
++    const per = new Map<number, number>();
++    let grouped = 0;
++    for (const c of pool) {
++      const g = done.get(c.articleId);
++      if (g === true) continue;
++      if (g === false) {
++        const n = per.get(c.articleId) ?? 0;
++        if (n < 2) (out.push(c), per.set(c.articleId, n + 1));
++        continue;
++      }
++      if (grouped >= maxArticles) {
++        done.set(c.articleId, false);
++        out.push(c);
++        per.set(c.articleId, 1);
++        continue;
++      }
++      grouped++;
++      done.set(c.articleId, true);
++      out.push(c);
++      let extra: Candidate[];
++      if (this.hasChunkVecs && queryVec) {
++        const rows = await this.db.getAllAsync<{ id: number; start: number; end: number; vec: Uint8Array }>(
++          `SELECT c.id, c.start, c.end, v.vec FROM chunks c JOIN chunk_vecs v ON v.chunk_id = c.id WHERE c.article_id = ? AND c.id != ?`,
++          [c.articleId, c.chunkId]
++        );
++        rbBytes("pick-vec", rows.reduce((n, r) => n + r.vec.length, 0));
++        extra = rows
++          .map((r) => ({ r, s: cosineSimilarityInt8(queryVec, new Uint8Array(r.vec)) }))
++          .sort((a, b) => b.s - a.s || a.r.id - b.r.id)
++          .slice(0, cap - 1)
++          .map(({ r }) => ({ chunkId: r.id, articleId: c.articleId, start: r.start, end: r.end, score: c.score }));
++      } else {
++        extra = pool.filter((x) => x.articleId === c.articleId && x.chunkId !== c.chunkId).slice(0, cap - 1).map((x) => ({ ...x, score: c.score }));
++      }
++      out.push(...extra);
++    }
++    return out;
++  }
++
++  /** RETBENCH RS_RB_LEAD: the lead chunk of the article holding `chunkId` (lowest start), its title and first sentence (<= 240 chars). */
++  async rsLeadHeaderOf(chunkId: number): Promise<PackHit | null> {
++    const row = await this.db.getFirstAsync<{ article_id: number }>("SELECT article_id FROM chunks WHERE id = ?", [chunkId]);
++    if (!row) return null;
++    const lead = await this.db.getFirstAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start LIMIT 1", [row.article_id]);
++    if (!lead) return null;
++    const h = await this.hit(row.article_id, lead.id, lead.start, lead.end, 0, "bm25", true);
++    const t = h.text.replace(/\s+/g, " ").trim();
++    const m = /^.{20,}?[.!?](?=\s|$)/.exec(t);
++    let first = (m ? m[0] : t).slice(0, 240);
++    if (first.length === 240 && t.length > 240) first = first.replace(/\s+\S*$/, "") + "…";
++    return { ...h, section: "", text: first };
++  }
++
+   /** RS_MERGE_CHECK only: sum over `terms` of the one-term bm25 (no idf change) per rowid. */
+   private async rsPlain(terms: string[], ids: string): Promise<Map<number, number>> {
+     const out = new Map<number, number>();
+@@ -1019,7 +1082,14 @@
+     const seen = new Set(hits.map((h) => h.chunkId));
+     let keyword: Candidate[] | null = null;
+     if (hits.length < limit) {
+-      keyword = await this.bm25Candidates(stems);
++      // RETBENCH (bench-only, default off = unchanged): RS_RB_CAP (per-article cap, 2 = stock) / RS_RB_PICK=vec (within-article pick by chunk vector)
++      // re-group the uncapped keyword pool (ARTCAP's mechanism); RS_RB_POOL scales the format-2 bm25 pool by RS_RB_POOL / 400 (the format-1 default).
++      const rbEnv = (globalThis as any).process?.env;
++      const rbCap = Number(rbEnv?.RS_RB_CAP ?? 2) || 2;
++      const rbPick = rbEnv?.RS_RB_PICK === "vec";
++      const rbGroup = rbCap !== 2 || rbPick;
++      const rbPool = Number(rbEnv?.RS_RB_POOL) > 0 ? Math.round((this.tuning.pool * Number(rbEnv?.RS_RB_POOL)) / 400) : this.tuning.pool;
++      keyword = await this.bm25Candidates(stems, rbPool, this.tuning.prior, rbGroup ? Number.MAX_SAFE_INTEGER : 2);
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {
+@@ -1031,13 +1101,14 @@
+         const blended = (c: Candidate) => (1 - w) * (c.score / max) + w * (sem.get(c.articleId) ?? median);
+         keyword = [...keyword].sort((a, b) => blended(b) - blended(a));
+       }
++      if (rbGroup) keyword = await this.rsArtcapGroup(keyword, rbPick ? queryVec : undefined, rbCap);
+       // Text is read only for candidates in rank order, until the result is full.
+       for (const c of keyword) {
+         if (hits.length >= limit) break;
+         if (seen.has(c.chunkId)) continue;
+         const h = await this.materialize(c);
+         const relevant =
+-          coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
++          coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= (Number((globalThis as any).process?.env?.RS_RB_FLOOR) > 0 ? Number((globalThis as any).process?.env?.RS_RB_FLOOR) : SEMANTIC_KEEP); // RETBENCH RS_RB_FLOOR
+         // A what-to-do question: at most three passages per article, so a lay manual's steps (Wikibooks First Aid)
+         // get a place next to the clinical article's sections.
+         const perArticle = hits.filter((x) => x.articleId === c.articleId).length;
+@@ -1169,6 +1240,8 @@
+           art
+         )
+       : [];
++    rbBytes("dense1", ids.length * dims);
++    rbBytes("dense2", rows.reduce((n, r) => n + r.vec.length, 0));
+     const scored = rows
+       .map((r) => ({ r, s: cosineSimilarityInt8(queryVec, new Uint8Array(r.vec)) }))
+       .filter((x) => x.s >= floor)
+@@ -1212,6 +1285,7 @@
+       )
+       .catch(() => []);
+     for (const r of rows) out.set(r.article_id, new Uint8Array(r.vec));
++    rbBytes("lead-sim", rows.reduce((n, r) => n + r.vec.length, 0));
+     return out;
+   }
+ }
+diff -ruN -x node_modules -x modules -x assets rs-SEFIX/src/routing/answer.ts rs-RETBENCH/src/routing/answer.ts
+--- rs-SEFIX/src/routing/answer.ts	2026-10-22 19:47:17
++++ rs-RETBENCH/src/routing/answer.ts	2026-10-23 16:10:09
+@@ -1029,8 +1029,8 @@
+         }
+         raw = await (settings.packDense2 === true || settings.packDense2 === "extra" || settings.packDense2 === "append" || settings.packDense2 === "append-budget"
+           // HEADPASS-X2b retrieves as "append" (the budget applies in the append path below).
+-          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 === "append-budget" ? "append" : settings.packDense2 })
+-          : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
++          ? deps.retrieve(searchQuery, Number((globalThis as any).process?.env?.RS_RB_K) > 0 ? Number((globalThis as any).process?.env?.RS_RB_K) : gen?.retrieveK ?? 6, { packDense2: settings.packDense2 === "append-budget" ? "append" : settings.packDense2 })
++          : deps.retrieve(searchQuery, Number((globalThis as any).process?.env?.RS_RB_K) > 0 ? Number((globalThis as any).process?.env?.RS_RB_K) : gen?.retrieveK ?? 6) // RETBENCH RS_RB_K
+         ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+@@ -1208,6 +1208,18 @@
+           for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : seIds.has(c.chunkId) ? `headpass:selead:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];
++        }
++      }
++      // RETBENCH lead header (RS_RB_LEAD=1, bench-only; = ARTCAP cap4lead's header): title + lead sentence of the first kept user-pack article.
++      if ((globalThis as any).process?.env?.RS_RB_LEAD === "1" && gen?.mode !== "multipass" && sources.length) {
++        let lead = await (await import("../rag/packs")).packLeadHeader(sources);
++        if (lead && health && !healthFallback && !onHealthTopic(healthTopicTerms(req.query, english), lead)) {
++          reasonCodes.push("rb:lead:health-dropped");
++          lead = null;
++        }
++        if (lead) {
++          reasonCodes.push(`rb:lead:add:${lead.chunkId}`);
++          sources = [...sources, lead];
+         }
+       }
+       if (sources.length && gen?.mode !== "multipass") {
+diff -ruN -x node_modules -x modules -x assets rs-SEFIX/src/routing/context.ts rs-RETBENCH/src/routing/context.ts
+--- rs-SEFIX/src/routing/context.ts	2026-10-22 19:47:17
++++ rs-RETBENCH/src/routing/context.ts	2026-10-23 16:10:09
+@@ -1489,7 +1489,7 @@
+   const chunkBest = chunks.map((_, ci) => Math.max(0, ...scored.filter((s) => s.chunkIndex === ci).map((s) => s.score)));
+   const topBest = Math.max(0, ...chunkBest);
+   const pinnedIdx = new Set(chunks.map((c, i) => (opts.pinned?.has(c.chunkId) ? i : -1)).filter((i) => i >= 0));
+-  const relevant = (ci: number) => pinnedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
++  const relevant = (ci: number) => pinnedIdx.has(ci) || !anyMatch || chunkBest[ci] >= (Number((globalThis as any).process?.env?.RS_RB_COMPRESS) > 0 ? Number((globalThis as any).process?.env?.RS_RB_COMPRESS) : RELATIVE_RELEVANCE_FLOOR) * topBest; // RETBENCH RS_RB_COMPRESS
+   // Rank: matching sentences by score (ties → retrieval rank, then position);
+   // with no match at all, fall back to each chunk's opening sentence.
+   const ranked = (anyMatch ? scored.filter((s) => s.score > 0 && relevant(s.chunkIndex)) : scored.filter((s) => s.position === 0)).sort(

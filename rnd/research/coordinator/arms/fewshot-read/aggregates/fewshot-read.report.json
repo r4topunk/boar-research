@@ -1,0 +1,948 @@
+{
+ "arm": "fewshot-read",
+ "n": 87,
+ "vs_control": {
+  "n": 87,
+  "changed_answers": 41,
+  "deltas": {
+   "U": {
+    "d": -0.0008,
+    "ci": [
+     -0.0147,
+     0.0141
+    ]
+   },
+   "Q": {
+    "d": -0.0008,
+    "ci": [
+     -0.0147,
+     0.0141
+    ]
+   },
+   "CE": {
+    "d": -0.0115,
+    "ci": [
+     -0.0805,
+     0.046
+    ]
+   },
+   "decline": {
+    "d": 0.0,
+    "ci": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "ce_count": [
+   28,
+   29
+  ]
+ },
+ "U": [
+  0.39484451718494273,
+  0.39566284779050737
+ ],
+ "CEu": [
+  10,
+  11
+ ],
+ "CE": [
+  28,
+  29
+ ],
+ "R": [
+  36,
+  39
+ ],
+ "decline": [
+  2,
+  2
+ ],
+ "warned": [
+  34,
+  37
+ ],
+ "cite_shown_llm": [
+  [
+   21,
+   47
+  ],
+  [
+   18,
+   44
+  ]
+ ],
+ "prompt_tokens": {
+  "fired_items": 40,
+  "arm": {
+   "n": 40,
+   "p50": 762.5,
+   "p90": 922,
+   "sum": 30937
+  },
+  "control": {
+   "n": 40,
+   "p50": 475.5,
+   "p90": 635,
+   "sum": 19457
+  },
+  "delta": {
+   "n": 40,
+   "p50": 287.0,
+   "p90": 287,
+   "sum": 11480
+  }
+ },
+ "output_tokens": [
+  3382,
+  3594
+ ],
+ "totalMs_p50": [
+  2229.1,
+  2107.3
+ ],
+ "totalMs_sum": [
+  248204.4,
+  188359.6
+ ],
+ "rd1": {
+  "ids": [
+   "lan-exp-002",
+   "lan-exp-004",
+   "lan-exp-005",
+   "lan-exp-007",
+   "lan-rsn-006",
+   "vit-cry-003",
+   "vit-cry-006"
+  ],
+  "arm": [
+   2,
+   7
+  ],
+  "control": [
+   3,
+   7
+  ],
+  "per_item": {
+   "lan-exp-002": [
+    4.5,
+    4.0
+   ],
+   "lan-exp-004": [
+    2.5,
+    2.0
+   ],
+   "lan-exp-005": [
+    4.0,
+    3.0
+   ],
+   "lan-exp-007": [
+    1.5,
+    1.0
+   ],
+   "lan-rsn-006": [
+    4.5,
+    4.0
+   ],
+   "vit-cry-003": [
+    2.0,
+    2.0
+   ],
+   "vit-cry-006": [
+    1.0,
+    1.0
+   ]
+  }
+ },
+ "changed": [
+  {
+   "id": "lan-cmp-002",
+   "corr": [
+    2.5,
+    3.5
+   ],
+   "u": [
+    0.448,
+    0.536
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "lan-cmp-003",
+   "corr": [
+    4.0,
+    1.5
+   ],
+   "u": [
+    0.552,
+    0.3
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "lan-cmp-004",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.292,
+    0.25
+   ],
+   "CEu": [
+    true,
+    true
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "lan-cmp-005",
+   "corr": [
+    1.0,
+    4.0
+   ],
+   "u": [
+    0.261,
+    0.8
+   ],
+   "CEu": [
+    true,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "lan-exp-002",
+   "corr": [
+    4.5,
+    4.0
+   ],
+   "u": [
+    0.567,
+    0.552
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "lan-exp-004",
+   "corr": [
+    2.5,
+    2.0
+   ],
+   "u": [
+    0.333,
+    0.333
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "lan-exp-005",
+   "corr": [
+    4.0,
+    3.0
+   ],
+   "u": [
+    0.533,
+    0.4
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    true
+   ]
+  },
+  {
+   "id": "lan-exp-007",
+   "corr": [
+    1.5,
+    1.0
+   ],
+   "u": [
+    0.345,
+    0.267
+   ],
+   "CEu": [
+    true,
+    false
+   ],
+   "R": [
+    false,
+    true
+   ]
+  },
+  {
+   "id": "lan-hlt-003",
+   "corr": [
+    4.0,
+    4.0
+   ],
+   "u": [
+    0.467,
+    0.414
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "lan-ref-002",
+   "corr": [
+    5.0,
+    4.5
+   ],
+   "u": [
+    0.6,
+    0.567
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "lan-rsn-001",
+   "corr": [
+    2.0,
+    2.0
+   ],
+   "u": [
+    0.333,
+    0.37
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "lan-rsn-006",
+   "corr": [
+    4.5,
+    4.0
+   ],
+   "u": [
+    0.567,
+    0.533
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-boar-factbook-001",
+   "corr": [
+    2.5,
+    2.5
+   ],
+   "u": [
+    0.448,
+    0.5
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-factbook-002",
+   "corr": [
+    1.0,
+    1.5
+   ],
+   "u": [
+    0.233,
+    0.233
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-factbook-003",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.2,
+    0.2
+   ],
+   "CEu": [
+    true,
+    true
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-boar-factbook-004",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.267,
+    0.267
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-factbook-006",
+   "corr": [
+    2.0,
+    1.0
+   ],
+   "u": [
+    0.414,
+    0.2
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-factbook-007",
+   "corr": [
+    4.5,
+    4.0
+   ],
+   "u": [
+    0.692,
+    0.607
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-boar-factbook-012",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.2,
+    0.207
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-factbook-016",
+   "corr": [
+    3.5,
+    2.5
+   ],
+   "u": [
+    0.583,
+    0.423
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-boar-firstaid-en-013",
+   "corr": [
+    3.0,
+    2.0
+   ],
+   "u": [
+    0.4,
+    0.393
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-medlineplus-en-007",
+   "corr": [
+    2.0,
+    1.5
+   ],
+   "u": [
+    0.31,
+    0.276
+   ],
+   "CEu": [
+    false,
+    true
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-boar-simplewiki-en-005",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.2,
+    0.2
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-simplewiki-en-011",
+   "corr": [
+    2.5,
+    2.5
+   ],
+   "u": [
+    0.407,
+    0.379
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-simplewiki-en-014",
+   "corr": [
+    1.0,
+    1.5
+   ],
+   "u": [
+    0.231,
+    0.241
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-boar-simplewiki-en-020",
+   "corr": [
+    1.0,
+    1.5
+   ],
+   "u": [
+    0.222,
+    0.357
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-qa-bitcoin-se-014",
+   "corr": [
+    2.0,
+    2.5
+   ],
+   "u": [
+    0.267,
+    0.3
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "st-qa-bitcoin-se-015",
+   "corr": [
+    4.0,
+    4.0
+   ],
+   "u": [
+    0.615,
+    0.615
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-ethereum-se-010",
+   "corr": [
+    3.0,
+    3.5
+   ],
+   "u": [
+    0.5,
+    0.556
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-ethereum-se-017",
+   "corr": [
+    1.0,
+    3.0
+   ],
+   "u": [
+    0.231,
+    0.357
+   ],
+   "CEu": [
+    true,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-health-se-014",
+   "corr": [
+    4.0,
+    3.5
+   ],
+   "u": [
+    0.63,
+    0.6
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-money-se-005",
+   "corr": [
+    2.0,
+    2.0
+   ],
+   "u": [
+    0.296,
+    0.32
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-outdoors-se-006",
+   "corr": [
+    3.5,
+    4.0
+   ],
+   "u": [
+    0.519,
+    0.552
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-outdoors-se-008",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.231,
+    0.231
+   ],
+   "CEu": [
+    false,
+    true
+   ],
+   "R": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-outdoors-se-017",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.207,
+    0.2
+   ],
+   "CEu": [
+    true,
+    true
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "st-qa-travel-se-005",
+   "corr": [
+    1.0,
+    1.5
+   ],
+   "u": [
+    0.207,
+    0.321
+   ],
+   "CEu": [
+    true,
+    true
+   ],
+   "R": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "vit-cry-003",
+   "corr": [
+    2.0,
+    2.0
+   ],
+   "u": [
+    0.32,
+    0.308
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "vit-cry-006",
+   "corr": [
+    1.0,
+    1.0
+   ],
+   "u": [
+    0.2,
+    0.207
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "vit-cry-010",
+   "corr": [
+    1.5,
+    2.0
+   ],
+   "u": [
+    0.233,
+    0.267
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "vit-sci-002",
+   "corr": [
+    1.5,
+    1.0
+   ],
+   "u": [
+    0.267,
+    0.207
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "vit-trv-003",
+   "corr": [
+    1.0,
+    2.0
+   ],
+   "u": [
+    0.231,
+    0.308
+   ],
+   "CEu": [
+    false,
+    false
+   ],
+   "R": [
+    true,
+    true
+   ]
+  }
+ ],
+ "changed_summary": {
+  "n": 41,
+  "up": 16,
+  "down": 18,
+  "CEu_fixed": 3,
+  "CEu_new": 2,
+  "R_new": 2,
+  "R_gone": 5
+ }
+}

@@ -1,0 +1,114 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-20 23:26:47
++++ b/be/adapter-litedecline.ts	2026-10-20 23:27:01
+@@ -45,7 +45,7 @@
+   type TraceEvent,
+ } from "./trace";
+ import { gateEnabled, gateTop, renderChatML, topProbs } from "./gate";
+-import { applyData, budgetExceeded, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, rssSampler, serverVersion, sseData } from "./server";
++import { applyData, budgetExceeded, modelGuard, newHiddenState, newStreamState, nodeChatOptions, nodeHidden, parsePsRss, requestFor, MIN3CITE_VERSION, rssSampler, serverVersion, sseData } from "./server";
+ 
+ const HERE = dirname(fileURLToPath(import.meta.url));
+ const ROOT = join(HERE, "..");
+@@ -144,6 +144,12 @@
+ process.env.BOAR_EVAL_PLATFORM = config.device.platform;
+ process.env.BOAR_APP_GPU = cli.gpu ? "1" : process.env.BOAR_APP_GPU ?? "1"; // embeddings: Metal is fine (not timed)
+ 
++// MINISTRAL3-3B arm V: mistralai card "Recommended Settings": "Use a temperature below 0.1 for daily-driver and production environments"; no other
++// sampler is named, so top_k/top_p/min_p are neutralised (vLLM defaults). Temperature 0.1 is the default in be/server.ts samplerFor (patched),
++// not in this override, so the engine's per-item health temperature 0 still wins.
++process.env.BOAR_SAMPLER_JSON ??= '{"top_k":0,"top_p":1,"min_p":0}';
++// MIN3CITE arm: Ministral-only citation/length prompt adaptation (be/server.ts min3citeMessages); recorded in versions["prompt.min3cite"].
++process.env.BOAR_MIN3CITE ??= "1";
+ // ---------------------------------------------------------------- models (sha256 = HF LFS oid)
+ const MODELS: Record<string, { file: string; sha256: string }> = {
+   "qwen2.5-1.5b-instruct-q4km": { file: "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", sha256: "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370" },
+@@ -163,7 +169,9 @@
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+-  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
++  // MINISTRAL3-3B arm, vendor-sampling variant V (2026-10-20): the 1.7B id loads mistralai/Ministral-3-3B-Instruct-2512-GGUF @ eb599d40 Q4_K_M (official, Apache-2.0;
++  // text model only, no mmproj); vendor sampling (card: temperature below 0.1; T 0.1, other samplers neutral). The trace's versions["model.sha256"] identifies the weights.
++  "qwen3-1.7b-q4km": { file: "lite/Ministral-3-3B-Instruct-2512-Q4_K_M.gguf", sha256: "9ed150d4367e68df0ac8e1540f6ddc65b42d0ee26378329d1ecbca60f93fc5f8" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -181,7 +189,9 @@
+ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+-    id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
++    id: "qwen3-1.7b-q4km", kind: "llm", label: "Ministral-3-3B-Instruct-2512 (Q4_K_M) [MINISTRAL3-3B arm]",
++    // MINISTRAL3-3B: catalog size held at the 1.7B's value (real file 2147023008 B > LOW_RAM_MAX_MODEL_BYTES 1.6e9) so isCompactModel, declines,
++    // prompts and routing stay byte-identical to the control; only the weights differ.
+     filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
+@@ -835,6 +845,7 @@
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
++    ...(process.env.BOAR_MIN3CITE === "1" ? { "prompt.min3cite": MIN3CITE_VERSION } : {}),
+     ...(server && process.env.BOAR_SERVER_EXTRA_ARGS ? { "server.extra_args": process.env.BOAR_SERVER_EXTRA_ARGS.trim() } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+diff -ru a/be/server.ts b/be/server.ts
+--- a/be/server.ts	2026-10-20 23:26:47
++++ b/be/server.ts	2026-10-20 23:27:01
+@@ -24,7 +24,7 @@
+ 
+ /** Sampler identical to the node path: request override, else the engine's, else 0.7; top_k 40, top_p 0.95, min_p 0.05. */
+ export function samplerFor(o: GenOpts, temp: number | undefined, seed: number) {
+-  return { temperature: temp ?? o.temperature ?? 0.7, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
++  return { temperature: temp ?? o.temperature ?? 0.1 /* MINISTRAL3-3B arm V: vendor T (card: below 0.1) */, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
+ }
+ /**
+  * DEEPSAMP: BOAR_SAMPLER_JSON='{"temperature":1,"top_k":20,"min_p":0,"presence_penalty":1.5}' overrides sampler fields on
+@@ -41,6 +41,37 @@
+   return out;
+ }
+ 
++/**
++ * MIN3CITE arm (2026-10-20): Ministral-only prompt adaptation, on when BOAR_MIN3CITE=1 (set by the adapter for the Ministral swap only).
++ * Changes only the persona's length sentence (system) and the style reminder (user turn); retrieval, routing, declines and the warning
++ * logic are untouched. With sources in the prompt ("Context:" lines "[n] title"), the style line states the citation format the engine keeps
++ * (one number per bracket, src/routing/citations.ts) with one example using the prompt's own numbering.
++ */
++export const MIN3CITE_VERSION = "v1";
++const MIN3_PERSONA_OLD = "Answer in 2-3 short, direct sentences";
++const MIN3_PERSONA_NEW = "Answer in 2-4 short, direct sentences";
++const MIN3_STYLE_OLD = "Keep it short: 2-3 sentences. No lists unless the question asks for one.";
++const MIN3_STYLE_NOSRC = "Keep it short: 2-4 plain sentences. No lists unless the question asks for one.";
++export function min3citeStyle(k: number): string {
++  if (k < 1) return MIN3_STYLE_NOSRC;
++  const range = k === 1 ? "[1]" : `[1] to [${k}]`;
++  return `Keep it short: 2-4 plain sentences, no lists or bold. The sources are numbered ${range}. ` +
++    `End each sentence that uses a source with that source's number in square brackets, one number per bracket, ` +
++    `for example: "Water boils at 100 degrees Celsius at sea level [1]." ` +
++    `Never write "[1, 2]", "[general knowledge]" or a list of sources.`;
++}
++export function min3citeMessages(messages: { role: string; content: string }[]): { role: string; content: string }[] {
++  if (process.env.BOAR_MIN3CITE !== "1" || !messages.length) return messages;
++  const sys = messages[0].role === "system" ? messages[0].content : "";
++  const ctx = sys.indexOf("\nContext:\n");
++  const k = ctx < 0 ? 0 : Math.max(0, ...[...sys.slice(ctx).matchAll(/^\[(\d+)\] /gm)].map((m) => Number(m[1])));
++  const last = messages.length - 1;
++  return messages.map((m, i) =>
++    i === 0 && m.role === "system" ? { ...m, content: m.content.replace(MIN3_PERSONA_OLD, MIN3_PERSONA_NEW) }
++    : i === last && m.role === "user" ? { ...m, content: m.content.replace(MIN3_STYLE_OLD, min3citeStyle(k)) }
++    : m);
++}
++
+ /** POST /v1/chat/completions body (o.messages) or POST /completion body (o.prompt). */
+ export function requestFor(o: GenOpts, temp: number | undefined, seed: number): { path: string; body: Record<string, unknown> } {
+   const sampler = samplerFor(o, temp, seed);
+@@ -49,7 +80,7 @@
+     return {
+       path: "/v1/chat/completions",
+       body: {
+-        messages: o.messages,
++        messages: min3citeMessages(o.messages),
+         stream: true,
+         max_tokens: maxTokensFor(o),
+         ...sampler,

@@ -1,0 +1,12 @@
+{"arm": "NUMGUARD-r2", "criterion_sha256": "5c69f4fca088311263af168484d08a60d1f53afde7188ee46d6a52a8ef1b13a7",
+ "patch_sha256": "e6a5af5409ec3b1e9eb6fb00ca1a071f7110fc20b4b2a120e9a0f5375dd50228", "tree": "kiln-local/be-0cfd4a77-cut7-numguard-r2", "arm_label": "cut7+numguard-r2",
+ "checks": {
+  "a_health_guard": "0/32", "a_multiturn_guard": "0/6", "a_multiturn_turn_alone_guard": "5/6 (m02-m06)", "a_multiturn_window_fire": "6/6",
+  "b_benign_guard": "4/15 (b01 b02 b03 b10)", "b_rule": ">=13/15", "b_pass": false, "b_info_vs_review_fix_column": "15/15", "b_r1_benign_guard": "8/15",
+  "c_slice_correct": "26/26", "c_targets": {"mr-u07": true, "mr-a02": true, "mr-a04": true}, "c_correct_to_wrong_vs_r1": 0, "c_text_changed_vs_r1": 0,
+  "d_v01_changed_answers_non_numeric_vs_off": 0, "d_v01_numeric_items": 0, "d_v01_same_answer_vs_off": "60/60", "d_v01_same_answer_vs_r1_on": "60/60", "d_v01_codes_changed_vs_r1_on": ["vit-sci-003 (numguard:fired -> detector:numeric-guard, = cut 7)"],
+  "e_route_replay_180_on_acts": 0, "e_route_replay_info": {"slice_guard": 17, "slice_on_acts": 3, "v01_guard": 0, "cooking_money_40_on_acts": 0},
+  "f_tsc": "clean", "f_vitest_routing": "29 files / 647 tests green (55 new)"},
+ "slice": {"A_cut7": {"correct": 23, "cited": 4}, "NG_r1": {"correct": 26, "cited": 6}, "NGR2": {"correct": 26, "cited": 6, "calc": 11, "retrieved": 14}},
+ "wall_s": {"generation": 732, "of_which_busy_wait": 150}, "calls": {"haiku": 0, "opus": 0, "paid": 0},
+ "verdict": "FAIL (frozen rule; only (b) fails, by construction: predicted before the freeze from the review's table)"}

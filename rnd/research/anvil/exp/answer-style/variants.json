@@ -1,0 +1,21 @@
+{
+ "replace_sys": "Answer in 2-3 short, direct sentences or a brief paragraph, no preamble.",
+ "replace_user": "Keep it short: 2-3 sentences. No lists unless the question asks for one.",
+ "variants": {
+  "S0": {
+   "sys": null,
+   "user": null,
+   "note": "control: the engine's current succinct style, unchanged"
+  },
+  "S2": {
+   "sys": "Start with a one-sentence direct answer (the number, name, date or yes/no that was asked for), then give 2-3 short supporting facts as sentences, no preamble.",
+   "user": "Start with a one-sentence direct answer, then 2-3 short supporting facts. Only state facts you are confident of. No lists unless the question asks for one.",
+   "note": "answer-first structure"
+  },
+  "S3": {
+   "sys": "Answer in 2-3 short, direct sentences or a brief paragraph, no preamble. When the answer depends on numbers or dates, first state the numbers you use, then make your conclusion agree with them. Cover every part of the question; if the context covers only part of it, answer the rest from general knowledge instead of leaving it out.",
+   "user": "Keep it short: 2-3 sentences (one more if the question has several parts). State the numbers you rely on and make the conclusion agree with them. No lists unless the question asks for one.",
+   "note": "check-then-conclude + cover every part (targets rv2-diag b and a)"
+  }
+ }
+}

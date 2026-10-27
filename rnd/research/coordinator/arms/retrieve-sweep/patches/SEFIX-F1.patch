@@ -1,0 +1,252 @@
+diff -ruN rs-H4/src/rag/denseCandidates.ts rs-SEFIX-F1/src/rag/denseCandidates.ts
+--- rs-H4/src/rag/denseCandidates.ts	2026-10-14 14:04:53
++++ rs-SEFIX-F1/src/rag/denseCandidates.ts	2026-10-22 20:17:09
+@@ -11,6 +11,8 @@
+   candidates: RetrievedChunk[];
+   /** At least one searched format-2 pack carries a chunk_vecs sidecar (false: the dense path could not run). */
+   sidecar: boolean;
++  /** SEFIX F1 (RS_SE_LEAD, bench-only): lead-vector thread answers of Stack Exchange packs without chunk_vecs, best thread first. */
++  seLead?: RetrievedChunk[];
+ }
+ 
+ const attached = new WeakMap<RetrievedChunk[], DenseCandidates>();
+diff -ruN rs-H4/src/rag/packs.ts rs-SEFIX-F1/src/rag/packs.ts
+--- rs-H4/src/rag/packs.ts	2026-10-22 17:16:18
++++ rs-SEFIX-F1/src/rag/packs.ts	2026-10-22 20:17:09
+@@ -154,6 +154,8 @@
+   stems: Stem[];
+   /** packDense2: the pack's two-stage chunk-vector hits (absent when off or the pack has no chunk_vecs). */
+   semantic?: PackHit[];
++  /** SEFIX F1 (RS_SE_LEAD): lead-vector thread answers of a Stack Exchange pack without chunk_vecs. */
++  seLead?: PackHit[];
+ }
+ 
+ /** Searches every installed format-2 pack (a failing pack is skipped). */
+@@ -188,8 +190,8 @@
+         if (!(await openPack(pack))) continue;
+         const wp = wikiPacks.get(pack.id);
+         if (!wp) continue;
+-        const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
+-        out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
++        const { hits, stems, semantic, seLead } = await wp.searchDetailed(query, opts);
++        out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}), ...(seLead ? { seLead } : {}) });
+       } catch (e: any) {
+         console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+       }
+diff -ruN rs-H4/src/rag/retrieve.ts rs-SEFIX-F1/src/rag/retrieve.ts
+--- rs-H4/src/rag/retrieve.ts	2026-10-22 17:16:18
++++ rs-SEFIX-F1/src/rag/retrieve.ts	2026-10-22 20:17:09
+@@ -126,17 +126,21 @@
+   const append = opts.packDense2 === "append";
+   const mainR = await retrieveOneDetailed(query, topK, opts);
+   const main = mainR.chunks;
+-  const side = (list: RetrievedChunk[], dense: RetrievedChunk[], sidecar: boolean) =>
+-    extra ? appendDenseExtra(list, dense) : append ? attachDenseCandidates(list, { candidates: rankDenseCandidates(list, dense), sidecar }) : list;
++  const side = (list: RetrievedChunk[], dense: RetrievedChunk[], sidecar: boolean, seLead: RetrievedChunk[] = []) =>
++    extra
++      ? appendDenseExtra(list, dense)
++      : append
++        ? attachDenseCandidates(list, { candidates: rankDenseCandidates(list, dense), sidecar, ...(seLead.length ? { seLead } : {}) })
++        : list;
+   // A Portuguese question against English sources: search again with the English names it mentions
+   // (Wikipedia's own interlanguage links, src/rag/ptLexicon.ts), and put those results first. The English
+   // embedder and keyword index barely match Portuguese words, so the first search alone finds noise.
+-  if (!looksPortuguese(query)) return side(main, mainR.dense, mainR.sidecar);
++  if (!looksPortuguese(query)) return side(main, mainR.dense, mainR.sidecar, mainR.seLead);
+   // A standard's number in the question (EIP-1559, ERC-20, BIP-32) names its page exactly: it goes before any
+   // lexicon name, which for these questions is often only the generic "Ethereum".
+   const ids = identifiersIn(query);
+   const names = [...ids, ...englishNamesIn(query, opts.lexicon ?? ptLexicon()).filter((n) => !ids.includes(n))];
+-  if (!names.length) return side(main, mainR.dense, mainR.sidecar);
++  if (!names.length) return side(main, mainR.dense, mainR.sidecar, mainR.seLead);
+   // The names alone ("Earthquake") don't say the question asks what to do; the question does.
+   const foundR = await retrieveOneDetailed(names.join(" "), topK, {
+     includeWikiPacks: opts.includeWikiPacks,
+@@ -163,7 +167,7 @@
+   // The page of a standard the question names by number first, from either search.
+   const byId = (c: RetrievedChunk) => ids.some((id) => titleHasIdentifier(c.title, id));
+   const out = dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
+-  return side(out, [...mainR.dense, ...foundR.dense], mainR.sidecar || foundR.sidecar);
++  return side(out, [...mainR.dense, ...foundR.dense], mainR.sidecar || foundR.sidecar, [...mainR.seLead, ...foundR.seLead]);
+ }
+ 
+ /** packDense2: off (absent/false), true = the dense chunk hits join the fusion (DENSECHUNK-ST), "extra" = appended slots
+@@ -212,7 +216,7 @@
+   query: string,
+   topK: number,
+   opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean; packDense2?: PackDense2Mode }
+-): Promise<{ chunks: RetrievedChunk[]; dense: RetrievedChunk[]; sidecar: boolean }> {
++): Promise<{ chunks: RetrievedChunk[]; dense: RetrievedChunk[]; sidecar: boolean; seLead: RetrievedChunk[] }> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+@@ -289,7 +293,9 @@
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
+-  return { chunks: result, dense: extra ? wikiSemantic : [], sidecar: wiki.some((w) => w.pack?.hasChunkVecs === true) };
++  // SEFIX F1 (RS_SE_LEAD): the Stack Exchange lead-vector thread answers, as semantic candidates at their lead cosine.
++  const seLead = wiki.flatMap((w) => (w.seLead ?? []).map((h) => ({ ...packHitToChunk(w.packId, h), matchType: "semantic" as const, similarity: h.score })));
++  return { chunks: result, dense: extra ? wikiSemantic : [], sidecar: wiki.some((w) => w.pack?.hasChunkVecs === true), seLead };
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff -ruN rs-H4/src/rag/wikiPack.ts rs-SEFIX-F1/src/rag/wikiPack.ts
+--- rs-H4/src/rag/wikiPack.ts	2026-10-22 17:16:23
++++ rs-SEFIX-F1/src/rag/wikiPack.ts	2026-10-22 20:17:09
+@@ -448,6 +448,7 @@
+   /** RS_MERGE=gidf (RETRIEVE-SWEEP arm H4, bench-only): collection statistics across the installed packs, set by searchWikiPacks around a search. */
+   rsGlobal: { nRow: number; df: Map<string, number> } | null = null;
+   private rsRows = new Map<string, number>();
++  private rsSeCache: boolean | null = null;
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
+   private resolved = new Lru<string, number | null>(512);
+@@ -491,6 +492,67 @@
+     return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"));
+   }
+ 
++  /** SEFIX (bench-only): a Stack Exchange Q&A pack (meta.sources names stackexchange). */
++  get rsIsSE(): boolean {
++    if (this.rsSeCache === null) {
++      try { this.rsSeCache = "stackexchange" in JSON.parse(this.meta.sources ?? "{}"); } catch { this.rsSeCache = false; }
++    }
++    return this.rsSeCache;
++  }
++
++  /**
++   * SEFIX F1 (RS_SE_LEAD=<tau>, default 0.78; RS_SE_LEAD_N threads, default 1; bench-only): for a Stack Exchange pack without chunk_vecs, the
++   * top thread(s) by lead-vector cosine >= tau, as the chunks at positions 1-2 (accepted answer + next, by start) of each thread's article.
++   * The caller appends them after the kept list (answer.ts, headpass:selead:add). The lead matrix is the one denseChunks caches.
++   */
++  async rsSeLead(queryVec: Float32Array): Promise<PackHit[]> {
++    const env = (globalThis as any).process?.env;
++    const v = Number(env?.RS_SE_LEAD ?? 0);
++    if (!v || !this.rsIsSE || this.hasChunkVecs) return [];
++    const tau = v > 0 && v < 1 ? v : 0.78;
++    const nThreads = Math.max(1, Number(env?.RS_SE_LEAD_N ?? 1));
++    const dims = queryVec.length;
++    if (!this.leadMatrix) {
++      const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []).catch(() => []);
++      const ids = new Int32Array(rows.length);
++      const vecs = new Int8Array(rows.length * dims);
++      const norms = new Float32Array(rows.length);
++      rows.forEach((r, i) => {
++        ids[i] = r.article_id;
++        const vv = new Int8Array(r.vec.buffer, r.vec.byteOffset, dims);
++        vecs.set(vv, i * dims);
++        let n = 0;
++        for (let d = 0; d < dims; d++) n += vv[d] * vv[d];
++        norms[i] = Math.sqrt(n);
++      });
++      this.leadMatrix = { ids, vecs, norms };
++    }
++    const { ids, vecs, norms } = this.leadMatrix;
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    const top: Array<{ id: number; s: number }> = [];
++    for (let i = 0; i < ids.length; i++) {
++      let dot = 0;
++      const o = i * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vecs[o + d];
++      const s = norms[i] ? dot / (qn * norms[i]) : 0;
++      if (s < tau) continue;
++      if (top.length < nThreads || s > top[top.length - 1].s) {
++        let j = top.length < nThreads ? top.length : top.length - 1;
++        if (top.length < nThreads) top.push({ id: ids[i], s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id: ids[i], s };
++      }
++    }
++    const out: PackHit[] = [];
++    for (const t of top) {
++      const rows = await this.db.getAllAsync<{ id: number; start: number; end: number }>("SELECT id, start, end FROM chunks WHERE article_id = ? ORDER BY start", [t.id]);
++      for (const r of rows.slice(1, 3)) out.push({ ...(await this.hit(t.id, r.id, r.start, r.end, t.s, "semantic")), score: t.s });
++    }
++    return out;
++  }
++
+   /** RS_MERGE=gidf: rows of this pack's index (FTS5's nRow). */
+   get rsNRow(): number {
+     return this.nIndexed;
+@@ -920,7 +982,7 @@
+   }
+ 
+   /** search(), plus the question's stems (for scoring sentences with the same term weights). */
+-  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[]; semantic?: PackHit[] }> {
++  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[]; semantic?: PackHit[]; seLead?: PackHit[] }> {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
+     const stems = await this.stems(query);
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+@@ -1025,6 +1087,11 @@
+     }
+     // packDense2: the chunk-vector list, fused with the keyword hits by retrieve.ts (off or no sidecar: not computed).
+     if (opts.dense2 && queryVec && this.hasChunkVecs) return { hits: hits.slice(0, limit + lay), stems, semantic: await this.denseChunks(queryVec) };
++    // SEFIX F1 (RS_SE_LEAD, bench-only, default off): a Stack Exchange pack without chunk_vecs offers its best lead-vector thread's answers.
++    if (opts.dense2 && queryVec && (globalThis as any).process?.env?.RS_SE_LEAD) {
++      const seLead = await this.rsSeLead(queryVec);
++      if (seLead.length) return { hits: hits.slice(0, limit + lay), stems, seLead };
++    }
+     return { hits: hits.slice(0, limit + lay), stems };
+   }
+ 
+diff -ruN rs-H4/src/routing/answer.ts rs-SEFIX-F1/src/routing/answer.ts
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-SEFIX-F1/src/routing/answer.ts	2026-10-22 20:17:09
+@@ -1111,6 +1111,7 @@
+       const hpBefore = sources.length;
+       let pendX1: RetrievedChunk[] = [];
+       let pendDense: RetrievedChunk[] = [];
++      let pendSe: RetrievedChunk[] = [];
+       if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
+         if (settings.packHeadPass === "a2") {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+@@ -1133,9 +1134,21 @@
+         }
+         if (denseAppend) {
+           const dense = denseCandidatesOf(retrievedRaw);
++          // SEFIX F1 (RS_SE_LEAD): the Stack Exchange thread's answers go first among the dense appends, inside the same cap and budget.
++          if (dense?.seLead?.length) {
++            const have = new Set([...sources, ...pendX1, ...retrievedRaw].map((c) => c.chunkId));
++            let se = dense.seLead.filter((c) => !have.has(c.chunkId)).slice(0, Math.max(0, HEADPASS_MAX_APPEND - (sources.length - hpBefore + pendX1.length)));
++            if (health) {
++              const topic = healthTopicTerms(req.query, english);
++              const ok = se.filter((c) => onHealthTopic(topic, c));
++              if (ok.length < se.length) reasonCodes.push(`headpass:selead:health-dropped-${se.length - ok.length}`);
++              se = ok;
++            }
++            pendSe = se;
++          }
+           if (!dense?.sidecar) reasonCodes.push("headpass:dense:nosidecar");
+           else {
+-            let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
++            let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1, ...pendSe], sources.length - hpBefore + pendX1.length + pendSe.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+             if (health && add.length) {
+               const topic = healthTopicTerms(req.query, english);
+@@ -1150,7 +1163,11 @@
+             }
+           }
+         }
+-        if (budgeted && (pendX1.length || pendDense.length)) {
++        if (!budgeted && pendSe.length) {
++          for (const c of pendSe) reasonCodes.push(`headpass:selead:add:${c.chunkId}`);
++          sources = [...sources, ...pendSe];
++        }
++        if (budgeted && (pendX1.length || pendSe.length || pendDense.length)) {
+           let template = true;
+           try { template = deps.engine.hasEmbeddedChatTemplate(); } catch { /* the chat form, as the replay records it */ }
+           const base = sources;
+@@ -1161,8 +1178,9 @@
+               : deps.assemblePrompt(req.query, s, ctx.systemPrompt, ctx.history)).length;
+           };
+           const x1Ids = new Set(pendX1.map((c) => c.chunkId));
+-          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
+-          for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
++          const seIds = new Set(pendSe.map((c) => c.chunkId));
++          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendSe, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : seIds.has(c.chunkId) ? `headpass:selead:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];
+         }

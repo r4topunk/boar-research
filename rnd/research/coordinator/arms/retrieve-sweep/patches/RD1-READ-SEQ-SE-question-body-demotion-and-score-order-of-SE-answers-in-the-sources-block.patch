@@ -1,0 +1,191 @@
+--- rs-H4/src/rag/pure.ts	2026-10-07 09:27:55
++++ rs-RD1/src/rag/pure.ts	2026-10-22 21:04:11
+@@ -439,3 +439,54 @@
+   "Treat greetings and casual small talk conversationally and briefly, not as a command or task. " +
+   "Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you " +
+   "don't actually have the ability to do.";
++
++/**
++ * READ-SEQ (READER arm RD1, bench-only, switch BOAR_READ_SEQ=1 in answer.ts; default off = unchanged).
++ * Stack Exchange pack threads reach the sources block as a "Tags: ..." question chunk and "Answers > Answer (score n[, accepted])"
++ * chunks. The question chunk echoes the user's own premise and reads like a statement of fact; the answers carry the fact and
++ * the vote score says which answer the community kept.
++ *   1. drop every SE question chunk whose thread (docId) has at least one SE answer chunk in the list (pinned chunks are kept);
++ *   2. refill the positions the SE chunks hold (after step 1), in order, with SE answer chunks by score desc (ties keep the
++ *      original order; an accepted answer counts +0.5), then SE continuation chunks in original order, then the SE question
++ *      chunks left (their thread has no answer chunk in the list); non-SE chunks keep their exact positions;
++ *   3. label the question chunks that remain: body prefixed with "Question asked (not an answer): " (title unchanged).
++ */
++export interface SeChunkLike {
++  chunkId: string;
++  docId?: string;
++  title: string;
++  body: string;
++}
++const isSeChunk = (c: SeChunkLike) => /^pack:local-qa-/.test(c.chunkId);
++export const isSeQuestion = (c: SeChunkLike) => isSeChunk(c) && /^Tags:/.test(c.body.trimStart());
++export const isSeAnswer = (c: SeChunkLike) => isSeChunk(c) && /^Answers >/.test(c.body.trimStart());
++export const seScore = (c: SeChunkLike) =>
++  Number(/^Answers > Answer \(score (-?\d+)/.exec(c.body.trimStart())?.[1] ?? 0) + (/accepted\)/.test(c.body.slice(0, 60)) ? 0.5 : 0);
++export const SE_QUESTION_LABEL = "Question asked (not an answer): ";
++
++export function reorderSeSources<T extends SeChunkLike>(
++  sources: T[],
++  pinned: ReadonlySet<string> = new Set(),
++): { sources: T[]; droppedQuestions: number; labeledQuestions: number; reordered: boolean } {
++  const threadsWithAnswer = new Set(sources.filter(isSeAnswer).map((c) => c.docId ?? c.chunkId));
++  const kept = sources.filter((c) => !(isSeQuestion(c) && !pinned.has(c.chunkId) && threadsWithAnswer.has(c.docId ?? c.chunkId)));
++  const droppedQuestions = sources.length - kept.length;
++  const positions: number[] = [];
++  kept.forEach((c, i) => { if (isSeChunk(c)) positions.push(i); });
++  const se = positions.map((i) => kept[i]);
++  const order = new Map(se.map((c, i) => [c, i] as const));
++  const answers = se.filter(isSeAnswer).sort((a, b) => seScore(b) - seScore(a) || order.get(a)! - order.get(b)!);
++  const rest = se.filter((c) => !isSeAnswer(c) && !isSeQuestion(c));
++  const questions = se.filter(isSeQuestion);
++  const sorted = [...answers, ...rest, ...questions];
++  const out = kept.slice();
++  positions.forEach((pos, i) => { out[pos] = sorted[i]; });
++  const reordered = out.some((c, i) => c !== kept[i]);
++  let labeledQuestions = 0;
++  const labeled = out.map((c) => {
++    if (!isSeQuestion(c)) return c;
++    labeledQuestions++;
++    return { ...c, body: SE_QUESTION_LABEL + c.body };
++  });
++  return { sources: labeled, droppedQuestions, labeledQuestions, reordered };
++}
+--- rs-H4/src/rag/readSeq.test.ts	1969-12-31 21:00:00
++++ rs-RD1/src/rag/readSeq.test.ts	2026-10-22 21:07:19
+@@ -0,0 +1,96 @@
++import { describe, it, expect } from "vitest";
++import { reorderSeSources, seScore, isSeQuestion, isSeAnswer, SE_QUESTION_LABEL } from "./pure";
++
++const c = (chunkId: string, docId: string, title: string, body: string) => ({ chunkId, docId, title, body });
++const ids = (xs: { chunkId: string }[]) => xs.map((x) => x.chunkId);
++
++// lan-hlt-003-shaped: two threads, one question chunk with answers (dropped), one question without answers (kept last, labelled)
++const LAN = [
++  c("pack:local-qa-health-se:3681", "pack:local-qa-health-se:a856", "What diseases can be spread by mosquitos?", "Tags: infectious-diseases, mosquito I heard that the chance of cont"),
++  c("pack:local-qa-health-se:5344", "pack:local-qa-health-se:a1310", "Can a mosquito bite transmit STD's?", "Tags: sti, mosquito, syphilis Mosquitoes can of course transmit malaria"),
++  c("pack:local-boar-firstaid-en:5003", "pack:local-boar-firstaid-en:a495", "Appropedia: GEM mosquito control/FAQ", "Q14: Does mosquito spread HIV-AIDS?"),
++  c("pack:local-qa-health-se:5345", "pack:local-qa-health-se:a1310", "Can a mosquito bite transmit STD's?", "Diseases spread by mosquitoes only if they can replicate within the mosquito."),
++  c("pack:local-qa-health-se:5346", "pack:local-qa-health-se:a1310", "Can a mosquito bite transmit STD's?", "Answers > Answer (score 4, accepted): Yes, it is true that Zika can be transmitted sexually"),
++];
++
++// money-010-shaped: question + answer of one thread, a second thread with a better-voted answer after the first
++const MONEY = [
++  c("pack:local-qa-money-se:124071", "pack:local-qa-money-se:a30070", "New HSA contribution deadline", "Tags: united-states, taxes, hsa I had a qualifying event"),
++  c("pack:local-qa-money-se:124074", "pack:local-qa-money-se:a30070", "New HSA contribution deadline", "Answers > Answer (score 1): Because you did not become an HSA eligible individual until 2019"),
++  c("pack:local-qa-money-se:91261", "pack:local-qa-money-se:a22128", "Contribution limits and deadlines for HSA", "If I open an HSA after Dec. 31, 2018, any contribution goes toward 2019"),
++  c("pack:local-qa-money-se:91262", "pack:local-qa-money-se:a22128", "Contribution limits and deadlines for HSA", "Answers > Answer (score 3, accepted): Since you were HSA-eligible for 3 months in 2018"),
++];
++
++describe("reorderSeSources (READ-SEQ)", () => {
++  it("scores answers (accepted +0.5) and recognises question / answer chunks", () => {
++    expect(seScore(LAN[4])).toBe(4.5);
++    expect(seScore(MONEY[1])).toBe(1);
++    expect(seScore(LAN[3])).toBe(0);
++    expect(isSeQuestion(LAN[0])).toBe(true);
++    expect(isSeAnswer(LAN[4])).toBe(true);
++    expect(isSeQuestion(LAN[2])).toBe(false);
++  });
++
++  it("lan-hlt-003 shape: drops the question that has answers, keeps the other, wiki-like chunk keeps its position", () => {
++    const r = reorderSeSources(LAN);
++    // after the drop: [3681 q, 5003 fa, 5345 cont, 5346 ans]; SE positions 0, 2, 3 -> answer, continuation, question
++    expect(ids(r.sources)).toEqual([
++      "pack:local-qa-health-se:5346",
++      "pack:local-boar-firstaid-en:5003",
++      "pack:local-qa-health-se:5345",
++      "pack:local-qa-health-se:3681",
++    ]);
++    expect(r.droppedQuestions).toBe(1);
++    expect(r.labeledQuestions).toBe(1);
++    expect(r.reordered).toBe(true);
++    expect(r.sources[3].body.startsWith(SE_QUESTION_LABEL + "Tags:")).toBe(true);
++    expect(r.sources[3].title).toBe("What diseases can be spread by mosquitos?");
++    expect(r.sources[1]).toBe(LAN[2]);
++  });
++
++  it("money-010 shape: the question echo goes, the higher-score answer comes first", () => {
++    const r = reorderSeSources(MONEY);
++    // after the drop: [124074 a(1), 91261 cont, 91262 a(3.5)]; positions 0,1,2 -> 91262, 124074, 91261
++    expect(ids(r.sources)).toEqual(["pack:local-qa-money-se:91262", "pack:local-qa-money-se:124074", "pack:local-qa-money-se:91261"]);
++    expect(r.droppedQuestions).toBe(1);
++    expect(r.labeledQuestions).toBe(0);
++    expect(r.reordered).toBe(true);
++  });
++
++  it("a wiki-only list comes back unchanged (same objects, same order)", () => {
++    const wiki = [c("pack:local-boar-simplewiki-en:1", "d1", "A", "Alpha is a letter."), c("pack:local-boar-factbook:2", "d2", "B", "Tags: not an SE chunk")];
++    const r = reorderSeSources(wiki);
++    expect(r.sources).toEqual(wiki);
++    expect(r.sources[0]).toBe(wiki[0]);
++    expect(r.sources[1]).toBe(wiki[1]);
++    expect(r).toMatchObject({ droppedQuestions: 0, labeledQuestions: 0, reordered: false });
++  });
++
++  it("a pinned question chunk is never dropped (and is labelled)", () => {
++    const r = reorderSeSources(MONEY, new Set(["pack:local-qa-money-se:124071"]));
++    expect(r.droppedQuestions).toBe(0);
++    expect(ids(r.sources)).toEqual([
++      "pack:local-qa-money-se:91262",
++      "pack:local-qa-money-se:124074",
++      "pack:local-qa-money-se:91261",
++      "pack:local-qa-money-se:124071",
++    ]);
++    expect(r.sources[3].body.startsWith(SE_QUESTION_LABEL)).toBe(true);
++  });
++
++  it("ties keep the original order; an already-ordered list is not marked reordered", () => {
++    const a = [
++      c("pack:local-qa-x-se:1", "t1", "T", "Answers > Answer (score 2): one"),
++      c("pack:local-qa-x-se:2", "t1", "T", "Answers > Answer (score 2): two"),
++    ];
++    const r = reorderSeSources(a);
++    expect(ids(r.sources)).toEqual(["pack:local-qa-x-se:1", "pack:local-qa-x-se:2"]);
++    expect(r.reordered).toBe(false);
++  });
++
++  it("does not mutate the input", () => {
++    const copy = JSON.stringify(LAN);
++    reorderSeSources(LAN);
++    expect(JSON.stringify(LAN)).toBe(copy);
++  });
++});
+--- rs-H4/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-RD1/src/routing/answer.ts	2026-10-22 21:06:43
+@@ -121,6 +121,7 @@
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
++import { reorderSeSources } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+ import type { MemoryFit } from "../inference/memoryFit";
+ import type { AnswerSettings } from "../models/settings";
+@@ -277,6 +278,8 @@
+ const PROMPT_OVERHEAD_TOKENS = 512;
+ /** HEADPASS-ST eval only (= ORACLE-ST's dump, default off): BOAR_PROMPT_DUMP = JSONL file that receives each generation's prompt/messages. */
+ const PROMPT_DUMP: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_PROMPT_DUMP || undefined : undefined;
++/** READ-SEQ (READER arm RD1, bench-only, default off): BOAR_READ_SEQ=1 demotes SE question chunks and orders SE answers by vote score in the sources block. Unset or any other value = unchanged. */
++const READ_SEQ = typeof process !== "undefined" && process.env?.BOAR_READ_SEQ === "1";
+ async function dumpPrompt(query: string, prompt: unknown): Promise<void> {
+   const fs = await import("node:fs");
+   fs.appendFileSync(PROMPT_DUMP!, JSON.stringify({ query, prompt }) + "\n");
+@@ -1166,6 +1169,15 @@
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];
+         }
++      }
++      // READ-SEQ (READER arm RD1, BOAR_READ_SEQ=1, default off): see reorderSeSources in rag/pure.ts. Runs before the sources event, so the
++      // emitted sources, the prompt, CT-1, attributeCitations and finish() all see the same numbering. Pinned chunks are never dropped.
++      if (READ_SEQ && gen?.mode !== "multipass" && !health && sources.length) {
++        const rs = reorderSeSources(sources, pinned);
++        sources = rs.sources;
++        if (rs.droppedQuestions) reasonCodes.push(`readseq:dropq-${rs.droppedQuestions}`);
++        if (rs.reordered) reasonCodes.push("readseq:reorder");
++        if (rs.labeledQuestions) reasonCodes.push(`readseq:qlabel-${rs.labeledQuestions}`);
+       }
+       if (sources.length && gen?.mode !== "multipass") {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });

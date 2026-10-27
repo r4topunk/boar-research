@@ -1,0 +1,16 @@
+# set<TAB>status<TAB>note   (status: dev | held-out | clean). Source: coordinator/EXPOSURES.md "Status per set". Read by shard_judge.sh --preflight (preflight.py).
+# FAIL CLOSED: a set that is not listed here is treated as dev. A trailing * in the set column is a prefix glob (first exact match wins, then globs).
+# An Opus judge request against a dev set needs a filled opus_clause (pre-L1 near-miss clause) in the criterion's ## Precheck block.
+bench-v02	dev	v0.2 burnt (plaintext in git history d8154b6 + 4 claim-grade runs)
+V-para	dev	V-para: ruling 2026-10-09, dev-style for everything after 10-06; the cut 3/6 claim runs are history
+v01	dev	v0.1 dev set
+selftest-180	dev	180 public self-test items
+st-*	dev	self-test packs (st-<pack>-...)
+health-fresh1	dev	dev for card picking
+health-fresh2	dev	dev for card picking
+health-fresh3	held-out	spent 1 (confirm done), no dev ruling
+chat-v3	held-out	spent 3, not clean
+meta-fresh1	held-out	spent 1
+es-fresh1	held-out	unrun, style-contaminated
+es-fresh2	clean	untouched
+v03	clean	never an arm set

@@ -1,0 +1,24 @@
+module load ms 157.5 cold first call ms 88.86
+┌──────────────────┬────┬───────┬─────┐
+│ (index)          │ n  │ fired │ raw │
+├──────────────────┼────┼───────┼─────┤
+│ v0.1             │ 60 │ 8     │ 8   │
+│ vexact           │ 5  │ 0     │ 0   │
+│ vexact(dup v0.1) │ 6  │ 0     │ 0   │
+│ chat-v0          │ 64 │ 0     │ 0   │
+│ chat-v1          │ 64 │ 0     │ 0   │
+│ chat-v2          │ 64 │ 2     │ 2   │
+│ safety(en)       │ 9  │ 0     │ 0   │
+│ safety(pt-BR)    │ 3  │ 0     │ 0   │
+└──────────────────┴────┴───────┴─────┘
+v0.1 lan-cmp-001 FIRE population Q155,Q159 | Does Brazil have more people than Russia?
+v0.1 lan-rsn-002 FIRE depth Q12495,Q5513 | If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out
+v0.1 lan-ref-001 FIRE winner Q37922 | Who received the Nobel Prize in Literature in 2017?
+v0.1 lan-ref-004 FIRE area Q189 | How big is Iceland in square kilometres?
+v0.1 lan-exp-006 FIRE height Q7296 | What is Kilimanjaro, how high is it, and is it a volcano?
+v0.1 lan-rsn-007 FIRE dates Q5086 | In which year was the Berlin Wall built, and in which year did it come down?
+v0.1 lan-ref-005 FIRE host Q8613 | Which city hosted the 2016 Summer Olympics?
+v0.1 trv-002 FIRE electricity Q155 | What plug type and voltage does Brazil use?
+chat-v2 v2-045 FIRE population Q189 | hi! what's the population of Iceland?
+chat-v2 v2-054 FIRE languages Q228 | what language do they speak in Andorra?
+latency warm n=5500 p50=0.052ms p95=0.082ms p99=0.135ms max=0.331ms

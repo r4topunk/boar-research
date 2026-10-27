@@ -1,0 +1,40 @@
+<|im_start|>system
+You are Boar, a concise offline research assistant. Answer in 2-3 short, direct sentences or a brief paragraph, no preamble. Do not default to a bulleted list or a single takeaway sentence followed by three bullet points — use bullets only when the content is genuinely a list of distinct items. Use the context below when relevant, and cite a source you used by its number, like [1] or [2]. If the context doesn't cover the question, say so and answer from general knowledge. You are BOAR, an offline AI research app running on this phone; "Boar" is the app's name, never the animal, so never describe yourself as one. You have no ability to control real-world devices or take physical actions — no alarms, lights, thermostats, timers, or any other device or system. You can only respond with text. Treat greetings and casual small talk conversationally and briefly, not as a command or task. Never claim to have done something (set, adjusted, turned on/off, scheduled, etc.) that you don't actually have the ability to do.
+
+Context:
+[1] Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients
+Motivation: Historical blocks and receipts currently occupy more than 400GB of disk space (and growing!). Therefore, to validate the chain, users must typically have a 1TB disk. By pruning the history, this proposal reduces the disk requirements for users. Finally, this change will result in less bandwidth usage on the network as clients adopt more lightweight sync strategies based on the PoS weak subjectivity assumption.
+
+[2] Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients
+Security Considerations > Confusion with other proposals: Because there are a number of alternative proposals for reducing the execution client's footprint on disk, we've decided to enforce a specific pronunciation of the EIP. When pronouncing the EIP number, it **MUST** be pronounced EIP "four fours". All other pronunciation are incorrect.
+
+[3] Ethereum EIPs/ERCs: EIP-4444: Bound Historical Data in Execution Clients
+Prune history older than the consensus-layer block retention window Status: Draft Type: Standards Track (Networking) Created: 2021-11-02
+
+[4] Ethereum EIPs/ERCs: EIP-7927: History Expiry Meta
+Motivation: EIP-4444 documents the motivation for history expiry itself.
+
+[5] Ethereum EIPs/ERCs: EIP-7927: History Expiry Meta
+Meta EIP for History Expiry changes happening in conjunction with Pectra
+
+[6] ethereum.org: Statelessness, state expiry and history expiry
+Further reading: - What is Stateless Ethereum? - EIP-4444 specification<|im_end|>
+<|im_start|>user
+What does EIP-4444 history expiry change for Ethereum node operators, and how much disk does it save?
+
+(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+EIP-4444 reduces the disk space required for Ethereum node operators by pruning historical block data older than the consensus-layer retention window [1]. This change lowers the typical disk requirement from 1TB to approximately 400GB, significantly reducing storage and bandwidth usage [1].
+
+generation: 59 tokens, 0.116 s/token (8.624 tok/s)
+compute: 55.8% CPU occupancy (0.2589 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 679 tokens, 21.824 s (31.1 tok/s) | model load 9.269 s | TTFT 31.092 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 6755.7 MiB (114.50 MiB/token), decode 0.116 s/token (compute 0.054 + cache mgmt 0.003 + flash I/O 0.250 s/token, 457 MiB/s)
+moe-cache: 36.1% hit, resident 1500.0 MiB
+moe-cache: 19740 evictions, 12820 re-reads (217.3/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.059 s/token (flash reads overlapped with FFN compute)

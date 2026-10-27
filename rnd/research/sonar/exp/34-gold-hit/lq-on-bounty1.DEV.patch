@@ -1,0 +1,47 @@
+--- src/rag/wikiPack.ts.orig	2026-10-03 17:45:15
++++ src/rag/wikiPack.ts	2026-10-03 17:45:15
+@@ -334,7 +334,11 @@
+   return both / (ga.size + gb.size - both) >= threshold;
+ }
+ 
+-export function coverage(text: string, stems: Stem[]): number {
++/** Sonar exp-34 LQ: a long question is judged by its most informative stems (no passage covers half of a 10-term question). */
++export const LQ_TOP_STEMS = 6;
++export const topStems = (stems: Stem[]) => (stems.length > LQ_TOP_STEMS ? [...stems].sort((a, b) => b.idf - a.idf).slice(0, LQ_TOP_STEMS) : stems);
++export function coverage(text: string, stems0: Stem[]): number {
++  const stems = topStems(stems0);
+   const low = text.toLowerCase();
+   const total = stems.reduce((s, x) => s + x.idf, 0) || 1;
+   return stems.filter((s) => countAtBoundary(prefixOf(s.stem), low, true) > 0).reduce((s, x) => s + x.idf, 0) / total;
+@@ -703,7 +707,7 @@
+     // Nor do the words that only say the question wants steps ("nosebleed stop", "burn treat").
+     const content = stems.filter((s) => !FOREIGN_FUNCTION_WORDS.has(s.stem) && !ACTION_WORDS.has(s.stem));
+     const weight = new Map(content.map((s) => [s.stem, s.idf]));
+-    const total = content.reduce((n, s) => n + s.idf, 0) || 1;
++    const total = topStems(content).reduce((n, s) => n + s.idf, 0) || 1; // LQ: share of the top stems' weight
+     const sources: PackSource[] = [
+       ...(TRAVEL_INTENT.test(query) ? ["enwikivoyage", "enwiki"] as const : ["enwiki", "enwikivoyage"] as const),
+       ...this.topicSources,
+--- src/routing/context.ts.orig	2026-10-03 17:45:15
++++ src/routing/context.ts	2026-10-03 17:45:15
+@@ -610,7 +610,9 @@
+   const text = `${chunk.title} ${chunk.body}`;
+   // A year or a proper noun in the question must be in the source (Sextant, gate a9f156c:
+   // "1513 Marash earthquake" for the 1906 one, a cricketer for the 1970 World Cup).
+-  if (!yearsIn(query).every((y) => yearsIn(text).includes(y))) return false;
++  // LQ: a year used as a bound ("before 1970", "since 2015") is not the topic and need not be in the source.
++  const bound = new Set([...query.matchAll(/\b(?:before|after|since|until|till|by|prior to|earlier than|later than)\s+(?:the\s+)?(\d{4})\b/gi)].map((m) => m[1]));
++  if (!yearsIn(query).filter((y: any) => !bound.has(String(y))).every((y) => yearsIn(text).includes(y))) return false;
+   const proper = properNounTerms(query);
+   if (proper.length) {
+     const words = new Set(tokenizeTerms(text));
+@@ -648,7 +650,8 @@
+     const first = new Set(tokenizeTerms(splitSentences(text.trim())[0] ?? ""));
+     return q.size > 0 && [...q].every((t) => first.has(t));
+   }
+-  return termCoverage(query, `${chunk.title} ${chunk.body}`) >= MIN_TERM_COVERAGE;
++  // LQ: a long question (>= 7 terms) can't be 75% covered by one passage; half is enough.
++  return termCoverage(query, `${chunk.title} ${chunk.body}`) >= (q.size >= 7 ? 0.5 : MIN_TERM_COVERAGE);
+ }
+ 
+ /** Questions with fewer content words than this need a source whose title names one of them. */

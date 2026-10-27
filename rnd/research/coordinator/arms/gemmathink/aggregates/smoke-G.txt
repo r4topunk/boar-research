@@ -1,0 +1,5 @@
+smoke gt-smoke-G (v0.1 vit-hum-001, lan-exp-001), mini 02:38:49–02:42:41, rc 0, traces sha f8fff024315d, adapter desktop-node@e7124bdf02a5 (= boar-eval 80a16cc runner), llama-server b11010, deep model gemma-4-26b-a4b-ud-q2kxl sha 2a1d26dfe6ea
+gate 1 thinking reachable: 2/2 generate:deep-thinking, reasoningTokens 576 / 1033 (> 0) PASS
+gate 2 budget enforced: lan-exp-001 reasoning 1033 = 1024 + budget message, thinkingBudgetExceeded true; vit-hum-001 576 < 1024 PASS
+gate 3 answers non-empty 390 / 323 chars, 0 errors PASS; decode ≈ 12 / 9.4 tok/s (output 634 tok in 55.7 s; 1102 in 117 s) ≥ 5 PASS; reasoning 16.0 / 12.2 tok/s; peak RSS 7,217 MB ≤ 13 GB PASS (idle 5,141); free disk 35 GiB ≥ 25, swap 1.1 GB PASS
+timing: ttft 52.5 / 111.6 s, total 55.7 / 117.0 s (DEEPTHINK Qwen smoke: 136 / 163 s); model load 27 s

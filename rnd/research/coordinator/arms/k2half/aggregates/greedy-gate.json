@@ -1,0 +1,153 @@
+{
+ "arm": "K2HALF step 0 greedy gate",
+ "model": "Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf",
+ "expert_count": 256,
+ "expert_used_count": 8,
+ "k2half_kept": 4,
+ "settings": {
+  "temperature": 0,
+  "top_k": 1,
+  "n_predict": 64,
+  "seed": 42,
+  "enable_thinking": false,
+  "threads": 4,
+  "ctx": 4096,
+  "endpoint": "/apply-template + /completion"
+ },
+ "criterion": "PASS if mean agreement >= 0.80",
+ "items": [
+  {
+   "id": "lan-exp-001",
+   "prefix": 0.0,
+   "exact": 0.03125,
+   "stock_pp": 4.093318101641864,
+   "k2_pp": 7.80498634561,
+   "stock_tg": 8.954359628971135,
+   "k2_tg": 12.17512702715865,
+   "stock_rss_kb": 7491120,
+   "k2_rss_kb": 6984480,
+   "n_prompt": 36
+  },
+  {
+   "id": "vit-cry-001",
+   "prefix": 0.375,
+   "exact": 0.390625,
+   "stock_pp": 7.03869522701049,
+   "k2_pp": 15.399846001539983,
+   "stock_tg": 10.937108846454448,
+   "k2_tg": 15.888259635346788,
+   "stock_rss_kb": 7230720,
+   "k2_rss_kb": 7027664,
+   "n_prompt": 28
+  },
+  {
+   "id": "vit-cry-004",
+   "prefix": 0.234375,
+   "exact": 0.515625,
+   "stock_pp": 10.534594555059359,
+   "k2_pp": 21.69655935961675,
+   "stock_tg": 12.826686022068008,
+   "k2_tg": 20.276259203973378,
+   "stock_rss_kb": 7417136,
+   "k2_rss_kb": 6818464,
+   "n_prompt": 35
+  },
+  {
+   "id": "vit-cry-003",
+   "prefix": 0.125,
+   "exact": 0.140625,
+   "stock_pp": 15.71794028712004,
+   "k2_pp": 22.81131589233552,
+   "stock_tg": 13.231647075427949,
+   "k2_tg": 23.636768155945642,
+   "stock_rss_kb": 7452224,
+   "k2_rss_kb": 6792976,
+   "n_prompt": 37
+  },
+  {
+   "id": "lan-rsn-007",
+   "prefix": 0.140625,
+   "exact": 0.59375,
+   "stock_pp": 7.051664016416275,
+   "k2_pp": 22.215425947469402,
+   "stock_tg": 9.798892507393498,
+   "k2_tg": 16.18709195039042,
+   "stock_rss_kb": 7149712,
+   "k2_rss_kb": 7084608,
+   "n_prompt": 30
+  },
+  {
+   "id": "lan-ref-002",
+   "prefix": 0.125,
+   "exact": 0.140625,
+   "stock_pp": 7.925453187320067,
+   "k2_pp": 21.629922835250284,
+   "stock_tg": 11.318226674616971,
+   "k2_tg": 21.119890578852623,
+   "stock_rss_kb": 7106576,
+   "k2_rss_kb": 7056400,
+   "n_prompt": 20
+  },
+  {
+   "id": "lan-cmp-001",
+   "prefix": 0.03125,
+   "exact": 0.15625,
+   "stock_pp": 7.83806863718325,
+   "k2_pp": 25.5074386067837,
+   "stock_tg": 10.29857699821001,
+   "k2_tg": 18.07277648909638,
+   "stock_rss_kb": 7040624,
+   "k2_rss_kb": 7075456,
+   "n_prompt": 20
+  },
+  {
+   "id": "trv-004",
+   "prefix": 0.203125,
+   "exact": 0.203125,
+   "stock_pp": 6.490796726366671,
+   "k2_pp": 19.846241245947027,
+   "stock_tg": 7.334054787019049,
+   "k2_tg": 17.608522301193492,
+   "stock_rss_kb": 6909216,
+   "k2_rss_kb": 6969632,
+   "n_prompt": 24
+  },
+  {
+   "id": "lan-exp-007",
+   "prefix": 0.328125,
+   "exact": 0.390625,
+   "stock_pp": 6.081680003284107,
+   "k2_pp": 23.681264390068314,
+   "stock_tg": 8.708225914602162,
+   "k2_tg": 20.82993744736721,
+   "stock_rss_kb": 6505408,
+   "k2_rss_kb": 6688048,
+   "n_prompt": 40
+  },
+  {
+   "id": "vit-cry-009",
+   "prefix": 0.28125,
+   "exact": 0.296875,
+   "stock_pp": 5.2516980216744145,
+   "k2_pp": 15.657441280517737,
+   "stock_tg": 6.498547523052824,
+   "k2_tg": 17.196223927590253,
+   "stock_rss_kb": 6043280,
+   "k2_rss_kb": 6602272,
+   "n_prompt": 48
+  }
+ ],
+ "aggregate": {
+  "mean_prefix": 0.184375,
+  "mean_exact": 0.2859375,
+  "stock_pp": 7.802390876307654,
+  "k2_pp": 19.625044190513872,
+  "stock_tg": 9.990632597781605,
+  "k2_tg": 18.299085671691483,
+  "stock_rss_gib": 7.1440887451171875,
+  "k2_rss_gib": 6.75640869140625,
+  "pp_ratio": 2.5152603223335412,
+  "tg_ratio": 1.8316243233441243
+ },
+ "verdict": "FAIL"
+}

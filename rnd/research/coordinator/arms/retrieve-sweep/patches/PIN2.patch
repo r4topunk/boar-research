@@ -1,0 +1,138 @@
+diff -ruN rs-SEFIX/src/routing/answer.ts rs-PIN2/src/routing/answer.ts
+--- rs-SEFIX/src/routing/answer.ts	2026-10-22 19:47:17
++++ rs-PIN2/src/routing/answer.ts	2026-10-23 10:09:35
+@@ -67,6 +67,7 @@
+   healthTopicTerms,
+   onHealthTopic,
+   noKeptHoldsProper,
++  titleNamedBy,
+   riskyHealthInstruction,
+   termCoverage,
+ } from "./context";
+@@ -1061,9 +1062,19 @@
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
+-      const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
++      // PIN2 (RS_PIN2=1, bench-only, default off): a raw candidate whose title the question names is rescued from the
++      // compressor's relative floor only when under it, at its own rank, within the budget, and passes the non-health keep step.
++      const pin2 = (globalThis as any).process?.env?.RS_PIN2 === "1";
++      const floorRescue = new Set<string>(pin2 ? raw.filter((c) => !pinned.has(c.chunkId) && titleNamedBy(req.query, c.title)).map((c) => c.chunkId) : []);
++      const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned, ...(floorRescue.size ? { floorRescue } : {}) });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
++      const rescued = new Set<string>(compressed.rescued ?? []);
++      if (pin2) {
++        reasonCodes.push(`context:pin2-budget-${budget}`);
++        if (rescued.size) reasonCodes.push(`context:pin2-rescued-${rescued.size}`);
++        if (compressed.evicted) reasonCodes.push(`context:pin2-evicted-${compressed.evicted}`);
++      }
+ 
+       // Grounding: sources must be on topic in absolute terms, not just the best of what came back.
+       // Always on (Quill, 014c054: the chat reads "passages found, none cited" from a non-empty sources
+@@ -1072,7 +1083,8 @@
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+       if (guarded && !health && sources.length) {
+-        let kept = sources.filter((c) => onSubject(c));
++        let kept = sources.filter((c) => onSubject(c) || (rescued.has(c.chunkId) && !cryptoBlocked(c)));
++        if (rescued.size && kept.some((c) => rescued.has(c.chunkId) && !onSubject(c))) reasonCodes.push("grounding:pin2-kept");
+         // SEFIX F4 (RS_KEEP_NOPROPER=1 per source / =lit only when no kept source holds a proper noun; bench-only, default off): a source the
+         // proper-noun rule alone dropped comes back when it holds any content term of the question and passes the rest of onTopic.
+         const noProper = (globalThis as any).process?.env?.RS_KEEP_NOPROPER;
+diff -ruN rs-SEFIX/src/routing/context.ts rs-PIN2/src/routing/context.ts
+--- rs-SEFIX/src/routing/context.ts	2026-10-22 19:47:17
++++ rs-PIN2/src/routing/context.ts	2026-10-23 10:09:35
+@@ -692,6 +692,11 @@
+ }
+ 
+ /** Every word of one title segment is a question term ("Monsoon"; "Ethereum EIPs/ERCs: EIP-4844: …" by its "EIP-4844" part). */
++/** PIN2 (RS_PIN2, bench-only): some title segment of this source is named by the question (every term a question term). */
++export function titleNamedBy(query: string, title: string): boolean {
++  return titleSegmentNamed(title, new Set(tokenizeTerms(query)));
++}
++
+ function titleSegmentNamed(title: string, q: Set<string>): boolean {
+   return title.split(/:\s+/).some((seg) => {
+     const st = tokenizeTerms(seg.replace(/\s*\([^)]*\)\s*$/, ""));
+@@ -1445,6 +1450,8 @@
+    * doesn't exist).
+    */
+   pinned?: ReadonlySet<string>;
++  /** PIN2 (RS_PIN2, bench-only): named-article chunks exempt from the relative floor ONLY when under it; no move to the front, budget never exceeded. */
++  floorRescue?: ReadonlySet<string>;
+ }
+ 
+ export interface CompressedContext {
+@@ -1459,6 +1466,9 @@
+   keptIndices: number[];
+   tokensBefore: number;
+   tokensAfter: number;
++  /** PIN2: chunk ids rescued from the relative floor that reached the output, and chunks evicted to make room. */
++  rescued?: string[];
++  evicted?: number;
+ }
+ 
+ /**
+@@ -1489,7 +1499,13 @@
+   const chunkBest = chunks.map((_, ci) => Math.max(0, ...scored.filter((s) => s.chunkIndex === ci).map((s) => s.score)));
+   const topBest = Math.max(0, ...chunkBest);
+   const pinnedIdx = new Set(chunks.map((c, i) => (opts.pinned?.has(c.chunkId) ? i : -1)).filter((i) => i >= 0));
+-  const relevant = (ci: number) => pinnedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
++  // PIN2: only a named-article chunk the floor would drop is rescued (one above the floor is untouched).
++  const rescueIdx = new Set(
++    anyMatch && opts.floorRescue?.size
++      ? chunks.map((c, i) => (opts.floorRescue!.has(c.chunkId) && !pinnedIdx.has(i) && chunkBest[i] < RELATIVE_RELEVANCE_FLOOR * topBest ? i : -1)).filter((i) => i >= 0)
++      : []
++  );
++  const relevant = (ci: number) => pinnedIdx.has(ci) || rescueIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
+   // Rank: matching sentences by score (ties → retrieval rank, then position);
+   // with no match at all, fall back to each chunk's opening sentence.
+   const ranked = (anyMatch ? scored.filter((s) => s.score > 0 && relevant(s.chunkIndex)) : scored.filter((s) => s.position === 0)).sort(
+@@ -1550,6 +1566,36 @@
+     }
+   }
+ 
++  // PIN2 budget cap: a rescued chunk with no sentence gets title + opening (+ best) by evicting the lowest-ranked
++  // picked chunks that are neither pinned nor rescued; the budget is never exceeded.
++  let evicted = 0;
++  for (const ri of rescueIdx) {
++    if (picked.has(ri)) continue;
++    const first = scored.find((x) => x.chunkIndex === ri && x.position === 0);
++    if (!first) continue;
++    const best = scored.filter((x) => x.chunkIndex === ri && x.score > 0).sort((a, b) => b.score - a.score || a.position - b.position)[0];
++    const titleCost = count(chunks[ri].title) + 1;
++    const need = titleCost + cost(first);
++    const chunkCost = (ci: number) => count(chunks[ci].title) + 1 + [...picked.get(ci)!].reduce((a, p) => a + cost(scored.find((x) => x.chunkIndex === ci && x.position === p)!), 0);
++    const victims = [...picked.keys()].filter((ci) => !pinnedIdx.has(ci) && !rescueIdx.has(ci)).sort((a, b) => chunkBest[a] - chunkBest[b] || b - a);
++    const plan: number[] = [];
++    let free = budget - used;
++    for (const v of victims) {
++      if (free >= need) break;
++      plan.push(v);
++      free += chunkCost(v);
++    }
++    if (free < need) continue;
++    for (const v of plan) {
++      used -= chunkCost(v);
++      picked.delete(v);
++      evicted++;
++    }
++    used += titleCost;
++    tryAdd(first);
++    if (best && best !== first) tryAdd(best);
++  }
++
+   const keptIndices = [...picked.keys()].sort((a, b) => Number(pinnedIdx.has(b)) - Number(pinnedIdx.has(a)) || chunkBest[b] - chunkBest[a] || a - b);
+   const qTerms = [...new Set(tokenizeTerms(query))];
+   const shownRelevance = (ci: number) => {
+@@ -1576,7 +1622,8 @@
+     return { ...chunks[ci], body, ...(anyMatch ? { relevance: shownRelevance(ci) } : {}) };
+   });
+   const tokensAfter = out.reduce((acc, c) => acc + count(`${c.title}\n${c.body}`), 0);
+-  return { chunks: out, keptIndices, tokensBefore, tokensAfter };
++  const rescued = keptIndices.filter((ci) => rescueIdx.has(ci)).map((ci) => chunks[ci].chunkId);
++  return { chunks: out, keptIndices, tokensBefore, tokensAfter, ...(rescueIdx.size ? { rescued, evicted } : {}) };
+ }
+ 
+ /**

@@ -1,0 +1,79 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-20 11:53:57
++++ b/be/adapter-litedecline.ts	2026-10-20 11:53:57
+@@ -182,7 +182,7 @@
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+     id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
+-    filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, answerTier: "default",
++    filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
+   // THINK4B: shaped like the Android default (roles general + fast, answerTier default), so the fast tier picks it.
+@@ -811,6 +811,8 @@
+     recordExecution: async (r: any) => { records.push(r); },
+     memoryBytes: () => process.memoryUsage().rss,
+     ...(emergencyScore ? { emergencyScore } : {}),
++    // LITEDECLINE: eval switch for the compact-only declines (unset = engine default).
++    ...(process.env.LITEDECLINE_OFF === "3" ? { compactDeclinesOff: "three" as const } : process.env.LITEDECLINE_OFF === "5" ? { compactDeclinesOff: "all" as const } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 
+diff -ru a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-20 11:53:57
++++ b/src/routing/answer.ts	2026-10-20 11:53:57
+@@ -230,6 +230,9 @@
+   emergencyScore?(query: string, userTurns: string[]): Promise<{ p: number; fire: boolean } | null>;
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
++  /** LITEDECLINE (eval-only switch, default unset): "three" = the three compact-only declines named in LITEDECLINE-criterion.md
++   * skip (the compact model takes the 4B's path there); "all" = also the two uncited compact declines (report-only arm). */
++  compactDeclinesOff?: "three" | "all";
+   /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+@@ -1290,7 +1293,7 @@
+         finalText = message;
+         return finish(genTier, "success", message, [], receipt({ retrievalMs }));
+       }
+-      if (fromMemory && genLlm && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (fromMemory && genLlm && isCompactModel(genLlm) && !deps.compactDeclinesOff && !req.answerAnyway) {
+         // Product decision (Iris/Boar): the compact model doesn't answer from memory unless asked to.
+         reasonCodes.push("grounding:declined-compact");
+         markVisible();
+@@ -1539,7 +1542,7 @@
+       // model declines; the 4B loses the sentence. Deterministic, whatever the sampling seed.
+       const falseClaims = !health && gen.mode !== "multipass" ? falseQuantumClaims(text) : [];
+       if (falseClaims.length) {
+-        if (isCompactModel(genLlm) && !req.answerAnyway) {
++        if (isCompactModel(genLlm) && !deps.compactDeclinesOff && !req.answerAnyway) {
+           reasonCodes.push("grounding:false-claim-declined-compact");
+           const message = sources.length
+             ? pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer."
+@@ -1577,7 +1580,7 @@
+         }
+       }
+       if (stopRequested) return finish(genTier, "stopped", text, sources, baseReceipt);
+-      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
++      if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !deps.compactDeclinesOff && !req.answerAnyway && gen.mode !== "multipass") {
+         reasonCodes.push("grounding:all-citations-removed-declined-compact");
+         // Passages were found (and shown): "didn't find this" would be false (Quill 892c049).
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+@@ -1595,7 +1598,7 @@
+       // nothing, (A) never fired and the compact model's PT confident errors went 5 -> 9. A compact answer with
+       // sources in its prompt and no [n] at all (after attribution) is treated like "every citation removed":
+       // the decline, unless asked to answer anyway. The 4B is unchanged.
+-      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
++      if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && deps.compactDeclinesOff !== "all" && !req.answerAnyway) {
+         reasonCodes.push("grounding:uncited-with-sources-declined-compact");
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+         emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+@@ -1615,7 +1618,7 @@
+         // Sources that passed the topic guard are on topic.
+         const onTopicSources = guarded ? sources.length : 0;
+         if (onTopicSources > 0) reasonCodes.push("grounding:uncited-on-topic");
+-        else if (sources.length && isCompactModel(genLlm) && !req.answerAnyway) {
++        else if (sources.length && isCompactModel(genLlm) && deps.compactDeclinesOff !== "all" && !req.answerAnyway) {
+           reasonCodes.push("grounding:uncited-declined-compact");
+           const message = pt ? "Não encontrei isso no acervo deste celular." : "I didn't find this in this phone's library.";
+           emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });

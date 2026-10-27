@@ -1,0 +1,13 @@
+EIP-4444 reduces the disk space required for Ethereum node operators by pruning historical blocks and receipts older than the consensus-layer retention window [1]. This change lowers the typical storage requirement from 1TB to under 400GB, significantly reducing bandwidth usage and enabling more lightweight synchronization strategies [1].
+
+generation: 64 tokens, 0.196 s/token (5.098 tok/s)
+compute: 54.8% CPU occupancy (0.4297 cpu-s/token over 4 threads), 0.00 major faults/token
+ngram: 8/48 drafts accepted (16.7%), 1.14 tokens per verify decode (56 decodes for 64 tokens)
+ngram: drafting costs 0.0000 s/token on top of decode → 5.10 tok/s effective (vs 5.10 reported)
+ngram: drafted on 8 of 56 steps (14.3%); the rest decoded plainly
+prefill: 679 tokens, 21.651 s (31.4 tok/s) | model load 9.120 s | TTFT 30.770 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 13497.0 MiB (210.89 MiB/token), decode 0.196 s/token (compute 0.088 + cache mgmt 0.005 + flash I/O 0.482 s/token, 438 MiB/s)
+moe-cache: 30.9% hit, resident 1499.6 MiB
+moe-cache: 26581 evictions, 19606 re-reads (306.3/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.103 s/token (flash reads overlapped with FFN compute)

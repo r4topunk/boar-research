@@ -1,0 +1,175 @@
+diff -ruN wt/pr1/src/rag/pure.ts kiln-local/be-cut7-followup/src/rag/pure.ts
+--- wt/pr1/src/rag/pure.ts	2026-10-14 21:57:49
++++ kiln-local/be-cut7-followup/src/rag/pure.ts	2026-10-16 10:14:54
+@@ -265,6 +265,8 @@
+ export interface ConversationTurn {
+   role: "user" | "assistant";
+   text: string;
++  /** Assistant turns only, optional: the titles of the sources that answer showed (FOLLOWUP, deps.followupContext). */
++  sources?: string[];
+ }
+ 
+ export interface ConversationHistory {
+diff -ruN wt/pr1/src/routing/answer.ts kiln-local/be-cut7-followup/src/routing/answer.ts
+--- wt/pr1/src/routing/answer.ts	2026-10-16 00:59:30
++++ kiln-local/be-cut7-followup/src/routing/answer.ts	2026-10-16 10:15:03
+@@ -79,6 +79,7 @@
+ import { verdictGuard } from "./verdictGuard";
+ import { arithmeticAnswer } from "./arithmetic";
+ import { numericGuard } from "./numguard";
++import { followupExpansion } from "./followup";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
+@@ -255,6 +256,11 @@
+    */
+   numguard?: boolean;
+   /**
++   * FOLLOWUP (src/routing/followup.ts): a short or referring follow-up searches with the previous user turn's content
++   * words appended (and ranks the previous answer's source titles first). Off by default (absent/false = unchanged).
++   */
++  followupContext?: boolean;
++  /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+    * sources against them; without them a PT question never names an English title.
+@@ -1017,6 +1023,10 @@
+             ? canonicalHealthTerms(req.query)
+             : null;
+       if (english && !history) reasonCodes.push("retrieve:pt-en-terms");
++      // FOLLOWUP: the follow-up's own words plus the subject the previous user turn named (English only, not the date path).
++      const followup = deps.followupContext === true && !pt && !history ? followupExpansion(req.query, ctx.history) : null;
++      if (followup) reasonCodes.push("followup:expanded");
++      const withFollowup = (q: string) => (followup ? `${q} ${followup.terms.join(" ")}` : q);
+       // Any other PT question: the English names it mentions, from the lexicon (PT-1, "estacoes do ano" -> Season).
+       const names = pt && !english ? (deps.englishNames ?? defaultEnglishNames)(req.query) : [];
+       if (names.length) reasonCodes.push("match:pt-en-names");
+@@ -1027,7 +1037,7 @@
+       // And the acronyms it writes as they are ("ML-KEM", "SLH-DSA", "MEV"): with names ["Algorithm"] alone the
+       // ML-KEM page lost to "Jump flooding algorithm" in compression (Sextant cry-018-pt, gate bc7db6d).
+       const acronyms = [...new Set(req.query.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b|\b[A-Z]{2,}[0-9]*\b/g) ?? [])];
+-      const matchQuery = english ?? (names.length ? [...names, ...ids, ...acronyms].join(" ") : req.query);
++      const matchQuery = withFollowup(english ?? (names.length ? [...names, ...ids, ...acronyms].join(" ") : req.query));
+       // Lexicon names are article titles: a source must be titled by one ("Season", not "Hurricane Season ...").
+       // Sonar exp-30: a translated PT question's English terms can be crypto words too ("queimadura… crianças" ->
+       // "burn child" matched ERC-7401/7891, which burn child tokens). Crypto-pack sources need a crypto cue in the question.
+@@ -1043,7 +1053,7 @@
+       // The packs lift an article's Treatment/Management section only when the query asks what to
+       // do (Bramble b03c959); the article name alone ("snakebite") brought back "Signs and symptoms".
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.
+-      const searchQuery = english ? (ACTION_INTENT.test(req.query) ? `${english} what to do` : english) : req.query;
++      const searchQuery = withFollowup(english ? (ACTION_INTENT.test(req.query) ? `${english} what to do` : english) : req.query);
+       let raw: RetrievedChunk[] = req.reuseSources ?? [];
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+@@ -1062,6 +1072,16 @@
+           return [] as RetrievedChunk[];
+         });
+         retrievalMs = deps.now() - rs;
++        // FOLLOWUP: the pages the previous answer showed go first (stable; the rest keep the retrieval order).
++        if (followup?.titles.length) {
++          const prev = new Set(followup.titles);
++          const first = raw.filter((c) => prev.has(c.title));
++          const ranked = [...first, ...raw.filter((c) => !prev.has(c.title))];
++          if (ranked.some((c, i) => c !== raw[i])) {
++            raw = ranked;
++            reasonCodes.push(`followup:title-boost-${first.length}`);
++          }
++        }
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+ 
+diff -ruN wt/pr1/src/routing/followup.test.ts kiln-local/be-cut7-followup/src/routing/followup.test.ts
+--- wt/pr1/src/routing/followup.test.ts	1969-12-31 21:00:00
++++ kiln-local/be-cut7-followup/src/routing/followup.test.ts	2026-10-16 10:15:47
+@@ -0,0 +1,22 @@
++import { describe, expect, it } from "vitest";
++import { followupExpansion } from "./followup";
++
++const h = (u: string, a = "An answer.", sources?: string[]) => ({ turns: [{ role: "user" as const, text: u }, { role: "assistant" as const, text: a, ...(sources ? { sources } : {}) }] });
++
++describe("followupExpansion", () => {
++  it("expands a short follow-up with the previous user turn's content words", () => {
++    expect(followupExpansion("How much does it cost?", h("How does the Japan Rail Pass work?"))).toEqual({ terms: ["Japan", "Rail", "Pass"], titles: [] });
++  });
++  it("keeps the previous answer's source titles", () => {
++    expect(followupExpansion("And in winter?", h("What is the weather like in Iceland in summer?", "Mild.", ["Iceland", "Iceland"]))?.titles).toEqual(["Iceland"]);
++  });
++  it("is null without history, for a long self-contained turn, or with nothing new to add", () => {
++    expect(followupExpansion("How much does it cost?", undefined)).toBeNull();
++    expect(followupExpansion("Which countries in South America have the largest coffee production by volume today?", h("Tell me about coffee."))).toBeNull();
++    expect(followupExpansion("Japan rail pass price?", h("Japan Rail Pass?"))).toBeNull();
++  });
++  it("fires on a long turn that refers back and caps the terms at 12", () => {
++    const prev = "alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november";
++    expect(followupExpansion("Could you tell me in more detail how long that usually takes for most people?", h(prev))?.terms).toHaveLength(12);
++  });
++});
+diff -ruN wt/pr1/src/routing/followup.ts kiln-local/be-cut7-followup/src/routing/followup.ts
+--- wt/pr1/src/routing/followup.ts	1969-12-31 21:00:00
++++ kiln-local/be-cut7-followup/src/routing/followup.ts	2026-10-16 10:14:54
+@@ -0,0 +1,64 @@
++/**
++ * FOLLOWUP (deps.followupContext): a follow-up turn ("How much does it cost?", "What about Lisbon?") is searched with
++ * the previous user turn's content words appended, so retrieval sees the subject the history carries. PHONEFAIL
++ * (2026-10-16): with history the answer stayed on topic but the turn-2 sources equalled the no-history run on 4/4
++ * pairs, because retrieval read only the bare follow-up.
++ *
++ * Fires only when the conversation has an earlier user turn and the current turn is short (<= 8 words) or refers back
++ * (a pronoun or an ellipsis opener). Terms = the previous user turn's words, minus stopwords and minus words the
++ * current turn already has, at most 12, in order. Titles = the sources the previous answer showed, when the history
++ * turn carries them (ConversationTurn.sources), used to rank those pages first among the retrieved chunks.
++ */
++import type { ConversationHistory } from "../rag/pure";
++
++export const FOLLOWUP_MAX_WORDS = 8;
++export const FOLLOWUP_MAX_TERMS = 12;
++export const FOLLOWUP_MAX_TITLES = 6;
++
++const REFERS = /\b(it|its|it's|itself|that|this|these|those|they|them|their|theirs|there|he|she|him|her|his|hers|one|ones|same|other)\b/i;
++const OPENER = /^\s*(and|but|so|also|then|what about|how about|and what about|what if)\b/i;
++const STOP = new Set(
++  ("a about above after again against all also am an and any are aren't as at be because been before being below best better between both but by " +
++    "can can't cannot could couldn't compare comparison describe detail details did didn't difference differences do does doesn't doing don't down during " +
++    "each explain few for from further get gets getting give go going got had hadn't has hasn't have haven't having he he's her here here's hers herself " +
++    "him himself his how how's i i'd i'll i'm i've if in into is isn't it it's its itself just know let let's like make me mean means more most much " +
++    "must my myself need no nor not now of off on once only or other ought our ours ourselves out over own please quick quickly really right same " +
++    "say says see she should shouldn't show so some something such summarize summary sure tell than that that's the their theirs them themselves then " +
++    "there there's these they they'd they'll they're they've thing things think this those through to too under until up us use used using very " +
++    "versus vs want wanted was wasn't way we we'd we'll we're we've were weren't what what's when when's where where's which while who who's whom whose " +
++    "why why's will with won't work works would wouldn't yes yet you you'd you'll you're you've your yours yourself yourselves happen happened happens " +
++    "cause caused causes actually anything everything still one ones lot lots many maybe okay ok thanks thank hi hello hey").split(" ")
++);
++const WORD = /[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu;
++const words = (s: string) => (s.match(WORD) ?? []).map((w) => w.replace(/’/g, "'").replace(/['-]+$/, ""));
++
++export interface FollowupExpansion {
++  terms: string[];
++  titles: string[];
++}
++
++/** Null when the turn is not a follow-up, has no earlier user turn, or the earlier turn adds no new content word. */
++export function followupExpansion(query: string, history: ConversationHistory | undefined): FollowupExpansion | null {
++  const turns = history?.turns ?? [];
++  let u = -1;
++  for (let i = turns.length - 1; i >= 0; i--) if (turns[i].role === "user" && turns[i].text.trim()) { u = i; break; }
++  if (u < 0) return null;
++  const cur = words(query);
++  if (!(cur.length <= FOLLOWUP_MAX_WORDS || REFERS.test(query) || OPENER.test(query))) return null;
++  const have = new Set(cur.map((w) => w.toLowerCase()));
++  const terms: string[] = [];
++  for (const w of words(turns[u].text)) {
++    const l = w.toLowerCase();
++    if (have.has(l) || STOP.has(l) || (l.length < 3 && !/\d/.test(l))) continue;
++    have.add(l);
++    terms.push(w);
++    if (terms.length >= FOLLOWUP_MAX_TERMS) break;
++  }
++  if (!terms.length) return null;
++  let titles: string[] = [];
++  for (let i = turns.length - 1; i > u; i--) {
++    const t = turns[i];
++    if (t.role === "assistant" && t.sources?.length) { titles = [...new Set(t.sources.filter(Boolean))].slice(0, FOLLOWUP_MAX_TITLES); break; }
++  }
++  return { terms, titles };
++}

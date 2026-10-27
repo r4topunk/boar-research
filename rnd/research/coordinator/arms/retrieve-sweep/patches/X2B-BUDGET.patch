@@ -1,0 +1,14 @@
+diff -ru rs-SEFIX/src/routing/answer.ts rs-X2B/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-22 19:47:17
++++ b/src/routing/answer.ts	2026-10-23 17:25:47
+@@ -1204,7 +1204,9 @@
+           };
+           const x1Ids = new Set(pendX1.map((c) => c.chunkId));
+           const seIds = new Set(pendSe.map((c) => c.chunkId));
+-          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendSe, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          // X2B-BUDGET (RS_X2B_BUDGET, bench-only, default off = HEADPASS_BUDGET_TOKENS 600): the head-pass append budget in tokens.
++          const x2bBudget = Number((globalThis as any).process?.env?.RS_X2B_BUDGET) > 0 ? Number((globalThis as any).process?.env?.RS_X2B_BUDGET) : HEADPASS_BUDGET_TOKENS;
++          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendSe, ...pendDense], chars, 4 * x2bBudget);
+           for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : seIds.has(c.chunkId) ? `headpass:selead:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];

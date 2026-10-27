@@ -1,0 +1,11 @@
+--- a/be/server.ts
++++ b/be/server.ts
+@@ -24,7 +24,7 @@
+ 
+ /** Sampler identical to the node path: request override, else the engine's, else 0.7; top_k 40, top_p 0.95, min_p 0.05. */
+ export function samplerFor(o: GenOpts, temp: number | undefined, seed: number) {
+-  return { temperature: temp ?? o.temperature ?? 0.7, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
++  return { temperature: temp ?? o.temperature ?? 0.7, top_k: 40, top_p: 0.95, min_p: 0.05, seed: 43, ...samplerOverride() };
+ }
+ /**
+  * DEEPSAMP: BOAR_SAMPLER_JSON='{"temperature":1,"top_k":20,"min_p":0,"presence_penalty":1.5}' overrides sampler fields on

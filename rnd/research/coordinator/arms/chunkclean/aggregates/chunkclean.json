@@ -1,0 +1,1922 @@
+{
+ "criterion_sha256": "4cd6bbf73a3b9e23fb553dad9101783d62b561f7c4b679c1d9b3df2f31c09c2a",
+ "n": 30,
+ "gate": {
+  "C": {
+   "first": 30,
+   "replaced": 30,
+   "mismatch": []
+  },
+  "P": {
+   "first": 30,
+   "replaced": 30,
+   "mismatch": []
+  }
+ },
+ "U": {
+  "R": 0.427,
+  "C": 0.458,
+  "P": 0.44,
+  "ctl_mini": 0.412
+ },
+ "dU_C_minus_R": {
+  "d": 0.031,
+  "ci": [
+   -0.009,
+   0.073
+  ]
+ },
+ "dU_P_minus_R": {
+  "d": 0.013,
+  "ci": [
+   -0.023,
+   0.051
+  ]
+ },
+ "dU_C_minus_ctl_mini": {
+  "d": 0.045,
+  "ci": [
+   -0.006,
+   0.1
+  ]
+ },
+ "dU_P_minus_ctl_mini": {
+  "d": 0.028,
+  "ci": [
+   -0.018,
+   0.073
+  ]
+ },
+ "dU_R_minus_ctl_mini": {
+  "d": 0.015,
+  "ci": [
+   -0.029,
+   0.059
+  ]
+ },
+ "dU_P_minus_C": {
+  "d": -0.018,
+  "ci": [
+   -0.062,
+   0.029
+  ]
+ },
+ "CE_unwarned": {
+  "R": {
+   "n": 1,
+   "rate": 0.033
+  },
+  "C": {
+   "n": 3,
+   "rate": 0.1
+  },
+  "P": {
+   "n": 2,
+   "rate": 0.067
+  },
+  "ctl_mini": {
+   "n": 3,
+   "rate": 0.1
+  }
+ },
+ "warned": {
+  "R": 8,
+  "C": 4,
+  "P": 8,
+  "ctl_mini": 10
+ },
+ "declined": {
+  "R": 0,
+  "C": 0,
+  "P": 0,
+  "ctl_mini": 0
+ },
+ "support": {
+  "R": {
+   "cite1": 15,
+   "cite_any": 21
+  },
+  "C": {
+   "cite1": 15,
+   "cite_any": 25
+  },
+  "P": {
+   "cite1": 13,
+   "cite_any": 21
+  },
+  "ctl_mini": {
+   "cite1": 5,
+   "cite_any": 18
+  }
+ },
+ "prompt_tokens_mean": {
+  "R": 1040.9,
+  "C": 908.1,
+  "P": 1097.1,
+  "ctl_mini": 918.7
+ },
+ "changed_vs_R": {
+  "C": 26,
+  "P": 25
+ },
+ "subgroups": {
+  "gold lexical": {
+   "n": 24,
+   "d_C_R": 0.047,
+   "d_P_R": 0.018,
+   "ci_C_R": [
+    0.004,
+    0.095
+   ]
+  },
+  "gold manual": {
+   "n": 6,
+   "d_C_R": -0.031,
+   "d_P_R": -0.004,
+   "ci_C_R": [
+    -0.117,
+    0.047
+   ]
+  },
+  "gold Y": {
+   "n": 17,
+   "d_C_R": 0.001,
+   "d_P_R": -0.009,
+   "ci_C_R": [
+    -0.05,
+    0.043
+   ]
+  },
+  "gold P": {
+   "n": 13,
+   "d_C_R": 0.07,
+   "d_P_R": 0.043,
+   "ci_C_R": [
+    0.008,
+    0.143
+   ]
+  },
+  "fact kept in K3 (S4/S5)": {
+   "n": 23,
+   "d_C_R": 0.037,
+   "d_P_R": 0.031,
+   "ci_C_R": [
+    -0.002,
+    0.078
+   ]
+  },
+  "fact not kept in K3 (S1-S3)": {
+   "n": 7,
+   "d_C_R": 0.009,
+   "d_P_R": -0.043,
+   "ci_C_R": [
+    -0.087,
+    0.156
+   ]
+  }
+ },
+ "verdict": "INCONCLUSIVE at n 30 (indicative)",
+ "items": {
+  "lan-cmp-005": {
+   "R": {
+    "s": 1.3333333333333333,
+    "sref": 3.833333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1070,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:34543:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.833333333333333,
+    "sref": 3.333333333333333,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 934,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:34543:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.0,
+    "sref": 4.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1101,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:34543:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 895,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-simplewiki-en:34543",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-exp-001": {
+   "R": {
+    "s": 2.8333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1490,
+    "codes": [
+     "oracle:first:pack:local-boar-factbook:5753:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1234,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:5753:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.833333333333333,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1576,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:5753:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1143,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-factbook:5753",
+   "label": "Y",
+   "source": "manual"
+  },
+  "lan-exp-002": {
+   "R": {
+    "s": 2.6666666666666665,
+    "sref": 4.666666666666667,
+    "corr": 4.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1274,
+    "codes": [
+     "oracle:first:pack:local-boar-factbook:7481:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.833333333333333,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 935,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:7481:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.333333333333333,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1322,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:7481:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1273,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-factbook:7481",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-exp-003": {
+   "R": {
+    "s": 3.166666666666667,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1094,
+    "codes": [
+     "oracle:first:pack:local-boar-factbook:1009:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 3.5,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 788,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:1009:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.666666666666667,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1148,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:1009:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.5,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1093,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-factbook:1009",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-exp-004": {
+   "R": {
+    "s": 1.8333333333333335,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 639,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:222381:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 511,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:222381:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.8333333333333335,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 678,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:222381:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 528,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:222381",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-exp-005": {
+   "R": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 815,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:9543:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 655,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:9543:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 887,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:9543:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.6666666666666667,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 815,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:9543",
+   "label": "Y",
+   "source": "manual"
+  },
+  "lan-exp-007": {
+   "R": {
+    "s": 2.166666666666667,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1368,
+    "codes": [
+     "oracle:first:pack:local-boar-factbook:9181:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.666666666666667,
+    "sref": 4.833333333333334,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1156,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:9181:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.666666666666667,
+    "sref": 4.833333333333334,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1406,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-factbook:9181:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1113,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-factbook:9181",
+   "label": "Y",
+   "source": "manual"
+  },
+  "lan-hlt-001": {
+   "R": {
+    "s": 2.5,
+    "sref": 4.666666666666667,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 819,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:15581:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.6666666666666665,
+    "sref": 4.666666666666667,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 718,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:15581:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.3333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 866,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:15581:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.8333333333333335,
+    "sref": 4.5,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 659,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:15581",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-hlt-002": {
+   "R": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 785,
+    "codes": [
+     "oracle:first:pack:local-boar-medlineplus-en:1520:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 722,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-medlineplus-en:1520:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 825,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-medlineplus-en:1520:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 785,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-medlineplus-en:1520",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-hlt-003": {
+   "R": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 977,
+    "codes": [
+     "oracle:first:pack:local-boar-firstaid-en:5004:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 810,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-firstaid-en:5004:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.666666666666667,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1057,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-firstaid-en:5004:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 712,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-firstaid-en:5004",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "lan-ref-002": {
+   "R": {
+    "s": 3.333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1200,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:14188:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 3.333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1142,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:14188:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1279,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:14188:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.333333333333333,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1053,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:14188",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-ref-003": {
+   "R": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 922,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:112679:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 853,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:112679:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.6666666666666665,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 961,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:112679:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.5,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 802,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:112679",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-rsn-001": {
+   "R": {
+    "s": 2.166666666666667,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1001,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:19275:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.166666666666667,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 960,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:19275:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.166666666666667,
+    "sref": 4.666666666666667,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1056,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:19275:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.166666666666667,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1001,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:19275",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-rsn-003": {
+   "R": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 959,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:56214:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.3333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 937,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:56214:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.3333333333333333,
+    "sref": 4.666666666666667,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 993,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:56214:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 959,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:56214",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-rsn-004": {
+   "R": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 698,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:184755:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 510,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:184755:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 753,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:184755:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 698,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:184755",
+   "label": "P",
+   "source": "lexical"
+  },
+  "lan-rsn-006": {
+   "R": {
+    "s": 2.833333333333333,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 936,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:96344:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.1666666666666665,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 776,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:96344:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1011,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:96344:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 936,
+    "codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:96344",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-cry-002": {
+   "R": {
+    "s": 2.0,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 995,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:19578:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.3333333333333335,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 873,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:19578:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 2.0,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1056,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:19578:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.333333333333334,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 780,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:19578",
+   "label": "Y",
+   "source": "manual"
+  },
+  "vit-cry-003": {
+   "R": {
+    "s": 1.0,
+    "sref": 4.166666666666666,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1105,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:41530:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.0,
+    "sref": 4.333333333333333,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1073,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41530:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.3333333333333333,
+    "sref": 4.5,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1195,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41530:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.1666666666666665,
+    "sref": 4.333333333333333,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 968,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41530",
+   "label": "P",
+   "source": "lexical"
+  },
+  "vit-cry-004": {
+   "R": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1216,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:16592:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1137,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:16592:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1278,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:16592:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1043,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:16592",
+   "label": "P",
+   "source": "lexical"
+  },
+  "vit-cry-005": {
+   "R": {
+    "s": 1.8333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1278,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:27321:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.1666666666666665,
+    "sref": 4.5,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1127,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:27321:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.5,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1307,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:27321:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1071,
+    "codes": []
+   },
+   "stage_K3": "S1",
+   "gold": "pack:boar-crypto:27321",
+   "label": "P",
+   "source": "manual"
+  },
+  "vit-cry-006": {
+   "R": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 797,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:41922:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 771,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41922:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 878,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41922:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 797,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41922",
+   "label": "P",
+   "source": "lexical"
+  },
+  "vit-cry-008": {
+   "R": {
+    "s": 2.3333333333333335,
+    "sref": 3.833333333333333,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 822,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:41305:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.6666666666666665,
+    "sref": 3.833333333333333,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 783,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41305:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.6666666666666665,
+    "sref": 4.166666666666666,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 853,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:41305:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.3333333333333335,
+    "sref": 3.833333333333333,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 822,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41305",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-cry-009": {
+   "R": {
+    "s": 1.1666666666666665,
+    "sref": 4.666666666666666,
+    "corr": 1.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1039,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:14404:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 966,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:14404:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1064,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:14404:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.666666666666666,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 906,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-crypto:14404",
+   "label": "P",
+   "source": "manual"
+  },
+  "vit-cry-010": {
+   "R": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1016,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:40957:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.5,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 927,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:40957:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1075,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:40957:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 952,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-crypto:40957",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-cry-011": {
+   "R": {
+    "s": 1.3333333333333333,
+    "sref": 4.666666666666667,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 847,
+    "codes": [
+     "oracle:first:pack:local-boar-crypto:47608:had-1:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 751,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:47608:had-1:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.8333333333333335,
+    "sref": 4.666666666666666,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 896,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-crypto:47608:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 796,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:47608",
+   "label": "P",
+   "source": "lexical"
+  },
+  "vit-hlt-001": {
+   "R": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": null,
+    "codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:84351:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": null,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:84351:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": null,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:84351:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.166666666666667,
+    "sref": 4.666666666666667,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": null,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-wikivoyage-en:84351",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-hlt-002": {
+   "R": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": null,
+    "codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:7446:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": null,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:7446:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": null,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:7446:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": null,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-wikivoyage-en:7446",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-hlt-003": {
+   "R": {
+    "s": 2.3333333333333335,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1314,
+    "codes": [
+     "oracle:first:pack:local-boar-medlineplus-en:796:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 2.3333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1110,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-medlineplus-en:796:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.8333333333333335,
+    "sref": 4.666666666666667,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1365,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-medlineplus-en:796:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 4.666666666666667,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1053,
+    "codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-medlineplus-en:796",
+   "label": "Y",
+   "source": "lexical"
+  },
+  "vit-hum-004": {
+   "R": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 1465,
+    "codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:68816:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.1666666666666665,
+    "sref": 4.833333333333334,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1245,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:68816:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1558,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-simplewiki-en:68816:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "ptok": 1133,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:68816",
+   "label": "P",
+   "source": "lexical"
+  },
+  "vit-trv-003": {
+   "R": {
+    "s": 1.3333333333333333,
+    "sref": 4.333333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1204,
+    "codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:252078:had-0:dropped-0"
+    ]
+   },
+   "C": {
+    "s": 1.3333333333333333,
+    "sref": 4.5,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1023,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:252078:had-0:dropped-0"
+    ]
+   },
+   "P": {
+    "s": 1.5,
+    "sref": 4.333333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "ptok": 1274,
+    "codes": [
+     "oracle:text-replaced",
+     "oracle:first:pack:local-boar-wikivoyage-en:252078:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.5,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "ptok": 937,
+    "codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-wikivoyage-en:252078",
+   "label": "Y",
+   "source": "lexical"
+  }
+ },
+ "script_sha256": "92670e623f09edb3eaffdb679ff43ba37c8b7977afa414436d32061dbb103fd2"
+}

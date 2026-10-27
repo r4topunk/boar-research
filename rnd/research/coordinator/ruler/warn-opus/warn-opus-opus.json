@@ -1,0 +1,1803 @@
+{
+ "criterion_sha256": "472c2738168cd981184faacd12054d5593146396d5955d13a1f15084ca84b413",
+ "judge": "opus judge.v1",
+ "haiku_census_MS": {
+  "weighted": {
+   "precision": 0.4452,
+   "recall": 0.7182,
+   "p_corr_w": 0.0479,
+   "p_corr_u": 0.284,
+   "p_ce_u": 0.1984,
+   "ratio_w_u": 2.2435,
+   "reveal_correct_to_ce": 0.1528,
+   "reveal_correct_per100": 5.7743,
+   "reveal_ce_per100": 37.7953,
+   "reveal_net_per100": -32.021
+  },
+  "est_rows": {
+   "warned": 292,
+   "unwarned": 257,
+   "ce_w": 130,
+   "ce_u": 51,
+   "correct_w": 14,
+   "correct_u": 73,
+   "reveals": 381,
+   "reveal_correct": 22,
+   "reveal_ce": 144
+  },
+  "note": "Haiku labels on every MS LP row (the WARNCAL/SHOWANYWAY numbers restricted to MAIN + ST-SE)"
+ },
+ "haiku": {
+  "weighted": {
+   "precision": 0.6637,
+   "recall": 0.9442,
+   "p_corr_w": 0.0171,
+   "p_corr_u": 0.2031,
+   "p_ce_u": 0.0446,
+   "ratio_w_u": 14.8911,
+   "reveal_correct_to_ce": 0.0527,
+   "reveal_correct_per100": 2.8394,
+   "reveal_ce_per100": 53.8726,
+   "reveal_net_per100": -51.0332
+  },
+  "est_rows": {
+   "warned": 292,
+   "unwarned": 257,
+   "ce_w": 193.8,
+   "ce_u": 11.45,
+   "correct_w": 5.0,
+   "correct_u": 52.19,
+   "reveals": 381,
+   "reveal_correct": 10.82,
+   "reveal_ce": 205.25
+  },
+  "boot_ci": {
+   "precision": [
+    0.423,
+    0.905
+   ],
+   "recall": [
+    0.881,
+    1.0
+   ],
+   "p_corr_w": [
+    0.017,
+    0.017
+   ],
+   "p_corr_u": [
+    0.074,
+    0.358
+   ],
+   "p_ce_u": [
+    0.0,
+    0.089
+   ],
+   "ratio_w_u": [
+    6.5,
+    50.759
+   ],
+   "reveal_correct_to_ce": [
+    0.027,
+    0.108
+   ],
+   "reveal_correct_per100": [
+    1.837,
+    4.844
+   ],
+   "reveal_ce_per100": [
+    35.395,
+    73.047
+   ],
+   "reveal_net_per100": [
+    -70.208,
+    -32.861
+   ]
+  },
+  "strata": {
+   "CAND-h": {
+    "pop_units": 24,
+    "pop_rows": 26,
+    "n_units": 24,
+    "ce": 1,
+    "ce_cp": [
+     0.001,
+     0.211
+    ],
+    "correct": 7,
+    "correct_cp": [
+     0.126,
+     0.511
+    ],
+    "mid": 16
+   },
+   "H-h": {
+    "pop_units": 9,
+    "pop_rows": 13,
+    "n_units": 9,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.336
+    ],
+    "correct": 2,
+    "correct_cp": [
+     0.028,
+     0.6
+    ],
+    "mid": 7
+   },
+   "H-nh": {
+    "pop_units": 42,
+    "pop_rows": 76,
+    "n_units": 11,
+    "ce": 3,
+    "ce_cp": [
+     0.06,
+     0.61
+    ],
+    "correct": 1,
+    "correct_cp": [
+     0.002,
+     0.413
+    ],
+    "mid": 7
+   },
+   "S": {
+    "pop_units": 106,
+    "pop_rows": 168,
+    "n_units": 16,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.206
+    ],
+    "correct": 5,
+    "correct_cp": [
+     0.11,
+     0.587
+    ],
+    "mid": 11
+   },
+   "W-h": {
+    "pop_units": 31,
+    "pop_rows": 38,
+    "n_units": 31,
+    "ce": 7,
+    "ce_cp": [
+     0.096,
+     0.411
+    ],
+    "correct": 5,
+    "correct_cp": [
+     0.055,
+     0.337
+    ],
+    "mid": 19
+   },
+   "W-nh": {
+    "pop_units": 176,
+    "pop_rows": 254,
+    "n_units": 20,
+    "ce": 13,
+    "ce_cp": [
+     0.408,
+     0.846
+    ],
+    "correct": 0,
+    "correct_cp": [
+     0.0,
+     0.168
+    ],
+    "mid": 7
+   },
+   "pooled_unweighted": {
+    "warned": {
+     "n": 51,
+     "ce": 20,
+     "ce_cp": [
+      0.258,
+      0.539
+     ],
+     "correct": 5,
+     "correct_cp": [
+      0.033,
+      0.214
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.068,
+      0.407
+     ],
+     "ratio_cp": [
+      0.073,
+      0.686
+     ]
+    },
+    "unwarned": {
+     "n": 36,
+     "ce": 3,
+     "ce_cp": [
+      0.018,
+      0.225
+     ],
+     "correct": 8,
+     "correct_cp": [
+      0.101,
+      0.392
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.39,
+      0.94
+     ],
+     "ratio_cp": [
+      0.639,
+      15.667
+     ]
+    },
+    "reveal_MS": {
+     "n": 71,
+     "ce": 23,
+     "ce_cp": [
+      0.218,
+      0.445
+     ],
+     "correct": 8,
+     "correct_cp": [
+      0.05,
+      0.21
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.119,
+      0.446
+     ],
+     "ratio_cp": [
+      0.135,
+      0.805
+     ]
+    },
+    "health_reveal_all": {
+     "n": 64,
+     "ce": 8,
+     "ce_cp": [
+      0.056,
+      0.232
+     ],
+     "correct": 14,
+     "correct_cp": [
+      0.125,
+      0.34
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.407,
+      0.828
+     ],
+     "ratio_cp": [
+      0.686,
+      4.814
+     ]
+    }
+   }
+  }
+ },
+ "opus": {
+  "weighted": {
+   "precision": 0.6233,
+   "recall": 0.8882,
+   "p_corr_w": 0.2021,
+   "p_corr_u": 0.207,
+   "p_ce_u": 0.0891,
+   "ratio_w_u": 6.9922,
+   "reveal_correct_to_ce": 0.3212,
+   "reveal_correct_per100": 17.2751,
+   "reveal_ce_per100": 53.7819,
+   "reveal_net_per100": -36.5068
+  },
+  "est_rows": {
+   "warned": 292,
+   "unwarned": 257,
+   "ce_w": 182.0,
+   "ce_u": 22.91,
+   "correct_w": 59.0,
+   "correct_u": 53.19,
+   "reveals": 381,
+   "reveal_correct": 65.82,
+   "reveal_ce": 204.91
+  },
+  "boot_ci": {
+   "precision": [
+    0.382,
+    0.864
+   ],
+   "recall": [
+    0.764,
+    0.979
+   ],
+   "p_corr_w": [
+    0.112,
+    0.323
+   ],
+   "p_corr_u": [
+    0.089,
+    0.336
+   ],
+   "p_ce_u": [
+    0.015,
+    0.193
+   ],
+   "ratio_w_u": [
+    2.852,
+    37.896
+   ],
+   "reveal_correct_to_ce": [
+    0.134,
+    0.706
+   ],
+   "reveal_correct_per100": [
+    9.344,
+    26.514
+   ],
+   "reveal_ce_per100": [
+    33.3,
+    74.264
+   ],
+   "reveal_net_per100": [
+    -62.305,
+    -10.098
+   ]
+  },
+  "strata": {
+   "CAND-h": {
+    "pop_units": 24,
+    "pop_rows": 26,
+    "n_units": 24,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.142
+    ],
+    "correct": 16,
+    "correct_cp": [
+     0.447,
+     0.844
+    ],
+    "mid": 8
+   },
+   "H-h": {
+    "pop_units": 9,
+    "pop_rows": 13,
+    "n_units": 9,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.336
+    ],
+    "correct": 3,
+    "correct_cp": [
+     0.075,
+     0.701
+    ],
+    "mid": 6
+   },
+   "H-nh": {
+    "pop_units": 42,
+    "pop_rows": 76,
+    "n_units": 11,
+    "ce": 4,
+    "ce_cp": [
+     0.109,
+     0.692
+    ],
+    "correct": 1,
+    "correct_cp": [
+     0.002,
+     0.413
+    ],
+    "mid": 6
+   },
+   "S": {
+    "pop_units": 106,
+    "pop_rows": 168,
+    "n_units": 16,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.206
+    ],
+    "correct": 6,
+    "correct_cp": [
+     0.152,
+     0.646
+    ],
+    "mid": 10
+   },
+   "W-h": {
+    "pop_units": 31,
+    "pop_rows": 38,
+    "n_units": 31,
+    "ce": 5,
+    "ce_cp": [
+     0.055,
+     0.337
+    ],
+    "correct": 13,
+    "correct_cp": [
+     0.245,
+     0.609
+    ],
+    "mid": 13
+   },
+   "W-nh": {
+    "pop_units": 176,
+    "pop_rows": 254,
+    "n_units": 20,
+    "ce": 12,
+    "ce_cp": [
+     0.361,
+     0.809
+    ],
+    "correct": 5,
+    "correct_cp": [
+     0.087,
+     0.491
+    ],
+    "mid": 3
+   },
+   "pooled_unweighted": {
+    "warned": {
+     "n": 51,
+     "ce": 17,
+     "ce_cp": [
+      0.208,
+      0.479
+     ],
+     "correct": 18,
+     "correct_cp": [
+      0.224,
+      0.499
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.34,
+      0.686
+     ],
+     "ratio_cp": [
+      0.515,
+      2.185
+     ]
+    },
+    "unwarned": {
+     "n": 36,
+     "ce": 4,
+     "ce_cp": [
+      0.031,
+      0.261
+     ],
+     "correct": 10,
+     "correct_cp": [
+      0.142,
+      0.452
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.419,
+      0.916
+     ],
+     "ratio_cp": [
+      0.721,
+      10.905
+     ]
+    },
+    "reveal_MS": {
+     "n": 71,
+     "ce": 21,
+     "ce_cp": [
+      0.193,
+      0.416
+     ],
+     "correct": 22,
+     "correct_cp": [
+      0.205,
+      0.431
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.355,
+      0.667
+     ],
+     "ratio_cp": [
+      0.55,
+      2.003
+     ]
+    },
+    "health_reveal_all": {
+     "n": 64,
+     "ce": 5,
+     "ce_cp": [
+      0.026,
+      0.173
+     ],
+     "correct": 32,
+     "correct_cp": [
+      0.372,
+      0.628
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.712,
+      0.955
+     ],
+     "ratio_cp": [
+      2.472,
+      21.222
+     ]
+    }
+   }
+  }
+ },
+ "opus_diff": {
+  "weighted": {
+   "precision": 0.4048,
+   "recall": 0.6543,
+   "p_corr_w": 0.2329,
+   "p_corr_u": 0.2879,
+   "p_ce_u": 0.243,
+   "ratio_w_u": 1.6657,
+   "reveal_correct_to_ce": 0.536,
+   "reveal_correct_per100": 20.21,
+   "reveal_ce_per100": 37.7046,
+   "reveal_net_per100": -17.4946
+  },
+  "est_rows": {
+   "warned": 292,
+   "unwarned": 257,
+   "ce_w": 118.2,
+   "ce_u": 62.45,
+   "correct_w": 68.0,
+   "correct_u": 74.0,
+   "reveals": 381,
+   "reveal_correct": 77.0,
+   "reveal_ce": 143.65
+  },
+  "boot_ci": {
+   "precision": [
+    0.345,
+    0.435
+   ],
+   "recall": [
+    0.562,
+    0.713
+   ],
+   "p_corr_w": [
+    0.142,
+    0.353
+   ],
+   "p_corr_u": [
+    0.133,
+    0.417
+   ],
+   "p_ce_u": [
+    0.198,
+    0.332
+   ],
+   "ratio_w_u": [
+    1.128,
+    2.192
+   ],
+   "reveal_correct_to_ce": [
+    0.321,
+    0.825
+   ],
+   "reveal_correct_per100": [
+    13.281,
+    29.449
+   ],
+   "reveal_ce_per100": [
+    30.079,
+    46.027
+   ],
+   "reveal_net_per100": [
+    -28.127,
+    -5.946
+   ]
+  },
+  "strata": {
+   "CAND-h": {
+    "pop_units": 24,
+    "pop_rows": 26,
+    "n_units": 24,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.142
+    ],
+    "correct": 16,
+    "correct_cp": [
+     0.447,
+     0.844
+    ],
+    "mid": 8
+   },
+   "H-h": {
+    "pop_units": 9,
+    "pop_rows": 13,
+    "n_units": 9,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.336
+    ],
+    "correct": 3,
+    "correct_cp": [
+     0.075,
+     0.701
+    ],
+    "mid": 6
+   },
+   "H-nh": {
+    "pop_units": 42,
+    "pop_rows": 76,
+    "n_units": 11,
+    "ce": 4,
+    "ce_cp": [
+     0.109,
+     0.692
+    ],
+    "correct": 1,
+    "correct_cp": [
+     0.002,
+     0.413
+    ],
+    "mid": 6
+   },
+   "S": {
+    "pop_units": 106,
+    "pop_rows": 168,
+    "n_units": 16,
+    "ce": 0,
+    "ce_cp": [
+     0.0,
+     0.206
+    ],
+    "correct": 6,
+    "correct_cp": [
+     0.152,
+     0.646
+    ],
+    "mid": 10
+   },
+   "W-h": {
+    "pop_units": 31,
+    "pop_rows": 38,
+    "n_units": 31,
+    "ce": 5,
+    "ce_cp": [
+     0.055,
+     0.337
+    ],
+    "correct": 13,
+    "correct_cp": [
+     0.245,
+     0.609
+    ],
+    "mid": 13
+   },
+   "W-nh": {
+    "pop_units": 176,
+    "pop_rows": 254,
+    "n_units": 20,
+    "ce": 12,
+    "ce_cp": [
+     0.361,
+     0.809
+    ],
+    "correct": 5,
+    "correct_cp": [
+     0.087,
+     0.491
+    ],
+    "mid": 3
+   },
+   "pooled_unweighted": {
+    "warned": {
+     "n": 51,
+     "ce": 17,
+     "ce_cp": [
+      0.208,
+      0.479
+     ],
+     "correct": 18,
+     "correct_cp": [
+      0.224,
+      0.499
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.34,
+      0.686
+     ],
+     "ratio_cp": [
+      0.515,
+      2.185
+     ]
+    },
+    "unwarned": {
+     "n": 36,
+     "ce": 4,
+     "ce_cp": [
+      0.031,
+      0.261
+     ],
+     "correct": 10,
+     "correct_cp": [
+      0.142,
+      0.452
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.419,
+      0.916
+     ],
+     "ratio_cp": [
+      0.721,
+      10.905
+     ]
+    },
+    "reveal_MS": {
+     "n": 71,
+     "ce": 21,
+     "ce_cp": [
+      0.193,
+      0.416
+     ],
+     "correct": 22,
+     "correct_cp": [
+      0.205,
+      0.431
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.355,
+      0.667
+     ],
+     "ratio_cp": [
+      0.55,
+      2.003
+     ]
+    },
+    "health_reveal_all": {
+     "n": 64,
+     "ce": 5,
+     "ce_cp": [
+      0.026,
+      0.173
+     ],
+     "correct": 32,
+     "correct_cp": [
+      0.372,
+      0.628
+     ],
+     "correct_among_correct_or_ce_cp": [
+      0.712,
+      0.955
+     ],
+     "ratio_cp": [
+      2.472,
+      21.222
+     ]
+    }
+   }
+  }
+ },
+ "agreement": {
+  "CE": {
+   "agree": 104,
+   "n": 111,
+   "agree_cp": [
+    0.874,
+    0.974
+   ],
+   "haiku_pos": 24,
+   "opus_pos": 21,
+   "haiku_only": 5,
+   "opus_only": 2,
+   "kappa": 0.805
+  },
+  "correct": {
+   "agree": 77,
+   "n": 111,
+   "agree_cp": [
+    0.599,
+    0.778
+   ],
+   "haiku_pos": 20,
+   "opus_pos": 44,
+   "haiku_only": 5,
+   "opus_only": 29,
+   "kappa": 0.294
+  },
+  "corr_mae": 0.64,
+  "corr_signed_opus_minus_haiku": 0.324,
+  "haiku_only_CE": [
+   "st-boar-medlineplus-en-012",
+   "st-qa-bitcoin-se-010",
+   "st-qa-health-se-002",
+   "st-qa-health-se-002",
+   "st-qa-outdoors-se-007"
+  ],
+  "opus_only_CE": [
+   "st-qa-health-se-008",
+   "st-qa-travel-se-012"
+  ]
+ },
+ "health_reveals": [
+  {
+   "stratum": "W-h",
+   "id": "st-qa-ethereum-se-005",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-008",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0,
+    2.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-016",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.5
+   ],
+   "opus_corr": 1.5,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "lan-hlt-002",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "lan-hlt-003",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 4.5,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "lan-hlt-003",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "lan-hlt-003",
+   "arms": [
+    "K0"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 4.5,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-factbook-010",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-firstaid-en-015",
+   "arms": [
+    "K0"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-firstaid-en-015",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 3.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-002",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-002",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 3.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-002",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-003",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-003",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-004",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-005",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-005",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-005",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-008",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    4.0,
+    4.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-009",
+   "arms": [
+    "K0"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-012",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-013",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-013",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.5
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-014",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0,
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-014",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-016",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-016",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-018",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 4.5,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-018",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "CAND-h",
+   "id": "st-boar-medlineplus-en-020",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    5.0
+   ],
+   "opus_corr": 5.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-bitcoin-se-010",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-cooking-se-010",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0,
+    1.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-cooking-se-010",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-001",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-001",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-002",
+   "arms": [
+    "K0"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-002",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.5,
+    1.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-003",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-003",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-007",
+   "arms": [
+    "K0",
+    "K1",
+    "K3"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-008",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-009",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-010",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 3.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-010",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 3.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-010",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-011",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-011",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0
+   ],
+   "opus_corr": 3.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-011",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-014",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-014",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 4.5,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-016",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    3.0
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-health-se-016",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-017",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-outdoors-se-005",
+   "arms": [
+    "K0",
+    "K1",
+    "K3"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    3.5,
+    3.5,
+    3.5
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-outdoors-se-010",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5,
+    2.5
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "H-h",
+   "id": "st-qa-outdoors-se-010",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 2.5,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-outdoors-se-014",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    4.0
+   ],
+   "opus_corr": 3.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "vit-hlt-003",
+   "arms": [
+    "K0"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "vit-hlt-003",
+   "arms": [
+    "K1",
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.0,
+    2.0
+   ],
+   "opus_corr": 2.0,
+   "opus_CE": false,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "vit-sci-001",
+   "arms": [
+    "K0",
+    "K1",
+    "K3"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    2.5,
+    2.5,
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  }
+ ],
+ "health_opus_ce_units": 5,
+ "health_opus_ce_rows": 6,
+ "health_opus_correct_units": 32,
+ "health_se_019": [
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K3"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    2.5
+   ],
+   "opus_corr": 4.0,
+   "opus_CE": false,
+   "opus_correct": true
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K0"
+   ],
+   "tier": "no-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  },
+  {
+   "stratum": "W-h",
+   "id": "st-qa-health-se-019",
+   "arms": [
+    "K1"
+   ],
+   "tier": "beyond-source",
+   "haiku_corr": [
+    1.0
+   ],
+   "opus_corr": 1.0,
+   "opus_CE": true,
+   "opus_correct": false
+  }
+ ],
+ "decisions": {
+  "D1_two_thirds_sentence": "KEEP",
+  "D2_five_percent_sentence": "DROP",
+  "D3_reveal_ratio_sentence": "KEEP",
+  "D3b_liability_verdict": "STANDS",
+  "D4_safety_clause": "STANDS",
+  "D4_health_se_019_example": "KEEP"
+ }
+}

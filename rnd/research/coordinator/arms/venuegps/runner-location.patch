@@ -1,0 +1,50 @@
+diff --git a/adapters/desktop-node/runner/adapter.ts b/adapters/desktop-node/runner/adapter.ts
+index 69741c4..bb69ded 100644
+--- a/adapters/desktop-node/runner/adapter.ts
++++ b/adapters/desktop-node/runner/adapter.ts
+@@ -88,6 +88,16 @@ if (cli.deepModel && cli.backend !== "server") throw new Error("--deep-model nee
+ if (cli.installed && (cli.backend !== "node" || cli.deepModel)) throw new Error("--installed works with the node backend only, without --deep-model");
+ if (cli.serverUrl && cli.backend !== "server") throw new Error("--server-url needs --backend server");
+ const shard = cli.shard ? parseShard(cli.shard) : null;
++/**
++ * BOAR_ITEM_LOCATIONS=<json [{id, lat, lon}]> (VENUEGPS, runner-only): a per-item device fix for items whose EvalItem has
++ * no context lat/lon, handed to the engine exactly where the app's GPS would be (geoProvidersFrom getCurrentPoint /
++ * getLocationFix) in the app's Point shape (src/services/location.pure.ts: lat, lon, accuracyM, ageS; a fresh fix,
++ * ageS 0). Unset (default): nothing changes.
++ */
++const ITEM_LOCATIONS: Map<string, { lat: number; lon: number }> | null = process.env.BOAR_ITEM_LOCATIONS
++  ? new Map((JSON.parse(readFileSync(process.env.BOAR_ITEM_LOCATIONS, "utf8")) as { id: string; lat: number; lon: number }[])
++      .map((r) => [r.id, { lat: Number(r.lat), lon: Number(r.lon) }]))
++  : null;
+ /** Several items share the machine at once: latency fields are not comparable, so traces carry them as null. */
+ const PARALLEL = !!shard && shard.n > 1;
+ 
+@@ -252,7 +262,7 @@ async function setupAppRetrieval(packFiles: string[]) {
+   const lex: any = await import(join(ROOT, "src/rag/ptLexiconAsset.ts"));
+   if (!Object.keys(lex.ptLexicon() ?? {}).length) fail("LEXICON-NOT-LOADED: the app's PT lexicon did not load");
+   let geo: any = null;
+-  const point: { current: { lat: number; lon: number; accuracyM: number } | null } = { current: null };
++  const point: { current: { lat: number; lon: number; accuracyM: number; ageS?: number } | null } = { current: null };
+   if (existsSync(join(ROOT, "src/routing/geoWiring.ts")) && existsSync(join(ROOT, "src/rag/pois.ts"))) {
+     const { geoProvidersFrom } = await import(join(ROOT, "src/routing/geoWiring.ts"));
+     const pois = await import(join(ROOT, "src/rag/pois.ts"));
+@@ -752,6 +762,7 @@ async function main() {
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
++    ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+     ...(shard ? { parallel: String(shard.n), "parallel.timing": PARALLEL ? "invalid (null; raw in other/timing-raw)" : "valid" } : {}),
+   };
+   const host = `${os.cpus()[0]?.model} cpu x${cli.threads} (${os.platform()} ${os.release()}, ${cli.gpu ? "gpu" : "cpu"} generation${server ? ", llama-server" : ""})`;
+@@ -773,6 +784,11 @@ async function main() {
+     started = performance.now();
+     currentItem = q.id;
+     if (q.history) events.push({ tMs: 0, type: "other", kind: "history", origin: "adapter", turns: q.history.turns.length });
++    const injected = !env.point.current ? ITEM_LOCATIONS?.get(q.id) : undefined;
++    if (injected) {
++      env.point.current = { lat: injected.lat, lon: injected.lon, accuracyM: 20, ageS: 0 };
++      events.push({ tMs: 0, type: "other", kind: "item-location", origin: "adapter", accuracyM: 20, ageS: 0 } as any);
++    }
+     const sqlCalls: Map<string, number> | undefined = (globalThis as any).__boarSqlCalls;
+     if (process.env.BOAR_EVAL_SQL_COUNT === "1") sqlCalls?.clear();
+     try {

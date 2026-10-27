@@ -1,0 +1,15 @@
+diff -ruN be-0cfd4a77-bounty2/src/rag/packs.ts be-0cfd4a77-bounty2b/src/rag/packs.ts
+--- be-0cfd4a77-bounty2/src/rag/packs.ts	2026-10-03 15:07:00
++++ be-0cfd4a77-bounty2b/src/rag/packs.ts	2026-10-03 17:54:00
+@@ -151,8 +151,9 @@
+   return db;
+ }
+ 
+-/** Packs searched as a title-lookup tier: the English Wikipedia beyond the default kit (top-N subsets and the shards). */
+-export const NAMED_ONLY_PACK = /^boar-wiki-en-(top\d+k|\d{2})$/;
++/** Packs searched as a title-lookup tier: the English Wikipedia beyond the default kit (top-N subsets and the shards).
++ *  A pack outside the catalog is listed as "local-<file name>" (knowledgePacks): the top-N subsets are, so the prefix is allowed. */
++export const NAMED_ONLY_PACK = /^(?:local-)?boar-wiki-en-(top\d+k|\d{2}|names-\d{2})$/;
+ 
+ export interface WikiPackResult {
+   packId: string;

@@ -1,0 +1,15 @@
+# PACKCOND P4 step 0: patch design (packGround, 2026-10-12)
+
+Diagnosis (`tools/p4_diag.py` → `aggregates/p4-diag.json`; H = deep tier on dt512, K = 4B cut3 traces; F0 article = the P1 hit articles):
+| arm | n | a not in raw | b grounding drop | b-health | c compress drop | b or c | d kept |
+|---|---|---|---|---|---|---|---|
+| H | 32 | 15 | 3 | 1 | 2 | – | 11 |
+| K | 20 | 11 | 1 | 1 | – | 1 | 6 |
+
+1. Class (a) dominates. The article is missing from a k = 20 pool on 14 of the 15 H items; it sits at pool rank 7 on travel-local-A01. Six items return an empty raw list: 3 danger items on the health path, 2 with no source, and 1 calculate item that skips retrieval. Retrieval's relevance gates already return fewer than 6 chunks on 9 of the 15. So a larger k (L3) cannot help: the question's words do not reach the article that holds the fact.
+2. In class (b), `onSubject` = `onTopic(matchQuery, c)` in `answer.ts` drops the article. It runs on the compressed cut and needs a title that names a question term, or term coverage ≥ `MIN_TERM_COVERAGE` 0.75. The 3 articles fail on their full text too (coverage 0.40–0.44); on 2 of the 3, grounding then empties the context (`grounding:no-good-source`). b-health (danger-A01): the health topic filter drops it (`grounding:health-strict`), which is a safety rule and is left alone.
+3. In class (c), `compressContext` drops the article: a chunk is cut when its best sentence scores below `RELATIVE_RELEVANCE_FLOOR` 0.5 × the best chunk's, inside the 400-token deep cap. On crypto-B05 the full passage is on topic; honesty-B03 has 0.09 coverage.
+4. Ceiling: no grounding lever can keep more than 11 + 5 = 16 of 32. Reaching 16 means recovering all 5 non-health losses, including one with 0.09 coverage.
+5. Replay-side screen (`replay-pg.ts --diag`, same engine functions, reconstruction agrees with the engine on 29 of 31 items): L1 pin of the raw top-1/2/3 → 12/14/15 of 32 but changes 8/12/11 of the 20 control items (dropped pack chunks are mostly noise, and in this kit 83 % of kept slots are pack chunks). L2 full-text topic → 11. L2 + restore → 12, 1 control change. No-source fallback → 13, 5 changes. L4 quota does not apply: nearly every chunk in this kit comes from a pack.
+6. Lever chosen: the most precise combination, L2 + restore + fallback (`settings.packGround`, English non-health questions only). (i) A pack passage passes `onSubject` on its full text. (ii) The best-ranked pack passage that compression cut and that is on topic is pinned and compressed again (same budget). (iii) When nothing is on topic, the 2 best compressed pack passages are kept instead of an empty context. Reason codes are `packground:kept-N` / `packground:none`.
+7. Patch `packground.vs-dt512.patch` (sha256 cb7f239a…): engine +25/−1 in answer.ts and settings.ts, plus a 3-case unit test. Tree hash fb068d58… (dt512 = 8ce8b0fc…). Differential `tools/diff-vs-dt512.scratch.test.ts` (run it from wt/packcond/src/routing): off (undefined and false) is byte-identical to dt512 on 8/8 scenarios. tsc reports 0 errors. vitest src/routing: 599/601 pass; the 2 failures are the known deep-tier ones.

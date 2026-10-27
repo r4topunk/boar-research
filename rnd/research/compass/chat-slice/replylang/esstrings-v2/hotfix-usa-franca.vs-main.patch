@@ -1,0 +1,37 @@
+diff --git a/src/routing/emergencyNumbers.ts b/src/routing/emergencyNumbers.ts
+index 7248864..e22cb42 100644
+--- a/src/routing/emergencyNumbers.ts
++++ b/src/routing/emergencyNumbers.ts
+@@ -16,11 +16,13 @@ const COUNTRIES: CountryNumbers[] = [
+   { names: /\b(brazil|brasil)\b/i, en: "Brazil: police 190, ambulance (SAMU) 192, fire 193.", pt: "Brasil: polícia 190, ambulância (SAMU) 192, bombeiros 193." },
+   { names: /\b(portugal)\b/i, en: "Portugal: 112 (police, ambulance and fire).", pt: "Portugal: 112 (polícia, ambulância e bombeiros)." },
+   { names: /\b(spain|espanha)\b/i, en: "Spain: 112 (all emergencies).", pt: "Espanha: 112 (todas as emergências)." },
+-  { names: /\b(france|fran[çc]a)\b/i, en: "France: 112, or ambulance (SAMU) 15, police 17, fire 18.", pt: "França: 112, ou ambulância (SAMU) 15, polícia 17, bombeiros 18." },
++  // hotfix 2026-10-03: "franca" (PT/ES "frank", the city of Franca) is not France
++  { names: /(?<![\p{L}])(?:france|frança)(?![\p{L}])/iu, en: "France: 112, or ambulance (SAMU) 15, police 17, fire 18.", pt: "França: 112, ou ambulância (SAMU) 15, polícia 17, bombeiros 18." },
+   { names: /\b(germany|alemanha)\b/i, en: "Germany: ambulance and fire 112, police 110.", pt: "Alemanha: ambulância e bombeiros 112, polícia 110." },
+   { names: /\b(italy|it[áa]lia)\b/i, en: "Italy: 112 (all emergencies).", pt: "Itália: 112 (todas as emergências)." },
+   { names: /\b(united kingdom|uk|england|scotland|wales|reino unido|inglaterra|esc[óo]cia)\b/i, en: "United Kingdom: 999 or 112.", pt: "Reino Unido: 999 ou 112." },
+-  { names: /\b(united states|usa|u\.s\.|estados unidos|eua)\b/i, en: "United States: 911.", pt: "Estados Unidos: 911." },
++  // hotfix 2026-10-03: lowercase "usa" is PT/ES "uses"
++  { names: /(?<![\p{L}])(?:[Uu]nited [Ss]tates|UNITED STATES|[Ee]stados [Uu]nidos|ESTADOS UNIDOS|EUA|eua|USA|U\.S\.|EE\.? ?UU\.?)(?![\p{L}])/u, en: "United States: 911.", pt: "Estados Unidos: 911." },
+   { names: /\b(canada|canad[áa])\b/i, en: "Canada: 911.", pt: "Canadá: 911." },
+   { names: /\b(mexico|m[ée]xico)\b/i, en: "Mexico: 911.", pt: "México: 911." },
+   { names: /\b(argentina)\b/i, en: "Argentina: 911 (police), ambulance 107, fire 100.", pt: "Argentina: 911 (polícia), ambulância 107, bombeiros 100." },
+diff --git a/src/routing/emergencyNumbersHotfix.test.ts b/src/routing/emergencyNumbersHotfix.test.ts
+new file mode 100644
+index 0000000..a01296a
+--- /dev/null
++++ b/src/routing/emergencyNumbersHotfix.test.ts
+@@ -0,0 +1,11 @@
++import { describe, expect, it } from "vitest";
++import { emergencyNumbersLine } from "./emergencyNumbers";
++
++// Hotfix 2026-10-03 (Compass, from the Opus reviewer of esstrings-v2): the shipped aliases matched PT/ES verbs and adjectives.
++// Dev item ed-pt-105 (live flood in Petrópolis, "minha mae q usa andador") got "Estados Unidos: 911".
++describe("emergency-number aliases: 'usa' and 'franca' are words, not countries", () => {
++  it.each(["minha mae q usa andador", "mi papá usa marcapasos y se desmayó", "qué se usa para una quemadura", "Usa insulina y está confundido", "hemorragia franca", "moro em Franca"])(
++    "no country line: %s", (t) => expect(emergencyNumbersLine(t, true)).toBeNull());
++  it.each(["estamos en Estados Unidos", "we're in the USA", "nos EUA", "in the U.S. now", "united states"])("US: %s", (t) => expect(emergencyNumbersLine(t, false)).toMatch(/United States: 911/));
++  it.each(["estou na França", "in France", "FRANCE"])("France: %s", (t) => expect(emergencyNumbersLine(t, false)).toMatch(/France: 112/));
++});

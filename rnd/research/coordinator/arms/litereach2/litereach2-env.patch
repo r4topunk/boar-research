@@ -1,0 +1,25 @@
+--- a/src/rag/denseCandidates.ts
++++ b/src/rag/denseCandidates.ts
+@@ -37,9 +37,11 @@
+ }
+ 
+ /** HEADPASS-X2: dense chunks appended per answer (D). */
+-export const HEADPASS_DENSE_D = 2;
++/** LITEREACH2: env-overridable (BOAR_LR2_*; positive integers; unset = the X2b values). */
++const lr2Env = (k: string, d: number): number => { const v = Number(typeof process !== "undefined" ? process.env?.[k] : undefined); return Number.isInteger(v) && v > 0 ? v : d; };
++export const HEADPASS_DENSE_D = lr2Env("BOAR_LR2_DENSE_D", 2);
+ /** HEADPASS-X2: cap on all head-pass appended chunks of one answer (X1 neighbours + dense). */
+-export const HEADPASS_MAX_APPEND = 4;
++export const HEADPASS_MAX_APPEND = lr2Env("BOAR_LR2_MAX_APPEND", 4);
+ 
+ /**
+  * HEADPASS-X2: the dense chunks to append after grounding: the first `d` of `candidates` (already best-first, none in the
+@@ -60,7 +62,7 @@
+ }
+ 
+ /** HEADPASS-X2b (settings.packDense2 "append-budget"): prompt tokens (engine approxTokens) the head-pass append may add. */
+-export const HEADPASS_BUDGET_TOKENS = 600;
++export const HEADPASS_BUDGET_TOKENS = lr2Env("BOAR_LR2_BUDGET_TOKENS", 600);
+ 
+ /**
+  * HEADPASS-X2b: keeps `adds` in order while `measure(prefix)` (the prompt's length in characters with that prefix of

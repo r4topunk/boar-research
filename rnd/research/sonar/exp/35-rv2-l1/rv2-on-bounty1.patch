@@ -1,0 +1,214 @@
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/clean.test.ts be-0cfd4a77-rv2/src/rag/clean.test.ts
+--- be-0cfd4a77-bounty1/src/rag/clean.test.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-rv2/src/rag/clean.test.ts	2026-10-03 18:12:07
+@@ -0,0 +1,19 @@
++import { describe, expect, it } from "vitest";
++import { windowsOf } from "./clean";
++
++describe("rv2 windowsOf", () => {
++  const s = (n: number, w = "word") => `${Array.from({ length: n }, () => w).join(" ")}.`;
++  it("cuts on sentence boundaries once a window reaches 45 words", () => {
++    const text = [s(20), s(30), s(10), s(40)].join(" ");
++    const out = windowsOf(text);
++    expect(out).toEqual([[s(20), s(30)].join(" "), [s(10), s(40)].join(" ")]);
++  });
++  it("keeps a short tail of at least 12 words and drops a shorter one", () => {
++    expect(windowsOf([s(50), s(12)].join(" "))).toEqual([s(50), s(12)]);
++    expect(windowsOf([s(50), s(5)].join(" "))).toEqual([s(50)]);
++  });
++  it("is a pure function of the text (whitespace-normalized), so pack builds can store window vectors", () => {
++    const t = `${s(30)}\n\n  ${s(30)}`;
++    expect(windowsOf(t)).toEqual(windowsOf(t.replace(/\s+/g, " ")));
++  });
++});
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/clean.ts be-0cfd4a77-rv2/src/rag/clean.ts
+--- be-0cfd4a77-bounty1/src/rag/clean.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-rv2/src/rag/clean.ts	2026-10-03 18:09:34
+@@ -0,0 +1,26 @@
++// rv2 ("CLEAN min", Sonar exp-34): the constants and the window cutter of the question-ranked context. Pure (no I/O),
++// shared by retrieve.ts (candidates, embeddings) and answer.ts (the context budget).
++export const CLEAN_MAX_ARTICLES = 8;
++export const CLEAN_BM25_ARTICLES = 4;
++export const CLEAN_NAMED_SHARE = 0.25;
++/** Below this cosine a window is clearly off topic (0, 0.5 and 0.6 gave the same gold hits on v0.1). */
++export const CLEAN_FLOOR = 0.5;
++/** The context budget in words (≈ 320 tokens): 240 held every gold hit that 340 did. */
++export const CLEAN_WORDS = 240;
++
++/** ~45-60-word windows of a passage on sentence boundaries. A pure function of the text, so a pack build can store
++ *  each window's vector (Forge: ≈ 0 ms on the phone instead of ~30 ms per window). */
++export function windowsOf(text: string): string[] {
++  const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
++  const out: string[] = [];
++  let cur: string[] = [];
++  for (const s of text.replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+/)) {
++    cur.push(s);
++    if (words(cur.join(" ")) >= 45) {
++      out.push(cur.join(" "));
++      cur = [];
++    }
++  }
++  if (words(cur.join(" ")) >= 12) out.push(cur.join(" "));
++  return out;
++}
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/rag/retrieve.ts be-0cfd4a77-rv2/src/rag/retrieve.ts
+--- be-0cfd4a77-bounty1/src/rag/retrieve.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-rv2/src/rag/retrieve.ts	2026-10-03 18:09:34
+@@ -10,13 +10,14 @@
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+-import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
++import { packHitToChunk, searchPacks, searchWikiPacks, type WikiPackResult } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+ import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
+ import { EXPLAIN_INTENT } from "./explain";
+ import { identifiersIn, titleHasIdentifier } from "./identifiers";
+ import { ptLexicon } from "./ptLexiconAsset";
+ import { dedupeArticleCopies } from "./dedupe";
++import { CLEAN_BM25_ARTICLES, CLEAN_FLOOR, CLEAN_MAX_ARTICLES, CLEAN_NAMED_SHARE, windowsOf } from "./clean";
+ 
+ export type { RetrievedChunk } from "./retrieve.types";
+ 
+@@ -118,6 +119,18 @@
+   opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon } = {}
+ ): Promise<RetrievedChunk[]> {
+   const main = await retrieveOne(query, topK, opts);
++  // rv2 (Sonar exp-34): the question-ranked windows ride along, for the answer to use instead of compression + topic
++  // gates on English non-health questions (answer.ts). A failure leaves the classic path alone.
++  if (!looksPortuguese(query)) {
++    const { wiki, queryVec } = (main as any)[RV2] ?? {};
++    if (wiki && queryVec) {
++      const clean = await cleanWindows(query, queryVec, wiki, main).catch((e) => {
++        console.warn("[retrieve] rv2 windows failed:", e?.message ?? e);
++        return null;
++      });
++      if (clean) Object.defineProperty(main, "clean", { value: clean, enumerable: false });
++    }
++  }
+   // A Portuguese question against English sources: search again with the English names it mentions
+   // (Wikipedia's own interlanguage links, src/rag/ptLexicon.ts), and put those results first. The English
+   // embedder and keyword index barely match Portuguese words, so the first search alone finds noise.
+@@ -222,7 +235,52 @@
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
++  Object.defineProperty(result, RV2, { value: { wiki, queryVec }, enumerable: false });
+   return result;
++}
++
++const RV2 = Symbol("rv2");
++/** rv2 ("CLEAN min", Sonar exp-34): English Wikipedia packs give article candidates, every other source its retrieved
++ *  passages; all are cut into short windows (src/rag/clean.ts) and ranked by the question's embedding. */
++const ENWIKI_PACK = /(?:^|-)(?:boar-wiki-en-|wiki-vital)/;
++
++async function cleanWindows(query: string, queryVec: Float32Array, wiki: WikiPackResult[], retrieved: RetrievedChunk[]): Promise<RetrievedChunk[]> {
++  const enwiki = wiki.filter((w) => ENWIKI_PACK.test(w.packId));
++  const enwikiIds = new Set(enwiki.map((w) => `pack:${w.packId}:`));
++  const cands: RetrievedChunk[] = retrieved.filter((c) => ![...enwikiIds].some((p) => c.chunkId.startsWith(p)));
++  // Articles: the ones the question names (share >= 0.25), then the BM25 top articles, at most 8 across packs.
++  const picked: Array<{ w: WikiPackResult; id: number }> = [];
++  for (const w of enwiki) {
++    const named = (await w.pack.titlesInQuestion(query, w.stems)).filter((t) => t.share >= CLEAN_NAMED_SHARE).map((t) => t.id);
++    for (const id of named) if (!picked.some((p) => p.w === w && p.id === id)) picked.push({ w, id });
++  }
++  for (const w of enwiki) {
++    const bm = [...new Set((await w.pack.bm25Candidates(w.stems)).map((c) => c.articleId))].slice(0, CLEAN_BM25_ARTICLES);
++    for (const id of bm) if (!picked.some((p) => p.w === w && p.id === id)) picked.push({ w, id });
++  }
++  for (const { w, id } of picked.slice(0, CLEAN_MAX_ARTICLES)) {
++    // The article's lead chunk and its best chunk for the question's stems: both whole pack chunks.
++    for (const h of await w.pack.articlePassages(id, w.stems, 1)) {
++      const c = packHitToChunk(w.packId, h);
++      if (!isDisambiguation(c)) cands.push(c);
++    }
++  }
++  const seen = new Set<string>();
++  const wins: RetrievedChunk[] = [];
++  for (const c of cands)
++    windowsOf(c.body).forEach((body, i) => {
++      if (seen.has(body)) return;
++      seen.add(body);
++      wins.push({ ...c, chunkId: `${c.chunkId}#w${i}`, body });
++    });
++  const qn = Math.hypot(...queryVec) || 1;
++  for (const c of wins) {
++    const v = await embeddingEngine.embed(c.body);
++    let dot = 0;
++    for (let i = 0; i < v.length; i++) dot += v[i] * queryVec[i];
++    c.similarity = dot / (qn * (Math.hypot(...v) || 1));
++  }
++  return wins.filter((c) => (c.similarity ?? 0) >= CLEAN_FLOOR).sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff -ruN -x *.orig be-0cfd4a77-bounty1/src/routing/answer.ts be-0cfd4a77-rv2/src/routing/answer.ts
+--- be-0cfd4a77-bounty1/src/routing/answer.ts	2026-10-03 14:57:44
++++ be-0cfd4a77-rv2/src/routing/answer.ts	2026-10-03 18:09:34
+@@ -114,6 +114,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { CLEAN_WORDS } from "../rag/clean";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+ import type { MemoryFit } from "../inference/memoryFit";
+@@ -870,6 +871,8 @@
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.
+       const searchQuery = english ? (ACTION_INTENT.test(req.query) ? `${english} what to do` : english) : req.query;
+       let raw: RetrievedChunk[] = req.reuseSources ?? [];
++      /** rv2 (Sonar exp-34): the question-ranked windows retrieve() attached (English questions only). */
++      let cleanPool: RetrievedChunk[] | undefined;
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+       let retrievalMs: number | undefined;
+@@ -886,6 +889,7 @@
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
++        cleanPool = (raw as any).clean as RetrievedChunk[] | undefined;
+         retrievalMs = deps.now() - rs;
+       }
+       if (stopRequested) return finish(genTier, "stopped", "", [], receipt({ retrievalMs }));
+@@ -910,9 +914,29 @@
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
+-      const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
+-      let sources = compressed.chunks;
+-      reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
++      // rv2 (Sonar exp-34, "CLEAN min"): an English non-health question reads the best windows by the question's
++      // embedding, up to CLEAN_WORDS, instead of compression + the term-coverage topic gates (gold sentence in the
++      // 4B's context on v0.1 EN: 7/56 -> 19/56 at L0). Health, history, PT and multipass keep the classic path; the
++      // crypto-source guard still applies. No window above the floor -> the classic path.
++      const useClean = !!cleanPool?.length && gen?.mode !== "multipass" && !health && !history && !pt;
++      let sources: RetrievedChunk[];
++      if (useClean) {
++        const pool = cleanPool!.filter((c) => !cryptoBlocked(c));
++        const words = (t: string) => t.split(/\s+/).filter(Boolean).length;
++        sources = [];
++        let n = 0;
++        for (const c of pool) {
++          const w = words(c.body);
++          if (n + w > CLEAN_WORDS && n > 0) break;
++          sources.push(c);
++          n += w;
++        }
++        reasonCodes.push(`context:clean-${sources.length}-${n}w`);
++      } else {
++        const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
++        sources = compressed.chunks;
++        reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
++      }
+ 
+       // Grounding: sources must be on topic in absolute terms, not just the best of what came back.
+       // Always on (Quill, 014c054: the chat reads "passages found, none cited" from a non-empty sources
+@@ -920,7 +944,7 @@
+       // by its own words: English sources rarely name them, so its noise ("Estrela, Lisbon") is dropped.
+       const guarded = gen?.mode !== "multipass";
+       // Health has its own, stricter topic filter below (the condition, lay sources allowed).
+-      if (guarded && !health && sources.length) {
++      if (guarded && !health && !useClean && sources.length) {
+         const kept = sources.filter((c) => onSubject(c));
+         if (kept.length < sources.length) reasonCodes.push(`grounding:off-topic-dropped-${sources.length - kept.length}`);
+         if (!kept.length) reasonCodes.push("grounding:no-good-source");

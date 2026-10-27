@@ -1,0 +1,31 @@
+questions 89 x 2 packs | SQL calls base 39642 (445/q) -> skip-absent 35520 (399/q), 10% fewer | result lists differing: 0/178
+top base: [
+  [
+    'SELECT id FROM articles WHERE title = ? COLLATE NOCASE AND s',
+    8424
+  ],
+  [
+    'SELECT r.article_id FROM redirects r JOIN articles a ON a.id',
+    8379
+  ],
+  [
+    'SELECT title, source, views, block_id, off, len FROM article',
+    5707
+  ],
+  [ 'SELECT zdata FROM blocks WHERE id = ?', 5394 ]
+]
+top skip: [
+  [
+    'SELECT id FROM articles WHERE title = ? COLLATE NOCASE AND s',
+    6363
+  ],
+  [
+    'SELECT r.article_id FROM redirects r JOIN articles a ON a.id',
+    6318
+  ],
+  [
+    'SELECT title, source, views, block_id, off, len FROM article',
+    5707
+  ],
+  [ 'SELECT zdata FROM blocks WHERE id = ?', 5394 ]
+]

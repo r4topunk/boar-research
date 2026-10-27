@@ -1,0 +1,247 @@
+{
+ "searches": 59,
+ "article_reads": 16529,
+ "distinct_blocks": 2235,
+ "layout": {
+  "local-boar-crypto": {
+   "blocks": 407,
+   "articles": 3141,
+   "chunks": 54998,
+   "articles_per_block": 7.717444717444717,
+   "chunks_per_block": 135.13022113022112,
+   "chunks_per_article": 17.509710283349254
+  },
+  "local-boar-factbook": {
+   "blocks": 102,
+   "articles": 261,
+   "chunks": 10543,
+   "articles_per_block": 2.5588235294117645,
+   "chunks_per_block": 103.36274509803921,
+   "chunks_per_article": 40.39463601532567
+  },
+  "local-boar-medlineplus-en": {
+   "blocks": 35,
+   "articles": 1016,
+   "chunks": 3042,
+   "articles_per_block": 29.02857142857143,
+   "chunks_per_block": 86.91428571428571,
+   "chunks_per_article": 2.9940944881889764
+  },
+  "local-boar-visa-en": {
+   "blocks": 95,
+   "articles": 387,
+   "chunks": 10830,
+   "articles_per_block": 4.073684210526316,
+   "chunks_per_block": 114,
+   "chunks_per_article": 27.984496124031008
+  },
+  "local-boar-firstaid-en": {
+   "blocks": 193,
+   "articles": 1842,
+   "chunks": 22500,
+   "articles_per_block": 9.544041450777202,
+   "chunks_per_block": 116.58031088082902,
+   "chunks_per_article": 12.214983713355048
+  },
+  "local-boar-wikivoyage-en": {
+   "blocks": 3531,
+   "articles": 34002,
+   "chunks": 548051,
+   "articles_per_block": 9.629566694987256,
+   "chunks_per_block": 155.21127159444916,
+   "chunks_per_article": 16.118198929474737
+  },
+  "ALL": {
+   "blocks": 4363,
+   "articles": 40649,
+   "chunks": 649964,
+   "articles_per_block": 9.31675452670181,
+   "chunks_per_block": 148.97180838872336
+  }
+ },
+ "zstd_blocks_per_pack_block": {
+  "n": 2235,
+  "p10": 1,
+  "p25": 1,
+  "p50": 1,
+  "p75": 1,
+  "p90": 1,
+  "mean": 1.046532438478747
+ },
+ "zstd_block_count_hist": {
+  "1": 2137,
+  "2": 96,
+  "3": 1,
+  "7": 1
+ },
+ "sim": {
+  "16": {
+   "baseline": {
+    "misses": 13549,
+    "decoded_MB_full": 1091.129812,
+    "exact_end_over_len_first_read": {
+     "n": 13549,
+     "p10": 0.19533680306293372,
+     "p25": 0.39005763316362135,
+     "p50": 0.6411034277641461,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.6428104876332519
+    },
+    "exact_end_over_len_residency_max": {
+     "n": 13549,
+     "p10": 0.22400565617666526,
+     "p25": 0.4302991821246617,
+     "p50": 0.7022288773454892,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.6732112435997235
+    },
+    "zstd_stop_over_len_first_read": {
+     "n": 13549,
+     "p10": 1,
+     "p25": 1,
+     "p50": 1,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.9989206334759917
+    },
+    "zstd_stop_over_len_residency_max": {
+     "n": 13549,
+     "p10": 1,
+     "p25": 1,
+     "p50": 1,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.9989516197732429
+    },
+    "exact_residency_max_byte_weighted_saved_pct": 31.72327327080675,
+    "share_decompressions_stopping_before_last_zstd_block_residency": 0.008709129825079341
+   },
+   "modes": {
+    "exact_resume": {
+     "misses": 13549,
+     "upgrades": 1130,
+     "decoded_MB": 744.98772,
+     "saved_vs_full_pct": 31.72327327080675
+    },
+    "exact_restart": {
+     "misses": 13549,
+     "upgrades": 1130,
+     "decoded_MB": 778.366534,
+     "saved_vs_full_pct": 28.664167595853385
+    },
+    "stream_stop_restart": {
+     "misses": 13549,
+     "upgrades": 15,
+     "decoded_MB": 1090.495251,
+     "saved_vs_full_pct": 0.05815632503312074
+    },
+    "stream_stop_resume": {
+     "misses": 13549,
+     "upgrades": 15,
+     "decoded_MB": 1088.529171,
+     "saved_vs_full_pct": 0.2383438681079708
+    }
+   }
+  },
+  "64": {
+   "baseline": {
+    "misses": 6862,
+    "decoded_MB_full": 564.743785,
+    "exact_end_over_len_first_read": {
+     "n": 6862,
+     "p10": 0.1955758531433162,
+     "p25": 0.3963855605121725,
+     "p50": 0.6651396444467581,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.6534308004925646
+    },
+    "exact_end_over_len_residency_max": {
+     "n": 6862,
+     "p10": 0.24045406230410726,
+     "p25": 0.47562510328346064,
+     "p50": 0.8093168058305357,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.7187457143001538
+    },
+    "zstd_stop_over_len_first_read": {
+     "n": 6862,
+     "p10": 1,
+     "p25": 1,
+     "p50": 1,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.9982749936136137
+    },
+    "zstd_stop_over_len_residency_max": {
+     "n": 6862,
+     "p10": 1,
+     "p25": 1,
+     "p50": 1,
+     "p75": 1,
+     "p90": 1,
+     "mean": 0.9984659517526597
+    },
+    "exact_residency_max_byte_weighted_saved_pct": 26.945507687171798,
+    "share_decompressions_stopping_before_last_zstd_block_residency": 0.008598076362576508
+   },
+   "modes": {
+    "exact_resume": {
+     "misses": 6862,
+     "upgrades": 1121,
+     "decoded_MB": 412.570705,
+     "saved_vs_full_pct": 26.945507687171798
+    },
+    "exact_restart": {
+     "misses": 6862,
+     "upgrades": 1121,
+     "decoded_MB": 451.622155,
+     "saved_vs_full_pct": 20.030610872503896
+    },
+    "stream_stop_restart": {
+     "misses": 6862,
+     "upgrades": 15,
+     "decoded_MB": 564.716904,
+     "saved_vs_full_pct": 0.004759857605163287
+    },
+    "stream_stop_resume": {
+     "misses": 6862,
+     "upgrades": 15,
+     "decoded_MB": 562.750824,
+     "saved_vs_full_pct": 0.35289649092817843
+    }
+   }
+  }
+ },
+ "fractions": {},
+ "read_end_over_len": {
+  "n": 16529,
+  "p10": 0.18460398808713924,
+  "p25": 0.3695875025070755,
+  "p50": 0.6189233077761105,
+  "p75": 1,
+  "p90": 1,
+  "mean": 0.6262336924864572
+ },
+ "article_len_bytes": {
+  "n": 16529,
+  "p10": 1699,
+  "p25": 4520,
+  "p50": 16319,
+  "p75": 36011,
+  "p90": 48957,
+  "mean": 23133.91342488959
+ },
+ "block_len_bytes": {
+  "n": 2235,
+  "p10": 66389,
+  "p25": 68240,
+  "p50": 72572,
+  "p75": 83815,
+  "p90": 104986,
+  "mean": 81520.7677852349
+ }
+}

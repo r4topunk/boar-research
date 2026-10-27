@@ -1,0 +1,17 @@
+{"arm": "NUMGUARD-FINAL", "criterion_sha256": "6820cbc8fd1145ad31e531dad9a5f4384373c29a90de53bcdb2f88d65ac98f3c",
+ "patch_sha256": "08b742a1a7d46554181a95c25c0dac7c6d69edaed9bac0c86ab32107356224f2", "tree": "kiln-local/be-0cfd4a77-cut7-numguard-r2", "arm_label": "cut7+numguard-final",
+ "checks": {
+  "a_health_guard": "0/32", "a_multiturn_guard": "0/6", "a_pass": true,
+  "b_benign_agree_expected": "15/15 (guard true on exactly b01 b02 b03 b10)", "b_pass": true,
+  "c_slice_correct": "26/26", "c_targets": {"mr-u07": true, "mr-a02": true, "mr-a04": true}, "c_correct_to_wrong_vs_r2": 0,
+  "c_cited_guard_fired_model_answered": 0, "c_slice_cited_total": 4, "c_cut7_cited_total": 4, "c_pass": true,
+  "d_v01_changed_answers_vs_off": 0, "d_v01_numeric_items": 0, "d_v01_same_answer_vs_off": "60/60", "d_v01_same_answer_vs_r2": "60/60", "d_v01_codes_changed_vs_off": 0, "d_pass": true,
+  "e_route_replay_180_on_acts": 0, "e_replay_rows_diff_vs_r2": "0/306", "e_pass": true,
+  "f_tsc": "clean", "f_vitest_routing": "29 files / 649 tests green (57 numguard: 52 numguard.test + 5 answer.test, 2 new)", "f_pass": true,
+  "g_git_apply_check_wt_pr1": "clean (wt/pr1 6643aa9f; offsets only)", "g_pass": true},
+ "slice": {"A_cut7": {"correct": 23, "cited": 4, "extra": 5, "headline": 18, "retrieved": 15},
+           "NGR2": {"correct": 26, "cited": 6, "extra": 5, "headline": 21, "retrieved": 14},
+           "NGF": {"correct": 26, "cited": 4, "extra": 7, "headline": 20, "retrieved": 12, "p50_ms_model_only": 7501},
+           "text_changed_vs_r2": ["mr-u07", "mr-a02"], "text_same_vs_numguard2": "26/26"},
+ "wall_s": {"generation": 657, "replay_matcher": 10}, "calls": {"haiku": 0, "opus": 0, "paid": 0},
+ "verdict": "PASS"}

@@ -1,0 +1,90 @@
+diff --git a/modules/boar-zstd/expo-module.config.json b/modules/boar-zstd/expo-module.config.json
+index cf999eaf..bdb177de 100644
+--- a/modules/boar-zstd/expo-module.config.json
++++ b/modules/boar-zstd/expo-module.config.json
+@@ -1,5 +1,5 @@
+ {
+-  "platforms": ["android", "apple"],
++  "platforms": ["android"],
+   "android": {
+     "modules": ["expo.modules.boarzstd.BoarZstdModule"]
+   },
+diff --git a/src/rag/perfArms.test.ts b/src/rag/perfArms.test.ts
+index daa5d814..e60d6f62 100644
+--- a/src/rag/perfArms.test.ts
++++ b/src/rag/perfArms.test.ts
+@@ -16,8 +16,10 @@ afterEach(() => {
+ });
+ 
+ describe("perfFlags", () => {
+-  it("parses the build-time list and defaults every arm off", () => {
+-    expect(parsePerfFlags(undefined)).toEqual(OFF);
++  it("parses the build-time list: unset = every arm on (ship default), 'none' = every arm off", () => {
++    expect(parsePerfFlags(undefined)).toEqual({ nativeZstd: true, vectorCache: true, sqlBatch: true });
++    expect(parsePerfFlags("")).toEqual({ nativeZstd: true, vectorCache: true, sqlBatch: true });
++    expect(parsePerfFlags("none")).toEqual(OFF);
+     expect(parsePerfFlags(" nativeZstd , sqlBatch,unknown")).toEqual({ nativeZstd: true, vectorCache: false, sqlBatch: true });
+   });
+ 
+diff --git a/src/rag/perfFlags.ts b/src/rag/perfFlags.ts
+index 23db50cc..63a0589c 100644
+--- a/src/rag/perfFlags.ts
++++ b/src/rag/perfFlags.ts
+@@ -1,8 +1,9 @@
+ /**
+- * Retrieval performance switches (R&D arms, Forge). All off by default: with no flag set, retrieval runs the code
+- * of 0cfd4a77 unchanged. Set at build time with EXPO_PUBLIC_BOAR_PERF="nativeZstd,vectorCache,sqlBatch" (also read
+- * under Node, for the desktop adapter), or per device eval request ("perf": {...}, src/eval/deviceEvalRequest.ts),
+- * so one build carries every arm of a phone session.
++ * Retrieval performance switches (Forge). **All on by default** in the ship candidate: each one returns the same
++ * sources as the code it replaces (desktop identity 72/72, Kiln step 0) and falls back on its own (nativeZstd → fzstd).
++ * Build-time override: EXPO_PUBLIC_BOAR_PERF="none" turns every arm off (the 0cfd4a77 retrieval code, the kill
++ * switch); a list such as "nativeZstd,sqlBatch" turns on exactly those. Also read under Node (desktop adapter), and
++ * per device eval request ("perf": {...}, src/eval/deviceEvalRequest.ts), so one build still carries every arm.
+  *
+  * - nativeZstd: pack blocks are decompressed by the boar-zstd native module (vendored libzstd); fzstd stays as the
+  *   fallback for a missing module or a block the module refuses (src/rag/zstd.ts).
+@@ -18,12 +19,17 @@ export interface PerfFlags {
+ 
+ export const PERF_FLAG_NAMES = ["nativeZstd", "vectorCache", "sqlBatch"] as const;
+ 
++export const PERF_DEFAULT: PerfFlags = { nativeZstd: true, vectorCache: true, sqlBatch: true };
++
+ export function parsePerfFlags(raw: string | undefined): PerfFlags {
+-  const on = new Set((raw ?? "").split(",").map((s) => s.trim()).filter(Boolean));
++  const list = (raw ?? "").split(",").map((s) => s.trim()).filter(Boolean);
++  if (!list.length) return { ...PERF_DEFAULT };
++  const on = new Set(list);
+   return { nativeZstd: on.has("nativeZstd"), vectorCache: on.has("vectorCache"), sqlBatch: on.has("sqlBatch") };
+ }
+ 
+-let flags: PerfFlags = parsePerfFlags(typeof process !== "undefined" ? process.env?.EXPO_PUBLIC_BOAR_PERF : undefined);
++// Plain `process.env.EXPO_PUBLIC_…`, as in deviceEvalGate.ts: Expo inlines it at build time; Node/vitest read it live.
++let flags: PerfFlags = parsePerfFlags(process.env.EXPO_PUBLIC_BOAR_PERF);
+ 
+ export function perfFlags(): PerfFlags {
+   return flags;
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index de13c02b..18a4018f 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -96,9 +96,16 @@ async function corpusRows(db: Awaited<ReturnType<typeof getDb>>): Promise<Corpus
+     corpusCache = null;
+     return load();
+   }
+-  const sigRow = await db.getFirstAsync<{ n: number; e: number; c: number }>(
+-    `SELECT COUNT(*) AS n, TOTAL(e.rowid) AS e, TOTAL(c.rowid) AS c ${CORPUS_FROM}`
+-  );
++  let sigRow: { n: number; e: number; c: number } | null;
++  try {
++    sigRow = await db.getFirstAsync<{ n: number; e: number; c: number }>(
++      `SELECT COUNT(*) AS n, TOTAL(e.rowid) AS e, TOTAL(c.rowid) AS c ${CORPUS_FROM}`
++    );
++  } catch {
++    // On by default in the ship candidate: any failure of the signature query falls back to the uncached scan.
++    corpusCache = null;
++    return load();
++  }
+   const sig = `${sigRow?.n}:${sigRow?.e}:${sigRow?.c}`;
+   if (corpusCache?.sig === sig) {
+     const s = stages();

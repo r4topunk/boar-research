@@ -1,0 +1,58 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -378,6 +378,28 @@
+ 
+ /** CMP30OFF: the fixed first line of an answer a released compact decline would have declined. */
+ export const COMPACT_DECLINE_RELEASED_WARNING = "Not found in this phone's offline library. From the model's memory, may be wrong:";
++/** FEWSHOT-READ (arm, 2026-10-21): two worked examples of an answer written strictly from a numbered passage with a [1]
++ * citation, inserted into the system message just before the "Context:" block, for the compact model with sources (English,
++ * not health, single pass). Topics are outside every dev set. Everything else in the prompt is byte-identical. */
++export const FEWSHOT_READ_EXAMPLES =
++  "\n\nTwo examples of answers written strictly from a numbered passage:\n\n" +
++  "Example passage:\n[1] Slide rule\nA slide rule is a mechanical calculator that multiplies and divides by adding and subtracting " +
++  "lengths on logarithmic scales. It was invented around 1622 by William Oughtred and was the standard calculating tool " +
++  "of engineers until pocket electronic calculators replaced it in the 1970s.\n" +
++  "Example question: When did engineers stop using slide rules?\n" +
++  "Example answer: Engineers stopped using slide rules in the 1970s, when pocket electronic calculators replaced them [1]. " +
++  "Until then the slide rule, invented around 1622, was their standard calculating tool [1].\n\n" +
++  "Example passage:\n[1] Urushi\nUrushi is a Japanese lacquer made from the sap of the lacquer tree. It does not dry by evaporation: " +
++  "it hardens through an enzyme reaction that needs moisture, so lacquered pieces are cured in a humid cabinet at about " +
++  "70 to 85 percent relative humidity. The raw sap can cause a skin rash.\n" +
++  "Example question: Why is urushi cured in a humid cabinet?\n" +
++  "Example answer: Urushi hardens through an enzyme reaction that needs moisture rather than by drying, so pieces are " +
++  "cured in a humid cabinet at about 70 to 85 percent relative humidity [1].\n\n" +
++  "Answer the question below the same way, from the numbered context.";
++const withFewshotRead = <T extends { role: string; content: string }>(msgs: T[], on: boolean): T[] => {
++  const k = on && msgs[0]?.role === "system" ? msgs[0].content.indexOf("\n\nContext:\n") : -1;
++  return k < 0 ? msgs : [{ ...msgs[0], content: msgs[0].content.slice(0, k) + FEWSHOT_READ_EXAMPLES + msgs[0].content.slice(k) }, ...msgs.slice(1)];
++};
+ /** CMP30OFF bench switch (BOAR Bench engineOverrides.compactDeclinesOff, per request): true = OFF5 ("all") for every
+  * answerer whose deps leave compactDeclinesOff unset. Default false = the engine as is. */
+ let benchCompactDeclinesOff = false;
+@@ -1451,6 +1473,8 @@
+         } else {
+           stage("prefill", genTier, genLlm.id);
+           const useTemplate = deps.engine.hasEmbeddedChatTemplate();
++          // FEWSHOT-READ: the compact model with sources, English, not health (this branch is single pass).
++          const fewshotRead = !health && !fromMemory && !pt && sources.length > 0 && isCompactModel(genLlm);
+           const common = {
+             nPredict: Math.min(ctx.maxTokens, gen.maxTokens ?? Infinity),
+             // Reasoning models think before answering: bounded on the fast tier, off on the streaming MoE.
+@@ -1465,7 +1489,7 @@
+             await dumpPrompt(
+               req.query,
+               useTemplate
+-                ? deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++                ? withFewshotRead(deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder), fewshotRead)
+                 : deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
+             );
+           text = withoutModelReferences(
+@@ -1473,7 +1497,7 @@
+               useTemplate
+                 ? {
+                     ...common,
+-                    messages: deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder),
++                    messages: withFewshotRead(deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder), fewshotRead),
+                     // CUT5-SPEED: with no sources and no conversation summary the system message is static -> its own KV session file.
+                     ...(sources.length === 0 && !ctx.history?.summary?.trim() ? { staticSystem: true } : {}),
+                   }

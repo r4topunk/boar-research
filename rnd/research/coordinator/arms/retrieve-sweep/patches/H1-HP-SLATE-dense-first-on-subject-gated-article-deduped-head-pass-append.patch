@@ -1,0 +1,161 @@
+diff -ruN -x node_modules be-0cfd4a77-cut7-litepacks/src/rag/denseCandidates.test.ts rs-H1/src/rag/denseCandidates.test.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/denseCandidates.test.ts	2026-10-14 14:05:21
++++ rs-H1/src/rag/denseCandidates.test.ts	2026-10-22 16:00:16
+@@ -49,3 +49,30 @@
+   });
+   it("budget is 600 tokens", () => expect(HEADPASS_BUDGET_TOKENS).toBe(600));
+ });
++
++describe("RS_HP_SLATE (bench-only) dense pick and budget options", () => {
++  const ca = (chunkId: string, docId: string, similarity: number) => ({ ...c(chunkId, similarity), docId });
++  it("maxPerArticle=1: two same-article candidates -> the first is picked, then the next article", () => {
++    const cand = [ca("a1", "A", 0.9), ca("a2", "A", 0.85), ca("b1", "B", 0.8), ca("c1", "C", 0.7)];
++    expect(ids(pickDenseAppend(cand, [], 0, 2, 4, 1))).toEqual(["a1", "b1"]);
++    expect(ids(pickDenseAppend(cand, [], 0, 3, 4, 1))).toEqual(["a1", "b1", "c1"]);
++    // An article already present (kept or appended) takes no more; the cap and d still bound the picks.
++    expect(ids(pickDenseAppend(cand, [ca("k", "A", 0)], 1, 3, 4, 1))).toEqual(["b1", "c1"]);
++    expect(ids(pickDenseAppend(cand, [], 3, 3, 4, 1))).toEqual(["a1"]);
++    // Without the option the same-article pair is kept (default behaviour).
++    expect(ids(pickDenseAppend(cand, [], 0, 2, 4))).toEqual(["a1", "a2"]);
++  });
++  it("applyAppendBudget skipOver: a chunk over the budget is skipped and the next that fits is kept", () => {
++    const len = (xs: string[]) => 100 + xs.join("").length;
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10, true)).toEqual({ kept: ["aaa", "c"], dropped: ["bbbbbbbb"] });
++    expect(applyAppendBudget(["aaaaaaaaaaaa", "b"], len, 10, true)).toEqual({ kept: ["b"], dropped: ["aaaaaaaaaaaa"] });
++    expect(applyAppendBudget(["aaa", "bb", "c"], len, 10, true)).toEqual({ kept: ["aaa", "bb", "c"], dropped: [] });
++  });
++  it("default arguments are byte-identical to the pre-switch behaviour", () => {
++    const len = (xs: string[]) => 100 + xs.join("").length;
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10, false)).toEqual(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10));
++    expect(applyAppendBudget(["aaa", "bbbbbbbb", "c"], len, 10)).toEqual({ kept: ["aaa"], dropped: ["bbbbbbbb", "c"] });
++    const cand = [ca("a1", "A", 0.9), ca("a2", "A", 0.85), ca("b1", "B", 0.8)];
++    expect(JSON.stringify(pickDenseAppend(cand, [], 0, 2, 4, undefined))).toBe(JSON.stringify(pickDenseAppend(cand, [], 0)));
++  });
++});
+diff -ruN -x node_modules be-0cfd4a77-cut7-litepacks/src/rag/denseCandidates.ts rs-H1/src/rag/denseCandidates.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/denseCandidates.ts	2026-10-14 14:04:53
++++ rs-H1/src/rag/denseCandidates.ts	2026-10-22 16:00:03
+@@ -48,15 +48,27 @@
+  */
+ export function pickDenseAppend(
+   candidates: RetrievedChunk[],
+-  present: { chunkId: string }[],
++  present: { chunkId: string; docId?: string }[],
+   appendedSoFar: number,
+   d = HEADPASS_DENSE_D,
+-  cap = HEADPASS_MAX_APPEND
++  cap = HEADPASS_MAX_APPEND,
++  maxPerArticle?: number
+ ): RetrievedChunk[] {
+   const n = Math.max(0, Math.min(d, cap - appendedSoFar));
+   if (!n) return [];
+   const have = new Set(present.map((c) => c.chunkId));
+-  return candidates.filter((c) => !have.has(c.chunkId)).slice(0, n);
++  if (!maxPerArticle) return candidates.filter((c) => !have.has(c.chunkId)).slice(0, n);
++  // RS_HP_SLATE (bench-only): at most `maxPerArticle` chunks per article (docId), counting the chunks already present; walk in cosine order.
++  const perArticle = new Map<string, number>();
++  for (const c of present) perArticle.set(c.docId ?? c.chunkId, (perArticle.get(c.docId ?? c.chunkId) ?? 0) + 1);
++  const out: RetrievedChunk[] = [];
++  for (const c of candidates) {
++    if (out.length >= n) break;
++    if (have.has(c.chunkId) || (perArticle.get(c.docId) ?? 0) >= maxPerArticle) continue;
++    out.push(c);
++    perArticle.set(c.docId, (perArticle.get(c.docId) ?? 0) + 1);
++  }
++  return out;
+ }
+ 
+ /** HEADPASS-X2b (settings.packDense2 "append-budget"): prompt tokens (engine approxTokens) the head-pass append may add. */
+@@ -68,12 +80,18 @@
+  * stops (it and every later chunk are returned in `dropped`). Characters, not tokens: approxTokens = ceil(chars / 4), so a
+  * delta of at most 4 x budget characters keeps the token delta within the budget whatever the rounding.
+  */
+-export function applyAppendBudget<T>(adds: T[], measure: (prefix: T[]) => number, maxChars: number): { kept: T[]; dropped: T[] } {
++export function applyAppendBudget<T>(adds: T[], measure: (prefix: T[]) => number, maxChars: number, skipOver = false): { kept: T[]; dropped: T[] } {
+   const base = measure([]);
+   const kept: T[] = [];
++  const dropped: T[] = [];
+   for (let i = 0; i < adds.length; i++) {
+-    if (measure([...kept, adds[i]]) - base > maxChars) return { kept, dropped: adds.slice(i) };
++    if (measure([...kept, adds[i]]) - base > maxChars) {
++      // skipOver (RS_HP_SLATE, bench-only): skip the chunk that does not fit and try the next; default: stop at it.
++      if (!skipOver) return { kept, dropped: adds.slice(i) };
++      dropped.push(adds[i]);
++      continue;
++    }
+     kept.push(adds[i]);
+   }
+-  return { kept, dropped: [] };
++  return { kept, dropped };
+ }
+diff -ruN -x node_modules be-0cfd4a77-cut7-litepacks/src/routing/answer.ts rs-H1/src/routing/answer.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-H1/src/routing/answer.ts	2026-10-22 16:00:03
+@@ -119,6 +119,7 @@
+ } from "./events";
+ import type { ModelRole } from "./types";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { tokenizeTerms as rsTokenizeTerms } from "./context";
+ import { denseCandidatesOf, pickDenseAppend, applyAppendBudget, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND, HEADPASS_BUDGET_TOKENS } from "../rag/denseCandidates";
+ import type { ConversationHistory, ChatMessage } from "../rag/pure";
+ import type { GenerateOptions, GenerationTimings, LoadResult, PromptPrefix } from "../inference/LlamaEngine";
+@@ -1111,13 +1112,34 @@
+       const hpBefore = sources.length;
+       let pendX1: RetrievedChunk[] = [];
+       let pendDense: RetrievedChunk[] = [];
+-      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
+-        if (settings.packHeadPass === "a2") {
++      // RS_HP_SLATE (RETRIEVE-SWEEP arm H1 HP-SLATE, bench-only env switch, unset or '' = every path below unchanged): (1) X1 gate,
++      // (2) dense-first order + skip-over budget, (3) one dense pick per article and width RS_HP_SLATE_D (default 3), (4) the
++      // head-pass block also runs when the raw list is empty but retrieve() attached dense candidates.
++      const rsSlate = Number((globalThis as any).process?.env?.RS_HP_SLATE ?? "") > 0;
++      const rsSlateD = Number((globalThis as any).process?.env?.RS_HP_SLATE_D ?? "") > 0 ? Number((globalThis as any).process?.env?.RS_HP_SLATE_D) : 3;
++      const rsRawEmptyDense = rsSlate && !retrievedRaw.length && (denseCandidatesOf(retrievedRaw)?.candidates.length ?? 0) > 0;
++      if (rsRawEmptyDense) reasonCodes.push("rs:hp:rawempty-dense");
++      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && (retrievedRaw.length || rsRawEmptyDense)) {
++        if (settings.packHeadPass === "a2" && !(rsSlate && !retrievedRaw.length)) {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+           if (!head) reasonCodes.push("headpass:no-user-pack");
+           else {
+             let add = head.chunks.filter((c) => !sources.some((s) => s.chunkId === c.chunkId));
+             if (head.chunks.length > add.length) reasonCodes.push(`headpass:already-kept-${head.chunks.length - add.length}`);
++            if (rsSlate && add.length) {
++              // (1) X1 gate: drop the neighbours of an article all of whose (substantive) raw chunks fail onSubject (the grounding test;
++              // not applied to health, whose grounding is the stricter topic filter below), and any neighbour with no retrieval score
++              // that shares no content term with the question.
++              const artRaw = raw.filter((c) => c.docId === head.first.docId);
++              const artOff = guarded && !health && artRaw.length > 0 && artRaw.every((c) => !onSubject(c));
++              const qTerms = new Set([...rsTokenizeTerms(req.query), ...rsTokenizeTerms(searchQuery)]);
++              const okX1: RetrievedChunk[] = [];
++              for (const c of add) {
++                if (artOff || (!(c.score > 0) && !rsTokenizeTerms(`${c.title} ${c.body}`).some((t) => qTerms.has(t)))) reasonCodes.push(`rs:hp:x1-offsubject-skip:${c.chunkId}`);
++                else okX1.push(c);
++              }
++              add = okX1;
++            }
+             if (health) {
+               const topic = healthTopicTerms(req.query, english);
+               const ok = add.filter((c) => onHealthTopic(topic, c));
+@@ -1135,7 +1157,9 @@
+           const dense = denseCandidatesOf(retrievedRaw);
+           if (!dense?.sidecar) reasonCodes.push("headpass:dense:nosidecar");
+           else {
+-            let add = pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
++            let add = rsSlate
++              ? pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, rsSlateD, HEADPASS_MAX_APPEND, 1)
++              : pickDenseAppend(dense.candidates, [...sources, ...pendX1], sources.length - hpBefore + pendX1.length, HEADPASS_DENSE_D, HEADPASS_MAX_APPEND);
+             if (!dense.candidates.length) reasonCodes.push("headpass:dense:none");
+             if (health && add.length) {
+               const topic = healthTopicTerms(req.query, english);
+@@ -1161,7 +1185,10 @@
+               : deps.assemblePrompt(req.query, s, ctx.systemPrompt, ctx.history)).length;
+           };
+           const x1Ids = new Set(pendX1.map((c) => c.chunkId));
+-          const { kept, dropped } = applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
++          if (rsSlate && pendDense.length) for (const c of pendDense) reasonCodes.push(`rs:hp:dense-first:${c.chunkId}`);
++          const { kept, dropped } = rsSlate
++            ? applyAppendBudget([...pendDense, ...pendX1], chars, 4 * HEADPASS_BUDGET_TOKENS, true)
++            : applyAppendBudget([...pendX1, ...pendDense], chars, 4 * HEADPASS_BUDGET_TOKENS);
+           for (const c of kept) reasonCodes.push(x1Ids.has(c.chunkId) ? `headpass:add:${c.chunkId}` : `headpass:dense:add:${c.chunkId}`);
+           for (const c of dropped) reasonCodes.push(`headpass:budget:dropped:${c.chunkId}`);
+           sources = [...sources, ...kept];

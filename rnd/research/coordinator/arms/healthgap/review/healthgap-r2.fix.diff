@@ -1,0 +1,372 @@
+diff -ru a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+--- a/src/routing/answer.test.ts	2026-10-15 23:57:10
++++ b/src/routing/answer.test.ts	2026-10-15 23:57:10
+@@ -2369,3 +2369,46 @@
+     expect(f.generations).toHaveLength(0);
+   });
+ });
++
++describe("answer(): HEALTHGAP survival with a kept source (rule v1.2 §2.6)", () => {
++  it("a source titled by the condition: the model answers from it under the health grounding; none on topic: the no-source line", async () => {
++    const Q = "How many hours can someone survive in 5 °C water?";
++    f.deps.emergencyScore = async () => ({ p: 0.012, fire: false });
++    f.deps.healthgap = true;
++    f.retrieved = [chunk("cw", "Wikivoyage: Cold weather", "Cold water: in water below 10 °C a person can lose consciousness within an hour.")];
++    const sourced = await collect(Q);
++    expect(sourced.result.receipt.reasonCodes).toEqual(expect.arrayContaining(["healthgap:survival", "grounding:health-survival-sourced"]));
++    expect(f.generations).toHaveLength(1);
++    f.generations.length = 0;
++    f.retrieved = [chunk("wv", "Wikivoyage: Vientiane", "Vientiane is the capital of Laos, on the Mekong.")];
++    const none = await collect(Q);
++    expect(none.result.text).toBe(noHealthSourceAnswer(false));
++    expect(f.generations).toHaveLength(0);
++    f.deps.healthgap = undefined;
++  });
++});
++
++describe("answer(): HEALTHGAP dose with a kept source (rule v1.2 §2.5)", () => {
++  const Q = "How many international units of vitamin D per day are recommended for adults, and who needs more?";
++  it("a source titled by the medicine with an amount: its own sentence, cited, then the dose line's label and overdose text; no model", async () => {
++    f.retrieved = [chunk("vd", "Vitamin D", "Vitamin D helps your body absorb calcium. The recommended amounts, in international units (IU), are: - Adults 19-70 years: 600 IU - Adults 71 years and older: 800 IU")];
++    f.deps.emergencyScore = async () => ({ p: 0, fire: false });
++    f.deps.healthgap = true;
++    const { result } = await collect(Q);
++    expect(result.receipt.modelId).toBe("extractive");
++    expect(result.text).toMatch(/^From the offline source:\nThe recommended amounts, in international units \(IU\), are: .*800 IU \[1\]\n\nUse the dose and the time between doses printed on the package/);
++    expect(result.text).toContain("even if they seem fine.");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["healthgap:dose", "grounding:health-dose-excerpt"]));
++    expect(f.generations).toHaveLength(0);
++    f.deps.healthgap = undefined;
++  });
++  it("a kept source with no amount, or not titled by the medicine: the dose line, never a first-aid excerpt", async () => {
++    f.retrieved = [chunk("bf", "Bone fracture", "Treatment: Give ibuprofen for pain and keep the limb still. Call for help.")];
++    f.deps.emergencyScore = async () => ({ p: 0, fire: false });
++    f.deps.healthgap = true;
++    const { result } = await collect("How many mg of ibuprofen for a 20 kg child?");
++    expect(result.text).toBe(noDoseAnswer(false));
++    expect(f.generations).toHaveLength(0);
++    f.deps.healthgap = undefined;
++  });
++});
+diff -ru a/src/routing/answer.ts b/src/routing/answer.ts
+--- a/src/routing/answer.ts	2026-10-15 23:57:10
++++ b/src/routing/answer.ts	2026-10-15 23:57:10
+@@ -129,7 +129,7 @@
+ import { smallTalkReply } from "./smallTalk";
+ import { conditionCardText as cut2ConditionCardText, conversationCondition, isCardEmergency } from "./conditionCards";
+ import { withReviewedSnakebiteText } from "./snakebiteCardText";
+-import { classify as classifyHealthGap, healthGapCard, healthGapCodes, noDoseAnswer, type HealthGap } from "./healthGap";
++import { classify as classifyHealthGap, doseExcerpt, healthGapCard, healthGapCodes, healthGapTitle, noDoseAnswer, type HealthGap } from "./healthGap";
+ 
+ // SBt (cut-3 final candidate): the snakebite card's EN text is the reviewed text (snakebiteCardText.ts); the trigger and
+ // the card code in firstAidCards.ts / conditionCards.ts are cut 2's, byte for byte.
+@@ -686,6 +686,9 @@
+         learned = { p: learned?.p ?? 0, fire: true };
+         detectorCodes.push(...healthGapCodes(healthGap));
+       }
++      // HEALTHGAP (rule v1.2 §2.5): a dose or survival turn keeps a source whose title names its medicine or condition.
++      const gapTitle = healthGapTitle(healthGap, req.query, userTurns);
++      const gapSource = (c: RetrievedChunk) => !!gapTitle && gapTitle.test(c.title);
+ 
+       // Arithmetic (temperature, fuel economy, Naismith, currency at a given rate, battery Wh) is answered
+       // exactly, before anything else: "Minha conta do jantar deu 2.450 baht…" is a sum, not a restaurant
+@@ -1102,12 +1105,12 @@
+         reasonCodes.push("grounding:health-strict");
+         // Health: only sources whose title names the health topic (never a plant, a cave or a TV show).
+         const topic = healthTopicTerms(req.query, english);
+-        const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c));
++        const onTopicHealth = sources.filter((c) => onHealthTopic(topic, c) || gapSource(c));
+         if (onTopicHealth.length < sources.length) reasonCodes.push(`grounding:health-off-topic-dropped-${sources.length - onTopicHealth.length}`);
+         sources = onTopicHealth;
+         // The best source to quote may have been cut by compression (relative relevance): a
+         // first-aid book's section loses to the clinical article's wording. Bring it back.
+-        const pool = raw.filter((c) => onHealthTopic(topic, c));
++        const pool = raw.filter((c) => onHealthTopic(topic, c) || gapSource(c));
+         if (pool.length) {
+           const best = pool[healthSourceIndex(pool, coreProcedure(topic))];
+           if (!sources.some((c) => c.chunkId === best.chunkId)) {
+@@ -1123,7 +1126,11 @@
+       // 2. Instant snippet (no LLM): only a sentence that covers the question. Not for an extractive
+       // health answer: its snippet is the excerpt below (EQ-2: the preview quoted "Do not run during
+       // the quake!" by word overlap, before the Drop, Cover and Hold On excerpt).
+-      const healthExtractive = health && sources.length > 0 && req.tier !== "deep";
++      // HEALTHGAP (rule v1.2 §2.6): a survival-time question with a kept source titled by its condition ("Cold weather",
++      // "Hypothermia") is answered by the model from that source under the health grounding, as the deep tier answers health.
++      const survivalSourced = healthGap?.cls === "survival" && sources.some(gapSource);
++      if (survivalSourced) reasonCodes.push("grounding:health-survival-sourced");
++      const healthExtractive = health && sources.length > 0 && req.tier !== "deep" && !survivalSourced;
+       // Never for health/danger (a single sentence is never a first-aid answer, and with no source the guard below
+       // answers), and never when the sources were matched against a translation instead of the question (a PT
+       // question's pt-en terms or lexicon names): coverage of "child" or "India" alone let an off-topic pack line
+@@ -1207,6 +1214,20 @@
+           emit({ type: "token", answerId, tier: genTier, text: card });
+           return finish(genTier, "success", card, [], receipt({ modelId: "grounding-guard", modelLabel: "First aid card", retrievalMs }));
+         }
++      }
++      // HEALTHGAP: a dose question with a kept source gets the source's own amount, quoted and cited, or the dose line; never a
++      // first-aid excerpt and never a model.
++      if (healthExtractive && healthGap?.cls === "dose") {
++        const es = !pt && isSpanishQuestion(req.query);
++        const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
++        const quoted = doseExcerpt(fullSources, gapTitle, pt, es);
++        reasonCodes.push(quoted ? "grounding:health-dose-excerpt" : "grounding:health-no-dose");
++        const text = quoted ?? noDoseAnswer(pt, es);
++        markVisible();
++        emit({ type: "token", answerId, tier: "instant", text });
++        return quoted
++          ? finish("instant", "success", text, sources, receipt({ modelId: "extractive", modelLabel: "Source excerpt", retrievalMs }))
++          : finish("instant", "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: "No offline source", retrievalMs }));
+       }
+       if (healthExtractive) {
+         reasonCodes.push("grounding:health-extractive");
+diff -ru a/src/routing/conditionCards.v1.json b/src/routing/conditionCards.v1.json
+--- a/src/routing/conditionCards.v1.json	2026-10-15 23:57:10
++++ b/src/routing/conditionCards.v1.json	2026-10-15 23:57:10
+@@ -220,8 +220,8 @@
+   },
+   "poisoning": {
+    "en": "Possible poisoning (swallowed or breathed in a chemical, a plant, a mushroom, alcohol or too much medicine): if they're unconscious, having a seizure, struggling to breathe, or very drowsy or confused, call emergency services now. If they're unconscious but breathing, lay them on their side; if they're not breathing normally, start CPR. Otherwise call a poison control center or your local emergency number now, even if they seem fine. If they breathed in fumes, get them into fresh air. Don't make them vomit, and don't give anything to eat or drink unless a poison center or doctor tells you to. Note what they took, how much and when, and keep the container, packet or a piece of the plant or mushroom to show.",
+-   "pt": "Possível intoxicação (engoliu ou inalou um produto químico, uma planta, um cogumelo, álcool ou remédio demais): se a pessoa estiver inconsciente, tendo uma convulsão, com dificuldade para respirar, ou muito sonolenta ou confusa, ligue para a emergência agora. Se estiver inconsciente mas respirando, deite-a de lado; se não estiver respirando normalmente, comece a RCP. Caso contrário, ligue agora para um centro de informação toxicológica (CIATox) ou para o serviço de emergência local, mesmo que a pessoa pareça bem. Se ela inalou fumaça ou vapores, leve-a para o ar livre. Não provoque vômito e não dê nada para comer ou beber, a menos que o centro toxicológico ou um médico mande. Anote o que a pessoa tomou, quanto e quando, e guarde a embalagem, o pacote ou um pedaço da planta ou do cogumelo para mostrar.",
+-   "es": "Posible intoxicación (tragó o inhaló un producto químico, una planta, un hongo, alcohol o demasiado medicamento): si está inconsciente, tiene una convulsión, le cuesta respirar, o está muy somnoliento o confundido, llame a emergencias ahora. Si está inconsciente pero respira, póngalo de lado; si no respira con normalidad, empiece la RCP. Si no, llame ahora a un centro de toxicología o al número de emergencias local, aunque parezca estar bien. Si inhaló humo o vapores, llévelo al aire libre. No le provoque el vómito y no le dé nada de comer ni de beber, salvo que se lo indique un centro de toxicología o un médico. Anote qué tomó, cuánto y cuándo, y guarde el envase, el paquete o un trozo de la planta o del hongo para mostrarlo.",
++   "pt": "Possível intoxicação (engoliu ou inalou um produto químico, uma planta, um cogumelo, álcool ou remédio demais): se a pessoa estiver inconsciente, tendo uma convulsão, com dificuldade para respirar, ou muito sonolenta ou confusa, ligue agora para o serviço de emergência. Se estiver inconsciente mas respirando, deite-a de lado; se não estiver respirando normalmente, comece a reanimação (RCP). Caso contrário, ligue agora para o Disque-Intoxicação (0800 722 6001) ou para o serviço de emergência, mesmo que a pessoa pareça bem. Se ela inalou fumaça ou vapores, leve-a para o ar livre. Não provoque vômito e não dê nada para comer ou beber, a menos que o centro de intoxicação ou um médico oriente. Anote o que foi ingerido ou inalado, quanto e quando, e guarde a embalagem, o pacote ou um pedaço da planta ou do cogumelo para mostrar.",
++   "es": "Posible intoxicación (tragó o inhaló un producto químico, una planta, un hongo o seta, alcohol o demasiado medicamento): si está inconsciente, tiene una convulsión, le cuesta respirar, o está muy somnoliento o confundido, llame a emergencias ahora. Si está inconsciente pero respira, póngalo de lado; si no respira con normalidad, empiece la reanimación (RCP). En los demás casos, llame ahora a un centro de toxicología o al número de emergencias local, aunque parezca estar bien. Si inhaló humo o vapores, llévelo al aire libre. No le provoque el vómito y no le dé nada de comer ni de beber, salvo que se lo indique un centro de toxicología o un médico. Anote qué tragó o inhaló, cuánto y cuándo, y guarde el envase, el paquete o un trozo de la planta o del hongo para mostrarlo.",
+    "sources": "NHS, Poisoning; CDC, Poison Help; St John Ambulance, The recovery position and CPR. Contains public sector information licensed under the Open Government Licence v3.0",
+    "status": "reviewed-by-opus-reviewer"
+   }
+diff -ru a/src/routing/healthGap.test.ts b/src/routing/healthGap.test.ts
+--- a/src/routing/healthGap.test.ts	2026-10-15 23:57:10
++++ b/src/routing/healthGap.test.ts	2026-10-15 23:57:10
+@@ -1,7 +1,7 @@
+ /**
+  * HEALTHGAP rule v1.1 goldens (rnd arms/healthgap/HEALTHGAP-rule-v1.1.md §4–§5; expected values = the rule's Python scan).
+- * 64 health probes (single and multi-turn; 16 fire), the 280 public bench questions (v0.1 60 + 220 knowledge-pack
+- * self-tests; 1 fires: a vitamin D IU question), the reviewer's word-list examples, and the split Calpol follow-up with its
++ * 64 health probes (single and multi-turn; 16 fire), the 240 public bench questions (v0.1 60 + 180 self-tests of the 9 published knowledge
++ * packs; 1 fires: a vitamin D IU question), the reviewer's word-list examples, and the split Calpol follow-up with its
+  * Lisbon counter-example. A probe that changes class here changes what the user is told: re-run the rule's scan first.
+  */
+ import { describe, expect, it } from "vitest";
+@@ -43,8 +43,8 @@
+   ["h30", "My 2-year-old drank 2 cups of lamp oil 10 minutes ago", [], "poison", true],
+   ["h31", "His temperature is 104 °F, what is that in Celsius?", [], null, false],
+   ["h32", "My 3-year-old weighs 15 kg, how many ml of syrup?", [], "dose", false],
+-  ["m01", "It was about 2 cups, 10 minutes ago", ["My toddler drank lamp oil"], null, false],
+-  ["m02", "He is 70 kg, what is that in pounds?", ["My dad took too many of his heart pills"], null, false],
++  ["m01", "It was about 2 cups, 10 minutes ago", ["My toddler drank lamp oil"], "poison", true],
++  ["m02", "He is 70 kg, what is that in pounds?", ["My dad took too many of his heart pills"], "poison", true],
+   ["m03", "It was 20 mm, what is that in inches?", ["My son swallowed a button battery"], null, false],
+   ["m04", "It reads 39.5 °C, convert to Fahrenheit", ["I have a fever and chills"], null, false],
+   ["m05", "It was about 4 m, how many feet is that?", ["My friend fell off a ladder and isn't moving"], null, false],
+@@ -68,7 +68,7 @@
+   ["n17", "Patient's core temp is 34 C, convert to Fahrenheit", [], null, false],
+   ["n18", "My husband's chest feels tight since 9:40 pm, what time is it 2 h later?", [], null, false],
+   ["nm01", "It was at 9:40 pm, what time is it 2 h 35 min later?", ["My wife took a whole bottle of Xanax"], null, false],
+-  ["nm02", "It was 30 g, how many ounces is that?", ["We ate wild mushrooms an hour ago and feel strange"], null, false],
++  ["nm02", "It was 30 g, how many ounces is that?", ["We ate wild mushrooms an hour ago and feel strange"], "poison", true],
+   ["vit-hlt-001", "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?", [], null, false],
+   ["vit-hlt-002", "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?", [], null, false],
+   ["vit-hlt-003", "Is dengue more dangerous the second time you get it?", [], null, false],
+@@ -218,26 +218,6 @@
+   ["st-boar-simplewiki-en-018", "Which is older, the Laetoli footprints or the Kabwe skull, and which kind of human relative does each one represent?"],
+   ["st-boar-simplewiki-en-019", "I'm trying to understand why tar-pit asphalt and other fossil oils don't count as biomass even though they came from living things. How do the two compare?"],
+   ["st-boar-simplewiki-en-020", "Compare Hyundai Motor Company and the Mercedes-Benz S-Class: when each began, and what each is best known for."],
+-  ["st-qa-bitcoin-se-001", "How can someone demonstrate that bitcoins were destroyed forever rather than just moved to a wallet they control?"],
+-  ["st-qa-bitcoin-se-002", "My university won't give me a fixed IP for a Bitcoin full node. Will a changing address hurt the node?"],
+-  ["st-qa-bitcoin-se-003", "Explain what sets bitcoin's dollar price when no central bank issues or backs it."],
+-  ["st-qa-bitcoin-se-004", "Describe what happens to a bitcoin transaction between broadcasting it and its inclusion in a block."],
+-  ["st-qa-bitcoin-se-005", "If I just leave the Bitcoin Core wallet running on my PC, will it slowly earn me coins?"],
+-  ["st-qa-bitcoin-se-006", "What do people mean by calling themselves bitcoin maximalists, and why do they hold that view?"],
+-  ["st-qa-bitcoin-se-007", "A few of my LND channels have nearly all the liquidity on the far side. How can I even them out while keeping them open?"],
+-  ["st-qa-bitcoin-se-008", "Roughly how much disk space did the full Bitcoin block chain need in mid-2012?"],
+-  ["st-qa-bitcoin-se-009", "I'd like to check my Ledger balance without plugging the device in. Can the extended public key do that?"],
+-  ["st-qa-bitcoin-se-010", "What usually explains those days when Bitcoin transactions paid absurdly large fees?"],
+-  ["st-qa-bitcoin-se-011", "In about which year will the final new bitcoin be created, and why that year?"],
+-  ["st-qa-bitcoin-se-012", "I'm reproducing the attack that pulls a private key from two ECDSA signatures sharing a nonce, but my result is wrong. What could I be missing?"],
+-  ["st-qa-bitcoin-se-013", "Explain how a lightweight SPV wallet verifies payments compared with a full node."],
+-  ["st-qa-bitcoin-se-014", "Why can't a bitcoin public key be recovered from the address it belongs to?"],
+-  ["st-qa-bitcoin-se-015", "Tell me what an ASIC miner is and why it beats a regular computer at mining."],
+-  ["st-qa-bitcoin-se-016", "Tell me whether a majority-hashrate attack rewriting history could be noticed and what honest users could do."],
+-  ["st-qa-bitcoin-se-017", "What does Bitcoin Core do if the prune option is set to 1 rather than a large number?"],
+-  ["st-qa-bitcoin-se-018", "Recommend where hardened derivation belongs in a BIP32/BIP44 wallet tree."],
+-  ["st-qa-bitcoin-se-019", "Several websites promise me free bitcoin if I give them my address. Are these faucets legit, and is sharing my address dangerous?"],
+-  ["st-qa-bitcoin-se-020", "Is it still possible to get a zero-fee bitcoin transaction confirmed, and how would you even create one?"],
+   ["st-qa-cooking-se-001", "Food-safety rules let cooked dishes cool over several hours, so why is thawing frozen meat on the kitchen counter discouraged?"],
+   ["st-qa-cooking-se-002", "I want to preserve vegetables in oil at home. Which kind of food poisoning should worry me most, and can I taste it if something has gone wrong?"],
+   ["st-qa-cooking-se-003", "Why would a recipe tell me to cover a simmering pan with a round of baking paper rather than the normal pot lid?"],
+@@ -258,26 +238,6 @@
+   ["st-qa-cooking-se-018", "If no smoke is visible, can I assume my frying oil is still below its smoke point, and how can I gauge its heat?"],
+   ["st-qa-cooking-se-019", "Tell me how to cut and time garlic in a vegetable saute if I want the strongest garlic taste."],
+   ["st-qa-cooking-se-020", "Explain why ice cream recipes warm the dairy first and then cook it again after the egg yolks go in."],
+-  ["st-qa-ethereum-se-001", "Under EIP-1559, how do the base fee, the priority tip cap and the overall fee cap interact when a transaction is mined?"],
+-  ["st-qa-ethereum-se-002", "I'm worried I'll lose my ENS name when it expires. How does renewal work under the permanent registrar?"],
+-  ["st-qa-ethereum-se-003", "Walk me through recovering ether from an old eth-lightwallet keystore so I can use it in geth."],
+-  ["st-qa-ethereum-se-004", "Which fields make up a raw Ethereum transaction, and what changed with the type-2 format?"],
+-  ["st-qa-ethereum-se-005", "My CREATE2 address prediction works when the constructor takes uints but breaks when it takes addresses. What am I doing wrong?"],
+-  ["st-qa-ethereum-se-006", "Since contracts can't wake up on their own, how do you make something happen in a contract hours or days later?"],
+-  ["st-qa-ethereum-se-007", "Compare UUPS proxies with beacon proxies and tell me when to choose each."],
+-  ["st-qa-ethereum-se-008", "If the biggest proof-of-work pools held over 60% of hashrate, what would stop them colluding to rewrite recent blocks?"],
+-  ["st-qa-ethereum-se-009", "If I push my ETH through a ring-signature mixer, can anyone still connect my withdrawal to my deposit?"],
+-  ["st-qa-ethereum-se-010", "Explain when Solidity code should use require and when assert."],
+-  ["st-qa-ethereum-se-011", "For a DeFi price feed with several reporters, is taking the median better than the mean?"],
+-  ["st-qa-ethereum-se-012", "I need some of my contract's data to stay secret. What are realistic options on Ethereum?"],
+-  ["st-qa-ethereum-se-013", "Can a Solidity function push a file to IPFS itself and get back the content hash?"],
+-  ["st-qa-ethereum-se-014", "I want a four-letter ERC-20 ticker but most exchanges seem to list three-letter ones. Is there a maximum symbol length?"],
+-  ["st-qa-ethereum-se-015", "What is the real difference between a distributed system and a decentralised one, and which is Ethereum?"],
+-  ["st-qa-ethereum-se-016", "Suggest a design for software licences held on Ethereum that keeps working when users are offline for weeks."],
+-  ["st-qa-ethereum-se-017", "Why did the ERC-721 authors keep a plain transferFrom next to safeTransferFrom?"],
+-  ["st-qa-ethereum-se-018", "If I selfdestruct my contract, is its stored data actually gone from the chain?"],
+-  ["st-qa-ethereum-se-019", "Does relying on MetaMask's default remote node undermine trustless use of Ethereum dapps?"],
+-  ["st-qa-ethereum-se-020", "Show why contracts should let payees pull funds instead of pushing ether to them."],
+   ["st-qa-health-se-001", "Are vitamin pills made in a lab worse for you than the vitamins in food?"],
+   ["st-qa-health-se-002", "Is there a known death rate for the common cold like the ones quoted for flu and COVID-19?"],
+   ["st-qa-health-se-003", "I get hiccups that won't quit. What actually works to stop them, and when should I worry?"],
+@@ -402,20 +362,20 @@
+ ];
+ 
+ describe("healthGap.classify: rule v1.1 goldens", () => {
+-  it("the 64 health probes: 16 fire, each with its class and form", () => {
++  it("the 64 health probes: 19 fire (3 through the previous turn), each with its class and form", () => {
+     expect(PROBES).toHaveLength(64);
+     for (const [id, q, turns, cls, event] of PROBES) {
+       const g = classify(q, turns);
+       expect(g?.cls ?? null, id).toBe(cls);
+       expect(g?.event ?? false, id).toBe(event);
+-      expect(g?.prevTurn ?? false, id).toBe(false);
++      expect(g?.prevTurn ?? false, id).toBe(["m01", "m02", "nm02"].includes(id));
+     }
+     expect(PROBES.filter(([, q, t]) => classify(q, t)).map(([id]) => id)).toEqual(
+-      ["h01", "h02", "h08", "h10", "h15", "h16", "h19", "h21", "h23", "h24", "h27", "h28", "h30", "h32", "n03", "n06"]
++      ["h01", "h02", "h08", "h10", "h15", "h16", "h19", "h21", "h23", "h24", "h27", "h28", "h30", "h32", "m01", "m02", "n03", "n06", "nm02"]
+     );
+   });
+-  it("the 280 public bench questions: only the vitamin D IU self-test fires (dose)", () => {
+-    expect(PUBLIC).toHaveLength(280);
++  it("the 240 public bench questions: only the vitamin D IU self-test fires (dose)", () => {
++    expect(PUBLIC).toHaveLength(240);
+     const fired = PUBLIC.filter(([, q]) => classify(q)).map(([id]) => id);
+     expect(fired).toEqual(Object.keys(PUBLIC_HITS));
+     for (const [id, q] of PUBLIC) {
+@@ -431,6 +391,12 @@
+     expect(classify("I gave her Calpol at 9.")).toBeNull();
+     expect(classify("when can she have more?", ["I gave her Calpol at 9."])).toEqual({ cls: "dose", event: false, prevTurn: true });
+     expect(classify("when can I visit Lisbon again?", ["I gave her Calpol at 9."])).toBeNull();
++    // a short turn that only adds a patient or an amount continues a previous turn with a class of its own
++    expect(classify("and for a 30 kg kid?", ["How much ibuprofen can I take?"])).toEqual({ cls: "dose", event: false, prevTurn: true });
++    expect(classify("what about 2 g?", ["Is 5 g of nutmeg toxic?"])).toEqual({ cls: "poison", event: false, prevTurn: true });
++    expect(classify("and for a 30 kg kid?", ["What's the airline baggage limit?"])).toBeNull();
++    expect(classify("¿Cuánto paracetamol puedo tomar?")?.cls).toBe("dose");
++    expect(classify("Quanto paracetamol posso tomar?")?.cls).toBe("dose");
+     // the current turn's own class wins over the join
+     expect(classify("Is 5 g of nutmeg toxic?", ["I gave her Calpol at 9."])).toEqual({ cls: "poison", event: false, prevTurn: false });
+   });
+diff -ru a/src/routing/healthGap.ts b/src/routing/healthGap.ts
+--- a/src/routing/healthGap.ts	2026-10-15 23:57:10
++++ b/src/routing/healthGap.ts	2026-10-15 23:57:10
+@@ -30,7 +30,7 @@
+ );
+ const DOSE_WORD = bw(String.raw`dose|doses|dosage|dosagem|dosis|tablets?|pills?|capsules?|drops|gotas|gotitas|comprimidos?|pastillas?|cucharadas?|colheres?|teaspoons?|spoonfuls?|ml|mg|mcg|µg`);
+ const DOSE_INTENT = bw(
+-  String.raw`how (?:many|much)|quant[ao]s|cu[áa]nt[ao]s|too (?:much|many)|demais|is it (?:safe|ok|okay|too)|max(?:imum)?|m[áa]xim[oa]|can (?:i|she|he|we|they|my ${W}+) (?:have|take|give)|(?:what time|when) can|again|more|(?:every|per|each|a cada|cada) \d+ ?(?:h|hr|hrs|hours?|horas?|days?|dias?|d[íi]as?)` +
++  String.raw`how (?:many|much)|quant[ao]s?|cu[áa]nt[ao]s?|too (?:much|many)|demais|is it (?:safe|ok|okay|too)|max(?:imum)?|m[áa]xim[oa]|can (?:i|she|he|we|they|my ${W}+) (?:have|take|give)|(?:what time|when) can|again|more|(?:every|per|each|a cada|cada) \d+ ?(?:h|hr|hrs|hours?|horas?|days?|dias?|d[íi]as?)` +
+     String.raw`|what dose|dose of|twice|double|by mistake|accidentally|extra|missed|next (?:one|dose)|together`
+ );
+ const PATIENT = bw(String.raw`\d+ ?(?:kg|kilos?|lbs?|pounds?|months?|years?|yo|anos|meses|años)|child|kid|baby|toddler|infant|son|daughter|filh[oa]|criança|bebê|hij[oa]|niñ[oa]|bebé`);
+@@ -111,9 +111,10 @@
+ 
+ /** Follow-up-only words a split dose question uses ("when can she have more?") beyond isHealthFollowUp's list. */
+ const FOLLOW_UP_EXTRA = new Set(["more", "have", "another", "again", "dose", "doses", "much", "many", "too", "safe", "next", "one"]);
++const words = (query: string) => query.toLowerCase().replace(/[¿¡?!.,;:]/g, " ").split(/\s+/).filter(Boolean);
+ function followUpOnly(query: string): boolean {
+-  const words = query.toLowerCase().replace(/[¿¡?!.,;:]/g, " ").split(/\s+/).filter(Boolean);
+-  return words.length > 0 && words.length <= 12 && words.every((w) => FOLLOW_UP_WORDS.has(w) || FOLLOW_UP_EXTRA.has(w));
++  const w = words(query);
++  return w.length > 0 && w.length <= 12 && w.every((x) => FOLLOW_UP_WORDS.has(x) || FOLLOW_UP_EXTRA.has(x));
+ }
+ 
+ /**
+@@ -125,7 +126,10 @@
+   const now = classifyOne(query);
+   if (now) return { ...now, prevTurn: false };
+   const last = userTurns[userTurns.length - 1];
+-  if (!last || !followUpOnly(query)) return null;
++  // A short turn that only adds a patient or an amount ("and for a 30 kg kid?", "what about 2 g?") continues a previous turn
++  // that has a class of its own.
++  const addsDetail = !!last && words(query).length <= 12 && (PATIENT.test(query) || QUANTITY.test(query)) && !!classifyOne(last);
++  if (!last || !(followUpOnly(query) || addsDetail)) return null;
+   const joined = classifyOne(`${last}. ${query}`);
+   return joined ? { ...joined, prevTurn: true } : null;
+ }
+@@ -141,14 +145,71 @@
+ }
+ 
+ /**
++ * HEALTHGAP sources (rule v1.2 §2.5): the titles a gap turn's own source may carry, so the health topic filter keeps it.
++ * Dose: a medicine the question names ("Vitamin D", "Ibuprofen"; generic words such as "medicine" never count). Survival: the
++ * condition its cue names (cold → hypothermia / cold weather; water or heat → dehydration / desert / heat illness; food →
++ * starvation). Title only, never body text. Poison and co: none (their cards stay first).
++ */
++const GENERIC_DRUG = /^(?:antibiotics?|antibi[óo]tico|painkillers?|analg[ée]sic[oa]?|rem[ée]dio|medicine|medication|medicamento|medicina|antihistamine|iron tablets?)$/iu;
++const COLD_CUE = /cold|freez|icy|snow|winter|°|degree|frio|gelad/iu;
++const HEAT_CUE = /desert|heat|hot|sun/iu;
++const WATER_CUE = /water|thirst|drink|dehydrat/iu;
++const FOOD_CUE = /food|eat|starv|hunger/iu;
++const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
++export function healthGapTitle(gap: HealthGap | null, query: string, userTurns: string[] = []): RegExp | null {
++  if (!gap || (gap.cls !== "dose" && gap.cls !== "survival")) return null;
++  const q = gap.prevTurn ? `${userTurns[userTurns.length - 1] ?? ""}. ${query}` : query;
++  let alts: string[];
++  if (gap.cls === "dose") alts = [...new Set((q.match(new RegExp(DRUG.source, "giu")) ?? []).filter((d) => !GENERIC_DRUG.test(d)).map((d) => esc(d)))];
++  else if (COLD_CUE.test(q)) alts = [String.raw`hypotherm${W}*`, "cold (?:weather|water|climates?)", "cold water immersion"];
++  else
++    alts = [
++      ...(HEAT_CUE.test(q) ? ["desert", String.raw`heat (?:illness|exhaustion|stroke)`, "heatstroke"] : []),
++      ...(WATER_CUE.test(q) || HEAT_CUE.test(q) ? [String.raw`dehydrat${W}*`] : []),
++      ...(FOOD_CUE.test(q) ? ["starvation", "fasting", "malnutrition"] : []),
++    ];
++  return alts.length ? bw(alts.join("|")) : null;
++}
++
++/** A sentence that states an amount: a number and a dose unit. */
++const DOSE_FIGURE = new RegExp(String.raw`\d[\d,.]*\s?(?:IU|international units?|mg|mcg|µg|micrograms?|milligrams?|ml|milliliters?|millilitres?)${E}`, "iu");
++const DOSE_EXCERPT_MAX = 600;
++/**
++ * Dose with a kept source (rule v1.2 §2.5): the source's own sentences that state an amount, quoted verbatim and cited, from the
++ * first source whose title names the medicine; then the dose line without its first sentence. null = no such sentence:
++ * the caller gives the dose line. Never a number that is not in the source.
++ */
++export function doseExcerpt(sources: { title: string; body: string }[], title: RegExp | null, pt: boolean, es = false): string | null {
++  if (!title) return null;
++  for (let k = 0; k < sources.length; k++) {
++    if (!title.test(sources[k].title)) continue;
++    let quote = "";
++    for (const s of sources[k].body.split(/(?<=[.!?])\s+/)) {
++      if (!DOSE_FIGURE.test(s)) continue;
++      if (quote && quote.length + s.length + 1 > DOSE_EXCERPT_MAX) break;
++      quote = quote ? `${quote} ${s.trim()}` : s.trim();
++    }
++    if (!quote) continue;
++    const lead = es && !pt ? "De la fuente offline (en inglés):" : pt ? "Da fonte offline (em inglês):" : "From the offline source:";
++    return `${lead}\n${quote.slice(0, DOSE_EXCERPT_MAX)} [${k + 1}]\n\n${doseTail(pt, es)}`;
++  }
++  return null;
++}
++
++/** After a quoted amount: the dose line without its first sentence (label, child, overdose: the reviewed wording). */
++function doseTail(pt: boolean, es: boolean): string {
++  return noDoseAnswer(pt, es).split(/(?<=\.)\s+/).slice(1).join(" ");
++}
++
++/**
+  * The no-source answer for a dose question (rule v1.1 §3.1): no medication dose from memory, the label and a pharmacist,
+  * and the overdose line. Text reviewed by an independent Opus reviewer (HEALTHGAP review, 2026-10-15): AI-reviewed, not
+  * clinically reviewed. PT/ES are translations of the reviewed EN text.
+  */
+ export function noDoseAnswer(pt: boolean, es = false): string {
+   if (es && !pt)
+-    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar dosis de medicamentos de memoria. Usa la dosis y el tiempo entre dosis impresos en el envase, o pregunta a un farmacéutico o a un médico. Para un niño, usa la dosis para su edad o su peso que indica la etiqueta y el dosificador que viene con el medicamento; si la etiqueta no indica su edad o su peso, pregunta antes a un farmacéutico o a un médico. Si alguien pudo haber tomado más del máximo de la etiqueta, o el mismo componente de dos productos distintos, llama ahora a un centro de toxicología o al número de emergencias local (911 en gran parte de América, 112 en Europa), aunque parezca estar bien.";
++    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar dosis de medicamentos de memoria. Usa la dosis y el intervalo entre dosis que indican el envase o el prospecto, o pregunta a un farmacéutico o a un médico. Para un niño, usa la dosis para su edad o su peso que indica la etiqueta y el dosificador que viene con el medicamento (vasito, jeringa o gotero); si la etiqueta no indica su edad o su peso, pregunta antes a un farmacéutico o a un médico. Si alguien pudo haber tomado más de la dosis máxima de la etiqueta, o el mismo principio activo en dos productos distintos, llama ahora a un centro de toxicología o al número de emergencias local (911 en gran parte de América, 112 en Europa), aunque parezca estar bien.";
+   return pt
+-    ? "Não tenho uma fonte offline confiável sobre isso, então não vou indicar doses de medicamentos de memória. Use a dose e o intervalo entre as doses impressos na embalagem, ou pergunte a um farmacêutico ou médico. Para uma criança, use a dose para a idade ou o peso dela indicada no rótulo e o medidor que vem com o remédio; se o rótulo não trouxer a idade ou o peso dela, pergunte antes a um farmacêutico ou médico. Se alguém pode ter tomado mais do que o máximo do rótulo, ou o mesmo princípio ativo de dois produtos diferentes, ligue agora para um centro de informação toxicológica (CIATox) ou para o serviço de emergência (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA), mesmo que a pessoa pareça bem."
++    ? "Não tenho uma fonte offline confiável sobre isso, então não vou indicar doses de remédios de memória. Use a dose e o intervalo entre as doses que estão na bula ou na embalagem, ou pergunte a um farmacêutico ou médico. Para uma criança, use a dose para a idade ou o peso dela indicada na bula e o medidor que vem com o remédio (copinho, seringa dosadora ou conta-gotas); se a bula não trouxer a idade ou o peso dela, pergunte antes a um farmacêutico ou médico. Se houver chance de alguém ter tomado mais do que a dose máxima da bula, ou o mesmo princípio ativo em dois remédios diferentes, ligue agora para o Disque-Intoxicação (0800 722 6001) ou para o serviço de emergência (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA), mesmo que a pessoa pareça bem."
+     : "I don't have a reliable offline source on this, so I won't give medication doses from memory. Use the dose and the time between doses printed on the package, or ask a pharmacist or doctor. For a child, use the dose for their age or weight on the label and the measuring device that comes with the medicine; if the label doesn't list their age or weight, ask a pharmacist or doctor first. If someone may have taken more than the label's maximum, or the same ingredient from two different products, call a poison control center or your local emergency number now (911 in the US, 112 in Europe), even if they seem fine.";
+ }

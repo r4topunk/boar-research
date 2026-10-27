@@ -1,0 +1,543 @@
+diff --git a/src/models/settings.ts b/src/models/settings.ts
+index ff125bf..3492c50 100644
+--- a/src/models/settings.ts
++++ b/src/models/settings.ts
+@@ -44,6 +44,8 @@ interface Settings {
+   placeTileNames?: Record<string, string>;
+   /** CR-2: models whose last load killed the app (cleared by a successful load). */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST: chunk-vector two-stage search in packs that carry chunk_vecs (default off); "extra" = DENSECHUNK-ST2 appended slots. */
++  packDense2?: boolean | "extra";
+   /** The last load crash, until the chat shows it once (src/inference/loadGuard.ts consumeLoadCrash). */
+   pendingLoadCrash?: StoredLoadCrash | null;
+   /** Random id created the first time this install shares results (src/eval/shareResults.ts). */
+@@ -489,6 +491,9 @@ export interface AnswerSettings {
+   largeModelConfirmedIds?: string[];
+   /** Models whose last load killed the app: not loaded again unless confirmed after the crash. */
+   loadCrashedIds?: string[];
++  /** DENSECHUNK-ST (default off): a pack's chunk-vector sidecar adds a two-stage semantic list to its search (true: fused;
++   *  "extra": DENSECHUNK-ST2, its best hits appended after the list). */
++  packDense2?: boolean | "extra";
+ }
+ 
+ export async function getAnswerSettings(): Promise<AnswerSettings> {
+@@ -500,6 +505,7 @@ export async function getAnswerSettings(): Promise<AnswerSettings> {
+     deepModelId: s.deepModelId,
+     largeModelConfirmedIds: s.largeModelConfirmedIds ?? [],
+     loadCrashedIds: crashedIds(s.loadCrashedIds),
++    ...(s.packDense2 === true ? { packDense2: true } : s.packDense2 === "extra" ? { packDense2: "extra" as const } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b14..01c9843 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -152,6 +152,8 @@ export interface WikiPackResult {
+   pack: WikiPack;
+   hits: PackHit[];
+   stems: Stem[];
++  /** packDense2: the pack's two-stage chunk-vector hits (absent when off or the pack has no chunk_vecs). */
++  semantic?: PackHit[];
+ }
+ 
+ /** Searches every installed format-2 pack (a failing pack is skipped). */
+@@ -162,8 +164,8 @@ export async function searchWikiPacks(query: string, opts: PackSearchOptions = {
+       if (!(await openPack(pack))) continue;
+       const wp = wikiPacks.get(pack.id);
+       if (!wp) continue;
+-      const { hits, stems } = await wp.searchDetailed(query, opts);
+-      out.push({ packId: pack.id, pack: wp, hits, stems });
++      const { hits, stems, semantic } = await wp.searchDetailed(query, opts);
++      out.push({ packId: pack.id, pack: wp, hits, stems, ...(semantic ? { semantic } : {}) });
+     } catch (e: any) {
+       console.warn(`[packs] search failed in ${pack.id}:`, e?.message ?? e);
+     }
+diff --git a/src/rag/retrieve.dense2extra.test.ts b/src/rag/retrieve.dense2extra.test.ts
+new file mode 100644
+index 0000000..c2d667a
+--- /dev/null
++++ b/src/rag/retrieve.dense2extra.test.ts
+@@ -0,0 +1,57 @@
++import { describe, it, expect, vi } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++
++const { hit } = vi.hoisted(() => ({
++  hit: (chunkId: number, title: string, score: number, via: string) => ({
++    articleId: chunkId, chunkId, title, section: "", text: `${title} text.`, start: 0, end: 10, score, via, source: "simplewiki", views: 0, lead: false, action: false,
++  }),
++}));
++// One large pack: 8 keyword hits; with dense2 also a semantic list (chunk 3 is already a keyword hit).
++vi.mock("./packs", async (importOriginal) => {
++  const actual: any = await importOriginal();
++  return {
++    packHitToChunk: actual.packHitToChunk,
++    searchPacks: async () => ({ lexical: [], semantic: [] }),
++    searchWikiPacks: async (_q: string, o: any) => [
++      {
++        packId: "p",
++        hits: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => hit(i, `Lex ${i}`, 10 - i, "bm25")),
++        ...(o.dense2 ? { semantic: [hit(3, "Lex 3", 0.9, "semantic"), hit(20, "Dense A", 0.7, "semantic"), hit(21, "Dense B", 0.8, "semantic"), hit(22, "Dense C", 0.6, "semantic")] } : {}),
++      },
++    ],
++  };
++});
++
++import { retrieve, appendDenseExtra } from "./retrieve";
++
++const ids = (cs: { chunkId: string }[]) => cs.map((c) => c.chunkId);
++
++describe("packDense2 extra (DENSECHUNK-ST2)", () => {
++  it("off and false give the same list; extra keeps that list and appends the 2 best new dense chunks", async () => {
++    const off = await retrieve("lex question", 6);
++    expect(ids(await retrieve("lex question", 6, { packDense2: false }))).toEqual(ids(off));
++    expect(off).toHaveLength(6);
++    const extra = await retrieve("lex question", 6, { packDense2: "extra" });
++    expect(ids(extra.slice(0, 6))).toEqual(ids(off));
++    // chunk 3 is already in the list; then similarity order: Dense B (0.8), Dense A (0.7); Dense C not taken.
++    expect(ids(extra.slice(6))).toEqual(["pack:p:21", "pack:p:20"]);
++    expect(extra[6].similarity).toBe(0.8);
++  });
++
++  it("fusion mode (true) is a different path: the dense hits compete inside the top-k", async () => {
++    const fused = await retrieve("lex question", 6, { packDense2: true });
++    expect(fused.length).toBeLessThanOrEqual(6);
++  });
++
++  it("appendDenseExtra: no dense or max 0 returns the same array", () => {
++    const l = [{ chunkId: "a" } as any];
++    expect(appendDenseExtra(l, [])).toBe(l);
++    expect(appendDenseExtra(l, [{ chunkId: "b", similarity: 0.6 } as any], 0)).toBe(l);
++    expect(ids(appendDenseExtra(l, [{ chunkId: "a", similarity: 0.9 } as any, { chunkId: "b", similarity: 0.6 } as any]))).toEqual(["a", "b"]);
++  });
++});
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e..d63013d 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -115,25 +115,31 @@ async function semanticSearch(queryVec: Float32Array, limit: number): Promise<Re
+ export async function retrieve(
+   query: string,
+   topK = 6,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon } = {}
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; lexicon?: Lexicon; packDense2?: PackDense2Mode } = {}
+ ): Promise<RetrievedChunk[]> {
+-  const main = await retrieveOne(query, topK, opts);
++  // packDense2 "extra" (DENSECHUNK-ST2): the dense chunk hits never enter the fusion; the best DENSE2_EXTRA of them that
++  // the list does not already hold are appended after it (k + up to DENSE2_EXTRA), so nothing in the list is displaced.
++  const extra = opts.packDense2 === "extra";
++  const mainR = await retrieveOneDetailed(query, topK, opts);
++  const main = mainR.chunks;
+   // A Portuguese question against English sources: search again with the English names it mentions
+   // (Wikipedia's own interlanguage links, src/rag/ptLexicon.ts), and put those results first. The English
+   // embedder and keyword index barely match Portuguese words, so the first search alone finds noise.
+-  if (!looksPortuguese(query)) return main;
++  if (!looksPortuguese(query)) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // A standard's number in the question (EIP-1559, ERC-20, BIP-32) names its page exactly: it goes before any
+   // lexicon name, which for these questions is often only the generic "Ethereum".
+   const ids = identifiersIn(query);
+   const names = [...ids, ...englishNamesIn(query, opts.lexicon ?? ptLexicon()).filter((n) => !ids.includes(n))];
+-  if (!names.length) return main;
++  if (!names.length) return extra ? appendDenseExtra(main, mainR.dense) : main;
+   // The names alone ("Earthquake") don't say the question asks what to do; the question does.
+-  const found = await retrieveOne(names.join(" "), topK, {
++  const foundR = await retrieveOneDetailed(names.join(" "), topK, {
+     includeWikiPacks: opts.includeWikiPacks,
+     titles: names,
+     action: ACTION_INTENT.test(query),
+     explain: EXPLAIN_INTENT.test(query),
++    ...(opts.packDense2 ? { packDense2: opts.packDense2 } : {}),
+   });
++  const found = foundR.chunks;
+   // Sources without a title boost (bundled corpus, format-1 packs): the article whose title is one of the names first.
+   const named = new Set(names.map((n) => n.toLowerCase()));
+   // A what-to-do question: passages from a section that says what to do (the preparedness pack's Treatment,
+@@ -150,7 +156,30 @@ export async function retrieve(
+   );
+   // The page of a standard the question names by number first, from either search.
+   const byId = (c: RetrievedChunk) => ids.some((id) => titleHasIdentifier(c.title, id));
+-  return dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
++  const out = dedupeArticleCopies([...merged.filter(byId), ...merged.filter((c) => !byId(c))]).slice(0, topK);
++  return extra ? appendDenseExtra(out, [...mainR.dense, ...foundR.dense]) : out;
++}
++
++/** packDense2: off (absent/false), true = the dense chunk hits join the fusion (DENSECHUNK-ST), "extra" = appended slots (DENSECHUNK-ST2). */
++export type PackDense2Mode = boolean | "extra";
++/** packDense2 "extra": at most this many dense chunk hits are appended after the retrieved list. */
++export const DENSE2_EXTRA = 2;
++
++/**
++ * packDense2 "extra": appends to `list` the best `max` dense chunk hits (similarity order, ties in the given order) whose
++ * chunkId is not already in it. The hits are already at cosine >= MIN_SEMANTIC_SIMILARITY (WikiPack.denseChunks).
++ * Nothing in `list` moves or is dropped.
++ */
++export function appendDenseExtra(list: RetrievedChunk[], dense: RetrievedChunk[], max = DENSE2_EXTRA): RetrievedChunk[] {
++  if (!dense.length || max <= 0) return list;
++  const seen = new Set(list.map((c) => c.chunkId));
++  const add = dense
++    .map((c, i) => ({ c, i }))
++    .sort((a, b) => (b.c.similarity ?? 0) - (a.c.similarity ?? 0) || a.i - b.i)
++    .map((x) => x.c)
++    .filter((c) => !seen.has(c.chunkId) && (seen.add(c.chunkId), true))
++    .slice(0, max);
++  return add.length ? [...list, ...add] : list;
+ }
+ 
+ /** A "may refer to" list or a "(disambiguation)" page: never a source. */
+@@ -158,11 +187,11 @@ export function isDisambiguation(c: { title: string; body: string }): boolean {
+   return /\(disambiguation\)$/i.test(c.title) || /\bmay (also )?refer to\b/i.test(c.body.slice(0, 300));
+ }
+ 
+-async function retrieveOne(
++async function retrieveOneDetailed(
+   query: string,
+   topK: number,
+-  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean }
+-): Promise<RetrievedChunk[]> {
++  opts: { queryVec?: Float32Array; includeWikiPacks?: boolean; titles?: string[]; action?: boolean; explain?: boolean; packDense2?: PackDense2Mode }
++): Promise<{ chunks: RetrievedChunk[]; dense: RetrievedChunk[] }> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+@@ -177,6 +206,7 @@ async function retrieveOne(
+           ...(titles ? { titles } : {}),
+           ...(opts.action !== undefined ? { action: opts.action } : {}),
+           ...(opts.explain !== undefined ? { explain: opts.explain } : {}),
++          ...(opts.packDense2 ? { dense2: true } : {}),
+         }).catch(() => [])
+       : Promise.resolve([]),
+   ]);
+@@ -192,9 +222,16 @@ async function retrieveOne(
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+   // take the top-K or per-article slots before the gate sees the rest. Large-pack hits have their
+   // own ranking and no similarity, so they aren't gated here.
++  // packDense2: a large pack's chunk-vector hits (already at cosine >= MIN_SEMANTIC_SIMILARITY) join the semantic list,
++  // so a passage found by both its words and its meaning adds up (fuseRetrievalResults); off: the list is empty.
++  const wikiSemantic = wiki.flatMap((w) =>
++    (w.semantic ?? []).map((h) => ({ ...packHitToChunk(w.packId, h), matchType: "semantic" as const, similarity: h.score }))
++  );
++  // "extra": the dense list stays out of the fusion and is returned beside the result (retrieve appends it).
++  const extra = opts.packDense2 === "extra";
+   const fused = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+-    gateByRelevance([...semantic, ...packs.semantic]),
++    [...gateByRelevance([...semantic, ...packs.semantic]), ...(extra ? [] : wikiSemantic)],
+     topK
+   );
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+@@ -222,7 +259,7 @@ async function retrieveOne(
+     // Through the same copy check as the rest (result is already one copy per passage, so it all stays).
+     result.push(...dedupeArticleCopies([...result, ...lay]).slice(result.length, result.length + 2));
+   }
+-  return result;
++  return { chunks: result, dense: extra ? wikiSemantic : [] };
+ }
+ 
+ export { assemblePrompt } from "./pure";
+diff --git a/src/rag/wikiPack.dense2.test.ts b/src/rag/wikiPack.dense2.test.ts
+new file mode 100644
+index 0000000..33c08cb
+--- /dev/null
++++ b/src/rag/wikiPack.dense2.test.ts
+@@ -0,0 +1,96 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll, vi } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { decompress } from "fzstd";
++
++vi.mock("expo-file-system/legacy", () => ({ documentDirectory: "file:///docs/" }));
++vi.mock("expo-sqlite", () => ({}));
++vi.mock("./embed", () => ({ embeddingEngine: {} }));
++
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { WikiPack, denseScans } from "./wikiPack";
++
++// DENSECHUNK-ST packDense2: the two-stage chunk-vector path. Synthetic 384-d vectors: article i's lead points
++// along axis i, chunk j of article i along axis 10 * (i + 1) + j. Made-up, test-only documents.
++const filler = (t: string) => Array.from({ length: 30 }, (_, i) => `${t} filler sentence number ${i} about unrelated matters.`).join(" ");
++const docs = ["Alpha", "Beta", "Gamma", "Delta"].map((t, i) => ({
++  page_id: 1000 + i, title: t, source: "simplewiki",
++  text: `# ${t}\n\n${t} is a test article. ${filler(t)}\n\n## Details\n\n${filler(t + " detail")}\n\n## More\n\n${filler(t + " more")}`,
++}));
++const axis = (k: number, w = 1) => { const v = new Int8Array(384); v[k] = 127 * w; return v; };
++
++let dense: WikiPack, plain: WikiPack, chunkOf: (title: string, j: number) => number;
++beforeAll(async () => {
++  const dir = mkdtempSync(join(tmpdir(), "boar-pack-dense2-"));
++  const shard = join(dir, "d.jsonl");
++  writeFileSync(shard, docs.map((r) => JSON.stringify(r)).join("\n") + "\n");
++  const build = (name: string) => {
++    const out = join(dir, `${name}.sqlite`);
++    execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", out, "--shards", shard, "--no-embed"], { stdio: "pipe" });
++    return out;
++  };
++  const pDense = build("dense"), pPlain = build("plain");
++  for (const [p, withChunks] of [[pDense, true], [pPlain, false]] as const) {
++    const db = new DatabaseSync(p);
++    db.exec("CREATE TABLE IF NOT EXISTS lead_vecs (article_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++    const arts = db.prepare("SELECT id, title FROM articles ORDER BY id").all() as Array<{ id: number; title: string }>;
++    for (const a of arts) {
++      const i = docs.findIndex((d) => d.title === a.title);
++      db.prepare("INSERT OR REPLACE INTO lead_vecs VALUES (?, 1, ?)").run(a.id, new Uint8Array(axis(i).buffer));
++    }
++    if (withChunks) {
++      db.exec("CREATE TABLE chunk_vecs (chunk_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++      for (const a of arts) {
++        const i = docs.findIndex((d) => d.title === a.title);
++        const ch = db.prepare("SELECT id FROM chunks WHERE article_id = ? ORDER BY start").all(a.id) as Array<{ id: number }>;
++        ch.forEach((c, j) => db.prepare("INSERT INTO chunk_vecs VALUES (?, 1, ?)").run(c.id, new Uint8Array(axis(10 * (i + 1) + j).buffer)));
++      }
++    }
++    db.close();
++  }
++  const ro = new DatabaseSync(pDense, { readOnly: true });
++  chunkOf = (title, j) =>
++    (ro.prepare("SELECT c.id FROM chunks c JOIN articles a ON a.id = c.article_id WHERE a.title = ? ORDER BY c.start").all(title) as any[])[j].id;
++  dense = await WikiPack.open(nodeSqliteDatabase(pDense), decompress);
++  plain = await WikiPack.open(nodeSqliteDatabase(pPlain), decompress);
++}, 60000);
++
++/** A query vector: mostly toward Gamma's lead (axis 2) and its chunk 1 (axis 31), a little toward Beta's chunk 1. */
++const q = () => { const v = new Float32Array(384); v[2] = 0.6; v[31] = 0.75; v[21] = 0.2; return v; };
++
++describe("packDense2 two-stage chunk vectors", () => {
++  it("detects the sidecar at open", () => {
++    expect(dense.hasChunkVecs).toBe(true);
++    expect(plain.hasChunkVecs).toBe(false);
++  });
++
++  it("stage 2 only scores the stage-1 articles and applies the cosine floor", async () => {
++    const top1 = await dense.denseChunks(q(), 1, 12, 0.5);
++    expect(top1.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1)]);
++    expect(top1[0].via).toBe("semantic");
++    expect(top1[0].title).toBe("Gamma");
++    expect(top1[0].score).toBeCloseTo(0.75 / Math.hypot(0.6, 0.75, 0.2), 4);
++    // With the floor at 0, every Gamma chunk comes back (cos 0 for the others), still Gamma only.
++    const all = await dense.denseChunks(q(), 1, 12, 0);
++    expect(new Set(all.map((h) => h.title))).toEqual(new Set(["Gamma"]));
++    // Two articles in stage 1 (Gamma, then Alpha/Beta/Delta tie at 0 -> scan order): Beta's chunk 1 is not reachable
++    // unless Beta is among them; with m = 4 it is, below Gamma's.
++    const m4 = await dense.denseChunks(q(), 4, 12, 0.1);
++    expect(m4.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1), chunkOf("Beta", 1)]);
++    expect(denseScans.at(-1)!.leads).toBe(4);
++  });
++
++  it("searchDetailed: off, or no sidecar, returns no semantic list (identical hits)", async () => {
++    const off = await dense.searchDetailed("Gamma test article", { queryVec: q() });
++    const plainOn = await plain.searchDetailed("Gamma test article", { queryVec: q(), dense2: true });
++    const on = await dense.searchDetailed("Gamma test article", { queryVec: q(), dense2: true });
++    expect("semantic" in off).toBe(false);
++    expect("semantic" in plainOn).toBe(false);
++    expect(on.hits).toEqual(off.hits);
++    expect(on.semantic!.map((h) => h.chunkId)).toEqual([chunkOf("Gamma", 1)]);
++  });
++});
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269e..4eda913 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -15,7 +15,7 @@
+  * that's only used when the keyword search comes back thin.
+  */
+ 
+-import { cosineSimilarityInt8 } from "./pure";
++import { cosineSimilarityInt8, MIN_SEMANTIC_SIMILARITY } from "./pure";
+ import { EXPLAIN_INTENT } from "./explain";
+ 
+ export interface PackSql {
+@@ -64,8 +64,11 @@ export interface PackHit {
+   start: number;
+   end: number;
+   score: number;
+-  /** "title": the article was named by the question or the planner; "bm25": whole-index keyword hit. */
+-  via: "title" | "bm25";
++  /**
++   * "title": the article was named by the question or the planner; "bm25": whole-index keyword hit; "semantic": a
++   * chunk-vector hit of the two-stage dense path (packDense2; `score` is then its cosine to the question).
++   */
++  via: "title" | "bm25" | "semantic";
+   source: PackSource;
+   /** Monthly pageviews of the article (0 when unknown). */
+   views: number;
+@@ -102,8 +105,22 @@ export interface PackSearchOptions {
+    * (>= SEMANTIC_KEEP) is kept.
+    */
+   queryVec?: Float32Array;
++  /**
++   * packDense2 (DENSECHUNK-ST, default off): with `queryVec` and a pack that carries `chunk_vecs`, also return the
++   * two-stage semantic list (denseChunks): lead top-DENSE2_ARTICLES articles, then their chunks' cosine.
++   */
++  dense2?: boolean;
+ }
+ 
++/** Two-stage dense path (packDense2): articles kept by lead cosine, chunks returned, cosine floor. */
++export const DENSE2_ARTICLES = 50;
++export const DENSE2_K = 12;
++export const DENSE2_FLOOR = MIN_SEMANTIC_SIMILARITY;
++
++/** Timing of the last dense scans (newest last, at most 32): instrumentation for replays, read-only. */
++export interface DenseScan { leadMs: number; chunkMs: number; ms: number; leads: number; candidates: number; kept: number; loadMs: number }
++export const denseScans: DenseScan[] = [];
++
+ // Index = articles.source code written by scripts/build-wiki-pack.mjs.
+ const SOURCES: PackSource[] = ["enwiki", "enwikivoyage", "enwikibooks", "appropedia", "usgov", "eips", "ethspecs", "ethereumorg", "bips"];
+ 
+@@ -435,8 +452,12 @@ export class WikiPack {
+     private hasDf: boolean,
+     private hasMeta: boolean,
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+-    private topicSources: PackSource[] = []
++    private topicSources: PackSource[] = [],
++    /** The pack carries a chunk_vecs sidecar (int8 bge-small vector per chunk): the packDense2 path can run. */
++    readonly hasChunkVecs = false
+   ) {}
++  /** All lead vectors in memory (loaded on the first dense query): stage 1 of denseChunks. */
++  private leadMatrix: { ids: Int32Array; vecs: Int8Array; norms: Float32Array } | null = null;
+ 
+   static async open(db: PackSql, decompress: Decompress): Promise<WikiPack> {
+     const rows = await db.getAllAsync<{ key: string; value: string }>("SELECT key, value FROM meta", []);
+@@ -458,7 +479,7 @@ export class WikiPack {
+           .map((r) => SOURCES[r.source])
+           .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources);
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"));
+   }
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+@@ -820,7 +841,7 @@ export class WikiPack {
+   }
+ 
+   /** search(), plus the question's stems (for scoring sentences with the same term weights). */
+-  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[] }> {
++  async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[]; semantic?: PackHit[] }> {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
+     const stems = await this.stems(query);
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+@@ -923,9 +944,78 @@ export class WikiPack {
+         hits = [...hits, ...more.filter((h) => !seen.has(h.chunkId))];
+       }
+     }
++    // packDense2: the chunk-vector list, fused with the keyword hits by retrieve.ts (off or no sidecar: not computed).
++    if (opts.dense2 && queryVec && this.hasChunkVecs) return { hits: hits.slice(0, limit + lay), stems, semantic: await this.denseChunks(queryVec) };
+     return { hits: hits.slice(0, limit + lay), stems };
+   }
+ 
++  /**
++   * Two-stage chunk-level semantic search (packDense2, DENSECHUNK-ST): stage 1 ranks every article by its lead
++   * vector's cosine to the question and keeps the top `m`; stage 2 scores only those articles' chunk vectors
++   * (chunk_vecs) and returns the best `k` at cosine >= `floor`, as "semantic" hits whose score is the cosine.
++   */
++  async denseChunks(queryVec: Float32Array, m = DENSE2_ARTICLES, k = DENSE2_K, floor = DENSE2_FLOOR): Promise<PackHit[]> {
++    const t0 = Date.now();
++    let loadMs = 0;
++    if (!this.leadMatrix) {
++      const rows = await this.db.getAllAsync<{ article_id: number; vec: Uint8Array }>("SELECT article_id, vec FROM lead_vecs ORDER BY article_id", []);
++      const dims = queryVec.length;
++      const ids = new Int32Array(rows.length);
++      const vecs = new Int8Array(rows.length * dims);
++      const norms = new Float32Array(rows.length);
++      rows.forEach((r, i) => {
++        ids[i] = r.article_id;
++        const v = new Int8Array(r.vec.buffer, r.vec.byteOffset, dims);
++        vecs.set(v, i * dims);
++        let n = 0;
++        for (let d = 0; d < dims; d++) n += v[d] * v[d];
++        norms[i] = Math.sqrt(n);
++      });
++      this.leadMatrix = { ids, vecs, norms };
++      loadMs = Date.now() - t0;
++    }
++    const t1 = Date.now();
++    const { ids, vecs, norms } = this.leadMatrix;
++    const dims = queryVec.length;
++    let qn = 0;
++    for (let d = 0; d < dims; d++) qn += queryVec[d] * queryVec[d];
++    qn = Math.sqrt(qn) || 1;
++    // Top-m by lead cosine (ties: lower article id first, the scan order).
++    const top: Array<{ id: number; s: number }> = [];
++    for (let i = 0; i < ids.length; i++) {
++      let dot = 0;
++      const o = i * dims;
++      for (let d = 0; d < dims; d++) dot += queryVec[d] * vecs[o + d];
++      const s = norms[i] ? dot / (qn * norms[i]) : 0;
++      if (top.length < m || s > top[top.length - 1].s) {
++        let j = top.length < m ? top.length : top.length - 1;
++        if (top.length < m) top.push({ id: ids[i], s });
++        while (j > 0 && top[j - 1].s < s) (top[j] = top[j - 1]), j--;
++        top[j] = { id: ids[i], s };
++      }
++    }
++    const t2 = Date.now();
++    const art = top.map((t) => t.id);
++    const rows = art.length
++      ? await this.db.getAllAsync<{ id: number; article_id: number; start: number; end: number; vec: Uint8Array }>(
++          `SELECT c.id, c.article_id, c.start, c.end, v.vec FROM chunks c JOIN chunk_vecs v ON v.chunk_id = c.id
++           WHERE c.article_id IN (${art.map(() => "?").join(",")})`,
++          art
++        )
++      : [];
++    const scored = rows
++      .map((r) => ({ r, s: cosineSimilarityInt8(queryVec, new Uint8Array(r.vec)) }))
++      .filter((x) => x.s >= floor)
++      .sort((a, b) => b.s - a.s || a.r.id - b.r.id)
++      .slice(0, k);
++    const t3 = Date.now();
++    const hits: PackHit[] = [];
++    for (const { r, s } of scored) hits.push({ ...(await this.hit(r.article_id, r.id, r.start, r.end, s, "semantic")), score: s });
++    denseScans.push({ leadMs: t2 - t1, chunkMs: t3 - t2, ms: Date.now() - t0, leads: ids.length, candidates: rows.length, kept: hits.length, loadMs });
++    if (denseScans.length > 32) denseScans.shift();
++    return hits;
++  }
++
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {
+     const perTitle: PackHit[][] = [];
+     for (const id of ids) perTitle.push(await this.articlePassages(id, stems, 2, action, !action && explain));
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 52edfef..58169ec 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -185,7 +185,8 @@ export interface AnswerEngine {
+ 
+ export interface AnswerDeps {
+   engine: AnswerEngine;
+-  retrieve(query: string, k: number): Promise<RetrievedChunk[]>;
++  /** `opts.packDense2`: settings.packDense2 (DENSECHUNK-ST true / ST2 "extra"), passed only when on. */
++  retrieve(query: string, k: number, opts?: { packDense2?: boolean | "extra" }): Promise<RetrievedChunk[]>;
+   getSettings(): Promise<AnswerSettings>;
+   listInstalledLlms(): Promise<InstalledLlm[]>;
+   getActiveModelId(): Promise<string | null>;
+@@ -996,7 +997,10 @@ export function createAnswerer(deps: AnswerDeps) {
+           const indexed = deps.knowledgeReady().catch(() => {});
+           if ((await Promise.race([indexed, stopSignal])) === "stopped") return finish(genTier, "stopped", "", [], receipt({}));
+         }
+-        raw = await deps.retrieve(searchQuery, gen?.retrieveK ?? 6).catch((e) => {
++        raw = await (settings.packDense2 === true || settings.packDense2 === "extra"
++          ? deps.retrieve(searchQuery, gen?.retrieveK ?? 6, { packDense2: settings.packDense2 })
++          : deps.retrieve(searchQuery, gen?.retrieveK ?? 6)
++        ).catch((e) => {
+           console.warn("[answer] retrieval failed, answering without sources:", e?.message ?? e);
+           return [] as RetrievedChunk[];
+         });
+diff --git a/src/routing/answerService.ts b/src/routing/answerService.ts
+index 2b278e1..e44a0da 100644
+--- a/src/routing/answerService.ts
++++ b/src/routing/answerService.ts
+@@ -75,7 +75,7 @@ function knowledgeReady(): Promise<void> {
+ 
+ export const { answer, deepen, effectiveModel: effectiveAnswerModel } = createAnswerer({
+   engine: llamaEngine,
+-  retrieve: (q, k) => retrieve(q, k),
++  retrieve: (q, k, o) => retrieve(q, k, o),
+   knowledgeReady,
+   englishNames: (query) => englishNamesIn(query, ptLexicon()),
+   getSettings: getAnswerSettings,

@@ -1,0 +1,13 @@
+The most convenient option is the Metro, where the Red Line (Linha Vermelha) connects directly to the city center, reaching stations like Rato and Saldanha in about 20 minutes [1]. Alternatively, you can take a taxi or ride-sharing service, which typically takes 15–20 minutes depending on traffic [1].
+
+generation: 71 tokens, 0.172 s/token (5.809 tok/s)
+compute: 58.6% CPU occupancy (0.4032 cpu-s/token over 4 threads), 0.00 major faults/token
+ngram: 1/24 drafts accepted (4.2%), 1.01 tokens per verify decode (70 decodes for 71 tokens)
+ngram: drafting costs 0.0000 s/token on top of decode → 5.81 tok/s effective (vs 5.81 reported)
+ngram: drafted on 4 of 70 steps (5.7%); the rest decoded plainly
+prefill: 664 tokens, 22.393 s (29.7 tok/s) | model load 9.266 s | TTFT 31.659 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 10826.7 MiB (152.49 MiB/token), decode 0.172 s/token (compute 0.086 + cache mgmt 0.003 + flash I/O 0.370 s/token, 412 MiB/s)
+moe-cache: 37.9% hit, resident 1499.0 MiB
+moe-cache: 24206 evictions, 17009 re-reads (239.6/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.083 s/token (flash reads overlapped with FFN compute)

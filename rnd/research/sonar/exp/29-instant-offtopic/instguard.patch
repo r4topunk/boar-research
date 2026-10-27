@@ -1,0 +1,45 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e66..03c0d28 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -882,7 +882,13 @@ export function createAnswerer(deps: AnswerDeps) {
+       // health answer: its snippet is the excerpt below (EQ-2: the preview quoted "Do not run during
+       // the quake!" by word overlap, before the Drop, Cover and Hold On excerpt).
+       const healthExtractive = health && sources.length > 0 && req.tier !== "deep";
+-      if (plan.instant !== "off" && raw.length && !healthExtractive) {
++      // Never for health/danger (a single sentence is never a first-aid answer, and with no source the guard below
++      // answers), and never when the sources were matched against a translation instead of the question (a PT
++      // question's pt-en terms or lexicon names): coverage of "child" or "India" alone let an off-topic pack line
++      // ("Reject child token 2.", "Atheism is not taboo in India") stand as the final answer (Sonar exp-29).
++      const translated = matchQuery !== req.query;
++      if (plan.instant !== "off" && raw.length && (health || translated)) reasonCodes.push(health ? "instant:off-health" : "instant:off-translated");
++      if (plan.instant !== "off" && raw.length && !health && !translated) {
+         // Lexicon names: the sentence comes from a source titled by one (a one-word name is in many titles).
+         const pool = names.length ? raw.filter(onSubject) : raw;
+         const snip = pool.length ? selectInstant(matchQuery, pool) : null;
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 44d473a..f843911 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -252,8 +252,21 @@ export const ACTION_INTENT =
+ const INJURY_DESCRIBED =
+   /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico)(?![\p{L}])/iu;
+ 
++// A venomous animal with a sting/bite, a child or a severity question; something swallowed; a person who doesn't
++// respond. PT/ES/EN, no action phrase needed ("Escorpião picou meu filho, é grave?", "Mi hijo se tragó una pila"):
++// these went to the model and came back "Scorpions do not sting children" (Sonar exp-29).
++const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
++const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
++const SWALLOWED = /(^|[^\p{L}])(engol\p{L}*|se trag\p{L}*|trag[oó]|swallow\p{L}*)(?![\p{L}])/iu;
++const UNRESPONSIVE = /(^|[^\p{L}])(sem responder|n[ãa]o responde\p{L}*|inconscient\p{L}*|desacordad\p{L}*|no responde|unresponsive|not responding|n[ãa]o est[áa] respirando|no respira|not breathing)(?![\p{L}])/iu;
++const HEALTH_ES = /(^|[^\p{L}])(picad[oa]s?|picó|mordid[oa]s?|mordió|quemad\p{L}*|quemó|atragant\p{L}*|envenen\p{L}*|intoxica\p{L}*|convulsi\p{L}*|desmay\p{L}*|sangrando|sangrad\p{L}*|sangre|fiebre|emergencia|primeros auxilios)(?![\p{L}])/iu;
++
+ export function isHealthQuestion(query: string): boolean {
+   return (
++    (VENOMOUS.test(query) && STUNG_OR_RISK.test(query)) ||
++    SWALLOWED.test(query) ||
++    UNRESPONSIVE.test(query) ||
++    HEALTH_ES.test(query) ||
+     HEALTH.test(query) ||
+     HEALTH_PT.test(query) ||
+     (DISASTER.test(query) && ACTION_INTENT.test(query)) ||

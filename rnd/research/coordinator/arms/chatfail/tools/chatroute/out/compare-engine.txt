@@ -1,0 +1,22 @@
+| metric | before | after L2+L3 |
+|---|---|---|
+| intent acc, all turns | 74.8% (119/159) | 85.5% (136/159) |
+| intent acc, capability turns | 34.7% (17/49) | 69.4% (34/49) |
+|   code asks | 0.0% (0/21) | 81.0% (17/21) |
+|   format asks (table/shorter) | 72.2% (13/18) | 72.2% (13/18) |
+|   translate asks | 40.0% (4/10) | 40.0% (4/10) |
+| intent acc, non-capability turns | 92.7% (102/110) | 92.7% (102/110) |
+| capability turns left on a capped (retrieval + 2-3 sentence) class | 91.8% (45/49) | 57.1% (28/49) |
+|   of which code asks | 100.0% (21/21) | 19.0% (4/21) |
+| anchor acc, turns >= 3 (fallback borrows) | 20.2% (20/99) | 64.6% (64/99) |
+| anchor acc, turns >= 3 (fallback keeps own turn) | 20.2% (20/99) | 44.4% (44/99) |
+|   direct-plan turns >= 3 only (no bound ambiguity) | 18.6% (8/43) | 74.4% (32/43) |
+
+capability misrouted before: 65.3% (32/49); fixed by L2+L3: 53.1% (17/32)
+code asks misrouted before: 100.0% (21/21); fixed: 81.0% (17/21)
+anchor lost before (turn>=3, fallback borrows): 79.8% (79/99); regained after: 57.0% (45/79)
+
+control chats: 29 turns, intent class changes: 0; intent acc 89.7% (26/29) -> 89.7% (26/29); anchor changes 8
+intent-change chats: class changed on 17 turns; wrongly 0 (ok -> not ok)
+
+v0.1 public single turns: classify unchanged 60/60

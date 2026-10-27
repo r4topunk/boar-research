@@ -1,0 +1,98 @@
+# exp-10 O-main-1: the new engine's health guard ported to main (boar-app 6b53ee83), detector extended in sample (declared). LOCAL ONLY.
+# Off unless EXPO_PUBLIC_MAIN_HEALTH_GUARD=1.
+
+diff -ruN hg-a/src/routing/executor.ts hg-b/src/routing/executor.ts
+--- a/src/routing/executor.ts	2026-10-01 02:46:03
++++ b/src/routing/executor.ts	2026-10-01 10:37:36
+@@ -24,6 +24,7 @@
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { RoutingPlan, RoutingStep } from "./router";
+ import { VerificationStatus } from "./types";
++import { healthGuardCard, hasHealthSource, isHealthQuestion, mainHealthGuardOn } from "./healthGuard";
+ 
+ /**
+  * "cold" — nothing was resident in LlamaEngine at all before this request.
+@@ -218,6 +219,15 @@
+       }
+ 
+       case "generate": {
++        // exp-10 O-main-1 (local measurement): a health/danger question with no health source among the retrieved
++        // passages gets the fixed safe card instead of an answer from the model's memory.
++        if (mainHealthGuardOn() && isHealthQuestion(input.query) && !hasHealthSource(input.query, citations)) {
++          answer = healthGuardCard(input.query);
++          warnings.push("health-guard:no-health-source");
++          callbacks.onToken?.(answer);
++          stepsExecuted++;
++          break;
++        }
+         const ok = await ensureModelLoaded(step.modelId);
+         if (!ok) {
+           if (step.required) {
+diff -ruN hg-a/src/routing/healthGuard.ts hg-b/src/routing/healthGuard.ts
+--- a/src/routing/healthGuard.ts	1969-12-31 21:00:00
++++ b/src/routing/healthGuard.ts	2026-10-01 10:38:27
+@@ -0,0 +1,64 @@
++/**
++ * exp-10 O-main-1 (LOCAL measurement branch, rule 0): the new engine's health guard, ported to main's chat path.
++ * A health / first-aid / danger question whose retrieved sources include no health source is not answered from the
++ * model's memory: the answer is the new engine's fixed safe card (emergency number). Off unless
++ * EXPO_PUBLIC_MAIN_HEALTH_GUARD=1. Detector: boar-app 611a4b92 src/routing/context.ts HEALTH / HEALTH_PT / DISASTER /
++ * ACTION_INTENT / INJURY_DESCRIBED copied verbatim (the phrase-translation clause is not ported). Card text: verbatim
++ * noHealthSourceAnswer (611a4b92 context.ts:1213).
++ */
++import type { RetrievedChunk } from "../rag/retrieve.types";
++
++/** Health, first aid and emergencies: the answer may only state what the sources say. */
++const HEALTH =
++  /\b(first aid|nose ?bleeds?|bleed(ing)?|burns?|scald(ed|s)?|bites?|stings?|snake|venom|poison(ing|ed)?|overdose|cpr|resuscitat\w*|chok(e|ing)|heimlich|fractur\w*|broken (bone|arm|leg)|sprain\w*|concussion|seizures?|stroke|heart attack|cardiac|allerg\w*|anaphyla\w*|epipen|asthma|hypotherm\w*|heat ?stroke|frostbite|drown\w*|unconscious|faint\w*|wounds?|fever|dehydrat\w*|symptoms?|dosage|medicine|medication|injur\w*|emergency|shiver\w*|evacuat\w*|contaminated|safe to drink|purify\w*|drinking water|evacua\w*|[áa]gua (pot[áa]vel|contaminada|fervente)|primeiros socorros|sangra\w*|queimadura\w*|picada\w*|mordida\w*|cobra|veneno|envenena\w*|engasg\w*|fratura\w*|desmai\w*|convuls\w*|infarto|avc|alergi\w*|febre|ferida\w*|ferimento\w*|afogamento|rcp|reanima\w*|emerg[eê]ncia|sintomas?|rem[eé]dio)\b/i;
++
++// Portuguese terms starting or ending with an accented letter: JS \b doesn't see "á" as a letter.
++const HEALTH_PT = /(^|[^\p{L}])([áa]gua (pot[áa]vel|contaminada|fervente|quente)|queimadura|picad[ao]|tremend\w*|tremores?|calafrios?|hipotermia|sangramento|engasg\w*|afogamento|desmai\w*|convuls\p{L}*|emerg[êe]ncia)(?![\p{L}])/iu;
++
++// Disasters are safety questions when the question is what to do (Iris, E-1: "What should I
++// do during an earthquake?"), not when it asks history ("What caused the 1906 earthquake?").
++const DISASTER =
++  /(^|[^\p{L}])(earthquakes?|tsunamis?|floods?|flooding|hurricanes?|tornado(es)?|cyclones?|typhoons?|wildfires?|bush ?fires?|house fires?|kitchen fires?|on fire|caught fire|fires? (breaks?|broke) out|fire alarm|smoke inhalation|landslides?|avalanches?|volcan\p{L}*|eruption|terremotos?|sismos?|tsunamis?|enchentes?|inunda\p{L}*|alagamentos?|furac[ãa]o|tornados?|inc[êe]ndios?|deslizamentos?|avalanches?)(?![\p{L}])/iu;
++export const ACTION_INTENT =
++  /\b(what (should|do|can|must) (i|we|you|one) do|what to do|how (do|should|can) (i|we|you) (stay|keep|survive|protect|prepare|get|treat|stop|help|make|purify|care)|how to (treat|stop|help|survive|make|purify)|first aid|stay safe|survive|protect (myself|yourself|ourselves)|prepare for|during|after (it|the)|before (it|the)|right now|evacuat\w*)\b|o que (eu )?(fa[çc]o|fazer|devo fazer)|como (agir|me proteger|sobreviver|se proteger|deixo|tornar|fa[çc]o|estancar|parar|tratar|cuidar|socorrer|aliviar)|durante|depois (de|do|da|que)|antes (de|do|da)|segur[ao] para/i;
++
++// An injury DESCRIBED without the condition's name ("spilled boiling water on his arm",
++// "derramou água fervendo no braço", "got bitten", "está sangrando"): health when the
++// question asks what to do (gate ee1f2b7: 20/20 free answers, one said "medicinal oil").
++const INJURY_DESCRIBED =
++  /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico)(?![\p{L}])/iu;
++
++// exp-10 additions (in-sample, declared): danger wording the new engine's detector misses on the safety track
++// (burn "burned my hand", "stung", frostbite, heat stroke, carbon monoxide, altitude, jellyfish, collapse) and a
++// disaster question that asks for a decision ("Should I stand in a doorway…?", "Devo…?").
++const EXTRA_DANGER =
++  /(^|[^\p{L}])(burned|burnt|stung|frostbit\p{L}*|hypotherm\p{L}*|heat ?stroke|heat exhaustion|collapsed|unconscious|carbon monoxide|gas leak|altitude sickness|mountain sickness|jellyfish|seizure|drown\p{L}*|queimei|queimou|queimad\p{L}*|intoxica\p{L}*|mon[óo]xido|insola[çc][ãa]o|[áa]gua-viva|[áa]guas-vivas|congelad\p{L}*|mal de altitude|desmaiou|convuls\p{L}*)(?![\p{L}])/iu;
++const DECIDE = /\b(should|must|can|do) (i|we)\b|(^|[^\p{L}])(devo|devemos|posso)(?![\p{L}])/iu;
++
++export function isHealthQuestion(query: string): boolean {
++  return (
++    HEALTH.test(query) || HEALTH_PT.test(query) || EXTRA_DANGER.test(query) ||
++    (DISASTER.test(query) && (ACTION_INTENT.test(query) || DECIDE.test(query))) ||
++    (INJURY_DESCRIBED.test(query) && (ACTION_INTENT.test(query) || DECIDE.test(query)))
++  );
++}
++
++const STOP = new Set("what when where which while with without from have does should could would about after before into that this then than there their they them your yours right just very help make made some will been being also only over under more most such like near need want".split(" "));
++const words = (s: string) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 4 && !STOP.has(w));
++
++/** A retrieved source is a health source when its title shares a word stem (first 5 letters) with the question:
++ * "Snakebite" for "bitten by a snake", "Frostbite" for "frostbitten", "Nosebleed" for "nosebleed". */
++export function hasHealthSource(query: string, sources: Pick<RetrievedChunk, "title">[]): boolean {
++  const q = words(query);
++  return sources.some((c) => words(c.title).some((t) => q.some((w) => t.startsWith(w.slice(0, 5)) || w.startsWith(t.slice(0, 5)))));
++}
++
++const PT = /[ãõçâêôáéíóú]|(^|[^\p{L}])(o que|como|devo|estou|meu|minha|fui|não|está|faço|fazer|uma|um)(?![\p{L}])/iu;
++/** The new engine's no-health-source answer, verbatim. */
++export function healthGuardCard(query: string): string {
++  return PT.test(query)
++    ? "Não tenho uma fonte offline confiável sobre isso, então não vou arriscar orientações de saúde de memória. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
++    : "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
++}
++
++export const mainHealthGuardOn = () => process.env.EXPO_PUBLIC_MAIN_HEALTH_GUARD === "1";

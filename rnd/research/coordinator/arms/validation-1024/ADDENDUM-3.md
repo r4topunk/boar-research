@@ -1,0 +1,7 @@
+# VALIDATION-criterion Addendum 3 (2026-10-23 19:0x, coordinator; earlier text unchanged)
+
+Why: r4to (18:1x) wants to know how the app performs in conversation (keeps the searched referent, follow-ups work). ENGINE-RC has no follow-up rule: each turn searches with the user's text only (R5, U5), while the app maintainer's app has FollowUp.kt (U5: his rule keeps the turn-1 source 17/18 on F8, 12/16 on LONGSESSION vs ours 1/19, 4/13). V3 layer 2 on plain ENGINE-RC therefore measures the bench engine, not the app. Two extra judge-ready jobs, 0 judge calls tonight:
+
+17. v3-s-carry: tree kiln-local/rs-RC-STICKY = rs-RC + arms/retrieve-sweep/patches/R5-STICKY.patch (default off), RS_STICKY=2 (subject carry, the closest switch to the app's rule; not adopted, measurement only). Gates before generation (0 LLM, MacBook): switch off = rs-RC kept ids on MAIN 97/97 and F8 96/96; with RS_STICKY=2, F8 turn-2 survival and LONGSESSION survival reported vs U5 (carry recovered 15 of 18 F8, 8 of 9 LS; off-subject chunk ratio 1.22x / 1.29x). Then the 48 F8 pairs (turn 1 + turn 2 with history) with persona S on the mini, seed 42, labelled later by the frozen V3L2 protocol.
+18. v2-p2: V2 UXMATRIX seed 42 ON/OFF with a two-paragraph Succinct variant ("Answer in two short paragraphs" replacing the length phrase, rest of Succinct unchanged; r4to's 18:0x preference "eu preferia até 2"), judge-ready next to S and S+. Reported only; the S+ ADOPT rule does not apply to it.
+Both run after job 16 (or in place of job 16 if job 16 would start after 08:30).

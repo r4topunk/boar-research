@@ -1,0 +1,28 @@
+diff -ruN a/src/ui-android/chat/answerBridge.ts b/src/ui-android/chat/answerBridge.ts
+--- a/src/ui-android/chat/answerBridge.ts	2026-10-18 07:40:19
++++ b/src/ui-android/chat/answerBridge.ts	2026-10-18 07:40:19
+@@ -31,6 +31,14 @@
+ export const VERBATIM_MESSAGE_COUNT = 6;
+ 
+ /**
++ * CHATFAIL L4: a model declining instead of answering ("I'm sorry, but…", "I can't…"). TS twin of the Kotlin
++ * DeepResearch.REFUSAL (engine regex, ^-anchored): the same function the Deep Research flow uses to spot a decline.
++ */
++const DECLINE =
++  /^(i'?m sorry|i am sorry|sorry|i (cannot|can't|can ?not|am unable|'m unable|don't have|do not have)|as an ai|unfortunately|desculp|lamento|infelizmente|não (posso|consigo|tenho)|nao (posso|consigo|tenho))/i;
++export const isDeclinedAnswer = (text: string): boolean => DECLINE.test(text.replace(/[\u2018\u2019]/g, "'").trim());
++
++/**
+  * The history the chat sends with a question: the session summary plus the last
+  * VERBATIM_MESSAGE_COUNT non-empty messages, assistant text without its reasoning.
+  * The same window for the legacy path and answer().
+@@ -42,6 +50,9 @@
+   const priorMessages = prior.filter((m) => m.text.length > 0);
+   const turns: ConversationTurn[] = priorMessages
+     .slice(-VERBATIM_MESSAGE_COUNT)
++    // CHATFAIL L4: an assistant turn that declined does not go back into the history block (the user turn stays), so the
++    // next answer is not conditioned on its own earlier refusal.
++    .filter((m) => !(m.role === "assistant" && isDeclinedAnswer(m.text)))
+     .map((m) => ({ role: m.role, text: m.role === "assistant" ? stripThinking(m.text) : m.text }));
+   return { history: { summary, turns }, priorMessages };
+ }

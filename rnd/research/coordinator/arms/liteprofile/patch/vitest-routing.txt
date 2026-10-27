@@ -1,0 +1,15 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.4 <workspace>/kiln-local/be-cut7-liteprofile
+
+
+ Test Files  33 passed (33)
+      Tests  787 passed (787)
+   Start at  13:00:53
+   Duration  2.99s (tests 49%, transform 33%, import 17%, worker 1%)
+
+    Isolate  33 workers spawned · ~130ms startup each (spawn + environment, per file)
+             at least ~482ms faster with isolate: false — reuses workers across files instead of one per file
+

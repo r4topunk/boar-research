@@ -1,0 +1,32 @@
+# large or regenerable artifacts
+*.gguf
+*.sqlite
+*.sqlite-*
+*.db
+**/models/
+**/data/*.npy
+# python / node
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+.DS_Store
+
+# 2026-10-03: generated/heavy artifacts (rebuildable; keep repo small)
+*.hbc
+*.onnx
+research/forge/arms/tree/
+research/forge/exp/l0-hermes/rec/*.bundle.js
+research/compass/exp/p3-nli/model/spm.model
+research/compass/exp/p3-nli/model/tokenizer.json
+research/sonar/exp/26-doc2query/cands.json
+
+# replay caches (regenerable)
+research/coordinator/arms/*/cache/
+research/coordinator/arms/*/logs/*.log
+research/coordinator/locks/*.lock
+research/coordinator/locks/.tmp.*
+research/coordinator/locks/cron-registry.txt
+research/coordinator/arms/*/.owner
+research/coordinator/arms/honestprompt/tools/rows.json

@@ -1,0 +1,1251 @@
+{
+ "criterion_sha256": "16f32030871d2b8f1df7630db27e5bf4f7a8fb9aee1d6f1c02a2e8d6c07b3f8e",
+ "n": 30,
+ "U": {
+  "oracle": 0.427,
+  "ctl_mini": 0.412,
+  "ctl_macbook": 0.424
+ },
+ "dU_oracle_minus_ctl_mini": {
+  "d": 0.015,
+  "ci": [
+   -0.029,
+   0.059
+  ],
+  "frac_selftest_gain": 0.1
+ },
+ "dU_oracle_minus_ctl_macbook": {
+  "d": 0.002,
+  "ci": [
+   -0.045,
+   0.051
+  ],
+  "frac_selftest_gain": 0.02
+ },
+ "dU_ctl_mini_minus_ctl_macbook": {
+  "d": -0.012,
+  "ci": [
+   -0.042,
+   0.014
+  ]
+ },
+ "CE_unwarned": {
+  "oracle": {
+   "n": 1,
+   "rate": 0.033
+  },
+  "ctl_mini": {
+   "n": 3,
+   "rate": 0.1
+  },
+  "ctl_macbook": {
+   "n": 1,
+   "rate": 0.033
+  }
+ },
+ "warned": {
+  "oracle": 8,
+  "ctl_mini": 10,
+  "ctl_macbook": 13
+ },
+ "declined": {
+  "oracle": 0,
+  "ctl_mini": 0,
+  "ctl_macbook": 0
+ },
+ "support": {
+  "oracle": {
+   "cite1": 15,
+   "cite_any": 21
+  },
+  "ctl_mini": {
+   "cite1": 5,
+   "cite_any": 18
+  },
+  "ctl_macbook": {
+   "cite1": 5,
+   "cite_any": 15
+  }
+ },
+ "changed_vs_ctl_mini": 26,
+ "subgroups": {
+  "fact kept in K3 (S4/S5)": {
+   "n": 23,
+   "U_oracle": 0.428,
+   "U_ctl_mini": 0.42,
+   "d": 0.008,
+   "ci": [
+    -0.028,
+    0.045
+   ]
+  },
+  "fact not kept in K3 (S1-S3)": {
+   "n": 7,
+   "U_oracle": 0.421,
+   "U_ctl_mini": 0.384,
+   "d": 0.037,
+   "ci": [
+    -0.136,
+    0.155
+   ]
+  },
+  "gold Y": {
+   "n": 17,
+   "U_oracle": 0.506,
+   "U_ctl_mini": 0.488,
+   "d": 0.018,
+   "ci": [
+    -0.054,
+    0.084
+   ]
+  },
+  "gold P": {
+   "n": 13,
+   "U_oracle": 0.322,
+   "U_ctl_mini": 0.314,
+   "d": 0.008,
+   "ci": [
+    -0.032,
+    0.043
+   ]
+  },
+  "gold lexical": {
+   "n": 24,
+   "U_oracle": 0.423,
+   "U_ctl_mini": 0.432,
+   "d": -0.009,
+   "ci": [
+    -0.059,
+    0.037
+   ]
+  },
+  "gold manual": {
+   "n": 6,
+   "U_oracle": 0.439,
+   "U_ctl_mini": 0.333,
+   "d": 0.106,
+   "ci": [
+    0.054,
+    0.159
+   ]
+  }
+ },
+ "verdict": "KILL: reading, not retrieval, is the binding stage (dU < +0.03)",
+ "hypothesis_kill": {
+  "ci_high_lt_0_05": false,
+  "d_lt_half_oraclest": true
+ },
+ "items": {
+  "lan-cmp-005": {
+   "oracle": {
+    "s": 1.3333333333333333,
+    "sref": 3.833333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:34543:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.3333333333333335,
+    "sref": 3.6666666666666665,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-simplewiki-en:34543",
+   "label": "P"
+  },
+  "lan-exp-001": {
+   "oracle": {
+    "s": 2.8333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-factbook:5753:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-factbook:5753",
+   "label": "Y"
+  },
+  "lan-exp-002": {
+   "oracle": {
+    "s": 2.6666666666666665,
+    "sref": 4.666666666666667,
+    "corr": 4.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-factbook:7481:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.0,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-factbook:7481",
+   "label": "Y"
+  },
+  "lan-exp-003": {
+   "oracle": {
+    "s": 3.166666666666667,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-factbook:1009:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.5,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.5,
+    "sref": 4.833333333333334,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-factbook:1009",
+   "label": "Y"
+  },
+  "lan-exp-004": {
+   "oracle": {
+    "s": 1.8333333333333335,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:222381:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:222381",
+   "label": "Y"
+  },
+  "lan-exp-005": {
+   "oracle": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:9543:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.6666666666666667,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.1666666666666665,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:9543",
+   "label": "Y"
+  },
+  "lan-exp-007": {
+   "oracle": {
+    "s": 2.166666666666667,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-factbook:9181:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-factbook:9181",
+   "label": "Y"
+  },
+  "lan-hlt-001": {
+   "oracle": {
+    "s": 2.5,
+    "sref": 4.666666666666667,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:15581:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.8333333333333335,
+    "sref": 4.5,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.5,
+    "sref": 4.666666666666667,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:15581",
+   "label": "Y"
+  },
+  "lan-hlt-002": {
+   "oracle": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-medlineplus-en:1520:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-medlineplus-en:1520",
+   "label": "Y"
+  },
+  "lan-hlt-003": {
+   "oracle": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-firstaid-en:5004:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.6666666666666665,
+    "sref": 5.0,
+    "corr": 4.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.1666666666666665,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-firstaid-en:5004",
+   "label": "Y"
+  },
+  "lan-ref-002": {
+   "oracle": {
+    "s": 3.333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:14188:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.333333333333333,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.333333333333333,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:14188",
+   "label": "P"
+  },
+  "lan-ref-003": {
+   "oracle": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:112679:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.5,
+    "sref": 5.0,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:112679",
+   "label": "P"
+  },
+  "lan-rsn-001": {
+   "oracle": {
+    "s": 2.166666666666667,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:19275:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.166666666666667,
+    "sref": 5.0,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.166666666666667,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:19275",
+   "label": "P"
+  },
+  "lan-rsn-003": {
+   "oracle": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:56214:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:56214",
+   "label": "P"
+  },
+  "lan-rsn-004": {
+   "oracle": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:184755:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:184755",
+   "label": "P"
+  },
+  "lan-rsn-006": {
+   "oracle": {
+    "s": 2.833333333333333,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:96344:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.0,
+    "sref": 5.0,
+    "corr": 5.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S5",
+   "gold": "pack:boar-simplewiki-en:96344",
+   "label": "Y"
+  },
+  "vit-cry-002": {
+   "oracle": {
+    "s": 2.0,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:19578:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.333333333333334,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.0,
+    "sref": 4.666666666666667,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:19578",
+   "label": "Y"
+  },
+  "vit-cry-003": {
+   "oracle": {
+    "s": 1.0,
+    "sref": 4.166666666666666,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:41530:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.1666666666666665,
+    "sref": 4.333333333333333,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.3333333333333333,
+    "sref": 4.333333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41530",
+   "label": "P"
+  },
+  "vit-cry-004": {
+   "oracle": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:16592:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.0,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:16592",
+   "label": "P"
+  },
+  "vit-cry-005": {
+   "oracle": {
+    "s": 1.8333333333333335,
+    "sref": 4.833333333333334,
+    "corr": 2.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:27321:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S1",
+   "gold": "pack:boar-crypto:27321",
+   "label": "P"
+  },
+  "vit-cry-006": {
+   "oracle": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:41922:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.6666666666666665,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41922",
+   "label": "P"
+  },
+  "vit-cry-008": {
+   "oracle": {
+    "s": 2.3333333333333335,
+    "sref": 3.833333333333333,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:41305:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 2.3333333333333335,
+    "sref": 3.833333333333333,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 2.166666666666667,
+    "sref": 3.833333333333333,
+    "corr": 2.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:41305",
+   "label": "Y"
+  },
+  "vit-cry-009": {
+   "oracle": {
+    "s": 1.1666666666666665,
+    "sref": 4.666666666666666,
+    "corr": 1.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:14404:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.666666666666666,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-crypto:14404",
+   "label": "P"
+  },
+  "vit-cry-010": {
+   "oracle": {
+    "s": 2.3333333333333335,
+    "sref": 5.0,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:40957:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-crypto:40957",
+   "label": "Y"
+  },
+  "vit-cry-011": {
+   "oracle": {
+    "s": 1.3333333333333333,
+    "sref": 4.666666666666667,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-crypto:47608:had-1:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 5.0,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.6666666666666667,
+    "sref": 4.833333333333334,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-crypto:47608",
+   "label": "P"
+  },
+  "vit-hlt-001": {
+   "oracle": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:84351:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.166666666666667,
+    "sref": 4.666666666666667,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.166666666666667,
+    "sref": 4.666666666666667,
+    "corr": 3.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-wikivoyage-en:84351",
+   "label": "Y"
+  },
+  "vit-hlt-002": {
+   "oracle": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:7446:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 3.5,
+    "sref": 5.0,
+    "corr": 4.5,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-wikivoyage-en:7446",
+   "label": "Y"
+  },
+  "vit-hlt-003": {
+   "oracle": {
+    "s": 2.3333333333333335,
+    "sref": 4.666666666666667,
+    "corr": 3.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-medlineplus-en:796:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.3333333333333333,
+    "sref": 4.666666666666667,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.3333333333333333,
+    "sref": 4.833333333333334,
+    "corr": 2.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S3",
+   "gold": "pack:boar-medlineplus-en:796",
+   "label": "Y"
+  },
+  "vit-hum-004": {
+   "oracle": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-simplewiki-en:68816:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 5.0,
+    "corr": 1.0,
+    "declined": false,
+    "warned": false,
+    "cite1": false,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.1666666666666665,
+    "sref": 5.0,
+    "corr": 1.5,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-simplewiki-en:68816",
+   "label": "P"
+  },
+  "vit-trv-003": {
+   "oracle": {
+    "s": 1.3333333333333333,
+    "sref": 4.333333333333333,
+    "corr": 2.0,
+    "declined": false,
+    "warned": false,
+    "cite1": true,
+    "cite_any": true,
+    "oracle_codes": [
+     "oracle:first:pack:local-boar-wikivoyage-en:252078:had-0:dropped-0"
+    ]
+   },
+   "ctl_mini": {
+    "s": 1.0,
+    "sref": 4.5,
+    "corr": 1.0,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "ctl_macbook": {
+    "s": 1.1666666666666665,
+    "sref": 4.166666666666666,
+    "corr": 1.5,
+    "declined": false,
+    "warned": true,
+    "cite1": false,
+    "cite_any": false,
+    "oracle_codes": []
+   },
+   "stage_K3": "S4",
+   "gold": "pack:boar-wikivoyage-en:252078",
+   "label": "Y"
+  }
+ },
+ "script_sha256": "9f12649e45cbf1e6b2aaca9f8975d0c06ae59a465d9203f8565e98fa5adbc36d"
+}

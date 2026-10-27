@@ -1,0 +1,27 @@
+--- a/src/constants/personalities.ts
++++ b/src/constants/personalities.ts
+@@ -42,7 +42,11 @@
+       "You are Boar, a concise offline research assistant. Answer in 2-3 short, direct " +
+       "sentences or a brief paragraph, no preamble. Do not default to a bulleted list " +
+       "or a single takeaway sentence followed by three bullet points — use bullets only " +
+-      "when the content is genuinely a list of distinct items.",
++      "when the content is genuinely a list of distinct items. State only facts you are sure of. " +
++      "Never invent names, numbers, dates, places or quotes. If you don't know, say so in one " +
++      "sentence. A shorter correct answer beats a longer one. This rule covers facts only. " +
++      "Always do what the user asks: write code, give examples, make tables, and calculate " +
++      "from numbers given in the question.",
+     styleReminder: "Keep it short: 2-3 sentences. No lists unless the question asks for one.",
+   },
+   {
+--- a/src/rag/pure.ts
++++ b/src/rag/pure.ts
+@@ -330,7 +330,8 @@
+ 
+ const CONTEXT_INSTRUCTION =
+   " Use the context below when relevant, and cite a source you used by its number, like [1] or [2]. " +
+-  "If the context doesn't cover the question, say so and answer from general knowledge.";
++  "If the context doesn't cover it, say so, then answer briefly from general knowledge, " +
++  "without specific figures or names you're unsure of.";
+ 
+ /**
+  * The fixed start of every answer prompt that has sources, for a given tone: persona, source rules and

@@ -1,0 +1,42 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -683,7 +683,9 @@
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: chat.text, sources: [], receipt: r, cited: [] };
+         }
+-        const calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
++        // MATHROUTE (measurement only, never committed): MATHROUTE_NOCALC=1 bypasses the calculator, arithmetic and travel-distance shortcuts.
++        const mrNoCalc = process.env.MATHROUTE_NOCALC === "1";
++        const calc = learned?.fire || mrNoCalc ? null : calculate(req.query, isPortugueseQuestion(req.query));
+         if (calc) {
+           markVisible();
+           const codes = [`answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
+@@ -696,7 +698,7 @@
+         // exact, from the question's own numbers (EN). It also runs when the learned detector fired, because the message
+         // has no health, injury or danger word (the numeric guard: vit-sci-003 "10 tokens per second… how long?" got
+         // "I won't give health advice from memory" on every cut-2 seed).
+-        const arith = isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : arithmeticAnswer(req.query);
++        const arith = mrNoCalc || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : arithmeticAnswer(req.query);
+         if (arith) {
+           markVisible();
+           const codes = [...detectorCodes, ...(learned?.fire ? ["detector:numeric-guard"] : []), `answer:calculator-${arith.kind}`];
+@@ -707,7 +709,7 @@
+         }
+         // Travel distance between two cities (EN): an estimate from the bundled city table, never a mapped route; a place
+         // not in the table -> null -> the normal path (Anvil, V-exact Paris–Rome).
+-        const travel = learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : travelDistanceAnswer(req.query);
++        const travel = mrNoCalc || learned?.fire || isPortugueseQuestion(req.query) || isSpanishQuestion(req.query) ? null : travelDistanceAnswer(req.query);
+         if (travel) {
+           markVisible();
+           const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: ["answer:calculator-travel-distance"] };
+@@ -831,6 +833,10 @@
+         verifiers: depthModels.filter((m) => m.roles.includes("verifier") && deepAutoIneligibility(m) === null),
+         hasReusedSources: !!req.reuseSources?.length,
+       });
++      // MATHROUTE (measurement only): MATHROUTE_RETRIEVE=off|on forces plan.retrieve after planAnswer (A3 emulation / retrieval forced on).
++      const mrRet = process.env.MATHROUTE_RETRIEVE;
++      if (mrRet === "off" || mrRet === "on") { (plan as any).retrieve = mrRet === "on"; plan.reasonCodes.push(`mathroute:retrieve-${mrRet}`); }
++      if (process.env.MATHROUTE_NOCALC === "1") plan.reasonCodes.push("mathroute:nocalc");
+       const reasonCodes = [`task:${taskType}`, ...gateCodes, ...plan.reasonCodes, ...(lowRamNote ? [lowRamNote] : []), ...detectorCodes];
+       if (!deepModel && !settings.deepModelId) {
+         for (const m of depthModels.filter((d) => d.roles.includes("reasoning"))) {

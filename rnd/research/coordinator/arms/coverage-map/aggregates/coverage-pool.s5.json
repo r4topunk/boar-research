@@ -1,0 +1,629 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-006": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "What is John Stuart Mill's harm principle in On Liberty, and what are the main objections to it?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1472053",
+       "title": "John Stuart Mill",
+       "share": 1.0,
+       "anchor": 0.822,
+       "bm25_rank": 0,
+       "text": "Mill's On Liberty (1859) addresses the nature and limits of the power that can be legitimately exercised by society over the individual. Mill's idea is that only if a democratic society follows the Principle of Liberty can its political and social institutions fulfill their role of shaping national character so that its citizens can realise the permanent interests of people as progressive beings. "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1472058",
+       "title": "John Stuart Mill",
+       "share": 1.0,
+       "anchor": 0.695,
+       "bm25_rank": 11,
+       "text": "Mill's view on liberty, which was influenced by Joseph Priestley and Josiah Warren, is that individuals ought to be free to do as they wished unless they caused harm to others. Individuals are rational enough to make decisions about their well-being. Government should interfere when it is for the protection of society. Mill explained:\nThe sole end for which mankind are warranted, individually or c"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1472063",
+       "title": "John Stuart Mill",
+       "share": 1.0,
+       "anchor": 0.686,
+       "bm25_rank": 10,
+       "text": "The belief that freedom of speech would advance society presupposed a society sufficiently culturally and institutionally advanced to be capable of progressive improvement. If any argument is really wrong or harmful, the public will judge it as wrong or harmful, and then those arguments cannot be sustained and will be excluded. Mill argued that even any arguments which are used in justifying murde"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1293842",
+       "title": "Cultural liberalism",
+       "share": 1.0,
+       "anchor": 0.695,
+       "bm25_rank": 0,
+       "text": "As with modern liberalism in general, cultural liberalism often implies the fundamental liberal principles of individual liberty, autonomy, and equality.\nCultural liberalism places a strong emphasis on the protection and expansion of civil rights and liberties, recognizing them as fundamental to individual autonomy and societal progress. This philosophical stance aligns with core liberal principle"
+      }
+     ]
+    }
+   }
+  },
+  "lan-rsn-002": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {}
+  },
+  "vit-trv-004": {
+   "set": "v0.1",
+   "tag": "travel",
+   "question": "How far is it to walk from Paris to Rome and back?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:284550",
+       "title": "Rome/Old Rome",
+       "share": 1.0,
+       "anchor": 0.601,
+       "bm25_rank": 114,
+       "text": "- Cul de Sac: Piazza Pasquino, 73. Near Piazza Navona. Kitchen works until 01:00. In Aug, closed for 2 weeks. One of the best enoteche (wine bars) in Rome, serving a wide range of small dishes. The pate selection is a must-try. However, off-hours service is slow.\n- Il Bacaro: Via degli Spagnoli, 27. You'd never know that you are three minutes walk from Piazza Navona and the Pantheon. Via degli Spa"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:527348",
+       "title": "Old towns in Italy and Malta",
+       "share": 1.0,
+       "anchor": 0.808,
+       "bm25_rank": 106,
+       "text": "- Arezzo\n- Bari\n- Bologna\n- \u2014 the Renaissance city known for its architecture and art that had a major impact throughout the world.\n- Genoa\n- Gubbio\n- Lucca\n- Mantua\n- Matera\n- Naples\n- \u2014 a city with a thousand years of history, and beautiful Arab-Norman architecture\n- Perugia\n- Pienza \u2014 entirely redesigned in honor of native son Pope Pius II (1405-1464; reigned as Pope starting in 1458), it is a "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:387409",
+       "title": "Cheddar",
+       "share": 1.0,
+       "anchor": 0.58,
+       "bm25_rank": 172,
+       "text": "- Rock Climbing: There are around 350 official graded rock climbing routes on the 27 cliffs that make up the Cheddar Gorge.\n- Clifftop walk: 24/7. Free. The gorge clifftop is fully accessible and makes a good 1.3 mile (2 km) walk; the views and air at the clifftop are well worth the steep gradient of the walking path that may be encountered here and there. The easiest way up is via \"Jacobs Ladder\""
+      }
+     ]
+    },
+    "qa-outdoors-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-outdoors-se:4844",
+       "title": "Emergency measures: sleeping bag not suitable for the current weather",
+       "share": 1.0,
+       "anchor": 0.58,
+       "bm25_rank": 31,
+       "text": "I've only once experienced a nights' sleep that my sleeping bag didn't handle. I was only 200 metre from civilisation, and I hardly slept, but it was not really dangerous. I'd expected temperatures around 0\u00b0C, but it turned out to be the local coldest night of the year at -7\u00b0C.\n\nNormally, the gulf stream means that at \u00c5 i Lofoten, Norway, temperatures usually don't drop far below 0\u00b0C, but on the e"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:611436",
+       "title": "From Paris with Love (film)",
+       "share": 1.0,
+       "anchor": 0.55,
+       "bm25_rank": 184,
+       "text": "The film opened in the US on February 5, 2010, and took [usage detail removed] on its opening weekend, ranked number 3 in the charts in 2,722 theaters. The movie was open in the US until March 11, 2010, a total of 5 weeks. Its final US domestic gross was [usage detail removed]. It also grossed [usage detail removed] internationally for a worldwide total of [usage detail removed]- just grossing back its [usage detail removed]m budget. In July 2010, Parade liste"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2458939",
+       "title": "Napoleon III",
+       "share": 1.0,
+       "anchor": 0.55,
+       "bm25_rank": 120,
+       "text": "In February 1848, Louis Napoleon learned that the French Revolution of 1848 had broken out; as Louis Philippe I, faced with opposition within his government and army, abdicated. Believing that his time had finally come, he set out for Paris on 27 February, departing England on the same day that Louis-Philippe left France for his own exile in England. When he arrived in Paris, he found that the Sec"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2441446",
+       "title": "Old towns in Italy and Malta",
+       "share": 1.0,
+       "anchor": 0.808,
+       "bm25_rank": 125,
+       "text": "- Arezzo\n- Bari\n- Bologna\n- \u2014 the Renaissance city known for its architecture and art that had a major impact throughout the world.\n- Genoa\n- Gubbio\n- Lucca\n- Mantua\n- Matera\n- Naples\n- \u2014 a city with a thousand years of history, and beautiful Arab-Norman architecture\n- Perugia\n- Pienza \u2014 entirely redesigned in honor of native son Pope Pius II (1405-1464; reigned as Pope starting in 1458), it is a "
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2301365",
+       "title": "Cheddar",
+       "share": 1.0,
+       "anchor": 0.58,
+       "bm25_rank": 120,
+       "text": "- Rock Climbing: There are around 350 official graded rock climbing routes on the 27 cliffs that make up the Cheddar Gorge.\n- Clifftop walk: 24/7. Free. The gorge clifftop is fully accessible and makes a good 1.3 mile (2 km) walk; the views and air at the clifftop are well worth the steep gradient of the walking path that may be encountered here and there. The easiest way up is via \"Jacobs Ladder\""
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-006": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What is quadratic funding, and what is its main weakness?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:41922",
+       "title": "What are zero-knowledge proofs?",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 2,
+       "text": "For example, quadratic funding mechanisms rely on donations to measure preference for certain options among different public good projects. Each donation counts as a \"vote\" for a specific project, with projects that receive more votes getting more funds from the matching pool.\n\nUsing onchain voting makes quadratic funding susceptible to collusion: blockchain transactions are public, so bribers can"
+      },
+      {
+       "chunk": "pack:boar-crypto:41457",
+       "title": "The privacy roadmap for Ethereum",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 12,
+       "text": "In the governance space, the **Minimal Anti-Collusion Infrastructure (MACI)** protocol provides **receipt-freeness**, making it cryptographically impossible to prove how an account voted. Because voters cannot produce a receipt showing their choice, vote-buying and coercion lose their economic incentive. MACI has secured real-world funding decisions since 2020 through clr.fund, which has distribut"
+      },
+      {
+       "chunk": "pack:boar-crypto:41923",
+       "title": "What are zero-knowledge proofs?",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 32,
+       "text": "Fortunately, newer solutions such as MACI (Minimum Anti-Collusion Infrastructure) are using zero-knowledge proofs to make onchain voting (e.g., quadratic funding mechanisms) resistant to bribery and collusion. MACI is a set of smart contracts and scripts that allow a central administrator (called a \"coordinator\") to aggregate votes and tally results _without_ revealing specifics on how each indivi"
+      }
+     ]
+    },
+    "boar-vitalik-blog-en": {
+     "n_qualifying": 16,
+     "top": [
+      {
+       "chunk": "pack:boar-vitalik-blog-en:2045",
+       "title": "Review of Gitcoin Quadratic Funding Round 3",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 10,
+       "text": "On the whole, this was by far the largest and the most data-rich Gitcoin funding round to date. It successfully attracted hundreds of contributors, reaching a size where we can finally see many significant effects in play and drown out the effects of the more naive forms of small-scale collusion. The experiment already seems to be leading to valuable information that can be used by future quadrati"
+      },
+      {
+       "chunk": "pack:boar-vitalik-blog-en:2036",
+       "title": "Review of Gitcoin Quadratic Funding Round 3",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 18,
+       "text": "Round 3 differs from previous rounds in that it uses a new flavor of quadratic funding, which limits the subsidy per pair of participants. For example, in traditional QF, if two people each donate $10, the subsidy would be $10, and if two people each donate $10,000, the subsidy would be $10,000. This property of traditional QF makes it highly vulnerable to collusion: two key employees of a project"
+      },
+      {
+       "chunk": "pack:boar-vitalik-blog-en:4637",
+       "title": "Quadratic Payments: A Primer",
+       "share": 0.5,
+       "anchor": 0.609,
+       "bm25_rank": 21,
+       "text": "Second, one can look at the formula through a quadratic voting lens. We interpret the quadratic funding as being _a special case_ of quadratic voting, where the contributors to a project are voting for that project and there is one imaginary participant voting against it: the subsidy pool. Every \"project\" is a motion to take money from the subsidy pool and give it to that project's creator. Everyo"
+      }
+     ]
+    }
+   }
+  },
+  "vit-sci-001": {
+   "set": "v0.1",
+   "tag": "science-tech",
+   "question": "Does far-UVC light reduce airborne disease transmission, and is it safe for skin and eyes?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {}
+  },
+  "lan-ref-002": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "Which side won the American Civil War?",
+   "K1": "S5",
+   "K3": "S5",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 14,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:424438",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 7,
+       "text": "Site of the First and Second Battles of Manassas, also known as the First and Second Battles of Bull Run. First Bull Run showed the overconfident North that the South was willing and able to fight a serious war and showed both sides that the war would last more than a few months and not be decided by a single major engagement, no matter who won any given major battle.\n- Monocacy National Battlefie"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:424425",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 8,
+       "text": "However, even after the 1863 defeat at Gettysburg, the Army of Northern Virginia was considered unbeaten and a considerable foe by the North. When Grant took over in the East in 1864 he changed the tactics of the Army of the Potomac and aggressively pursued Lee with the latter ultimately surrendering at Appomattox Court House in 1865. While other less significant armies fought on for a few more we"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:424435",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 72,
+       "text": "- Antietam National Battlefield and Cemetery: Sharpsburg, Maryland. Site of the battle which became the bloodiest day in American military history up to that point. After the battle, which resulted in a draw that could be charitable described as advantageous to the North, Abraham Lincoln, who had been waiting for a military victory to do so, released the Emancipation Proclamation, declaring all sl"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 20,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:14188",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 14,
+       "text": "The North won control of almost all of the Mississippi River by capturing the cities along the river in the fall of 1862 and the spring of 1863. However, the Confederacy still held Vicksburg, an important city and fort. If they held, the Confederates could move soldiers and supplies from one side of the river to the other. Grant started the Siege of Vicksburg during the month of May 1863. The sieg"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:308931",
+       "title": "Border states (American Civil War)",
+       "share": 1.0,
+       "anchor": 0.804,
+       "bm25_rank": 97,
+       "text": "Kentucky was strategic to Union victory in the Civil War. Lincoln once said,\n\"I think to lose Kentucky is nearly the same as to lose the whole game. Kentucky gone, we cannot hold Missouri, nor Maryland. These all against us, and the job on our hands is too large for us. We would as well consent to separation at once, including the surrender of this capitol [Washington, which was surrounded by slav"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:14192",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 12,
+       "text": "By late 1864, Lee's army was struggling, as they had less soldiers and supplies than Grant's army. Helped by Philip Sheridan, Grant's army slowly started to push into Virginia. At the start of April 1865, they won several battles against Lee's army and captured Richmond. Lee decided that he had too few soldiers to keep on fighting. He surrendered to Grant on April 9, 1865 near Appomattox Court Hou"
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:9295",
+       "title": "United States",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 4,
+       "text": "Thirteen of Britain's American colonies broke with the mother country in 1776 and were recognized as the new nation of the United States of America following the Treaty of Paris in 1783. During the 19th and 20th centuries, 37 new states were added as the nation expanded across the North American continent and acquired a number of overseas possessions. Two of the most traumatic experiences in the n"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 37,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:501730",
+       "title": "Nigerian Civil War",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 3,
+       "text": "Media and public relations played a central role in the war, due to their influence on morale at home and the dynamics of international involvement. Both sides relied heavily on external support. Biafra hired the New York public relations firm of Ruder and Finn to lobby American public opinion. However, it was not until Biafra hired the Geneva public relations Markpress in January 1968 that signif"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3043131",
+       "title": "American Indian Wars",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 91,
+       "text": "The U.S. Army kept a small garrison west of the Rockies, but starting in 1849, the California Gold Rush brought a great influx of miners and settlers into the area. The result was that most of the early conflicts with the California Indians involved local parties of miners or settlers. During the American Civil War, California volunteers replaced Federal troops and won the ongoing Bald Hills War a"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1182424",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 18,
+       "text": "Lee did not intend to surrender, but planned to regroup at Appomattox Station, where supplies were to be waiting, and then continue the war. Grant chased Lee and got in front of him, so that when Lee's army reached the village of Appomattox Court House, they were surrounded. After an initial battle, Lee decided the fight was hopeless, and surrendered his Army of Northern Virginia to Grant on April"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:259",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 11,
+       "text": "The American Civil War (April 12, 1861 \u2013 May 26, 1865; also known by other names) was a civil war in the United States between the Union (\"the North\") and the Confederacy (\"the South\"), which was formed in 1861 by states that had seceded from the Union to preserve slavery in the United States. The South saw slavery as threatened because of the election of Abraham Lincoln and the growing abolitioni"
+      },
+      {
+       "chunk": "pack:wiki-vital5:1030",
+       "title": "African Americans",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 86,
+       "text": "A few were able to achieve freedom through manumission or escape, and founded independent communities before and during the American Revolution. After the United States was founded in 1783, most American Black people continued to be enslaved, primarily in the American South, with four million enslaved people only liberated after the Northern victory over the South in the Civil War of 1861 to 1865."
+      },
+      {
+       "chunk": "pack:wiki-vital5:17548",
+       "title": "Ulysses S. Grant",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 38,
+       "text": "Ulysses S. Grant (born Hiram Ulysses Grant; April 27, 1822 \u2013 July 23, 1885) was the 18th president of the United States, serving from 1869 to 1877, and was the Commanding General of the Union Army, leading it to victory in the American Civil War in 1865. Grant was born in Ohio and graduated from the United States Military Academy in 1843. He served with distinction in the Mexican\u2013American War, but"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 33,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2338442",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.77,
+       "bm25_rank": 20,
+       "text": "Site of the First and Second Battles of Manassas, also known as the First and Second Battles of Bull Run. First Bull Run showed the overconfident North that the South was willing and able to fight a serious war and showed both sides that the war would last more than a few months and not be decided by a single major engagement, no matter who won any given major battle.\n- Monocacy National Battlefie"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2338429",
+       "title": "American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 19,
+       "text": "However, even after the 1863 defeat at Gettysburg, the Army of Northern Virginia was considered unbeaten and a considerable foe by the North. When Grant took over in the East in 1864 he changed the tactics of the Army of the Potomac and aggressively pursued Lee with the latter ultimately surrendering at Appomattox Court House in 1865. While other less significant armies fought on for a few more we"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1650057",
+       "title": "Pacific coast theater of the American Civil War",
+       "share": 1.0,
+       "anchor": 0.574,
+       "bm25_rank": 65,
+       "text": "CSS Alabama operated in the Pacific for only a few weeks in the southwest Pacific, capturing three ships. CSS Shenandoah was the second and last Confederate raider to enter the Pacific Ocean. However, her attacks came too late, at the end of the war or afterward, and did most of her damage after the war was over, capturing 38 vessels, mostly whalers. When word of the attacks came, the Pacific Squa"
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-003": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Give me the essentials on Kenya: its location, capital, official languages and year of independence.",
+   "K1": "S5",
+   "K3": "S5",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:419737",
+       "title": "Kenya Colony",
+       "share": 1.0,
+       "anchor": 0.521,
+       "bm25_rank": 0,
+       "text": "Key facts: conventional long name: Colony and Protectorate of Kenya; common name: Kenya; empire: British Empire; p1: East Africa Protectorate; flag p1: Flag of Kenya (1895\u20131921).svg; s1: Kenya (1963\u20131964)Dominion of Kenya; flag s1: Flag of Kenya.svg; flag type: Flag of the Colony of Kenya; national anthem: God Save the King (1920\u20131952) , God Save the Queen (1952\u20131963) File:United States Navy Band "
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:6190",
+       "title": "Kenya",
+       "share": 1.0,
+       "anchor": 0.521,
+       "bm25_rank": 1,
+       "text": "Key facts: native name: Jamhuri ya Kenya; conventional long name: Republic of Kenya; common name: Kenya; national motto: \"Harambee\"2(Swahili), \"Let us all pull together\"; national anthem: Ee Mungu Nguvu Yetu, \"O God of All Creation\" File:National Anthem of Kenya.ogg; official languages: Swahili, English; demonym: Kenyan; capital: Nairobi; government type: Presidential Republic; leader title1: Pres"
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 9,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:1009",
+       "title": "Kenya",
+       "share": 1.0,
+       "anchor": 0.723,
+       "bm25_rank": 0,
+       "text": "Key facts:\nOfficial name: Republic of Kenya\nCapital: Nairobi\nTime zone: UTC+3\nLocation: Eastern Africa, bordering the Indian Ocean, between Somalia and Tanzania\nArea: 580,367 sq km\nPopulation: 55,751,717 (2025 est.)\nLanguages: English (official), Kiswahili (official), numerous indigenous languages\nReligions: Christian 85.5% (Protestant 33.4%, Catholic 20.6%, Evangelical 20.4%, African Instituted C"
+      },
+      {
+       "chunk": "pack:boar-factbook:2160",
+       "title": "Tanzania",
+       "share": 1.0,
+       "anchor": 0.723,
+       "bm25_rank": 2,
+       "text": "Key facts:\nOfficial name: United Republic of Tanzania\nCapital: Dodoma\nTime zone: UTC+3\nLocation: Eastern Africa, bordering the Indian Ocean, between Kenya and Mozambique\nArea: 947,300 sq km\nPopulation: 69,145,464 (2025 est.)\nLanguages: Kiswahili or Swahili (official), Kiunguja (name for Swahili in Zanzibar), English (official, primary language of commerce, administration, and higher\u2026\nReligions: Ch"
+      },
+      {
+       "chunk": "pack:boar-factbook:185",
+       "title": "Burundi",
+       "share": 1.0,
+       "anchor": 0.545,
+       "bm25_rank": 19,
+       "text": "Key facts:\nOfficial name: Republic of Burundi\nCapital: Gitega (political capital), Bujumbura (commercial capital)\nTime zone: UTC+2\nLocation: Central Africa, east of the Democratic Republic of the Congo, west of Tanzania\nArea: 27,830 sq km\nPopulation: 13,590,102 (2024 est.)\nLanguages: Kirundi (official), French (official), English (official, least spoken), Swahili (2008 est.)\nReligions: Christian 9"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:559176",
+       "title": "International Electrotechnical Commission",
+       "share": 1.0,
+       "anchor": 0.509,
+       "bm25_rank": 2,
+       "text": "Key facts: Abbreviation: IEC; Formation: 26 June 1906, 119 years old; Type: Standards organization; Legal status: Swiss association; Purpose: Standardization for electrical technology, electronics and related fields.; Headquarters: Geneva, Switzerland; Location: - List - Geneva, Switzerland - Sydney, Australia - S\u00e3o Paulo, Brazil - Nairobi, Kenya - Singapore - Worcester, Massachusetts, United Stat"
+      }
+     ]
+    }
+   }
+  },
+  "lan-rsn-005": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "Which are the longest rivers on Earth, and why is the ranking of the top two disputed?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2522749",
+       "title": "Amazon River",
+       "share": 1.0,
+       "anchor": 0.5,
+       "bm25_rank": 7,
+       "text": "The Amazon River (UK: /\u02c8\u00e6m\u0259z\u0259n/, US: /\u02c8\u00e6m\u0259z\u0252n/; Spanish: R\u00edo Amazonas, Portuguese: Rio Amazonas) in South America is the largest river by discharge volume of water in the world, and the longest or second-longest river system in the world, a title which is disputed with the Nile.\nThe headwaters of the Apur\u00edmac River on Nevado Mismi had been considered, for nearly a century, the Amazon basin's most "
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:761",
+       "title": "Amazon River",
+       "share": 1.0,
+       "anchor": 0.5,
+       "bm25_rank": 19,
+       "text": "The Amazon River in South America is the largest river in the world by discharge volume of water, and the second-longest or longest river system in the world, a title which is disputed with the Nile. For nearly a century, the headwaters of the Apur\u00edmac River on Nevado Mismi in Peru had been considered the Amazon basin's most distant source, until a 2014 study found the farthest source to be the he"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-002": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "I want to preserve vegetables in oil at home. Which kind of food poisoning should worry me most, and can I taste it if something has gone wrong?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-008": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Will a green pineapple left on the counter for a few days get sweeter?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-014": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Give me tips to stop my homemade pizza base from puffing up into giant domes in the oven.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-020": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Explain why ice cream recipes warm the dairy first and then cook it again after the egg yolks go in.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-cooking-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:64439",
+       "title": "Why is there a 2 step heating process for making custard for ice cream",
+       "share": 0.5,
+       "anchor": 0.591,
+       "bm25_rank": 23,
+       "text": "Step 3 and 4 are more related than one might think. Step 3 is the first step in incorporating the diary and the egg mixture. By adding part of the warm dairy to the egg mixture, you are tempering the egg mixture. This means you are bring the temperature of the egg mixture a little closer to the temperature of the dairy. So, when you add the rest of the dairy to the egg mixture it won\u2019t cook the eg"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-006": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Why do ordinary US bank transfers and direct deposits take a business day or more to clear?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-money-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:136417",
+       "title": "How can a bank make it possible for their customers to get their salary up to two days in advance?",
+       "share": 0.5,
+       "anchor": 0.772,
+       "bm25_rank": 0,
+       "text": "This policy is standard for many US banks, e.g. Wells Fargo and Chase and often applies to all ACH/direct deposits, such as government benefits, pensions, and tax refunds. It is called early funds availability, and it actually is less generous than you expect.\n\nNormal ACH/direct deposit clears overnight on business days. The bank receives a message that money is to be deposited, but the actual fun"
+      },
+      {
+       "chunk": "pack:qa-money-se:34215",
+       "title": "Why do (ACH) payments that withdraw or deposit on my bank account require 1+ business days to complete?",
+       "share": 0.5,
+       "anchor": 0.726,
+       "bm25_rank": 1,
+       "text": "Automated Clearing House transactions are used in the US for direct deposit of pay checks and direct debit of many payments for accounts such as mortgages, credit cards, car loans, insurance premiums, etc. The reason they take one or more business days to clear is that the transactions are accumulated by each processor in the network during the day and processed as a batch at the end of each busin"
+      },
+      {
+       "chunk": "pack:qa-money-se:34213",
+       "title": "Why do (ACH) payments that withdraw or deposit on my bank account require 1+ business days to complete?",
+       "share": 0.5,
+       "anchor": 0.565,
+       "bm25_rank": 4,
+       "text": "As Nathan has correctly noted, ACH processes transactions in daily batches. The reason for that is accounting - the money doesn't actually change hands for each transaction. All the transactions are aggregated and calculated in the batch process, and the money only changes hands for the difference.\n\nConsider this:\n\n- 25 clients from bank A send each $50 to bank B.\n- 2 clients from bank B send each"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-money-se-012": {
+   "set": "cm",
+   "tag": "money",
+   "question": "In the UK, does earning a couple of pounds over the higher-rate threshold double my total income tax bill?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {}
+  },
+  "st-qa-money-se-018": {
+   "set": "cm",
+   "tag": "money",
+   "question": "For someone who would pay cash and values convenience over savings, does leasing a car or buying it outright make more sense?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

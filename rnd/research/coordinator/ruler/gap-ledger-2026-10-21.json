@@ -1,0 +1,83 @@
+{
+ "id": "C1-GAP-LEDGER",
+ "frozen": "2026-10-21",
+ "snapshot": {"repo": "<workspace>/wt/native-qa", "commit": "5f8cc8f4706891bd564e90a14a9769addc0b2ac9"},
+ "label": "our reading of the maintainer's pre-release snapshot, not of RC1",
+ "apk": {"file": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-15b/readout.json", "sha256": "d8f2b4a1", "field": "apk_sha256", "expect_prefix": "2ef43258"},
+ "verb_check_source": "rnd/research/coordinator/ruler/tools/a2_state_check.py",
+ "rows": [
+  {"row": 1, "cause": "model", "status": "established",
+   "sentence": "The 1.7B model behind our 8 GB numbers is not in the app's model catalog: catalog.json lists Qwen2.5-1.5B and Qwen3-4B but no Qwen3-1.7B (our reading of the maintainer's pre-release snapshot, not of RC1). On RC1 a request for the 1.7B failed with 'matches no installed model', and the only installed model was Qwen2.5-1.5B.",
+   "snapshot": [
+    {"kind": "sha", "path": "android-native/app/src/main/assets/boar-data/catalog.json", "expect_prefix": "18406c60"},
+    {"kind": "line", "path": "android-native/app/src/main/assets/boar-data/catalog.json", "line": 65, "expect": "\"id\": \"qwen2.5-1.5b-instruct-q4km\""},
+    {"kind": "line", "path": "android-native/app/src/main/assets/boar-data/catalog.json", "line": 44, "expect": "\"id\": \"qwen3-4b-instruct-2507-q4km\""},
+    {"kind": "absent", "path": "android-native/app/src/main/assets", "patterns": ["qwen3-1.7b", "qwen3-1_7b", "1.7b-instruct"]}],
+   "device": [
+    {"kind": "json_contains", "file": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-17b/summary.json", "sha256": "1f80de00", "path": ["status", "error"], "expect": "matches no installed model"},
+    {"kind": "json_eq", "file": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-17b/summary.json", "sha256": "1f80de00", "path": ["status", "installedModels"], "expect": ["qwen2.5-1.5b-instruct-q4km"]},
+    {"kind": "sha", "file": "rnd/research/coordinator/arms/rc1-pixel/RC1-SPEED.md", "sha256": "8736d486"}],
+   "recheck": "runsheet row 0b: Model Catalog photo sha; strike if it lists Qwen3-1.7B or apk sha is not 2ef43258"},
+  {"row": 2, "cause": "style", "status": "established",
+   "sentence": "The app's evaluation hook answers in the Detailed style with a 1,024-work budget because it takes the style from personalities.json defaultId ('detailed'), not from the user setting (DeviceEvalRunner.kt lines 164 and 203; our reading of the maintainer's pre-release snapshot, not of RC1). On RC1, 50 of 51 answers ran Detailed at maxTokens 1024; the app moved one to Succinct by its own short-answer rule.",
+   "snapshot": [
+    {"kind": "line", "path": "android-native/app/src/main/assets/boar-data/personalities.json", "line": 37, "expect": "\"defaultId\": \"detailed\""},
+    {"kind": "line", "path": "android-native/app/src/main/java/team/sopa/boar/eval/DeviceEvalRunner.kt", "line": 164, "expect": "autoMaxTokens(personalities.defaultId)"},
+    {"kind": "line", "path": "android-native/app/src/main/java/team/sopa/boar/eval/DeviceEvalRunner.kt", "line": 203, "expect": "\"succinct\" else personalities.defaultId"},
+    {"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/settings/AppSettings.kt", "line": 99, "expect": "AUTO_MAX_TOKENS_DETAILED = 1024"}],
+   "device": [
+    {"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "df26ed79", "field": "personalityId", "op": "eq", "value": "detailed", "expect": 50, "of": 51},
+    {"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "df26ed79", "field": "maxTokens", "op": "eq", "value": 1024, "expect": 51, "of": 51}],
+   "recheck": "none (eval-hook behaviour; the chat's own style is not measured here)"},
+  {"row": 3, "cause": "packs", "status": "established",
+   "sentence": "The app searched only its built-in knowledge base: RC1's log reads 'knowledge base + 0 packs', and its Knowledge screen offers extra collections only as network downloads from its own catalog, none of them ours. The code has no route to add a .sqlite pack offline: a single MAIN/LAUNCHER intent filter, and the only file picker takes text, CSV, JSON and PDF notes (our reading of the maintainer's pre-release snapshot, not of RC1).",
+   "snapshot": [
+    {"kind": "count", "path": "android-native/app/src/main/AndroidManifest.xml", "pattern": "<intent-filter", "expect": 1},
+    {"kind": "line", "path": "android-native/app/src/main/AndroidManifest.xml", "line": 31, "expect": "android.intent.action.MAIN"},
+    {"kind": "line", "path": "android-native/app/src/main/java/team/sopa/boar/ui/documents/DocumentsScreen.kt", "line": 60, "expect": "OpenMultipleDocuments()"},
+    {"kind": "line", "path": "android-native/app/src/main/java/team/sopa/boar/ui/documents/DocumentsScreen.kt", "line": 78, "expect": "\"application/json\", \"application/pdf\", \"text/*\""},
+    {"kind": "absent", "path": "android-native/app/src/main/assets", "patterns": ["boar-packs", "boar-crypto", "boar-wikivoyage"]}],
+   "device": [
+    {"kind": "line", "file": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-15b/logcat.txt", "sha256": "d761cb36", "line": 836, "expect": "knowledge base + 0 packs"},
+    {"kind": "sha", "file": "rnd/research/coordinator/arms/rc1-pixel/RC1-PACKS.md", "sha256": "69a944fa"}],
+   "recheck": "runsheet row 0b: Knowledge and Model Catalog photo shas; strike if a boar-packs entry is listed"},
+  {"row": 4, "cause": "warning line", "status": "established",
+   "sentence": "The app has no 'may be wrong' line for answers that come from model memory: the warning text our engine prints occurs 0 times in the code and assets (our reading of the maintainer's pre-release snapshot, not of RC1). On RC1 the line appeared on 0 of the 3 questions where our bench engine shows it, and on 0 of 51 answers.",
+   "snapshot": [
+    {"kind": "absent", "path": "android-native", "patterns": ["may be wrong", "from the model's memory", "Not found in this phone's offline library"]}],
+   "device": [
+    {"kind": "json_eq", "file": "handoff/pixel8-2026-10-20/bench/results/rc-speed9-15b/note2-rc-ref-aunion73a.json", "sha256": "354bc6b5", "path": ["line_presence"], "expect": "0/3"},
+    {"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "df26ed79", "field": "answer", "op": "icontains", "value": "may be wrong", "expect": 0, "of": 51}],
+   "recheck": "none"},
+  {"row": 5, "cause": "deterministic layers", "status": "not established",
+   "sentence": "Whether the app answers fact-table questions (population, height, dates and similar) with deterministic layers is not established: on RC1's evaluation hook the 8 such questions in the 51 all went to the 1.5B (176 to 424 generated tokens each), but that hook may bypass the chat's routing. Device-day check H2a decides.",
+   "snapshot": [],
+   "device": [
+    {"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "df26ed79", "field": "tokensGenerated", "op": "gt", "value": 0, "expect": 8, "of": 8,
+     "ids": ["lan-cmp-001", "lan-exp-006", "lan-ref-001", "lan-ref-004", "lan-ref-005", "lan-rsn-002", "lan-rsn-007", "trv-002"]}],
+   "recheck": "H2a (rc-layer10-4b / -15b): >= 4/5 probes matching cut 7 -> 'layers present', row leaves the ledger; else row reads 'no layers on RC1' with the H2a sha"},
+  {"row": 6, "cause": "KB similarity cutoff", "status": "established",
+   "sentence": "The app sends the model only knowledge-base passages with a similarity of at least 0.7 (RagPure.kt line 41, applied in Retriever.kt lines 72-73; our reading of the maintainer's pre-release snapshot, not of RC1). On RC1, retrieval was used on 1 of 51 questions, so the answers were in effect closed-book.",
+   "snapshot": [
+    {"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt", "line": 41, "expect": "ANSWER_MIN_SIMILARITY = 0.7"},
+    {"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/Retriever.kt", "line": 72, "expect": "RagPure.gateByRelevance(lexical"},
+    {"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/Retriever.kt", "line": 73, "expect": "RagPure.gateByRelevance(semantic"}],
+   "device": [
+    {"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "df26ed79", "field": "retrievalUsed", "op": "truthy", "expect": 1, "of": 51}],
+   "recheck": "none"}
+ ],
+ "negative_controls": [
+  {"row": 901, "cause": "planted wrong line (RagPure cutoff cited at line 35)", "status": "established", "must": "fail",
+   "sentence": "Planted control: the cutoff sits at RagPure.kt line 35 (our reading of the maintainer's pre-release snapshot, not of RC1).",
+   "snapshot": [{"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt", "line": 35, "expect": "ANSWER_MIN_SIMILARITY = 0.7"}],
+   "device": []},
+  {"row": 902, "cause": "planted verb (claims packs ship by default)", "status": "established", "must": "fail",
+   "sentence": "Planted control: the app ships packs by default (our reading of the maintainer's pre-release snapshot, not of RC1).",
+   "snapshot": [{"kind": "line", "path": "android-native/engine/src/main/java/team/sopa/boar/engine/rag/RagPure.kt", "line": 41, "expect": "ANSWER_MIN_SIMILARITY = 0.7"}],
+   "device": []},
+  {"row": 903, "cause": "planted wrong device sha", "status": "established", "must": "fail",
+   "sentence": "Planted control: retrieval was used on 1 of 51 questions (our reading of the maintainer's pre-release snapshot, not of RC1).",
+   "snapshot": [],
+   "device": [{"kind": "rows_count", "file": "handoff/pixel8-2026-10-20/bench/results/rc-cv5-51-15b/rows.jsonl", "sha256": "00000000", "field": "retrievalUsed", "op": "truthy", "expect": 1, "of": 51}]}
+ ]
+}

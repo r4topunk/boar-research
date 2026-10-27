@@ -1,0 +1,118 @@
+diff --git a/src/eval/answerEval.pure.ts b/src/eval/answerEval.pure.ts
+index b431957..4586fe5 100644
+--- a/src/eval/answerEval.pure.ts
++++ b/src/eval/answerEval.pure.ts
+@@ -10,12 +10,21 @@
+ import type { AnswerEvent, AnswerReceipt, AnswerResult, AnswerStageName } from "../routing/events";
+ import type { EvalCategory } from "./evalSet";
+ import type { EvalResultRow } from "./evalHarness.pure";
++import type { ConversationTurn } from "../rag/pure";
+ 
+ /** A question sent in a device request: any dataset (e.g. eval/dataset/questions.v2.jsonl), not only EVAL_SET. */
+ export interface EvalQuestion {
+   id: string;
+   query: string;
+   category?: string;
++  /** Earlier turns of the conversation, oldest first (multi-turn items: the chat-routing gate probe). None by default. */
++  history?: ConversationTurn[];
++}
++
++/** A history turn as { role, text } or as a [role, text] pair (the chat-slice files' form). */
++function toTurn(t: unknown): ConversationTurn | null {
++  const [role, text] = Array.isArray(t) ? t : [(t as any)?.role, (t as any)?.text];
++  return (role === "user" || role === "assistant") && typeof text === "string" && text.trim() !== "" ? { role, text } : null;
+ }
+ 
+ export const MAX_REQUEST_QUESTIONS = 500;
+@@ -174,7 +183,8 @@ function isQuestion(v: unknown): v is EvalQuestion {
+     q.id.trim() !== "" &&
+     typeof q.query === "string" &&
+     q.query.trim() !== "" &&
+-    (q.category === undefined || typeof q.category === "string")
++    (q.category === undefined || typeof q.category === "string") &&
++    (q.history === undefined || (Array.isArray(q.history) && q.history.every((t) => toTurn(t) !== null)))
+   );
+ }
+ 
+@@ -182,10 +192,15 @@ function isQuestion(v: unknown): v is EvalQuestion {
+ export function parseQuestions(value: unknown): EvalQuestion[] | undefined {
+   if (value === undefined) return undefined;
+   if (!Array.isArray(value) || value.length === 0 || !value.every(isQuestion)) {
+-    throw new Error('"questions" must be a non-empty list of { id, query, category? }');
++    throw new Error('"questions" must be a non-empty list of { id, query, category?, history? }');
+   }
+   if (value.length > MAX_REQUEST_QUESTIONS) throw new Error(`"questions" holds at most ${MAX_REQUEST_QUESTIONS} items`);
+-  const questions = value.map((q) => ({ id: q.id.trim(), query: q.query.trim(), category: q.category }));
++  const questions = value.map((q) => ({
++    id: q.id.trim(),
++    query: q.query.trim(),
++    category: q.category,
++    ...(q.history?.length ? { history: q.history.map((t) => toTurn(t)!) } : {}),
++  }));
+   // Unique after trimming: "a" and "a " would otherwise share one result key on resume and in the report.
+   if (new Set(questions.map((q) => q.id)).size !== questions.length) throw new Error('"questions" ids must be unique');
+   return questions;
+diff --git a/src/eval/answerEval.ts b/src/eval/answerEval.ts
+index b47bfad..81d1595 100644
+--- a/src/eval/answerEval.ts
++++ b/src/eval/answerEval.ts
+@@ -129,14 +129,20 @@ export interface AnswerEvaluationRun {
+ 
+ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+ 
+-async function askOnce(query: string, answerAnyway: boolean, shouldStop?: () => boolean) {
++async function askOnce(query: string, answerAnyway: boolean, shouldStop?: () => boolean, history?: EvalQuestion["history"]) {
+   const personality = getPersonality(DEFAULT_PERSONALITY_ID);
+   const events: TimedEvent[] = [];
+   const t0 = performance.now();
+   const handle = answer(
+     { query, answerAnyway: answerAnyway || undefined },
+     (event: AnswerEvent) => events.push({ atMs: performance.now() - t0, event }),
+-    { systemPrompt: personality.systemPrompt, styleReminder: personality.styleReminder, maxTokens: DEFAULT_MAX_TOKENS }
++    {
++      systemPrompt: personality.systemPrompt,
++      styleReminder: personality.styleReminder,
++      maxTokens: DEFAULT_MAX_TOKENS,
++      // A multi-turn item: its earlier turns, as the chat passes them (no summary).
++      ...(history?.length ? { history: { summary: null, turns: history } } : {}),
++    }
+   );
+   let result: AnswerResult | null = null;
+   let error: string | undefined;
+@@ -240,13 +246,13 @@ export async function runAnswerEvaluation({
+           maxTokens: DEFAULT_MAX_TOKENS,
+           answerSettings,
+         };
+-        const first = await askOnce(q.query, false, shouldStop);
++        const first = await askOnce(q.query, false, shouldStop, q.history);
+         const row = buildAnswerEvalRow(q, first.events, first.result, first.wallMs, { ...meta, answeredAnyway: false, createdAt: Date.now() }, first.error);
+         rows.push(row);
+         onRow?.(row);
+         if (row.declined && answerAnyway && !shouldStop?.()) {
+           await sleep(GAP_MS);
+-          const again = await askOnce(q.query, true, shouldStop);
++          const again = await askOnce(q.query, true, shouldStop, q.history);
+           const row2 = buildAnswerEvalRow(q, again.events, again.result, again.wallMs, { ...meta, answeredAnyway: true, createdAt: Date.now() }, again.error);
+           rows.push(row2);
+           onRow?.(row2);
+diff --git a/src/rag/perfArms.test.ts b/src/rag/perfArms.test.ts
+index daa5d81..b74f7a8 100644
+--- a/src/rag/perfArms.test.ts
++++ b/src/rag/perfArms.test.ts
+@@ -82,3 +82,16 @@ describe("device eval request perf", () => {
+     expect(() => parseEvalRequest('{"requestId":"r","pipeline":"answer","perf":{"sqlBatch":"yes"}}')).toThrow(/perf/);
+   });
+ });
++
++describe("device eval questions with history (gate probe multi-turn items)", () => {
++  it("accepts [role, text] pairs and { role, text }, and rejects other roles", () => {
++    const q = (h: unknown) => JSON.stringify({ requestId: "r", pipeline: "answer", questions: [{ id: "cs-029", query: "e o clima de lá?", history: h }] });
++    expect(parseEvalRequest(q([["user", "me fala de Lisboa"], ["assistant", "Lisboa é a capital [1]."]])).questions![0].history).toEqual([
++      { role: "user", text: "me fala de Lisboa" },
++      { role: "assistant", text: "Lisboa é a capital [1]." },
++    ]);
++    expect(parseEvalRequest(q([{ role: "user", text: "oi" }])).questions![0].history).toEqual([{ role: "user", text: "oi" }]);
++    expect(parseEvalRequest(q(undefined)).questions![0].history).toBeUndefined();
++    expect(() => parseEvalRequest(q([["system", "x"]]))).toThrow(/questions/);
++  });
++});

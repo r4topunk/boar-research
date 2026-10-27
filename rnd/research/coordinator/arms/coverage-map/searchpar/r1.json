@@ -1,0 +1,207 @@
+{
+ "arm": "R1 DENSE-RERANK",
+ "criterion_sha": "d8fca0ee",
+ "patch": "retrieve-sweep/patches/R1-RERANK.patch",
+ "patch_sha256": "db60aa3f54fcf9dca91af41630fa4dd89a3785e5f05a6e17c8d914dc887e7fae",
+ "identity_off_20_of_20": true,
+ "main": {
+  "F1b": {
+   "kept92": 45,
+   "kept_v01": 27,
+   "kept_cm": 18,
+   "stages": {
+    "S1": 7,
+    "S2": 16,
+    "S3": 24,
+    "K": 45
+   },
+   "gained": [],
+   "lost": [],
+   "junk_ratio_ownset": 1.0,
+   "junk_ratio_ctlset": 1.0,
+   "junk_ratio_bothset": 1.0,
+   "mean_kept": 3.489130434782609,
+   "kept_tokens": 445.9673913043478,
+   "kept_tokens_ratio": 1.0,
+   "wall_ms_mean": 838.9217391304348,
+   "wall_ms_p50": 877.6,
+   "kept_changed_vs_ctl": 0,
+   "raw_changed_vs_ctl": 0
+  },
+  "cos": {
+   "kept92": 48,
+   "kept_v01": 25,
+   "kept_cm": 23,
+   "stages": {
+    "S1": 7,
+    "S2": 16,
+    "S3": 21,
+    "K": 48
+   },
+   "gained": [
+    "st-qa-money-se-007",
+    "st-qa-money-se-002",
+    "lan-hlt-002",
+    "st-qa-money-se-015",
+    "vit-cry-010",
+    "vit-trv-003",
+    "st-qa-cooking-se-002",
+    "st-qa-money-se-006"
+   ],
+   "lost": [
+    "vit-cry-001",
+    "lan-ref-003",
+    "lan-rsn-004",
+    "vit-cry-006",
+    "vit-sci-001"
+   ],
+   "junk_ratio_ownset": 0.992558326629123,
+   "junk_ratio_ctlset": 1.1238938053097345,
+   "junk_ratio_bothset": 1.0689655172413792,
+   "mean_kept": 3.8152173913043477,
+   "kept_tokens": 483.4891304347826,
+   "kept_tokens_ratio": 1.084135611396817,
+   "wall_ms_mean": 6843.476086956522,
+   "wall_ms_p50": 7147.9,
+   "kept_changed_vs_ctl": 68,
+   "raw_changed_vs_ctl": 80,
+   "rule": {
+    "kept_ge_base_plus_4": false,
+    "losses_le_2": false,
+    "junk_le_1.15": true,
+    "qform_ge_minus1": true
+   },
+   "improves": false
+  },
+  "mix": {
+   "kept92": 49,
+   "kept_v01": 27,
+   "kept_cm": 22,
+   "stages": {
+    "S1": 7,
+    "S2": 16,
+    "S3": 20,
+    "K": 49
+   },
+   "gained": [
+    "st-qa-money-se-007",
+    "st-qa-money-se-002",
+    "lan-hlt-002",
+    "st-qa-money-se-015",
+    "st-qa-money-se-006"
+   ],
+   "lost": [
+    "vit-cry-006"
+   ],
+   "junk_ratio_ownset": 1.0446593949372298,
+   "junk_ratio_ctlset": 1.088495575221239,
+   "junk_ratio_bothset": 1.0510204081632653,
+   "mean_kept": 3.6956521739130435,
+   "kept_tokens": 472.6630434782609,
+   "kept_tokens_ratio": 1.0598600989543983,
+   "wall_ms_mean": 4714.016304347826,
+   "wall_ms_p50": 4749.799999999999,
+   "kept_changed_vs_ctl": 48,
+   "raw_changed_vs_ctl": 78,
+   "rule": {
+    "kept_ge_base_plus_4": true,
+    "losses_le_2": true,
+    "junk_le_1.15": true,
+    "qform_ge_minus1": true
+   },
+   "improves": true
+  }
+ },
+ "qform": {
+  "v2off": {
+   "hit_kept_n": 117,
+   "hit_raw_n": 147,
+   "hit_wide_n": 180,
+   "junk_kept": 1.4484126984126984,
+   "mean_kept": 1.5856481481481481,
+   "kept_tokens": 169.0810185185185,
+   "wall_ms_mean": 226.2162037037037
+  },
+  "v3extra": {
+   "hit_kept_n": 211,
+   "hit_raw_n": 265,
+   "hit_wide_n": 180,
+   "junk_kept": 3.492063492063492,
+   "mean_kept": 3.3796296296296298,
+   "kept_tokens": 457.07175925925924,
+   "wall_ms_mean": 261.4175925925926
+  },
+  "cos": {
+   "hit_kept_n": 226,
+   "hit_raw_n": 269,
+   "hit_wide_n": 180,
+   "junk_kept": 3.388888888888889,
+   "mean_kept": 3.310185185185185,
+   "kept_tokens": 438.1712962962963,
+   "wall_ms_mean": 630.1636574074074
+  },
+  "mix": {
+   "hit_kept_n": 217,
+   "hit_raw_n": 267,
+   "hit_wide_n": 180,
+   "junk_kept": 3.4325396825396823,
+   "mean_kept": 3.321759259259259,
+   "kept_tokens": 443.50231481481484,
+   "wall_ms_mean": 1100.2826388888889
+  }
+ },
+ "qform_delta": {
+  "cos-v3extra": {
+   "d": 3.4722222222222223,
+   "ci": [
+    1.6203703703703702,
+    5.555555555555555
+   ],
+   "ci_fact": [
+    1.8518518518518516,
+    5.324074074074074
+   ],
+   "gained": 16,
+   "lost": 1
+  },
+  "cos-v2off": {
+   "d": 25.23148148148148,
+   "ci": [
+    21.296296296296298,
+    29.398148148148145
+   ],
+   "ci_fact": [
+    19.444444444444446,
+    31.48148148148148
+   ],
+   "gained": 110,
+   "lost": 1
+  },
+  "mix-v3extra": {
+   "d": 1.3888888888888888,
+   "ci": [
+    0.4629629629629629,
+    2.5462962962962963
+   ],
+   "ci_fact": [
+    0.4629629629629629,
+    2.5462962962962963
+   ],
+   "gained": 6,
+   "lost": 0
+  },
+  "mix-v2off": {
+   "d": 23.14814814814815,
+   "ci": [
+    19.212962962962962,
+    27.314814814814813
+   ],
+   "ci_fact": [
+    17.59259259259259,
+    29.166666666666668
+   ],
+   "gained": 100,
+   "lost": 0
+  }
+ }
+}

@@ -1,0 +1,87 @@
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -231,6 +231,12 @@
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
+   /**
++   * LITE7 (eval-only switch, default off; the eval runs it on the lite-tier 1.7B only): the succinct persona's two style
++   * lines become "3-4 short sentences" + "include each specific figure, name or step the passages give". Health answers
++   * keep the house lines. Off/unset = byte-identical prompts. The X2b append budget is still measured on the house lines.
++   */
++  liteStyle?: boolean;
++  /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+    * sources against them; without them a PT question never names an English title.
+@@ -270,6 +276,12 @@
+ 
+ /** Room kept for the system prompt, history and template tokens around the sources. */
+ const PROMPT_OVERHEAD_TOKENS = 512;
++/** LITE7 (deps.liteStyle): the succinct persona's style lines and their lite-tier replacements (LITE6's thin bucket). */
++export const LITE_STYLE_SYSTEM_FROM = "Answer in 2-3 short, direct sentences or a brief paragraph, no preamble.";
++export const LITE_STYLE_SYSTEM_TO = "Answer in 3-4 short, direct sentences, no preamble.";
++export const LITE_STYLE_REMINDER_FROM = "Keep it short: 2-3 sentences.";
++export const LITE_STYLE_REMINDER_TO = "Use 3-4 short sentences; include each specific figure, name or step the passages give for what was asked.";
++const liteStyled = (t: string | undefined, from: string, to: string) => (t && t.includes(from) ? t.replace(from, to) : t);
+ /** HEADPASS-ST eval only (= ORACLE-ST's dump, default off): BOAR_PROMPT_DUMP = JSONL file that receives each generation's prompt/messages. */
+ const PROMPT_DUMP: string | undefined = typeof process !== "undefined" ? process.env?.BOAR_PROMPT_DUMP || undefined : undefined;
+ async function dumpPrompt(query: string, prompt: unknown): Promise<void> {
+@@ -1304,9 +1316,14 @@
+         reasonCodes.push("grounding:no-source-memory");
+         emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
+       }
++      // LITE7: the lite style lines, only where the house persona's lines are present and not on a health answer.
++      const lite7 =
++        !!deps.liteStyle && !health && (!!ctx.systemPrompt?.includes(LITE_STYLE_SYSTEM_FROM) || !!ctx.styleReminder?.includes(LITE_STYLE_REMINDER_FROM));
++      const systemPrompt = lite7 ? liteStyled(ctx.systemPrompt, LITE_STYLE_SYSTEM_FROM, LITE_STYLE_SYSTEM_TO) : ctx.systemPrompt;
++      if (lite7) reasonCodes.push("lite:style");
+       const styleReminder =
+         [
+-          ctx.styleReminder,
++          lite7 ? liteStyled(ctx.styleReminder, LITE_STYLE_REMINDER_FROM, LITE_STYLE_REMINDER_TO) : ctx.styleReminder,
+           health ? HEALTH_GROUNDING_INSTRUCTION : fromMemory ? NO_SOURCE_INSTRUCTION : undefined,
+           // "today"/"hoje": the model gets the device's date instead of guessing one (Prism TD-1).
+           mentionsNow(req.query) ? todayLine(deps.today?.() ?? new Date(), pt) : undefined,
+@@ -1389,7 +1406,7 @@
+         if (gen.mode === "multipass") {
+           const r = await deps.runMultipass(
+             req.query,
+-            ctx.systemPrompt,
++            systemPrompt,
+             ctx.history,
+             ctx.maxTokens,
+             (p) => {
+@@ -1442,19 +1459,19 @@
+             await dumpPrompt(
+               req.query,
+               useTemplate
+-                ? deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
+-                : deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder)
++                ? deps.assembleChatMessages(req.query, sources, systemPrompt, ctx.history, styleReminder)
++                : deps.assemblePrompt(req.query, sources, systemPrompt, ctx.history, styleReminder)
+             );
+           text = withoutModelReferences(
+             await deps.engine.generate(
+               useTemplate
+                 ? {
+                     ...common,
+-                    messages: deps.assembleChatMessages(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder),
++                    messages: deps.assembleChatMessages(req.query, sources, systemPrompt, ctx.history, styleReminder),
+                     // CUT5-SPEED: with no sources and no conversation summary the system message is static -> its own KV session file.
+                     ...(sources.length === 0 && !ctx.history?.summary?.trim() ? { staticSystem: true } : {}),
+                   }
+-                : { ...common, prompt: deps.assemblePrompt(req.query, sources, ctx.systemPrompt, ctx.history, styleReminder) }
++                : { ...common, prompt: deps.assemblePrompt(req.query, sources, systemPrompt, ctx.history, styleReminder) }
+             )
+           );
+           if (health) {
+--- a/be/adapter-lite5.ts
++++ b/be/adapter-lite7.ts
+@@ -811,6 +811,7 @@
+     recordExecution: async (r: any) => { records.push(r); },
+     memoryBytes: () => process.memoryUsage().rss,
+     ...(emergencyScore ? { emergencyScore } : {}),
++    ...(process.env.LITE_STYLE === "1" ? { liteStyle: true } : {}), // LITE7: lite-tier style lines (eval switch)
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 

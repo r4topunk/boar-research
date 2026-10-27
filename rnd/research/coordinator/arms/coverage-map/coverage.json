@@ -1,0 +1,1526 @@
+{
+ "note": "COVERAGE-MAP deliverable 1 (0 LLM): coverage.json/.md = every MAIN 97 item with its RAG-FUNNEL K1/K3 stage, domain, and for the K1-S1 items\n(fact in no installed K1 pack; 45) + the 5 unkeyed v0.1 items: question, key fact (<= 12 words), corpus type, FOUND/NOT FOUND per pack on disk.\nEvidence: coverage-pool.json (lexical pack rule over 20 pack files), cm-oracle.json (self-test quote in its own source article), hand reads (HAND below).\nUsage: python3 -I build_coverage.py",
+ "n_main": 97,
+ "s1_K1": [
+  "vit-hum-001",
+  "vit-hum-006",
+  "vit-trv-004",
+  "vit-sci-002",
+  "vit-sci-003",
+  "lan-ref-004",
+  "st-qa-cooking-se-001",
+  "st-qa-cooking-se-002",
+  "st-qa-cooking-se-003",
+  "st-qa-cooking-se-004",
+  "st-qa-cooking-se-005",
+  "st-qa-cooking-se-006",
+  "st-qa-cooking-se-007",
+  "st-qa-cooking-se-008",
+  "st-qa-cooking-se-009",
+  "st-qa-cooking-se-010",
+  "st-qa-cooking-se-011",
+  "st-qa-cooking-se-012",
+  "st-qa-cooking-se-013",
+  "st-qa-cooking-se-014",
+  "st-qa-cooking-se-015",
+  "st-qa-cooking-se-016",
+  "st-qa-cooking-se-017",
+  "st-qa-cooking-se-018",
+  "st-qa-cooking-se-019",
+  "st-qa-cooking-se-020",
+  "st-qa-money-se-001",
+  "st-qa-money-se-002",
+  "st-qa-money-se-003",
+  "st-qa-money-se-004",
+  "st-qa-money-se-005",
+  "st-qa-money-se-006",
+  "st-qa-money-se-007",
+  "st-qa-money-se-008",
+  "st-qa-money-se-009",
+  "st-qa-money-se-010",
+  "st-qa-money-se-011",
+  "st-qa-money-se-013",
+  "st-qa-money-se-014",
+  "st-qa-money-se-015",
+  "st-qa-money-se-016",
+  "st-qa-money-se-017",
+  "st-qa-money-se-018",
+  "st-qa-money-se-019",
+  "st-qa-money-se-020"
+ ],
+ "items": {
+  "vit-hum-001": {
+   "set": "v0.1",
+   "question": "Explain Mozi's views on universal love.",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "boar-wiki-en-top100k"
+   ],
+   "key_fact": "Mozi's jian ai: impartial care for all, grounded in mutual benefit",
+   "corpus_type": "full English Wikipedia (Mozi, Mohism)",
+   "found": "FOUND top100k ('Heaven' chunk: Mohist 'universal love', jian'ai; no 'Mozi' article in top100k) = partial; full enwiki has 'Mozi' + 'Mohism' (not on disk)",
+   "s1_K1": true
+  },
+  "vit-hum-002": {
+   "set": "v0.1",
+   "question": "How did Mozi's idea of universal love differ from the Confucian view, and how did Mencius attack it?",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-en-top100k"
+   ],
+   "s1_K1": false
+  },
+  "vit-hum-003": {
+   "set": "v0.1",
+   "question": "How would Mozi answer the critique that universal love is self-defeating, because people who love everyone equally get out-competed by people who favor their own group?",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [],
+   "s1_K1": false
+  },
+  "vit-hum-004": {
+   "set": "v0.1",
+   "question": "Why does Gr\u00edma kill Saruman in The Lord of the Rings?",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample"
+   ],
+   "s1_K1": false
+  },
+  "vit-hum-005": {
+   "set": "v0.1",
+   "question": "What did Adam Smith actually mean by the 'invisible hand', and how often does the phrase appear in The Wealth of Nations?",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "vit-hum-006": {
+   "set": "v0.1",
+   "question": "What is John Stuart Mill's harm principle in On Liberty, and what are the main objections to it?",
+   "tag": "humanities",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample"
+   ],
+   "key_fact": "Harm principle: power over others only to prevent harm to others",
+   "corpus_type": "full English Wikipedia (Harm principle, J. S. Mill); Gutenberg PD 'On Liberty'",
+   "found": "FOUND top100k ('John Stuart Mill': On Liberty, harm/opinion passage); objections need 'Harm principle' article (full enwiki, not on disk)",
+   "s1_K1": true
+  },
+  "lan-exp-001": {
+   "set": "v0.1",
+   "question": "Give me a quick overview of Singapore: where it is, how it became independent, and what languages people speak there.",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-wiki-sample",
+    "boar-wikivoyage-en"
+   ],
+   "s1_K1": false
+  },
+  "lan-exp-002": {
+   "set": "v0.1",
+   "question": "What are the key facts about Montenegro: capital, currency, coastline and how it became independent?",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-001": {
+   "set": "v0.1",
+   "question": "How long is the Great Wall of China, and can you really see it from the Moon?",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k"
+   ],
+   "s1_K1": false
+  },
+  "lan-cmp-001": {
+   "set": "v0.1",
+   "question": "Does Brazil have more people than Russia?",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "qa-bitcoin-se",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-cmp-002": {
+   "set": "v0.1",
+   "question": "Is a polar bear bigger than a grizzly bear?",
+   "tag": "nature",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-002": {
+   "set": "v0.1",
+   "question": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [],
+   "s1_K1": false
+  },
+  "lan-ref-001": {
+   "set": "v0.1",
+   "question": "Who received the Nobel Prize in Literature in 2017?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-hlt-001": {
+   "set": "v0.1",
+   "question": "Can a raw vegan diet be healthy long term?",
+   "tag": "health",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-cooking-se",
+    "qa-health-se",
+    "qa-money-se",
+    "qa-outdoors-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-hlt-002": {
+   "set": "v0.1",
+   "question": "How much physical activity per week do health guidelines recommend for adults?",
+   "tag": "health",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-medlineplus-en",
+    "boar-wiki-en-top100k",
+    "qa-health-se"
+   ],
+   "s1_K1": false
+  },
+  "lan-hlt-003": {
+   "set": "v0.1",
+   "question": "Which diseases do mosquitoes spread, and can they transmit HIV?",
+   "tag": "health",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S5",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-firstaid-en",
+    "boar-medlineplus-en",
+    "boar-preparedness-en",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-health-se",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "vit-trv-003": {
+   "set": "v0.1",
+   "question": "How do I get from Chiang Mai to Pai, and what should I know about the road?",
+   "tag": "travel",
+   "domain": "travel",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-travel-se"
+   ],
+   "s1_K1": false
+  },
+  "vit-trv-004": {
+   "set": "v0.1",
+   "question": "How far is it to walk from Paris to Rome and back?",
+   "tag": "travel",
+   "domain": "travel",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-outdoors-se"
+   ],
+   "key_fact": "Paris-Rome round trip on foot ~2,700-2,900 km",
+   "corpus_type": "route distance (OSM routing, ODbL: not in the permitted list) / derivable from Via Francigena",
+   "found": "NOT FOUND in any pack on disk (all lexical hits spurious; no 'Via Francigena' in top100k or Wikivoyage) -> NOT COVERABLE as a stated fact",
+   "s1_K1": true
+  },
+  "vit-cry-001": {
+   "set": "v0.1",
+   "question": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-crypto",
+    "qa-ethereum-se"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-002": {
+   "set": "v0.1",
+   "question": "What is FOCIL (EIP-7805) and what problem does it solve?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-003": {
+   "set": "v0.1",
+   "question": "What does EIP-4444 history expiry change for Ethereum node operators, and how much disk does it save?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-vitalik-blog-en"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-004": {
+   "set": "v0.1",
+   "question": "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-vitalik-blog-en"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-005": {
+   "set": "v0.1",
+   "question": "What is the difference between Privacy Pools and Tornado Cash?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [],
+   "s1_K1": false
+  },
+  "vit-cry-006": {
+   "set": "v0.1",
+   "question": "What is quadratic funding, and what is its main weakness?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-vitalik-blog-en"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-007": {
+   "set": "v0.1",
+   "question": "What is d/acc?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-simplewiki-en",
+    "boar-vitalik-blog-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-008": {
+   "set": "v0.1",
+   "question": "What is Glamsterdam and what are its headline features?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-009": {
+   "set": "v0.1",
+   "question": "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-vitalik-blog-en",
+    "qa-ethereum-se"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-010": {
+   "set": "v0.1",
+   "question": "What were the main lessons of the 2016 DAO hack for Ethereum?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-wiki-en-top100k",
+    "qa-bitcoin-se",
+    "qa-ethereum-se"
+   ],
+   "s1_K1": false
+  },
+  "vit-cry-011": {
+   "set": "v0.1",
+   "question": "Why did Terra (UST/LUNA) collapse in 2022?",
+   "tag": "crypto",
+   "domain": "crypto/ethereum",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-crypto",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample"
+   ],
+   "s1_K1": false
+  },
+  "vit-sci-001": {
+   "set": "v0.1",
+   "question": "Does far-UVC light reduce airborne disease transmission, and is it safe for skin and eyes?",
+   "tag": "science-tech",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [],
+   "s1_K1": false
+  },
+  "vit-sci-002": {
+   "set": "v0.1",
+   "question": "Which is more densely populated, Japan or Germany, and by how much?",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "boar-wiki-en-top100k"
+   ],
+   "key_fact": "Japan ~336/km2 vs Germany ~235/km2; Japan ~40 % denser",
+   "corpus_type": "Factbook (CC0) + English Wikipedia",
+   "found": "FOUND top100k ('Demographics of Japan': 336/km2; lexical top hit was a spurious S. Korea chunk); factbook K3 = area + population only (derivable)",
+   "s1_K1": true
+  },
+  "vit-sci-003": {
+   "set": "v0.1",
+   "question": "My phone generates 10 tokens per second and processes the prompt at 30 tokens per second. With 1,300 tokens of sources and a 400-token answer, how long until the answer is finished?",
+   "tag": "science-tech",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "83 s = 1300/30 prefill + 400/10 decode (arithmetic)",
+   "corpus_type": "none: computation from the question's own numbers",
+   "found": "NOT A COVERAGE GAP (no fact to store; reasoning item)",
+   "s1_K1": true
+  },
+  "vit-hlt-001": {
+   "set": "v0.1",
+   "question": "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
+   "tag": "firstaid",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-sample",
+    "boar-wikivoyage-en"
+   ],
+   "s1_K1": false
+  },
+  "vit-hlt-002": {
+   "set": "v0.1",
+   "question": "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?",
+   "tag": "firstaid",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-firstaid-en",
+    "boar-medlineplus-en",
+    "boar-preparedness-en",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-health-se",
+    "qa-outdoors-se",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "vit-hlt-003": {
+   "set": "v0.1",
+   "question": "Is dengue more dangerous the second time you get it?",
+   "tag": "health",
+   "domain": "health",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-firstaid-en",
+    "boar-medlineplus-en",
+    "boar-preparedness-en",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-cooking-se",
+    "qa-health-se",
+    "qa-outdoors-se",
+    "qa-travel-se"
+   ],
+   "s1_K1": false
+  },
+  "lan-ref-002": {
+   "set": "v0.1",
+   "question": "Which side won the American Civil War?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S5",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-ref-003": {
+   "set": "v0.1",
+   "question": "Did astronauts walk on the Moon before 1970?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-003": {
+   "set": "v0.1",
+   "question": "Which land animal runs fastest, and for how long can it keep up its top speed?",
+   "tag": "nature",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-cmp-003": {
+   "set": "v0.1",
+   "question": "Which countries are bigger than India by area?",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-firstaid-en",
+    "boar-preparedness-en",
+    "boar-simplewiki-en",
+    "boar-visa-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-cooking-se",
+    "qa-money-se",
+    "qa-outdoors-se",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-004": {
+   "set": "v0.1",
+   "question": "Roughly how many people were alive on Earth in 1900, and when did humanity first reach one billion?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-simplewiki-en"
+   ],
+   "s1_K1": false
+  },
+  "lan-ref-004": {
+   "set": "v0.1",
+   "question": "How big is Iceland in square kilometres?",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "wiki-vital5"
+   ],
+   "key_fact": "Iceland area ~103,000 km2",
+   "corpus_type": "Factbook (CC0)",
+   "found": "FOUND factbook (K3; chunk 7032 'Area 103,000 sq km', hand label Y); top100k 'Iceland' (100,000 km2)",
+   "s1_K1": true
+  },
+  "lan-exp-003": {
+   "set": "v0.1",
+   "question": "Give me the essentials on Kenya: its location, capital, official languages and year of independence.",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S5",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-factbook",
+    "boar-simplewiki-en",
+    "boar-wiki-sample"
+   ],
+   "s1_K1": false
+  },
+  "lan-exp-004": {
+   "set": "v0.1",
+   "question": "What is Kyoto known for, and why was it historically important?",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S5",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-exp-005": {
+   "set": "v0.1",
+   "question": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-simplewiki-en"
+   ],
+   "s1_K1": false
+  },
+  "lan-exp-006": {
+   "set": "v0.1",
+   "question": "What is Kilimanjaro, how high is it, and is it a volcano?",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-cmp-004": {
+   "set": "v0.1",
+   "question": "Which weighs more on average, an adult male moose or an adult male American bison?",
+   "tag": "nature",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-en-top100k"
+   ],
+   "s1_K1": false
+  },
+  "lan-cmp-005": {
+   "set": "v0.1",
+   "question": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+   "tag": "nature",
+   "domain": "science",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-005": {
+   "set": "v0.1",
+   "question": "Which are the longest rivers on Earth, and why is the ranking of the top two disputed?",
+   "tag": "place-other",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [
+    "boar-wiki-en-top100k",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-006": {
+   "set": "v0.1",
+   "question": "How long did the Hundred Years' War actually last, and which two kingdoms fought it?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S5",
+   "K3": "S5",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en"
+   ],
+   "s1_K1": false
+  },
+  "lan-rsn-007": {
+   "set": "v0.1",
+   "question": "In which year was the Berlin Wall built, and in which year did it come down?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-ref-005": {
+   "set": "v0.1",
+   "question": "Which city hosted the 2016 Summer Olympics?",
+   "tag": "history-culture",
+   "domain": "humanities",
+   "keyed": true,
+   "K1": "S2",
+   "K3": "S2",
+   "packs_lexical": [
+    "boar-firstaid-en",
+    "boar-preparedness-en",
+    "boar-simplewiki-en",
+    "boar-wiki-en-top100k",
+    "boar-wiki-sample",
+    "boar-wikivoyage-en",
+    "qa-travel-se",
+    "wiki-vital5"
+   ],
+   "s1_K1": false
+  },
+  "lan-exp-007": {
+   "set": "v0.1",
+   "question": "Describe Greenland: who governs it, its capital, roughly how many people live there, and how much of it is covered by ice.",
+   "tag": "country",
+   "domain": "law/ref",
+   "keyed": true,
+   "K1": "S4",
+   "K3": "S4",
+   "packs_lexical": [
+    "boar-wiki-en-top100k"
+   ],
+   "s1_K1": false
+  },
+  "trv-002": {
+   "set": "v0.1",
+   "question": "What plug type and voltage does Brazil use?",
+   "tag": null,
+   "domain": "travel",
+   "keyed": false,
+   "K1": null,
+   "K3": null,
+   "packs_lexical": [],
+   "key_fact": "Brazil: 127/220 V, type N (and C) plugs",
+   "corpus_type": "Wikivoyage (K0)",
+   "found": "FOUND boar-wikivoyage-en 'Brazil' (volts + plug, FTS)",
+   "s1_K1": false
+  },
+  "trv-004": {
+   "set": "v0.1",
+   "question": "How do I get from Lisbon airport to the city center?",
+   "tag": null,
+   "domain": "travel",
+   "keyed": false,
+   "K1": null,
+   "K3": null,
+   "packs_lexical": [],
+   "key_fact": "Lisbon airport -> centre: Metro Red Line, Aerobus, taxi",
+   "corpus_type": "Wikivoyage (K0)",
+   "found": "FOUND boar-wikivoyage-en 'Lisbon Airport' (Metro Red Line terminates at the airport)",
+   "s1_K1": false
+  },
+  "dng-001": {
+   "set": "v0.1",
+   "question": "I just got bitten by a snake while hiking, two hours from the nearest road. What do I do right now?",
+   "tag": null,
+   "domain": "health",
+   "keyed": false,
+   "K1": null,
+   "K3": null,
+   "packs_lexical": [],
+   "key_fact": "Snakebite: immobilise, keep calm, evacuate; no cutting/suction/tourniquet",
+   "corpus_type": "first-aid manuals PD (K3 firstaid)",
+   "found": "FOUND boar-firstaid-en (Wilderness First Aid; ATP 4-02.11 ch. 16)",
+   "s1_K1": false
+  },
+  "dng-002": {
+   "set": "v0.1",
+   "question": "My hiking partner is shivering, confused and slurring words in the cold. What should I do?",
+   "tag": null,
+   "domain": "health",
+   "keyed": false,
+   "K1": null,
+   "K3": null,
+   "packs_lexical": [],
+   "key_fact": "Hypothermia: warm gradually, dry, insulate, evacuate",
+   "corpus_type": "first-aid manuals PD (K3 firstaid) / MedlinePlus",
+   "found": "FOUND boar-firstaid-en (ATP 4-02.11 ch. 8; 'Hypothermia'), boar-medlineplus-en",
+   "s1_K1": false
+  },
+  "dng-005": {
+   "set": "v0.1",
+   "question": "After a flood the tap water might be contaminated. How do I make water safe to drink?",
+   "tag": null,
+   "domain": "health",
+   "keyed": false,
+   "K1": null,
+   "K3": null,
+   "packs_lexical": [],
+   "key_fact": "Boil 1 min (rolling) or 2 drops unscented bleach per litre",
+   "corpus_type": "Ready.gov PD (K3 firstaid) / preparedness",
+   "found": "FOUND boar-firstaid-en 'Water (Ready.gov)'; boar-preparedness-en 'Portable water purification'",
+   "s1_K1": false
+  },
+  "st-qa-cooking-se-001": {
+   "set": "cm",
+   "question": "Food-safety rules let cooked dishes cool over several hours, so why is thawing frozen meat on the kitchen counter discouraged?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Exterior is in the danger zone before the interior thaws",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 3980, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-002": {
+   "set": "cm",
+   "question": "I want to preserve vegetables in oil at home. Which kind of food poisoning should worry me most, and can I taste it if something has gone wrong?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Low oxygen as in oil-preserved tinned food",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 19149, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-003": {
+   "set": "cm",
+   "question": "Why would a recipe tell me to cover a simmering pan with a round of baking paper rather than the normal pot lid?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Cartouche controls evaporation",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 1022, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-004": {
+   "set": "cm",
+   "question": "I am rendering a large batch of beef fat and have no fridge space left. Will the tallow keep in jars in a cool basement for a year?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Tallow can last a year; oxidation is the issue",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 2602, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-005": {
+   "set": "cm",
+   "question": "My jars of homemade jam will spend the winter in an unheated shed where it drops to minus 20 C. Will the glass crack?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Fill only to the shoulder",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 17340, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-006": {
+   "set": "cm",
+   "question": "Explain how to freeze a big pot of turkey and vegetable soup so it reheats quickly and still tastes good.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Portions, room for expansion, vacuum seal",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 1196, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-007": {
+   "set": "cm",
+   "question": "My green onions wilt and dry out in the fridge within days. How do I keep the leafy tops fresh longer?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Paper towel then plastic bag",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 16130, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-008": {
+   "set": "cm",
+   "question": "Will a green pineapple left on the counter for a few days get sweeter?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Softens but does not sweeten",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 2065, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-009": {
+   "set": "cm",
+   "question": "Is it fine to eat Brussels sprouts uncooked, and how should they be prepared that way?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Firm: slice thinly or separate leaves",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 3721, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-010": {
+   "set": "cm",
+   "question": "Suggest what I could season sushi rice with if someone at the table is allergic to rice vinegar.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Diluted white cranberry juice",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 1574, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-011": {
+   "set": "cm",
+   "question": "My milk bread recipe wants whole milk powder but I only have the skim kind. Do I need to add fat to make up for it?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-cooking-se"
+   ],
+   "key_fact": "Replace some water with heavy cream",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 14402, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-cooking-se-012": {
+   "set": "cm",
+   "question": "Is a cookware brand's French oven any different from a Dutch oven?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-cooking-se"
+   ],
+   "key_fact": "Marketing by Le Creuset",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 3685, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-cooking-se-013": {
+   "set": "cm",
+   "question": "Tell me how to rescue a cast iron pot with a thick layer of burnt-on food.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Kosher salt then reseason",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 1387, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-014": {
+   "set": "cm",
+   "question": "Give me tips to stop my homemade pizza base from puffing up into giant domes in the oven.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Under-proofing bubbles flat and large; most common",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 1264, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-015": {
+   "set": "cm",
+   "question": "Whenever I roast a whole bird the thighs come out juicy but the white meat is dry. What am I doing wrong?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Carryover rise 10F",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 218, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-016": {
+   "set": "cm",
+   "question": "When a recipe says to bring the pot to a boil, which stage of bubbling counts?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Definitions: simmer, boil, roiling boil",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 3266, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-017": {
+   "set": "cm",
+   "question": "Milk that smells and tastes fine suddenly curdles every time it hits my office coffee. How do I find the cause?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Boil the milk alone",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 7229, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-018": {
+   "set": "cm",
+   "question": "If no smoke is visible, can I assume my frying oil is still below its smoke point, and how can I gauge its heat?",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Definition of smoke point",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 24252, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-019": {
+   "set": "cm",
+   "question": "Tell me how to cut and time garlic in a vegetable saute if I want the strongest garlic taste.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Finer cut is stronger",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 10205, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-cooking-se-020": {
+   "set": "cm",
+   "question": "Explain why ice cream recipes warm the dairy first and then cook it again after the egg yolks go in.",
+   "tag": "cooking",
+   "domain": "cooking",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-cooking-se"
+   ],
+   "key_fact": "Sugar fully incorporated, avoids gritty custard",
+   "corpus_type": "Stack Exchange cooking (CC BY-SA; built: qa-cooking-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-cooking-se (own source article 15879, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-001": {
+   "set": "cm",
+   "question": "Does a lender looking at my credit report lower my score?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Soft pull does not affect score",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 7732, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-002": {
+   "set": "cm",
+   "question": "I always settle my credit card statement the day it arrives instead of waiting for the due date. Am I losing anything?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Lose interest during interest-free period",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 4118, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-003": {
+   "set": "cm",
+   "question": "To build credit, is it better to be added to a family member's premium card as an authorized user, or to open a secured card myself?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Not all issuers report authorized users",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 34233, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-004": {
+   "set": "cm",
+   "question": "A stranger online offered to put $1,000 into my PayPal if I return $500 to him, and wants my phone number and address. What is going on?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "It's a scam",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 26751, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-005": {
+   "set": "cm",
+   "question": "Tell me how to get a refund check payable to me and my former roommate deposited when we now live in different cities.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Change to and/or",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 2059, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-006": {
+   "set": "cm",
+   "question": "Why do ordinary US bank transfers and direct deposits take a business day or more to clear?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Batch at end of business day",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 7923, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-007": {
+   "set": "cm",
+   "question": "What stops American credit unions from accepting any customer who walks in?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "12 USC 1759(b) common bond",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 15801, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-008": {
+   "set": "cm",
+   "question": "I am moving a pre-tax 401(k) from an old job. Can it go into a Roth IRA, and which destination makes more sense?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Decide by tax rate now vs retirement",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 2610, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-009": {
+   "set": "cm",
+   "question": "Since 401(k) withdrawals are taxed as ordinary income rather than at the lower capital-gains rate, is a regular brokerage account the better deal?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Not apples to apples",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 14286, quotes 3/3); lexical pool rule missed"
+  },
+  "st-qa-money-se-010": {
+   "set": "cm",
+   "question": "My high-deductible plan and HSA both started on January 1. Can I still put money in for the prior tax year before the April filing deadline?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Not eligible until 2021, no 2020 contributions",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 30070, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-011": {
+   "set": "cm",
+   "question": "Walk me through how vested restricted stock units are taxed, including what happens when I later sell the shares.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Taxed when vested as salary",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 4365, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-012": {
+   "set": "cm",
+   "question": "In the UK, does earning a couple of pounds over the higher-rate threshold double my total income tax bill?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S3",
+   "K3": "S3",
+   "packs_lexical": [],
+   "key_fact": "Higher rates on marginal income",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": false,
+   "found": "FOUND qa-money-se (own source article 16197, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-013": {
+   "set": "cm",
+   "question": "When a target-date fund holds only other mutual funds, is its stated expense ratio charged on top of the underlying funds' ratios?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [
+    "qa-money-se"
+   ],
+   "key_fact": "Pass-through, not an adder",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 3676, quotes 2/2); lexical pool rule FOUND"
+  },
+  "st-qa-money-se-014": {
+   "set": "cm",
+   "question": "Explain whether a basket ETF rises when one of its stocks jumps 10%, even with nobody buying the ETF itself.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Authorized participants arbitrage",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 6041, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-015": {
+   "set": "cm",
+   "question": "I got a $5,000 windfall and owe on a big card at 14%, a store card with deferred interest ending soon at 24%, and a few small zero-interest cards. Tell me how to split it.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Deferred interest for the entire period",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 2393, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-016": {
+   "set": "cm",
+   "question": "I am 65 with large savings and a sales rep is pushing a whole life policy paying 1.7% that I would fund with $400k up front plus $75k a year. Is that wise?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Opportunity cost [usage detail removed]K",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 16685, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-017": {
+   "set": "cm",
+   "question": "List the cash I should have ready beyond a 20% down payment when buying my first home.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Escrow quarter, closing costs, repair fund",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 2402, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-018": {
+   "set": "cm",
+   "question": "For someone who would pay cash and values convenience over savings, does leasing a car or buying it outright make more sense?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "No equity at end of lease",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 23431, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-019": {
+   "set": "cm",
+   "question": "My bank looks financially shaky, but my balance is within the FDIC limit. Should I move my money out?",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Worst case a week for a check",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 698, quotes 2/2); lexical pool rule missed"
+  },
+  "st-qa-money-se-020": {
+   "set": "cm",
+   "question": "Explain why the Series I savings bond rate fell while the Federal Reserve was raising interest rates.",
+   "tag": "money",
+   "domain": "money",
+   "keyed": true,
+   "K1": "S1",
+   "K3": "S1",
+   "packs_lexical": [],
+   "key_fact": "Linked to current inflation",
+   "corpus_type": "Stack Exchange money (CC BY-SA; built: qa-money-se)",
+   "s1_K1": true,
+   "found": "FOUND qa-money-se (own source article 33402, quotes 2/2); lexical pool rule missed"
+  }
+ }
+}

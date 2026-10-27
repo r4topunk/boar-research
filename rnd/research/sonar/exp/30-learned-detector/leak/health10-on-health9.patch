@@ -1,0 +1,17 @@
+--- a/src/routing/ptQuery.ts	2026-10-03 03:32:16
++++ b/src/routing/ptQuery.ts	2026-10-03 10:52:00
+@@ -65,8 +65,13 @@
+       if (!out.includes(en)) out.push(en);
+     }
+   }
+-  return out.length ? out.join(" ") : null;
++  // Sonar exp-30: a translation made only of modifiers is not the question's subject. "Meu bebê está com
++  // diarreia e vômito…" -> "child" matched every source naming a child (ERC-7401 "Parent-Governed NFTs"
++  // shown under the model's answer and under the compact decline). Then the question is matched by its own words.
++  if (out.every((t) => MODIFIER_TERMS.has(t))) return null;
++  return out.join(" ");
+ }
++const MODIFIER_TERMS = new Set(["child", "stop", "treat", "prevent"]);
+ 
+ // English first-aid questions phrased as a story ("I just got bitten by a snake while hiking")
+ // share few words with the articles (Snakebite, Burn, Hypothermia): search with their names.

@@ -1,0 +1,55 @@
+From bb71eb4fc75f664a4d22821a735554790c8b1de6 Mon Sep 17 00:00:00 2001
+From: BOAR R&D <noreply>
+Date: Sun, 18 Oct 2026 17:51:55 -0300
+Subject: [PATCH 2/8] routing: count a car, SUV or truck cab as an enclosed
+ space for the carbon-monoxide card
+
+"Can I run a propane heater in the car?" got no carbon-monoxide card: the enclosed-space list had van, camper and RV but no car, so only "inside my car" fired. The list now names car, SUV, truck, truck cab, minivan and vehicle; a fuel device is still required, so "charge my phone in the car" and "bring a propane tank in the car" stay out. Found by the native app's plugin suite. 0 new firings on 625 public bench questions; full suite 1,484/1,484 with and without HEALTHGAP.
+
+Co-Authored-By: Claude Opus 5.5 <noreply>
+---
+ src/routing/coHazard.test.ts | 17 +++++++++++++++++
+ src/routing/coHazard.ts      |  2 +-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/src/routing/coHazard.test.ts b/src/routing/coHazard.test.ts
+index b6901f51..842d3da3 100644
+--- a/src/routing/coHazard.test.ts
++++ b/src/routing/coHazard.test.ts
+@@ -163,3 +163,20 @@ describe("coHazardAnswer", () => {
+     expect(coHazardAnswer("Where should I put the generator, garage or outside?")).toMatch(/^Carbon monoxide/);
+   });
+ });
++
++describe("vehicle cabins (native app suite, 2026-10-18)", () => {
++  it("a fuel heater or stove in a car, SUV or truck cab fires; car questions without a burner do not", () => {
++    for (const q of [
++      "Can I run a propane heater in the car?",
++      "Can I sleep in my SUV with a small gas heater on?",
++      "Can I cook with a camping stove inside my truck cab when it rains?",
++    ])
++      expect(isCoHazardQuestion(q), q).toBe(true);
++    for (const q of [
++      "How long does a car battery last?",
++      "Can I charge my phone in the car?",
++      "Is it okay to bring a propane tank in the car to the campsite?",
++    ])
++      expect(isCoHazardQuestion(q), q).toBe(false);
++  });
++});
+diff --git a/src/routing/coHazard.ts b/src/routing/coHazard.ts
+index 6e5172be..ce03c431 100644
+--- a/src/routing/coHazard.ts
++++ b/src/routing/coHazard.ts
+@@ -87,7 +87,7 @@ const RUNNING = re(`${B}(?:run|running|use|using|operate|operating|start|startin
+ const SPACE = re(
+   [
+     `${B}indoors?${E}`,
+-    `${B}(?:inside|in|into) (?:the |my |our |a |your |an |his |her |their )?(?:[\\p{L}-]+ ){0,2}(?:house|home|bedroom|living room|apartment|flat|cabin|room|tent|camper|garage|basement|shed|van|rv|caravan|trailer|motorhome|boat|yurt|hut|shelter|dorm|condo|workshop|barn|porch|sunroom|conservatory)${E}`,
++    `${B}(?:inside|in|into) (?:the |my |our |a |your |an |his |her |their )?(?:[\\p{L}-]+ ){0,2}(?:house|home|bedroom|living room|apartment|flat|cabin|room|tent|camper|garage|basement|shed|van|minivan|car|suv|truck|truck cab|vehicle|rv|caravan|trailer|motorhome|boat|yurt|hut|shelter|dorm|condo|workshop|barn|porch|sunroom|conservatory)${E}`,
+     `${B}garages?${E}(?! (?:sale|band|door opener))`,
+     `${B}carports?${E}`,
+     `${B}on (?:the |my |our |a )?(?:enclosed |screened |screened-in |covered |closed-in )?(?:porch|sunroom|veranda)${E}`,
+-- 
+2.50.1 (Apple Git-155)
+

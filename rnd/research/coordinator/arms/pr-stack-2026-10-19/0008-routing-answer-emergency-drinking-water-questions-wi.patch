@@ -1,0 +1,352 @@
+From 7b798a7c1cc7cf8c3cc268bfb739a7fbab5b423b Mon Sep 17 00:00:00 2001
+From: BOAR R&D <noreply>
+Date: Mon, 19 Oct 2026 14:40:46 -0300
+Subject: [PATCH 8/9] routing: answer emergency drinking-water questions with a
+ fixed water-treatment card
+
+"After a flood the tap water might be contaminated. How do I make water safe to drink?" got a travel guide's line ("Tap water is not safe to drink...") instead of how to treat the water. An English question about making drinking water safe in an emergency (flood, storm, outage, boil-water notice, contamination, a flooded well, only creek or lake water left) now gets a fixed card before any model, in the carbon-monoxide card's pattern: use bottled or stored water; follow the local notice; settle or filter cloudy water, then boil 1 minute (3 above 1,000 m); unscented bleach at 2 drops per litre for 5-9% bleach or 10 for 1% bleach, doubled for cloudy, coloured or very cold water, 30 minutes, chlorine-smell check; what boiling and bleach can't fix; flooded wells. The text is an independent reviewer's sentence-by-sentence match to CDC "How to Make Water Safe in an Emergency" and US EPA "Emergency Disinfection of Drinking Water" (public domain; both pages re-checked 2026-10-19, figures unchanged). AI-reviewed, not clinically reviewed. Receipt: answer:safety-fact-water, label "Safety facts (CDC, EPA)". Portuguese and Spanish questions are untouched.
+
+The trigger needs a drinking-water subject, a make-safe ask, an emergency context and a present need, and stays off swimming, pools, laundry, cooking, appliances, plumbing, driving, history, how-it-works and backcountry filtering. It favours precision: on its last fresh set it fired on 18 of 25 water questions and on none of 75 others; a missed phrasing keeps the normal health route, so a miss costs nothing that exists today. On 640 public bench and self-test messages it fires twice, both water-treatment questions (dng-005 and the emergency pack's flood tap-water self-test). Three retrieval tests that used dng-005 now use a phrasing without a make-safe word, which still takes the health route.
+
+Co-Authored-By: Claude Opus 5.5 <noreply>
+---
+ src/routing/answer.test.ts      |  26 ++++++--
+ src/routing/answer.ts           |  11 +++
+ src/routing/waterSafety.test.ts | 115 ++++++++++++++++++++++++++++++++
+ src/routing/waterSafety.ts      | 111 ++++++++++++++++++++++++++++++
+ 4 files changed, 259 insertions(+), 4 deletions(-)
+ create mode 100644 src/routing/waterSafety.test.ts
+ create mode 100644 src/routing/waterSafety.ts
+
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 753facb5..386284fd 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -349,12 +349,12 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+     const contamination = { ...chunk("wc", "Wikivoyage: Water", "Water contamination: boil water for one minute at a rolling boil before you drink it."), action: true };
+     const stayHealthy = { ...chunk("sh", "Wikivoyage: Stay healthy", "During your trip > Precautions against disease > Water contamination: After a flood, boil water for one minute at a rolling boil before you drink it."), action: true };
+     f.retrieved = [stayHealthy, quality] as any;
+-    const first = await collect("After a flood the tap water might be contaminated. How do I make water safe to drink?");
++    const first = await collect("After a flood the tap water might be contaminated. What should I do about drinking water?");
+     // Topic named by the section heading, not the article title (gate 5e70bbd, safety-005).
+     expect(first.result.text).toMatch(/Water contamination: After a flood, boil water .* \[\d\]\n\nIn an emergency/);
+     f = makeFake();
+     f.retrieved = [quality, contamination] as any;
+-    const { result } = await collect("After a flood the tap water might be contaminated. How do I make water safe to drink?");
++    const { result } = await collect("After a flood the tap water might be contaminated. What should I do about drinking water?");
+     expect(result.text).toMatch(/^(?:The offline library has no guidance specific to a flood; the passage below is general advice on the subject\.\n\n)?From the offline source:\nWater contamination: boil water for one minute .* \[\d\]\n\nIn an emergency/);
+   });
+ 
+@@ -389,7 +389,7 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+       ["My friend was bitten by a snake on a hike. How do we treat the bite?", chunk("r", "Renealmia cernua", "Renealmia cernua is a plant. Its leaves are used against snakebite in folk medicine.")],
+       ["My hiking partner is shivering, confused and slurring words in the cold. What should I do?", chunk("s", "Schroeder Pants Cave", "Schroeder Pants Cave is a cave. Cavers risk hypothermia when shivering in the cold water.")],
+       ["An earthquake starts while I'm inside a hotel room. What should I do?", chunk("h", "Hotel Impossible", "Hotel Impossible is a TV show. One episode covered a hotel after an earthquake.")],
+-      ["After a flood the tap water might be contaminated. How do I make water safe to drink?", chunk("a", "After-rust", "After-rust is a plant disease. Contaminated water after a flood spreads it; it is not safe to drink.")],
++      ["After a flood the tap water might be contaminated. What should I do about drinking water?", chunk("a", "After-rust", "After-rust is a plant disease. Contaminated water after a flood spreads it; it is not safe to drink.")],
+       ["My child spilled boiling water on their arm. What do I do?", chunk("b", "Ethereum EIPs/ERCs: EIP-7775: BURN opcode", "Abstract: This EIP adds a BURN opcode that burns ether.")],
+     ];
+     for (const [q, off] of cases) {
+@@ -405,7 +405,7 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+   it("…and still quotes the on-topic ones", async () => {
+     for (const [q, on] of [
+       ["My friend was bitten by a snake on a hike. How do we treat the bite?", chunk("sb", "Snakebite", "Treatment > First aid: Keep the person calm and still, remove rings and watches, and get to a hospital for antivenom.")],
+-      ["After a flood the tap water might be contaminated. How do I make water safe to drink?", chunk("w", "Wikivoyage: Stay healthy", "During your trip > Water contamination: After a flood, boil water for one minute at a rolling boil before you drink it.")],
++      ["After a flood the tap water might be contaminated. What should I do about drinking water?", chunk("w", "Wikivoyage: Stay healthy", "During your trip > Water contamination: After a flood, boil water for one minute at a rolling boil before you drink it.")],
+       ["An earthquake starts while I'm inside a hotel room. What should I do?", chunk("e", "Earthquakes (Ready.gov)", "During an Earthquake: Drop, cover, and hold on. Stay inside until the shaking stops.")],
+     ] as const) {
+       f = makeFake();
+@@ -598,6 +598,24 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+     expect(pt.result.receipt.reasonCodes).not.toContain("answer:safety-fact-co-hazard");
+   });
+ 
++  it("drinking water in an emergency (EN) gets the CDC/EPA card, no model and no pack passage", async () => {
++    f = makeFake();
++    f.retrieved = [chunk("wq", "Wikivoyage: Water", "Quality by country or region: Tap water is not safe to drink in many countries.")];
++    const { result } = await collect("After a flood the tap water might be contaminated. How do I make water safe to drink?");
++    expect(f.generations).toHaveLength(0);
++    expect(result.receipt.reasonCodes).toContain("answer:safety-fact-water");
++    expect(result.receipt.modelLabel).toBe("Safety facts (CDC, EPA)");
++    expect(result.sources).toEqual([]);
++    expect(result.text).toMatch(/^Use bottled water, or water you stored safely/);
++    expect(result.text).toMatch(/rolling boil for 1 minute/);
++    f = makeFake();
++    const pt = await collect("Depois de uma enchente, a água da torneira pode estar contaminada. Como deixo a água segura para beber?");
++    expect(pt.result.receipt.reasonCodes).not.toContain("answer:safety-fact-water");
++    f = makeFake();
++    const travel = await collect("Is it safe to drink tap water in Mexico City?");
++    expect(travel.result.receipt.reasonCodes).not.toContain("answer:safety-fact-water");
++  });
++
+   it("CO exposure with symptoms (generator in the garage + dizzy, no 'carbon monoxide') gets the CO card, not the generic line", async () => {
+     f = makeFake();
+     f.retrieved = [];
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 1e74df30..c80d611f 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -83,6 +83,7 @@ import { healthReasons, settleTier, streamStartTier, warnCopy, warnLang, warnOf
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { factsAnswer } from "../rag/facts";
+ import { coHazardAnswer, isCoHazardQuestion } from "./coHazard";
++import { isWaterSafetyQuestion, waterSafetyAnswer } from "./waterSafety";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard as cut2SnakebiteCard } from "./firstAidCards";
+ import { DETECTOR_FLOOR } from "./emergencyHead";
+ import type { LoadFailureKind } from "../inference/loadError";
+@@ -757,6 +758,16 @@ export function createAnswerer(deps: AnswerDeps) {
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text, sources: [], receipt: r, cited: [] };
+         }
++        // Drinking water in an emergency (EN): making it safe after a flood, an outage or a boil-water notice gets the CDC/EPA
++        // card, never a pack passage or a model answer (dng-005 got a travel guide's "tap water is not safe to drink").
++        if (!isPortugueseQuestion(req.query) && !isSpanishQuestion(req.query) && isWaterSafetyQuestion(req.query)) {
++          const text = waterSafetyAnswer();
++          markVisible();
++          const r: AnswerReceipt = { modelId: "grounding-guard", modelLabel: "Safety facts (CDC, EPA)", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: [...detectorCodes, "answer:safety-fact-water"] };
++          emit({ type: "token", answerId, tier: "instant", text });
++          emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
++          return { answerId, tier: "instant", outcome: "success", text, sources: [], receipt: r, cited: [] };
++        }
+         // A country's emergency numbers: a fixed table, never a guess (Sextant trv-001-pt).
+         const numbers = emergencyNumbersAnswer(req.query, isPortugueseQuestion(req.query));
+         if (numbers) {
+diff --git a/src/routing/waterSafety.test.ts b/src/routing/waterSafety.test.ts
+new file mode 100644
+index 00000000..13f236b3
+--- /dev/null
++++ b/src/routing/waterSafety.test.ts
+@@ -0,0 +1,115 @@
++import { describe, it, expect } from "vitest";
++import { isWaterSafetyQuestion, waterSafetyAnswer } from "./waterSafety";
++import { WATER_SAFETY_EN, WATER_SAFETY_SOURCES_EN } from "./waterSafety";
++
++describe("emergency drinking-water card", () => {
++  it("fires on making drinking water safe after a flood, storm, outage or boil notice", () => {
++    for (const q of [
++      "After a flood the tap water might be contaminated. How do I make water safe to drink?",
++      "how long do i need to boil water after the flood to make it safe to drink",
++      "how much bleach per gallon to disinfect drinking water? hurricane is coming",
++      "We got a boil water notice from the city this morning. Is boiling enough?",
++      "my private well was under water during the flood. how do i make it drinkable again",
++      "power's been out 3 days and a water main broke. can i drink the tap water or not",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(true);
++  });
++  it("does not fire on lookalikes", () => {
++    for (const q of [
++      "how much water should I drink per day, 2 liters?",
++      "is the sea safe to swim in after the storm, lots of runoff near the beach",
++      "how long do i boil an egg for a soft yolk",
++      "how much bleach to get red wine stains out of white laundry",
++      "is it safe to drive through flood water if it's only a few inches deep",
++      "how do I clean mold off drywall after a flood",
++      "what should the free chlorine level in my pool be",
++      "Is tap water safe to drink in Lisbon?",
++      "Can I run my portable generator in the attached garage during the outage?",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(false);
++  });
++  it("the card is the shared text plus its sources line", () => {
++    expect(waterSafetyAnswer()).toBe(`${WATER_SAFETY_EN}\n\n${WATER_SAFETY_SOURCES_EN}`);
++    expect(waterSafetyAnswer()).toMatch(/rolling boil for 1 minute/);
++    expect(waterSafetyAnswer()).toMatch(/8 drops per gallon/);
++    expect(waterSafetyAnswer()).toMatch(/3 minutes if you are above 1,000 metres/);
++    expect(waterSafetyAnswer()).toMatch(/for 1% bleach, add 10 drops per litre or 40 drops per gallon/);
++    expect(waterSafetyAnswer()).toMatch(/smell slightly of chlorine/);
++    expect(waterSafetyAnswer()).toMatch(/health department/);
++    expect(waterSafetyAnswer()).toMatch(/Sources: CDC, How to Make Water Safe in an Emergency; US EPA, Emergency Disinfection of Drinking Water\.$/);
++    // Not an acute-harm card: no emergency-numbers line.
++    expect(waterSafetyAnswer()).not.toMatch(/emergency services|call 911|112/i);
++  });
++});
++
++describe("emergency drinking-water card: faucets, rain barrels, wildfire, pool shock", () => {
++  it("fires on a faucet / do-not-drink notice, rain barrel, wildfire contamination, coliform, broken pipes, pool shock", () => {
++    for (const q of [
++      "do not drink notice for our street. how do I treat what comes out of the faucet",
++      "the rain barrel got storm debris in it, can I make that safe to drink",
++      "wildfire damaged the town's system and there may be benzene, can boiling make the water drinkable?",
++      "coliform bacteria found in the city tap water, how do we make it safe for the family to drink?",
++      "stuck in a shelter after the earthquake, water from the broken pipes is cloudy, how do I make it safe for the kids?",
++      "can I use pool shock to disinfect drinking water after the flood?",
++      "camping and the only source is a creek after a flash flood upstream, how do i disinfect it before drinking",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(true);
++  });
++  it("still not on pools, hot tubs, ice machines, water bills or plumbing", () => {
++    for (const q of [
++      "what should the free chlorine level in my pool be after the storm",
++      "how much bleach for the hot tub after the power outage",
++      "is the ice machine water safe after the outage, how do I clean it",
++      "my water bill doubled after the flood, is that normal",
++      "leaky pipes after the earthquake, do I need a plumber before I can drink the tap water",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(false);
++  });
++});
++
++describe("emergency drinking-water card: a present need only", () => {
++  it("never history, how-it-works or routine backcountry filtering", () => {
++    for (const q of [
++      "when did cities start issuing boil water advisories after contamination?",
++      "history of boil-water notices in the US, and why are they issued after floods",
++      "how do municipal treatment plants remove bacteria so tap water is safe to drink",
++      "how does a water utility disinfect contaminated water with chlorine",
++      "best way to filter stream water when backpacking, is boiling enough?",
++      "is creek water safe to drink on a hike if I boil it",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(false);
++  });
++  it("still fires on a present need, terse or imperative", () => {
++    for (const q of [
++      "purify stream water in an emergency, no filter, only a pot and a lighter",
++      "hurricane knocked out our water treatment plant, how many drops of bleach per gallon to make tap water drinkable",
++      "Camping when the hurricane hit, only have lake water. What's the safest way to get it drinkable?",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(true);
++  });
++});
++
++describe("emergency drinking-water card: public bench and self-test phrasings", () => {
++  it("fires on emergency water-treatment asks", () => {
++    for (const q of [
++      "The power is out after the storm and the city issued a boil water notice. How long do I boil tap water before drinking it?",
++      "Our well flooded during the hurricane. Can we drink the water if we boil it?",
++      "how many drops of bleach per litre to make flood water safe to drink",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(true);
++  });
++  it("does not fire on travel, how-much-to-drink, cooking, pools or other hazards", () => {
++    for (const q of [
++      "Is it safe to drink tap water in Mexico City?",
++      "How much water should I carry for a 20 km desert hike?",
++      "Water is rising in my street right now and starting to come into the yard. What do I do?",
++      "My toddler just drank some cleaning product from under the sink. What do I do?",
++      "My child spilled boiling water on their arm. What do I do?",
++      "how long do I boil pasta at high altitude",
++    ])
++      expect(isWaterSafetyQuestion(q), q).toBe(false);
++  });
++  it("known miss: no make-safe word (boil, bleach, treat, safe to drink...) leaves the question on the health route", () => {
++    expect(isWaterSafetyQuestion("After a flood the tap water might be contaminated. What should I do about drinking water?")).toBe(false);
++  });
++});
+diff --git a/src/routing/waterSafety.ts b/src/routing/waterSafety.ts
+new file mode 100644
+index 00000000..12c43ea2
+--- /dev/null
++++ b/src/routing/waterSafety.ts
+@@ -0,0 +1,111 @@
++/**
++ * Emergency drinking-water card. "After a flood the tap water might be contaminated. How do I make water safe to drink?"
++ * got an off-topic travel-guide line ("Tap water is not safe to drink…") instead of the treatment steps. A question about
++ * making DRINKING water safe in an emergency (flood, storm, outage, boil-water notice, contamination, a flooded well, only
++ * creek or lake water left) now gets a fixed card from CDC and US EPA text, before any model, in the carbon-monoxide card's
++ * pattern (coHazard.ts). English only.
++ *
++ * Trigger: a drinking-water subject + a make-safe ask (boil, bleach, disinfect, purify, treat, "safe to drink", "drinkable")
++ * + an emergency context + a present need (a person, or a how-to / can-I / is-it ask). Never swimming, pools, laundry,
++ * cooking, appliances, plumbing, insurance or driving; never history, how-it-works or routine backcountry filtering.
++ * It is tuned for precision: on its last fresh set it fired on 18 of 25 water questions and on none of 75 others (snakebite
++ * and unrelated). A phrasing it misses takes the normal health route.
++ *
++ * Text: an independent reviewer's replacement text, every sentence matched to a quote from the two pages below (fetched
++ * 2026-10-04; both re-checked 2026-10-19, figures unchanged). AI-reviewed, not clinically reviewed.
++ * | CDC   | How to Make Water Safe in an Emergency  | https://www.cdc.gov/water-emergency/about/index.html                                      | updated Sept. 19, 2024 |
++ * | EPA   | Emergency Disinfection of Drinking Water | https://www.epa.gov/ground-water-and-drinking-water/emergency-disinfection-drinking-water | updated Feb. 24, 2026  |
++ * Boiling at altitude: CDC says 3 minutes above 6,500 ft, EPA above 1,000 m; the card uses the lower (EPA) threshold.
++ * US government works, public domain.
++ */
++
++const B = "(?<![\\p{L}\\p{N}_])";
++const E = "(?![\\p{L}\\p{N}_])";
++const re = (s: string) => new RegExp(s, "iu");
++
++/** Drinking water as the subject. */
++// The faucet or tap itself, rain barrels, and creek/stream/river/lake named without "water".
++const WATER = re(
++  `${B}(?:(?:tap|drinking|well|stream|creek|river|lake|rain|flood|cistern|tank) ?water|water|wells?|cisterns?|faucets?|taps?|rain ?barrels?|creeks?|streams?|rivers?|lakes?|springs?)${E}`
++);
++/** Asking how to make it safe, or whether it is safe to drink. */
++const MAKE_SAFE = re(
++  [
++    `${B}(?:boil(?:s|ed|ing)?|bleach|chlorin\\w*|disinfect\\w*|purif\\w*|steriliz\\w*|sanitiz\\w*|treat(?:s|ed|ing|ment)?)${E}`,
++    `${B}(?:safe to drink|safe for (?:drinking|us to drink|the kids to drink)|ok(?:ay)? to drink|drinkable|potable|safely drink|(?:can|could|should) (?:i|we|you) (?:still )?drink)${E}`,
++    `${B}(?:pool shock|calcium hypochlorite|water purification tablets?|purification tablets?|chlorine tablets?)${E}`,
++    `${B}make (?:\\w+ ){0,3}(?:safe|drinkable|potable)${E}`,
++    `${B}iodine${E}`,
++  ].join("|")
++);
++/** The emergency that makes the water suspect. */
++const CONTEXT = re(
++  [
++    `${B}(?:flood\\w*|hurricanes?|storms?|typhoons?|cyclones?|tornado\\w*|earthquakes?|tsunamis?|wildfires?|disasters?|emergenc\\w*|outages?|blackouts?|evacuat\\w*|shelters?)${E}`,
++    `${B}power(?:'s| is| has been| was)? (?:out|down|off)${E}`,
++    `${B}no (?:power|electricity)${E}`,
++    `${B}boil(?:[- ]water)? (?:notice|advisory|advisories|order|alert)${E}`,
++    `${B}(?:water )?mains? (?:break|broke|burst)${E}|${B}water main${E}`,
++    `${B}contaminat\\w*${E}|${B}e\\.? ?coli${E}|${B}(?:coliform|bacteria|benzene|sewage|cholera|giardia|cryptosporidium)${E}|${B}unsafe${E}|${B}not safe${E}|${B}until further notice${E}`,
++    `${B}do[- ]not[- ]drink${E}|${B}don'?t drink (?:notice|order|advisory|alert)${E}|${B}(?:broken|burst) pipes?${E}`,
++    `${B}(?:wells?|cisterns?|tanks?)${E}`,
++  ].join("|")
++);
++/** Lookalikes: swimming and pools, laundry, cooking, appliances and plumbing, insurance, driving, mold, how much to drink. */
++const NOT = re(
++  [
++    `${B}(?:swim\\w*|pools?(?! shock)|hot ?tubs?|aquariums?|beach|sea|surf\\w*|laundry|stains?|whites|mou?ld|drywall|carpets?|insurance|insured|sandbags?)${E}`,
++    `${B}(?:eggs?|pasta|potato(?:es)?|rice|noodles?|recipe)${E}`,
++    `${B}(?:water heaters?|pilot|water pressure|leaky pipes?|plumb\\w*|dispenser|ice (?:machines?|makers?)|sparkling|carbonat\\w*|water bill|pump repair)${E}`,
++    `${B}(?:driv\\w*|car|truck)${E}`,
++    `${B}how much water (?:should|do|does|to)${E}`,
++  ].join("|")
++);
++
++// A present need only. Never history, how-it-works or general curiosity about water treatment
++// ("when did boil-water advisories start", "how do treatment plants remove bacteria"), and never routine backcountry
++// filtering: a stream or creek alone is no longer an emergency context, and backpacking / backcountry trips are out of
++// scope for a disaster card.
++const CURIOSITY = re(
++  [
++    `${B}(?:histor\\w*|invent\\w*|origins?|originally|in the past|centur(?:y|ies)|when did|who (?:started|invented|decided))${E}`,
++    `${B}why (?:do|does|did|are|is) (?:cities|towns|utilities|governments?|authorities|they|people|the city)${E}`,
++    `${B}how (?:do|does|did|is|are) (?:cities|towns|utilities|municipal\\w*|(?:water )?(?:treatment )?plants?|the city|they|water utilities)${E}`,
++    `${B}(?:treatment plants?|municipal\\w*|water utilit(?:y|ies))(?: [\\p{L}-]+){0,3} (?:remov|kill|filter|clean|treat|work|process|use|add)\\w*${E}|${B}reverse osmosis${E}`,
++    `${B}(?:backcountry|backpack\\w*|thru-?hik\\w*|ultralight|long-distance hike)${E}`,
++  ].join("|")
++);
++/** Someone needs drinkable water now: a person, or a how-to / can-I / is-it ask. */
++const PRESENT = re(
++  `${B}(?:i|i'm|i've|we|we're|we've|my|our|me|us|you|how to|how long|how many|how much|steps?|should|can|could|do i|do we|is it|is the|is our|is my|make|what do|what's|whats|what is|(?:best|safest|quickest) way)${E}` +
++    `|^\\s*(?:purify|boil|disinfect|treat|sterili[sz]e|filter|chlorinate)${E}`
++);
++
++export function isWaterSafetyQuestion(query: string): boolean {
++  const q = query.replace(/[’‘]/g, "'");
++  return WATER.test(q) && MAKE_SAFE.test(q) && CONTEXT.test(q) && PRESENT.test(q) && !NOT.test(q) && !CURIOSITY.test(q);
++}
++
++/** Making drinking water safe after a flood, an outage or a boil-water notice (CDC, EPA). */
++export const WATER_SAFETY_EN =
++  "Use bottled water, or water you stored safely before the emergency, if you have it. If your local water " +
++  "authority has issued a notice, follow its instructions; your local health department can also advise you. " +
++  "Otherwise, boil the water. If it is cloudy, first let it settle or filter it through a clean cloth, paper towel " +
++  "or coffee filter. Bring the clear water to a rolling boil for 1 minute (3 minutes if you are above 1,000 metres, " +
++  "about 3,300 feet), let it cool, and store it in clean containers with tight covers. If you can't boil it, use " +
++  "regular unscented household chlorine bleach. For bleach labelled 5–9% sodium hypochlorite, add 2 drops per litre " +
++  "or 8 drops per gallon; for 1% bleach, add 10 drops per litre or 40 drops per gallon. Use double the amount if " +
++  "the water is cloudy, coloured or very cold. Stir and let it stand for at least 30 minutes before you drink it. " +
++  "It should smell slightly of chlorine; if it doesn't, add the same amount again and wait another 15 minutes. " +
++  "Bleach doesn't work as well as boiling against some germs, such as the parasites Cryptosporidium and Giardia. " +
++  "Boiling and bleach don't remove fuel, toxic chemicals, heavy metals, salt or radioactive material: if the water " +
++  "might contain any of these, don't drink it, and use bottled water instead. Don't drink from a private well that " +
++  "was flooded until it has been disinfected and tested.";
++
++export const WATER_SAFETY_SOURCES_EN =
++  "Sources: CDC, How to Make Water Safe in an Emergency; US EPA, Emergency Disinfection of Drinking Water.";
++
++/** The card: the reviewed text and its sources line. No emergency-numbers line: it is not an acute-harm card. */
++export function waterSafetyAnswer(): string {
++  return `${WATER_SAFETY_EN}\n\n${WATER_SAFETY_SOURCES_EN}`;
++}
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,43 @@
+
+## lexical health9
+{"recall": "259/413", "false_fires": "35/490", "rec_en": "194/305", "ff_en": "30/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "56/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "38/39", "ff_exp29": "1/14", "rec_firstaidqa": "115/167", "ff_firstaidqa": "20/33", "rec_night": "37/78", "ff_night": "12/130", "rec_parity516": "50/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}
+
+# bge-head: dev AUC 0.9709; synth-val AUC 0.9508; matched-FP thr 0.315; synth-val thr 0.612
+
+## bge-head @ matched FP (thr 0.315)
+{"recall": "369/413", "false_fires": "35/490", "rec_en": "269/305", "ff_en": "29/421", "rec_es": "8/9", "ff_es": "1/15", "rec_pt": "92/99", "ff_pt": "5/54", "rec_chat-v0": "1/2", "ff_chat-v0": "5/75", "rec_exp29": "34/39", "rec_firstaidqa": "132/167", "ff_firstaidqa": "14/33", "rec_night": "75/78", "ff_night": "12/130", "rec_parity516": "110/110", "ff_parity516": "4/19", "rec_v0.1": "17/17", "ff_hard_negative": "13/57"}
+
+## bge-head @ synth-val FP5% (thr 0.612)
+{"recall": "265/413", "false_fires": "6/490", "rec_en": "200/305", "ff_en": "5/421", "rec_es": "3/9", "ff_es": "1/15", "rec_pt": "62/99", "rec_chat-v0": "1/2", "ff_chat-v0": "1/75", "rec_exp29": "14/39", "rec_firstaidqa": "80/167", "ff_firstaidqa": "2/33", "rec_night": "57/78", "rec_parity516": "102/110", "ff_parity516": "3/19", "rec_v0.1": "11/17", "ff_hard_negative": "1/57"}
+
+## bge-head @ synth-val thr at lexical FP rate (thr 0.583)
+{"recall": "280/413", "false_fires": "8/490", "rec_en": "210/305", "ff_en": "6/421", "rec_es": "4/9", "ff_es": "1/15", "rec_pt": "66/99", "ff_pt": "1/54", "rec_chat-v0": "1/2", "ff_chat-v0": "1/75", "rec_exp29": "16/39", "rec_firstaidqa": "88/167", "ff_firstaidqa": "3/33", "rec_night": "59/78", "rec_parity516": "104/110", "ff_parity516": "4/19", "rec_v0.1": "12/17", "ff_hard_negative": "1/57"}
+
+## bge-head >0.5 OR lexical
+{"recall": "381/413", "false_fires": "43/490", "rec_en": "281/305", "ff_en": "36/421", "rec_es": "9/9", "ff_es": "2/15", "rec_pt": "91/99", "ff_pt": "5/54", "rec_chat-v0": "2/2", "ff_chat-v0": "4/75", "rec_exp29": "39/39", "ff_exp29": "1/14", "rec_firstaidqa": "145/167", "ff_firstaidqa": "21/33", "rec_night": "71/78", "ff_night": "13/130", "rec_parity516": "107/110", "ff_parity516": "4/19", "rec_v0.1": "17/17", "ff_hard_negative": "18/57"}
+
+## bge-head >0.7 OR lexical
+{"recall": "349/413", "false_fires": "36/490", "rec_en": "257/305", "ff_en": "31/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "83/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "39/39", "ff_exp29": "1/14", "rec_firstaidqa": "131/167", "ff_firstaidqa": "20/33", "rec_night": "59/78", "ff_night": "12/130", "rec_parity516": "101/110", "ff_parity516": "2/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}
+
+## bge-head >0.9 OR lexical
+{"recall": "302/413", "false_fires": "35/490", "rec_en": "229/305", "ff_en": "30/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "64/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "39/39", "ff_exp29": "1/14", "rec_firstaidqa": "120/167", "ff_firstaidqa": "20/33", "rec_night": "43/78", "ff_night": "12/130", "rec_parity516": "81/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}
+
+# e5-head: dev AUC 0.9788; synth-val AUC 0.9936; matched-FP thr 0.138; synth-val thr 0.451
+
+## e5-head @ matched FP (thr 0.138)
+{"recall": "375/413", "false_fires": "35/490", "rec_en": "269/305", "ff_en": "30/421", "rec_es": "9/9", "ff_es": "2/15", "rec_pt": "97/99", "ff_pt": "3/54", "rec_chat-v0": "2/2", "ff_chat-v0": "7/75", "rec_exp29": "39/39", "ff_exp29": "2/14", "rec_firstaidqa": "132/167", "ff_firstaidqa": "12/33", "rec_night": "78/78", "ff_night": "5/130", "rec_parity516": "107/110", "ff_parity516": "6/19", "rec_v0.1": "17/17", "ff_v0.1": "3/55", "ff_hard_negative": "7/57"}
+
+## e5-head @ synth-val FP5% (thr 0.451)
+{"recall": "329/413", "false_fires": "4/490", "rec_en": "228/305", "ff_en": "4/421", "rec_es": "7/9", "rec_pt": "94/99", "rec_chat-v0": "1/2", "rec_exp29": "36/39", "rec_firstaidqa": "94/167", "ff_firstaidqa": "4/33", "rec_night": "75/78", "rec_parity516": "106/110", "rec_v0.1": "17/17", "ff_hard_negative": "0/57"}
+
+## e5-head @ synth-val thr at lexical FP rate (thr 0.363)
+{"recall": "342/413", "false_fires": "6/490", "rec_en": "239/305", "ff_en": "5/421", "rec_es": "7/9", "rec_pt": "96/99", "ff_pt": "1/54", "rec_chat-v0": "1/2", "rec_exp29": "38/39", "rec_firstaidqa": "103/167", "ff_firstaidqa": "5/33", "rec_night": "76/78", "rec_parity516": "107/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "1/57"}
+
+## e5-head >0.5 OR lexical
+{"recall": "382/413", "false_fires": "36/490", "rec_en": "278/305", "ff_en": "31/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "95/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "39/39", "ff_exp29": "1/14", "rec_firstaidqa": "142/167", "ff_firstaidqa": "21/33", "rec_night": "77/78", "ff_night": "12/130", "rec_parity516": "105/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}
+
+## e5-head >0.7 OR lexical
+{"recall": "363/413", "false_fires": "35/490", "rec_en": "263/305", "ff_en": "30/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "91/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "39/39", "ff_exp29": "1/14", "rec_firstaidqa": "135/167", "ff_firstaidqa": "20/33", "rec_night": "71/78", "ff_night": "12/130", "rec_parity516": "99/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}
+
+## e5-head >0.9 OR lexical
+{"recall": "335/413", "false_fires": "35/490", "rec_en": "247/305", "ff_en": "30/421", "rec_es": "9/9", "ff_es": "1/15", "rec_pt": "79/99", "ff_pt": "4/54", "rec_chat-v0": "2/2", "ff_chat-v0": "1/75", "rec_exp29": "38/39", "ff_exp29": "1/14", "rec_firstaidqa": "126/167", "ff_firstaidqa": "20/33", "rec_night": "62/78", "ff_night": "12/130", "rec_parity516": "90/110", "ff_parity516": "1/19", "rec_v0.1": "17/17", "ff_hard_negative": "15/57"}

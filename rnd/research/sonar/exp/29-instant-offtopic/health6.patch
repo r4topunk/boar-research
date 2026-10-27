@@ -1,0 +1,889 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 3180573..2b3430b 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -5,7 +5,8 @@ import { AnswerDeps, createAnswerer, InstalledLlm } from "./answer";
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+-import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, NO_SOURCE_INSTRUCTION, PT_ANSWER_LANGUAGE } from "./context";
++import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, NO_SOURCE_INSTRUCTION, noHealthSourceAnswer, PT_ANSWER_LANGUAGE } from "./context";
++import { conditionCardText } from "./conditionCards";
+ import { ModelLoadError } from "../inference/loadError";
+ import { answerReducer, initialAnswer } from "./answerReducer";
+ 
+@@ -17,6 +18,14 @@ const chunk = (chunkId: string, title: string, body: string): RetrievedChunk =>
+   score: 1,
+   matchType: "hybrid",
+ });
++/** The no-source health answer: the condition's first-aid card when the question names exactly one, else the generic card
++ * (Sonar exp-29 arm instcards). Returns the card's condition, or null for the generic card. */
++function expectNoSourceCard(result: { text: string; receipt: { reasonCodes: string[] } }, query: string, pt = false): string | null {
++  const code = result.receipt.reasonCodes.find((c) => c.startsWith("grounding:fa-card-") && c !== "grounding:fa-card-multi" && c !== "grounding:fa-card-from-history");
++  expect(result.receipt.reasonCodes, query).toContain("grounding:health-no-source");
++  expect(result.text, query).toBe(code ? conditionCardText(code.slice("grounding:fa-card-".length), query, pt) : noHealthSourceAnswer(pt));
++  return code ? code.slice("grounding:fa-card-".length) : null;
++}
+ const WALIPINI_KB = chunk("wk", "Walipini", "A Walipini is an earth-sheltered cold frame. A greenhouse can be built by digging a hole in the ground. It uses the heat stored in the earth during the cold season.");
+ const CANBERRA = chunk(
+   "c1",
+@@ -336,7 +345,7 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+       f = makeFake();
+       f.retrieved = [off];
+       const { result } = await collect(q);
+-      expect(result.text, q).toMatch(/don't have a reliable offline source/);
++      expectNoSourceCard(result, q);
+       expect(result.sources, q).toEqual([]);
+       expect(f.generations).toHaveLength(0);
+     }
+@@ -396,7 +405,7 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+     expect(events.some((e) => e.type === "sources")).toBe(false);
+     expect(events.some((e) => e.type === "instant")).toBe(false);
+     expect(result.sources).toEqual([]);
+-    expect(result.text).toMatch(/don't have a reliable offline source/);
++    expect(expectNoSourceCard(result, "How do I stop a nosebleed?")).toBe("nosebleed");
+     expect(f.generations).toHaveLength(0);
+ 
+     f = makeFake();
+@@ -631,8 +640,9 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+       expect(sources.map((c) => c.title), q).toEqual(["Season"]);
+       expect(queries, q).toEqual([q]); // retrieve() translates a PT question itself
+       expect(result.receipt.reasonCodes).toContain("match:pt-en-names");
+-      const instant = events.find((e) => e.type === "instant") as any;
+-      expect(instant && sources[instant.snippet.sourceIndex].title, q).toBe("Season");
++      // Sonar exp-29 knob (a): sources matched against a translation (lexicon names) never give an instant snippet.
++      expect(events.some((e) => e.type === "instant"), q).toBe(false);
++      expect(result.receipt.reasonCodes).toContain("instant:off-translated");
+     }
+     // Without the names, no English title is named by the PT words: the guard keeps nothing.
+     f = makeFake();
+@@ -1063,10 +1073,12 @@ describe("answer(): the instant snippet says when the source is in another langu
+     f.retrieved = [MONSOON];
+     f.deps.englishNames = () => ["Monsoon"];
+     const pt = await collect("O que é uma monção?");
++    // Sonar exp-29: a one-subject PT definition question keeps its instant snippet when the sentence defines the name.
+     const inst = pt.events.find((e) => e.type === "instant") as any;
+     expect(inst.snippet.text).toMatch(/^Da fonte offline \(em inglês\):\nA monsoon is/);
+     expect(pt.result.tier).toBe("instant");
+     expect(pt.result.text).toMatch(/^Da fonte offline \(em inglês\):/);
++    expect(pt.result.receipt.reasonCodes).toContain("instant:pt-definitional");
+     f = makeFake();
+     f.retrieved = [MONSOON];
+     const en = await collect("What is a monsoon?");
+@@ -1231,9 +1243,11 @@ describe("answer(): cry-004-pt, EIP-4844 (gate a11d730)", () => {
+     ];
+     f.deps.englishNames = () => ["Ethereum"];
+     const { events, result } = await collect("O que é a EIP-4844 e o que são blobs no Ethereum?");
+-    const inst = events.find((e) => e.type === "instant") as any;
+-    expect(inst.snippet.text).toMatch(/Shard Blob Transactions scale data-availability/);
+-    expect(result.receipt.reasonCodes).not.toContain("instant:off-topic");
++    // Sonar exp-29 knob (a): matched through a translation (names + identifier) → no instant snippet; the page still
++    // reaches the sources.
++    expect(events.some((e) => e.type === "instant")).toBe(false);
++    expect(result.receipt.reasonCodes).toContain("instant:off-translated");
++    expect((((events.find((e) => e.type === "sources") as any)?.sources ?? []) as RetrievedChunk[]).map((c) => c.title)).toContain(T);
+   });
+ });
+ 
+@@ -1243,10 +1257,12 @@ describe("answer(): dng-001 snakebite, never a contested or dangerous procedure
+   const CONTESTED_FIRST_AID = chunk("s1", "Snakebite", "Treatment > First aid: Some have little local effect, but life-threatening systemic effects, in which case containing the venom in the region of the bite by pressure immobilization is desirable. Other venoms instigate localized tissue damage, and immobilization may increase the severity of the damage; whether this trade-off is desirable remains a point of controversy.");
+   const OLD_MANUAL = chunk("fm", "US government: US Army Survival Manual FM 21-76: CHAPTER 4 - BASIC SURVIVAL MEDICINE", "Snakebite: Keep the victim still. Put a constricting band 5 to 10 centimeters above the bite. Make an incision over the bite and suck out the venom.");
+   const SAFE_LAY = chunk("wb", "Wikibooks: First Aid/Snake Bites", "Treatment: Call emergency services. Keep the person still and calm, with the bitten limb below the heart. Do not cut the wound or suck out the venom. Do not apply a tourniquet or ice.");
+-  it("only a contested section and an outdated manual: the emergency number and 'get care', no steps", async () => {
++  it("only a contested section and an outdated manual: no steps from them; the condition's card (Sonar exp-29), else the emergency number", async () => {
+     f.retrieved = [CONTESTED_FIRST_AID, OLD_MANUAL];
+     const { result } = await collect(q);
+-    expect(result.text).toMatch(/^Não encontrei no acervo offline instruções de primeiros socorros seguras para isso\. Ligue agora/);
++    // The snakebite question names one condition with a card (the WHO snakebite card), shown instead of the fixed line.
++    expect(result.receipt.reasonCodes).toContain("grounding:fa-card-snakebite");
++    expect(result.text).toMatch(/emergência|emergency|SAMU|192/i);
+     expect(result.text).not.toMatch(/immobiliz|constricting|incision|suck/i);
+     expect(result.receipt.reasonCodes).toContain("grounding:health-no-safe-excerpt");
+   });
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e66..012546e 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -50,6 +50,11 @@ import {
+   NO_SOURCE_INSTRUCTION,
+   uncitedPreface,
+   noHealthSourceAnswer,
++  isSpanishQuestion,
++  isHealthFollowUp,
++  isNoStepsAnswer,
++  isPtDefinitional,
++  definesName,
+   onTopic,
+   namedByLexicon,
+   PT_QUESTION,
+@@ -114,6 +119,25 @@ import type { AnswerSettings } from "../models/settings";
+ import type { ResearchOptions, ResearchProgress, ResearchResult } from "../services/orchestrator";
+ import type { ExecutionOutcome, ExecutionTelemetryRecord, ModelResidency } from "../services/executionTelemetry.pure";
+ import { smallTalkReply } from "./smallTalk";
++import { conditionCardText, conversationCondition } from "./conditionCards";
++
++/**
++ * The no-source health card (Sonar exp-29, r4to 2026-10-03: never answer an emergency from memory, recover with
++ * first-aid cards): a question whose terms name exactly one condition (conditionCards.ts, Compass trigger v1) gets
++ * that condition's card; several or none, or a Spanish question (no ES card texts yet) → the generic card.
++ */
++function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes: string[], userTurns: string[] = []): { text: string; label: string } {
++  const { condition: r, fromHistory } = conversationCondition(query, userTurns);
++  if (r === "MULTI") reasonCodes.push("grounding:fa-card-multi");
++  const condition = r === "MULTI" ? null : r;
++  const text = condition ? conditionCardText(condition, query, es ? "es" : pt ? "pt" : "en") : null;
++  if (condition && text) {
++    reasonCodes.push(`grounding:fa-card-${condition}`);
++    if (fromHistory) reasonCodes.push("grounding:fa-card-from-history");
++    return { text, label: "First aid card" };
++  }
++  return { text: noHealthSourceAnswer(pt, es), label: "No offline source" };
++}
+ 
+ /** Development builds log each answer's checks to Metro ([ANSWER] lines); never in a release build or a test. */
+ const DEV_LOG = typeof __DEV__ !== "undefined" && __DEV__ && process.env.NODE_ENV !== "test";
+@@ -666,7 +690,10 @@ export function createAnswerer(deps: AnswerDeps) {
+         }
+       }
+       // Health never goes through multi-pass Deep Research: it would answer from memory past the grounding guard.
+-      const health = isHealthQuestion(req.query);
++      const userTurns = (ctx.history?.turns ?? []).filter((t) => t.role === "user").map((t) => t.text);
++      const healthFollowUp = isHealthFollowUp(req.query, userTurns);
++      const health = isHealthQuestion(req.query) || healthFollowUp;
++      if (healthFollowUp) reasonCodes.push("grounding:health-follow-up");
+       const gen =
+         health && plan.generation?.mode === "multipass"
+           ? { ...plan.generation, mode: "single" as const, retrieveK: Math.max(plan.generation.retrieveK, 6) }
+@@ -882,7 +909,15 @@ export function createAnswerer(deps: AnswerDeps) {
+       // health answer: its snippet is the excerpt below (EQ-2: the preview quoted "Do not run during
+       // the quake!" by word overlap, before the Drop, Cover and Hold On excerpt).
+       const healthExtractive = health && sources.length > 0 && req.tier !== "deep";
+-      if (plan.instant !== "off" && raw.length && !healthExtractive) {
++      // Never for health/danger (a single sentence is never a first-aid answer, and with no source the guard below
++      // answers), and never when the sources were matched against a translation instead of the question (a PT
++      // question's pt-en terms or lexicon names): coverage of "child" or "India" alone let an off-topic pack line
++      // ("Reject child token 2.", "Atheism is not taboo in India") stand as the final answer (Sonar exp-29).
++      const translated = matchQuery !== req.query;
++      // A PT/ES definition question matched through lexicon names may still get its snippet, if the sentence defines the name.
++      const definitional = translated && !health && names.length > 0 && isPtDefinitional(req.query);
++      if (plan.instant !== "off" && raw.length && (health || (translated && !definitional))) reasonCodes.push(health ? "instant:off-health" : "instant:off-translated");
++      if (plan.instant !== "off" && raw.length && !health && (!translated || definitional)) {
+         // Lexicon names: the sentence comes from a source titled by one (a one-word name is in many titles).
+         const pool = names.length ? raw.filter(onSubject) : raw;
+         const snip = pool.length ? selectInstant(matchQuery, pool) : null;
+@@ -893,7 +928,9 @@ export function createAnswerer(deps: AnswerDeps) {
+           onSubject(pool[snip.sourceIndex]) &&
+           termCoverage(matchQuery, `${pool[snip.sourceIndex].title} ${snip.text}`) >= MIN_TERM_COVERAGE &&
+           // The sentence itself names the subject, not only its page's title (Sextant q7, EN and PT).
+-          sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text);
++          sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text) &&
++          (!definitional || definesName(names, snip.text));
++        if (definitional) reasonCodes.push("instant:pt-definitional");
+         if (snip && sourceIndex >= 0 && !covers) reasonCodes.push("instant:off-topic");
+         if (snip && sourceIndex >= 0 && covers) {
+           markVisible();
+@@ -924,14 +961,25 @@ export function createAnswerer(deps: AnswerDeps) {
+       // "not from the offline library" instruction below, never quoting them.
+       if (health && gen?.mode !== "multipass" && sources.length === 0) {
+         reasonCodes.push("grounding:health-no-source");
+-        const text = noHealthSourceAnswer(pt);
++        const { text, label } = noSourceHealthCard(req.query, pt, !pt && isSpanishQuestion(req.query), reasonCodes, (ctx.history?.turns ?? []).filter((t) => t.role === "user").map((t) => t.text));
+         markVisible();
+         emit({ type: "token", answerId, tier: genTier, text });
+-        return finish(genTier, "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: "No offline source", retrievalMs }));
++        return finish(genTier, "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: label, retrievalMs }));
+       }
+       // Health with a good source: the answer IS the source's text, not the model's
+       // retelling (Sextant: the models misplaced the pinch point, iced snake bites,
+       // put cream on burns). "Deeper answer" (tier deep) lets the model summarize it, strictly.
++      // A coastal quake (tsunami card): the pack's earthquake excerpts say "take cover", the wrong action at the coast, so the
++      // card goes first (Sonar exp-29, Compass round 2).
++      if (healthExtractive && conversationCondition(req.query, userTurns).condition === "tsunami") {
++        const card = conditionCardText("tsunami", req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en");
++        if (card) {
++          reasonCodes.push("grounding:fa-card-tsunami", "grounding:health-card-first");
++          markVisible();
++          emit({ type: "token", answerId, tier: genTier, text: card });
++          return finish(genTier, "success", card, [], receipt({ modelId: "grounding-guard", modelLabel: "First aid card", retrievalMs }));
++        }
++      }
+       if (healthExtractive) {
+         reasonCodes.push("grounding:health-extractive");
+         // Score on each source's full text: compression keeps the sentences matching the question
+@@ -959,9 +1007,24 @@ export function createAnswerer(deps: AnswerDeps) {
+           }
+           break;
+         }
++        // No first-aid steps in the source: the condition's card when there is one (Sonar exp-29: a diabetic's low sugar).
++        if (text && isNoStepsAnswer(text)) {
++          const { condition } = conversationCondition(req.query, userTurns);
++          const card = condition && condition !== "MULTI" ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
++          if (card) {
++            reasonCodes.push("grounding:health-no-steps", `grounding:fa-card-${condition}`);
++            markVisible();
++            emit({ type: "token", answerId, tier: "instant", text: card });
++            return finish("instant", "success", card, [], receipt({ modelId: "grounding-guard", modelLabel: "First aid card", retrievalMs }));
++          }
++        }
+         if (!text) {
+           reasonCodes.push("grounding:health-no-safe-excerpt");
+-          const fixed = noSafeStepsAnswer(pt);
++          // No safe excerpt: the condition's first-aid card when there is one (Sonar exp-29), else the fixed line.
++          const { condition } = conversationCondition(req.query, userTurns);
++          const card = condition && condition !== "MULTI" ? conditionCardText(condition, req.query, !pt && isSpanishQuestion(req.query) ? "es" : pt ? "pt" : "en") : null;
++          if (card) reasonCodes.push(`grounding:fa-card-${condition}`);
++          const fixed = card ?? noSafeStepsAnswer(pt);
+           markVisible();
+           emit({ type: "token", answerId, tier: "instant", text: fixed });
+           return finish("instant", "success", fixed, [], receipt({ modelId: "grounding-guard", modelLabel: "No safe source", retrievalMs }));
+diff --git a/src/routing/conditionCards.test.ts b/src/routing/conditionCards.test.ts
+new file mode 100644
+index 0000000..c6fae97
+--- /dev/null
++++ b/src/routing/conditionCards.test.ts
+@@ -0,0 +1,41 @@
++import { describe, it, expect } from "vitest";
++import { conditionCardText, pickCondition, regexCondition } from "./conditionCards";
++import { noHealthSourceAnswer } from "./context";
++
++describe("first-aid condition cards v0.1 (Compass, FROZEN e0730060…)", () => {
++  it("term regexes: one condition, several (MULTI), none; EN and PT", () => {
++    expect(regexCondition("We think there is carbon monoxide in the cabin")).toBe("co");
++    expect(regexCondition("Acho que tem monóxido de carbono no quarto")).toBe("co");
++    expect(regexCondition("My son spilled boiling water on his leg")).toBe("burn");
++    expect(regexCondition("Ela está com dor no peito e a boca torta")).toBe("MULTI");
++    expect(regexCondition("What is the capital of Australia?")).toBeNull();
++  });
++  it("hypothermia needs cold exposure (a shaking, confused diabetic is not hypothermia)", () => {
++    expect(regexCondition("He is shaking, sweaty and confused after skipping lunch")).toBeNull();
++    expect(regexCondition("He is shivering and confused after falling in the icy lake")).toBe("hypothermia");
++  });
++  it("Unicode boundaries as in Python: 'co' alone or inside a word is not CO", () => {
++    // Not CO; since Compass round 2 it is a head injury (a coconut falling on a head is one).
++    expect(regexCondition("The coconut fell on my head")).not.toBe("co");
++    expect(regexCondition("co poisoning from the stove?")).toBe("co");
++  });
++  it("trigger v0.1: the regex's unique condition only; MULTI or none → no specific card (no embedding fallback)", () => {
++    expect(pickCondition("We think there is carbon monoxide in the cabin")).toBe("co");
++    expect(pickCondition("Something bad happened in the kitchen")).toBeNull();
++    expect(pickCondition("Ela está com dor no peito e a boca torta")).toBeNull();
++  });
++  it("v0.1 bluebottle: a bluebottle sting soaked in hot water is jellyfish + burn = MULTI, not the burn card", () => {
++    expect(regexCondition("A bluebottle stung me, should I put hot water on it?")).toBe("MULTI");
++    expect(regexCondition("I was stung by a blue bottle at the beach")).toBe("jellyfish");
++  });
++  it("card text: must-do first, sources, then the emergency line; snakebite = the WHO card", () => {
++    const co = conditionCardText("co", "carbon monoxide at home", false)!;
++    expect(co).toMatch(/^Possible carbon monoxide poisoning: get everyone out into fresh air now/);
++    expect(co).toMatch(/\n\nSource: NHS, Carbon monoxide poisoning/);
++    expect(co).toMatch(/emergency/i);
++    expect(conditionCardText("co", "monóxido de carbono em casa", true)).toMatch(/^Possível intoxicação por monóxido de carbono/);
++    expect(conditionCardText("snakebite", "snake bit me", false)).toMatch(/^Snakebite, first aid/);
++    expect(conditionCardText("unknown", "x", false)).toBeNull();
++    expect(conditionCardText("co", "x", false)).not.toBe(noHealthSourceAnswer(false));
++  });
++});
+diff --git a/src/routing/conditionCards.ts b/src/routing/conditionCards.ts
+new file mode 100644
+index 0000000..8658733
+--- /dev/null
++++ b/src/routing/conditionCards.ts
+@@ -0,0 +1,127 @@
++/**
++ * Per-condition first-aid cards v0.1 (Compass, rnd/research/compass/cards/first-aid-condition-cards.md; FROZEN
++ * exp/fa-cards/FROZEN.v0.1.sha256 combined e0730060…a56b, which supersedes v0 before QUEUE #14 ran): where the engine
++ * would show the generic no-source health card (noHealthSourceAnswer, from the health path or from A1's danger
++ * detector), a question whose terms name exactly one condition gets that condition's card: the must-do line, the
++ * key don'ts, the facts' sources, then the emergency line.
++ *
++ * Trigger v0.1 (trigger.v0.1.md): exactly one condition by the term regexes (terms.py v0.1, ported) → that card;
++ * several (MULTI) or none → the generic card. v0's embedding-centroid fallback was removed before the run (an
++ * out-of-sample check on 400 FirstAidQA questions found it wrong on 3 of 4 firings). Snakebite maps to the existing
++ * WHO card (firstAidCards.ts). Texts: conditionCards.v0.json = cards.v0.json byte for byte (sha256 5de2015a…).
++ * NOT clinically reviewed yet: an eval arm, not a shipping text.
++ * Pure. The regexes are Python's (Unicode \w and \b), ported with lookarounds on [\p{L}\p{N}_].
++ */
++import cards from "./conditionCards.v1.json";
++import { emergencyLine } from "./context";
++import { emergencyNumbersLine } from "./emergencyNumbers";
++import { snakebiteFirstAidCard } from "./firstAidCards";
++
++const BASE_TERMS: Record<string, RegExp> = {
++  co: /(?<![\p{L}\p{N}_])(carbon monoxide|(?<![\p{L}\p{N}_])co(?![\p{L}\p{N}_]) poison|mon[óo]xido de carbono|gas (heater|leak)|vazamento de g[áa]s|aquecedor a g[áa]s|generator (inside|indoors))/iu,
++  burn: /(?<![\p{L}\p{N}_])(burn(ed|t)? (my|his|her|their)|scald|boiling (water|oil)|hot (pan|oil|water|stove)|queim(ei|ou|ado|ada|adura)|[áa]gua fervendo|[óo]leo quente|panela quente)/iu,
++  heatstroke: /(?<![\p{L}\p{N}_])(heat ?stroke|stopped sweating|collapsed in the heat|very hot and confused|insola[çc][ãa]o|golpe de calor|desmai[\p{L}\p{N}_]* no calor|desabou no calor)/iu,
++  hypothermia: /(?<![\p{L}\p{N}_])(hypotherm|hipoterm|(shiver[\p{L}\p{N}_]*|slurr[\p{L}\p{N}_]+|stumbl[\p{L}\p{N}_]+|confused)[^.?!]{0,80}(?<![\p{L}\p{N}_])(cold|snow|winter|freezing|icy|lake)(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(cold|snow|winter|freezing)(?![\p{L}\p{N}_])[^.?!]{0,80}(shiver[\p{L}\p{N}_]*|slurr[\p{L}\p{N}_]+|stumbl[\p{L}\p{N}_]+|confus[\p{L}\p{N}_]+)|(tremend[\p{L}\p{N}_]*|fala enrolada|enrolando a fala|confus[\p{L}\p{N}_]+)[^.?!]{0,80}(?<![\p{L}\p{N}_])(frio|neve|inverno|gelad[\p{L}\p{N}_]*)(?![\p{L}\p{N}_])|(?<![\p{L}\p{N}_])(frio|neve|inverno|gelad[\p{L}\p{N}_]*)(?![\p{L}\p{N}_])[^.?!]{0,80}(tremend[\p{L}\p{N}_]*|enrolad[\p{L}\p{N}_]*|confus[\p{L}\p{N}_]+))/iu,
++  frostbite: /(?<![\p{L}\p{N}_])(frostbit|frostnip|frozen (toes|fingers|feet)|white,? (waxy|hard)|congelad|queimadura de frio)/iu,
++  choking: /(?<![\p{L}\p{N}_])(chok(e|ing)|can'?t (breathe|speak) .{0,20}(food|stuck)|engasg)/iu,
++  bleeding: /(?<![\p{L}\p{N}_])(bleeding (a lot|heavily|badly)|won'?t stop bleeding|blood (is )?(pouring|spurting)|sangrando muito|sangramento forte|n[ãa]o para de sangrar)/iu,
++  heartattack: /(?<![\p{L}\p{N}_])(chest pain|pressure in (his|her|my) chest|heart attack|dor (forte )?no peito|aperto (forte )?no peito|infarto|ataque card)/iu,
++  stroke: /(?<![\p{L}\p{N}_])(face (droop|drooping|drooped)|crooked (smile|face)|stroke(?![\p{L}\p{N}_])|one side (of (his|her) body )?(is )?weak|boca torta|rosto (ca[íi]do|torto)|derrame|(?<![\p{L}\p{N}_])avc(?![\p{L}\p{N}_]))/iu,
++  seizure: /(?<![\p{L}\p{N}_])(seizure|convuls|fit(?![\p{L}\p{N}_])|jerking|shaking on the (floor|ground)|se debatendo|ataque epil)/iu,
++  anaphylaxis: /(?<![\p{L}\p{N}_])(anaphyla|throat (is )?(swelling|closing)|lips? (are |is )?swelling|garganta (inchando|fechando)|choque anafil)/iu,
++  battery: /(?<![\p{L}\p{N}_])(swallow[\p{L}\p{N}_]* (a |an )?(button |coin|watch |small )?batter|engoli[\p{L}\p{N}_]* (uma )?(bateria|pilha))/iu,
++  eyechem: /(?<![\p{L}\p{N}_])((bleach|chemical|cleaning product|acid|alkali)[\p{L}\p{N}_]* .{0,25}(eye)|(eye).{0,25}(bleach|chemical)|(sanit[áa]ria|produto qu[íi]mico|produto de limpeza).{0,25}olho)/iu,
++  electric: /(?<![\p{L}\p{N}_])(electric(al)? shock|electrocut|live (wire|cable)|got a shock|tomou choque|levou um choque|fio desencapado)/iu,
++  jellyfish: /(?<![\p{L}\p{N}_])(jellyfish|man.o.war|blue ?bottle|[áa]gua.viva|caravela)/iu,
++  nosebleed: /(?<![\p{L}\p{N}_])(nose ?bleed|nose (is |started )?bleeding|bleeding from (my|the|his|her) nose|sangr[\p{L}\p{N}_]* (pelo|no|do) nariz|nariz (sangrando|sangra))/iu,
++  earthquake: /(?<![\p{L}\p{N}_])(earthquake|ground is shaking|building is shaking|terremoto|tremor de terra|pr[ée]dio (est[áa] )?tremendo)/iu,
++  drowning: /(?<![\p{L}\p{N}_])(drown|pulled .{0,20}out of the (water|pool|sea)|afog|tiramos .{0,20}(da|do) (piscina|mar|[áa]gua))/iu,
++  snakebite: /(?<![\p{L}\p{N}_])(snake ?bit|bitten by a (snake|viper|rattlesnake)|snake (just )?bit|cobra (me )?(picou|mordeu)|picad[\p{L}\p{N}_]* (por|de) (uma )?(cobra|jararaca|cascavel))/iu,
++  // v1 long tail (Compass terms_v1.py NEW, FROZEN.v1 e407c676…), ported mechanically by Sonar exp-29 (parity-tested).
++  hypoglycemia: /^(?!.*(?<![\p{L}\p{N}_])(high blood sugar|hyperglyc|a[çc][úu]car alto|hiperglic))(?:.*(low (blood )?sugar|hypoglyc|hipoglic|glicose baixa|a[çc][úu]car (no sangue )?baixo)|(?=.*(diabet|diab[ée]tic|insulin))(?=.*(?<![\p{L}\p{N}_])(shak[\p{L}\p{N}_]*|sweat[\p{L}\p{N}_]*|confus[\p{L}\p{N}_]*|faint[\p{L}\p{N}_]*|dizzy|pale|drows[\p{L}\p{N}_]*|tremend[\p{L}\p{N}_]*|suad[\p{L}\p{N}_]*|suando|confus[\p{L}\p{N}_]*|desmai[\p{L}\p{N}_]*|tont[\p{L}\p{N}_]*)))/ius,
++  altitude: /(?<![\p{L}\p{N}_])(altitude sickness|mountain sickness|(?<![\p{L}\p{N}_])ams(?![\p{L}\p{N}_])|hace(?![\p{L}\p{N}_])|hape(?![\p{L}\p{N}_])|at [0-9][0-9.,]{2,} ?m(?![\p{L}\p{N}_])|high altitude|soroche|mal de altitude|doen[çc]a da altitude)/iu,
++  beesting: /(?<![\p{L}\p{N}_])((?<![\p{L}\p{N}_])(bee|wasp|hornet|yellow ?jacket)s?(?![\p{L}\p{N}_]).{0,40}(?<![\p{L}\p{N}_])(sting|stung|stinger)|(?<![\p{L}\p{N}_])stung by an? (bee|wasp|hornet)|(abelha|vespa|marimbondo).{0,40}(picad|picou|ferr[ãa]o)|picad[\p{L}\p{N}_]* (por|de) (uma )?(abelha|vespa|marimbondo))/iu,
++  scorpion: /(?<![\p{L}\p{N}_])(scorpion|escorpi[ãa]o)/iu,
++  marinepuncture: /(?<![\p{L}\p{N}_])(sting ?ray|sea urchin|stonefish|weever|lionfish|arraia|ouri[çc]o.do.mar|peixe.pedra)/iu,
++  tick: /(?<![\p{L}\p{N}_])((?<![\p{L}\p{N}_])ticks?(?![\p{L}\p{N}_])|carrapato)/iu,
++  animalbite: /(?<![\p{L}\p{N}_])((?<![\p{L}\p{N}_])(dog|cat|monkey|bat|fox|raccoon|macaque)s?(?![\p{L}\p{N}_]).{0,30}(?<![\p{L}\p{N}_])(bit|bite|bitten|scratch[\p{L}\p{N}_]*)|(?<![\p{L}\p{N}_])bitten by an? (dog|cat|monkey|bat|fox|raccoon)|rabies|raiva|(cachorro|c[ãa]o|gato|macaco|morcego).{0,30}(mordeu|mordid|arranh)|mordid[\p{L}\p{N}_]* (por|de) (um )?(cachorro|c[ãa]o|gato|macaco|morcego))/iu,
++  heatexhaustion: /(?<![\p{L}\p{N}_])(heat exhaustion|heat cramps?|cramps?.{0,40}(?<![\p{L}\p{N}_])(heat|sun|hot)(?![\p{L}\p{N}_])|exaust[ãa]o (pelo|por) calor|c[ãa]imbras?.{0,40}(?<![\p{L}\p{N}_])(sol|calor)(?![\p{L}\p{N}_]))/iu,
++};
++
++// Compass first-aid-cards draft (2026-10-03, rnd/research/compass/exp/first-aid-cards/triggers.proposed.mjs, round 2, sha256
++// see SHA256SUMS; self-test 36/36): replaces the terms of the 10 drafted conditions (ES terms, drowning "pulled … out of the lake", choking split
++// into child vs infant, coins with batteries); the other conditions keep the v0.1 / v1 terms.
++const B = String.raw`(?<![\p{L}\p{N}_])`, E = String.raw`(?![\p{L}\p{N}_])`;
++const INFANT = String.raw`(?:baby|infant|newborn|beb[êeé]|rec[ée]m.nascid\w*|lactante|[0-9]{1,2} (?:months?|meses) old|de [0-9]{1,2} meses|[0-9]{1,2}.?(?:month|m[eê]s).?old)`;
++const W = String.raw`[\p{L}\p{N}_]`;
++const u = (src: string) => src.replaceAll("\\w", W);
++const PROPOSED = {
++  // + lake/river/pond/ocean, rescued/taken/dragged, "not breathing" after any water; PT resgat/puxamos; ES ahogad/sacamos.
++  drowning: new RegExp(u(`${B}(drown|(?:pulled|taken|dragged|fished|got|rescued|pulled him|pulled her)[^.?!]{0,30}(?:out of|from) (?:the )?(?:water|pool|sea|lake|river|ocean|pond|surf)|afog|(?:tir|pux|resgat)\\w*[^.?!]{0,30}(?:da|do) (?:piscina|mar|[áa]gua|lago|rio|represa|lagoa)|ahogad|se ahog\\w*[^.?!]{0,30}(?:agua|piscina|alberca|mar|lago|r[íi]o)|(?:sac|rescat)\\w*[^.?!]{0,30}(?:del|de la) (?:agua|piscina|alberca|mar|lago|r[íi]o))`), "iu"),
++  jellyfish: new RegExp(u(`${B}(jellyfish|man.o.war|blue ?bottle|[áa]gua.viva|caravela|medusa|aguamala|agua mala|carabela)`), "iu"),
++  seizure: new RegExp(u(`${B}(seizure|convuls|fit${E}|jerking|shaking on the (?:floor|ground)|se debatendo|ataque epil|crisis epil)`), "iu"),
++  co: new RegExp(u(`${B}(carbon monoxide|${B}co${E} poison|mon[óo]xido de carbono|gas (?:heater|leak)|vazamento de g[áa]s|aquecedor a g[áa]s|generator (?:inside|indoors)|fuga de gas|calentador de gas|intoxicaci[óo]n por (?:mon[óo]xido|gas))`), "iu"),
++  scorpion: new RegExp(u(`${B}(scorpion|escorpi[ãa]o|escorpi[óo]n|alacr[áa]n)`), "iu"),
++  beesting: new RegExp(u(`${B}((?:bee|wasp|hornet|yellow ?jacket)s?${E}.{0,40}${B}(?:sting|stung|stinger)|stung by an? (?:bee|wasp|hornet)|(?:abelha|vespa|marimbondo).{0,40}(?:picad|picou|ferr[ãa]o)|picad\\w* (?:por|de) (?:uma )?(?:abelha|vespa|marimbondo)|(?:abeja|avispa).{0,40}(?:pic|aguij)|picad\\w* (?:por|de) (?:una )?(?:abeja|avispa)|pic[óo][^.?!]{0,15}(?:una )?(?:abeja|avispa))`), "iu"),
++  // battery card also covers coins (same card: button battery = emergency; coin = when to go).
++  battery: new RegExp(u(`${B}(swallow\\w* (?:a |an )?(?:button |coin|watch |small )?(?:batter|coin)|engoli\\w* (?:uma )?(?:bateria|pilha|moeda)|(?:se )?trag[óo] (?:una )?(?:pila|bater[íi]a|moneda))`), "iu"),
++  // choking: adult/child only; an infant mention goes to chokinginfant (else MULTI → generic card).
++  choking: new RegExp(u(`^(?!.*${INFANT})(?=.*${B}(?:chok(?:e|ing)|can'?t (?:breathe|speak) .{0,20}(?:food|stuck)|engasg|atragant))`), "isu"),
++  chokinginfant: new RegExp(u(`^(?=.*${INFANT})(?=.*${B}(?:chok(?:e|ing)|engasg|atragant|can'?t breathe))`), "isu"),
++  hypoglycemia: new RegExp(u(`^(?!.*${B}(?:high blood sugar|hyperglyc|a[çc][úu]car alto|hiperglic|az[úu]car alta))(?:.*(?:low (?:blood )?sugar|hypoglyc|hipoglic|hipogluc|glicose baixa|glucosa baja|a[çc][úu]car (?:no sangue )?baixo|az[úu]car baja)|(?=.*(?:diabet|diab[ée]tic|insulin))(?=.*${B}(?:shak\\w*|sweat\\w*|confus\\w*|faint\\w*|dizzy|pale|drows\\w*|tremend\\w*|suad\\w*|suando|desmai\\w*|tont\\w*|tembl\\w*|sud(?:ando|ado|oroso|a)|mare\\w*|desmay\\w*|confund\\w*)))`), "isu"),
++  // round 2 (2026-10-03)
++  heartattack: new RegExp(u(`^(?!.*(?:saudade|cora[çc][ãa]o partido|heartbreak|broken heart|de amor|desamor|por (?:ela|ele|ti|vos)))(?=.*${B}(?:chest pain|pressure in (?:his|her|my) chest|heart attack|dor (?:forte )?no peito|aperto (?:forte )?no peito|infarto|ataque card|dolor (?:fuerte )?(?:en el|de) pecho|opresi[óo]n en el pecho|ataque al coraz[óo]n))`), "isu"),
++  hypothermia: new RegExp(u(`${B}(hypotherm|hipoterm|(?:shiver\\w*|slurr\\w+|stumbl\\w+|confused)[^.?!]{0,80}${B}(?:cold|snow|winter|freezing|icy|lake)${E}|${B}(?:cold|snow|winter|freezing)${E}[^.?!]{0,80}(?:shiver\\w*|slurr\\w+|stumbl\\w+|confus\\w+)|(?:tremend\\w*|fala enrolada|confus\\w+|tiritand\\w*|temblando)[^.?!]{0,80}${B}(?:frio|frío|neve|nieve|inverno|invierno|gelad\\w*|helad\\w*)${E})`), "iu"),
++  headinjury: new RegExp(u(`${B}(head injur|hit (?:his|her|my|their) head|bumped (?:his|her|my|their) head|fell on (?:his|her|my|their) head|concussion|bateu a cabe[çc]a|batida na cabe[çc]a|pancada na cabe[çc]a|caiu de cabe[çc]a|traumatismo craniano|concuss[ãa]o|golpe(?:ó)? (?:en|la) (?:la )?cabeza|se golpe[óo] la cabeza|traumatismo craneal|conmoci[óo]n cerebral)`), "iu"),
++  // coastal earthquake → tsunami card (Sonar's earthquake card keeps inland quakes; this needs earthquake + coast/sea/beach words)
++  tsunami: new RegExp(u(`${B}(tsunami|maremoto|(?:earthquake|quake|terremoto|sismo|temblor|tremor de terra)[^.?!]{0,120}${B}(?:beach|coast|shore|sea|ocean|praia|litoral|mar|playa|costa|orilla)${E}|${B}(?:beach|coast|shore|praia|litoral|playa|costa)${E}[^.?!]{0,120}(?:earthquake|quake|terremoto|sismo|temblor))`), "iu"),
++};
++export const CONDITION_TERMS: Record<string, RegExp> = { ...BASE_TERMS, ...PROPOSED };
++// Hypothermia: the round-2 regex dropped the v0.1 PT form "molhado na neve, está tremendo muito e meio confuso"; the union
++// keeps both (it can only add fires; Sonar exp-29, reported to Compass).
++{
++  const v01 = BASE_TERMS.hypothermia, r2 = PROPOSED.hypothermia;
++  // …except next to a diabetes cue: "suando frio, tremendo" there is low blood sugar (the false fire round 2 removed).
++  if (v01 && r2) CONDITION_TERMS.hypothermia = { test: (q: string) => r2.test(q) || (v01.test(q) && !/diab[eé]t|insulin/i.test(q)) } as RegExp;
++}
++
++/** terms.py regex_condition: the one matching condition, "MULTI" for several, null for none. */
++export function regexCondition(query: string): string | null {
++  let hits = Object.keys(CONDITION_TERMS).filter((c) => CONDITION_TERMS[c].test(query));
++  // A quake at the coast is a tsunami question: the tsunami card, not the inland earthquake card (Compass round 2).
++  if (hits.includes("tsunami")) hits = hits.filter((c) => c !== "earthquake");
++  return hits.length === 1 ? hits[0] : hits.length ? "MULTI" : null;
++}
++
++/**
++ * The condition for a conversation: the current question's, else (it names none) the user's turns together, oldest
++ * first ("my son was stung by a scorpion" … "what do I do now?"). A condition named in the current question wins.
++ */
++export function conversationCondition(query: string, userTurns: string[] = []): { condition: string | null; fromHistory: boolean } {
++  const now = regexCondition(query);
++  if (now !== null || !userTurns.length) return { condition: now, fromHistory: false };
++  return { condition: regexCondition([...userTurns, query].join(" / ")), fromHistory: true };
++}
++
++/** trigger.v0.1 step 2: the regex's unique condition; MULTI or none → null (the generic card). */
++export function pickCondition(query: string): string | null {
++  const r = regexCondition(query);
++  return r === "MULTI" ? null : r;
++}
++
++type CardText = { en: string; pt: string; es?: string; sources: string; status?: string };
++export type CardLang = "en" | "pt" | "es";
++const ES_EMERGENCY = "En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
++const CARDS = (cards as { cards: Record<string, CardText> }).cards;
++
++/** The condition's card text in the question's language (the emergency line appended, as for the snakebite card); null
++ * for an unknown condition or a language the card has no text for (the caller shows the generic card). */
++export function conditionCardText(condition: string, query: string, lang: CardLang | boolean): string | null {
++  const l: CardLang = typeof lang === "boolean" ? (lang ? "pt" : "en") : lang;
++  if (condition === "snakebite") return l === "es" ? null : snakebiteFirstAidCard(query, l === "pt");
++  const c = CARDS[condition];
++  const body = c?.[l];
++  if (!c || !body) return null;
++  const emergency = l === "es" ? ES_EMERGENCY : emergencyNumbersLine(query, l === "pt") ?? emergencyLine(l === "pt");
++  return `${body}\n\n${l === "pt" ? "Fonte" : l === "es" ? "Fuente" : "Source"}: ${c.sources}.\n\n${emergency}`;
++}
+diff --git a/src/routing/conditionCards.v0.json b/src/routing/conditionCards.v0.json
+new file mode 100644
+index 0000000..b3bffc8
+--- /dev/null
++++ b/src/routing/conditionCards.v0.json
+@@ -0,0 +1,21 @@
++{"_note": "Compass 2026-10-02. Own wording (not copied) summarizing the cited sources, which were fetched 2026-10-02 (see ../../cards/first-aid-condition-cards.md). Engine appends the emergency-numbers line after each card, as for the existing snakebite card. MUST be reviewed by a qualified person before shipping (as the snakebite card was).",
++"cards": {
++"co": {"en": "Possible carbon monoxide poisoning: get everyone out into fresh air now. Turn off the heater, stove or generator only if it's on your way out. Call emergency services. Don't go back inside until the place has been checked, and don't drive yourself to hospital.", "pt": "Possível intoxicação por monóxido de carbono: leve todos para o ar livre agora. Desligue o aquecedor, fogão ou gerador só se estiver no caminho da saída. Ligue para a emergência. Não volte para dentro até o local ser verificado e não dirija até o hospital.", "sources": "NHS, Carbon monoxide poisoning (reviewed Dec 2025); CDC/NIOSH, Carbon monoxide (2024)"},
++"burn": {"en": "Burn or scald: hold it under cool running water for 20 minutes, as soon as possible (cool bottled water or a wet towel if there's no tap). Don't put ice, butter, oil or creams on it, don't burst blisters, and don't pull off anything stuck to it. Get medical help for a large or deep burn, or a burn on a child.", "pt": "Queimadura: deixe sob água corrente fria (não gelada) por 20 minutos, o quanto antes (água engarrafada fria ou pano molhado se não houver torneira). Não passe gelo, manteiga, óleo nem pomada, não estoure bolhas e não arranque o que estiver grudado. Procure atendimento para queimadura grande ou profunda, ou em criança.", "sources": "NHS, Burns and scalds (reviewed Mar 2026); St John Ambulance, Burns and scalds (2025)"},
++"heatstroke": {"en": "Heatstroke (very hot and confused): call emergency services, then cool them fast while you wait: move them to shade, wrap them in a cool wet sheet or sponge them with cold water, and fan them. If they aren't fully alert, don't give anything by mouth.", "pt": "Insolação grave (muito quente e confuso): ligue para a emergência e resfrie a pessoa rápido enquanto espera: leve para a sombra, enrole num lençol molhado frio ou molhe com água fria e abane. Se ela não estiver bem acordada, não dê nada pela boca.", "sources": "NHS, Heat exhaustion and heatstroke (reviewed May 2026); CDC/NIOSH, Heat-related illnesses (2026); MedlinePlus, Heat emergencies"},
++"hypothermia": {"en": "Hypothermia (cold, shivering, confused or slurring): get them out of the cold into shelter, remove wet clothes and wrap them in blankets or a sleeping bag with the head covered; call emergency services. Move them gently and don't make them walk or exercise. Don't use a hot bath, hot-water bottle or heat lamp, don't rub their arms or legs, and no alcohol. A warm sweet drink only if they're fully awake.", "pt": "Hipotermia (frio, tremendo, confuso ou com fala enrolada): tire a pessoa do frio para um abrigo, troque a roupa molhada e enrole em cobertores ou saco de dormir, cobrindo a cabeça; ligue para a emergência. Mova com cuidado e não faça a pessoa andar ou se exercitar. Não use banho quente, bolsa de água quente nem lâmpada de aquecimento, não esfregue braços e pernas e nada de álcool. Bebida morna e doce só se ela estiver bem acordada.", "sources": "NHS, Hypothermia (reviewed Jun 2023); Wilderness Medical Society, Accidental hypothermia guideline (2019)"},
++"frostbite": {"en": "Frostbite: get to shelter. Rewarm the area in warm, not hot, water (about 37–39 °C) until it's soft, then dry it and cover it loosely. Don't rub it, don't warm it at a fire, heater or hot-water bottle, and don't thaw it if it could freeze again before you reach care.", "pt": "Congelamento (frostbite): vá para um abrigo. Reaqueça a área em água morna, não quente (cerca de 37–39 °C), até amolecer; depois seque e cubra sem apertar. Não esfregue, não aqueça no fogo, aquecedor ou bolsa de água quente e não descongele se puder congelar de novo antes de chegar ao atendimento.", "sources": "NHS, Frostbite (reviewed Jun 2025); Wilderness Medical Society, Frostbite summary (2024)"},
++"choking": {"en": "Choking (can't breathe, speak or cough): give up to 5 sharp back blows between the shoulder blades, then up to 5 abdominal thrusts; repeat until it clears, and call emergency services if it doesn't clear. If they can still cough, let them cough. Don't reach blindly into their mouth.", "pt": "Engasgo (não consegue respirar, falar ou tossir): dê até 5 tapas firmes nas costas, entre as escápulas, e depois até 5 compressões abdominais; repita até desengasgar e ligue para a emergência se não sair. Se a pessoa ainda consegue tossir, deixe tossir. Não enfie os dedos às cegas na boca.", "sources": "St John Ambulance, Choking (2025); MedlinePlus, Choking - adult"},
++"bleeding": {"en": "Severe bleeding: press firmly and directly on the wound with a clean cloth (or your hand) and keep pressing; call emergency services. If blood soaks through, keep the pressure on and add more cloth on top. Don't pull out anything stuck in the wound.", "pt": "Sangramento forte: pressione firme e diretamente sobre o ferimento com um pano limpo (ou a mão) e não solte; ligue para a emergência. Se o sangue atravessar o pano, mantenha a pressão e ponha mais pano por cima. Não retire objetos cravados no ferimento.", "sources": "St John Ambulance, Severe bleeding (2025); MedlinePlus, Bleeding"},
++"heartattack": {"en": "Possible heart attack (chest pain or pressure, sweating, short of breath): call emergency services now. For an adult who isn't allergic to aspirin, give one 300 mg aspirin to chew slowly if you have it. Keep them sitting and resting; don't let them drive.", "pt": "Possível infarto (dor ou aperto no peito, suor frio, falta de ar): ligue para a emergência agora. Para um adulto sem alergia a aspirina, dê 1 comprimido de 300 mg para mastigar devagar, se tiver. Mantenha a pessoa sentada e em repouso; não deixe dirigir.", "sources": "NHS, Heart attack (reviewed Mar 2026); St John Ambulance, Heart attack (2025)"},
++"stroke": {"en": "Possible stroke (face drooping, arm weakness, slurred speech): call emergency services now, even if the signs go away, and note the time they started. Don't drive them yourself.", "pt": "Possível AVC (rosto caído de um lado, braço fraco, fala enrolada): ligue para a emergência agora, mesmo que os sinais passem, e anote a hora em que começaram. Não leve a pessoa de carro por conta própria.", "sources": "NHS, Stroke symptoms (FAST) (reviewed Sep 2024); CDC, Stroke signs and symptoms (2026)"},
++"seizure": {"en": "Seizure: keep them safe: move away anything that could hurt them, cushion their head, and time the seizure. Don't hold them down and don't put anything in their mouth. When the shaking stops, turn them on their side. Call emergency services if it lasts more than 5 minutes or you don't know their usual seizures.", "pt": "Convulsão: proteja a pessoa: afaste o que possa machucá-la, apoie a cabeça em algo macio e marque o tempo. Não segure a pessoa e não coloque nada na boca. Quando parar de tremer, vire-a de lado. Ligue para a emergência se durar mais de 5 minutos ou se você não conhece as crises dela.", "sources": "NHS, What to do if someone has a seizure (reviewed Dec 2023); CDC, First aid for seizures (2024)"},
++"anaphylaxis": {"en": "Severe allergic reaction (swelling of throat or lips, trouble breathing): use an adrenaline auto-injector (EpiPen) if there is one, and call emergency services saying it's anaphylaxis. Lie them down with legs raised (or sit up slowly if breathing is hard). Don't let them stand or walk. If no better after 5 minutes, use a second injector.", "pt": "Reação alérgica grave (garganta ou lábios inchando, dificuldade para respirar): use a caneta de adrenalina (EpiPen) se houver e ligue para a emergência dizendo que é anafilaxia. Deite a pessoa com as pernas elevadas (ou sentada devagar se respirar mal). Não deixe ficar em pé nem andar. Se não melhorar em 5 minutos, use uma segunda caneta.", "sources": "NHS, Anaphylaxis (reviewed Jun 2023)"},
++"battery": {"en": "Swallowed button battery: go to the emergency department now, even if the child seems fine. Don't make them vomit and don't give food or drink.", "pt": "Engoliu bateria tipo botão (de relógio, controle): vá ao pronto-socorro agora, mesmo que a criança pareça bem. Não provoque vômito e não dê comida nem bebida.", "sources": "Child Accident Prevention Trust, Button batteries: in an emergency; National Capital Poison Center, Battery ingestion"},
++"eyechem": {"en": "Chemical in the eye: rinse it with plenty of clean, lukewarm running water for at least 20 minutes, holding the eye open, and keep rinsing while you get medical help; take the product container with you. Don't rub the eye.", "pt": "Produto químico no olho: lave com bastante água limpa corrente, morna, por pelo menos 20 minutos, mantendo o olho aberto, e continue lavando enquanto busca atendimento; leve a embalagem do produto. Não esfregue o olho.", "sources": "NHS, Eye injuries (reviewed Mar 2026)"},
++"electric": {"en": "Electric shock: don't touch the person while they're still in contact with the source. Switch off the power at the switch or fuse box first; stay at least 6 m away from fallen power lines. Then call emergency services and check their breathing.", "pt": "Choque elétrico: não toque na pessoa enquanto ela estiver encostada na fonte. Desligue a energia no interruptor ou no disjuntor primeiro; fique a pelo menos 6 m de fios de alta tensão caídos. Depois ligue para a emergência e veja se ela respira.", "sources": "St John Ambulance, Electrocution (2025); MedlinePlus, Electrical injury"},
++"jellyfish": {"en": "Jellyfish sting: rinse with seawater, not fresh water, and remove tentacles without bare hands. Then soak the area in hot water you can tolerate for 20–30 minutes. In tropical waters (box jellyfish), pour vinegar on the sting and go to hospital. Don't rub it and don't pee on it. Call emergency services for trouble breathing or a large sting.", "pt": "Queimadura de água-viva: enxágue com água do mar, não com água doce, e tire os tentáculos sem usar as mãos nuas. Depois deixe a área de molho em água quente que você aguente por 20–30 minutos. Em mares tropicais (cubozoários), jogue vinagre e vá ao hospital. Não esfregue e não urine no local. Ligue para a emergência se houver falta de ar ou queimadura extensa.", "sources": "NHS, Jellyfish and other sea creature stings (reviewed Jun 2024); healthdirect Australia, Jellyfish stings (2024)"},
++"nosebleed": {"en": "Nosebleed: sit up and lean forward (not back), and pinch the soft part of the nose just above the nostrils for 10–15 minutes, breathing through your mouth. Get medical help if it's still bleeding after 15 minutes.", "pt": "Sangramento no nariz: sente-se e incline a cabeça para a frente (não para trás) e aperte a parte mole do nariz, logo acima das narinas, por 10–15 minutos, respirando pela boca. Procure atendimento se ainda sangrar depois de 15 minutos.", "sources": "NHS, Nosebleed (reviewed Dec 2023); St John Ambulance, Nosebleed (2025)"},
++"earthquake": {"en": "Earthquake: drop to your hands and knees, cover your head and neck (under a sturdy table if one is close, otherwise next to an inside wall away from windows), and hold on until the shaking stops. Don't run outside and don't stand in a doorway.", "pt": "Terremoto: abaixe-se de joelhos e mãos no chão, proteja a cabeça e o pescoço (debaixo de uma mesa firme se houver uma perto; senão, junto a uma parede interna longe de janelas) e segure-se até o tremor parar. Não corra para fora e não fique no vão da porta.", "sources": "Ready.gov, Earthquakes (2026)"},
++"drowning": {"en": "Pulled from the water and not breathing normally: call emergency services and start CPR with rescue breaths (if trained: 5 first breaths, then 30 compressions to 2 breaths). If you can't give breaths, do chest compressions only until help arrives. Don't go into the water yourself unless you're trained.", "pt": "Retirado da água sem respirar normalmente: ligue para a emergência e comece a RCP com ventilações (se souber: 5 ventilações iniciais, depois 30 compressões para 2 ventilações). Se não conseguir ventilar, faça só compressões até a ajuda chegar. Não entre na água se não for treinado.", "sources": "St John Ambulance, Drowning (2025); American Heart Association / AAP drowning guidance (2024)"}
++}}
+diff --git a/src/routing/conditionCards.v1.json b/src/routing/conditionCards.v1.json
+new file mode 100644
+index 0000000..95285d6
+--- /dev/null
++++ b/src/routing/conditionCards.v1.json
+@@ -0,0 +1,193 @@
++{
++ "_note": "Compass 2026-10-03 DRAFT. Cards marked status=draft-vetted come from compass/exp/first-aid-cards/cards.json (every step cited, safety rules v0.8.2 clean, EN/PT/ES); status=placeholder cards are the unvetted fa-cards v0/v1 texts kept so the engine file stays complete. NOTHING ships without r4to's sign-off + clinical review. The engine appends the emergency-numbers line after each card. 'es' is not read by conditionCards.ts yet (one-line change).",
++ "cards": {
++  "co": {
++   "en": "Possible carbon monoxide poisoning: get everyone out into fresh air now. Switch off the heater, boiler or stove on your way out only if you can do it quickly. Don't go back inside until the place has been checked. Don't drive yourself to hospital. Call emergency services now if anyone is struggling to breathe, confused, weak, has chest pain or has passed out; otherwise get medical advice straight away.",
++   "pt": "Possível intoxicação por monóxido de carbono: leve todos para o ar livre agora. Desligue o aquecedor ou o fogão na saída só se der para fazer isso rápido. Não volte para dentro até o local ser verificado. Não dirija até o hospital. Ligue para a emergência agora se alguém estiver com falta de ar, confuso, fraco, com dor no peito ou desmaiado; se não, procure atendimento médico imediatamente.",
++   "es": "Posible intoxicación por monóxido de carbono: saque a todos al aire libre ahora. Apague el calentador o la estufa al salir solo si puede hacerlo rápido. No vuelva a entrar hasta que revisen el lugar. No conduzca usted mismo al hospital. Llame a emergencias ahora si alguien tiene dificultad para respirar, está confundido, débil, con dolor en el pecho o se desmayó; si no, busque atención médica de inmediato.",
++   "sources": "NHS, Carbon monoxide poisoning; CDC NIOSH, Carbon Monoxide Hazards at Work. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "burn": {
++   "en": "Burn or scald: hold it under cool running water for 20 minutes, as soon as possible (cool bottled water or a wet towel if there's no tap). Don't put ice, butter, oil or creams on it, don't burst blisters, and don't pull off anything stuck to it. Get medical help for a large or deep burn, or a burn on a child.",
++   "pt": "Queimadura: deixe sob água corrente fria (não gelada) por 20 minutos, o quanto antes (água engarrafada fria ou pano molhado se não houver torneira). Não passe gelo, manteiga, óleo nem pomada, não estoure bolhas e não arranque o que estiver grudado. Procure atendimento para queimadura grande ou profunda, ou em criança.",
++   "sources": "NHS, Burns and scalds (reviewed Mar 2026); St John Ambulance, Burns and scalds (2025)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "heatstroke": {
++   "en": "Heatstroke (very hot and confused): call emergency services, then cool them fast while you wait: move them to shade, wrap them in a cool wet sheet or sponge them with cold water, and fan them. If they aren't fully alert, don't give anything by mouth.",
++   "pt": "Insolação grave (muito quente e confuso): ligue para a emergência e resfrie a pessoa rápido enquanto espera: leve para a sombra, enrole num lençol molhado frio ou molhe com água fria e abane. Se ela não estiver bem acordada, não dê nada pela boca.",
++   "sources": "NHS, Heat exhaustion and heatstroke (reviewed May 2026); CDC/NIOSH, Heat-related illnesses (2026); MedlinePlus, Heat emergencies",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "hypothermia": {
++   "en": "Hypothermia (very cold, shivering, confused or drowsy): get them indoors or to a sheltered place as quickly as possible, out of the wind and off the cold ground. Remove wet clothing and wrap them in dry blankets, a sleeping bag or towels, with the head covered. Handle them gently. If they're fully awake, give a warm non-alcoholic drink and something sugary like chocolate; give no drinks to someone who isn't fully awake. You can also warm them skin to skin under dry blankets. Don't use a hot bath, hot-water bottle, heat lamp or fire, don't rub their arms, legs, hands or feet, and don't give alcohol. If they stop breathing normally, start CPR and keep warming them. Call emergency services for anyone you think has hypothermia; don't drive them yourself if an ambulance can come.",
++   "pt": "Hipotermia (muito frio, tremendo, confuso ou sonolento): leve a pessoa para dentro ou para um abrigo o mais rápido possível, protegida do vento e do chão frio. Tire a roupa molhada e enrole a pessoa em cobertores secos, saco de dormir ou toalhas, cobrindo a cabeça. Mova a pessoa com cuidado. Se estiver bem acordada, dê uma bebida morna sem álcool e algo doce, como chocolate; não dê bebida a quem não estiver bem acordado. Você também pode aquecê-la pele com pele, debaixo de cobertores secos. Não use banho quente, bolsa de água quente, lâmpada de aquecimento nem fogueira, não esfregue braços, pernas, mãos ou pés e não dê álcool. Se ela parar de respirar normalmente, comece a RCP e continue aquecendo. Ligue para a emergência sempre que suspeitar de hipotermia; não leve a pessoa de carro se uma ambulância puder vir.",
++   "es": "Hipotermia (mucho frío, tiritando, confundida o somnolienta): lleve a la persona adentro o a un lugar resguardado lo antes posible, protegida del viento y del suelo frío. Quítele la ropa mojada y envuélvala en mantas secas, un saco de dormir o toallas, cubriéndole la cabeza. Muévala con cuidado. Si está bien despierta, dele una bebida caliente sin alcohol y algo dulce, como chocolate; no le dé bebidas si no está bien despierta. También puede darle calor piel con piel, bajo mantas secas. No use baño caliente, bolsa de agua caliente, lámpara de calor ni fuego, no le frote brazos, piernas, manos ni pies y no le dé alcohol. Si deja de respirar con normalidad, empiece la RCP y siga dándole calor. Llame a emergencias siempre que sospeche hipotermia; no la lleve en coche si puede venir una ambulancia.",
++   "sources": "NHS, Hypothermia; St John Ambulance (UK), Hypothermia; CDC, Preventing Hypothermia. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "frostbite": {
++   "en": "Frostbite: get to shelter. Rewarm the area in warm, not hot, water (about 37–39 °C) until it's soft, then dry it and cover it loosely. Don't rub it, don't warm it at a fire, heater or hot-water bottle, and don't thaw it if it could freeze again before you reach care.",
++   "pt": "Congelamento (frostbite): vá para um abrigo. Reaqueça a área em água morna, não quente (cerca de 37–39 °C), até amolecer; depois seque e cubra sem apertar. Não esfregue, não aqueça no fogo, aquecedor ou bolsa de água quente e não descongele se puder congelar de novo antes de chegar ao atendimento.",
++   "sources": "NHS, Frostbite (reviewed Jun 2025); Wilderness Medical Society, Frostbite summary (2024)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "choking": {
++   "en": "Choking child (over 1 year): if they can cough, encourage them to keep coughing and stay with them. If they can't cough, breathe or speak, give up to 5 firm back blows between the shoulder blades. If it's still stuck, give up to 5 abdominal thrusts: from behind, fist between the navel and ribs, pull sharply in and up. Only take out an object you can see; don't poke blindly with your fingers. If they become unresponsive, start CPR. Call emergency services if it hasn't come out after back blows and thrusts, and keep repeating them until help arrives. Get medical help even if it comes out.",
++   "pt": "Criança engasgada (mais de 1 ano): se ela consegue tossir, incentive a continuar tossindo e fique junto. Se não consegue tossir, respirar ou falar, dê até 5 tapas firmes nas costas, entre as escápulas. Se continuar engasgada, faça até 5 compressões abdominais: por trás, punho entre o umbigo e as costelas, puxe com força para dentro e para cima. Só retire o objeto se conseguir vê-lo; não enfie os dedos às cegas. Se ela parar de responder, comece a RCP. Ligue para a emergência se não sair depois dos tapas e das compressões, e continue repetindo até a ajuda chegar. Procure atendimento médico mesmo que saia.",
++   "es": "Niño atragantado (mayor de 1 año): si puede toser, anímelo a seguir tosiendo y no lo deje solo. Si no puede toser, respirar ni hablar, dele hasta 5 golpes firmes en la espalda, entre los omóplatos. Si sigue atragantado, haga hasta 5 compresiones abdominales: por detrás, puño entre el ombligo y las costillas, tire con fuerza hacia dentro y hacia arriba. Saque el objeto solo si lo ve; no meta los dedos a ciegas. Si deja de responder, empiece la RCP. Llame a emergencias si no sale después de los golpes y las compresiones, y siga repitiéndolos hasta que llegue ayuda. Busque atención médica aunque salga.",
++   "sources": "NHS, How to stop a child from choking; British Red Cross, Choking child. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "bleeding": {
++   "en": "Severe bleeding: press firmly and directly on the wound with a clean cloth (or your hand) and keep pressing; call emergency services. If blood soaks through, keep the pressure on and add more cloth on top. Don't pull out anything stuck in the wound.",
++   "pt": "Sangramento forte: pressione firme e diretamente sobre o ferimento com um pano limpo (ou a mão) e não solte; ligue para a emergência. Se o sangue atravessar o pano, mantenha a pressão e ponha mais pano por cima. Não retire objetos cravados no ferimento.",
++   "sources": "St John Ambulance, Severe bleeding (2025); MedlinePlus, Bleeding",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "heartattack": {
++   "en": "Possible heart attack: help them sit on the floor with knees bent and back supported (or on a chair), and keep them calm. Don't drive them or let them drive to hospital; wait for the ambulance. Keep checking that they're responding and breathing. If they stop responding and aren't breathing normally, start CPR and send someone for a defibrillator. Call emergency services now if you think it's a heart attack: chest pain or pressure (tight, crushing or squeezing) that may spread to the arm, neck, jaw or back, with shortness of breath, sweating or feeling sick. Don't worry about wasting anyone's time.",
++   "pt": "Possível infarto: ajude a pessoa a sentar no chão com os joelhos dobrados e as costas apoiadas (ou numa cadeira) e mantenha-a calma. Não leve a pessoa de carro nem deixe que ela dirija até o hospital; espere a ambulância. Continue verificando se ela responde e respira. Se ela parar de responder e não respirar normalmente, comece a RCP e peça para alguém buscar um desfibrilador (DEA). Ligue para a emergência (SAMU 192) agora se achar que é um infarto: dor ou pressão no peito (aperto, peso ou esmagamento) que pode ir para o braço, pescoço, mandíbula ou costas, com falta de ar, suor ou enjoo. Não tenha medo de incomodar.",
++   "es": "Posible ataque al corazón: ayúdela a sentarse en el suelo con las rodillas dobladas y la espalda apoyada (o en una silla) y manténgala tranquila. No la lleve en coche ni deje que conduzca al hospital; espere a la ambulancia. Compruebe una y otra vez que responde y respira. Si deja de responder y no respira con normalidad, empiece la RCP y pida a alguien que traiga un desfibrilador (DEA). Llame a emergencias ahora si cree que es un ataque al corazón: dolor o presión en el pecho (opresión, peso o aplastamiento) que puede extenderse al brazo, cuello, mandíbula o espalda, con falta de aire, sudor o náuseas. No tema molestar.",
++   "sources": "NHS, Heart attack; British Heart Foundation, Heart attack; St John Ambulance (UK), CPR; British Heart Foundation, How to do CPR; CDC, About Heart Attack Symptoms, Risk, and Recovery. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "stroke": {
++   "en": "Possible stroke (face drooping, arm weakness, slurred speech): call emergency services now, even if the signs go away, and note the time they started. Don't drive them yourself.",
++   "pt": "Possível AVC (rosto caído de um lado, braço fraco, fala enrolada): ligue para a emergência agora, mesmo que os sinais passem, e anote a hora em que começaram. Não leve a pessoa de carro por conta própria.",
++   "sources": "NHS, Stroke symptoms (FAST) (reviewed Sep 2024); CDC, Stroke signs and symptoms (2026)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "seizure": {
++   "en": "Seizure: move anything that could hurt them out of the way and cushion their head. Don't hold them down and don't put anything in their mouth, not even your fingers. Note the time it starts and stops. When the jerking stops, turn them on their side. Call emergency services if it's their first seizure, it lasts more than 5 minutes, they're badly hurt, they don't wake up fully, or they have trouble breathing.",
++   "pt": "Convulsão: afaste o que possa machucar a pessoa e apoie a cabeça dela em algo macio. Não segure a pessoa e não coloque nada na boca dela, nem os dedos. Marque a hora em que começou e terminou. Quando os tremores pararem, vire a pessoa de lado. Ligue para a emergência se for a primeira convulsão, durar mais de 5 minutos, a pessoa se machucar, não acordar totalmente ou tiver dificuldade para respirar.",
++   "es": "Convulsión: aparte lo que pueda lastimar a la persona y apoye su cabeza en algo blando. No la sujete y no le ponga nada en la boca, ni siquiera los dedos. Anote la hora en que empieza y termina. Cuando paren las sacudidas, póngala de lado. Llame a emergencias si es su primera convulsión, dura más de 5 minutos, se lastima, no despierta del todo o tiene dificultad para respirar.",
++   "sources": "NHS, What to do if someone has a seizure (fit); CDC, First aid for seizures. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "anaphylaxis": {
++   "en": "Severe allergic reaction (swelling of throat or lips, trouble breathing): use an adrenaline auto-injector (EpiPen) if there is one, and call emergency services saying it's anaphylaxis. Lie them down with legs raised (or sit up slowly if breathing is hard). Don't let them stand or walk. If no better after 5 minutes, use a second injector.",
++   "pt": "Reação alérgica grave (garganta ou lábios inchando, dificuldade para respirar): use a caneta de adrenalina (EpiPen) se houver e ligue para a emergência dizendo que é anafilaxia. Deite a pessoa com as pernas elevadas (ou sentada devagar se respirar mal). Não deixe ficar em pé nem andar. Se não melhorar em 5 minutos, use uma segunda caneta.",
++   "sources": "NHS, Anaphylaxis (reviewed Jun 2023)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "battery": {
++   "en": "Swallowed button battery, coin or magnet: a button battery is an emergency: go to the emergency department now or call an ambulance. Don't wait for symptoms. A coin or magnet: also take the child to the emergency department. Don't make them vomit and don't let them eat or drink. Call emergency services now if they're choking, drooling, retching or vomiting, or working hard to breathe.",
++   "pt": "Engoliu bateria de botão, moeda ou ímã: bateria de botão é emergência: vá agora ao pronto-socorro ou chame uma ambulância. Não espere aparecer sintoma. Moeda ou ímã: leve a criança ao pronto-socorro também. Não provoque vômito e não deixe comer nem beber. Ligue para a emergência agora se a criança estiver engasgada, babando, com ânsia ou vômito, ou com esforço para respirar.",
++   "es": "Se tragó una pila de botón, una moneda o un imán: una pila de botón es una emergencia: vaya ahora a urgencias o llame a una ambulancia. No espere a que haya síntomas. Una moneda o un imán: lleve también al niño a urgencias. No le provoque el vómito y no le deje comer ni beber. Llame a emergencias ahora si se está atragantando, babea, tiene arcadas o vómitos, o le cuesta respirar.",
++   "sources": "CAPT (Child Accident Prevention Trust), Button Batteries: In an emergency; NHS West Yorkshire Healthier Together, Swallowed an object. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "eyechem": {
++   "en": "Chemical in the eye: rinse it with plenty of clean, lukewarm running water for at least 20 minutes, holding the eye open, and keep rinsing while you get medical help; take the product container with you. Don't rub the eye.",
++   "pt": "Produto químico no olho: lave com bastante água limpa corrente, morna, por pelo menos 20 minutos, mantendo o olho aberto, e continue lavando enquanto busca atendimento; leve a embalagem do produto. Não esfregue o olho.",
++   "sources": "NHS, Eye injuries (reviewed Mar 2026)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "electric": {
++   "en": "Electric shock: don't touch the person while they're still in contact with the source. Switch off the power at the switch or fuse box first; stay at least 6 m away from fallen power lines. Then call emergency services and check their breathing.",
++   "pt": "Choque elétrico: não toque na pessoa enquanto ela estiver encostada na fonte. Desligue a energia no interruptor ou no disjuntor primeiro; fique a pelo menos 6 m de fios de alta tensão caídos. Depois ligue para a emergência e veja se ela respira.",
++   "sources": "St John Ambulance, Electrocution (2025); MedlinePlus, Electrical injury",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "jellyfish": {
++   "en": "Jellyfish sting: get out of the water. Don't touch the tentacles with bare hands; remove any with tweezers or the edge of a card. Rinse the sting with seawater, not fresh water. In tropical box-jellyfish areas, pour vinegar on the sting and go to hospital. For pain, soak the area in very warm water (as hot as they can bear) for at least 30 minutes. Don't pee on it and don't put ice on it. Call emergency services if they have trouble breathing, chest pain, a seizure, severe swelling, vomiting, or feel faint.",
++   "pt": "Queimadura de água-viva: saia da água. Não toque nos tentáculos com as mãos; tire os que estiverem na pele com pinça ou a borda de um cartão. Lave o local com água do mar, não com água doce. Em áreas tropicais com cubomedusa (água-viva-de-caixa), jogue vinagre no local e vá ao hospital. Para a dor, deixe o local em água bem morna (o mais quente que a pessoa aguentar) por pelo menos 30 minutos. Não faça xixi no local e não ponha gelo. Ligue para a emergência se houver falta de ar, dor no peito, convulsão, inchaço forte, vômito ou sensação de desmaio.",
++   "es": "Picadura de medusa: salga del agua. No toque los tentáculos con las manos; retire los que queden en la piel con pinzas o el borde de una tarjeta. Enjuague la zona con agua de mar, no con agua dulce. En zonas tropicales con cubomedusas, eche vinagre sobre la picadura y vaya al hospital. Para el dolor, sumerja la zona en agua muy tibia (lo más caliente que tolere) durante al menos 30 minutos. No orine sobre la picadura y no ponga hielo. Llame a emergencias si hay dificultad para respirar, dolor en el pecho, convulsiones, hinchazón fuerte, vómitos o sensación de desmayo.",
++   "sources": "NHS, Jellyfish and other sea creature stings; healthdirect (AU), Jellyfish stings. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "nosebleed": {
++   "en": "Nosebleed: sit up and lean forward (not back), and pinch the soft part of the nose just above the nostrils for 10–15 minutes, breathing through your mouth. Get medical help if it's still bleeding after 15 minutes.",
++   "pt": "Sangramento no nariz: sente-se e incline a cabeça para a frente (não para trás) e aperte a parte mole do nariz, logo acima das narinas, por 10–15 minutos, respirando pela boca. Procure atendimento se ainda sangrar depois de 15 minutos.",
++   "sources": "NHS, Nosebleed (reviewed Dec 2023); St John Ambulance, Nosebleed (2025)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "earthquake": {
++   "en": "Earthquake: drop to your hands and knees, cover your head and neck (under a sturdy table if one is close, otherwise next to an inside wall away from windows), and hold on until the shaking stops. Don't run outside and don't stand in a doorway.",
++   "pt": "Terremoto: abaixe-se de joelhos e mãos no chão, proteja a cabeça e o pescoço (debaixo de uma mesa firme se houver uma perto; senão, junto a uma parede interna longe de janelas) e segure-se até o tremor parar. Não corra para fora e não fique no vão da porta.",
++   "sources": "Ready.gov, Earthquakes (2026)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "drowning": {
++   "en": "Pulled from the water and not breathing normally: don't put yourself in danger getting them out. Don't try to get water out of them or press on their stomach; start rescue breaths straight away. Open the airway and give 5 rescue breaths, then 30 chest compressions and 2 breaths; keep repeating. Anyone who needed rescue breaths or CPR must go to hospital, and anyone rescued should get medical advice even if they seem fine. Call emergency services now. If you're alone, give 1 minute of rescue breaths and compressions first, then call.",
++   "pt": "Tirado da água e sem respirar normalmente: não se coloque em perigo para tirar a pessoa da água. Não tente tirar água da pessoa nem apertar a barriga; comece as respirações de resgate imediatamente. Abra as vias aéreas e faça 5 respirações de resgate; depois 30 compressões no peito e 2 respirações, repetindo sem parar. Quem precisou de respirações ou RCP deve ir ao hospital, e todo resgatado deve procurar atendimento médico mesmo que pareça bem. Ligue para a emergência agora. Se estiver sozinho, faça 1 minuto de respirações e compressões antes de ligar.",
++   "es": "Sacado del agua y sin respirar con normalidad: no se ponga en peligro para sacar a la persona del agua. No intente sacarle agua ni presionarle el abdomen; empiece las respiraciones de rescate de inmediato. Abra la vía aérea y dé 5 respiraciones de rescate; luego 30 compresiones en el pecho y 2 respiraciones, y repita sin parar. Quien necesitó respiraciones o RCP debe ir al hospital, y toda persona rescatada debe recibir atención médica aunque parezca estar bien. Llame a emergencias ahora. Si está solo, haga 1 minuto de respiraciones y compresiones antes de llamar.",
++   "sources": "St John Ambulance (UK), Drowning; Saudi Ministry of Health, Drowning First Aid Steps; St John Ambulance NSW, Rescuing a drowning person; British Red Cross, Drowning first aid; AAP (HealthyChildren.org), CPR for drowning: updated guidance",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "hypoglycemia": {
++   "en": "Low blood sugar (diabetes): if they're awake and can swallow, give about 15 g of fast sugar now: a small glass of juice or regular soft drink, glucose tablets or sweets. Wait 15 minutes; if they still feel unwell, give fast sugar again. Once they feel better, give a snack or meal, such as a sandwich or biscuits. Don't give insulin. If they're unconscious or can't swallow safely, give nothing by mouth and put them in the recovery position; use a glucagon injection only if one is there and you know how. Call emergency services if they're unconscious, can't swallow, or don't improve.",
++   "pt": "Hipoglicemia (diabetes): se a pessoa estiver acordada e conseguir engolir, dê cerca de 15 g de açúcar rápido agora: um copo pequeno de suco ou refrigerante comum, tabletes de glicose ou balas. Espere 15 minutos; se ainda estiver mal, dê açúcar rápido de novo. Quando melhorar, ofereça um lanche ou refeição, como um sanduíche ou biscoitos. Não dê insulina. Se estiver inconsciente ou não conseguir engolir com segurança, não dê nada pela boca e coloque-a em posição lateral de segurança; use glucagon injetável só se houver e você souber aplicar. Ligue para a emergência se a pessoa estiver inconsciente, não conseguir engolir ou não melhorar.",
++   "es": "Hipoglucemia (diabetes): si está despierta y puede tragar, dele unos 15 g de azúcar rápido ahora: un vaso pequeño de jugo o refresco normal, tabletas de glucosa o caramelos. Espere 15 minutos; si sigue mal, dele azúcar rápido otra vez. Cuando se sienta mejor, dele un refrigerio o comida, como un sándwich o galletas. No le dé insulina. Si está inconsciente o no puede tragar con seguridad, no le dé nada por la boca y póngala en posición lateral de seguridad; use glucagón inyectable solo si lo hay y sabe aplicarlo. Llame a emergencias si está inconsciente, no puede tragar o no mejora.",
++   "sources": "CDC, Treatment of Low Blood Sugar (Hypoglycemia); healthdirect (AU), Hypoglycaemia; NHS, Low blood sugar (hypoglycaemia); St John New Zealand, Diabetes (first aid library). Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "altitude": {
++   "en": "Altitude sickness (headache, nausea, dizziness at high altitude): don't go higher. Rest where you are; if it gets worse or isn't better after a day, go down 300–1,000 m. Go down immediately, and get help, if there's confusion, clumsiness, breathlessness at rest, or a cough with frothy or bloody spit. No alcohol.",
++   "pt": "Mal de altitude (dor de cabeça, enjoo, tontura em grande altitude): não suba mais. Descanse onde está; se piorar ou não melhorar em um dia, desça 300–1.000 m. Desça imediatamente, e procure ajuda, se houver confusão, falta de coordenação, falta de ar em repouso ou tosse com catarro espumoso ou com sangue. Nada de álcool.",
++   "sources": "NHS, Altitude sickness (reviewed Jul 2023); CDC Yellow Book, High-altitude travel (2025)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "beesting": {
++   "en": "Bee or wasp sting: scrape the stinger out sideways with a fingernail or the edge of a card; don't use tweezers. Wash the area with soap and water and hold a cold cloth or wrapped ice pack on it for 20 minutes. Watch for an allergic reaction: swelling of the lips, mouth, tongue or throat, trouble breathing or swallowing, sudden confusion, dizziness or fainting. If that happens, use their adrenaline auto-injector if they have one, and a second one after 5 minutes if they're not better. Have them lie down (sit up slowly if breathing is hard) and don't let them stand or walk. Call emergency services now if any sign of an allergic reaction appears, and say it may be anaphylaxis.",
++   "pt": "Picada de abelha ou vespa: raspe o ferrão de lado com a unha ou a borda de um cartão; não use pinça. Lave com água e sabão e coloque um pano frio ou gelo enrolado num pano por 20 minutos. Observe sinais de alergia: inchaço nos lábios, boca, língua ou garganta, dificuldade para respirar ou engolir, confusão repentina, tontura ou desmaio. Se isso acontecer, use a caneta de adrenalina se a pessoa tiver, e uma segunda após 5 minutos se não melhorar. Deite a pessoa (sentada devagar se respirar for difícil) e não deixe ficar em pé nem caminhar. Ligue para a emergência agora se aparecer qualquer sinal de alergia, e diga que pode ser anafilaxia.",
++   "es": "Picadura de abeja o avispa: raspe el aguijón de lado con la uña o el borde de una tarjeta; no use pinzas. Lave con agua y jabón y ponga un paño frío o hielo envuelto en un paño durante 20 minutos. Vigile signos de alergia: hinchazón de labios, boca, lengua o garganta, dificultad para respirar o tragar, confusión repentina, mareo o desmayo. Si ocurre, use su autoinyector de adrenalina si lo tiene, y un segundo a los 5 minutos si no mejora. Acuéstela (que se siente despacio si le cuesta respirar) y no la deje ponerse de pie ni caminar. Llame a emergencias ahora si aparece cualquier signo de alergia, y diga que puede ser anafilaxia.",
++   "sources": "NHS, Insect bites and stings; NHS, Anaphylaxis. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "scorpion": {
++   "en": "Scorpion sting in a child: treat it as an emergency: children get the most serious poisoning. Go to the nearest hospital or health service now. Keep the child calm and away from the scorpion. Wash the sting with soap and water, without delaying the trip. Don't cut, squeeze or suck the sting, and don't use a tourniquet. Call emergency services now if you can't get to care quickly.",
++   "pt": "Criança picada por escorpião: é emergência: crianças têm o envenenamento mais grave. Vá agora ao hospital ou à unidade de saúde mais próxima. Acalme a criança e afaste-a do escorpião. Lave o local com água e sabão, sem atrasar a ida ao atendimento. Não corte, não esprema, não chupe o local e não faça torniquete. Ligue para o SAMU (192) agora se não der para chegar rápido ao atendimento.",
++   "es": "Niño picado por un alacrán: es una emergencia: los niños sufren el envenenamiento más grave. Vaya ahora al hospital o centro de salud más cercano. Calme al niño y aléjelo del alacrán. Lave la picadura con agua y jabón, sin retrasar el traslado. No corte, no apriete ni chupe la picadura, y no use torniquete. Llame a emergencias ahora si no puede llegar rápido a la atención.",
++   "sources": "Ministério da Saúde (BR), Acidentes por Escorpiões; Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população); Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "marinepuncture": {
++   "en": "Stingray, sea urchin or venomous fish wound: wash it, then soak it in water as hot as you can comfortably stand (test with an unhurt hand) for 30 to 90 minutes for pain. Remove only loose, easy-to-reach spines, but leave a stonefish spine in. Don't use ice and don't close the wound; get medical care, which a stingray wound always needs.",
++   "pt": "Ferimento por arraia, ouriço-do-mar ou peixe venenoso: lave e depois deixe de molho em água o mais quente que você aguente com conforto (teste com a mão sã) por 30 a 90 minutos para a dor. Retire só espinhos soltos e fáceis, mas deixe o espinho de peixe-pedra. Não use gelo e não feche o ferimento; procure atendimento, e sempre no caso de arraia.",
++   "sources": "healthdirect Australia, Sea creature stings (2025); NHS, Jellyfish and other sea creature stings (reviewed Jun 2024)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "tick": {
++   "en": "Tick: grasp it with fine-tipped tweezers as close to the skin as possible and pull straight up with steady pressure. Don't twist, jerk or crush it, and don't use heat, petroleum jelly or nail polish. Clean the bite and your hands. See a doctor if a rash or fever appears in the next weeks.",
++   "pt": "Carrapato: segure com uma pinça de ponta fina o mais perto possível da pele e puxe para cima com força firme e constante. Não torça, não dê tranco e não esmague, e não use calor, vaselina ou esmalte. Limpe a picada e as mãos. Procure um médico se aparecer mancha vermelha ou febre nas semanas seguintes.",
++   "sources": "CDC, What to do after a tick bite (2026); NHS, Lyme disease",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "animalbite": {
++   "en": "Bite or scratch from a dog, monkey, bat or other animal that could carry rabies: wash the wound with soap and running water for at least 15 minutes, then get medical care the same day for rabies shots, even if you were vaccinated before and even if you're abroad. Don't wait for symptoms: once they start, rabies can't be treated.",
++   "pt": "Mordida ou arranhão de cachorro, macaco, morcego ou outro animal que possa ter raiva: lave o ferimento com água corrente e sabão por pelo menos 15 minutos e procure atendimento no mesmo dia para a vacina antirrábica, mesmo se já foi vacinado e mesmo estando no exterior. Não espere sintomas: depois que começam, a raiva não tem tratamento.",
++   "sources": "WHO, Rabies fact sheet (2026); NHS, Rabies (reviewed Aug 2026)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "heatexhaustion": {
++   "en": "Heat exhaustion or heat cramps: move to a cool place, loosen or remove extra clothing, drink water or a sports or oral-rehydration drink in small sips, and cool the skin with water and fanning. They should feel better within 30 minutes. If not, or if they become confused, stop sweating or can't drink, call emergency services: that is heatstroke.",
++   "pt": "Exaustão pelo calor ou câimbras de calor: vá para um lugar fresco, afrouxe ou tire roupas a mais, beba água ou bebida isotônica/soro de reidratação em pequenos goles e resfrie a pele com água e abanando. Deve melhorar em até 30 minutos. Se não melhorar, ou se ficar confusa, parar de suar ou não conseguir beber, ligue para a emergência: é insolação grave.",
++   "sources": "NHS, Heat exhaustion and heatstroke (reviewed May 2026); American Red Cross, Heat exhaustion; CDC/NIOSH, Heat-related illnesses (2026)",
++   "status": "placeholder (fa-cards v0/v1, unvetted)"
++  },
++  "chokinginfant": {
++   "en": "Choking baby (under 1 year): lay the baby face down along your thigh or forearm, supporting the head, and give up to 5 sharp back blows between the shoulder blades. If it's still stuck, turn the baby face up and give up to 5 chest thrusts with two fingers in the middle of the chest, just below the nipple line. Never use abdominal thrusts on a baby. Only take out an object you can see; don't poke blindly with your fingers. Call emergency services if it hasn't cleared, taking the baby with you, and keep repeating back blows and chest thrusts. The baby should be seen in hospital afterwards.",
++   "pt": "Bebê engasgado (menos de 1 ano): deite o bebê de bruços ao longo da sua coxa ou antebraço, apoiando a cabeça, e dê até 5 tapas firmes nas costas, entre as escápulas. Se continuar engasgado, vire o bebê de barriga para cima e faça até 5 compressões no peito com dois dedos no meio do peito, logo abaixo da linha dos mamilos. Nunca faça compressões abdominais em bebê. Só retire o objeto se conseguir vê-lo; não enfie os dedos às cegas. Ligue para a emergência se não desengasgar, levando o bebê com você, e continue repetindo tapas e compressões. Depois, o bebê deve ser avaliado no hospital.",
++   "es": "Bebé atragantado (menor de 1 año): acueste al bebé boca abajo sobre su muslo o antebrazo, sosteniendo la cabeza, y dele hasta 5 golpes firmes en la espalda, entre los omóplatos. Si sigue atragantado, póngalo boca arriba y haga hasta 5 compresiones en el pecho con dos dedos en el centro del pecho, justo debajo de la línea de los pezones. Nunca haga compresiones abdominales a un bebé. Saque el objeto solo si lo ve; no meta los dedos a ciegas. Llame a emergencias si no se destapa, llevando al bebé con usted, y siga repitiendo golpes y compresiones. Después, el bebé debe ser revisado en el hospital.",
++   "sources": "NHS, How to stop a child from choking; British Red Cross, Choking baby; St John Ambulance (UK), Baby choking. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "headinjury": {
++   "en": "Head injury: if they might have hurt their neck (a fall from height, a high-speed hit) or aren't responding, don't move them unless they're in danger; support the head so the head, neck and spine stay in a straight line. If they're not responding but breathing normally and you can't keep the airway open, turn them on their side, keeping the head and spine in line. For a bump, hold an ice pack or frozen peas wrapped in a tea towel on it for short periods; never put ice directly on the skin. An adult should stay with them for the first 24 hours. They should rest, avoid alcohol until they feel better, and avoid contact sport for 3 weeks. Get urgent medical advice if they're being sick, feel dizzy, take blood thinners, or had been drinking; if told to go to hospital, don't drive yourself. Call emergency services if they were knocked out and haven't woken, can't stay awake, have a seizure, fell more than 1 metre or 5 stairs, were hit at high speed, have problems seeing, hearing, speaking, walking or with balance, new weakness or numbness, clear fluid from the ears or nose, bleeding from the ears, or changed behaviour.",
++   "pt": "Batida na cabeça: se a pessoa pode ter machucado o pescoço (queda de altura, batida em alta velocidade) ou não responde, não a mova a menos que esteja em perigo; apoie a cabeça mantendo cabeça, pescoço e coluna em linha reta. Se ela não responde mas respira normalmente e você não consegue manter a via aérea aberta, vire-a de lado, mantendo cabeça e coluna alinhadas. Para um galo, coloque gelo ou um saco de ervilhas congeladas enrolado num pano por períodos curtos; nunca ponha gelo direto na pele. Um adulto deve ficar com a pessoa nas primeiras 24 horas. Ela deve descansar, evitar álcool até se sentir melhor e evitar esportes de contato por 3 semanas. Procure orientação médica urgente se ela estiver vomitando, tonta, tomar anticoagulante ou tiver bebido; se mandarem ir ao hospital, não vá dirigindo. Ligue para a emergência se ela desmaiou e não acordou, não consegue ficar acordada, teve convulsão, caiu de mais de 1 metro ou 5 degraus, levou uma batida em alta velocidade, tem dificuldade para ver, ouvir, falar, andar ou se equilibrar, fraqueza ou dormência nova, líquido claro saindo do ouvido ou nariz, sangue saindo do ouvido, ou mudou de comportamento.",
++   "es": "Golpe en la cabeza: si pudo lastimarse el cuello (caída desde altura, golpe a gran velocidad) o no responde, no la mueva salvo que esté en peligro; sostenga la cabeza para que cabeza, cuello y columna queden en línea recta. Si no responde pero respira con normalidad y no puede mantener la vía aérea abierta, póngala de lado, con la cabeza y la columna alineadas. Para un chichón, ponga hielo o una bolsa de guisantes congelados envuelta en un paño durante ratos cortos; nunca ponga hielo directo sobre la piel. Un adulto debe quedarse con ella las primeras 24 horas. Debe descansar, evitar el alcohol hasta sentirse mejor y evitar deportes de contacto durante 3 semanas. Busque atención médica urgente si vomita, está mareada, toma anticoagulantes o había bebido; si le dicen que vaya al hospital, no conduzca. Llame a emergencias si perdió el conocimiento y no despierta, no puede mantenerse despierta, tiene una convulsión, cayó desde más de 1 metro o 5 escalones, recibió un golpe a gran velocidad, tiene problemas para ver, oír, hablar, caminar o mantener el equilibrio, debilidad o adormecimiento nuevos, líquido claro por los oídos o la nariz, sangre por los oídos, o cambió su comportamiento.",
++   "sources": "St John Ambulance (UK), Spinal injury; St John Ambulance (UK), Head injury; St John Ambulance (UK), Recovery position; NHS, Head injury and concussion; British Red Cross, Head injury. Contains public sector information licensed under the Open Government Licence v3.0",
++   "status": "draft-vetted (needs r4to sign-off)"
++  },
++  "tsunami": {
++   "en": "Earthquake near the coast: tsunami risk: while it shakes: drop, cover and hold on. As soon as the shaking stops, move to high ground or inland, away from the water. Don't wait for an official warning. Also leave at once if the sea suddenly pulls back or you hear a loud roar from the ocean. Go on foot if you can; roads may be blocked. If you can't get out of the area in time, go to the upper floors of a tall, strong building. If you're in the water, grab something that floats. Stay away from the coast until officials say it's safe: more waves can follow, and the first is not always the biggest.",
++   "pt": "Terremoto perto do mar: risco de tsunami: enquanto treme: abaixe-se, proteja-se e segure-se. Assim que o tremor parar, vá para um lugar alto ou para o interior, longe da água. Não espere um alerta oficial. Saia na hora também se o mar recuar de repente ou se ouvir um estrondo forte vindo do oceano. Vá a pé se puder; as ruas podem estar bloqueadas. Se não der tempo de sair da área, suba para os andares altos de um prédio alto e resistente. Se estiver na água, agarre-se a algo que boie. Fique longe da costa até as autoridades dizerem que é seguro: podem vir outras ondas, e a primeira nem sempre é a maior.",
++   "es": "Terremoto cerca del mar: riesgo de tsunami: mientras tiembla: agáchese, cúbrase y agárrese. En cuanto pare el temblor, vaya a un lugar alto o tierra adentro, lejos del agua. No espere una alerta oficial. Evacúe también de inmediato si el mar se retira de golpe o escucha un rugido fuerte del océano. Evacúe a pie si puede; las calles pueden estar bloqueadas. Si no le da tiempo a salir de la zona, suba a los pisos altos de un edificio alto y resistente. Si está en el agua, agárrese a algo que flote. Manténgase lejos de la costa hasta que las autoridades digan que es seguro: pueden llegar más olas, y la primera no siempre es la más grande.",
++   "sources": "Ready.gov (FEMA), Tsunamis; American Red Cross, Tsunami; NOAA National Weather Service, Tsunami Safety: During a Tsunami; NSW State Emergency Service, Tsunami guide (PDF); SENAPRED (Chile), Tsunami",
++   "status": "draft-vetted (needs r4to sign-off)"
++  }
++ }
++}
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 44d473a..c7db9dc 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -250,14 +250,87 @@ export const ACTION_INTENT =
+ // "derramou água fervendo no braço", "got bitten", "está sangrando"): health when the
+ // question asks what to do (gate ee1f2b7: 20/20 free answers, one said "medicinal oil").
+ const INJURY_DESCRIBED =
+-  /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico)(?![\p{L}])/iu;
++  /(^|[^\p{L}])(spill\p{L}*|splash\p{L}*|scald\p{L}*|burn\p{L}*|boiling|blister\p{L}*|bit|bitten|stung|sting\p{L}*|bleed\p{L}*|faint\p{L}*|passed out|chok\p{L}*|cut (my|his|her|their|him|herself|himself|myself)|fell (off|down|from)|broke (my|his|her|their)|twist\p{L}*|sprain\p{L}*|swallow\p{L}*|electrocut\p{L}*|derram\p{L}*|escald\p{L}*|queim\p{L}*|fervend\p{L}*|fervent\p{L}*|bolha\p{L}*|mord\p{L}*|picou|picad\p{L}*|sangr\p{L}*|desmai\p{L}*|engasg\p{L}*|cortou|caiu d\p{L}*|bateu a cabe[çc]a|torceu|quebrou|engoliu|choque el[ée]trico|collaps\p{L}*|desabou|desmaiou|se desmay\p{L}*)(?![\p{L}])/iu;
++
++// A venomous animal with a sting/bite, a child or a severity question; something swallowed; a person who doesn't
++// respond. PT/ES/EN, no action phrase needed ("Escorpião picou meu filho, é grave?", "Mi hijo se tragó una pila"):
++// these went to the model and came back "Scorpions do not sting children" (Sonar exp-29).
++const VENOMOUS = /(^|[^\p{L}])(escorpi\p{L}*|alacr[aá]n\p{L}*|scorpions?|aranhas?|ara[ñn]as?|spiders?|vespas?|abelhas?|avispas?|wasps?|bees?|marimbondos?|lacraia\p{L}*|centopeia\p{L}*|cobras?|serpientes?|víboras?|snakes?|jellyfish|[áa]gua-viva|medusas?)(?![\p{L}])/iu;
++const STUNG_OR_RISK = /(^|[^\p{L}])(pic\p{L}*|mord\p{L}*|ferro\p{L}*|stung|stings?|bit|bitten|bites?|grave|perigos\p{L}*|peligros\p{L}*|dangerous|deadly|mata|matar|crian[çc]\p{L}*|beb[êeé]s?|filh[oa]s?|hij[oa]s?|niñ[oa]s?|child\p{L}*|baby|babies|kids?)(?![\p{L}])/iu;
++const SWALLOWED = /(^|[^\p{L}])(engol\p{L}*|se trag\p{L}*|trag[oó]|swallow\p{L}*)(?![\p{L}])/iu;
++const UNRESPONSIVE = /(^|[^\p{L}])(sem responder|n[ãa]o responde\p{L}*|inconscient\p{L}*|desacordad\p{L}*|no responde|unresponsive|not responding|n[ãa]o est[áa] respirando|no respira|not breathing)(?![\p{L}])/iu;
++const HEALTH_ES = /(^|[^\p{L}])(picad[oa]s?|picó|mordid[oa]s?|mordió|quemad\p{L}*|quemó|atragant\p{L}*|envenen\p{L}*|intoxica\p{L}*|convulsi\p{L}*|desmay\p{L}*|sangrando|sangrad\p{L}*|sangre|fiebre|emergencia|primeros auxilios)(?![\p{L}])/iu;
++
++// "Should I put ice or butter on it?", "Should I stand in a doorway or run outside?": asking what to do, as a should-
++// question (safety track saf-004, saf-007; Sonar exp-29). Only next to a described injury or a disaster.
++// Not a trip being planned ("burning season — should I bring masks?", "earthquakes in Wellington? Should I worry?").
++const SHOULD_INTENT = /(^|[^\p{L}])(should (i|we|you|he|she|they)(?! (worry|bring|pack|visit|go(?! to (the )?(hospital|doctor|er|a&e|clinic|emergency))|travel|book|plan|cancel|still|be worried|be concerned|avoid (going|traveling|travelling)))|devo|devemos|debo|debemos|qu[ée] hago|qu[ée] hacemos)(?![\p{L}])/iu;
++// Chest pain and its lay forms (Sonar exp-29: "my dad has chest pain" went to the model, which said "In Japan, dial 119").
++// A head injury described (Sonar exp-29: "my 6 year old hit his head hard… thrown up twice", "bateu a cabeça na borda da
++// piscina, apagou" went to the model): the head-injury card's own words.
++const HEAD_INJURY = /(^|[^\p{L}])(head injur\p{L}*|hit (his|her|my|their) head|bumped (his|her|my|their) head|fell on (his|her|my|their) head|concussion|bateu a cabe[çc]a|batida na cabe[çc]a|pancada na cabe[çc]a|caiu de cabe[çc]a|traumatismo cran\p{L}*|concuss[ãa]o|se golpe[óo] la cabeza|golpe en la cabeza|traumatismo craneal|conmoci[óo]n cerebral)(?![\p{L}])/iu;
++// Not a metaphor ("dor no peito de saudade", heartbreak): the same exclusion as the heart-attack card trigger.
++const CHEST_PAIN_METAPHOR = /saudade|cora[çc][ãa]o partido|heartbreak|broken heart|de amor|desamor|por (ela|ele|ti|vos)/iu;
++const CHEST_PAIN = /(^|[^\p{L}])(chest (pain|pains|tightness|pressure|hurts?)|pain in (my|his|her|their) chest|pressure (in|on) (my|his|her|their) chest|tight(ness)? in (my|his|her|their) chest|dor (forte )?no peito|aperto no peito|press[ãa]o no peito|dolor (fuerte )?(en el|de) pecho|opresi[óo]n en el pecho)(?![\p{L}])/iu;
++// "frostbitten" (saf-009): HEALTH's \bfrostbite\b misses the participle.
++const FROSTBITE = /(^|[^\p{L}])(frostbit\p{L}*|frostnip)(?![\p{L}])/iu;
++
++// A follow-up turn that only asks what to do now, or how serious it is ("what do I do now?", "e agora?", "Should I go to
++// the hospital?") continues the previous user turn's health question (Sonar exp-29). It may hold only function words,
++// what-to-do words and care words: any other word ("vegan restaurant", "offline", "eat … healthy life") is a new question.
++const FOLLOW_UP_WORDS = new Set(
++  ("and now what then so ok okay please i we you he she they it this that them him her my our me us do does did should can could must " +
++   "would will is are was be it's i'm what's how what which when where why if someone somebody happens happen anything something " +
++   "go take call give get bring put need still right serious bad dangerous emergency hospital doctor ambulance er a&e clinic " +
++   "the a an to of for in on at with by now yet first next " +
++   "e agora o que eu fa\u00e7o faço fazer faz devo devemos posso preciso levar ligar chamar ir é grave perigoso perigosa urgente hospital " +
++   "médico medico pronto socorro pronto-socorro samu emergência emergencia ele ela isso isto se acontecer alguém alguem um uma ao à a pra para no na " +
++   "y ahora qué que hago hacer hacemos debo debemos puedo llevar llamar ir es grave peligroso peligrosa urgencias médico si le pasa a alguien " +
++   "un una al la el lo eso esto ella él").split(/\s+/).filter(Boolean)
++);
++const FOLLOW_INTENT = /(^|[^\p{L}])(what (do|should|can|must) (i|we) do|what now|now what|and now|e agora|o que (eu )?fa[çc]o|o que fazer|qu[ée] hago|qu[ée] hacemos|qu[ée] hacer|should (i|we)|devo|debo|is (it|that|this) (serious|bad|dangerous|an emergency)|[ée] grave|es grave|[ée] perigos[oa]|es peligros[oa]|hospital|doctor|ambulance|m[ée]dico|pronto.socorro|samu|urgencias)(?![\p{L}])/iu;
++export function isHealthFollowUp(query: string, userTurns: string[]): boolean {
++  const last = userTurns[userTurns.length - 1];
++  if (!last || isHealthQuestion(query)) return false;
++  // The previous turn is health, or becomes health with this turn's ask ("meu filho bateu a cabeça" + "o que eu faço?").
++  if (!isHealthQuestion(last) && !isHealthQuestion(`${last}. ${query}`)) return false;
++  const words = query.toLowerCase().replace(/[¿¡?!.,;:]/g, " ").split(/\s+/).filter(Boolean);
++  if (!words.length || words.length > 12 || words.some((w) => !FOLLOW_UP_WORDS.has(w))) return false;
++  return FOLLOW_INTENT.test(query);
++}
++
++/**
++ * A one-subject definition question in PT/ES ("O que é uma monção?", "Quem foi Tiradentes?", "¿Qué es el bitcoin?"): its
++ * instant snippet may stand even though the sources were matched against the lexicon's English names, provided the
++ * sentence defines one of those names (definesName). Two-part questions ("… e por que …", "… y cómo …") are not (Sonar exp-29).
++ */
++const PT_DEFINITIONAL = /^\s*[¿]?\s*(o que (é|são|significa)|quem (foi|é|era)|qu[ée] (es|son|significa)|qui[ée]n (es|fue|era))\s+\S/iu;
++const COMPOUND_PT_ES = /\s(e|y)\s+(o que|o\s|como|por que|porque|quando|onde|qual|quais|qu[ée]|c[óo]mo|cu[áa]ndo|d[óo]nde|cu[áa]l)/iu;
++export function isPtDefinitional(query: string): boolean {
++  const q = query.trim();
++  return PT_DEFINITIONAL.test(q) && !COMPOUND_PT_ES.test(q) && q.split(/\s+/).length <= 10;
++}
++/** The sentence says what one of the names is: "A monsoon is …", "Tiradentes was …". */
++export function definesName(names: string[], sentence: string): boolean {
++  return names.some((n) => {
++    const esc = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
++    return new RegExp(`(^|[^\\p{L}])${esc}s?(?![\\p{L}])[^.]{0,60}?(?<![\\p{L}])(is|are|was|were|refers to|stands for|means)(?![\\p{L}])`, "iu").test(sentence);
++  });
++}
+ 
+ export function isHealthQuestion(query: string): boolean {
+   return (
++    (VENOMOUS.test(query) && STUNG_OR_RISK.test(query)) ||
++    SWALLOWED.test(query) ||
++    UNRESPONSIVE.test(query) ||
++    HEALTH_ES.test(query) ||
+     HEALTH.test(query) ||
+     HEALTH_PT.test(query) ||
+-    (DISASTER.test(query) && ACTION_INTENT.test(query)) ||
+-    (INJURY_DESCRIBED.test(query) && ACTION_INTENT.test(query)) ||
++    (DISASTER.test(query) && (ACTION_INTENT.test(query) || SHOULD_INTENT.test(query))) ||
++    (INJURY_DESCRIBED.test(query) && (ACTION_INTENT.test(query) || SHOULD_INTENT.test(query))) ||
++    FROSTBITE.test(query) ||
++    (CHEST_PAIN.test(query) && !CHEST_PAIN_METAPHOR.test(query)) ||
++    HEAD_INJURY.test(query) ||
+     // Health for the content, translation for the form (Sextant lng-009, gate 52a2310: the 4B wrote "Je suis
+     // allergique au peanut" for a phrase the traveller shows a waiter): a phrase to translate that carries
+     // health content stays on the health path, and without a source it declines.
+@@ -341,6 +414,8 @@ export function healthTopicTerms(query: string, articleTerms: string | null): Se
+  */
+ /** Sources written for laypeople (first-aid book, travel health, Ready.gov/CDC): preferred for what to do. */
+ const LAY_SOURCE = /^(Wikibooks|Wikivoyage|US government):/;
++const FIRST_AID_SOURCE = /^(Wikibooks|US government):/;
++const HEALTH_SECTION = /\b(stay (healthy|safe)|health|first aid|dangers?|medical|safety|emergenc\w*|treatment)\b/i;
+ 
+ // Technical specifications are never first-aid sources ("EIP-7775: BURN opcode" for a burn).
+ const NON_HEALTH_SOURCE = /^(Ethereum EIPs\/ERCs|Ethereum specs|ethereum\.org|Bitcoin BIPs):/;
+@@ -382,7 +457,12 @@ export function onHealthTopic(topic: Set<string>, chunk: RetrievedChunk): boolea
+   // ("Oral rehydration therapy › Treatment" is an action section, not about burns). So does a
+   // lay first-aid source whose text names it (Army FM 21-76 "Before you start treating a
+   // snakebite...", Wikibooks "Outdoor Survival/First Aid › Insect and animal bite").
+-  return (action === true || LAY_SOURCE.test(chunk.title)) && titleNames(chunk.body, topic);
++  // Not inside a hyphenated compound: "traffic-choked" (Wikivoyage: Kabul) is not about choking (Sonar exp-29).
++  // A lay source's text counts in a first-aid manual, a health/safety section, or a passage that instructs ("Boil the
++  // water…"), never a place's overview: "traffic-choked streets … choking pollution" (Wikivoyage: Kabul) is not about
++  // choking (Sonar exp-29).
++  const layHealth = FIRST_AID_SOURCE.test(chunk.title) || HEALTH_SECTION.test(sectionHeading(chunk)) || imperativeSteps(chunk.body) >= 1;
++  return (action === true || layHealth) && titleNames(chunk.body.replace(/\p{L}+(?:-\p{L}+)+/gu, " "), topic);
+ }
+ 
+ /** Next to the question (small models follow instructions there, s32): health answers stay inside the sources. */
+@@ -1099,8 +1179,16 @@ export function healthExtract(source: RetrievedChunk, sourceNumber: number, pt:
+     : pt
+       ? "A fonte offline não traz os passos de socorro para isso. Em uma emergência, ligue para o serviço de emergência local (192 SAMU, 193 Bombeiros). O que a fonte diz (em inglês):"
+       : "The offline source doesn't give first-aid steps for this. In an emergency, call your local emergency number. What the source says:";
+-  // The emergency line closes every health answer; the "no steps" lead already says it.
+-  return steps ? `${lead}\n${text} [${sourceNumber}]\n\n${emergencyLine(pt)}` : `${lead}\n${text} [${sourceNumber}]`;
++  // No first-aid steps and no instruction in the text: no quote either. The quote was whatever passed the topic match, often another subject
++  // ("wood burning stoves" for a scald, "Grand Mosque seizure" for a seizure; Sonar exp-29): stop at the emergency line.
++  // A passage that still instructs ("Drop, cover, and hold on") is quoted under the no-steps lead, as before.
++  if (!steps && imperativeSteps(text) >= 1) return `${lead}\n${text} [${sourceNumber}]`;
++  if (!steps)
++    return pt
++      ? "A fonte offline não traz os passos de socorro para isso. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
++      : "The offline source doesn't give first-aid steps for this. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
++  // The emergency line closes every health answer.
++  return `${lead}\n${text} [${sourceNumber}]\n\n${emergencyLine(pt)}`;
+ }
+ 
+ // First-aid instructions the sources call wrong (NHS, CDC, Ready.gov), as a model might phrase them.
+@@ -1116,6 +1204,9 @@ const RISKY_HEALTH: Array<[string, RegExp]> = [
+   ["burn-cream", /\b(cream|ointment|lotion)s?\b[^.]{0,30}\bburn|\bburn\w*\b[^.]{0,40}\b(cream|ointment|lotion)|pomada/i],
+   ["doorway", /\bdoorway|batente|v[ãa]o da porta/i],
+   ["run-outside-quake", /\b(run|rush)\w* (outside|outdoors)/i],
++  // Hypothermia: exertion is advice for the healthy hiker, not first aid (safety rule hypo-exertion; Wikivoyage "Cold weather":
++  // "Keeping on walking even when tired is important… to keep warm"; Sonar exp-29).
++  ["hypo-exertion", /\bkeep(?:ing)?\s+(?:on\s+)?(?:walking|moving|hiking)\b[^.]{0,80}\b(warm|cold|tired|shelter)\b|\b(?:walk|walking|exercise|exercising|exert\w*)\b[^.]{0,40}\b(?:keep|stay|get)\s+warm\b/i],
+ ];
+ // Known-false technical claims, as a model might phrase them (gate 394bf31, crypto-named-001 seed 5: "Quantum-
+ // resistant signature algorithms include those based on elliptic curve cryptography (ECC)"; the NSA passage in
+@@ -1204,13 +1295,28 @@ const NEGATED = /\b(do not|don't|dont|never|avoid|not|no|instead of|rather than|
+ /** The first known-dangerous instruction in a generated health answer (not negated in its sentence), or null. */
+ export function riskyHealthInstruction(answer: string): string | null {
+   for (const sentence of splitSentences(answer)) {
+-    for (const [id, re] of RISKY_HEALTH) if (re.test(sentence) && !NEGATED.test(sentence)) return id;
++    // "not only to reach shelter, but also…" is not a negation of the advice (Sonar exp-29).
++    for (const [id, re] of RISKY_HEALTH) if (re.test(sentence) && !NEGATED.test(sentence.replace(/\bnot only\b/gi, ""))) return id;
+   }
+   return null;
+ }
+ 
++/** A Spanish question (no ES path elsewhere): inverted marks, or two words Portuguese and English don't use. */
++const ES_ONLY = /(?<![\p{L}])(qué|cómo|cuándo|dónde|hago|hijo|hija|niño|niña|niños|bebé|mi|una|está|tragó|picó|mordió|ayuda|ayudarlo|ayudarla|pila|alacrán|peligroso|grave|es|se|muy|tiene|puedo|debo|hacer)(?![\p{L}])/giu;
++export function isSpanishQuestion(query: string): boolean {
++  if (/[¿¡]/.test(query)) return true;
++  return new Set((query.match(ES_ONLY) ?? []).map((w) => w.toLowerCase())).size >= 3;
++}
++
+ /** Health question without a good source: fixed text, no model. */
+-export function noHealthSourceAnswer(pt: boolean): string {
++/** healthExtract's no-steps answer (no quote): the source had no first-aid steps for this. */
++export function isNoStepsAnswer(text: string): boolean {
++  return /^(The offline source doesn't give first-aid steps for this\.|A fonte offline não traz os passos de socorro para isso\.)/.test(text) && !/\[\d+\]/.test(text);
++}
++
++export function noHealthSourceAnswer(pt: boolean, es = false): string {
++  if (es && !pt)
++    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar consejos de salud de memoria. En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
+   return pt
+     ? "Não tenho uma fonte offline confiável sobre isso, então não vou arriscar orientações de saúde de memória. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
+     : "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
+diff --git a/src/routing/exp29.test.ts b/src/routing/exp29.test.ts
+new file mode 100644
+index 0000000..bd3092f
+--- /dev/null
++++ b/src/routing/exp29.test.ts
+@@ -0,0 +1,61 @@
++import { describe, it, expect } from "vitest";
++import { definesName, isHealthFollowUp, isHealthQuestion, isPtDefinitional, riskyHealthInstruction } from "./context";
++
++describe("Sonar exp-29: health detection gaps (knob 1)", () => {
++  it("should-questions next to a described injury or a disaster, frostbitten, collapsed", () => {
++    for (const q of [
++      "I burned my hand on a hot pan. Should I put ice or butter on it?",
++      "An earthquake just started and I'm indoors. Should I stand in a doorway or run outside?",
++      "My toes look frostbitten after a cold hike. Should I rub them or warm them by the fire?",
++      "My friend collapsed in the heat, is confused and very hot. What should I do right now?",
++    ]) expect(isHealthQuestion(q), q).toBe(true);
++  });
++  it("not a trip being planned", () => {
++    for (const q of [
++      "I'm going to Chiang Mai in March. I heard about the burning season — should I bring masks?",
++      "How common are earthquakes in Wellington? Should I worry?",
++    ]) expect(isHealthQuestion(q), q).toBe(false);
++  });
++  it("a coastal quake is a health (tsunami) question now that the tsunami card exists", () => {
++    expect(isHealthQuestion("We're on the beach in Kamakura and there was a really strong, long earthquake. Should we wait for a tsunami warning before leaving?")).toBe(true);
++    expect(isHealthQuestion("dor no peito de saudade")).toBe(false);
++  });
++});
++
++describe("Sonar exp-29: health follow-ups (knob 2)", () => {
++  it("a bare what-to-do or how-serious turn after a health turn", () => {
++    expect(isHealthFollowUp("what do I do now?", ["My son was stung by a scorpion"])).toBe(true);
++    expect(isHealthFollowUp("e agora?", ["Minha filha engoliu uma bateria"])).toBe(true);
++    expect(isHealthFollowUp("é grave?", ["Escorpião picou meu filho"])).toBe(true);
++    expect(isHealthFollowUp("o que eu faço agora?", ["meu filho caiu e bateu a cabeça e está vomitando"])).toBe(true);
++  });
++  it("a new question, or no health turn before", () => {
++    expect(isHealthFollowUp("thanks! what's the capital of Peru?", ["My son was stung by a scorpion"])).toBe(false);
++    expect(isHealthFollowUp("Is any vegan restaurant near me open right now?", ["My son was stung by a scorpion"])).toBe(false);
++    expect(isHealthFollowUp("what do I do now?", ["What is the capital of Peru?"])).toBe(false);
++  });
++});
++
++describe("Sonar exp-29: PT definitional instants (knob 3)", () => {
++  it("one-subject definition questions only", () => {
++    expect(isPtDefinitional("O que é uma monção?")).toBe(true);
++    expect(isPtDefinitional("Quem foi Oswaldo Cruz e por que aconteceu a Revolta da Vacina?")).toBe(false);
++    expect(isPtDefinitional("qual a melhor epoca pra ir nos lencois maranhenses")).toBe(false);
++  });
++  it("the sentence must define the name", () => {
++    expect(definesName(["Monsoon"], "A monsoon is traditionally a seasonal reversing wind.")).toBe(true);
++    expect(definesName(["Vitalik Buterin"], "- Why Proof of Stake (Nov 2020) _Vitalik Buterin_")).toBe(false);
++    expect(definesName(["India"], "Atheism is not taboo in India.")).toBe(false);
++  });
++});
++
++describe("Sonar exp-29: chest pain and the hypothermia exertion excerpt (B)", () => {
++  it("chest pain is a health question", () => {
++    for (const q of ["my dad has chest pain", "Meu pai está com dor no peito e suando frio", "mi madre tiene dolor en el pecho"]) expect(isHealthQuestion(q), q).toBe(true);
++    expect(isHealthQuestion("chest press machine workout")).toBe(false);
++  });
++  it("'keep walking to stay warm' is not first aid for hypothermia", () => {
++    expect(riskyHealthInstruction("Keeping on walking even when tired is important, not only to reach shelter, but also to keep warm.")).toBe("hypo-exertion");
++    expect(riskyHealthInstruction("Get them out of the wind and keep them warm with dry clothes.")).toBe(null);
++  });
++});

@@ -1,0 +1,6 @@
+# OPUSSHARD: may judge.mjs run Opus judge.v1 in N = 4 shards? (frozen 2026-10-08 13:0x, coordinator; PARJUDGE measured Haiku only)
+- Traces: `arms/deepread/deep35-R450.traces.jsonl` (sha12 05710eee2f92); reference rows: `arms/deepread/deep35-R450.judgments.jsonl` (Opus judge.v1 sequential, gap 5000, sha12 b40265bf921b).
+- Probe: the first 10 ids of `arms/signal20.ids` that exist in those traces (record them) → 20 calls, `--judge-model opus` (judge.v1, no --effort), `--gap-ms 0`, N = 4 shards via `arms/parjudge/tools/shard_run.sh` (round-robin ids, one --out per shard, concatenate), `--system opusshard-probe`, bench/v0.1 refs bd235bb9811f.
+- Measures: wall s, calls/min, 429/overloaded count (judge.mjs exits 3 on rate limit: count exits and resumes), structured-output failures, same winner per item vs the sequential rows (10 items), ratio Δ, position consistency.
+- USABLE (adopt N = 4 for Opus L2/claim runs, addendum to L1-PROTOCOL + CLAIM-RUNS method note) if: 429 ≤ 1 of 20 AND failures ≤ 1 AND same winner ≥ 9/10 AND |Δratio| ≤ 0.03. Otherwise NOT USABLE: keep sequential; optionally one more probe at N = 2 (same bars) and adopt N = 2 if it passes.
+- Budget: ≤ 40 Opus calls total (20 + an optional N = 2 probe), ≤ 20 min. Output `OPUSSHARD.md` (≤ 30 lines, cites this sha), `probe.judgments.jsonl`, shard logs.

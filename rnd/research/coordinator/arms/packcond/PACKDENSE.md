@@ -1,0 +1,5 @@
+# PACKDENSE (PACKCOND P4b): dense article router inside the installed pack — **FAIL at step 0** (2026-10-12 21:03)
+
+Criterion sha256 e2815dd8… (PACKDENSE-criterion.md). Verdict: FAIL at step 0 (G1 projected 21/32 < 22; lossless ceiling 22/32). 0 generations, 0 judge calls, mini untouched. Details: P4B-DIAG.md (D0), P4B-GATE.md (gates). Tools: tools/replay-p4b.ts (+ .sh), tools/p4b_diag.py; aggregates/p4b-diag.json; replay/p4b-v01.jsonl (public v0.1); blind/bench-v02/runs-packcond/p4b-v02.jsonl (dev, script-only).
+
+Mechanism tested: lead-vector cosine (bge-small int8, `lead_vecs`, 100 % of articles) over all articles of each format-2 pack; top-M ≥ floor added after the named hits. Finding: the dense signal is weak for this corpus and encoder (noise p50 0.69 vs targets 0.62; F0 article in the pack's lead top-5 on 5/15 misses) and the misses are mostly low-overlap questions (coverage < 0.40 on 11/15). Not adopted; no engine change; the family "retrieval-side 0-LLM recall levers on the installed packs" is closed at step 0 (CLOSED.md). Pre-declared split and judge stages never reached.

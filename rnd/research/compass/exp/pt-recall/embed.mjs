@@ -1,0 +1,11 @@
+import { createRequire } from "module"; import fs from "fs";
+const require = createRequire("<workspace>/boar-app/package.json");
+const { getLlama } = await import(require.resolve("node-llama-cpp"));
+const llama = await getLlama({ gpu: false });
+const model = await llama.loadModel({ modelPath: "<workspace>/shared-models/bge-small-en-v1.5-q8_0.gguf" });
+const ctx = await model.createEmbeddingContext({ contextSize: 512 });
+const rows = fs.readFileSync("aug.jsonl", "utf8").trim().split("\n").map(JSON.parse);
+const extra = process.argv[2] ? JSON.parse(fs.readFileSync(process.argv[2], "utf8")) : [];
+const cache = {}; const texts = [...new Set([...rows.flatMap((r) => [r.q, r.aug]), ...extra])];
+for (const t of texts) cache[t] = Array.from((await ctx.getEmbeddingFor(t)).vector);
+fs.writeFileSync(process.argv[3] ?? "emb.json", JSON.stringify(cache)); console.log("ok", texts.length);

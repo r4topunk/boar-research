@@ -1,0 +1,20 @@
+diff --git a/src/inference/LlamaEngine.ts b/src/inference/LlamaEngine.ts
+index 4d4dca4..765a88f 100644
+--- a/src/inference/LlamaEngine.ts
++++ b/src/inference/LlamaEngine.ts
+@@ -274,12 +274,15 @@ export class LlamaEngine {
+           n_ctx: nCtx,
+           n_threads: nThreads,
+           n_gpu_layers: 0, // CPU-only for broad device compatibility; adjust per-device
++          // PROBE B (Anvil android-lowram-no-repack): keep weights file-backed; no CPU_REPACK anonymous copy.
++          ...(Platform.OS === "android" ? { no_extra_bufts: true } : {}),
+         },
+         { platform: Platform.OS, cpuDevices: () => cpuDeviceNames(getBackendDevicesInfo), log: (m) => console.warn(m) }
+       );
+       this.context = loaded.context;
+       backend = loaded.backend;
+       this.modelInfo = { filename: modelFilename, nCtx, nThreads, backend };
++      console.warn(`[engine] PROBE-B no_extra_bufts=${Platform.OS === "android"} nCtx=${nCtx} model=${modelFilename}`);
+       this.loadedMeta = meta;
+       loadedOk = true;
+       this.arch = fit ? this.lastHeaderArch : await this.readArch(modelPath);

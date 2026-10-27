@@ -1,0 +1,13 @@
+The Berlin Wall was built in 1961 and came down in 1989 [2]. It served as a concrete barrier separating Western and Eastern Berlin until German reunification led to its dismantling [2].
+
+generation: 46 tokens, 0.242 s/token (4.131 tok/s)
+compute: 56.8% CPU occupancy (0.5503 cpu-s/token over 4 threads), 0.00 major faults/token
+ngram: 8/60 drafts accepted (13.3%), 1.21 tokens per verify decode (38 decodes for 46 tokens)
+ngram: drafting costs 0.0000 s/token on top of decode → 4.13 tok/s effective (vs 4.13 reported)
+ngram: drafted on 10 of 38 steps (26.3%); the rest decoded plainly
+prefill: 667 tokens, 21.551 s (31.0 tok/s) | model load 9.171 s | TTFT 30.722 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 12223.3 MiB (265.72 MiB/token), decode 0.242 s/token (compute 0.114 + cache mgmt 0.006 + flash I/O 0.598 s/token, 444 MiB/s)
+moe-cache: 26.7% hit, resident 1499.2 MiB
+moe-cache: 25509 evictions, 18293 re-reads (397.7/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.122 s/token (flash reads overlapped with FFN compute)

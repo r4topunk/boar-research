@@ -1,0 +1,172 @@
+From 00d5b2c57c9311e53d1479d34b39347afa58020b Mon Sep 17 00:00:00 2001
+From: BOAR R&D <noreply>
+Date: Mon, 19 Oct 2026 14:11:15 -0300
+Subject: [PATCH] routing: search an emergency told as a situation by its
+ hazard's name, and put the guidance page titled by it first
+
+With the emergency pack installed, situation questions ("Water is rising in my street right now and starting to come into the yard. What do I do?", "My toddler just drank some cleaning product from under the sink. What do I do?") were searched with their own words. Those words cover too little of any guidance page to pass the pack's keyword check, so retrieval came back empty or with noise, and the health filter, which keeps only sources whose title names the health topic, found none: the user got the no-source refusal. On 30 public emergency self-tests the page the answer should come from (Ready.gov "Floods", "Household Chemical Emergencies", ...) reached the sources on 1/30; retrieval was empty on 10 and 18 ended in the no-source refusal.
+
+Two changes. (1) A health-routed English question that names no condition the canonical dictionary knows, but a hazard (flood, earthquake, tornado, hurricane, tsunami, wildfire, extreme heat, winter weather and cold injuries, radiation, household chemical, chemical release, gas leak, drinking water, power outage, evacuation, home fire), is searched as "<hazard> what to do", and the hazard words are the health topic, as the canonical terms already are for snakebite or hypothermia (src/routing/ptQuery.ts hazardTerms; reason code retrieve:hazard-terms). The most specific hazard wins: a tsunami after a quake, a hurricane's storm surge, drinking water after a flood. (2) In a pack's what-to-do search, the official-guidance step looks for the government page titled by the topic ("Floods") and is no longer skipped when only a campaign page that mentions it ("Flood Safety Social Media Toolkit") is among the hits.
+
+Retrieval replay (no model) on the 30 self-tests: gold page in the sources 1 -> 21, empty retrieval 10 -> 2, no-source refusals 18 -> 2. The hazard dictionary alone gives 15; the titled-page rule alone gives 1. Pre-answer sources change on 1 of 54 pack self-tests (each with its own pack; a hypothermia question that had no source now gets Ready.gov Winter Weather) and on 1 of 60 v0.1 public questions (drinking water after a flood: Wikivoyage Water instead of four place guides); no question changes route. Known gap: a lay travel guide whose safety section names "winter" or "weather" still passes the health filter for a cold-injury question.
+
+Co-Authored-By: Claude Opus 5.5 <noreply>
+---
+ src/rag/wikiPack.ts         | 20 +++++++++++++++++++-
+ src/routing/answer.ts       | 12 ++++++++----
+ src/routing/ptQuery.test.ts | 25 ++++++++++++++++++++++++-
+ src/routing/ptQuery.ts      | 30 ++++++++++++++++++++++++++++++
+ 4 files changed, 81 insertions(+), 6 deletions(-)
+
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..9d1376c9 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -887,11 +887,29 @@ export class WikiPack {
+       // A what-to-do question: official guidance (a government page's steps: Ready.gov "Protect Yourself During
+       // Earthquakes") ranks above other sources' sections on the same topic, so it's among the first passages even
+       // when other articles repeat the question's words more. Its best what-to-do sections go right after the first hit.
+-      if (action && !hits.some((x) => x.source === "usgov")) {
++      // The page titled by the topic ("Floods" for a flood) is that guidance; a campaign page that only mentions it
++      // ("Flood Safety Social Media Toolkit") is not, so it does not stop the search for the titled one.
++      const topicStems = new Set((topic.length ? topic : stems).map((s) => s.stem));
++      const titled = async (title: string) => {
++        const own = await this.stems(title.replace(/\s*\([^)]*\)\s*$/, ""));
++        const inTopic = own.filter((s) => topicStems.has(s.stem)).length;
++        return inTopic > 0 && inTopic * 2 >= own.length;
++      };
++      const official = hits.filter((x) => x.source === "usgov");
++      let titledOfficial = false;
++      for (const x of official) if (!titledOfficial && (await titled(x.title))) titledOfficial = true;
++      if (action && !titledOfficial) {
++        // The titled page first, then (when no official page is in yet) the first one that covers the topic.
++        const found: Array<{ c: Candidate; titled: boolean }> = [];
+         for (const c of pool) {
+           if (seen.has(c.chunkId)) continue;
+           const h = await this.materialize(c);
+           if (h.source !== "usgov" || coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) < 0.5) continue;
++          const t = await titled(h.title);
++          if (t || !official.length) found.push({ c, titled: t });
++          if (t) break;
++        }
++        for (const { c } of [...found.filter((f) => f.titled), ...found.filter((f) => !f.titled)]) {
+           const acts = (await this.articlePassages(c.articleId, stems, 3, true)).filter((p) => p.action && !seen.has(p.chunkId)).slice(0, 2);
+           if (!acts.length) continue;
+           hits.splice(Math.min(1, hits.length), 0, ...acts.map((p) => ({ ...p, via: "bm25" as const })));
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index 22ca042e..ce27a9f5 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -69,7 +69,7 @@ import {
+   riskyHealthInstruction,
+   termCoverage,
+ } from "./context";
+-import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
++import { canonicalHealthTerms, englishSearchTerms, hazardTerms } from "./ptQuery";
+ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+@@ -1014,9 +1014,12 @@ export function createAnswerer(deps: AnswerDeps) {
+         : pt
+           ? englishSearchTerms(req.query)
+           : (learned ? health : isHealthQuestion(req.query)) // without the detector: unchanged
+-            ? canonicalHealthTerms(req.query)
++            ? canonicalHealthTerms(req.query) ?? hazardTerms(req.query)
+             : null;
+-      if (english && !history) reasonCodes.push("retrieve:pt-en-terms");
++      // An emergency told as a situation ("Water is rising in my street…") is searched by its hazard's name ("flood"),
++      // which titles the guidance written for it; the situation's own words cover too little of any page.
++      const hazard = !!english && !pt && !history && english === hazardTerms(req.query);
++      if (english && !history) reasonCodes.push(hazard ? "retrieve:hazard-terms" : "retrieve:pt-en-terms");
+       // Any other PT question: the English names it mentions, from the lexicon (PT-1, "estacoes do ano" -> Season).
+       const names = pt && !english ? (deps.englishNames ?? defaultEnglishNames)(req.query) : [];
+       if (names.length) reasonCodes.push("match:pt-en-names");
+@@ -1043,7 +1046,8 @@ export function createAnswerer(deps: AnswerDeps) {
+       // The packs lift an article's Treatment/Management section only when the query asks what to
+       // do (Bramble b03c959); the article name alone ("snakebite") brought back "Signs and symptoms".
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.
+-      const searchQuery = english ? (ACTION_INTENT.test(req.query) ? `${english} what to do` : english) : req.query;
++      // A hazard's situation always asks what to do ("Should I walk to find help?", "Is the fan enough?").
++      const searchQuery = english ? (ACTION_INTENT.test(req.query) || hazard ? `${english} what to do` : english) : req.query;
+       let raw: RetrievedChunk[] = req.reuseSources ?? [];
+       /** Multi-pass only: the cited sources as retrieved (ResearchResult.fullCitations), for the citation checks. */
+       let fullCited: RetrievedChunk[] = [];
+diff --git a/src/routing/ptQuery.test.ts b/src/routing/ptQuery.test.ts
+index f158cf41..48af0302 100644
+--- a/src/routing/ptQuery.test.ts
++++ b/src/routing/ptQuery.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, it, expect } from "vitest";
+-import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
++import { canonicalHealthTerms, englishSearchTerms, hazardTerms } from "./ptQuery";
+ 
+ describe("englishSearchTerms", () => {
+   it("Sextant safety-007: the PT nosebleed question gets English search words", () => {
+@@ -58,3 +58,26 @@ describe("canonicalHealthTerms", () => {
+     expect(englishSearchTerms("Os bebês podem tomar sol?")).toBeNull();
+   });
+ });
++
++describe("hazardTerms", () => {
++  it("names the hazard an emergency told as a situation is about", () => {
++    expect(hazardTerms("Water is rising in my street right now and starting to come into the yard. What do I do?")).toBe("flood");
++    expect(hazardTerms("My toddler just drank some cleaning product from under the sink. What do I do?")).toBe("household chemical emergency");
++    expect(hazardTerms("Sirens say there's a chemical leak near us and to stay indoors.")).toBe("hazardous materials chemical");
++    expect(hazardTerms("Emergency alert says there was a radiation release at the nuclear plant near us.")).toBe("radiation emergency");
++    expect(hazardTerms("It's 104 degrees, our AC broke and grandma only has a fan.")).toBe("extreme heat");
++    expect(hazardTerms("We pulled my friend out of a cold lake. He's shivering hard.")).toBe("winter weather");
++    expect(hazardTerms("I smell gas in my house and hear a hissing sound.")).toBe("gas leak");
++  });
++
++  it("the most specific hazard wins: a tsunami after a quake, a hurricane's surge, drinking water after a flood", () => {
++    expect(hazardTerms("There was a big earthquake and now the ocean is pulling way back from the beach.")).toBe("tsunami");
++    expect(hazardTerms("Storm surge from the hurricane is flooding our house.")).toBe("hurricane");
++    expect(hazardTerms("After the flood our tap water is cloudy. How do we make it safe to drink?")).toBe("drinking water");
++  });
++
++  it("no hazard, no terms", () => {
++    expect(hazardTerms("My arm is bleeding a lot, what do I do?")).toBeNull();
++    expect(hazardTerms("What is the capital of Australia?")).toBeNull();
++  });
++});
+diff --git a/src/routing/ptQuery.ts b/src/routing/ptQuery.ts
+index f8f6e479..b9b81d3f 100644
+--- a/src/routing/ptQuery.ts
++++ b/src/routing/ptQuery.ts
+@@ -95,3 +95,33 @@ export function canonicalHealthTerms(query: string): string | null {
+   if (!out.length) return null;
+   return out.join(" ");
+ }
++
++// An emergency told as a situation ("Water is rising in my street", "My toddler drank some cleaning product") shares
++// few words with the guidance written for it (Ready.gov "Floods", "Household Chemical Emergencies"): its words cover
++// too little of any page to pass the pack's keyword check, and the health filter finds no title that names the
++// situation. The hazard's own name is what the guidance is titled by. First match only, most specific first: a
++// tsunami after an earthquake is a tsunami, a hurricane's storm surge is the hurricane.
++const EN_HAZARD: Array<[RegExp, string]> = [
++  [/\btsunamis?\b|\b(ocean|sea|water)\b[^.?!]{0,30}\b(pull\w*|reced\w*|draw\w*|drain\w*|go\w*) (way |far )?(back|out)\b/i, "tsunami"],
++  [/\bhurricanes?\b|\btyphoons?\b|\btropical storm\b|\bstorm surge\b/i, "hurricane"],
++  [/\btornado(es)?\b/i, "tornado"],
++  [/\b(wild|forest|bush|brush|grass) ?fires?\b/i, "wildfire"],
++  [/\b(earth)?quakes?\b/i, "earthquake"],
++  [/\bradiation\b|\bradioactive\b|\bnuclear (plant|power|reactor|release|accident|leak|emergency)\b/i, "radiation emergency"],
++  [/\b(drank|drunk|drink|swallowed|swallow|ate|ingested)\b[^.?!]{0,40}\b(cleaning|cleaner|bleach|detergent|chemicals?|drain opener|antifreeze)\b/i, "household chemical emergency"],
++  [/\bchemicals?\b[^.?!]{0,30}\b(leak\w*|spill\w*|smell\w*|release\w*|cloud|fumes)\b|\bhazardous materials?\b|\bhazmat\b|\btoxic (gas|fumes|cloud)\b/i, "hazardous materials chemical"],
++  [/\b(smell\w*|smelt) (gas|propane)\b|\bgas (leak\w*|smell)\b|\bleaking gas\b/i, "gas leak"],
++  [/\b(safe to drink|drinking water|tap water|make (the |our )?water safe|purify\w* (the )?water)\b/i, "drinking water"],
++  [/\bflash floods?\b|\bflood\w*|\bwater\b[^.?!]{0,20}\b(is |keeps )?(rising|coming (in|into))\b/i, "flood"],
++  [/\bheat ?stroke\b|\bheat exhaustion\b|\bheat ?waves?\b|\bextreme heat\b|\bin the heat\b|\b(9[5-9]|1[0-2]\d) ?(degrees|°f)\b/i, "extreme heat"],
++  // Cold injuries (hypothermia, frostbite) are what winter-weather guidance treats: shivering after cold water counts.
++  [/\bblizzards?\b|\bsnow ?storms?\b|\b(ice|winter) storms?\b|\bfrost ?bit\w*|\bhypotherm\w*|\bshovel\w* snow\b|\bcold\b[^?!]{0,80}\bshiver\w*|\bshiver\w*[^?!]{0,80}\bcold\b/i, "winter weather"],
++  [/\bpower (outage|cut|failure)s?\b|\bpower('s| is| has been| went| was) (out|off|down)\b|\bblackout\b/i, "power outage"],
++  [/\bevacuat\w*/i, "evacuation"],
++  [/\b(house|home|kitchen|grease|apartment) fires?\b|\bcaught fire\b|\bon fire\b/i, "home fire"],
++];
++
++/** The hazard an English emergency situation is about, as the words its guidance is titled by, or null. */
++export function hazardTerms(query: string): string | null {
++  return EN_HAZARD.find(([re]) => re.test(query))?.[1] ?? null;
++}
+-- 
+2.50.1 (Apple Git-155)
+

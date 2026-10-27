@@ -1,0 +1,11 @@
+--- r1/be/adapter.ts
++++ kiln-local/be-cut7-followup/be/adapter.ts
+@@ -806,6 +806,8 @@
+     ...(process.env.WARN === "1" ? { warn: true } : {}),
+     // FOLLOWUP (engine deps.followupContext, src/routing/followup.ts): eval-side switch.
+     ...(process.env.FOLLOWUP === "1" ? { followupContext: true } : {}),
++    // FOLLOWUP r2 (engine deps.followupAnchor): eval-side switch.
++    ...(process.env.FOLLOWUP_ANCHOR === "1" ? { followupAnchor: true } : {}),
+   });
+   const ctx = { systemPrompt: persona.systemPrompt, styleReminder: persona.styleReminder, maxTokens: 512 };
+ 

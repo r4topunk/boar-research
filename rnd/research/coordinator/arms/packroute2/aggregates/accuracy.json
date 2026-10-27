@@ -1,0 +1,244 @@
+{
+ "criterion_sha256": "d67fd81c4b58ff150fd8f893d53bf90d3e7e030ebd3a513e9f6e8cb2a00c9d05",
+ "wording": "v1",
+ "descriptions_file": "pack_descriptions.json",
+ "descriptions_sha256": "d55c0bc86ad5bbb6ee5fc3d3cc9d2ac9acc276cbf0c677cbb47c6b126aad1003",
+ "prompt_sha256": "0286b1f57c1ec6fbf5dfa894182927c69edec8cca961a0bf3354af960e0134f2",
+ "prompt_system_chars": 1864,
+ "model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+ "model_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+ "server": {
+  "bin": "<workspace>/spikes/llama-b11010-cpu/bin/llama-server",
+  "flags": [
+   "-t",
+   "4",
+   "-tb",
+   "4",
+   "-c",
+   "4096",
+   "-ngl",
+   "0",
+   "-np",
+   "1",
+   "--jinja",
+   "--no-webui",
+   "--cache-ram",
+   "0",
+   "--reasoning-format",
+   "deepseek",
+   "--host",
+   "127.0.0.1",
+   "--port",
+   "8137"
+  ],
+  "request": {
+   "endpoint": "/v1/chat/completions",
+   "temperature": 0,
+   "seed": 42,
+   "max_tokens": 16,
+   "cache_prompt": "false (cold); true only for routes-cached20"
+  }
+ },
+ "st180": {
+  "n": 180,
+  "own": 105,
+  "acc": 0.583,
+  "family": {
+   "SE": {
+    "n": 100,
+    "own": 65,
+    "acc": 0.65
+   },
+   "topic": {
+    "n": 80,
+    "own": 40,
+    "acc": 0.5
+   }
+  },
+  "per_pack": {
+   "qa-travel-se": {
+    "own": 16,
+    "n": 20
+   },
+   "qa-ethereum-se": {
+    "own": 19,
+    "n": 20
+   },
+   "qa-bitcoin-se": {
+    "own": 17,
+    "n": 20
+   },
+   "qa-health-se": {
+    "own": 7,
+    "n": 20
+   },
+   "qa-outdoors-se": {
+    "own": 6,
+    "n": 20
+   },
+   "boar-firstaid-en": {
+    "own": 17,
+    "n": 20
+   },
+   "boar-medlineplus-en": {
+    "own": 2,
+    "n": 20
+   },
+   "boar-factbook": {
+    "own": 19,
+    "n": 20
+   },
+   "boar-simplewiki-en": {
+    "own": 2,
+    "n": 20
+   }
+  },
+  "confusion": {
+   "qa-travel-se": {
+    "qa-travel-se": 16,
+    "none": 3,
+    "boar-firstaid-en": 1
+   },
+   "qa-ethereum-se": {
+    "qa-ethereum-se": 19,
+    "qa-bitcoin-se": 1
+   },
+   "qa-bitcoin-se": {
+    "qa-bitcoin-se": 17,
+    "qa-ethereum-se": 2,
+    "none": 1
+   },
+   "qa-health-se": {
+    "boar-firstaid-en": 8,
+    "qa-health-se": 7,
+    "none": 4,
+    "boar-medlineplus-en": 1
+   },
+   "qa-outdoors-se": {
+    "boar-firstaid-en": 10,
+    "qa-outdoors-se": 6,
+    "invalid": 2,
+    "none": 1,
+    "qa-travel-se": 1
+   },
+   "boar-firstaid-en": {
+    "boar-firstaid-en": 17,
+    "none": 2,
+    "qa-outdoors-se": 1
+   },
+   "boar-medlineplus-en": {
+    "qa-health-se": 12,
+    "boar-firstaid-en": 6,
+    "boar-medlineplus-en": 2
+   },
+   "boar-factbook": {
+    "boar-factbook": 19,
+    "qa-outdoors-se": 1
+   },
+   "boar-simplewiki-en": {
+    "none": 15,
+    "boar-simplewiki-en": 2,
+    "qa-travel-se": 2,
+    "boar-factbook": 1
+   }
+  },
+  "choice_dist": {
+   "boar-firstaid-en": 42,
+   "none": 26,
+   "qa-ethereum-se": 21,
+   "boar-factbook": 20,
+   "qa-travel-se": 19,
+   "qa-health-se": 19,
+   "qa-bitcoin-se": 18,
+   "qa-outdoors-se": 8,
+   "boar-medlineplus-en": 3,
+   "invalid": 2,
+   "boar-simplewiki-en": 2
+  }
+ },
+ "kit_none": {
+  "v01_ids": [
+   "lan-hlt-001",
+   "lan-hlt-003",
+   "vit-cry-010",
+   "vit-cry-011",
+   "vit-hum-001",
+   "vit-hum-002",
+   "vit-hum-005",
+   "vit-hum-006",
+   "vit-trv-003"
+  ],
+  "v01_n": 9,
+  "v01_none": 5,
+  "v02_n": 15,
+  "v02_none": 5,
+  "none": 10,
+  "n": 24,
+  "picked": {
+   "qa-bitcoin-se": 5,
+   "qa-travel-se": 5,
+   "qa-health-se": 1,
+   "qa-ethereum-se": 1,
+   "boar-firstaid-en": 1,
+   "boar-factbook": 1
+  }
+ },
+ "route_dist": {
+  "v01": {
+   "n": 60,
+   "none": 24,
+   "boar-factbook": 12,
+   "qa-ethereum-se": 6,
+   "boar-firstaid-en": 5,
+   "qa-health-se": 4,
+   "boar-simplewiki-en": 3,
+   "qa-travel-se": 2,
+   "qa-bitcoin-se": 2,
+   "invalid": 2
+  },
+  "v02": {
+   "n": 110,
+   "none": 52,
+   "boar-firstaid-en": 14,
+   "qa-travel-se": 12,
+   "boar-factbook": 8,
+   "qa-bitcoin-se": 8,
+   "boar-simplewiki-en": 5,
+   "qa-ethereum-se": 5,
+   "qa-health-se": 3,
+   "invalid": 1,
+   "qa-outdoors-se": 1,
+   "boar-medlineplus-en": 1
+  }
+ },
+ "invalid": {
+  "st180": 2,
+  "v01": 2,
+  "v02": 1
+ },
+ "ms": {
+  "cold_all": {
+   "n": 350,
+   "p50": 5075.5,
+   "p90": 5712.4
+  },
+  "cold_prompt_ms_st180": {
+   "p50": 4941.3
+  },
+  "cached20": {
+   "n": 20,
+   "p50": 619.3,
+   "p90": 792.3,
+   "cold_same_items_p50": 5141.2,
+   "prompt_n_p50": 28.0,
+   "same_choice": "20/20"
+  }
+ },
+ "G1": {
+  "own": "105/180",
+  "need_own": 153,
+  "none": "10/24",
+  "need_none": 21,
+  "pass": false
+ }
+}

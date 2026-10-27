@@ -1,0 +1,11 @@
+A: show all (no verifier)    shown 45/45  pass 20 (44% of shown)  fail-missing 22  cw 3  | pass recall 20/20
+verifier Qwen2.5-1.5B yes    shown 26/45  pass 10 (38% of shown)  fail-missing 15  cw 1  | pass recall 10/20
+verifier Qwen3-4B yes        shown 10/45  pass  5 (50% of shown)  fail-missing  4  cw 1  | pass recall 5/20
+cosine >= 0.7                shown 27/45  pass 16 (59% of shown)  fail-missing 10  cw 1  | pass recall 16/20
+cosine >= 0.75               shown 20/45  pass 12 (60% of shown)  fail-missing  7  cw 1  | pass recall 12/20
+cosine >= 0.8                shown 16/45  pass  9 (56% of shown)  fail-missing  6  cw 1  | pass recall 9/20
+cosine >= 0.85               shown  3/45  pass  2 (67% of shown)  fail-missing  1  cw 0  | pass recall 2/20
+1.5B yes AND cos>=.75        shown 15/45  pass  8 (53% of shown)  fail-missing  6  cw 1  | pass recall 8/20
+cos by label: {'pass': np.float64(0.788), 'confident-wrong': np.float64(0.632), 'fail-missing': np.float64(0.662)}
+CW items: [('vit-sci-002', 'no', 'no', 0.63, 'Germany is more densely populated than Japan. Germany has a population density of around 2'), ('lan-cmp-005', 'no', 'no', 0.6, 'The Nile crocodile grows larger than the saltwater crocodile. Nile crocodiles can reach le'), ('vit-cry-009', 'yes', 'yes', 0.83, 'Before EIP-7251, you needed 32 ETH to stake 10,000 ETH. After EIP-7251, the minimum valida')]
+PT drafts: 0

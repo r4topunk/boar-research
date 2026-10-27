@@ -1,0 +1,25 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-21 00:20:59
++++ b/be/adapter-litedecline.ts	2026-10-21 00:20:59
+@@ -163,7 +163,9 @@
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+-  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
++  // SMOLLM3-3B arm, model-only variant (2026-10-21): the 1.7B id loads bartowski/HuggingFaceTB_SmolLM3-3B-GGUF @ 86b3536e Q4_K_M (HuggingFaceTB/SmolLM3-3B @ a07cc9a0, Apache-2.0);
++  // engine sampling unchanged (0.7/40/0.95/0.05, health 0); thinking off via --reasoning off (template renders "Reasoning Mode: /no_think" + empty think block).
++  "qwen3-1.7b-q4km": { file: "lite/HuggingFaceTB_SmolLM3-3B-Q4_K_M.gguf", sha256: "519732558d5fa7420ab058e1b776dcfe73da78013c2fe59c7ca43c325ef89132" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -181,7 +183,9 @@
+ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+-    id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
++    id: "qwen3-1.7b-q4km", kind: "llm", label: "SmolLM3-3B (Q4_K_M) [SMOLLM3-3B arm]",
++    // SMOLLM3-3B: sizeBytes kept at the 1.7B's value on purpose (real file 1915305792 B), so the compact tier, prompts and declines stay
++    // byte-identical to the 1.7B path and only the weights differ.
+     filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },

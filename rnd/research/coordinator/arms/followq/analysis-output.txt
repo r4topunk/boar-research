@@ -1,0 +1,132 @@
+messages 192; with history 39; follow-ups (rule) 21 (expected-search yes: 16); expected-yes 69; non-follow-ups 171
+Q0 with >=1 passage: all 81/192, expected-yes 32/69, follow-ups 6/21
+
+== Q1 ==
+with >=1 passage: all 89/192, expected-yes 38/69, follow-ups 13/21
+DECISION-A follow-ups gaining sources (Q0 none -> Q1 >=1): 10  ['cs-030', 'cs-032', 'cs-035', 'cs-036', 'cs-039', 'v1-037', 'v2-029', 'v2-032', 'v2-035', 'v2-036']
+  follow-ups expected-yes only gaining: 9; history items (any flag) gaining: 13 ['cs-030', 'cs-031', 'cs-032', 'cs-035', 'cs-036', 'cs-039', 'v1-037', 'v2-029', 'v2-030', 'v2-032', 'v2-035', 'v2-036', 'v2-038']; follow-ups losing sources: ['cs-038', 'v1-033', 'v1-035']
+DECISION-B non-follow-ups whose kept passages change: 11  ['cs-031', 'cs-037', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-034', 'v2-038', 'v2-040']   (raw top-k change: 17 ['cs-031', 'cs-033', 'cs-037', 'v1-030', 'v1-032', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-033', 'v2-034', 'v2-037', 'v2-038', 'v2-039', 'v2-040'])
+  of which history items: ['cs-031', 'cs-037', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-034', 'v2-038', 'v2-040']; follow-ups whose kept change at all: 16; follow-ups with raw change: 21
+  retrieval ran Q0->Q1 (follow-ups): 21 -> 21
+
+== Q2 ==
+with >=1 passage: all 89/192, expected-yes 38/69, follow-ups 12/21
+DECISION-A follow-ups gaining sources (Q0 none -> Q2 >=1): 9  ['cs-030', 'cs-032', 'cs-035', 'cs-036', 'cs-039', 'v1-037', 'v2-029', 'v2-032', 'v2-035']
+  follow-ups expected-yes only gaining: 9; history items (any flag) gaining: 12 ['cs-030', 'cs-031', 'cs-032', 'cs-033', 'cs-035', 'cs-036', 'cs-039', 'v1-037', 'v2-029', 'v2-030', 'v2-032', 'v2-035']; follow-ups losing sources: ['cs-038', 'v1-033', 'v1-035']
+DECISION-B non-follow-ups whose kept passages change: 11  ['cs-031', 'cs-033', 'cs-037', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-034', 'v2-040']   (raw top-k change: 14 ['cs-031', 'cs-033', 'cs-037', 'v1-032', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-033', 'v2-034', 'v2-037', 'v2-040'])
+  of which history items: ['cs-031', 'cs-033', 'cs-037', 'v1-034', 'v1-036', 'v1-038', 'v1-039', 'v1-041', 'v2-030', 'v2-034', 'v2-040']; follow-ups whose kept change at all: 15; follow-ups with raw change: 21
+  retrieval ran Q0->Q2 (follow-ups): 21 -> 21
+
+## per-item (69 expected-search)
+| id | follow-up | n Q0/Q1/Q2 | Q0 top-2 | Q1 top-2 | Q2 top-2 |
+|---|---|---|---|---|---|
+| cs-029 | y | 1/3/3 | Wikivoyage: Biomes and ecosystems | Wikivoyage: Lisbon | Wikivoyage: Lisbon |
+| cs-030 | y | 0/3/4 | - | Wikivoyage: Dengue fever | Wikivoyage: Dengue fever |
+| cs-032 | y | 0/2/2 | - | Wikivoyage: Guernica | Wikivoyage: Guernica |
+| cs-035 | y | 0/1/3 | - | Wikivoyage: Canberra | Coptic Australians; Wikivoyage: Capital Region |
+| cs-036 | y | 0/2/2 | - | Immune system; Vaccine | Immune system; Vaccine |
+| cs-038 | y | 2/0/0 | Wikivoyage: Sanamahism; Ethereum EIPs/ERCs: EIP-8025: Optional Execution Proofs | - | - |
+| cs-039 | y | 0/4/4 | - | Wikivoyage: Machu Picchu | Wikivoyage: Machu Picchu |
+| cs-040 | y | 0/0/0 | - | - | - |
+| cs-042 | n | 0/0/0 | - | - | - |
+| cs-043 | n | 2/2/2 | Wikivoyage: Elephants | Wikivoyage: Elephants | Wikivoyage: Elephants |
+| cs-044 | n | 0/0/0 | - | - | - |
+| cs-045 | n | 0/0/0 | - | - | - |
+| cs-046 | n | 2/2/2 | Wikivoyage: East Africa; Wikivoyage: Africa | Wikivoyage: East Africa; Wikivoyage: Africa | Wikivoyage: East Africa; Wikivoyage: Africa |
+| cs-047 | n | 0/0/0 | - | - | - |
+| cs-048 | n | 0/0/0 | - | - | - |
+| cs-049 | n | 0/0/0 | - | - | - |
+| cs-050 | n | 2/2/2 | Wikivoyage: Santos Dumont | Wikivoyage: Santos Dumont | Wikivoyage: Santos Dumont |
+| cs-051 | n | 0/0/0 | - | - | - |
+| cs-052 | n | 0/0/0 | - | - | - |
+| cs-053 | n | 2/2/2 | Wikivoyage: Jellyfish | Wikivoyage: Jellyfish | Wikivoyage: Jellyfish |
+| cs-054 | n | 3/3/3 | Wikivoyage: Berlin Wall | Wikivoyage: Berlin Wall | Wikivoyage: Berlin Wall |
+| cs-055 | n | 0/0/0 | - | - | - |
+| cs-056 | n | 0/0/0 | - | - | - |
+| v1-029 | y | 0/0/0 | - | - | - |
+| v1-031 | y | 0/0/0 | - | - | - |
+| v1-033 | y | 1/0/0 | Wikivoyage: Tamil Nadu | - | - |
+| v1-034 | n (hist) | 2/2/2 | Wikivoyage: Illinois; Short Weather Cipher | Wikivoyage: Kazakhstan | Wikivoyage: Kazakhstan |
+| v1-035 | y | 3/0/0 | ethereum.org: Anatomy of smart contracts; Ethereum EIPs/ERCs: EIP-8130: Keystore Accounts | - | - |
+| v1-037 | y | 0/1/1 | - | Wikivoyage: Gili Islands | Wikivoyage: Diving the west coast of South Africa |
+| v1-038 | n (hist) | 4/3/3 | Wikivoyage: La Paz; Wikivoyage: La Paz (Mexico) | Wikivoyage: La Paz | Wikivoyage: La Paz |
+| v1-039 | n (hist) | 4/0/4 | Wikivoyage: Buenos Aires; Wikivoyage: Buenos Aires (disambiguation) | - | Wikivoyage: Buenos Aires; Wikivoyage: Argentina |
+| v1-042 | n | 0/0/0 | - | - | - |
+| v1-043 | n | 4/4/4 | Wikivoyage: Bahia; Wikivoyage: Flying to South America | Wikivoyage: Bahia; Wikivoyage: Flying to South America | Wikivoyage: Bahia; Wikivoyage: Flying to South America |
+| v1-044 | n | 2/2/2 | ethereum.org: Proof-of-stake vs proof-of-work | ethereum.org: Proof-of-stake vs proof-of-work | ethereum.org: Proof-of-stake vs proof-of-work |
+| v1-045 | n | 1/1/1 | Wikivoyage: Moon | Wikivoyage: Moon | Wikivoyage: Moon |
+| v1-046 | n | 1/1/1 | Wikivoyage: Arctic wildlife | Wikivoyage: Arctic wildlife | Wikivoyage: Arctic wildlife |
+| v1-047 | n | 0/0/0 | - | - | - |
+| v1-048 | n | 1/1/1 | Wikivoyage: Hierve el Agua | Wikivoyage: Hierve el Agua | Wikivoyage: Hierve el Agua |
+| v1-049 | n | 0/0/0 | - | - | - |
+| v1-050 | n | 0/0/0 | - | - | - |
+| v1-051 | n | 1/1/1 | Wikivoyage: Porto | Wikivoyage: Porto | Wikivoyage: Porto |
+| v1-052 | n | 1/1/1 | Typhoon | Typhoon | Typhoon |
+| v1-053 | n | 1/1/1 | Wikivoyage: Vinicunca | Wikivoyage: Vinicunca | Wikivoyage: Vinicunca |
+| v1-054 | n | 3/3/3 | Ethereum | Ethereum | Ethereum |
+| v1-055 | n | 3/3/3 | Wikivoyage: Bolivia | Wikivoyage: Bolivia | Wikivoyage: Bolivia |
+| v1-056 | n | 0/0/0 | - | - | - |
+| v2-029 | y | 0/3/3 | - | Wikivoyage: Brazil; Human rights and encryption | Wikivoyage: Brazil |
+| v2-031 | n (hist) | 2/2/2 | Wikivoyage: Flash floods; Wikivoyage: Findlay | Wikivoyage: Flash floods; Wikivoyage: Findlay | Wikivoyage: Flash floods; Wikivoyage: Findlay |
+| v2-032 | y | 0/2/4 | - | Wikivoyage: Curitiba; Wikivoyage: Uberlândia | Wikivoyage: Curitiba; Wikivoyage: Uberlândia |
+| v2-034 | n (hist) | 2/2/2 | Wikivoyage: Hanoi | Wikivoyage: Vietnam; Wikivoyage: Hanoi | Wikivoyage: Vietnam; Wikivoyage: Hanoi |
+| v2-035 | y | 0/1/1 | - | Secure multi-party computation | Secure multi-party computation |
+| v2-037 | n (hist) | 0/0/0 | - | - | - |
+| v2-038 | n (hist) | 0/4/0 | - | Wikivoyage: Uyuni; Wikivoyage: Salar de Uyuni | - |
+| v2-039 | n (hist) | 0/0/0 | - | - | - |
+| v2-042 | n | 0/0/0 | - | - | - |
+| v2-043 | n | 4/4/4 | Wikivoyage: Fernando de Noronha | Wikivoyage: Fernando de Noronha | Wikivoyage: Fernando de Noronha |
+| v2-044 | n | 2/2/2 | ethereum.org: Timeline of all Ethereum forks (2014 to present); ethereum.org: Introduction to Ethereum governance | ethereum.org: Timeline of all Ethereum forks (2014 to present); ethereum.org: Introduction to Ethereum governance | ethereum.org: Timeline of all Ethereum forks (2014 to present); ethereum.org: Introduction to Ethereum governance |
+| v2-045 | n | 3/3/3 | Wikivoyage: Southwest Iceland; Wikivoyage: Iceland | Wikivoyage: Southwest Iceland; Wikivoyage: Iceland | Wikivoyage: Southwest Iceland; Wikivoyage: Iceland |
+| v2-046 | n | 3/3/3 | Wikivoyage: Mexico City | Wikivoyage: Mexico City | Wikivoyage: Mexico City |
+| v2-047 | n | 0/0/0 | - | - | - |
+| v2-048 | n | 0/0/0 | - | - | - |
+| v2-049 | n | 0/0/0 | - | - | - |
+| v2-050 | n | 0/0/0 | - | - | - |
+| v2-051 | n | 0/0/0 | - | - | - |
+| v2-052 | n | 1/1/1 | Wikivoyage: Mecca | Wikivoyage: Mecca | Wikivoyage: Mecca |
+| v2-053 | n | 2/2/2 | Ethereum EIPs/ERCs: EIP-7918: Blob base fee bounded by execution cost | Ethereum EIPs/ERCs: EIP-7918: Blob base fee bounded by execution cost | Ethereum EIPs/ERCs: EIP-7918: Blob base fee bounded by execution cost |
+| v2-054 | n | 3/3/3 | Wikivoyage: Andorra; Wikivoyage: Spanish phrasebook | Wikivoyage: Andorra; Wikivoyage: Spanish phrasebook | Wikivoyage: Andorra; Wikivoyage: Spanish phrasebook |
+| v2-055 | n | 0/0/0 | - | - | - |
+| v2-056 | n | 1/1/1 | Wikivoyage: Camino de Santiago | Wikivoyage: Camino de Santiago | Wikivoyage: Camino de Santiago |
+
+## history items (39): variants
+cs-029 exp=yes F=y Q1='me fala de Lisboa e o clima de lá?' Q2='e o clima de lá? Lisboa'
+cs-030 exp=yes F=y Q1='o que é a dengue? e como previne?' Q2='e como previne? dengue'
+cs-031 exp=no F=n Q1='qual a diferença entre ethereum e bitcoin? resume em uma frase' Q2='resume em uma frase diferença ethereum bitcoin'
+cs-032 exp=yes F=y Q1='quem pintou a Guernica? e onde ela está hoje?' Q2='e onde ela está hoje? Guernica pintou'
+cs-033 exp=either F=n Q1='me explica o que é staking não entendi, explica mais simples' Q2='não entendi, explica mais simples staking'
+cs-034 exp=either F=y Q1='tell me about the Atacama desert compare with the other one' Q2='compare with the other one Atacama desert'
+cs-035 exp=yes F=y Q1="what's the capital of Australia? how many people live there?" Q2='how many people live there? Australia capital'
+cs-036 exp=yes F=y Q1='explain how vaccines train the immune system thanks! and what about mRNA ones?' Q2='thanks! and what about mRNA ones? vaccines train immune system'
+cs-037 exp=no F=n Q1='what is PeerDAS? can you say that again in Portuguese?' Q2='can you say that again in Portuguese? PeerDAS'
+cs-038 exp=yes F=y Q1='who wrote One Hundred Years of Solitude? what else did he write?' Q2='what else did he write? One Hundred Years Solitude wrote'
+cs-039 exp=yes F=y Q1='háblame de Machu Picchu ¿y cómo se llega?' Q2='¿y cómo se llega? Machu Picchu'
+cs-040 exp=yes F=y Q1='¿qué es la hipotermia? ¿y qué hago si le pasa a alguien?' Q2='¿y qué hago si le pasa a alguien? hipotermia'
+cs-041 exp=no F=y Q1='¿quién fue Simón Bolívar? ok gracias' Q2='ok gracias Simón Bolívar'
+v1-029 exp=yes F=y Q1='qual a altura do Everest? e quem subiu primeiro?' Q2='e quem subiu primeiro? Everest altura'
+v1-030 exp=no F=n Q1='como funciona uma vacina? explica como se eu tivesse 10 anos' Q2='explica como se eu tivesse 10 anos funciona vacina'
+v1-031 exp=yes F=y Q1='o que é escorpião amarelo? e se picar uma criança, o que eu faço?' Q2='e se picar uma criança, o que eu faço? escorpião amarelo'
+v1-032 exp=no F=n Q1='me fala de Ouro Preto valeu, ajudou muito' Q2='valeu, ajudou muito Ouro Preto'
+v1-033 exp=yes F=y Q1='quando foi a Revolução dos Cravos? e por que esse nome?' Q2='e por que esse nome? Revolução Cravos'
+v1-034 exp=yes F=n Q1="what's the capital of Kazakhstan? and what's the weather like there in January?" Q2="and what's the weather like there in January? Kazakhstan capital"
+v1-035 exp=yes F=y Q1='who painted The Night Watch? where can I see it?' Q2='where can I see it? The Night Watch painted'
+v1-036 exp=no F=n Q1='what causes the northern lights? can you put that in Spanish?' Q2='can you put that in Spanish? causes northern lights'
+v1-037 exp=yes F=y Q1='how do I treat a bee sting? what if her face starts swelling?' Q2='what if her face starts swelling? treat sting'
+v1-038 exp=yes F=n Q1='¿qué es el mal de altura? ¿y cómo lo evito si voy a La Paz?' Q2='¿y cómo lo evito si voy a La Paz? altura'
+v1-039 exp=yes F=n Q1='¿cuántos habitantes tiene Montevideo? ¿y Buenos Aires?' Q2='¿y Buenos Aires? Montevideo habitantes'
+v1-040 exp=either F=y Q1='¿qué es un NFT? ¿y tú qué opinas, vale la pena?' Q2='¿y tú qué opinas, vale la pena? NFT'
+v1-041 exp=either F=n Q1='háblame de Frida Kahlo ¿algo más?' Q2='¿algo más? Frida Kahlo'
+v2-029 exp=yes F=y Q1='qual o maior lago do Brasil? e qual a profundidade dela?' Q2='e qual a profundidade dela? Brasil'
+v2-030 exp=no F=n Q1='o que é inflação? resume em 3 tópicos' Q2='resume em 3 tópicos inflação'
+v2-031 exp=yes F=n Q1='o que é leptospirose? andei na água da enchente ontem, o que eu faço?' Q2='andei na água da enchente ontem, o que eu faço? leptospirose'
+v2-032 exp=yes F=y Q1='quem foi Oscar Niemeyer? e em que ano ele morreu?' Q2='e em que ano ele morreu? Oscar Niemeyer'
+v2-033 exp=either F=n Q1='me indica um livro sobre a história do Brasil tem algum mais curto?' Q2='tem algum mais curto? Brasil indica livro história'
+v2-034 exp=yes F=n Q1="what's the currency of Vietnam? and can I pay with cards in Hanoi?" Q2='and can I pay with cards in Hanoi? Vietnam currency'
+v2-035 exp=yes F=y Q1='who invented the telephone? was anyone else working on it at the same time?' Q2='was anyone else working on it at the same time? invented telephone'
+v2-036 exp=no F=y Q1='what is a black hole? make it shorter, two sentences max' Q2='make it shorter, two sentences max black'
+v2-037 exp=yes F=n Q1='what are the symptoms of carbon monoxide poisoning? my whole family has a headache and the heater is on, what now?' Q2='my whole family has a headache and the heater is on, what now? symptoms carbon monoxide poisoning'
+v2-038 exp=yes F=n Q1='¿dónde está el Salar de Uyuni? ¿cuál es la mejor época para ir?' Q2='¿cuál es la mejor época para ir? Salar Uyuni'
+v2-039 exp=yes F=n Q1='¿qué es una insolación? mi amigo está confundido y no suda después de caminar al sol, ¿qué hago?' Q2='mi amigo está confundido y no suda después de caminar al sol, ¿qué hago? insolación'
+v2-040 exp=no F=n Q1='¿qué es la blockchain? tradúcelo al portugués' Q2='tradúcelo al portugués blockchain'
+v2-041 exp=either F=y Q1='recomiéndame una serie sobre historia ¿y otra parecida?' Q2='¿y otra parecida? serie historia'

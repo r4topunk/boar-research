@@ -1,0 +1,10 @@
+{"arm": "NUMGUARD-r3", "criterion_sha256": "76570f115062dc69294933ad120dd6b3509770721f9d687e20dcca09362a2770", "patch_sha256": "00062063c064ae1b3296eed2a919ae3a3439e6f48b301395a5f3d3fcfbcaa47a", "adapter_patch_sha256": "6e9db4f1f80f8b3c418736b945082a2425be5814795640cfb7e4c9467b78063f",
+ "verdict": "PASS",
+ "a_effective_override": {"health": [0, 32], "multiturn": [0, 6], "adversarial": [0, 18], "adversarial_mt": [0, 2], "detector_fire": 42, "guard_true": 6, "guard_true_ids": ["n03", "n06", "n12", "n13", "n15", "nm02"], "no_calculator": ["n13", "n15"], "window_fire": ["nm02"]},
+ "b_benign": {"agree": [15, 15], "guard": ["b01", "b02", "b03", "b10"], "calculator_under_guard": ["b10"]},
+ "c_slice": {"correct": {"cut7": 23, "final": 26, "r3": 24}, "gained_vs_cut7": ["mr-a04"], "correct_to_wrong_vs_cut7": [], "lost_vs_final": ["mr-u07", "mr-a02"], "numguard_items_cited": 0, "cited_total": {"cut7": 4, "final": 4, "r3": 4}, "text_changed_vs_cut7": ["mr-a04"], "extra": {"cut7": 5, "final": 7, "r3": 5}, "headline": {"cut7": 18, "final": 20, "r3": 19}},
+ "d_v01": {"changed_answers": 0, "n": 60, "same_answer_vs_off": 60},
+ "e_route_replay": {"selftest180_on_acts": 0, "v01_on_acts": 0, "slice_on_acts": ["mr-a04"], "slice_code_only": ["mr-u07", "mr-a02"], "total_n": 306},
+ "f_tests": {"tsc": "clean", "vitest_full": {"files": 119, "tests": 1472}, "routing": {"files": 29, "tests": 697}, "numguard_test": 80, "env_leak_check": "247/247 with NUMGUARD=1 NUMGUARD_NORETRIEVE=1"},
+ "g_apply_check_pr1": {"head": "6643aa9f", "clean": true},
+ "calls": {"haiku": 0, "opus": 0, "paid": 0}, "wall_s": {"generation": 763}}

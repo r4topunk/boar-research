@@ -1,0 +1,204 @@
+--- a/be/adapter-litedecline.ts
++++ b/be/adapter-litedecline.ts
+@@ -165,6 +165,57 @@
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+   "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
+ };
++
++// ---------------------------------------------------------------- OCCRAG hybrid (server backend, fast path only)
++// OCC-RAG-1.7B (occ-ai/OCC-RAG-1.7B-GGUF @ 57938bfa, MIT; Qwen3-1.7B-Base mid-trained for grounded RAG) answers ONLY generations where the
++// engine kept >= 1 source for the model; everything else (no source kept, prompt-form calls) and every OCC answer whose status is
++// UNANSWERABLE (or whose answer section is empty / "Not enough information") runs on Qwen3-1.7B with the original request, byte-identical
++// to the control. Engine code (retrieval, routing, warning line, decline rules) is untouched; this file only chooses which server answers.
++// OCC request (native format, HF card + embedded template): one user turn = the question (the engine's style reminder removed), the engine's
++// context [n] chunks as chat_template_kwargs.documents in the same order (source id n = [n]), no system prompt, greedy (vendor default).
++// OCC output: the answer section only, <|source_id|>N -> [N]; if the answer cites nothing, the ids the reasoning section cites are appended
++// as [a][b] (the model's own citations). Trace cap: OCC_TRACE_BUDGET tokens on top of the engine's nPredict (512); at the cap without an
++// answer section the open section is closed and the model writes status (<= 8 tokens) then answer (<= 64 tokens), greedy.
++// Fallback to Qwen3-1.7B (original request) on: status UNANSWERABLE / empty or "Not enough information" answer ("abstain"), a status that is
++// not exactly ANSWERABLE/UNANSWERABLE or no answer section ("malformed"), or a section opened twice while streaming ("looped", stream stopped).
++const OCC_FILE = { file: "lite/OCC-RAG-0.6B-Q4_K_M.gguf", sha256: "2b0bf248d0cdd60ea37c0fa092134acea35ee4bca0ee11ee031b91bf04281d17" };
++const OCC_TRACE_BUDGET = 512;
++let OCC_LAST: Record<string, unknown> | null = null;
++function occInput(msgs: { role: string; content: string }[]) {
++  const sys = msgs.find((m) => m.role === "system")?.content ?? "";
++  const user = [...msgs].reverse().find((m) => m.role === "user")?.content ?? "";
++  const question = user.replace(/\n\n\(Response style: [\s\S]*\)\s*$/, "").trim();
++  const documents: { text: string }[] = [];
++  const ci = sys.indexOf("\n\nContext:\n");
++  if (ci >= 0) {
++    let rest = sys.slice(ci + "\n\nContext:\n".length);
++    for (let k = 1; rest.startsWith(`[${k}] `); k++) {
++      const nx = rest.indexOf(`\n\n[${k + 1}] `);
++      documents.push({ text: (nx >= 0 ? rest.slice(0, nx) : rest).slice(`[${k}] `.length).trim() });
++      if (nx < 0) break;
++      rest = rest.slice(nx + 2);
++    }
++  }
++  return { question, documents };
++}
++// OCCDECL (2026-10-20): an OCC abstention becomes the engine's own refusal string instead of a Qwen answer.
++const OCC_REFUSAL = "I didn't find this in this phone's library.";
++const OCC_LACKS_INFO = /\bnot enough information\b|\b(sources?|context|passages?|documents?|text) (do|does) not (contain|provide|mention|include)\b|\bunanswerable\b/i;
++function occOutput(raw: string, nDocs: number) {
++  const sec = (name: string) => { const m = raw.match(new RegExp(`<\\|${name}_start\\|>([\\s\\S]*?)(?:<\\|${name}_end\\|>|$)`)); return m ? m[1] : null; };
++  const ids = (t: string) => [...new Set([...t.matchAll(/<\|source_id\|>\s*(\d+)/g)].map((m) => Number(m[1])).filter((n) => n >= 1 && n <= nDocs))].sort((a, b) => a - b);
++  const ans = sec("answer"), status = (sec("status") ?? "").trim(), reasoning = sec("reasoning") ?? "";
++  const stU = status.toUpperCase(); // OCCDECL: status read case-insensitively ("unanswerable" = UNANSWERABLE)
++  let text = (ans ?? "").replace(/<\|source_id\|>\s*(\d+)/g, "[$1]").replace(/<\|[a-z_]+\|>/g, "").trim();
++  let appended: number[] = [];
++  if (text && !/\[\d+\]/.test(text) && stU !== "UNANSWERABLE") { appended = ids(reasoning); if (appended.length) text += " " + appended.map((n) => `[${n}]`).join(""); }
++  const valid = ans !== null && (stU === "ANSWERABLE" || stU === "UNANSWERABLE");
++  // OCCDECL: UNANSWERABLE / empty / "Not enough information" = "decline" (the engine's refusal, no Qwen fallback); a malformed trace whose
++  // answer section says the sources lack the information = "decline-malformed" (refusal too); any other malformed trace = "malformed" (Qwen).
++  const fallback = !valid ? (ans !== null && OCC_LACKS_INFO.test(text) ? "decline-malformed" : "malformed")
++    : stU === "UNANSWERABLE" || !text || /^not enough information\.?$/i.test(text.trim()) ? "decline" : null;
++  return { text, status: status || null, answerFound: ans !== null, appended, fallback };
++}
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+  * entry the app would have, shaped like the Android default (Qwen3-4B's: answerTier "default", roles general + fast,
+@@ -414,7 +465,7 @@
+   });
+ });
+ 
+-async function makeServerEngine(modelPath: string, fileName: string, seed: number, temp: number | undefined, onGeneration: (g: Generation) => void) {
++async function makeServerEngine(modelPath: string, fileName: string, seed: number, temp: number | undefined, onGeneration: (g: Generation) => void, occMode = false) {
+   const bin = resolve(cli.serverBin!.replace(/^~(?=\/)/, HOME));
+   if (!existsSync(bin)) fail(`--server-bin ${bin} does not exist`);
+   const v = spawnSync(bin, ["--version"], { encoding: "utf8" }); // prints on stderr
+@@ -428,7 +479,7 @@
+   const port = external ? 0 : await freePort();
+   const base = external ?? `http://127.0.0.1:${port}`;
+   const args = ["-m", modelPath, "-t", String(cli.threads), "-tb", String(cli.threads), "-c", process.env.BOAR_SERVER_CTX ?? "4096", "-ngl", "0", "-np", "1", "--jinja",
+-                "--no-webui", "--cache-ram", "0", "--reasoning-format", "deepseek", "--host", "127.0.0.1", "--port", String(port),
++                "--no-webui", "--cache-ram", "0", "--reasoning-format", "deepseek", ...(occMode ? ["--special"] : []), "--host", "127.0.0.1", "--port", String(port),
+                 ...(process.env.BOAR_KV_TYPE ? ["--cache-type-k", process.env.BOAR_KV_TYPE, "--cache-type-v", process.env.BOAR_KV_TYPE] : []), // KVQ8 arm: KV cache type (unset = llama-server default f16)
+                 // BONSAI2: extra llama-server args, whitespace-split, appended last (unset = byte-identical args); recorded in versions["server.extra_args"].
+                 ...(process.env.BOAR_SERVER_EXTRA_ARGS ? process.env.BOAR_SERVER_EXTRA_ARGS.trim().split(/\s+/) : [])];
+@@ -481,13 +532,22 @@
+     hasEmbeddedChatTemplate: () => hasTemplate,
+     async estimateFit() { return null; },
+     setAnswerPrefix() { /* not emulated (cache_prompt false = fresh prefill per answer, as the node path) */ },
+-    async generate(o: any): Promise<string> {
++    async generate(o0: any): Promise<string> {
++      // OCCRAG: native query + documents, greedy; nothing streams (the hybrid wrapper emits the accepted answer once).
++      const occ = occMode && o0.messages ? occInput(o0.messages) : null;
++      if (occMode && !occ) throw new Error("OCCRAG: OCC engine called without messages");
++      const o = occ ? { ...o0, messages: [{ role: "user", content: occ.question }], nPredict: (o0.nPredict ?? 512) + OCC_TRACE_BUDGET, onToken: undefined } : o0;
+       const { path, body } = requestFor(hasTemplate ? o : { ...o, messages: undefined }, temp, seed);
++      if (occ) {
++        body.chat_template_kwargs = { ...((body.chat_template_kwargs as object) ?? {}), documents: occ.documents };
++        Object.assign(body, { temperature: 0, top_k: 1 });
++      }
+       const temperature = body.temperature as number;
+       abort = new AbortController();
+       const timer = setTimeout(() => abort?.abort(), o.timeoutMs ?? cli.timeoutMs);
+       const st = newStreamState();
+       const start = performance.now();
++      let occLooped = false, occChunks = 0; // streamed content chunks (llama-server: 1 token each)
+       rss.start();
+       try {
+         const res = await fetch(base + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: abort.signal });
+@@ -499,10 +559,12 @@
+           buf += dec.decode(chunk, { stream: true });
+           const { datas, rest } = sseData(buf);
+           buf = rest;
+-          for (const d of datas) applyData(st, d, performance.now() - start, (c) => o.onToken?.(c));
++          for (const d of datas) applyData(st, d, performance.now() - start, (c) => { occChunks++; o.onToken?.(c); });
+           if (st.done) break;
++          // OCCRAG loop guard: a section opened twice = the trace is looping (smoke lan-cmp-002: 1352 tokens, 40 s) -> stop, fall back.
++          if (occ && /<\|([a-z_]+)_start\|>[\s\S]*<\|\1_start\|>/.test(st.content)) { occLooped = true; break; }
+         }
+-        if (buf.trim()) for (const d of sseData(buf + "\n").datas) applyData(st, d, performance.now() - start, (c) => o.onToken?.(c));
++        if (buf.trim()) for (const d of sseData(buf + "\n").datas) applyData(st, d, performance.now() - start, (c) => { occChunks++; o.onToken?.(c); });
+       } catch (e) {
+         if (!abort.signal.aborted) throw e;
+       } finally {
+@@ -524,7 +586,34 @@
+       };
+       onGeneration(g);
+       o.onTimings?.({ promptTokens: g.promptTokens, promptMs: g.promptMs, predictedTokens: g.predictedTokens, predictedMs: g.predictedMs, cachedTokens: 0 });
+-      return st.content;
++      if (!occ) return st.content;
++      let forced = false, forcedTokens = 0;
++      if (!occLooped && !st.content.includes("<|answer_start|>") && !abort.signal.aborted) {
++        const tpl: any = await (await fetch(`${base}/apply-template`, { method: "POST", headers: { "Content-Type": "application/json" },
++          body: JSON.stringify({ messages: body.messages, chat_template_kwargs: body.chat_template_kwargs }) })).json();
++        const starts = [...st.content.matchAll(/<\|([a-z_]+)_start\|>/g)].map((m) => m[1]);
++        const open = ["query_analysis", ...starts].filter((n) => !st.content.includes(`<|${n}_end|>`)).pop();
++        const step = async (prompt: string, n: number, stop: string) => {
++          const r: any = await (await fetch(`${base}/completion`, { method: "POST", headers: { "Content-Type": "application/json" },
++            body: JSON.stringify({ prompt, n_predict: n, temperature: 0, top_k: 1, seed, cache_prompt: false, stream: false, stop: [stop] }) })).json();
++          forcedTokens += r.timings?.predicted_n ?? 0;
++          return String(r.content ?? "").split(stop)[0].trim();
++        };
++        const head = `${st.content.trimEnd()}${open ? `<|${open}_end|>` : ""}\n<|status_start|>\n`;
++        const status = await step(`${tpl.prompt}${head}`, 8, "<|status_end|>");
++        const head2 = `${head}${status}<|status_end|>\n<|answer_start|>\n`;
++        const answer = await step(`${tpl.prompt}${head2}`, 64, "<|answer_end|>");
++        st.content = `${head2}${answer}<|answer_end|>`;
++        forced = true;
++      }
++      const out = occOutput(st.content, occ.documents.length);
++      if (occLooped) out.fallback = "looped";
++      const ai = st.content.indexOf("<|answer_start|>");
++      OCC_LAST = { nDocs: occ.documents.length, occTokens: (g.predictedTokens || occChunks) + forcedTokens, occWallMs: Math.round(performance.now() - start), status: out.status,
++                   answerFound: out.answerFound, fallback: out.fallback, looped: occLooped, occText: out.text, appendedCites: out.appended, timedOut: g.timedOut, forced, forcedTokens,
++                   traceChars: ai >= 0 ? ai : st.content.length, occPromptTokens: g.promptTokens, occPromptMs: g.promptMs, occPredictedTokens: g.predictedTokens,
++                   occPredictedMs: g.predictedMs, raw: st.content };
++      return out.fallback ? "" : out.text;
+     },
+   };
+   return engine;
+@@ -671,6 +760,11 @@
+     ? (await makeMultiEngine(installedEntries.map((e) => ({ id: e.id, filename: e.filename, path: join(SHARED_MODELS, MODELS[e.id].file) })),
+                              R0.seed, R0.temperature, onGeneration, (id) => (currentModelId = id))) as any
+     : await (server ? makeServerEngine : makeEngine)(genPath, (deepEntry ?? entry).filename, R0.seed, R0.temperature, onGeneration);
++  // OCCRAG: the second server (OCC-RAG) next to the Qwen3-1.7B one; fast path on the server backend only.
++  if (!server || deepEntry || cli.installed) fail("OCCRAG needs --backend server without --deep-model / --installed");
++  const occPath = join(SHARED_MODELS, OCC_FILE.file);
++  if ((await sha256File(occPath)) !== OCC_FILE.sha256) fail(`OCCRAG: sha256 mismatch for ${occPath}`);
++  const occEngine = await makeServerEngine(occPath, "occ-rag-0.6b-q4km.gguf", R0.seed, R0.temperature, onGeneration, true);
+   const llm = { id: entry.id, label: entry.label, filename: entry.filename, sizeBytes: entry.sizeBytes ?? 0,
+                 roles: deepEntry ? ["fast"] : entry.capabilities?.roles ?? ["fast"], isDefault: true, answerTier: entry.answerTier };
+   // --deep-model (card deep-tier-streamed-moe §6b): two installed LLMs, the fast one active (never loaded: the backend
+@@ -694,7 +788,21 @@
+       if (cli.dumpPrompts)
+         appendFileSync(cli.dumpPrompts, JSON.stringify({ itemId: currentItem, ...(o.messages ? { messages: o.messages } : { prompt: o.prompt }),
+                                                          nPredict: o.nPredict ?? null, enableThinking: o.enableThinking ?? null }) + "\n");
+-      return gen0(o);
++      // OCCRAG hybrid routing (see OCC_FILE): OCC when >= 1 source reaches the model, Qwen3-1.7B otherwise or when OCC abstains.
++      OCC_LAST = null;
++      const t0 = performance.now();
++      const nDocs = o.messages ? occInput(o.messages).documents.length : 0;
++      let r: string, route: string;
++      if (nDocs > 0) {
++        const a = await occEngine.generate(o);
++        const fb = (OCC_LAST as any)?.fallback;
++        if (a) { route = "occ"; r = a; o.onToken?.(a); }
++        else if (fb === "decline" || fb === "decline-malformed") { route = `occ-${fb}`; r = OCC_REFUSAL; o.onToken?.(r); }
++        else { route = `occ-${(OCC_LAST as any)?.fallback ?? "empty"}-fallback-qwen`; r = await gen0(o); }
++      } else { route = o.messages ? "qwen-nosource" : "qwen-prompt"; r = await gen0(o); }
++      appendFileSync(`${cli.out!.replace(/\.jsonl$/, "")}.occ.jsonl`,
++                     JSON.stringify({ itemId: currentItem, route, nDocs, totalWallMs: Math.round(performance.now() - t0), ...(OCC_LAST ?? {}) }) + "\n");
++      return r;
+     };
+   }
+   // Sonar exp-30 (health11): learned emergency detector. Desktop stand-in for llama.rn: a llama-server built from
+@@ -835,6 +943,7 @@
+     "persona.sha256": personaSha,
+     ...(patchSha ? { "engine.patch.sha256": patchSha } : {}),
+     ...(process.env.BOAR_SAMPLER_JSON ? { "sampler.override": process.env.BOAR_SAMPLER_JSON } : {}),
++    "occrag.adapter": `occdecl;occ=${OCC_FILE.sha256.slice(0, 16)};trace_budget=${OCC_TRACE_BUDGET};greedy;forced_close=8+64`,
+     ...(server && process.env.BOAR_SERVER_EXTRA_ARGS ? { "server.extra_args": process.env.BOAR_SERVER_EXTRA_ARGS.trim() } : {}),
+     ...(cli.places.length ? { places: cli.places.map((p) => p.split("/").pop()).join(",") } : {}),
+     ...(ITEM_LOCATIONS ? { "item.locations.sha256": createHash("sha256").update(readFileSync(process.env.BOAR_ITEM_LOCATIONS!)).digest("hex") } : {}),
+@@ -952,6 +1061,7 @@
+   console.log(JSON.stringify({ done: requests.length, errors, setupMs: Math.round(setupMs), modelLoadMs: Math.round(engine.loadMs), runMs: Math.round(performance.now() - runStart), out: cli.out,
+                                ...(server ? { backend: "llama-server", llamaServer: engine.version, idleRssMb: mb(engine.idleRssBytes ?? null), peakRssMb: mb(engine.peakRssBytes ?? null) } : {}) }));
+   await engine.close?.();
++  await occEngine.close();
+ }
+ 
+ const mb = (b: number | null) => (b === null ? null : round1(b / 1024 ** 2));

@@ -1,0 +1,19 @@
+# CLAIM-DRAFT v3.1 → v3.2: changes for the independent reviewer (2026-10-07; document update only, 0 runs, 0 judge calls)
+1. Headline unchanged: floor removed held-out 0.389 / V-para 0.261, wins 0/110 and 0/51; raw 0.513 / 0.413. Added cut 6 s42 floor-removed 0.397 (PIPELINE-AUDIT §1) beside 0.389; CLAUDE.md's "0.40" is that figure rounded.
+2. Claim build = cut 7 (6d0b93b1 = cut 6 + FACTS r6): 0 fires on v0.2 (0/110) and V-para (0/58), replay identical, so numbers are cut 6's; v0.1 +0.027 projected (CUT7.md). Lineage table gains cut 6 and cut 7; the "re-measure on cut 5" owner decision is removed.
+3. §3: two module rows (facts tier: recall 28/40, precision 28/29, FP 0/20; places with location + tile: 7/7); two failed-lever rows (MoE 25–35B plateau ≈ 0.60; fine-tune data closed 16/20 → 11/20 → 6/20).
+4. §4: row 3 adds +0.76 MB facts table and +3.65 MB tiles; row 14 notes cut 7 identity and v0.3 need; NEW row 15 venues "Partly met (desktop, plumbing only)" with the OSM-tag caveat.
+5. §5: venue caveat rewritten (claim run 0/7 = no location; location alone 0/7; location + area tile 7/7); the old text's "coordinates in the question text" reading is replaced by VENUEGPS's cause analysis (no-location 7/7). Please check this against CLAIM-RESULTS-cut6 l. 89, which still states the coordinates-in-text reading.
+6. §5: single-family caveat quantified with JUDGE2 (Gemma +0.110/+0.112, winner 49/57 and 50/57, κ 0.32/0.55, ranking kept); §2 adds a method note on Haiku triage + parallel judging (not claim numbers).
+7. §6: v0.3 claim run row; deep tier row rewritten (closed-book +0.108; engine all-deep +0.057 at ×7.1; R2 rule 26 % deep, +0.033, 58 %, ×2.4; in-sample; needs 12 GB device); fine-tune line closed (one row).
+8. §7: v0.3 timeline (10-08 … 10-24, buffer to 10-31) as first item; area-tile download item; note to record whether cut 5 latency changes are in cut 7.
+9. Sources S18–S27, Review log entry (pending review), 3 UNKNOWN lines, Changelog v3.1 → v3.2; old v2 → v3 changelog condensed to stay < 270 lines (269).
+Check: no device-performance claims added; "AI-reviewed, not clinically reviewed" kept unchanged; claim text for venues must say "with device location and the user's area tile".
+
+## Review v3.2 applied (independent Opus, ACCEPT WITH EDITS; 1 blocker + 3 major + 8 minor)
+- B1: TL;DR device line replaced verbatim (cut 6 on the A15: 73/73, airplane + no INTERNET, p50 49 / p90 77 / max 111 s, instant p50 8.5 s, PSS 4.41 GiB, thermal 0, phone 0.561 vs desktop 0.558/0.560 on 57 dev items; cut 5 sweep decode 2.0–2.7 tok/s); rows 1, 2, 4 (→ "Partly met (one 8 GB phone run)"), 5 (cca28caf… ran), 8 (→ "cut 6 measured", projection labelled superseded, "sweep not run" removed), 12, §6 on-device row, E5, §7 (3 done items removed; cut 7 on a phone + ABBA rerun added); new S28 (QUEUE l.695, l.711, final-cut6-v01).
+- M1: cut 6 = cut 5 + DETMAX; cut 5 row "Included in cut 6 and cut 7"; §3 lineage note per review; both cut 5 UNKNOWNs and the §7 "record whether" sentence removed; new S29.
+- M2: deep-tier memory = desktop footprint vs our own ≤ 8 GiB estimate (QUEUE l.267); §6 "desktop-only"; +0.060 (server base) vs +0.057 (DEEPROUTE) bases named.
+- M3: "judge family" sentence replaced by the one-non-Claude-judge wording in §5 and §6 (quantification, not a correction).
+- m1 venue cause sentence (no location field, routed near-device, typed places not converted; no claim about question text); m2 seed scoping; m3 OSM caveat in TL;DR; m4 105/110 and 210/220; m5 v0.3 "planned", judge stays Opus; m6 "the project owner"; m7 row 7 leads with floor removed, table label "formerly held-out (exposed)"; m8 Portuguese or Spanish, 75 % partial / 85 % pass, flood-water "no card".
+- Not applied (outside the draft, per review notes): annotating CLAIM-RESULTS-cut3/cut6, CLAUDE.md and REPRO-PLAN staleness; coordinator's call.

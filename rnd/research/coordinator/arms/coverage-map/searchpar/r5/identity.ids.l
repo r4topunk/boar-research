@@ -1,0 +1,1 @@
+ls01-t2,ls02-t2,ls03-t2,ls04-t2,ls05-t2,ls06-t2,ls07-t2,ls08-t2,ls09-t2,ls10-t2

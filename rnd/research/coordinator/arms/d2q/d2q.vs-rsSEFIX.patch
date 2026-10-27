@@ -1,0 +1,158 @@
+diff -ru rs-SEFIX/src/rag/packs.ts rs-D2Q/src/rag/packs.ts
+--- rs-SEFIX/src/rag/packs.ts	2026-10-22 19:47:17
++++ rs-D2Q/src/rag/packs.ts	2026-10-23 15:43:58
+@@ -262,6 +262,7 @@
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
++    ...(h.expansion ? { expansion: h.expansion } : {}),
+   };
+ }
+ 
+diff -ru rs-SEFIX/src/rag/retrieve.types.ts rs-D2Q/src/rag/retrieve.types.ts
+--- rs-SEFIX/src/rag/retrieve.types.ts	2026-10-07 09:27:55
++++ rs-D2Q/src/rag/retrieve.types.ts	2026-10-23 15:43:58
+@@ -15,4 +15,6 @@
+    * false for a lead or a background section; absent for sources without sections.
+    */
+   action?: boolean;
++  /** D2Q x2 (research): generated questions of a pack chunk, matched by the gate and onTopic only (never in the prompt). */
++  expansion?: string;
+ }
+diff -ru rs-SEFIX/src/rag/wikiPack.ts rs-D2Q/src/rag/wikiPack.ts
+--- rs-SEFIX/src/rag/wikiPack.ts	2026-10-22 20:14:31
++++ rs-D2Q/src/rag/wikiPack.ts	2026-10-23 15:43:58
+@@ -78,6 +78,8 @@
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** D2Q x2 (research): the chunk's generated questions, seen by the relevance gate and onTopic only (never shown). */
++  expansion?: string;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -351,6 +353,12 @@
+   return both / (ga.size + gb.size - both) >= threshold;
+ }
+ 
++/** D2Q (research): RS_D2Q = "x1" (index only) | "x2" (index + gate/onTopic see the questions); anything else = off. */
++export function d2qMode(): "x1" | "x2" | null {
++  const v = (globalThis as any).process?.env?.RS_D2Q;
++  return v === "x1" || v === "x2" ? v : null;
++}
++
+ export function coverage(text: string, stems: Stem[]): number {
+   const low = text.toLowerCase();
+   const total = stems.reduce((s, x) => s + x.idf, 0) || 1;
+@@ -466,8 +474,15 @@
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+     private topicSources: PackSource[] = [],
+     /** The pack carries a chunk_vecs sidecar (int8 bge-small vector per chunk): the packDense2 path can run. */
+-    readonly hasChunkVecs = false
++    readonly hasChunkVecs = false,
++    /** D2Q (research): the copy carries fts_d2q(title, section, body, questions) + d2q(chunk_id, q). */
++    private hasD2q = false
+   ) {}
++  /** D2Q: per-stem row counts on fts_d2q (gidf ratio denominator). */
++  private d2qRows = new Map<string, number>();
++  private get d2qOn(): boolean {
++    return this.hasD2q && d2qMode() !== null;
++  }
+   /** All lead vectors in memory (loaded on the first dense query): stage 1 of denseChunks. */
+   private leadMatrix: { ids: Int32Array; vecs: Int8Array; norms: Float32Array } | null = null;
+ 
+@@ -491,7 +506,7 @@
+           .map((r) => SOURCES[r.source])
+           .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"));
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("chunk_vecs"), has("fts_d2q"));
+   }
+ 
+   /** SEFIX (bench-only): a Stack Exchange Q&A pack (meta.sources names stackexchange). */
+@@ -711,7 +726,9 @@
+ 
+   private async hit(articleId: number, chunkId: number, start: number, end: number, score: number, via: PackHit["via"], lead = false): Promise<PackHit> {
+     const a = await this.article(articleId);
++    const q = this.hasD2q && d2qMode() === "x2" ? (await this.db.getFirstAsync<{ q: string }>("SELECT q FROM d2q WHERE chunk_id = ?", [chunkId]))?.q : undefined;
+     return {
++      ...(q ? { expansion: q } : {}),
+       articleId,
+       chunkId,
+       title: a.title,
+@@ -806,9 +823,14 @@
+   async bm25Candidates(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<Candidate[]> {
+     const terms = this.rsTerms(stems);
+     if (!terms.length) return [];
++    // D2Q (research, default off): RS_D2Q=x1|x2 matches against fts_d2q (questions column weight 1) when the pack has it;
++    // term selection and the global df stay on the original index. Unset -> the original SQL, byte for byte.
++    const d2q = this.d2qOn;
++    const fts = d2q ? "fts_d2q" : "fts";
++    const wts = (d2q ? [...this.tuning.weights, 1] : this.tuning.weights).map(Number).join(", ");
+     const rows = await this.db.getAllAsync<{ id: number; s: number; article_id: number; start: number; end: number; views: number }>(
+       `SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views
+-       FROM (SELECT rowid, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? ORDER BY s LIMIT ?) f
++       FROM (SELECT rowid, bm25(${fts}, ${wts}) AS s FROM ${fts} WHERE ${fts} MATCH ? ORDER BY s LIMIT ?) f
+        JOIN chunks c ON c.id = f.rowid JOIN articles a ON a.id = c.article_id`,
+       [terms.map(matchTerm).join(" OR "), pool]
+     );
+@@ -823,9 +845,11 @@
+       rescored = new Map();
+       for (const t of terms) {
+         const nl = await this.rsTermRows(t);
+-        const ratio = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) / rsFts5Idf(this.nIndexed, nl);
++        // D2Q: the one-term bm25 on fts_d2q carries fts_d2q's own idf, so the denominator counts rows there.
++        const nd = d2q ? await this.d2qTermRows(t) : nl;
++        const ratio = rsFts5Idf(g.nRow, g.df.get(t) ?? nl) / rsFts5Idf(this.nIndexed, nd);
+         const part = await this.db.getAllAsync<{ id: number; s: number }>(
+-          `SELECT rowid AS id, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? AND rowid IN (${ids})`,
++          `SELECT rowid AS id, bm25(${fts}, ${wts}) AS s FROM ${fts} WHERE ${fts} MATCH ? AND rowid IN (${ids})`,
+           [matchTerm(t)]
+         );
+         for (const r of part) rescored.set(r.id, (rescored.get(r.id) ?? 0) + -r.s * ratio);
+@@ -849,6 +873,15 @@
+     });
+   }
+ 
++  /** D2Q: rows of fts_d2q that match the FTS term of `stem`. */
++  private async d2qTermRows(stem: string): Promise<number> {
++    const hit = this.d2qRows.get(stem);
++    if (hit !== undefined) return hit;
++    const n = (await this.db.getFirstAsync<{ doc: number }>("SELECT count(*) AS doc FROM fts_d2q WHERE fts_d2q MATCH ?", [matchTerm(stem)]))?.doc ?? 0;
++    this.d2qRows.set(stem, n);
++    return n;
++  }
++
+   /** RS_MERGE_CHECK only: sum over `terms` of the one-term bm25 (no idf change) per rowid. */
+   private async rsPlain(terms: string[], ids: string): Promise<Map<number, number>> {
+     const out = new Map<number, number>();
+@@ -1037,7 +1070,7 @@
+         if (seen.has(c.chunkId)) continue;
+         const h = await this.materialize(c);
+         const relevant =
+-          coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
++          coverage(`${h.title} ${h.text}${h.expansion ? ` ${h.expansion}` : ""}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
+         // A what-to-do question: at most three passages per article, so a lay manual's steps (Wikibooks First Aid)
+         // get a place next to the clinical article's sections.
+         const perArticle = hits.filter((x) => x.articleId === c.articleId).length;
+diff -ru rs-SEFIX/src/routing/context.ts rs-D2Q/src/routing/context.ts
+--- rs-SEFIX/src/routing/context.ts	2026-10-22 19:47:17
++++ rs-D2Q/src/routing/context.ts	2026-10-23 15:43:58
+@@ -712,7 +712,7 @@
+ /** `relaxProper` (SEFIX F4, bench-only): the proper-noun requirement becomes "any content term of the question is in the source". */
+ export function onTopic(query: string, chunk: RetrievedChunk, relaxProper = false): boolean {
+   const q = new Set(tokenizeTerms(query));
+-  const text = `${chunk.title} ${chunk.body}`;
++  const text = `${chunk.title} ${chunk.body}${chunk.expansion ? ` ${chunk.expansion}` : ""}`;
+   // A year or a proper noun in the question must be in the source (Sextant, gate a9f156c:
+   // "1513 Marash earthquake" for the 1906 one, a cricketer for the 1970 World Cup).
+   if (!yearsIn(query).every((y) => yearsIn(text).includes(y))) return false;
+@@ -755,7 +755,7 @@
+     const first = new Set(tokenizeTerms(splitSentences(text.trim())[0] ?? ""));
+     return q.size > 0 && [...q].every((t) => first.has(t));
+   }
+-  return termCoverage(query, `${chunk.title} ${chunk.body}`) >= MIN_TERM_COVERAGE;
++  return termCoverage(query, text) >= MIN_TERM_COVERAGE;
+ }
+ 
+ /** Questions with fewer content words than this need a source whose title names one of them. */

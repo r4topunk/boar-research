@@ -1,0 +1,146 @@
+[
+ {
+  "suite": "V2 UXMATRIX S vs S+",
+  "ready": true,
+  "a_calls_exact": 207,
+  "max_calls": 621,
+  "cap": 520,
+  "command": "LABEL_CAP=520 node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/v2/judge/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/v2/judge/labels.jsonl && python3 -I <workspace>/rnd/research/coordinator/arms/validation-1024/v2/agg_v2.py <workspace>/rnd/research/coordinator/arms/validation-1024/v2/judge <workspace>/rnd/research/coordinator/arms/validation-1024/v2/judge/labels.jsonl --out <workspace>/rnd/research/coordinator/arms/validation-1024/v2/v2.json",
+  "note": "A on every unit, then B on borderline A, then C on A != B (UXMATRIX used 309 calls for 208 units)"
+ },
+ {
+  "suite": "S4 MAIN s42",
+  "ready": true,
+  "a_calls_exact": 86,
+  "max_calls": 86,
+  "cap": null,
+  "command": "bash <workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-tools/judge_s43.sh <workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/s4-main-s42/out/00-main/traces.jsonl <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-s42.ids <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-s42-judge rc-s42",
+  "note": "43 of 97 answers differ from sefix124-main-s42; compare with that run's judgments on the same ids (coverage-map/sefix/ans-judge)"
+ },
+ {
+  "suite": "S4 MAIN s43",
+  "ready": true,
+  "a_calls_exact": 72,
+  "max_calls": 72,
+  "cap": null,
+  "command": "bash <workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-tools/judge_s43.sh <workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/s4-main-s43/out/00-main/traces.jsonl <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-s43.ids <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-s43-judge rc-s43",
+  "note": "36 of 97 answers differ from sefix124-main-s43; compare with that run's judgments on the same ids (coverage-map/sefix/ans-judge)"
+ },
+ {
+  "suite": "V3 layer 2",
+  "ready": true,
+  "a_calls_exact": 48,
+  "max_calls": 144,
+  "cap": 220,
+  "command": "LABEL_CAP=220 node <workspace>/rnd/research/coordinator/arms/validation-1024/v3/label_v3.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/v3/judge/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/v3/judge/labels.jsonl S  (add ,SP only if V2 ADOPTs S+: +48 A, cut at 220) && python3 -I <workspace>/rnd/research/coordinator/arms/validation-1024/v3/prep_agg_v3.py agg <workspace>/rnd/research/coordinator/arms/validation-1024/v3/judge <workspace>/rnd/research/coordinator/arms/validation-1024/v3/judge/labels.jsonl",
+  "note": "units 96 per tag {'S': 48, 'SP': 48} (= exact A calls) | first check history_in_prompt in the agg output (FAIL-INFRA rule)"
+ },
+ {
+  "suite": "S5 PACKPROOF ON/OFF",
+  "ready": true,
+  "a_calls_exact": 323,
+  "max_calls": 969,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s5-packproof/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s5-packproof/labels.jsonl",
+  "note": "aggregate: S5 with packproof/tools/agg.py logic on answers.json; S7 = agg_v2.py --tags S on the ON rows vs V2 S ON (seed 42)"
+ },
+ {
+  "suite": "S7 seed 44 UXMATRIX ON",
+  "ready": true,
+  "a_calls_exact": 60,
+  "max_calls": 180,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s7-uxm-on-s44/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s7-uxm-on-s44/labels.jsonl",
+  "note": "aggregate: S5 with packproof/tools/agg.py logic on answers.json; S7 = agg_v2.py --tags S on the ON rows vs V2 S ON (seed 42)"
+ },
+ {
+  "suite": "S10 topics",
+  "ready": true,
+  "a_calls_exact": null,
+  "max_calls": 88,
+  "cap": "name it",
+  "command": "copy topics27/tools/prep_succinct.py with gen-succinct -> <workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/s10-topics/out/00-topics, then node <workspace>/rnd/research/coordinator/arms/topics27/tools/audit_succinct.mjs <prep.json> <out.jsonl> primary",
+  "note": "88 answer sentences over 27 topics (TOPICS27-SUCCINCT used 53 calls for 46 sentences + 7 batched)"
+ },
+ {
+  "suite": "B-k4comp40 19",
+  "ready": true,
+  "a_calls_exact": 38,
+  "max_calls": 38,
+  "cap": null,
+  "command": "bash <workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-tools/judge_s43.sh <workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/b-k4comp40-19/out/00-main19/traces.jsonl <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/b-k4comp40-19.ids <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/b19-judge b19",
+  "note": "paired against sefix124-main-s42's judgments on the same 19 ids"
+ },
+ {
+  "suite": "V2 seed 43 S vs S+",
+  "ready": true,
+  "a_calls_exact": 208,
+  "max_calls": 624,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s43/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s43/labels.jsonl && python3 -I <workspace>/rnd/research/coordinator/arms/validation-1024/v2/agg_v2.py <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s43 <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s43/labels.jsonl",
+  "note": "stability column; units identical to an already-labelled unit can reuse its label by key"
+ },
+ {
+  "suite": "V2 seed 44 S vs S+ (ON only)",
+  "ready": true,
+  "a_calls_exact": 112,
+  "max_calls": 336,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s44/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s44/labels.jsonl && python3 -I <workspace>/rnd/research/coordinator/arms/validation-1024/v2/agg_v2.py <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s44 <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-s-s44/labels.jsonl",
+  "note": "stability column; units identical to an already-labelled unit can reuse its label by key"
+ },
+ {
+  "suite": "S5 PACKPROOF ON with S+",
+  "ready": true,
+  "a_calls_exact": 180,
+  "max_calls": 540,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s5-packproof-splus/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/s5-packproof-splus/labels.jsonl",
+  "note": ""
+ },
+ {
+  "suite": "S4 MAIN S+ s42",
+  "ready": true,
+  "a_calls_exact": 144,
+  "max_calls": 144,
+  "cap": null,
+  "command": "bash <workspace>/rnd/research/coordinator/arms/coverage-map/sefix/ans-tools/judge_s43.sh <workspace>/rnd/research/coordinator/arms/validation-1024/night/fetched/s4-main-splus-s42/out/00-main/traces.jsonl <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-splus-s42.ids <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge-ready/s4-main-splus-s42-judge rc-splus-s42",
+  "note": "72 of 97 differ from the S run on ENGINE-RC (s4-main-s42)"
+ },
+ {
+  "suite": "V3 layer 2 seed 43",
+  "ready": true,
+  "a_calls_exact": 48,
+  "max_calls": 144,
+  "cap": "name it (V3L2 cap 220 covers seed 42)",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/v3/label_v3.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v3-s-s43/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v3-s-s43/labels.jsonl S",
+  "note": "units 48 per tag {'S': 48} (= exact A calls)"
+ },
+ {
+  "suite": "S10 topics S+",
+  "ready": true,
+  "a_calls_exact": null,
+  "max_calls": 125,
+  "cap": "name it",
+  "command": "as S10, on fetched/s10-topics-splus",
+  "note": "125 answer sentences"
+ },
+ {
+  "suite": "V3 layer 2 with subject carry (RS_STICKY=2)",
+  "ready": true,
+  "a_calls_exact": 48,
+  "max_calls": 144,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/v3/label_v3.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v3-s-carry/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v3-s-carry/labels.jsonl S",
+  "note": "units 48 per tag {'S': 48} (= exact A calls)"
+ },
+ {
+  "suite": "V2 two-paragraph (P2) vs S",
+  "ready": true,
+  "a_calls_exact": 208,
+  "max_calls": 624,
+  "cap": "name it",
+  "command": "LABEL_CAP=<cap> node <workspace>/rnd/research/coordinator/arms/validation-1024/night/tools/label.mjs <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-p2/units.json <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-p2/labels.jsonl && python3 -I <workspace>/rnd/research/coordinator/arms/validation-1024/v2/agg_v2.py <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-p2 <workspace>/rnd/research/coordinator/arms/validation-1024/night/judge/v2-p2/labels.jsonl  (SP column = P2; ADOPT rule not applicable)",
+  "note": "S units identical to the V2 run's reuse their labels by key"
+ }
+]

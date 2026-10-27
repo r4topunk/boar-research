@@ -1,0 +1,351 @@
+--- [v0 4b] cs-001 (pt,greeting) want pt: en→pt | expected: Greets back (boa noite), offers help in PT; no search.
+  B6 : 'Boa noite! How can I help you tonight? 🌙'
+  ARM: 'Boa noite! Como posso ajudar você hoje? 😊'
+--- [v0 4b] cs-002 (pt,greeting) want pt: en→pt | expected: Greets back by name-free reply in PT; no search.
+  B6 : 'Boa noite! How can I help you tonight?'
+  ARM: 'Boa noite! Como posso ajudar você hoje?'
+--- [v0 4b] cs-003 (pt,greeting) want pt: en→pt | expected: Reads the elongated greeting as 'boa noite'; greets back in PT; no search.
+  B6 : 'Boar noitee! How can I help you tonight?'
+  ARM: 'Boa noite! Tudo bem? Como posso te ajudar hoje?'
+--- [v0 4b] cs-004 (pt,greeting) want pt: pt→pt | expected: Says it's fine and asks what the user wants to know, in PT; no search.
+  B6 : 'Oi! Tudo bem, obrigado por perguntar. Como posso ajudar?'
+  ARM: 'Oi! Tudo bem, obrigado por perguntar. Como está você?'
+--- [v0 4b] cs-005 (pt,greeting) want pt: en→pt | expected: Greets back in PT; no search.
+  B6 : 'Olá! 😊 How can I help you today?'
+  ARM: 'Olá! 😊 Tudo bem? Como posso te ajudar hoje?'
+--- [v0 4b] cs-006 (pt,greeting) want pt: en→pt | expected: Greets back (bom dia) in PT; no search.
+  B6 : 'Bom dia! How can I help you today?'
+  ARM: 'Bom dia! Como vai? Espero que esteja bem. 😊'
+--- [v0 4b] cs-008 (pt,greeting) want pt: pt→pt | expected: Says you're welcome in PT; no search.
+  B6 : 'De nada! Fico feliz em ter ajudado. Qual é o próximo passo?'
+  ARM: 'De nada! Fico feliz em ter ajudado. Qual o próximo passo?'
+--- [v0 4b] cs-009 (pt,greeting) want pt: en→pt | expected: Short friendly acknowledgement in PT; no search.
+  B6 : 'Got it. What’s on your mind?'
+  ARM: 'Tudo bem! O que você precisa saber agora?'
+--- [v0 4b] cs-017 (es,greeting) want es: es→es | expected: Greets back in ES and offers help; no search.
+  B6 : 'Hola, ¿cómo estás? Bien, gracias. ¿En qué puedo ayudarte?'
+  ARM: 'Hola, ¿cómo estás? Bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?'
+--- [v0 4b] cs-019 (es,greeting) want es: es→es | expected: De nada, in ES; no search.
+  B6 : 'De nada amigo. ¡Mucho gusto! 😊'
+  ARM: 'De nada amigo. ¡Es un placer ayudarte! 😊'
+--- [v0 4b] cs-020 (es,greeting) want es: es→es | expected: Says goodbye in ES; no search.
+  B6 : 'Chau, hasta mañana. Que tengas un buen día.'
+  ARM: 'Chau, hasta mañana. Espero que tengas un buen día.'
+--- [v0 4b] cs-027 (es,meta) want es: es→es | expected: Explains it works offline; no search.
+  B6 : 'No, no necesito internet para funcionar. Solo uso la información local almacenada en mi dispositivo. Puedo responder preguntas y realizar tareas basadas en datos disponibles offline.'
+  ARM: 'No, no necesito internet para funcionar. Soy un asistente de investigación offline que opera sin conexión. Puedo responder preguntas y proporcionar información basada en datos locales o almacenados en mi sistema.'
+--- [v0 4b] cs-028 (es,meta) want es: es→es | expected: Introduces itself as BOAR; no search.
+  B6 : 'Soy Boar, un asistente de investigación offline diseñado para responder preguntas de forma rápida y concisa. No tengo acceso a internet ni puedo controlar dispositivos físicos. Mi función es ayudarte con información y respuestas basadas en conocimientos locales.'
+  ARM: 'Soy Boar, un asistente de investigación offline que responde con información clara y directa. No tengo acceso a internet ni puedo controlar dispositivos físicos. Me especializo en responder preguntas con respuestas breves y precisas.'
+--- [v0 4b] cs-037 (en,followup) want pt: pt→pt | expected: Translates its previous answer to PT; no new search.
+  B6 : 'O PeerDAS permite que os nós da Ethereum verifiquem a disponibilidade de blobs amostrando partes em vez de baixar todo o conteúdo. Isso melhora a eficiência na verificação de dados.'
+  ARM: 'O PeerDAS permite que os nós da Ethereum verifiquem a disponibilidade de blobs amostrando trechos, em vez de baixar todo o conteúdo. Isso melhora a eficiência da verificação de blocos.'
+--- [v0 4b] cs-039 (es,followup) want es: es→es | expected: Resolves to getting to Machu Picchu; searches; ES.
+  B6 : 'Se llega principalmente por el tren desde Cusco hasta Aguas Calientes, luego con un bus o camino de senderismo hasta la ciudadela. También se puede hacer por sendero desde Cusco en varios días.'
+  ARM: 'Se llega principalmente por el tren desde Cusco hasta Aguas Calientes, luego con un bus o camino de sendero hasta el sitio. También se puede llegar por carretera desde Cusco o por avión hasta el aeropuerto de Aguas Calientes. El camino es exigente, especialmente en temporada seca.'
+--- [v0 4b] cs-041 (es,followup) want es: en→es | expected: Acknowledges; no search.
+  B6 : "You're welcome. Let me know if you need more on Simón Bolívar."
+  ARM: 'De nada. Fue un héroe de la independencia de América.'
+--- [v0 4b] cs-047 (es,mixed) want es: es→es | expected: Saluda y explica con búsqueda; ES.
+  B6 : 'Un eclipse lunar ocurre cuando la Tierra se sitúa entre la Luna y el Sol, oscureciendo parcial o completamente la Luna. No es un evento común, pero se puede observar con el ojo desnudo. A menudo se asocia con fenómenos astronómicos visibles en la noche.'
+  ARM: 'Un eclipse lunar ocurre cuando la Tierra se sitúa entre la Luna y el Sol, sombreando la Luna y haciéndola aparecer más oscura o con tonos rojizos. No es un evento común, pero se puede observar con el ojo desnudo. Es un fenómeno natural que ocurre periódicamente.'
+--- [v0 4b] cs-048 (es,mixed) want es: es→es | expected: Saluda y responde (Amazonas) con búsqueda; ES.
+  B6 : 'El río más largo de Sudamérica es el Amazonas.  \nTiene una longitud estimada de aproximadamente 6.400 kilómetros.  \nFluye por varios países, siendo el más importante en términos de caudal y volumen.'
+  ARM: 'El río más largo de Sudamérica es el Amazonas.  \nTiene una longitud estimada de aproximadamente 6.400 kilómetros.  \nFluye por varios países, siendo el más importante del continente en términos de caudal y volumen.'
+--- [v0 4b] cs-055 (es,research) want es: es→es | expected: Explains (diet/carotenoids) with search; ES.
+  B6 : 'Los flamencos son rosados por la presencia de pigments en su dieta, especialmente carotenos, que obtienen al comer algas y pequeños crustáceos. Estos pigmentos se acumulan en su piel y plumaje, dando el característico color rojizo. El color se intensifica con el tiempo y con la cantidad de carotenos ingeridos.'
+  ARM: 'Los flamencos son rosados por la presencia de pigments en su dieta, especialmente de algas y organismos que contienen carotenos. Estos compuestos se acumulan en su piel y plumaje, dandoles el color rosado característico. El tono se intensifica con el tiempo y al consumir más alimentos ricos en carotenos.'
+--- [v0 4b] cs-056 (es,research) want es: es→es | expected: Explains with search; ES.
+  B6 : 'La fotosíntesis es el proceso por el cual las plantas, algas y ciertos bacterias convierten la luz solar en energía, usando dióxido de carbono y agua para producir glucosa y oxígeno. Es fundamental para la vida en la Tierra, ya que genera oxígeno y forma la base de la cadena alimenticia.'
+  ARM: 'La fotosíntesis es el proceso mediante el cual las plantas, algas y ciertos bacterias convierten la luz solar en energía, utilizando dióxido de carbono y agua para producir glucosa y oxígeno. Es fundamental para la vida en la Tierra, ya que genera oxígeno y forma la base de la cadena alimenticia.'
+--- [v0 15b] cs-001 (pt,greeting) want pt: en→pt | expected: Greets back (boa noite), offers help in PT; no search.
+  B6 : 'Good night [1]!'
+  ARM: 'Boa noite, obrigado! [1]'
+--- [v0 15b] cs-003 (pt,greeting) want pt: en→und | expected: Reads the elongated greeting as 'boa noite'; greets back in PT; no search.
+  B6 : 'Boaa, noitee! Good night.'
+  ARM: 'Boa noite!'
+--- [v0 15b] cs-004 (pt,greeting) want pt: pt→pt | expected: Says it's fine and asks what the user wants to know, in PT; no search.
+  B6 : 'Oi! Tudo bem, eu também. Como posso ajudar?'
+  ARM: 'Boa tarde! Estou bem, obrigado. Você?'
+--- [v0 15b] cs-005 (pt,greeting) want pt: en→en | expected: Greets back in PT; no search.
+  B6 : 'Ola is a small city in Russia, with a population of 6,000 people. [1]'
+  ARM: "The passages found don't support this answer."
+--- [v0 15b] cs-008 (pt,greeting) want pt: en→pt | expected: Says you're welcome in PT; no search.
+  B6 : "You're welcome! I'm glad I could help."
+  ARM: 'De nada, fico feliz em ajudar!'
+--- [v0 15b] cs-009 (pt,greeting) want pt: en→pt | expected: Short friendly acknowledgement in PT; no search.
+  B6 : "That's great! You're welcome."
+  ARM: 'Tudo bem, obrigado!'
+--- [v0 15b] cs-019 (es,greeting) want es: en→es | expected: De nada, in ES; no search.
+  B6 : "You're welcome! No problem."
+  ARM: '¡De nada! No te preocupes, amigo. Si necesitas más ayuda, solo dime.'
+--- [v0 15b] cs-020 (es,greeting) want es: en→es | expected: Says goodbye in ES; no search.
+  B6 : 'Goodbye, see you tomorrow.'
+  ARM: 'Hola, hasta luego.'
+--- [v0 15b] cs-028 (es,meta) want es: en→es | expected: Introduces itself as BOAR; no search.
+  B6 : "Boar is an AI research app designed to provide quick answers to your queries. I don't have a physical existence but can assist with various information and tasks."
+  ARM: '¡Hola! Soy Boar, un asistente de investigación offline. No tengo la capacidad de interactuar o tomar acciones físicas en el mundo real.'
+--- [v0 15b] cs-039 (es,followup) want es: es→es | expected: Resolves to getting to Machu Picchu; searches; ES.
+  B6 : 'Machu Picchu se puede visitar en tren desde Cusco y tomar una caminata de aproximadamente 2 horas para visitar las principales construcciones.'
+  ARM: 'Machu Picchu se puede visitar en avión desde el Perú, Lima, o en tren desde distintas ciudades del centro del país.'
+--- [v0 15b] cs-040 (es,followup) want es: es→es | expected: Resolves to hypothermia first aid; searches; ES; safety-relevant.
+  B6 : 'Si alguien está hipotérmico, asegúrate de que tengan suficiente calor y agua. Utiliza un termómetro corporal para medir su temperatura y asegúrate de que no esté en riesgo de frío extremo.'
+  ARM: 'Si alguien sufre de hipotermia, primero asegúrate de no ponerlo en contacto con el calor. Luego, almacena a la persona en un lugar fresco y cómodo. No la mueva si no es necesario, y llama al 112 si el sujeto tiene síntomas graves.'
+--- [v0 15b] cs-047 (es,mixed) want es: es→es | expected: Saluda y explica con búsqueda; ES.
+  B6 : 'Un eclipse lunar ocurre cuando la Luna pasa completamente entre la Tierra y la Luna, ocultando la totalidad de la superficie lunar.'
+  ARM: 'Un eclipse lunar ocurre cuando la Luna pasa entre el Sol y la Tierra, ocultando su rostro en el cielo, dejando una sombra en la superficie de la Tierra.'
+--- [v0 15b] cs-048 (es,mixed) want es: es→es | expected: Saluda y responde (Amazonas) con búsqueda; ES.
+  B6 : 'El río más largo de Sudamérica es el Nilo, cuyo curso supera los 6,650 kilómetros.'
+  ARM: 'El río más largo de Sudamérica es el Nilo, cuyo curso total es de aproximadamente 6,637 kilómetros.'
+--- [v0 15b] cs-055 (es,research) want es: es→es | expected: Explains (diet/carotenoids) with search; ES.
+  B6 : 'Los flamencos son rosados debido a la pigmentación natural de sus plumas, que incluye una toque de rojo por la acción de la luz.'
+  ARM: 'Los flamencos son rosados debido a la pigmentación en su piel. Esta tonalidad es una de las características más notables de la especie y ayuda a protegerlos del frío de la montaña donde viven.'
+--- [v0 15b] cs-056 (es,research) want es: es→es | expected: Explains with search; ES.
+  B6 : 'Fotosíntesis es la capacidad de algunas plantas para convertir la luz solar en energía, produciendo glucosa y oxígeno.'
+  ARM: 'La fotosíntesis es el proceso por el cual los seres vivos, como las plantas, capturan la luz solar y converten el agua y la dióxido de carbono en glucosa y oxígeno. Este proceso es crucial para la vida en la Tierra, ya que produce la mayoría de la energía que consumimos.'
+--- [v1 4b] v1-001 (pt,greeting) want pt: pt→pt | expected: Greets back casually in PT, offers help. No search.
+  B6 : 'Oi! Como vai? Tudo bem com você?'
+  ARM: 'Oi! Como posso ajudar você hoje?'
+--- [v1 4b] v1-002 (pt,greeting) want pt: en→pt | expected: Greets back in PT. No search.
+  B6 : 'Salve! How can I help you today?'
+  ARM: 'Olá! Tudo bem? Como posso ajudar você hoje?'
+--- [v1 4b] v1-003 (pt,greeting) want pt: pt→pt | expected: Says all good in PT, asks how to help. No search.
+  B6 : 'Tudo certo, amigo! Como posso te ajudar hoje? 😊'
+  ARM: 'Tudo certo, amigo! Como posso ajudar você hoje?'
+--- [v1 4b] v1-004 (pt,greeting) want pt: pt→pt | expected: Says bom dia / all good in PT. No search.
+  B6 : 'Dia! Tudo bem, obrigada pelo sol! 🌞 💫'
+  ARM: 'Dia! Tudo bem, obrigado pela energia do sol! 😄 Como vai você hoje?'
+--- [v1 4b] v1-006 (pt,greeting) want pt: en→pt | expected: Greets back in PT. No search.
+  B6 : 'Oiee! How’s it going? Got a question or need a quick fact?'
+  ARM: 'Oi! Tudo bem? Como está o seu dia? 😊'
+--- [v1 4b] v1-016 (es,greeting) want es: en→es | expected: Greets back in ES. No search.
+  B6 : 'Nothing much, just here doing the research. How’s your day going?'
+  ARM: 'Nada, todo bien. ¿En qué puedo ayudarte?'
+--- [v1 4b] v1-017 (es,greeting) want es: es→es | expected: Answers politely in ES, offers help. No search.
+  B6 : 'Holaa! Estoy bien, gracias. ¿Y tú?'
+  ARM: 'Hola, bien gracias. ¿Cómo va tu día?'
+--- [v1 4b] v1-018 (es,greeting) want es: en→es | expected: Acknowledges thanks in ES. No search.
+  B6 : "You're very welcome! 😊 Glad I could help. Let me know if you need anything else."
+  ARM: 'De nada, ¡feliz día! 😊'
+--- [v1 4b] v1-023 (pt,meta) want pt: pt→pt | expected: Says yes, it works offline, in PT. No search.
+  B6 : 'Sim, funciona no modo voo. O app continua operando normalmente sem interrupções. Não há configuração de modo voo que afete o funcionamento.'
+  ARM: 'Sim, funciona no modo voo. O modo voo desativa a conexão com redes Wi-Fi e dados, o que ajuda a reduzir o consumo de bateria. Isso é útil para evitar interferência e manter o aparelho mais estável.'
+--- [v1 4b] v1-027 (es,meta) want es: pt→pt | expected: Says yes (can reply in PT), in ES. No search.
+  B6 : 'Claro. Estou aqui para ajudar com respostas rápidas e diretas em português. Se tiver uma pergunta, é só dizer.'
+  ARM: 'Claro, puedo responder en portugués. Estou aqui para ajudar com qualquer dúvida que você tiver.'
+--- [v1 4b] v1-028 (es,meta) want es: es→es | expected: Explains offline packs + model knowledge, in ES. No search.
+  B6 : 'La información la procesa directamente desde mis datos internos, actualizados hasta 2024. No accedo a internet en tiempo real ni a fuentes externas. Mi conocimiento es basado en datos preentrenados y no se actualiza en tiempo real.'
+  ARM: 'La información la procesa y organiza el modelo de inteligencia artificial entrenado con datos disponibles hasta 2024. No tengo acceso en tiempo real a fuentes externas ni a internet. Mis respuestas se basan en conocimientos previamente aprendidos y no en investigaciones en vivo.'
+--- [v1 4b] v1-032 (pt,followup) want pt: und→und | expected: Acknowledges thanks; no search; PT.
+  B6 : 'De nada! Se precisar de mais coisa, é só pedir.'
+  ARM: 'De nada! Se precisar de mais coisa, é só pedir. 😊'
+--- [v1 4b] v1-036 (en,followup) want es: es→es | expected: Translates its previous answer to ES; no new search.
+  B6 : 'Las partículas cargadas del Sol chocan con los gases de la atmósfera y producen su brillante luz. Esto ocurre en la capa superior de la atmósfera terrestre.'
+  ARM: 'Las partículas cargadas del Sol chocan con los gases de la atmósfera y producen su brillante luz. Esto ocurre en la capa superior de la atmósfera terrestre. Se conoce como aurora boreal.'
+--- [v1 4b] v1-038 (es,followup) want es: es→es | expected: Prevention for La Paz (~3,600 m): ascend gradually, rest, hydrate, descend if worse; searches; ES.
+  B6 : 'Evita el mal de altura acelerando tu ascenso y bebiendo líquidos para mantener la hidratación. Incluye alimentos ricos en hierro y evita el alcohol y el café antes de subir.'
+  ARM: 'Para evitar el mal de altura en La Paz, ascende gradualmente y mantén hidratado tu cuerpo. Evita el alcohol y el café, y considera usar oxígeno en viajes a alturas superiores a 3000 metros.'
+--- [v1 4b] v1-039 (es,followup) want es: en→es | expected: Population of Buenos Aires (city vs metro made clear); searches; ES.
+  B6 : 'Buenos Aires has a population of approximately 3 million people. It is one of the largest cities in Latin America and serves as the capital of Argentina [1]. The city is known for its cultural attractions, historic architecture, and vibrant nightlife.'
+  ARM: 'Buenos Aires tiene aproximadamente 3 millones de habitantes. Es una de las ciudades más pobladas de América Latina.'
+--- [v1 4b] v1-040 (es,followup) want es: es→es | expected: Gives a balanced view (risks, no financial advice) with or without a search; ES.
+  B6 : 'Depende del uso: si es para colecciones, arte o acceso exclusivo, puede tener valor. Pero muchas veces se valora más por la especulación que por su utilidad real.'
+  ARM: 'Depende del uso: pueden ser útiles para autenticación, coleccionismo o acceso a contenido, pero no siempre tienen valor inherente. En contextos como arte o rarezas digitales, sí pueden tener valor. Pero en muchos casos, su valor está más en la especulación que en el uso práctico.'
+--- [v1 4b] v1-041 (es,followup) want es: es→es | expected: Adds more about Frida Kahlo (with a search or from the earlier context); ES.
+  B6 : 'Frida Kahlo fue también conocida por su estilo único que combinaba elementos del arte tradicional mexicano con expresiones personal y emocionales. Su obra influyó profundamente en el arte contemporáneo y se convirtió en símbolo de la identidad femenina y la resistencia.'
+  ARM: 'Frida Kahlo exploró temas de identidad, dolor y la cultura mexicana en sus obras. Su estilo único fusiona elementos del arte popular mexicano con una expresión personal intensa.'
+--- [v1 4b] v1-042 (pt,mixed) want pt: pt→pt | expected: Greets briefly, then answers: 206 bones; searches; PT.
+  B6 : 'O corpo humano adulto tem 206 ossos.  \nEssa quantidade pode variar ligeiramente de pessoa para pessoa.  \nÉ o número comum usado em anatomia para descrever o esqueleto adulto.'
+  ARM: 'O corpo humano adulto tem 206 ossos. Essa quantidade pode variar ligeiramente de pessoa para pessoa.'
+--- [v1 4b] v1-047 (es,mixed) want es: es→es | expected: Greets briefly, then answers: Pico de Orizaba (Citlaltépetl); searches; ES.
+  B6 : 'El volcán más alto de México es el Pico de Orizaba, también conocido como Popocatépetl. Sin embargo, el volcán más alto en términos de altitud es el Pico de Orizaba, que mide aproximadamente 5,636 metros sobre el nivel del mar. Es el punto más alto del país.'
+  ARM: 'El volcán más alto de México es el Pico de Orizaba, también conocido como Popocatépetl. Sin embargo, el volcán más alto en términos de altitud es el Pico de Orizaba, que mide aproximadamente 5,636 metros sobre el nivel del mar.'
+--- [v1 4b] v1-048 (es,mixed) want es: es→es | expected: Greets briefly, then answers: Boil / filter / disinfect; searches; ES.
+  B6 : 'No puedo ayudarte con eso porque no tengo acceso a dispositivos o capacidades físicas para actuar en el mundo real. Para hacer potable el agua de un río, debes filtrarla, desinfectarla con cloro o usar un sistema de filtrado con UV, y nunca beber agua sin tratar. Consulta guías de primeros auxilios o recursos de salud para campamentos.'
+  ARM: 'No puedo ayudarte con eso porque no tengo acceso a fuentes que expliquen cómo hacer potable el agua de un río en acampada. Para tu seguridad, recomiendo usar filtros portátiles, desinfectantes como cloro o óxido de nitrógeno, o métodos de calentamiento, pero no puedo proporcionar instrucciones específicas sin fuentes confiables.'
+--- [v1 4b] v1-055 (es,research) want es: en→es | expected: Searches and answers: Spanish + 36 indigenous languages; ES.
+  B6 : 'Bolivia has two official languages: Spanish and Guarani.  \nThe country also recognizes several indigenous languages, though they are not officially recognized at the national level.'
+  ARM: 'Bolivia tiene dos idiomas oficiales: español y ayacuchano.  \nAdemás, se reconoce el uso del quechua y otros idiomas indígenas, aunque no son oficiales en el mismo sentido.'
+--- [v1 4b] v1-056 (es,research) want es: es→es | expected: Searches and answers: Cool running water ~20 min, cover, no ice/butter, seek care if large; ES.
+  B6 : 'Se trata con agua fría durante 10-20 minutos para reducir el dolor y la inflamación. Se debe aplicar una pomada antiséptica y mantener la zona limpia y seca. En casos graves, se debe acudir a un médico para evaluar si se necesitan tratamientos como antibióticos o cirugía.'
+  ARM: 'Una quemadura de segundo grado requiere atención médica inmediata. Se trata generalmente con antibióticos, crema antipruriginosa y cuidado de la herida para prevenir infecciones. Evita el contacto con agua caliente y no la abras ni uses pomadas sin consultarlo con un médico.'
+--- [v1 4b] v1-061 (pt,ambiguous) want pt: pt→pt | expected: Short overview with a search, or asks what about inflation; PT.
+  B6 : 'Inflação é o aumento geral dos preços dos bens e serviços em um período. Ela é medido pelo Índice de Preços ao Consumidor (IPC) e pode afetar o poder de compra da população. Altas taxas de inflação reduzem o valor da moeda e podem indicar desequilíbrios econômicos.'
+  ARM: 'A inflação é a variação percentual geral dos preços dos bem e serviços no país ao longo do tempo. Ela pode ser medida pelo Índice Nacional de Preços ao Consumidor (INPC) ou pelo Índice de Preços ao Consumidor Ampliado (IPCA), dependendo do contexto. Altas taxas de inflação reduzem o poder de compra da moeda.'
+--- [v1 15b] v1-001 (pt,greeting) want pt: en→pt | expected: Greets back casually in PT, offers help. No search.
+  B6 : 'Hello! How can I assist you today?'
+  ARM: 'Boa tarde! Como posso ajudar você hoje?'
+--- [v1 15b] v1-002 (pt,greeting) want pt: en→en | expected: Greets back in PT. No search.
+  B6 : "The passages found don't support this answer."
+  ARM: 'Salve is a town in the Apulia region of Italy, with 4,500 inhabitants [1]. Its coastline on the Ionian Sea measures 7 km, and the village has remnants of an old castle now used as houses [1]. The town offers mid-range dining options, with Ikarus restaurant located at Parco dei Gigli, 1, Pescoluse, from 12:00 to 15:00, and 19:00 to 00:00 [2]. Crime is uncommon in Salve, with the police station at Comando dei Carabinie'
+--- [v1 15b] v1-003 (pt,greeting) want pt: pt→pt | expected: Says all good in PT, asks how to help. No search.
+  B6 : 'Não, a frase "opa, td certo?" não é perfeitamente correta. A correção seria: "Opá, está tudo certo?"'
+  ARM: 'Ótimo! Estou pronto para ajudar com suas perguntas e pesquisas.'
+--- [v1 15b] v1-004 (pt,greeting) want pt: en→pt | expected: Says bom dia / all good in PT. No search.
+  B6 : "Yes, it's a beautiful day! 🌞"
+  ARM: 'Olá! Tudo bem, Joia. O céu está claro hoje!'
+--- [v1 15b] v1-006 (pt,greeting) want pt: en→pt | expected: Greets back in PT. No search.
+  B6 : 'Hey there! What can I help you with today?'
+  ARM: 'Oi! Boar aqui para ajudar com suas pesquisas offline!'
+--- [v1 15b] v1-007 (pt,greeting) want pt: en→pt | expected: Acknowledges thanks in PT. No search.
+  B6 : "You're welcome! I'm glad I could help."
+  ARM: 'De nada! Eu estou aqui para ajudar. Pode perguntar mais alguma coisa.'
+--- [v1 15b] v1-008 (pt,greeting) want pt: pt→pt | expected: Says goodbye in PT. No search.
+  B6 : 'Aqui estão algumas coisas que posso fazer:\n- Auxiliar nas pesquisas\n- Atender as perguntas de forma resumida\n- Manter contato e fornecer informações\n- Servir como um meio de comunicação direto'
+  ARM: 'Boa noite! Até amanhã então, seja bem vindo!'
+--- [v1 15b] v1-016 (es,greeting) want es: en→es | expected: Greets back in ES. No search.
+  B6 : 'Hello there! How can I assist you today?'
+  ARM: 'Hola, qué onda! ¿Cómo estás?'
+--- [v1 15b] v1-019 (es,greeting) want es: en→es | expected: Says buen día in ES. No search.
+  B6 : 'Buen día! How can I assist you today?'
+  ARM: 'Buen día, Boar. ¿Cómo puedo ayudarte hoy?'
+--- [v1 15b] v1-020 (es,greeting) want es: und→pt | expected: Says goodbye in ES. No search.
+  B6 : 'Boar no se vio luego.'
+  ARM: 'No, nos vemos luego.'
+--- [v1 15b] v1-028 (es,meta) want es: es→es | expected: Explains offline packs + model knowledge, in ES. No search.
+  B6 : 'Saco información de bases de datos y fuentes externas como wunderground.'
+  ARM: 'La información proviene de fuentes confiables y actualizadas de Internet.'
+--- [v1 15b] v1-032 (pt,followup) want pt: en→und | expected: Acknowledges thanks; no search; PT.
+  B6 : 'Glad to help! If you have more questions, feel free to ask.'
+  ARM: 'De nada! Se precisar de mais alguma coisa, estou à disposição.'
+--- [v1 15b] v1-040 (es,followup) want es: es→es | expected: Gives a balanced view (risks, no financial advice) with or without a search; ES.
+  B6 : 'Opino que un NFT puede ser valioso para propietarios si tienen valor añadido o exclusividad asociado a su contenido. Sin embargo, su precio puede fluctuar según el mercado y el interés del público.'
+  ARM: 'Tengo opiniones personales, pero no puedo formular mi opinión, ya que soy un asistente AI.'
+--- [v1 15b] v1-042 (pt,mixed) want pt: pt→pt | expected: Greets briefly, then answers: 206 bones; searches; PT.
+  B6 : 'O corpo humano adulto tem cerca de 206 ossos, embora alguns possam variar com a idade.'
+  ARM: 'O corpo humano adulto tem aproximadamente 206 ossos, incluindo ossos intersticiais que não são visíveis no corpo externo.'
+--- [v1 15b] v1-047 (es,mixed) want es: es→es | expected: Greets briefly, then answers: Pico de Orizaba (Citlaltépetl); searches; ES.
+  B6 : 'El volcán más alto de México es Cerro Perdiz en el estado de Chiapas.'
+  ARM: 'El volcán más alto de México es Cerro de la Pila, con una altura de 4.612 metros.'
+--- [v1 15b] v1-056 (es,research) want es: es→es | expected: Searches and answers: Cool running water ~20 min, cover, no ice/butter, seek care if large; ES.
+  B6 : 'Un segundo grado de quemadura es una lesión de la piel donde la superficie daña la dermis y la epidermis. Apto para el secado y cubrimiento.'
+  ARM: 'Una quemadura de segundo grado es una lesión superficialmente grave donde la piel se daña pero no está completamente derretida. Se mantiene firme y puede ser dolorosa. Los primeros pasos para tratar una quemadura de segundo grado son limpiar con agua fría y apagar la quemadura con un paño húmedo antes de adherir una cubeta de crema o ungüento antiseptic.'
+--- [v1 15b] v1-061 (pt,ambiguous) want pt: en→pt | expected: Short overview with a search, or asks what about inflation; PT.
+  B6 : 'Inflation refers to a sustained increase in the general price level of goods and services in an economy over time.'
+  ARM: 'A inflação é uma variação do preço dos produtos e serviços em relação ao valor do dinheiro. É uma constante preocupação econômica e política.'
+--- [v2 4b] v2-001 (pt,greeting) want pt: es→pt | expected: Greets back casually in PT. No search.
+  B6 : 'Eae mano, cómo estás? ¿En qué puedo ayudarte hoy?'
+  ARM: 'Eae mano! Tudo bem? Como está a sua dia?'
+--- [v2 4b] v2-002 (pt,greeting) want pt: en→pt | expected: Returns the good night in PT. No search.
+  B6 : 'Boa noite! How can I help you tonight?'
+  ARM: 'Boa noite! Como está seu dia? Espero que esteja tudo bem.'
+--- [v2 4b] v2-003 (pt,greeting) want pt: pt→pt | expected: Says all good in PT, offers help. No search.
+  B6 : 'Bom dia! Tudo certo aqui, obrigado por perguntar. Como posso ajudar?'
+  ARM: 'Bom dia! Tudo bem, obrigado pela perguntinha. Como você está?'
+--- [v2 4b] v2-004 (pt,greeting) want pt: pt→pt | expected: Says it is here and offers help in PT. No search.
+  B6 : 'Oi! Tudo bem? Sim, estou aqui. Como posso ajudar?'
+  ARM: 'Alô! Tudo bem? Sim, estou aqui. Como posso ajudar?'
+--- [v2 4b] v2-005 (pt,greeting) want pt: pt→pt | expected: Acknowledges thanks in PT. No search.
+  B6 : 'Oi! Como vai? Tudo bem por aí?'
+  ARM: 'Obrigado por vir! Como posso ajudar?'
+--- [v2 4b] v2-006 (pt,greeting) want pt: pt→und | expected: Says goodbye in PT. No search.
+  B6 : 'Tudo bem! Até a próxima. 😊'
+  ARM: 'Falou, até depois! 😊'
+--- [v2 4b] v2-007 (pt,greeting) want pt: en→pt | expected: Greets back lightly in PT. No search.
+  B6 : 'Haha, just chilling. How’s your day going? 😄'
+  ARM: 'Oi, não foi nada sério! Tudo bem com você? 😄'
+--- [v2 4b] v2-017 (es,greeting) want es: es→es | expected: Answers politely in ES, offers help. No search.
+  B6 : 'Hola! Estoy bien, gracias. ¿Cómo va tu día?'
+  ARM: 'Hola, todo bien gracias. ¿En qué puedo ayudarte?'
+--- [v2 4b] v2-018 (es,greeting) want es: es→es | expected: Acknowledges thanks in ES. No search.
+  B6 : 'De nada. ¡Feliz día! 😊'
+  ARM: 'De nada, está bien. ¡Mucho gusto! 😊'
+--- [v2 4b] v2-019 (es,greeting) want es: und→es | expected: Says goodbye in ES. No search.
+  B6 : 'Hasta pronto! Have a great day. 👋'
+  ARM: 'Hasta pronto 👋, espero que tengas un buen día. ¡Hasta la próxima!'
+--- [v2 4b] v2-020 (es,greeting) want es: en→es | expected: Greets back in ES. No search.
+  B6 : '¡Saludos! How can I help you today?'
+  ARM: '¡Saludos! ¿En qué puedo ayudarte hoy?'
+--- [v2 4b] v2-027 (es,meta) want es: es→es | expected: Answers about cost/offline use, in ES. No search.
+  B6 : 'Sí, soy gratis de usar. No hay costo por consultas ni uso. Solo necesitas acceder a través de tu dispositivo.'
+  ARM: 'Sí, soy gratis de usar. Puedes consultarme sin coste. Solo necesitas acceso a una conexión a internet para usarme.'
+--- [v2 4b] v2-028 (es,meta) want es: es→es | expected: Says who built Boar, in ES. No search.
+  B6 : 'No tengo un programador específico. Fui desarrollado por un equipo de investigadores y ingenieros en China. Mi diseño se basa en tecnologías de inteligencia artificial avanzadas.'
+  ARM: 'No tengo un programador específico. Fui desarrollado por un equipo de investigadores y ingenieros. Mi diseño y entrenamiento fueron realizados por inteligencia artificial especializada.'
+--- [v2 4b] v2-033 (pt,followup) want pt: pt→pt | expected: Suggests a shorter title, with or without a search; PT.
+  B6 : 'This answer is not from an offline source on this phone; check it before relying on it.\n\nSim, "O Brasil que não foi" de Luiz Carlos Bentes é curto e acessível. Aborda a história do país de forma clara e objetiva.'
+  ARM: 'This answer is not from an offline source on this phone; check it before relying on it.\n\n"O Brasil, 1500–1800" de Gilberto Freyre é um ótimo livro curto e claro sobre a história do Brasil. Ele aborda com simplicidade os principais eventos e transformações do período colonial até o início da independência.'
+--- [v2 4b] v2-038 (es,followup) want es: pt→es | expected: Rainy season mirror effect vs dry season access; searches; ES.
+  B6 : 'A melhor época para ir é entre dezembro e fevereiro, quando as condições climáticas são mais estáveis e há menos chuva. O salar está seco nesse período, o que permite melhores vistas. Evite o verão (dezembro a fevereiro) por causa do calor extremo.'
+  ARM: 'La mejor época para ir es de abril a noviembre, cuando el clima es más agradable y hay menos lluvia. Evita los meses de diciembre a marzo, que pueden ser fríos y lluviosos.'
+--- [v2 4b] v2-039 (es,followup) want es: pt→es | expected: Possible heatstroke: call emergency, move to shade, cool actively, no fluids if not alert; searches; ES.
+  B6 : 'Isso pode ser sinal de problema de saúde, como hipotermia ou distúrbio do sistema nervoso. Procure um médico para avaliação.'
+  ARM: 'No sudar al caminar al sol puede ser señal de un problema médico, como una enfermedad del sistema nervioso o un trastorno de la sudoración. Es importante que tu amigo consulte a un médico para descartar condiciones médicas. No lo ignores, especialmente si ha cambiado repentinamente.'
+--- [v2 4b] v2-041 (es,followup) want es: es→es | expected: Suggests a similar series, with or without a search; ES.
+  B6 : "'The Crown' (Netflix) explora la historia de la Reina Elizabeth I con un enfoque en la política y los personajes reales. Es narrativa, bien documentada y con un ritmo agradable para quienes disfrutan de historias reales."
+  ARM: "'El imperio' (historia de la caída del Imperio Romano).  \nO 'La historia de la humanidad', una serie visual y accesible sobre el desarrollo de la civilización."
+--- [v2 4b] v2-047 (es,mixed) want es: es→es | expected: Greets briefly, then answers: Aconcagua (~6,961 m); searches; ES.
+  B6 : 'La montaña más alta de Argentina es el Aconcagua, aunque en realidad no está en Argentina, sino en el sur de Chile. En Argentina, la montaña más alta es el Cerro Aconcagua, que forma parte de la cordillera andina. Sin embargo, no está en Argentina. La montaña más alta dentro de Argentina es el Cerro Pinto, aunque su altura es menor. La montaña más alta en el territorio argentino es el Cerro de la Cruz, con una altura'
+  ARM: 'La montaña más alta de Argentina es el Aconcagua, que alcanza 6.961 metros sobre el nivel del mar. Se encuentra en la cordillera andina, en la provincia de Mendoza. Es la montaña más alta del continente sudamericano.'
+--- [v2 4b] v2-048 (es,mixed) want es: es→es | expected: Greets briefly, then answers: Leave the water, rinse with seawater (not fresh), remove tentacles carefully, no urine; searches; ES.
+  B6 : 'Mantén la calma y no toques la medusa. Si te ha picado, lava la zona con agua salada o con agua del mar para reducir la irritación. Evita el contacto directo con otras medusas.'
+  ARM: 'No te touches con la piel ni con las manos. Si ya estás afectado, enjuaga con agua corriente y aplícales un baño de bicarbonato para aliviar la picazón. Evita el contacto directo con medusas en el futuro.'
+--- [v2 4b] v2-051 (pt,research) want pt: pt→pt | expected: Searches and answers: Four; PT.
+  B6 : 'This answer is not from an offline source on this phone; check it before relying on it.\n\nO Brasil tem apenas um fuso horário, o Horário de Inverno Brasileiro (Fuso Horário Brasileiro, UTC-3). Apenas o Acre e o Rio Grande do Sul usam o horário de verão, mas isso não cria mais fusos horários. O país inteiro segue o mesmo fuso horário.'
+  ARM: 'This answer is not from an offline source on this phone; check it before relying on it.\n\nO Brasil tem apenas um fuso horário, o Horário Brasília (BRT), que é o mesmo para todo o país. Não há divisão em fusos horários distintos.'
+--- [v2 4b] v2-055 (es,research) want es: es→es | expected: Searches and answers: Only for life-threatening limb bleeding when pressure fails; high and tight, note the time, emergency; ES.
+  B6 : 'Un torniquete es un dispositivo que aprieta una extensión de un miembro para detener la hemorragia en caso de lesión. Se usa en emergencias cuando hay sangrado grave y no se puede controlar con otras técnicas. Debe aplicarse con precaución y solo como medida temporal.'
+  ARM: 'Un torniquete es un dispositivo que aplica presión para detener el flujo sanguíneo en una extremidad, usualmente en emergencias para evitar la pérdida de sangre. Se usa cuando hay una lesión grave con riesgo de hemorragia masiva y se necesita esperar al tratamiento médico. Debe aplicarse con cuidado para no dañar tejidos o causar daño permanente.'
+--- [v2 4b] v2-056 (es,research) want es: es→es | expected: Searches and answers: Pilgrimage routes to Santiago de Compostela; ES.
+  B6 : 'El Camino de Santiago es un camino de peregrinación que conduce a la catedral de Santiago de Compostela en España, uno de los principales sitios religiosos de Europa. Aunque tiene raíces cristianas, hoy en día se realiza por motivos espirituales, culturales o personales, y el viaje en sí es tan importante como el destino. En 2024, cerca de medio millón de personas lo recorrieron.'
+  ARM: 'El Camino de Santiago es un peregrinaje religioso y cultural que conduce a Santiago de Compostela en España, considerado uno de los más importantes en Europa. Aunque tiene raíces cristianas, hoy en día se realiza por motivos espirituales, personales o culturales, y el viaje en sí es tan importante como el destino.'
+--- [v2 4b] v2-057 (pt,ambiguous) want pt: en→pt | expected: Light reply, offers help; no search; PT.
+  B6 : 'Got it. What’s on your mind?'
+  ARM: 'Tudo bem! O que você precisa saber?'
+--- [v2 15b] v2-001 (pt,greeting) want pt: en→pt | expected: Greets back casually in PT. No search.
+  B6 : 'Hey there! How can I help you today?'
+  ARM: 'Olá! Boa! O que posso ajudar você com hoje?'
+--- [v2 15b] v2-002 (pt,greeting) want pt: und→pt | expected: Returns the good night in PT. No search.
+  B6 : 'Boa noite!'
+  ARM: 'Boa noite! Boa noite pra você tbm.'
+--- [v2 15b] v2-003 (pt,greeting) want pt: en→pt | expected: Says all good in PT, offers help. No search.
+  B6 : 'Bom dia! Tudo tranquilo aqui. Boar and I are good.'
+  ARM: 'Bom dia! Estou bem, obrigado. Boar aqui!'
+--- [v2 15b] v2-004 (pt,greeting) want pt: pt→pt | expected: Says it is here and offers help in PT. No search.
+  B6 : 'Olá! Eu sou Boar, um assistente de pesquisas offline. Como posso ajudar?'
+  ARM: 'Olá! Eu sou Boar, um assistente de pesquisas offline. Como posso ajudar hoje?'
+--- [v2 15b] v2-005 (pt,greeting) want pt: en→pt | expected: Acknowledges thanks in PT. No search.
+  B6 : 'Yes, I have seen you. How can I assist you today?'
+  ARM: 'Sim, eu vi. Como posso ajudar você hoje?'
+--- [v2 15b] v2-006 (pt,greeting) want pt: en→pt | expected: Says goodbye in PT. No search.
+  B6 : 'Boar, offline, here. Until later.'
+  ARM: 'Olá! Boa tarde!'
+--- [v2 15b] v2-007 (pt,greeting) want pt: en→pt | expected: Greets back lightly in PT. No search.
+  B6 : "Boar here. 😅 How's it going?"
+  ARM: 'Oi, sumido! 😅'
+--- [v2 15b] v2-016 (es,greeting) want es: en→und | expected: Says buenas tardes in ES. No search.
+  B6 : 'Buenas tardes [1]! How can I assist you today?'
+  ARM: 'Buenas tardes, Boar. [1]'
+--- [v2 15b] v2-017 (es,greeting) want es: es→es | expected: Answers politely in ES, offers help. No search.
+  B6 : 'Hola! Bien, gracias. ¿Y tú? ¿Qué puedo hacer por ti hoy?'
+  ARM: 'Hola, buenos días. ¿Cómo estás? ¿Cómo estás mi hermano?'
+--- [v2 15b] v2-018 (es,greeting) want es: en→es | expected: Acknowledges thanks in ES. No search.
+  B6 : "You're welcome, thank you!"
+  ARM: 'De nada, me alegra ayudarte. Si tienes alguna otra pregunta, no dudes en hacerla.'
+--- [v2 15b] v2-019 (es,greeting) want es: en→es | expected: Says goodbye in ES. No search.
+  B6 : 'Boar is offline, but you can say goodbye to Boar. See you soon!'
+  ARM: 'Hasta luego, Boar. ¡Nos vemos pronto!'
+--- [v2 15b] v2-020 (es,greeting) want es: en→es | expected: Greets back in ES. No search.
+  B6 : 'Boar here, ready to assist with your research needs. Saludos!'
+  ARM: 'Hola! ¿Cómo estás?'
+--- [v2 15b] v2-027 (es,meta) want es: en→es | expected: Answers about cost/offline use, in ES. No search.
+  B6 : 'Yes, I am free to answer your questions and assist with information. How can I help you today?'
+  ARM: '¡Sí, soy gratis! ¿En qué puedo ayudarte hoy?'
+--- [v2 15b] v2-028 (es,meta) want es: es→es | expected: Says who built Boar, in ES. No search.
+  B6 : 'Como una aplicación de inteligencia artificial, no tuve programadores. No soy un ser humano y no fui programado.'
+  ARM: 'No tengo la capacidad de programarme. Soy un sistema de inteligencia artificial creado por Anthropic.'
+--- [v2 15b] v2-038 (es,followup) want es: pt→es | expected: Rainy season mirror effect vs dry season access; searches; ES.
+  B6 : 'A melhor época para visitar o Salar de Uyuni é o verão, que ocorre entre junho e setembro, quando os dias são longos e o clima é seco e quente.'
+  ARM: 'La mejor época para visitar el Salar de Uyuni es primavera y otoño, debido a la ausencia de lluvias y a las temperaturas más cálidas.'
+--- [v2 15b] v2-039 (es,followup) want es: pt→es | expected: Possible heatstroke: call emergency, move to shade, cool actively, no fluids if not alert; searches; ES.
+  B6 : 'Pode tentar fazer ele usar roupas mais leves ou evitar caminhar durante o pico da luz solar. Se houver persistência, pode-se considerar consultar um profissional de saúde.'
+  ARM: 'Ese síntoma podría indicar que tu amigo tiene síndrome de la insola, un trastorno por exposición a altas temperaturas y exposición al sol. Para ayudarlo, puedes asegurarte de que use ropa adecuada para la climatología local y beba líquidos para evitar la deshidratación.'
+--- [v2 15b] v2-048 (es,mixed) want es: en→es | expected: Greets briefly, then answers: Leave the water, rinse with seawater (not fresh), remove tentacles carefully, no urine; searches; ES.
+  B6 : 'If you get stung by a jellyfish, rinse the wound with salt water or vinegar to neutralize the stinging tentacles. Calm yourself and avoid rubbing, as this can increase the stinging sensation.'
+  ARM: '¡No te preocupes! Puedes hacer que la púa desaparezca con agua tibia, una cuchara o un cuchillo. Mantén la púa en la superficie del agua durante 30 minutos para ayudar a que se seque. Si es necesario, puedes ponerte un protector solar para protegerte de las rayas.'
+--- [v2 15b] v2-055 (es,research) want es: es→es | expected: Searches and answers: Only for life-threatening limb bleeding when pressure fails; high and tight, note the time, emergency; ES.
+  B6 : 'Un torniquete es un dispositivo que se usa para apagar la sangre en la cabeza, como en casos de dolor de cabeza intensa o en el hospital para aliviar la presión cerebral. Se usa cuando el dolor es extremadamente severo o durante una operación.'
+  ARM: 'Un torniquete es una ligadura física que se utiliza para bloquear la circulación sanguínea en un área de la cuerpo. Se usa para detener la sangre de fluir en un brazo o pierna durante una cirugía o para reducir un hematomas. Se debe usar con precaución y siempre bajo la supervisión de un profesional de la salud.'
+--- [v2 15b] v2-057 (pt,ambiguous) want pt: en→pt | expected: Light reply, offers help; no search; PT.
+  B6 : "Sure, I'm here. What can I help you with?"
+  ARM: 'Boa tarde! Como posso ajudar você hoje?'

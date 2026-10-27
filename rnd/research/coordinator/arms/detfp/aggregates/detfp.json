@@ -1,0 +1,100 @@
+{
+ "criterion_sha256": "dbd13687192952dd946fd66eaf6ad22f546df7293297c3af2ce7704fe97a6c73",
+ "verdict": "CLOSE: ceiling below MDE (0.0185 < 0.02)",
+ "ceiling": {
+  "n": 110,
+  "seeds_per_item_min": 4,
+  "raw_ratio_claim": 0.5124,
+  "mean_b_110": 2.524,
+  "mean_b_7": 1.095,
+  "mean_b_103": 2.621,
+  "mean_r_7": 4.952,
+  "ceiling_ratio_exact": 0.0185,
+  "ceiling_per_item_ratio": 0.0186,
+  "raw_if_7_at_mean": 0.5308
+ },
+ "sensitivity_own_category_mean": {
+  "reasoning_others_n15_mean_b": 2.667,
+  "crypto_others_n12_mean_b": 2.389,
+  "ceiling": 0.0198
+ },
+ "route": {
+  "claim_s42": {
+   "fire_all": 18,
+   "fire_nonhealth92": 7,
+   "seven_fire": 7,
+   "seven_health_no_source": 7,
+   "diff_vs_c7": 0
+  },
+  "c7": {
+   "fire_all": 18,
+   "fire_nonhealth92": 7,
+   "seven_fire": 7,
+   "seven_health_no_source": 7,
+   "diff_vs_c7": 0
+  },
+  "pr": {
+   "fire_all": 18,
+   "fire_nonhealth92": 7,
+   "seven_fire": 7,
+   "seven_health_no_source": 7,
+   "diff_vs_c7": 0
+  },
+  "prng": {
+   "fire_all": 18,
+   "fire_nonhealth92": 7,
+   "seven_fire": 7,
+   "seven_health_no_source": 7,
+   "diff_vs_c7": 0
+  }
+ },
+ "pr_rules_on_seven": [
+  {
+   "id": "v02-reasoning-A02",
+   "numericGuard": false,
+   "healthLexicon": false,
+   "healthGap": null
+  },
+  {
+   "id": "v02-reasoning-A03",
+   "numericGuard": false,
+   "healthLexicon": false,
+   "healthGap": null
+  },
+  {
+   "id": "v02-reasoning-A06",
+   "numericGuard": false,
+   "healthLexicon": true,
+   "healthGap": null
+  },
+  {
+   "id": "v02-reasoning-A07",
+   "numericGuard": false,
+   "healthLexicon": false,
+   "healthGap": null
+  },
+  {
+   "id": "v02-reasoning-B01",
+   "numericGuard": false,
+   "healthLexicon": false,
+   "healthGap": null
+  },
+  {
+   "id": "v02-reasoning-B09",
+   "numericGuard": false,
+   "healthLexicon": false,
+   "healthGap": null
+  },
+  {
+   "id": "v02-crypto-B03",
+   "numericGuard": false,
+   "healthLexicon": true,
+   "healthGap": null
+  }
+ ],
+ "notes": [
+  "judgment rows per item = 4 (2 seeds x 2 orders), all Opus judge.v1",
+  "healthgap/numguard codes: 0/110 in pr and prng",
+  "A07 is multi-turn; ng_probe passes the final user turn only"
+ ]
+}

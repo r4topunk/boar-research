@@ -1,0 +1,11 @@
+# WARN-ON: per-answer health caution (deps.warn) turned on by default (2026-10-19)
+- Decision (project owner, 2026-10-19): the app ships with a safety warning, so the caution is on. Option kept: deps.warn = false turns it off (then identical to before).
+- Stack: wt/pr1 8ac9eb7a + longdigit, cocar, facts-r7, facts-r8, saferoute (HEAD 94e1c360), then 2 commits: the ported warn patch (tools/warn.patch v2, applied clean, no conflicts) and the default-on commit. Tree: tmp/wt-warn of the job dir (detached worktree of wt/pr1).
+- Change: src/routing/answer.ts resolves `warnOn = deps.warn !== false` once; all warn checks use it. Doc comment updated. Banner strings untouched.
+- Update (coordinator blocker, option B): new dep `warnRendered` (default false). warn events, done.warn and warn:<tier> are always sent when warn is on, but the caution replaces weak_sources / the uncited preface only when warnRendered is true; otherwise those stay exactly as before. The Android bridge does not set it (no renderer; A would need ChatScreen UI work that cannot be tested here). When a renderer lands, the bridge sets warnRendered: true.
+- Tests: the on/off cases set deps.warn explicitly; added "default: unset means on". 
+- Results: vitest 122 files / 1554 tests green; HEALTHGAP=1 vitest 122 / 1554 green; tsc --noEmit clean.
+- Android: resolved by warnRendered (above); Android keeps its old notices until a renderer exists.
+- Patch: warn-on.patch (git format-patch 94e1c360..HEAD, 2 commits). Still open: v0.3 out-of-sample check of the lexicon / p >= 0.05 line.
+- Reducer (2nd update): the warn event and done.warn carry `rendered` (= deps.warnRendered). answerReducer clears state.weakSources only when rendered is not false; with false it keeps weakSources and still records state.warn. Reducer test added; vitest 122 files / 1555 tests green in both modes (one unrelated timing test, longDigits 250 ms, flaked once under load and passed on rerun); tsc clean.
+- Is the Android chat bridge reducer-driven? No: src/ui-android/chat/answerBridge.ts has its own event switch (answerReducer is imported only by answer.test.ts). It ignores the warn event and only records weakSources as a code in `warnings`, so it is unaffected by the reducer change and, with warnRendered false, keeps the old notices.

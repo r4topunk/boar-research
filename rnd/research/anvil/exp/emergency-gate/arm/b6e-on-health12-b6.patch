@@ -1,0 +1,345 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 4851378..b5eb66a 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1947,7 +1947,7 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     expect(calls[0].messages[1].content).toBe("tell me something fun about yourself");
+     expect(retrieved).toBe(0);
+     expect(f.generations).toHaveLength(1);
+-    expect(codes(result)).toEqual(["task:conversation", "route-gate:answer", "route-gate:score-0.020", "route-gate:chat->conversation"]);
++    expect(codes(result)).toEqual(["task:conversation", "route-gate:answer", "route-gate:score-0.020", "route-gate:em-0.000", "route-gate:chat->conversation"]);
+   });
+ 
+   it("SEARCH on the 4B keeps the rule's route", async () => {
+@@ -1955,7 +1955,7 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     f.activeId = qwen4.id;
+     gate([{ token: "SEARCH", prob: 0.99 }]);
+     const { result } = await collect("What is the capital of Australia?");
+-    expect(codes(result)).toEqual(["task:lookup", "route-gate:search", "route-gate:score-1.000"]);
++    expect(codes(result)).toEqual(["task:lookup", "route-gate:search", "route-gate:score-1.000", "route-gate:em-0.000"]);
+   });
+ 
+   it("a health question searches even when the gate says ANSWER", async () => {
+@@ -1968,6 +1968,46 @@ describe("answer(): route gate (Anvil B4 arm)", () => {
+     expect(codes(result)).not.toContain("task:conversation");
+   });
+ 
++  it("B6E: the EMERGENCY label is the 4B's health predicate (one forward, it searches)", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    const calls = gate([{ token: "EM", prob: 0.96 }, { token: "SEARCH", prob: 0.03 }, { token: "ANS", prob: 0.01 }]);
++    const { result } = await collect("meu pai caiu da escada e não mexe a perna");
++    expect(calls).toHaveLength(1);
++    expect(codes(result)).toContain("route-gate:search");
++    expect(codes(result)).toContain("route-gate:em-0.960");
++    expect(result.receipt.reasonCodes).toContain("grounding:health-gate-emergency");
++  });
++
++  it("B6E: no EMERGENCY label -> not the health path, even on a health word (the regex only guards the search)", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    gate([{ token: "SEARCH", prob: 0.97 }, { token: "EM", prob: 0.02 }, { token: "ANS", prob: 0.01 }]);
++    const { result } = await collect("How many people died in the 1918 flu pandemic?");
++    expect(codes(result)).toContain("route-gate:search");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:health-gate-emergency");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:health-strict");
++  });
++
++  it("B6E: a calculator hit runs the gate first; EMERGENCY skips the arithmetic and the verdict is reused", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    const calls = gate([{ token: "EM", prob: 0.9 }, { token: "SEARCH", prob: 0.1 }]);
++    const { result } = await collect("my daughter has a 40 C fever, what is that in F?");
++    expect(calls).toHaveLength(1);
++    expect(result.receipt.reasonCodes.some((c) => c.startsWith("answer:temperature") || c.startsWith("answer:calculator"))).toBe(false);
++    expect(result.receipt.reasonCodes).toContain("grounding:health-gate-emergency");
++  });
++
++  it("B6E: a calculator hit the gate does not call an emergency stays arithmetic", async () => {
++    f.installed = [qwen4];
++    f.activeId = qwen4.id;
++    const calls = gate([{ token: "SEARCH", prob: 0.9 }, { token: "EM", prob: 0.05 }]);
++    const { result } = await collect("convert 40 C to F");
++    expect(calls).toHaveLength(1);
++    expect(result.receipt.reasonCodes).toContain("answer:temperature-conversion");
++  });
++
+   it("rules when the engine can't run it, and never on the 1.5B", async () => {
+     f.installed = [qwen4];
+     f.activeId = qwen4.id;
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index ffe0e70..7758f21 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -11,7 +11,7 @@
+  * a double send can never run two completions on one context.
+  */
+ import { classifyTask } from "./classify";
+-import { gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_CONFIG, ROUTE_GATE_MODEL_IDS, ROUTE_GATE_N_PROBS, type GateMessage, type TokenProb } from "./routeGate";
++import { gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_CONFIG, ROUTE_GATE_MODEL_IDS, ROUTE_GATE_N_PROBS, type GateMessage, type GateVerdict, type TokenProb } from "./routeGate";
+ import {
+   compressContext,
+   selectInstant,
+@@ -622,6 +622,34 @@ export function createAnswerer(deps: AnswerDeps) {
+       const learned = deps.emergencyScore && !req.reuseSources ? await deps.emergencyScore(req.query, userTurns).catch(() => null) : null;
+       const detectorCodes = learned ? [`detector:p=${learned.p.toFixed(3)}`, ...(learned.fire ? ["detector:fire"] : [])] : [];
+ 
++      // Route gate (4B only, B6E): ONE forward decides search vs answer AND the health path (EMERGENCY label). It runs
++      // where B6 ran (greetings stay instant); only a calculator hit runs it early, so a dosing/overdose message with
++      // numbers is never answered as arithmetic. The verdict is cached: never two forwards for one message.
++      let selected: Awaited<ReturnType<typeof selectAnswerModel>> | null = null;
++      const selectModel = async () => (selected ??= await selectAnswerModel(deps));
++      let gateRun: { verdict: GateVerdict | null } | null = null;
++      const runGate = async (fastLlm: InstalledLlm | undefined): Promise<GateVerdict | null> => {
++        if (gateRun) return gateRun.verdict;
++        if (
++          !fastLlm ||
++          !deps.engine.nextTokenProbs ||
++          ROUTE_GATE_CONFIG.off ||
++          !(ROUTE_GATE_CONFIG.anyModel || ROUTE_GATE_MODEL_IDS.has(fastLlm.id)) ||
++          (req.tier ?? "auto") !== "auto" ||
++          req.reuseSources ||
++          req.answerAnyway
++        )
++          return null;
++        const probs = await deps.engine
++          .nextTokenProbs(routeGateMessages(req.query, ctx.history), { modelFilename: fastLlm.filename, nProbs: ROUTE_GATE_N_PROBS })
++          .catch((e) => {
++            console.warn("[answer] route gate failed:", e?.message ?? e);
++            return null;
++          });
++        gateRun = { verdict: probs ? routeGateVerdict(probs) : null };
++        return gateRun.verdict;
++      };
++
+       // Arithmetic (temperature, fuel economy, Naismith, currency at a given rate, battery Wh) is answered
+       // exactly, before anything else: "Minha conta do jantar deu 2.450 baht…" is a sum, not a restaurant
+       // search (Sextant 3ccf7c0, mth-003-pt went to task:places).
+@@ -654,7 +682,8 @@ export function createAnswerer(deps: AnswerDeps) {
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: chat.text, sources: [], receipt: r, cited: [] };
+         }
+-        const calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
++        let calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
++        if (calc && !learned && (await runGate((await selectModel()).fastLlm))?.emergency) calc = null;
+         if (calc) {
+           markVisible();
+           const codes = [`answer:${calc.kind === "temperature" ? "temperature-conversion" : `calculator-${calc.kind}`}`];
+@@ -674,7 +703,7 @@ export function createAnswerer(deps: AnswerDeps) {
+           : detectGeoIntent(req.query);
+       if (geoIntent) return runGeo(geoIntent as GeoIntent, t0, markVisible, () => firstVisibleAt);
+ 
+-      const { settings, installed, speeds, fastLlm, lowRamNote, lowRamBlocked } = await selectAnswerModel(deps);
++      const { settings, installed, speeds, fastLlm, lowRamNote, lowRamBlocked } = await selectModel();
+       const byId = new Map(installed.map((m) => [m.id, m]));
+       const toDepth = (m: InstalledLlm, fit?: MemoryFit | null): DepthModel => ({
+         id: m.id,
+@@ -699,31 +728,20 @@ export function createAnswerer(deps: AnswerDeps) {
+       const ruleTaskType = classifyTask(req.query);
+       const gateCodes: string[] = [];
+       let taskType = ruleTaskType;
+-      if (
+-        fastLlm &&
+-        deps.engine.nextTokenProbs &&
+-        !ROUTE_GATE_CONFIG.off &&
+-        (ROUTE_GATE_CONFIG.anyModel || ROUTE_GATE_MODEL_IDS.has(fastLlm.id)) &&
+-        (req.tier ?? "auto") === "auto" &&
+-        !req.reuseSources &&
+-        !req.answerAnyway
+-      ) {
+-        const probs = await deps.engine
+-          .nextTokenProbs(routeGateMessages(req.query, ctx.history), { modelFilename: fastLlm.filename, nProbs: ROUTE_GATE_N_PROBS })
+-          .catch((e) => {
+-            console.warn("[answer] route gate failed:", e?.message ?? e);
+-            return null;
+-          });
+-        if (!probs) gateCodes.push("route-gate:unavailable");
+-        else {
+-          const v = routeGateVerdict(probs);
+-          // A health question always searches: the gate may only skip a search where a wrong skip is harmless.
+-          const decision = v.decision === "answer" && isHealthQuestion(req.query) ? "search" : v.decision;
+-          taskType = gatedTaskType(ruleTaskType, decision);
+-          gateCodes.push(`route-gate:${decision}`, `route-gate:score-${v.score === null ? "none" : v.score.toFixed(3)}`);
+-          if (decision !== v.decision) gateCodes.push("route-gate:health-guard");
+-          if (taskType !== ruleTaskType) gateCodes.push(`route-gate:${ruleTaskType}->${taskType}`);
+-        }
++      const gate = await runGate(fastLlm);
++      if (gateRun && !gate) gateCodes.push("route-gate:unavailable");
++      // B6E: the gate's EMERGENCY label is the 4B's health predicate (null: no gate or no label -> the fallback below).
++      const gateEmergency = gate?.emergency ?? null;
++      if (gate) {
++        // A health message always searches: the gate may only skip a search where a wrong skip is harmless. The broad
++        // regex stays here as a routing-only guard (B6's L2-tested behaviour); it no longer decides the health path.
++        const healthAsk = gateEmergency || isHealthQuestion(req.query) || isHealthFollowUp(req.query, userTurns) || isCardEmergency(req.query);
++        const decision = gate.decision === "answer" && healthAsk ? "search" : gate.decision;
++        taskType = gatedTaskType(ruleTaskType, decision);
++        gateCodes.push(`route-gate:${decision}`, `route-gate:score-${gate.score === null ? "none" : gate.score.toFixed(3)}`);
++        if (gate.emergencyScore !== null) gateCodes.push(`route-gate:em-${gate.emergencyScore.toFixed(3)}`);
++        if (decision !== gate.decision) gateCodes.push("route-gate:health-guard");
++        if (taskType !== ruleTaskType) gateCodes.push(`route-gate:${ruleTaskType}->${taskType}`);
+       }
+       const plan: AnswerPlan = planAnswer({
+         taskType,
+@@ -749,9 +767,17 @@ export function createAnswerer(deps: AnswerDeps) {
+       // health11: the learned detector replaces the broad regex (15/57 hard-negative fires on Sonar's dev). The broad
+       // regex still counts with weak detector evidence (DETECTOR_FLOOR), and the precise lexical parts stay: card-condition
+       // triggers and the health follow-up.
+-      const lexicalHealth = learned ? learned.fire || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query)) : isHealthQuestion(req.query);
++      // B6E (Anvil): on the 4B the gate's EMERGENCY label decides alone (the blind-tested predicate, no floor); Sonar's
++      // detector path (1.5B) and the broad regex are the fallbacks when the gate did not run or gave no label.
++      const lexicalHealth =
++        gateEmergency !== null
++          ? gateEmergency
++          : learned
++            ? learned.fire || (learned.p >= DETECTOR_FLOOR && isHealthQuestion(req.query))
++            : isHealthQuestion(req.query);
+       const cardEmergency = !lexicalHealth && !healthFollowUp && isCardEmergency(req.query);
+       const health = lexicalHealth || healthFollowUp || cardEmergency;
++      if (gateEmergency) reasonCodes.push("grounding:health-gate-emergency");
+       if (cardEmergency) reasonCodes.push("grounding:health-card-condition");
+       if (healthFollowUp) reasonCodes.push("grounding:health-follow-up");
+       const gen =
+@@ -858,7 +884,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         ? history.search
+         : pt
+           ? englishSearchTerms(req.query)
+-          : (learned ? health : isHealthQuestion(req.query)) // without the detector: unchanged
++          : (learned || gateEmergency !== null ? health : isHealthQuestion(req.query)) // without a detector: unchanged
+             ? canonicalHealthTerms(req.query)
+             : null;
+       if (english && !history) reasonCodes.push("retrieve:pt-en-terms");
+diff --git a/src/routing/routeGate.test.ts b/src/routing/routeGate.test.ts
+index d1367a8..3914153 100644
+--- a/src/routing/routeGate.test.ts
++++ b/src/routing/routeGate.test.ts
+@@ -1,19 +1,20 @@
+ import { describe, it, expect } from "vitest";
+ 
+-const ROUTE_GATE_SYSTEM_B5_LENGTH = ROUTE_GATE_SYSTEM.length;
++import { createHash } from "node:crypto";
+ import { BOAR_SELF_DESCRIPTION, gatedTaskType, routeGateMessages, routeGateVerdict, ROUTE_GATE_SYSTEM } from "./routeGate";
+ 
+ describe("routeGateMessages", () => {
+-  it("sends a single message as is, after the B4 system prompt", () => {
++  it("sends a single message as is, after the B6E system prompt (frozen sha)", () => {
+     expect(routeGateMessages("boa noite 🙂")).toEqual([
+       { role: "system", content: ROUTE_GATE_SYSTEM },
+       { role: "user", content: "boa noite 🙂" },
+     ]);
+-    expect(ROUTE_GATE_SYSTEM.length).toBe(ROUTE_GATE_SYSTEM_B5_LENGTH);
++    // anvil/exp/emergency-gate/blind-replay/B6E.txt: the prompt that passed the blind replay, byte for byte.
++    expect(createHash("sha256").update(ROUTE_GATE_SYSTEM + "\n").digest("hex")).toBe("453893ec4b65d73df429135491dce8404fbf1d432acd1f889d106cfdff940bd8");
+     expect(ROUTE_GATE_SYSTEM).not.toMatch(/arithmetic|12 times 7/);
+     expect(ROUTE_GATE_SYSTEM).toContain("Well-known facts too");
+     expect(ROUTE_GATE_SYSTEM).toContain(`About BOAR (only for questions about the app itself): ${BOAR_SELF_DESCRIPTION}`);
+-    expect(ROUTE_GATE_SYSTEM.endsWith("Reply with exactly one word: SEARCH or ANSWER.")).toBe(true);
++    expect(ROUTE_GATE_SYSTEM.endsWith("Reply with exactly one word: EMERGENCY, SEARCH or ANSWER.")).toBe(true);
+   });
+ 
+   it("folds history into one user message (the measured format)", () => {
+@@ -44,8 +45,20 @@ describe("routeGateVerdict", () => {
+   });
+ 
+   it("searches when neither label is in the top N", () => {
+-    expect(routeGateVerdict([{ token: "Hello", prob: 0.9 }])).toEqual({ decision: "search", score: null, labelMass: 0 });
+-    expect(routeGateVerdict([])).toEqual({ decision: "search", score: null, labelMass: 0 });
++    const none = { decision: "search", score: null, emergency: null, emergencyScore: null, labelMass: 0 };
++    expect(routeGateVerdict([{ token: "Hello", prob: 0.9 }])).toEqual(none);
++    expect(routeGateVerdict([])).toEqual(none);
++  });
++
++  it("B6E: EMERGENCY = p(EM)/mass ≥ 0.5, and p(EM) counts on the search side", () => {
++    const v = routeGateVerdict([{ token: "EM", prob: 0.6 }, { token: "ANS", prob: 0.3 }, { token: "SEARCH", prob: 0.1 }]);
++    expect(v.emergency).toBe(true);
++    expect(v.decision).toBe("search");
++    expect(v.emergencyScore).toBeCloseTo(0.6);
++    const w = routeGateVerdict([{ token: "EM", prob: 0.3 }, { token: "ANS", prob: 0.6 }, { token: "SEARCH", prob: 0.1 }]);
++    expect(w.emergency).toBe(false);
++    expect(w.decision).toBe("answer");
++    expect(routeGateVerdict([{ token: "ANS", prob: 1 }]).emergency).toBe(false);
+   });
+ });
+ 
+diff --git a/src/routing/routeGate.ts b/src/routing/routeGate.ts
+index 7ff692f..031139f 100644
+--- a/src/routing/routeGate.ts
++++ b/src/routing/routeGate.ts
+@@ -28,10 +28,14 @@ export const BOAR_SELF_DESCRIPTION =
+  * weak kind on v1-fresh was meta; placed first, it made the gate answer lookups from memory) + "help with a real problem"
+  * and "greeting followed by a question" clauses + 3 new examples. Dev sets: chat-slice v0, v0.1 (gate-only), own probes.
+  * B5 = B4 without "arithmetic" in ANSWER and the "12 times 7" example (L1 vit-sci-003); B4 = search by default + examples.
++ * B6E (Anvil emergency-gate, 2026-10-03) = B6 + an EMERGENCY label: the same forward also decides the health path on the 4B.
++ * Blind detection-only replay PASS (anvil/exp/emergency-gate/blind-replay, prompt sha256 453893ec…): health-fresh2
++ * 90/90 danger, 6/60 hard negatives; health-fresh1 71/72, 2/48 (lexical 23/90 + 9/60, 32/72 + 11/48).
+  * Changing it invalidates the measurement.
+  */
+ export const ROUTE_GATE_SYSTEM = [
+   "You are BOAR's router. BOAR answers questions about the world only from its offline library, never from memory.",
++  "EMERGENCY: someone is hurt, sick, poisoned, bitten or stung, injured, has worrying symptoms, or is in physical danger now (fire, flood, earthquake, tsunami, extreme cold or heat, drowning, electricity, gas, unsafe water, lost or stuck somewhere dangerous); or the message asks what to do, first aid or safety steps for such a situation, even hypothetically; or it follows up on such a situation from earlier in the conversation. Not an emergency: history, trivia, facts about animals or diseases when nobody is in danger, figures of speech.",
+   "SEARCH: the last message asks for any fact, explanation, advice, place, route, rule, health, safety or travel information. Well-known facts too (who won, when something happened, a capital, who someone was, how many): BOAR must show a source, so SEARCH even when the answer seems obvious. A call for help with a real problem (an injury, danger, getting somewhere) is SEARCH. A greeting followed by a question is judged by the question.",
+   "ANSWER: the last message is a greeting, thanks, small talk, a request to rewrite or translate text already in the conversation, or a question about BOAR itself: what it is, how it works, where its answers come from, what it can or cannot do, what its library holds, how to use it, privacy.",
+   "",
+@@ -47,14 +51,16 @@ export const ROUTE_GATE_SYSTEM = [
+   "\"how tall is the Eiffel Tower?\" -> SEARCH",
+   "\"como chegar em Ouro Preto de ônibus?\" -> SEARCH",
+   "\"is it safe to swim after eating?\" -> SEARCH",
+-  "\"help, I cut my hand badly\" -> SEARCH",
++  "\"help, I cut my hand badly\" -> EMERGENCY",
++  "\"minha filha engoliu uma moeda\" -> EMERGENCY",
++  "\"how many people died in the 2004 tsunami?\" -> SEARCH",
+   "\"when was the printing press invented?\" -> SEARCH",
+   "\"what is a rollup?\" -> SEARCH",
+   "\"e quanto custa?\" (after a travel answer) -> SEARCH",
+   "",
+   `About BOAR (only for questions about the app itself): ${BOAR_SELF_DESCRIPTION}`,
+   "",
+-  "Reply with exactly one word: SEARCH or ANSWER."
++  "Reply with exactly one word: EMERGENCY, SEARCH or ANSWER.",
+ ].join("\n");
+ 
+ /** Top-N next-token probabilities asked of the engine; both labels sat in the top 2 on the desktop (mass ≥ 0.93). */
+@@ -62,6 +68,8 @@ export const ROUTE_GATE_N_PROBS = 20;
+ /** Label first tokens as llama.cpp prints them (Qwen2.5 and Qwen3 tokenizers: "SEARCH" = 1 token, "ANSWER" = "ANS"+"WER"). */
+ const SEARCH_PIECE = "SEARCH";
+ const ANSWER_PIECE = "ANS";
++/** "EMERGENCY" = "EM" + … in the Qwen3 tokenizer (B6E). */
++const EMERGENCY_PIECE = "EM";
+ /** History cap: a follow-up pays a prefill for every new token, and the gate sits before the first visible text. */
+ const MAX_TURNS = 6;
+ const MAX_TURN_CHARS = 280;
+@@ -95,22 +103,28 @@ export function routeGateMessages(query: string, history?: ConversationHistory |
+ 
+ export interface GateVerdict {
+   decision: "search" | "answer";
+-  /** p(SEARCH) / (p(SEARCH) + p(ANS)); null when neither label is in the top N (then: search). */
++  /** (p(SEARCH) + p(EM)) / (p(SEARCH) + p(ANS) + p(EM)); null when no label is in the top N (then: search). */
+   score: number | null;
++  /** B6E: p(EM) / label mass ≥ 0.5. null when no label is in the top N (the health predicate then falls back). */
++  emergency: boolean | null;
++  emergencyScore: number | null;
+   labelMass: number;
+ }
+ 
+ /**
+- * Threshold 0.5. Also right on llama.rn rc.4's post-sampling probabilities: the ratio keeps the sign of the
+- * logit gap at any temperature, and truncation can only drop the lower label (anvil llamarn-nprobs.md).
++ * Threshold 0.5 for both reads. Also right on llama.rn rc.4's post-sampling probabilities: the ratios keep the order
++ * of the logits at any temperature, and truncation can only drop the lowest labels (anvil llamarn-nprobs.md).
++ * An emergency always searches (p(EM) counts on the search side).
+  */
+ export function routeGateVerdict(probs: readonly TokenProb[]): GateVerdict {
+   const pS = probs.find((p) => p.token === SEARCH_PIECE)?.prob ?? 0;
+   const pA = probs.find((p) => p.token === ANSWER_PIECE)?.prob ?? 0;
+-  const labelMass = pS + pA;
+-  if (!(labelMass > 0)) return { decision: "search", score: null, labelMass: 0 };
+-  const score = pS / labelMass;
+-  return { decision: score >= 0.5 ? "search" : "answer", score, labelMass };
++  const pE = probs.find((p) => p.token === EMERGENCY_PIECE)?.prob ?? 0;
++  const labelMass = pS + pA + pE;
++  if (!(labelMass > 0)) return { decision: "search", score: null, emergency: null, emergencyScore: null, labelMass: 0 };
++  const score = (pS + pE) / labelMass;
++  const emergencyScore = pE / labelMass;
++  return { decision: score >= 0.5 ? "search" : "answer", score, emergency: emergencyScore >= 0.5, emergencyScore, labelMass };
+ }
+ 
+ /**

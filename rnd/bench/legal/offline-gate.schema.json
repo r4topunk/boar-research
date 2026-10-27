@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "offline-research-bench/v0/offline_proof",
+  "title": "offline_proof: the device block's offline gate (label only, never changes the score)",
+  "type": "object",
+  "required": ["applicable", "mark"],
+  "properties": {
+    "applicable": { "type": "boolean", "description": "false when the entry is not an Android APK (iOS build, desktop proxy)" },
+    "mark": {
+      "enum": ["offline_by_construction", "offline_with_gms_or_trackers", "network_capable", "network_capable_trackers", "not_an_apk"],
+      "description": "Printed on the report card as ✅ / ⚠ / ⚠ / ⛔ / —"
+    },
+    "debug_signed": { "type": "boolean", "description": "Printed as 🔑: signer is an Android debug or known public key" },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version", "sha256"],
+      "properties": {
+        "name": { "type": "string", "examples": ["scripts/audit-apk.py"] },
+        "version": { "type": "string", "examples": ["0.2.0"] },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "apk_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "package": { "type": "string" },
+    "verdict": {
+      "enum": ["NO-NETWORK-BY-CONSTRUCTION", "NO-INTERNET-PERMISSION but GMS/tracker code present (proxy/dead-code risk)", "NETWORK-CAPABLE", "NETWORK-CAPABLE + TRACKERS"],
+      "description": "Verbatim from the tool's JSON report"
+    },
+    "signer_cert_sha256": { "type": "array", "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
+    "review_hosts": { "type": "array", "items": { "type": "string" }, "description": "Hosts classified 'review' by the tool; shown on the card for network-capable entries" },
+    "report_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the tool's JSON report, so anyone can re-run and compare" },
+    "dynamic": {
+      "type": ["object", "null"],
+      "description": "Optional on-device check (scripts/netstats-uid.sh); adds '· 0 B measured' when rx = tx = 0 and history = 0",
+      "properties": {
+        "rx_bytes": { "type": "integer", "minimum": 0 },
+        "tx_bytes": { "type": "integer", "minimum": 0 },
+        "history_entries": { "type": "integer", "minimum": 0 },
+        "conditions": { "type": "array", "items": { "enum": ["airplane", "wifi_on"] } },
+        "device": { "type": "string" },
+        "android_build_fingerprint": { "type": "string" },
+        "date": { "type": "string", "format": "date" }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "applicable": { "const": false } } }, "then": { "properties": { "mark": { "const": "not_an_apk" } } } },
+    { "if": { "properties": { "applicable": { "const": true } } }, "then": { "required": ["tool", "apk_sha256", "verdict", "signer_cert_sha256", "report_sha256"] } }
+  ]
+}

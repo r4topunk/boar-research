@@ -1,0 +1,90 @@
+diff -ruN be-0cfd4a77-health13/src/routing/answer.ts be-0cfd4a77-bounty1/src/routing/answer.ts
+--- be-0cfd4a77-health13/src/routing/answer.ts	2026-10-03 14:37:39
++++ be-0cfd4a77-bounty1/src/routing/answer.ts	2026-10-03 14:57:44
+@@ -74,6 +74,7 @@
+ import { cleanPlaceName } from "../rag/poiPack";
+ import { attributeCitations, checkCitations } from "./citations";
+ import { calculate } from "./calculators";
++import { travelDistanceAnswer } from "./travelDistance";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard } from "./firstAidCards";
+ import { DETECTOR_FLOOR } from "./emergencyHead";
+@@ -647,6 +648,16 @@
+           emit({ type: "token", answerId, tier: "instant", text: chat.text });
+           emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
+           return { answerId, tier: "instant", outcome: "success", text: chat.text, sources: [], receipt: r, cited: [] };
++        }
++        // Sonar exp-31 (bounty): city-to-city distance from the gazetteer's coordinates ("walk from Paris to Rome and back").
++        const geoP = learned?.fire ? null : deps.getGeoProviders?.();
++        const trip = geoP && !isPortugueseQuestion(req.query) ? await travelDistanceAnswer(req.query, (n) => geoP.resolvePlace(n)).catch(() => null) : null;
++        if (trip) {
++          markVisible();
++          const r: AnswerReceipt = { modelId: "calculator", modelLabel: "Calculator", tokens: 0, tokPerSec: 0, ttftMs: deps.now() - t0, totalMs: deps.now() - t0, reasonCodes: ["answer:travel-distance"] };
++          emit({ type: "token", answerId, tier: "instant", text: trip });
++          emit({ type: "done", answerId, tier: "instant", outcome: "success", receipt: r, cited: [] });
++          return { answerId, tier: "instant", outcome: "success", text: trip, sources: [], receipt: r, cited: [] };
+         }
+         const calc = learned?.fire ? null : calculate(req.query, isPortugueseQuestion(req.query));
+         if (calc) {
+diff -ruN be-0cfd4a77-health13/src/routing/travelDistance.ts be-0cfd4a77-bounty1/src/routing/travelDistance.ts
+--- be-0cfd4a77-health13/src/routing/travelDistance.ts	1969-12-31 21:00:00
++++ be-0cfd4a77-bounty1/src/routing/travelDistance.ts	2026-10-03 15:02:00
+@@ -0,0 +1,58 @@
++/**
++ * "How far is it to walk from Paris to Rome and back?" (Vitalik's own example; v0.1 vit-trv-004). No offline text states
++ * city-to-city distances, so the 4B guessed (~2,400 km round trip). The gazetteer already holds both cities' coordinates:
++ * answer with the great-circle distance and an explicit route-factor range, never a single invented road figure.
++ * English only (bounty board, 2026-10-03). Sonar exp-31. Pure apart from the injected place resolver.
++ */
++import { distanceMeters } from "./geo";
++
++type Resolve = (name: string) => Promise<{ name: string; lat: number; lon: number; country?: string; kind: string } | null>;
++
++const ASK = /\b(how far|how long|how many (?:km|kilometres|kilometers|miles|days|hours)|distance|how much walking)\b/i;
++const FROM_TO = /\bfrom\s+(.+?)\s+to\s+(.+?)(?=\s+(?:and back|and return|round[- ]?trip|return|on foot|by (?:car|train|bike|bicycle|plane|air|road)|walking|if\b|in\b|for\b)|\s*[?.!]*$)/i;
++const BETWEEN = /\bbetween\s+(.+?)\s+and\s+(.+?)(?=\s+(?:and back|round[- ]?trip|on foot|by (?:car|train|bike|bicycle|plane|air|road)|walking|if\b|in\b|for\b)|\s*[?.!]*$)/i;
++const ROUND = /\b(and back|and return|round[- ]?trip|return trip|there and back)\b/i;
++const NOT_PLACES = /\b(earth|moon|mars|venus|jupiter|sun|planet|star|galaxy|orbit|airport|station|hotel|downtown|city cent(?:er|re)|my (?:house|home|hotel)|here)\b/i;
++type Mode = "walk" | "bike" | "drive" | "fly" | "any";
++function modeOf(q: string): Mode {
++  if (/\b(walk\w*|on foot|hik\w*|trek\w*|pilgrimage)\b/i.test(q)) return "walk";
++  if (/\b(bike|bicycle|cycl\w*)\b/i.test(q)) return "bike";
++  if (/\b(drive|driving|car|road trip|by road)\b/i.test(q)) return "drive";
++  if (/\b(fly|flight|plane|by air)\b/i.test(q)) return "fly";
++  return "any";
++}
++const clean = (s: string) => s.replace(/^(the city of|downtown)\s+/i, "").replace(/[?.!,]+$/, "").trim();
++const km = (m: number) => Math.round(m / 1000).toLocaleString("en-US");
++
++export async function travelDistanceAnswer(query: string, resolve: Resolve): Promise<string | null> {
++  if (!ASK.test(query) || NOT_PLACES.test(query)) return null;
++  const m = FROM_TO.exec(query) ?? BETWEEN.exec(query);
++  if (!m) return null;
++  const [a, b] = [clean(m[1]), clean(m[2])];
++  if (!a || !b || a.split(/\s+/).length > 4 || b.split(/\s+/).length > 4) return null;
++  const [pa, pb] = await Promise.all([resolve(a), resolve(b)]);
++  if (!pa || !pb) return null;
++  const straight = distanceMeters(pa, pb);
++  if (straight < 5_000) return null; // same place or a resolver mismatch: let the normal path answer
++  const round = ROUND.test(query);
++  const mode = modeOf(query);
++  const mult = round ? 2 : 1;
++  const lo = straight * (mode === "fly" ? 1.0 : 1.2) * mult, hi = straight * (mode === "fly" ? 1.1 : 1.35) * mult;
++  const nameA = pa.country ? `${pa.name} (${pa.country})` : pa.name, nameB = pb.country ? `${pb.name} (${pb.country})` : pb.name;
++  const lines = [
++    `${nameA} to ${nameB} is about ${km(straight)} km in a straight line (great-circle distance from the offline gazetteer's coordinates).`,
++    mode === "fly"
++      ? `A flight covers roughly ${km(lo / mult)}–${km(hi / mult)} km each way${round ? `, so about ${km(lo)}–${km(hi)} km there and back` : ""}.`
++      : `Roads and paths are longer than the straight line, typically by 20–35%, so expect roughly ${km(lo / mult)}–${km(hi / mult)} km each way${round ? `, about ${km(lo)}–${km(hi)} km there and back` : ""}.`,
++  ];
++  const loKm = lo / 1000, hiKm = hi / 1000; // lo/hi are metres
++  const round5 = (x: number) => Math.max(1, Math.round(x / 5) * 5);
++  if (mode === "walk") {
++    // 25-35 km a day is a sustained long-distance walking pace (pilgrim routes); 5 km/h moving speed.
++    lines.push(`On foot at a sustained 25–35 km a day, that's roughly ${round5(loKm / 35)}–${round5(hiKm / 25)} days of walking${round ? " for the round trip" : ""}, not counting rest days (about ${km(lo / 5)}–${km(hi / 5)} hours of walking at 5 km/h).`);
++  } else if (mode === "bike") lines.push(`By bike at 80–100 km a day, that's roughly ${Math.max(1, Math.round(loKm / 100))}–${Math.max(1, Math.round(hiKm / 80))} days.`);
++  else if (mode === "fly") lines.push(`Flying time is roughly ${(loKm / 800 + 0.5).toFixed(1)}–${(hiKm / 750 + 0.75).toFixed(1)} hours in the air for a direct flight, not counting the airport.`);
++  else if (mode === "drive") lines.push(`Driving at an average 80 km/h, roughly ${Math.max(1, Math.round(loKm / 80))}–${Math.max(1, Math.round(hiKm / 80))} hours at the wheel.`);
++  lines.push(mode === "fly" ? "This is an estimate from coordinates, not a flight schedule." : "This is an estimate from coordinates, not a mapped route; the real distance depends on the roads or trails you take.");
++  return lines.join(" ");
++}

@@ -1,0 +1,11 @@
+Before EIP-7251, you needed 312 validators (10,000 ETH / 32 ETH per validator, rounded up). After EIP-7251, the minimum balance per validator remains 32 ETH, so you still need 312 validators to stake 10,000 ETH [1].
+
+generation: 77 tokens, 0.127 s/token (7.896 tok/s)
+compute: 49.8% CPU occupancy (0.2523 cpu-s/token over 4 threads), 0.00 major faults/token
+prefill: 629 tokens, 20.142 s (31.2 tok/s) | model load 9.245 s | TTFT 29.388 s
+mode: expert streaming, cache 1500 MiB, dense anon, overlap
+moe-stream: read 9493.6 MiB (123.29 MiB/token), decode 0.127 s/token (compute 0.055 + cache mgmt 0.003 + flash I/O 0.291 s/token, 424 MiB/s)
+moe-cache: 39.8% hit, resident 1499.8 MiB
+moe-cache: 22399 evictions, 15754 re-reads (204.6/token) — bytes the cache had already paid for once
+moe-overlap: stall 0.069 s/token (flash reads overlapped with FFN compute)
+moe-prefetch: 39.7 MiB speculative, 7/30 experts useful (23%)

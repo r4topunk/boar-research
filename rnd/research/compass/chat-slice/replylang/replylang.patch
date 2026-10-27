@@ -1,0 +1,149 @@
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..844ef12e 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -32,6 +32,9 @@ import {
+   PT_ANSWER_LANGUAGE_NO_SOURCES,
+   situationNote,
+   isPortugueseQuestion,
++  replyLanguage,
++  ES_ANSWER_LANGUAGE,
++  ES_ANSWER_LANGUAGE_NO_SOURCES,
+   healthSourceOrder,
+   safeHealthExcerpt,
+   noSafeStepsAnswer,
+@@ -764,6 +767,12 @@ export function createAnswerer(deps: AnswerDeps) {
+ 
+       // 1. Sources. A Portuguese question searches the (English) packs with English words when it has known terms.
+       const pt = isPortugueseQuestion(req.query);
++      // The answer's language: this message, else the conversation's (ES too). `pt` above still drives retrieval.
++      const replyLang = replyLanguage(req.query, ctx.history) ?? (pt ? "pt" : null);
++      const answerLanguageLine = (withSources: boolean) =>
++        replyLang === "pt" ? (withSources ? PT_ANSWER_LANGUAGE : PT_ANSWER_LANGUAGE_NO_SOURCES)
++          : replyLang === "es" ? (withSources ? ES_ANSWER_LANGUAGE : ES_ANSWER_LANGUAGE_NO_SOURCES)
++          : undefined;
+       // "Today in history": a question about the device's date ("September 27"); a source must name it (Boar R3).
+       const history = isTodayInHistory(req.query) ? historyDate(deps.today?.() ?? new Date()) : null;
+       if (history) reasonCodes.push("grounding:today-in-history");
+@@ -1005,7 +1014,7 @@ export function createAnswerer(deps: AnswerDeps) {
+           mentionsNow(req.query) ? todayLine(deps.today?.() ?? new Date(), pt) : undefined,
+           // A PT question, in Portuguese, next to it: with English sources the 4B answered 8 of 29 PT questions in
+           // English (gate bc7db6d) despite "Reply in the question's language" after </sources>.
+-          pt ? (sources.length ? PT_ANSWER_LANGUAGE : PT_ANSWER_LANGUAGE_NO_SOURCES) : undefined,
++          answerLanguageLine(sources.length > 0),
+         ]
+           .filter(Boolean)
+           .join("\n") || undefined;
+@@ -1101,7 +1110,7 @@ export function createAnswerer(deps: AnswerDeps) {
+               retrieveK: gen.retrieveK,
+               // A Portuguese question gets a Portuguese answer here too: every multi-pass prompt was English
+               // and none said which language to answer in, so the synthesis followed the English sources.
+-              ...(pt ? { answerLanguage: PT_ANSWER_LANGUAGE } : {}),
++              ...(answerLanguageLine(true) ? { answerLanguage: answerLanguageLine(true) } : {}),
+               // Each sub-question's sources as soon as they are known (a prefix of the final list, same
+               // numbers), instead of only after every sub-answer is written. The answer's sources are
+               // still the final list below.
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 44d473a6..2cf1357e 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -830,6 +830,59 @@ export const PT_ANSWER_LANGUAGE_NO_SOURCES = "Responda em português do Brasil."
+ 
+ export const PT_QUESTION = /\b(como|o que|quando|onde|qual|quais|por que|porque|devo|fazer|posso|existe|quem|quanto)\b/i;
+ 
++/** Reply language for the language line (Compass, chat-slice lang_match: 14/64 replies came back in English to PT/ES
++ * users, mostly greetings, and there was no ES line at all). Distinct function words + greetings + spelling per
++ * language; a PT question by isPortugueseQuestion stays PT unless the ES evidence is stronger. A message with no
++ * evidence ("ok", "Lisboa") takes the latest earlier user turn that has some. null = no evidence: no line (as before);
++ * "en" also gets no line, so English prompts are unchanged. */
++export type ReplyLanguage = "pt" | "es" | "en";
++const RL_WORDS: Record<ReplyLanguage, RegExp> = {
++  pt: /(?<![\p{L}])(não|você|vc|é|são|um|uma|os|dos|das|em|na|nas|nos|com|mas|também|isso|essa|esse|eu|ele|ela|seu|sua|ao|pela|pelo|nem|já|há|foi|ou|tem|quer|posso|pode|obrigad[oa]|obrigadão|valeu|olá|oi+e*|tudo|bem|td|sim|muito|beleza|tchau|fala|salve|noite|dia|tarde|bom|boa|aí|eai|até|onde|quando|qual|quais|quem|quanto|como)(?![\p{L}])/giu,
++  es: /(?<![\p{L}])(el|los|las|del|al|en|con|una|unos|unas|es|y|pero|más|también|eso|esa|ese|yo|él|ella|su|sus|lo|le|les|hay|fue|son|tiene|puedo|puedes|gracias|muchas|muchísimas|hola+|sí|muy|nada|qué|cómo|cuál|cuáles|dónde|cuándo|quién|cuánto|hasta|desde|usted|tú|buenas|buenos|buen|noches|días|necesitas|adiós|chau|oye|onda|andas|nos|vemos|luego)(?![\p{L}])/giu,
++  en: /(?<![\p{L}])(the|and|is|are|was|of|to|in|on|for|with|it|this|that|you|your|i|i'm|can|how|what|which|who|hi|hello|hey|hiya|yo|sup|thanks|thank|thx|morning|evening|bye|good|yes|please|sure|great|cool|cheers|lol|there|going)(?![\p{L}])/giu,
++};
++const RL_SPELLING: Record<"pt" | "es", RegExp> = { pt: /ção|ções|[ãõç]/giu, es: /ción|ciones|[ñ¿¡]/giu };
++
++function replyLanguageOf(text: string): ReplyLanguage | null {
++  const t = text.toLowerCase();
++  const n = (l: ReplyLanguage) => (t.match(RL_WORDS[l])?.length ?? 0) + (l === "en" ? 0 : t.match(RL_SPELLING[l])?.length ?? 0);
++  const score = { pt: n("pt"), es: n("es"), en: n("en") };
++  if (isPortugueseQuestion(text) && score.es <= score.pt) return "pt";
++  const ranked = (Object.keys(score) as ReplyLanguage[]).sort((a, b) => score[b] - score[a]);
++  return score[ranked[0]] > score[ranked[1]] ? ranked[0] : null;
++}
++
++/** An explicit ask wins: "say that again in Portuguese", "em inglês", "en español". */
++// A reply-language verb ("answer in", "responda em", "habla en"), or a redo verb on the previous answer ("say that
++// again in", "dilo en"); "how do you say thank you in Portuguese?" is a question about Portuguese, not an ask.
++const RL_REPLY = String.raw`(?:answer|reply|respond|responda|responde|fala|fale|habla|hable)\b[^.?!]{0,30}`;
++const RL_REDO = String.raw`(?:say|write|repeat|put|tell|explain|translate|diga|escrev\w*|escrib\w*|repet\w*|repit\w*|traduz\w*|traduc\w*|expli\w*)\b[^.?!]{0,15}\b(?:that|it|this|again|isso|isto|de\s+novo|eso|esto|otra\s+vez)\b[^.?!]{0,15}|dilo\b[^.?!]{0,15}`;
++const rlAsk = (names: string) => new RegExp(String.raw`\b(?:${RL_REPLY}|${RL_REDO})\b(?:in|em|en)\s+(?:${names})(?![\p{L}])`, "iu");
++const RL_ASKED: [ReplyLanguage, RegExp][] = [
++  ["pt", rlAsk("portuguese|portugu[êeé]s")],
++  ["es", rlAsk("spanish|espanhol|español|espanol|castellano")],
++  ["en", rlAsk("english|ingl[êeé]s")],
++];
++
++export function replyLanguage(query: string, history?: { turns?: { role: string; text: string }[] | null } | null): ReplyLanguage | null {
++  const asked = RL_ASKED.find(([, re]) => re.test(query));
++  if (asked) return asked[0];
++  // Elongated chat ("boaa noitee", "holaaa"): retried with repeated letters collapsed.
++  const own = replyLanguageOf(query) ?? replyLanguageOf(query.replace(/(\p{L})\1+/gu, "$1"));
++  if (own) return own;
++  const users = (history?.turns ?? []).filter((t) => t.role === "user");
++  for (let i = users.length - 1; i >= 0; i--) {
++    const l = replyLanguageOf(users[i].text);
++    if (l) return l;
++  }
++  return null;
++}
++
++/** The ES twins of the PT lines (same wording and the same citation example). */
++export const ES_ANSWER_LANGUAGE =
++  "Responde en español, aunque las fuentes estén en inglés, y cita cada afirmación con el número de la fuente, como [1].";
++export const ES_ANSWER_LANGUAGE_NO_SOURCES = "Responde en español.";
++
+ /** Longest health excerpt shown as the answer (about 120 words). */
+ export const HEALTH_EXTRACT_MAX_CHARS = 700;
+ 
+diff --git a/src/routing/replyLanguage.test.ts b/src/routing/replyLanguage.test.ts
+new file mode 100644
+index 00000000..00a0050d
+--- /dev/null
++++ b/src/routing/replyLanguage.test.ts
+@@ -0,0 +1,34 @@
++import { describe, expect, it } from "vitest";
++import { replyLanguage } from "./context";
++
++const h = (...user: string[]) => ({ turns: user.flatMap((text) => [{ role: "user" as const, text }, { role: "assistant" as const, text: "Sure [1]." }]) });
++
++describe("replyLanguage", () => {
++  it("reads greetings and thanks in PT / ES / EN", () => {
++    expect(replyLanguage("boa noite 🙂")).toBe("pt");
++    expect(replyLanguage("oiee boar!!")).toBe("pt");
++    expect(replyLanguage("buenas noches")).toBe("es");
++    expect(replyLanguage("muchísimas gracias!!")).toBe("es");
++    expect(replyLanguage("good evening :)")).toBe("en");
++  });
++  it("collapses elongated letters", () => {
++    expect(replyLanguage("boaa noitee")).toBe("pt");
++    expect(replyLanguage("holaaa")).toBe("es");
++  });
++  it("keeps PT questions PT and takes ES when its evidence is stronger", () => {
++    expect(replyLanguage("como faço pra chegar lá?")).toBe("pt");
++    expect(replyLanguage("¿Qué es lo que pasa con el agua?")).toBe("es");
++  });
++  it("falls back to the latest earlier user turn with evidence", () => {
++    expect(replyLanguage("ok", h("¿quién fue Simón Bolívar?"))).toBe("es");
++    expect(replyLanguage("Lisboa", h("oi", "e aí, tudo bem?"))).toBe("pt");
++    expect(replyLanguage("ok")).toBeNull();
++    expect(replyLanguage("Lisboa")).toBeNull();
++  });
++  it("honours an explicit ask, not a question about a language", () => {
++    expect(replyLanguage("can you say that again in Portuguese?")).toBe("pt");
++    expect(replyLanguage("answer in Spanish please")).toBe("es");
++    expect(replyLanguage("responda em inglês")).toBe("en");
++    expect(replyLanguage("how do you say thank you in Portuguese?")).toBe("en");
++  });
++});

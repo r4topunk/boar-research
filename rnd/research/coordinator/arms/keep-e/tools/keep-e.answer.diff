@@ -1,0 +1,13 @@
+--- <workspace>/kiln-local/be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ <workspace>/kiln-local/be-0cfd4a77-cut7-litepacks-keepe/src/routing/answer.ts	2026-10-21 13:45:27
+@@ -1111,7 +1111,9 @@
+       const hpBefore = sources.length;
+       let pendX1: RetrievedChunk[] = [];
+       let pendDense: RetrievedChunk[] = [];
+-      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && retrievedRaw.length) {
++      const keepE = (globalThis as any).process?.env?.KEEP_E === "1"; // KEEP-E empty-raw dense fallback (eval flag)
++      if ((settings.packHeadPass === "a2" || denseAppend) && gen?.mode !== "multipass" && (retrievedRaw.length || (keepE && !!denseCandidatesOf(retrievedRaw)?.candidates.length))) {
++        if (!retrievedRaw.length) reasonCodes.push("keep-e:empty-raw-dense");
+         if (settings.packHeadPass === "a2") {
+           const head = await (await import("../rag/packs")).packHeadPass(retrievedRaw);
+           if (!head) reasonCodes.push("headpass:no-user-pack");

@@ -1,0 +1,1112 @@
+{
+ "method": "COVERAGE-MAP pool search (2026-10-22; 0 LLM, 0 judge, 0 paid). For every MAIN 97 keyed item (92), which pack file on disk holds the key fact?\nRule = RAG-FUNNEL's pack-presence rule, unchanged (fact rule + pool search + idf anchor exec'd from ruler/tools/ragfunnel.py): per pack, FTS5 bm25\ntop 200 for OR(question tokens) and top 200 for OR(question tokens + grading terms); a chunk holds the fact when the fact rule on that chunk alone\ngives share >= 0.5 and its idf topic anchor >= 0.5. Generalised only to more pack files (format-1 wiki-vital5: chunks_fts(title, body)).\nUsage: python3 -I coverage_pool.py <out json> [shard nshards]",
+ "packs": {
+  "boar-crypto": "<workspace>/shared-data/crypto/boar-crypto.sqlite",
+  "boar-wikivoyage-en": "<workspace>/shared-data/packs/boar-wikivoyage-en.sqlite",
+  "boar-simplewiki-en": "<workspace>/shared-data/packs/v3proto/boar-simplewiki-en.sqlite",
+  "boar-factbook": "<workspace>/shared-data/packs/v3proto/boar-factbook.sqlite",
+  "boar-medlineplus-en": "<workspace>/shared-data/packs/v3proto/boar-medlineplus-en.sqlite",
+  "boar-firstaid-en": "<workspace>/shared-data/packs/v3proto/boar-firstaid-en.sqlite",
+  "boar-visa-en": "<workspace>/shared-data/packs/wave4/boar-visa-en.sqlite",
+  "boar-nist-crypto": "<workspace>/shared-data/packs/wave4/boar-nist-crypto.sqlite",
+  "qa-bitcoin-se": "<workspace>/shared-data/packs/v3proto/qa-bitcoin-se.sqlite",
+  "qa-ethereum-se": "<workspace>/shared-data/packs/v3proto/qa-ethereum-se.sqlite",
+  "qa-health-se": "<workspace>/shared-data/packs/v3proto/qa-health-se.sqlite",
+  "qa-outdoors-se": "<workspace>/shared-data/packs/v3proto/qa-outdoors-se.sqlite",
+  "qa-travel-se": "<workspace>/shared-data/packs/v3proto/qa-travel-se.sqlite",
+  "qa-cooking-se": "<workspace>/shared-data/packs/wave3/qa-cooking-se.sqlite",
+  "qa-money-se": "<workspace>/shared-data/packs/wave3/qa-money-se.sqlite",
+  "boar-preparedness-en": "<workspace>/shared-data/preparedness-v3/boar-preparedness-en.sqlite",
+  "boar-vitalik-blog-en": "<scratch>",
+  "boar-wiki-en-top100k": "<workspace>/shared-data/packs/boar-wiki-en-top100k.sqlite",
+  "wiki-vital5": "<workspace>/shared-data/packs/wiki-vital5.sqlite",
+  "boar-wiki-sample": "<workspace>/shared-data/packs/boar-wiki-sample.sqlite"
+ },
+ "script_sha256": "f699b9be189d526e63cd3c8a127fb93dd93eec4b19c34a825a26b6a31fb0fff4",
+ "items": {
+  "vit-hum-003": {
+   "set": "v0.1",
+   "tag": "humanities",
+   "question": "How would Mozi answer the critique that universal love is self-defeating, because people who love everyone equally get out-competed by people who favor their own group?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {}
+  },
+  "lan-rsn-001": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "How long is the Great Wall of China, and can you really see it from the Moon?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-simplewiki-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:19275",
+       "title": "Great Wall of China",
+       "share": 0.5,
+       "anchor": 0.713,
+       "bm25_rank": 0,
+       "text": "A astronaut named William Pogue was able to see the wall from a Low Earth Orbit (300\u2013530 km above Earth), but only with binoculars and a lot of practice. Another astronaut, Neil Armstrong, said that on the Moon, it was very clear that the wall was not visible. The Great Wall has shown up in some photos taken from space, but scientists are sure it is not possible for astronauts to see the wall with"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:19268",
+       "title": "Great Wall of China",
+       "share": 0.5,
+       "anchor": 0.528,
+       "bm25_rank": 1,
+       "text": "The Great Wall of China (, literally \"ten thousand li long wall\") is a series of fortifications in China. Chinese emperors and dynasties built the wall (and joined together existing walls) to protect the north of their empire from enemy attacks. In total, the wall stretches .\n\nThe first walls were built in the 7th century BC. Later, during the Qin dynasty (which ruled China from 221 BC to 206 BC),"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 7,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3105199",
+       "title": "History of the Great Wall of China",
+       "share": 0.5,
+       "anchor": 0.586,
+       "bm25_rank": 0,
+       "text": "Examples of this myth's growth are the false but widespread belief that the Great Wall of China is visible from the Moon or Mars."
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1060360",
+       "title": "Great Wall of China",
+       "share": 0.5,
+       "anchor": 0.586,
+       "bm25_rank": 1,
+       "text": "The Great Wall of China cannot be seen by the naked human eye from the Moon. Even though the myth is thoroughly debunked, it is still ingrained in popular culture. The apparent width of the Great Wall as seen from the Moon would be the same as that of a human hair viewed from 3\u00a0km (2\u00a0mi) away.\nOne of the earliest known references to the myth of the Great Wall's visibility from the Moon appears in "
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1060347",
+       "title": "Great Wall of China",
+       "share": 0.5,
+       "anchor": 0.545,
+       "bm25_rank": 18,
+       "text": "However, Ibn Battuta could find no one who had either seen it or knew of anyone who had seen it, suggesting that although there were remnants of the wall at that time, they were not significant.\nSoon after Europeans reached Ming China by ship in the early 16th century, accounts of the Great Wall started to circulate in Europe, even though no European was to see it for another century. Possibly one"
+      }
+     ]
+    }
+   }
+  },
+  "lan-hlt-002": {
+   "set": "v0.1",
+   "tag": "health",
+   "question": "How much physical activity per week do health guidelines recommend for adults?",
+   "K1": "S3",
+   "K3": "S5",
+   "packs": {
+    "boar-medlineplus-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-medlineplus-en:1520",
+       "title": "How Much Exercise Do I Need?",
+       "share": 0.667,
+       "anchor": 0.578,
+       "bm25_rank": 2,
+       "text": "Regular exercise is one of the best things you can do for your health. It has many benefits. It can improve your overall health and fitness and reduce your risk for many chronic diseases. To get the most benefit, here's how much physical activity you should get:\n\nFor adults\n\nGet at least 150 to 300 minutes of moderate-intensity or 75 to 150 minutes of vigorous-intensity aerobic physical activity e"
+      }
+     ]
+    },
+    "qa-health-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-health-se:16753",
+       "title": "Has World Health Organization provided nutrition/diet/exercise guidelines to strengthen the human immune system for better responding to COVID-19?",
+       "share": 1.0,
+       "anchor": 0.807,
+       "bm25_rank": 0,
+       "text": "[...]Good nutrition is crucial for health, particularly in times when the immune system might need to fight back [...]Alcohol is not only a mind-altering and dependence-producing substance, harmful at any level consumed, but it also weakens the immune system\n\nStay physically active during self-quarantine\n\n[...]Staying at home for prolonged periods of time can pose a significant challenge for remai"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2855555",
+       "title": "Physical fitness",
+       "share": 0.667,
+       "anchor": 0.915,
+       "bm25_rank": 0,
+       "text": "The 2018 Physical Activity Guidelines for Americans were released by the U.S. Department of Health and Human Services to provide science-based guidance for people ages 3 years and older to improve their health by participating in regular physical activity. These guidelines recommend that all adults should move more and sit less throughout the day to improve health-related quality of life including"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2855556",
+       "title": "Physical fitness",
+       "share": 0.667,
+       "anchor": 0.857,
+       "bm25_rank": 2,
+       "text": "Additional health benefits may be achieved by engaging in more than 300 minutes (5 hours) of moderate-intensity physical activity per week. Adults should also do muscle-strengthening activities that are of moderate or greater intensity and involve all major muscle groups on two or more days a week, as these activities provide additional health benefits.\nGuidelines in the United Kingdom released in"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2855567",
+       "title": "Physical fitness",
+       "share": 0.667,
+       "anchor": 0.564,
+       "bm25_rank": 4,
+       "text": "Centers for disease control and prevention provide lifestyle guidelines for maintaining a balanced diet and engaging in physical activity to reduce the risk of disease. The WCRF/ American Institute for Cancer Research (AICR) published a list of recommendations that reflect the dietary and exercise behaviors which are proven to reduce incidence of cancer.\nThe WCRF/AICR recommendations include the f"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-003": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "What does EIP-4444 history expiry change for Ethereum node operators, and how much disk does it save?",
+   "K1": "S4",
+   "K3": "S4",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:41530",
+       "title": "Statelessness, state expiry and history expiry",
+       "share": 1.0,
+       "anchor": 0.566,
+       "bm25_rank": 7,
+       "text": "Today, high disk space requirements is the main barrier preventing universal access to nodes. This is primarily due to the need to store large chunks of Ethereum's state data. This state data contains critical information required to correctly process new blocks and transactions. At the time of writing, a fast 2TB SSD is recommended for running a full Ethereum node. For a node that does not prune "
+      },
+      {
+       "chunk": "pack:boar-crypto:41532",
+       "title": "Statelessness, state expiry and history expiry",
+       "share": 0.5,
+       "anchor": 0.517,
+       "bm25_rank": 5,
+       "text": "There are several ways to reduce the amount of data each node has to store, each requiring Ethereum's core protocol to be updated to a different extent:\n\n- **History expiry**: enable nodes to discard state data older than X blocks, but does not change how Ethereum client's handle state data.\n- **State expiry**: allow state data that is not used frequently to become inactive. Inactive data can be i"
+      },
+      {
+       "chunk": "pack:boar-crypto:41218",
+       "title": "Fusaka \ud83e\udd93",
+       "share": 0.5,
+       "anchor": 0.623,
+       "bm25_rank": 2,
+       "text": "n July 2025, Ethereum execution clients began to support partial history expiry. This dropped history older than the Merge in order to reduce the disk space required by node operators as Ethereum continues to grow.\n\nThis EIP is in a section apart from the \"Core EIPs\" because the fork doesn't actually implement any changes - it's a notice that client teams must support history expiry by the Fusaka "
+      }
+     ]
+    },
+    "boar-vitalik-blog-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-vitalik-blog-en:1760",
+       "title": "Possible futures of the Ethereum protocol, part 4: The Verge",
+       "share": 1.0,
+       "anchor": 0.553,
+       "bm25_rank": 6,
+       "text": "One other important synergy is between stateless validation and **history expiry**. Today, clients have to store nearly a terabyte of history data; this data is several times larger than the state. Even if clients are _stateless_, the dream of nearly-storage-free clients will not be realized unless we can relieve clients of the responsibility to store _history_ as well. The first step in this rega"
+      },
+      {
+       "chunk": "pack:boar-vitalik-blog-en:1799",
+       "title": "Possible futures of the Ethereum protocol, part 5: The Purge",
+       "share": 0.5,
+       "anchor": 0.564,
+       "bm25_rank": 1,
+       "text": "Reducing history storage requirements is arguably even more important than statelessness if we want to make it extremely easy to run or spin up a node: out of the 1.1 TB that a node needs to have, ~300 GB is state, and the remaining ~800 GB is history. The vision of an Ethereum node running on a smart watch and taking only a few minutes to set up is only achievable if _both_ statelessness and EIP-"
+      }
+     ]
+    }
+   }
+  },
+  "vit-cry-009": {
+   "set": "v0.1",
+   "tag": "crypto",
+   "question": "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?",
+   "K1": "S2",
+   "K3": "S3",
+   "packs": {
+    "boar-crypto": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-crypto:23775",
+       "title": "EIP-8062: Add sweep withdrawal fee for 0x01 validators",
+       "share": 0.5,
+       "anchor": 0.539,
+       "bm25_rank": 12,
+       "text": "To improve consolidation while upholding fairness, this EIP accounts for the resource load of the `0x01` partial withdrawal sweep by imposing a small withdrawal fee for it. The proposed fee is 0.05% of the withdrawn amount, imposed via `WITHDRAWAL_FEE_FRACTION = 2000`. Since the average sweep withdrawal credits around 0.0235 ETH, the average expected fee per withdrawal is $0.0235\\;\\mathrm{ETH} \\ti"
+      },
+      {
+       "chunk": "pack:boar-crypto:26755",
+       "title": "EIP-8222: Lean Staking",
+       "share": 0.5,
+       "anchor": 0.51,
+       "bm25_rank": 28,
+       "text": "Although the amount is bound to the commitment, allowing arbitrary deposit amounts is problematic for privacy: all deposits of the same amount effectively form a separate anonymity set. An unusual amount (e.g., 37.5 ETH) may have very few other deposits to hide among, making linking trivial.\n\nTo enforce good privacy hygiene, the contract could restrict deposits to a fixed set of denominations (e.g"
+      }
+     ]
+    },
+    "qa-ethereum-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-ethereum-se:69324",
+       "title": "What is the proposed ETH 2.0 staking reward and minimum / maximum stake one can put on a node?",
+       "share": 0.5,
+       "anchor": 0.658,
+       "bm25_rank": 0,
+       "text": "Using the specifications from here: https://docs.ethhub.io/ethereum-roadmap/ethereum-2.0/eth-2.0-economics/\n\nYou need to have first a beacon node and then tie that to your validator nodes that hosts your 32ETH. You can can multiple validator nodes. Estimated cost is about [usage detail removed]/yr for a beacon node. And each validator node is about [usage detail removed]/year or [usage detail removed]/month.\n\nJudging from the chart above, if 1 million e"
+      },
+      {
+       "chunk": "pack:qa-ethereum-se:81385",
+       "title": "Do I need to update my ethereum token if proof of stake finally come and proof of work no longer in use?",
+       "share": 0.5,
+       "anchor": 0.545,
+       "bm25_rank": 132,
+       "text": "No, you don't have to do anything.\n\nIn phase 1, especially 1.5 the Ethereum 1.0 chain merges with the Ethereum 2.0 chain and your ETH token automatically gets converted to ETH 2.0 token.\n\nAnyway if you want to become a validator before phase 1.5 has finished you can convert your ETH token already to ETH 2.0 token (but once converted you can't rollback your transition). More infos on how to get inv"
+      },
+      {
+       "chunk": "pack:qa-ethereum-se:72334",
+       "title": "What is Fuse.io for?",
+       "share": 0.5,
+       "anchor": 0.587,
+       "bm25_rank": 6,
+       "text": "Fuse is on its own sidechain. Currently you can do about 10,000 transactions with just 1 Fuse token on fusenet and is much much faster than eth payments. You can also deploy solidity contracts just as you would on Eth Mainnet. With Fuse Studio you can easily create your own token and add plugin functions to it. Fuse also has Fusewallet for iOS and Android Phones.\n\nNew Fuse tokens are generated at "
+      }
+     ]
+    },
+    "boar-vitalik-blog-en": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:boar-vitalik-blog-en:835",
+       "title": "The near and mid-term future of improving the Ethereum network's permissionlessness and decentralization",
+       "share": 0.5,
+       "anchor": 0.526,
+       "bm25_rank": 5,
+       "text": "1. Verkle trees plus EIP-4444 allow staking nodes to function with very low hard disk requirements. Additionallty, they allow staking nodes to sync almost instantly, greatly simplifying the setup process, as well as operations such as switching from one implementation to another. They also make Ethereum light clients much more viable, by reducing the data bandwidth needed to provide proofs for eve"
+      }
+     ]
+    }
+   }
+  },
+  "vit-hlt-001": {
+   "set": "v0.1",
+   "tag": "firstaid",
+   "question": "My friend just got stung by a jellyfish while swimming in Thailand. Should I pour vinegar or fresh water on it?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:84351",
+       "title": "Darwin",
+       "share": 1.0,
+       "anchor": 0.64,
+       "bm25_rank": 3,
+       "text": "Malaria is not endemic in Australia. During the peak of the dry season (which is the preferred traveling season), mosquitoes are still present in areas where there is water. Bring a DEET-based repellent, as this will also work on sandflies.\n\nThe dreaded Box Jellyfish is a potentially deadly beach hazard between the months of October and May, but less so during the peak travel season. When swimming"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:130055",
+       "title": "Gulf Islands National Seashore",
+       "share": 0.5,
+       "anchor": 0.596,
+       "bm25_rank": 0,
+       "text": "- Sharks are present in the Gulf of Mexico. Do not swim at dawn, dusk or night when sharks are active or feeding. Do not swim in murky waters. Beware of jellyfish and stingrays. If stung by a jellyfish apply vinegar and meat tenderizer. Do not touch irritated skin or wash with fresh water. Shuffle feet lightly while wading to scare stingrays away.\n- It is not safe to climb on fortifications.\n- Bew"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:182789",
+       "title": "Langkawi",
+       "share": 0.5,
+       "anchor": 0.502,
+       "bm25_rank": 1,
+       "text": "The biggest health risk on Langkawi is from jellyfish stings, especially during January - June season. Uninformed visitors are stung every day and the lifeguards on Pantai Cenang and the hospital treat more or less severe cases of jellyfish stings most days. There are several species of jellyfish in Langkawi's waters, while most will give you a nasty sting or a burn, there are some that will cause"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1998007",
+       "title": "Darwin",
+       "share": 1.0,
+       "anchor": 0.64,
+       "bm25_rank": 3,
+       "text": "Malaria is not endemic in Australia. During the peak of the dry season (which is the preferred traveling season), mosquitoes are still present in areas where there is water. Bring a DEET-based repellent, as this will also work on sandflies.\n\nThe dreaded Box Jellyfish is a potentially deadly beach hazard between the months of October and May, but less so during the peak travel season. When swimming"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2043762",
+       "title": "Gulf Islands National Seashore",
+       "share": 0.5,
+       "anchor": 0.596,
+       "bm25_rank": 0,
+       "text": "- Sharks are present in the Gulf of Mexico. Do not swim at dawn, dusk or night when sharks are active or feeding. Do not swim in murky waters. Beware of jellyfish and stingrays. If stung by a jellyfish apply vinegar and meat tenderizer. Do not touch irritated skin or wash with fresh water. Shuffle feet lightly while wading to scare stingrays away.\n- It is not safe to climb on fortifications.\n- Bew"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2096534",
+       "title": "Langkawi",
+       "share": 0.5,
+       "anchor": 0.502,
+       "bm25_rank": 1,
+       "text": "The biggest health risk on Langkawi is from jellyfish stings, especially during January - June season. Uninformed visitors are stung every day and the lifeguards on Pantai Cenang and the hospital treat more or less severe cases of jellyfish stings most days. There are several species of jellyfish in Langkawi's waters, while most will give you a nasty sting or a burn, there are some that will cause"
+      }
+     ]
+    }
+   }
+  },
+  "lan-cmp-003": {
+   "set": "v0.1",
+   "tag": "country",
+   "question": "Which countries are bigger than India by area?",
+   "K1": "S3",
+   "K3": "S3",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 19,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:508451",
+       "title": "Vietnam by motorcycle",
+       "share": 1.0,
+       "anchor": 0.815,
+       "bm25_rank": 99,
+       "text": "It is illegal for foreigners to ride a motorbike in Vietnam unless they are in possession of a temporary Vietnamese motorcycle licence, or an International Driving Permit (IDP) with the 1968 convention agreement, if your IDF says 1949 on top like in Canada, USA, New Zealand, India, Australia and others, you'll be fined because they don't recognize this version of the IDP. A fine between 6 to 8 mil"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:8504",
+       "title": "English language varieties",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 88,
+       "text": "- gentlemen's club: Refers to a posh, exclusive private club in the UK; a euphemism for a strip club in the U.S.\n- hotel\n- In all dialects, refers to a place where you can pay for short-term lodging, but may take on additional meanings in some countries.\n- In Australia, the word is also used to refer to pubs, which may or may not have accommodation on site but often do, especially in rural areas.\n"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:310024",
+       "title": "Singapore",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 120,
+       "text": "Citizens of several former Soviet countries (Georgia, Ukraine, and the Commonwealth of Independent States) are eligible for visa-free transit for up to 96 hours if you have an onward plane ticket to a third country. You may enter Singapore by any mode of transport, but must depart by air. A similar scheme is available for citizens of India who have a valid visa or residence permit issued by Austra"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 18,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:570880",
+       "title": "Stonex India",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 57,
+       "text": "Key facts: name: Stonex India; type: Private; industry: Natural Stone and Marble; founded: 2001; hq location: Delhi, India; products: Marble, Semi-Precious Stones, Travertine, Onyx, Limestone, Composites; production: 10 million sq. ft. annually; area served: India, USA, Canada, UAE, Singapore, Dubai, Australia, Malaysia etc; revenue: over \u20b9400 crore (FY2023); website: stonexindia.com\n\nStonex India"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:116572",
+       "title": "World Bank",
+       "share": 1.0,
+       "anchor": 0.815,
+       "bm25_rank": 8,
+       "text": "In 2010, voting powers at the World Bank were changed so that developing countries, especially China, have a bigger vote. The countries with most voting power are now the United States (15.85%), Japan (6.84%), China (4.42%), Germany (4.00%), France (3.75%) and the United Kingdom (3.75%). Under the changes, other countries that saw big gains included Brazil, India, South Korea and Mexico. Most deve"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:2748",
+       "title": "Police",
+       "share": 1.0,
+       "anchor": 0.74,
+       "bm25_rank": 137,
+       "text": "Different countries have different ways of organizing their police. Some countries like South Africa, Ireland and New Zealand have just one police force. Other countries have more than one. France has two police forces, one for cities and another for rural areas. Chile also has two, one for patrol and another for investigations.\n\nSome countries have two or more levels of police forces. For example"
+      }
+     ]
+    },
+    "boar-factbook": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-factbook:5009",
+       "title": "Uzbekistan",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 17,
+       "text": "Military - note: the military\u2019s responsibilities include ensuring the country\u2019s sovereignty and territorial integrity, securing its borders, and assisting with internal security; regional security and international terrorism are areas of concern; Uzbekistan joined the Russian-sponsored Collective Security Treaty Organization (CSTO) in the 1990s but withdrew in 1999; it returned in 2006 but left ag"
+      },
+      {
+       "chunk": "pack:boar-factbook:5158",
+       "title": "China",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 27,
+       "text": "Location: Eastern Asia, bordering the East China Sea, Korea Bay, Yellow Sea, and South China Sea, between North Korea and Vietnam\n\nGeographic coordinates: 35 00 N, 105 00 E\n\nMap references: Asia\n\nArea (total): 9,596,960 sq km\nArea (land): 9,326,410 sq km\nArea (water): 270,550 sq km\n\nArea - comparative: slightly smaller than the US\n\nLand boundaries (total): 22,457 km\nLand boundaries (border countri"
+      },
+      {
+       "chunk": "pack:boar-factbook:6776",
+       "title": "France",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 38,
+       "text": "Space program overview: has one of Europe\u2019s largest space programs and is one of the top contributors to the ESA; has independent capabilities in all areas, except for autonomous manned space flight; can build, launch, and operate a range of space/satellite launch vehicles (SLVs) and spacecraft, including exploratory probes and a full spectrum of satellites; shifted astronaut training to ESA in 20"
+      }
+     ]
+    },
+    "boar-firstaid-en": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-firstaid-en:18781",
+       "title": "Organic farming",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "In 2023, the agriculture area under certified organic status or in conversion to organic was 99 million hectares. Australia accounted for 54% of the total, followed by India (5%), Argentina and Uruguay (4% each). The eight countries with the largest organic agriculture area made up 78% of the global area under organic agriculture. The countries with the highest share of area under organic agricult"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:22280",
+       "title": "ATP 4-02.11 \u2014 Chapter 16 Bites and Stings: Insect (Arthropod) Bites And Stings",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 15,
+       "text": "16-61. The most dangerous scorpions are typically found in regions with warm climates, particularly in arid\nor desert areas. Some locations known for housing dangerous scorpion species are:\n- North Africa.\n- Middle East.\n- Mexico.\n- Brazil.\n- India.\n\n16-62. Countries in North Africa, such as Morocco, Algeria, Tunisia, and Egypt, are home to highly\nvenomous scorpion species. These species include t"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:22281",
+       "title": "ATP 4-02.11 \u2014 Chapter 16 Bites and Stings: Insect (Arthropod) Bites And Stings",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 34,
+       "text": "16-64. Mexico is known for its diverse scorpion fauna, and it is home to several highly venomous species.\nThe Bark scorpion is found in various parts of the country, including the notorious Arizona Bark scorpion,\nwhich is also found in the southwestern U.S.\n\nBites and Stings\n\n16-65. In Brazil, the Brazilian Yellow scorpion is considered one of the most venomous scorpions. It is\nprimarily found in "
+      }
+     ]
+    },
+    "boar-visa-en": {
+     "n_qualifying": 14,
+     "top": [
+      {
+       "chunk": "pack:boar-visa-en:2524",
+       "title": "Visa policy of the Schengen Area",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 149,
+       "text": "- Austria: Syria\n- Belgium: Burundi, Dominican Republic, Guinea, Guinea-Bissau, Haiti, Nepal, Palestine, South Sudan, Sudan, Syria, Tajikistan, Turkey, Uzbekistan, Yemen\n- Cyprus: Cameroon, Sudan, Turkey\n- Czech Republic: Algeria, Armenia, Chad, Cuba, Egypt, India, Lebanon, Libya, Mali, Mauritania, Niger, Palestine, Russia, South Sudan, Sudan, Syria, Turkey, Yemen\n- Denmark: Syria\n- France: Angola"
+      },
+      {
+       "chunk": "pack:boar-visa-en:3625",
+       "title": "Visa requirements for Bhutanese citizens",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 16,
+       "text": "Visa requirements for Bhutanese citizens (citizens of Bhutan), Visa requirements:\nHonduras: Visa required; Notes: Visa is not required if holding a valid visa for at least 6 months at the time of arrival, issued by Canada, the United States or a Schengen Area Member State.\nHungary: Visa required\nIceland: Visa required\nIndia: Freedom of movement\nIndonesia: Visa required\nIran: eVisa / Visa on arriva"
+      },
+      {
+       "chunk": "pack:boar-visa-en:9105",
+       "title": "Visa requirements for Santomean citizens",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 17,
+       "text": "Visa requirements for Santomean citizens (citizens of S\u00e3o Tom\u00e9), Visa requirements:\nHonduras: Visa not required; Notes: Visa is not required if holding a valid visa for at least 6 months at the time of arrival, issued by Canada, the United States or a Schengen Area Member State.\nHungary: Visa required\nIceland: Visa required\nIndia: Visa required\nIndonesia: eVisa; Allowed stay: 30 days\nIran: eVisa/V"
+      }
+     ]
+    },
+    "qa-outdoors-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-outdoors-se:10440",
+       "title": "Advice on wild swimming in Ontario, Canada",
+       "share": 0.5,
+       "anchor": 0.74,
+       "bm25_rank": 34,
+       "text": "If you don't have a provincial park near you, investigate conservation areas - some are completely undeveloped, some have a beach and some amenities. Don't Google for \"wild swimming\" - that's not a common Canadian phrase. Google for \"beach\" or \"swimming park\" for better results. (Not that a swimming park is a thing, just that pages containing both words are likely to be about swimming in some kind"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 28,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:48969",
+       "title": "Traveling to India from Europe via london",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 2,
+       "text": "- you\u2019re travelling to (or on part of a reasonable journey to) Australia, Canada, New Zealand or the USA and have a valid visa for that country\n- you\u2019re travelling from (or on part of a reasonable journey from) Australia, Canada, New Zealand or the USA and have a valid visa for that country\n- you\u2019re travelling from (or on part of a reasonable journey from) Australia, Canada, New Zealand or the USA"
+      },
+      {
+       "chunk": "pack:qa-travel-se:121506",
+       "title": "UK Tourist Visa - Visited countries in 10 years",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 33,
+       "text": "Tags: visas, uk, indian-citizens, us-residents\n\nI am an Indian citizen living in USA on work visa (L-1). I am applying for UK tourist visa.\n\nIn visa application it asks:\n\nHow many times have you visited the following places in the past 10 years?\n\n- Australia\n- Canada\n- New Zealand\n- USA\n- European Economic Area (do not include travel to the UK)\n\nSince I live in US, every time I enter back in US fr"
+      },
+      {
+       "chunk": "pack:qa-travel-se:110806",
+       "title": "Why was check-in denied for a Belgium\u2192UK\u2192India flight even with a US visa and Belgian residence permit?",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 59,
+       "text": "British Airways had nothing to do with this; it was Aviapartner staff that denied you boarding.\n\nYour son cannot use his residence permit to transit the UK (only the common EU-format permit card or the family member card - which looks like the Belgian national ID card - is accepted), but the US visa would've worked.\n\nUnfortunately, it would appear there is a bug in TIMATIC, the database used by ch"
+      }
+     ]
+    },
+    "qa-cooking-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:69022",
+       "title": "substitute for snakehead fish",
+       "share": 0.5,
+       "anchor": 0.567,
+       "bm25_rank": 65,
+       "text": "I'd suggest catfish as a replacement.\n\nIf you really want to try to find snakehead, a place like Roberts Fish Market or Humphries Specialty Store can order them. You can get it imported frozen into the U.S., probably the same in Canada. So look under the bigger fish sellers, those that deliver to stores, or specialty meat stores, those that sell things on order like elk, buffalo, zebra and such. Y"
+      }
+     ]
+    },
+    "qa-money-se": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:qa-money-se:11476",
+       "title": "How can I find a high-risk, high-reward investment that is not strongly correlated with the U.S. economy?",
+       "share": 1.0,
+       "anchor": 0.815,
+       "bm25_rank": 1,
+       "text": "High risk, high reward doesn't really mean anything. The reason that investments are risky is that the investor is clueless. As you gain more information and experience, you reduce the risk.\n\nTo answer your question, you can consider BRIC ETF's (Brazil, Russia, India and China). They are correlated to the U.S. economy. However, over the long term (say, 40 years), they may make sense. It depends on"
+      },
+      {
+       "chunk": "pack:qa-money-se:4932",
+       "title": "Do other countries have the equivalent of Australia's Negative Gearing?",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 3,
+       "text": "In addition, housing loans are given priority status as well - bank capital requirements on housing loans is lower than for, say, a corporate loan or a loan against other kinds of collateral. That makes housing loans cheaper as well - you get a home loan at around 10% in India versus 15% against most other assets, and since you can deduct it against tax, the effective interest rate is even lower.\n"
+      },
+      {
+       "chunk": "pack:qa-money-se:5405",
+       "title": "How do I figure out the market value of used books?",
+       "share": 0.5,
+       "anchor": 0.567,
+       "bm25_rank": 123,
+       "text": "Tags: canada, used-goods\n\nI have some used books and I would like to figure out their market value. Does anyone have any suggestions for how I should do that? Should I use prices on Amazon? If so, what formula should I use?\n\nI have noticed bookstores in my area just use a simple formula of half the listed price for most of the cheaper books.\n\nFor books that were originally in the [usage detail removed] range, there"
+      }
+     ]
+    },
+    "boar-preparedness-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-preparedness-en:10865",
+       "title": "Organic farming",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 1,
+       "text": "In 2023, the agriculture area under certified organic status or in conversion to organic was 99 million hectares. Australia accounted for 54% of the total, followed by India (5%), Argentina and Uruguay (4% each). The eight countries with the largest organic agriculture area made up 78% of the global area under organic agriculture. The countries with the highest share of area under organic agricult"
+      },
+      {
+       "chunk": "pack:boar-preparedness-en:18472",
+       "title": "Micro-livestock/Part 4: Rodents",
+       "share": 0.5,
+       "anchor": 0.567,
+       "bm25_rank": 108,
+       "text": "There have been no organized scientific attempts to raise these swift, shy animals in captivity, but Latin Americans sometimes keep them as \"domestics,\" especially in parks and large gardens. (Agoutis are well known, for instance at the Goeldi Museum in Belem, Brazil.) These animals seem to tame easily, and could perhaps be mass produced on a large scale like rabbits or guinea pigs. They make affe"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 32,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3110043",
+       "title": "Emerald",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 11,
+       "text": "Zambia is the world's second biggest producer, with its Kafubu River area deposits (Kagem Mines) about 45\u00a0km (28\u00a0mi) southwest of Kitwe responsible for 20% of the world's production of gem-quality stones in 2004. In the first half of 2011, the Kagem Mines produced 3.74 tons of emeralds.\nEmeralds are found all over the world in countries such as Afghanistan, Australia, Austria, Brazil, Bulgaria, Ca"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:2357042",
+       "title": "Talc",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 17,
+       "text": "## Occurrence\nTalc is a common metamorphic mineral in metamorphic belts that contain ultramafic rocks, such as soapstone (a high-talc rock), and within whiteschist and blueschist metamorphic terranes. Prime examples of whiteschists include the Franciscan Metamorphic Belt of the western United States, the western European Alps especially in Italy, certain areas of the Musgrave Block, and some colli"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1654787",
+       "title": "World-systems theory",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 25,
+       "text": "Further, semi-peripheries act as buffers between cores and peripheries and thus \"...partially deflect the political pressures which groups primarily located in peripheral areas might otherwise direct against core-states\" and stabilise the world system.\nSemi-peripheries can come into existence from developing peripheries and declining cores. Historically, two examples of semiperipheral states would"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 5,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:16083",
+       "title": "Suburb",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 35,
+       "text": "In some countries, including India, China, Argentina, Brazil, New Zealand, Canada, the United Kingdom, and parts of the United States, new suburbs are routinely annexed by adjacent cities due to urban sprawl. In others, such as Morocco, France, and much of the United States, many suburbs remain separate municipalities or are governed locally as part of a larger metropolitan area such as a county, "
+      },
+      {
+       "chunk": "pack:wiki-vital5:95912",
+       "title": "Northeast Greenland National Park",
+       "share": 0.5,
+       "anchor": 0.74,
+       "bm25_rank": 0,
+       "text": "This means that the national park is bigger than 166 of the world's 195 countries. It was the first national park to be created in the Kingdom of Denmark and remains Greenland's only national park. It is the northernmost national park in the world. It is the second-largest by area of any second-level subdivision of any country in the world, trailing only the Qikiqtaaluk Region in Nunavut, Canada."
+      },
+      {
+       "chunk": "pack:wiki-vital5:104603",
+       "title": "Territorial claims in Antarctica",
+       "share": 0.5,
+       "anchor": 0.618,
+       "bm25_rank": 5,
+       "text": "These countries have tended to place their Antarctic scientific observation and study facilities within their respective claimed territories; however, a number of such facilities are located outside of the area claimed by their respective countries of operation, and countries without claims such as Belgium, China, India, Italy, Japan, Pakistan, Poland, Russia, South Africa (SANAE), Spain, Ukraine,"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 17,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2422543",
+       "title": "Vietnam by motorcycle",
+       "share": 1.0,
+       "anchor": 0.815,
+       "bm25_rank": 192,
+       "text": "It is illegal for foreigners to ride a motorbike in Vietnam unless they are in possession of a temporary Vietnamese motorcycle licence, or an International Driving Permit (IDP) with the 1968 convention agreement, if your IDF says 1949 on top like in Canada, USA, New Zealand, India, Australia and others, you'll be fined because they don't recognize this version of the IDP. A fine between 6 to 8 mil"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:6232",
+       "title": "PTC Punjabi",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 35,
+       "text": "Key facts: Country: India; Broadcast area: India, Australia, Canada, New Zealand, United Kingdom, US, Europe; Network: PTC Network; Affiliates: Badal family; Headquarters: Delhi, India; Picture format: 576i SDTV; Owner: G Next Media Private Limited; Key people: Rabindra Narayan (Managing Director and President); Launched: 6 August 2008; Website: ptcpunjabi.co.in"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1792973",
+       "title": "Kaind",
+       "share": 1.0,
+       "anchor": 0.618,
+       "bm25_rank": 120,
+       "text": "Key facts: Country: India; \u2022 Total: 1,500; Time zone: UTC+5:30 (IST); Telephone code: 0161; Nearest city: Ludhiana\n\nKaind is a small village about 14 kilometers south of Ludhiana, Punjab, India. It is located on Malerkotla road, a community of about 1000 residents.\nMany of its former residents now reside in United States, Canada, UK, Australia And Europe .  The main surname is \"Pannu\" and others i"
+      }
+     ]
+    }
+   }
+  },
+  "lan-exp-006": {
+   "set": "v0.1",
+   "tag": "place-other",
+   "question": "What is Kilimanjaro, how high is it, and is it a volcano?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:361670",
+       "title": "Volcanoes",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 1,
+       "text": "- Mount Kilimanjaro: This stratovolcano is Africa's tallest mountain at 5895 m (19,340&nbsp;ft). It has a series of concentric summit craters apparently less than 10,000 years old and may have last erupted less than 2000 years ago. The name Kilimanjaro means \"shining mountain\" in Swahili, no doubt due to the once-extensive glaciers which are unfortunately disappearing rapidly each year. A .\n- Ol D"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:2477",
+       "title": "Africa",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 58,
+       "text": "- Jbel Toubkal (4165&nbsp;m) near Marrakech, Morocco is the tallest peak in the Atlas Mountains and can be climbed without technical gear in summer.\n- Mount Cameroon (4040 m) near Douala, Cameroon, is the tallest peak (actually a volcano) in Cameroon and is famous for the 1986 Lake Nyos disaster, when the lake released a huge volume carbon dioxide gas, suffocating thousands. Fast-paced hikes to th"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:332687",
+       "title": "Tanzania",
+       "share": 0.667,
+       "anchor": 0.67,
+       "bm25_rank": 12,
+       "text": "They are stunning, with their white sand, palm trees, and cool Indian Ocean water!\n- Kayak the beautiful coastal waters with a tour operator.\n- Tanzania has two of the best Stone Age sites in the world: Isimila Gorge (near Iringa) and the earliest known examples of human art among the rock paintings, near Kolo, north of Kondoa, Dodoma -- some of which are reckoned to be around 30,000 years old.\n- "
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:62984",
+       "title": "Mount Kilimanjaro",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 1,
+       "text": "Kilimanjaro (or Kilimanjaro, which means \"shining mountain\" in Swahili), formerly Kaiser-Wilhelm-Spitze, is a mountain in northeastern Tanzania. Kilimanjaro is the tallest free-standing mountain rise in the world, rising 4600 meters (15,000 ft) from the base, and is the highest peak in Africa at 5,895 meters (19,340 ft) and one of Seven Summits. It gives a dramatic view from the surrounding plains"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:226992",
+       "title": "Dormant volcano",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 2,
+       "text": "There are many examples of volcanoes which are considered dormant.\n\n- Mauna Kea in Hawaii, the United States\n- Mount Damavand in Iran\n- Mount Edziza in Canada\n- Mount Kilimanjaro in Tanzania\n- Western Victorian Volcanic Plains in Australia\n- Trou aux Cerf in Mauritius\n- Mount Hood in Oregon, the United States\n- Lake Toba in Indonesia"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:462598",
+       "title": "Pico de Orizaba",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 13,
+       "text": "Key facts: name: Pico de Orizaba; location: Veracruz, Mexico; first ascent: 1848 by F. Maynard & William F. Raynolds; last eruption: 1846; volcanic arc/belt: Trans-Mexican Volcanic Belt; type: Stratovolcano; photo: 270px; label position: left; relief: 1; parent peak: Mount Logan; prominence m: 4922; elevation m: 5636; photo caption: Aerial view of Volcano; easiest route: moderate snow/ice climb\n\nP"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3705564",
+       "title": "Mount Kilimanjaro",
+       "share": 1.0,
+       "anchor": 0.82,
+       "bm25_rank": 0,
+       "text": "Mount Kilimanjaro (/\u02cck\u026al\u026am\u0259n\u02c8d\u0292\u0251\u02d0ro\u028a/) is a large dormant volcano in Tanzania. It is the highest mountain in Africa and the highest free-standing mountain above sea level in the world, at 5,895\u00a0m (19,341\u00a0ft) above sea level and 4,900\u00a0m (16,100\u00a0ft) above its plateau base. It is also the highest volcano in the Eastern Hemisphere and the fourth most topographically prominent peak on Earth.\nKilimanjar"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:1731950",
+       "title": "East African Rift",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 8,
+       "text": "The East African Rift Zone includes a number of active and dormant volcanoes, among them: Mount Kilimanjaro, Mount Kenya, Mount Longonot, Menengai Crater, Mount Karisimbi, Mount Nyiragongo, Mount Meru and Mount Elgon, as well as the Crater Highlands in Tanzania. Although most of these mountains lie outside of the rift valley, the EAR created them.\nNotable active examples of EAR volcanism include E"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:40508",
+       "title": "Mount Kilimanjaro",
+       "share": 1.0,
+       "anchor": 0.82,
+       "bm25_rank": 0,
+       "text": "Mount Kilimanjaro () is a large dormant stratovolcano in Tanzania. It is the highest mountain in Africa and the highest free-standing mountain above sea level in the world, at 5,895 m (19,341 ft) above sea level and 4,900 m (16,100 ft) above its plateau base. It is also the highest volcano in the Eastern Hemisphere and the fourth most prominent peak on Earth. Kilimanjaro's southern and eastern slo"
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 4,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:2275599",
+       "title": "Volcanoes",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 1,
+       "text": "- Mount Kilimanjaro: This stratovolcano is Africa's tallest mountain at 5895 m (19,340&nbsp;ft). It has a series of concentric summit craters apparently less than 10,000 years old and may have last erupted less than 2000 years ago. The name Kilimanjaro means \"shining mountain\" in Swahili, no doubt due to the once-extensive glaciers which are unfortunately disappearing rapidly each year. A .\n- Ol D"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:1916061",
+       "title": "Africa",
+       "share": 0.667,
+       "anchor": 0.82,
+       "bm25_rank": 62,
+       "text": "- Jbel Toubkal (4165&nbsp;m) near Marrakech, Morocco is the tallest peak in the Atlas Mountains and can be climbed without technical gear in summer.\n- Mount Cameroon (4040 m) near Douala, Cameroon, is the tallest peak (actually a volcano) in Cameroon and is famous for the 1986 Lake Nyos disaster, when the lake released a huge volume carbon dioxide gas, suffocating thousands. Fast-paced hikes to th"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2246561",
+       "title": "Tanzania",
+       "share": 0.667,
+       "anchor": 0.67,
+       "bm25_rank": 14,
+       "text": "They are stunning, with their white sand, palm trees, and cool Indian Ocean water!\n- Kayak the beautiful coastal waters with a tour operator.\n- Tanzania has two of the best Stone Age sites in the world: Isimila Gorge (near Iringa) and the earliest known examples of human art among the rock paintings, near Kolo, north of Kondoa, Dodoma -- some of which are reckoned to be around 30,000 years old.\n- "
+      }
+     ]
+    }
+   }
+  },
+  "lan-ref-005": {
+   "set": "v0.1",
+   "tag": "history-culture",
+   "question": "Which city hosted the 2016 Summer Olympics?",
+   "K1": "S2",
+   "K3": "S2",
+   "packs": {
+    "boar-wikivoyage-en": {
+     "n_qualifying": 7,
+     "top": [
+      {
+       "chunk": "pack:boar-wikivoyage-en:400826",
+       "title": "Olympic Games",
+       "share": 1.0,
+       "anchor": 0.78,
+       "bm25_rank": 1,
+       "text": "- Munich \u2014 host of the 1972 Olympics, which was overshadowed by a terrorist attack that led to the deaths of 11 Israeli team members. Much of the Olympic infrastructure (including Olympiastadion) still exists. The U-Bahn (Germany's third) opened a year ahead of the game and was partly built for the games.\n- Paris \u2014 hosted the 1900, 1924, and 2024 Olympics. The main stadium from 1924 in the suburb "
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:400844",
+       "title": "Olympic Games",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 0,
+       "text": "- 2008: Summer Olympics in Beijing, China\n- 2010: Winter Olympics in Vancouver, Canada\n- 2012: Summer Olympics in London, United Kingdom\n- 2014: Winter Olympics in Sochi, Russia\n- 2016: Summer Olympics in Rio de Janeiro, Brazil\n- 2018: Winter Olympics in Pyeongchang, South Korea\n- 2020: Summer Olympics in Tokyo, Japan (postponed to 2021)\n- 2022: Winter Olympics in Beijing, China\n- 2024: Summer Oly"
+      },
+      {
+       "chunk": "pack:boar-wikivoyage-en:281826",
+       "title": "Rio de Janeiro",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 8,
+       "text": "Rio de Janeiro is the second largest city in Brazil, on the South Atlantic coast. Rio is famous for its breathtaking landscape, its laid-back beach culture and its annual carnival. The \"Carioca Landscapes between the Mountain and the Sea\" has been inscribed on the UNESCO World Heritage list.\n\nThe harbour of Rio de Janeiro is comprised of a unique entry from the ocean that makes it appear as the mo"
+      }
+     ]
+    },
+    "boar-simplewiki-en": {
+     "n_qualifying": 37,
+     "top": [
+      {
+       "chunk": "pack:boar-simplewiki-en:84121",
+       "title": "2012 Summer Olympics",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 4,
+       "text": "Key facts: host city: London, United Kingdom; motto: Inspire a Generation; nations: 204; athletes: 10,768 (5,992 men, 4,776 women); events: 302 in 26 sports (39 disciplines); opening: 27 July; closing: 12 August; opened by: Queen Elizabeth II; cauldron: * Callum Airlie * Jordan Duckitt * Desiree Henry * Katie Kirk * Cameron MacRitchie * Aidan Reynolds * Adelle Tracey * Austin Playfoot (relight) ; "
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:85608",
+       "title": "2014 Winter Olympics",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 5,
+       "text": "Key facts: host city: Sochi, Russia; motto: Hot. Cool. Yours., (, Zharkie. Zimnie. Tvoi); nations: 88; events: 98 in 7 sports (15 disciplines); athletes: 2,873; opening: 7 February; closing: 23 February; opened by: President Vladimir Putin; cauldron: Irina Rodnina, Vladislav Tretiak; stadium: Fisht Olympic Stadium; winter prev: Vancouver 2010; winter next: PyeongChang 2018; summer prev: London 201"
+      },
+      {
+       "chunk": "pack:boar-simplewiki-en:420551",
+       "title": "2016 Summer Paralympics",
+       "share": 1.0,
+       "anchor": 0.772,
+       "bm25_rank": 60,
+       "text": "Key facts: host city: Rio de Janeiro City, Rio de Janeiro, Brazil; motto: A new world, (Um mundo novo); nations: 159; athletes: 4,342; opening: 7 September; closing: 18 September; opened by: President Michel Temer; cauldron: Clodoaldo Silva; events: 528 in 22 sports; stadium: Maracan\u00e3 , Est\u00e1dio Ol\u00edmpico; summer prev: London 2012; summer next: Tokyo 2020; winter prev: Sochi 2014; winter next: Pyeon"
+      }
+     ]
+    },
+    "boar-firstaid-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-firstaid-en:10075",
+       "title": "CBRN defense",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 1,
+       "text": "Brazilian firefighters are trained for NBC situations. During the 2016 Summer Olympics, police forces like the GATE from S\u00e3o Paulo, the Federal Police, and the National Public Security Force were prepared.\n\nIn the military, there is CBRN equipment and personnel in all branches of the Armed Forces. The Brazilian Army has two specific teams: the 1st Chemical, Biological, Radiological and Nuclear Def"
+      },
+      {
+       "chunk": "pack:boar-firstaid-en:18008",
+       "title": "Harmful algal bloom",
+       "share": 1.0,
+       "anchor": 0.54,
+       "bm25_rank": 2,
+       "text": "Massive fish die-offs have been caused by HABs. In 2016, 23 million salmon which were being farmed in Chile died from a toxic algae bloom. To get rid of the dead fish, the ones fit for consumption were made into fishmeal and the rest were dumped 60 miles offshore to avoid risks to human health. The economic cost of that die-off is estimated to have been [usage detail removed] million. Environmental expert Lester Br"
+      }
+     ]
+    },
+    "qa-travel-se": {
+     "n_qualifying": 1,
+     "top": [
+      {
+       "chunk": "pack:qa-travel-se:67412",
+       "title": "Do flight costs to a city hosting the Olympics generally increase around the event?",
+       "share": 1.0,
+       "anchor": 0.54,
+       "bm25_rank": 2,
+       "text": "While I unfortunately haven't been able to find any comprehensive, hard statistics regarding this, and my personal guess would be an increase, I have found no consistent, conclusive evidence to back up that guess. Instead, I have found examples of it going both ways.\n\nRegarding the 2016 Rio Olympics, according to The Telegraph, flight prices from the UK and Austria to Rio increased by 48% and 74% "
+      }
+     ]
+    },
+    "boar-preparedness-en": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:boar-preparedness-en:2159",
+       "title": "CBRN defense",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 1,
+       "text": "Brazilian firefighters are trained for NBC situations. During the 2016 Summer Olympics, police forces like the GATE from S\u00e3o Paulo, the Federal Police, and the National Public Security Force were prepared.\n\nIn the military, there is CBRN equipment and personnel in all branches of the Armed Forces. The Brazilian Army has two specific teams: the 1st Chemical, Biological, Radiological and Nuclear Def"
+      },
+      {
+       "chunk": "pack:boar-preparedness-en:10092",
+       "title": "Harmful algal bloom",
+       "share": 1.0,
+       "anchor": 0.54,
+       "bm25_rank": 2,
+       "text": "Massive fish die-offs have been caused by HABs. In 2016, 23 million salmon which were being farmed in Chile died from a toxic algae bloom. To get rid of the dead fish, the ones fit for consumption were made into fishmeal and the rest were dumped 60 miles offshore to avoid risks to human health. The economic cost of that die-off is estimated to have been [usage detail removed] million. Environmental expert Lester Br"
+      }
+     ]
+    },
+    "boar-wiki-en-top100k": {
+     "n_qualifying": 80,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3428299",
+       "title": "Summer Olympic Games",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 1,
+       "text": "Tokyo, Japan, hosted the 2020 Games and became the first city outside the predominantly English-speaking and European nations to have hosted the Summer Olympics twice, having already hosted the Games in 1964; it is also the largest city ever to have hosted, having grown considerably since 1964. The other countries to have hosted the Summer Olympics are Belgium, Brazil, Canada, China, Finland, Ital"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3428327",
+       "title": "Summer Olympic Games",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 3,
+       "text": "Rio de Janeiro in Brazil hosted the 2016 Summer Olympics, becoming the first South American city to host the Olympics, the second Olympic host city in Latin America, after Mexico City in 1968, as well as the third city in the Southern Hemisphere to host the Olympics after Melbourne, Australia, in 1956 and Sydney, Australia, in 2000. The preparation for these Games was overshadowed by controversies"
+      },
+      {
+       "chunk": "pack:boar-wiki-en-top100k:3901389",
+       "title": "2016 Summer Olympics",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 16,
+       "text": "The bidding process for the 2016 Summer Olympics was officially launched on 16\u00a0May 2007. The first step for each city was to submit an initial application to the International Olympic Committee by 13\u00a0September 2007, confirming their intention to bid. Completed official bid files containing answers to a 25-question IOC form were to be submitted by each city by the deadline of 14\u00a0January 2008. On 4\u00a0"
+      }
+     ]
+    },
+    "wiki-vital5": {
+     "n_qualifying": 3,
+     "top": [
+      {
+       "chunk": "pack:wiki-vital5:78879",
+       "title": "Kim Rhode",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 1,
+       "text": "Most recently, she won the bronze medal at the Rio 2016 Olympics, making her the first Olympian to win a medal on five continents, the first Summer Olympian to win an individual medal at six consecutive summer games, and the first woman to medal in six consecutive Olympics."
+      },
+      {
+       "chunk": "pack:wiki-vital5:106037",
+       "title": "Michael Phelps",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 10,
+       "text": "Four years later, when he won eight gold medals at the 2008 Beijing Games, he broke fellow American swimmer Mark Spitz's 1972 record of seven first-place finishes at any single Olympic Games. At the 2012 Summer Olympics in London, Phelps won four gold and two silver medals, and at the 2016 Summer Olympics in Rio de Janeiro, he won five gold medals and one silver. This made him the most successful "
+      },
+      {
+       "chunk": "pack:wiki-vital5:105358",
+       "title": "K\u014dhei Uchimura",
+       "share": 1.0,
+       "anchor": 0.629,
+       "bm25_rank": 26,
+       "text": "However, he then extended those accomplishments even further when he followed it up with continued and uninterrupted victories of every major competition again throughout the next Olympic cycle, replicating the feat he achieved in the last quad, which led him to win two additional gold medals on team and individual all-around at the 2016 Summer Olympics in Rio de Janeiro."
+      }
+     ]
+    },
+    "boar-wiki-sample": {
+     "n_qualifying": 121,
+     "top": [
+      {
+       "chunk": "pack:boar-wiki-sample:1143050",
+       "title": "Japan at the 2016 Summer Olympics",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 1,
+       "text": "Japan competed at the 2016 Summer Olympics in Rio de Janeiro, Brazil, from 5 to 21 August 2016. Since the nation's official debut in 1912, Japanese athletes had appeared at every Summer Olympic Games in the modern era, except for two editions; they were not invited to the 1948 Summer Olympics in London because of the nation's role in World War II, and were also part of the United States-led boycot"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:203956",
+       "title": "Olympic Park",
+       "share": 1.0,
+       "anchor": 1.0,
+       "bm25_rank": 34,
+       "text": "An Olympic Park is a sports campus for hosting the Olympic Games. Typically it contains the Olympic Stadium and the International Broadcast Centre. It may also contain the Olympic Village or some of the other sports venues, such as the aquatics complex in the case of the summer games, or the main ice hockey rink for the winter games.  The Olympic Park is often part of the \"legacy\" which provides b"
+      },
+      {
+       "chunk": "pack:boar-wiki-sample:2314799",
+       "title": "Olympic Games",
+       "share": 1.0,
+       "anchor": 0.78,
+       "bm25_rank": 23,
+       "text": "- Munich \u2014 host of the 1972 Olympics, which was overshadowed by a terrorist attack that led to the deaths of 11 Israeli team members. Much of the Olympic infrastructure (including Olympiastadion) still exists. The U-Bahn (Germany's third) opened a year ahead of the game and was partly built for the games.\n- Paris \u2014 hosted the 1900, 1924, and 2024 Olympics. The main stadium from 1924 in the suburb "
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-005": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "My jars of homemade jam will spend the winter in an unheated shed where it drops to minus 20 C. Will the glass crack?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-cooking-se-011": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "My milk bread recipe wants whole milk powder but I only have the skim kind. Do I need to add fat to make up for it?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {
+    "qa-cooking-se": {
+     "n_qualifying": 2,
+     "top": [
+      {
+       "chunk": "pack:qa-cooking-se:59213",
+       "title": "What is a good substitute for full cream milk powder?",
+       "share": 0.5,
+       "anchor": 0.637,
+       "bm25_rank": 10,
+       "text": "I wouldn't add whole butter if all you're after is some extra fat.\n\nYou could try gently rendering down some unsalted butter to get the fat you want.\n\nDo this on very low heat, do not let it burn, take it on and off the heat periodically until it barely begins to foam, then skim off the fat with a small strainer or a tea ball.\n\nThen, save the clarified butter for something else.\n\nA small quantity "
+      },
+      {
+       "chunk": "pack:qa-cooking-se:59212",
+       "title": "What is a good substitute for full cream milk powder?",
+       "share": 0.5,
+       "anchor": 0.625,
+       "bm25_rank": 8,
+       "text": "When I am using skim powdered milk and want more fat, I just replace some of the water in the recipe with heavy cream.\n\nYour recipe doesn't have water, it already uses milk and cream. You could replace a little of the milk with cream to make up the difference.\n\nHowever, with all the cream and butter in that recipe, I doubt you would be able to notice the fat missing from the dry milk.\n\nI would jus"
+      }
+     ]
+    }
+   }
+  },
+  "st-qa-cooking-se-017": {
+   "set": "cm",
+   "tag": "cooking",
+   "question": "Milk that smells and tastes fine suddenly curdles every time it hits my office coffee. How do I find the cause?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-003": {
+   "set": "cm",
+   "tag": "money",
+   "question": "To build credit, is it better to be added to a family member's premium card as an authorized user, or to open a secured card myself?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-009": {
+   "set": "cm",
+   "tag": "money",
+   "question": "Since 401(k) withdrawals are taxed as ordinary income rather than at the lower capital-gains rate, is a regular brokerage account the better deal?",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  },
+  "st-qa-money-se-015": {
+   "set": "cm",
+   "tag": "money",
+   "question": "I got a $5,000 windfall and owe on a big card at 14%, a store card with deferred interest ending soon at 24%, and a few small zero-interest cards. Tell me how to split it.",
+   "K1": "S1",
+   "K3": "S1",
+   "packs": {}
+  }
+ }
+}

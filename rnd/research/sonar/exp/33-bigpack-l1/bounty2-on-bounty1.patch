@@ -1,0 +1,74 @@
+diff -ruN be-0cfd4a77-bounty1/src/rag/packs.ts be-0cfd4a77-bounty2/src/rag/packs.ts
+--- be-0cfd4a77-bounty1/src/rag/packs.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-bounty2/src/rag/packs.ts	2026-10-03 15:07:00
+@@ -129,7 +129,11 @@
+   }
+   if (meta.formatVersion === "2") {
+     try {
+-      wikiPacks.set(pack.id, await WikiPack.open(db, decompress));
++      const wp = await WikiPack.open(db, decompress);
++      // Sonar exp-33 (bounty): the big English Wikipedia packs are a title-lookup tier (named articles only); a name
++      // carrying a quarter of the question is enough there, since no keyword hit competes with it.
++      if (NAMED_ONLY_PACK.test(pack.id)) wp.tuning = { ...wp.tuning, namedOnly: true, namedMinShare: 0.25 };
++      wikiPacks.set(pack.id, wp);
+     } catch (e: any) {
+       console.warn(`[packs] ${pack.filename} failed to open:`, e?.message ?? e);
+       rejected.set(pack.id, size);
+@@ -146,6 +150,9 @@
+   openPacks.set(pack.id, conn);
+   return db;
+ }
++
++/** Packs searched as a title-lookup tier: the English Wikipedia beyond the default kit (top-N subsets and the shards). */
++export const NAMED_ONLY_PACK = /^boar-wiki-en-(top\d+k|\d{2})$/;
+ 
+ export interface WikiPackResult {
+   packId: string;
+diff -ruN be-0cfd4a77-bounty1/src/rag/wikiPack.test.ts be-0cfd4a77-bounty2/src/rag/wikiPack.test.ts
+--- be-0cfd4a77-bounty1/src/rag/wikiPack.test.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-bounty2/src/rag/wikiPack.test.ts	2026-10-03 15:07:10
+@@ -154,3 +154,20 @@
+   });
+ });
+ 
++
++describe("title-lookup tier (namedOnly)", () => {
++  it("answers only with articles the question names, never keyword neighbours", async () => {
++    const saved = pack.tuning;
++    pack.tuning = { ...saved, namedOnly: true, namedMinShare: 0.25 };
++    try {
++      const named = await pack.search("Tell me about black holes and how they form", { k: 4 });
++      expect(named.length).toBeGreaterThan(0);
++      expect(new Set(named.map((h) => h.title))).toEqual(new Set(["Black hole"]));
++      expect(named.every((h) => h.via === "title")).toBe(true);
++      // No article named: nothing (a full pack would return keyword hits on "collapses", "star", "gravity").
++      expect(await pack.search("what happens when a massive star collapses under gravity", { k: 4 })).toEqual([]);
++    } finally {
++      pack.tuning = saved;
++    }
++  });
++});
+diff -ruN be-0cfd4a77-bounty1/src/rag/wikiPack.ts be-0cfd4a77-bounty2/src/rag/wikiPack.ts
+--- be-0cfd4a77-bounty1/src/rag/wikiPack.ts	2026-10-03 03:32:16
++++ be-0cfd4a77-bounty2/src/rag/wikiPack.ts	2026-10-03 15:07:00
+@@ -414,6 +414,12 @@
+   pool: number;
+   /** Weight of the lead-embedding similarity when a query vector is given (0 = keyword order only). */
+   semanticWeight: number;
++  /**
++   * Title-lookup tier (Sonar exp-33, bounty): the pack only answers with articles the question NAMES (title or redirect
++   * n-grams), never whole-index keyword hits. A large pack's BM25 hits displaced better sources and doubled retrieval
++   * time (#17 G1+: +7/-4 keys, 2.17x); a named article is on topic by construction. Default false.
++   */
++  namedOnly?: boolean;
+ }
+ 
+ // Chosen on the dev half of eval/retrieval/questions.v1 (2026-09-26): a competitor team's title
+@@ -832,6 +838,7 @@
+     const action = opts.action ?? ACTION_INTENT.test(query);
+     let lay = 0;
+     let hits = await this.titleHits(ids, stems, 5, action, opts.explain ?? EXPLAIN_INTENT.test(query));
++    if (this.tuning.namedOnly) return { hits: hits.slice(0, Math.max(k, ids.length * 2)), stems };
+     const limit = Math.max(k, ids.length * 2);
+     const topic = titles.length ? await this.stems(titles.join(" ")) : stems;
+     const seen = new Set(hits.map((h) => h.chunkId));

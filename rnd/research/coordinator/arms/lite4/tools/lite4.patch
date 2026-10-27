@@ -1,0 +1,117 @@
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -770,6 +770,17 @@
+   // Moldova). The compact model no longer answers from memory unasked (6e5e9b7), so ask for a full answer.
+   "Answer completely; if you are unsure of a specific detail, say which one.";
+ 
++// LITE4 (deps.liteSourceBound, lite-tier model only): source-bound answering against LITE3's "invented" bucket.
++export const LITE_SOURCED_INSTRUCTION =
++  "Use only the numbered sources: state only what they say, put the key line first and cite it like [1]. " +
++  "If they do not answer the question, say so instead of guessing.";
++export const LITE_MEMORY_INSTRUCTION =
++  "No source in the offline library covers this question; the app already tells the reader. Do not mention sources or the library. " +
++  "Answer from memory in one hedged sentence. If you are not sure a specific claim is true, or the question's premise is not supported, say that instead of guessing.";
++export const LITE_NO_SOURCE_INSTRUCTION =
++  "No offline source covers this question: say so in your first sentence, then answer from memory in one hedged sentence. " +
++  "If you are not sure a specific claim is true, or the question's premise is not supported, say that instead of guessing.";
++
+ // A model's own "not from an offline source" opening, EN and PT, as the gates saw it: "This answer is not from an
+ // offline source.", "Esta resposta não está em um banco de dados offline.", "Essa resposta não está em uma fonte
+ // offline.", "Esta resposta não vem de uma fonte offline.", "I don't have a source for this."
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -49,6 +49,9 @@
+   ACTION_INTENT,
+   MIN_TERM_COVERAGE,
+   NO_SOURCE_INSTRUCTION,
++  LITE_SOURCED_INSTRUCTION,
++  LITE_MEMORY_INSTRUCTION,
++  LITE_NO_SOURCE_INSTRUCTION,
+   uncitedPreface,
+   noHealthSourceAnswer,
+   isSpanishQuestion,
+@@ -229,6 +232,12 @@
+   /** FACTS instant tier (src/rag/facts.ts); default on. false = off (model-path tests whose fixtures are fact questions). */
+   facts?: boolean;
+   /**
++   * LITE4 (eval-only switch, default off): the lite-tier model's source-bound reading rule. With kept sources: state only
++   * what they say, key line first, cite; with none: say so, one hedged sentence from memory, flag an unsupported premise.
++   * Health answers keep their own instruction. Off/unset = byte-identical prompts.
++   */
++  liteSourceBound?: boolean;
++  /**
+    * English article names a Portuguese question mentions (Bramble's lexicon, src/rag/ptLexicon.ts
+    * englishNamesIn): "Por que existem as estações do ano?" -> ["Season"]. The grounding guard matches
+    * sources against them; without them a PT question never names an English title.
+@@ -1220,7 +1229,17 @@
+       const styleReminder =
+         [
+           ctx.styleReminder,
+-          health ? HEALTH_GROUNDING_INSTRUCTION : fromMemory ? NO_SOURCE_INSTRUCTION : undefined,
++          health
++            ? HEALTH_GROUNDING_INSTRUCTION
++            : deps.liteSourceBound
++              ? fromMemory
++                ? LITE_MEMORY_INSTRUCTION
++                : sources.length
++                  ? LITE_SOURCED_INSTRUCTION
++                  : LITE_NO_SOURCE_INSTRUCTION
++              : fromMemory
++                ? NO_SOURCE_INSTRUCTION
++                : undefined,
+           // "today"/"hoje": the model gets the device's date instead of guessing one (Prism TD-1).
+           mentionsNow(req.query) ? todayLine(deps.today?.() ?? new Date(), pt) : undefined,
+           // A PT question, in Portuguese, next to it: with English sources the 4B answered 8 of 29 PT questions in
+@@ -1230,6 +1249,8 @@
+           .filter(Boolean)
+           .join("\n") || undefined;
+ 
++      if (deps.liteSourceBound && !health) reasonCodes.push(`lite:source-bound-${fromMemory ? "memory" : sources.length ? "sourced" : "nosource"}`);
++
+       // 3. Generation.
+       if (!gen || !genLlm) {
+         return finish(genTier, "error", "", sources, receipt({ retrievalMs }), {
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -5,7 +5,7 @@
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+-import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, NO_SOURCE_INSTRUCTION, noHealthSourceAnswer, PT_ANSWER_LANGUAGE } from "./context";
++import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, LITE_MEMORY_INSTRUCTION, LITE_SOURCED_INSTRUCTION, NO_SOURCE_INSTRUCTION, noHealthSourceAnswer, PT_ANSWER_LANGUAGE } from "./context";
+ import { conditionCardText } from "./conditionCards";
+ import { withReviewedSnakebiteText } from "./snakebiteCardText";
+ import { ModelLoadError } from "../inference/loadError";
+@@ -252,6 +252,32 @@
+     expect(f.generations[0].messages!.map((m) => m.content).join("\n")).not.toContain("Dean Lee");
+     expect(result.sources).toEqual([]);
+     expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:off-topic-dropped-2", "grounding:no-good-source", "grounding:no-source-memory"]));
++  });
++
++  it("LITE4: deps.liteSourceBound swaps in the source-bound rules; unset leaves the prompt as before", async () => {
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    f.retrieved = [DEAN_LEE, PUBLIC_KEY];
++    f.deps.liteSourceBound = true;
++    const a = await collect("Which signature algorithms are quantum resistant?");
++    expect(f.generations[0].messages!.at(-1)!.content).toContain(LITE_MEMORY_INSTRUCTION);
++    expect(f.generations[0].messages!.at(-1)!.content).not.toContain(NO_SOURCE_INSTRUCTION);
++    expect(a.result.receipt.reasonCodes).toContain("lite:source-bound-memory");
++    f = makeFake();
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    f.retrieved = [CANBERRA];
++    f.deps.liteSourceBound = true;
++    const b = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(f.generations[0].messages!.at(-1)!.content).toContain(LITE_SOURCED_INSTRUCTION);
++    expect(b.result.receipt.reasonCodes).toContain("lite:source-bound-sourced");
++    f = makeFake();
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    f.retrieved = [CANBERRA];
++    const c = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(f.generations[0].messages!.at(-1)!.content).not.toContain(LITE_SOURCED_INSTRUCTION);
++    expect(c.result.receipt.reasonCodes.some((r: string) => r.startsWith("lite:"))).toBe(false);
+   });
+ 
+   it("CUT5-SPEED: an answer with sources, or with a conversation summary, is not marked staticSystem", async () => {

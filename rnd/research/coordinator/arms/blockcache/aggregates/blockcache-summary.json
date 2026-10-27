@@ -1,0 +1,649 @@
+{
+ "ms_per_block_costs": [
+  16.0,
+  12.5,
+  8.0
+ ],
+ "validation_vs_phone": {
+  "n_questions": 58,
+  "phone_blocks_total": 10583,
+  "replay_misses16_total": 13549,
+  "ratio_replay_over_phone": 1.28,
+  "phone_per_search_p50": 194.0,
+  "replay16_per_search_p50": 232.5
+ },
+ "parity_raw_diffs_vs_16": {
+  "S": {
+   "16": 0,
+   "64": 0,
+   "256": 0,
+   "0": 0
+  },
+  "R1": {
+   "16": 0,
+   "64": 0,
+   "256": 0,
+   "0": 0
+  },
+  "R2": {
+   "16": 0,
+   "64": 0,
+   "256": 0,
+   "0": 0
+  },
+  "R3": {
+   "16": 0,
+   "64": 0,
+   "256": 0,
+   "0": 0
+  },
+  "M": {
+   "16": 0,
+   "64": 0,
+   "256": 0,
+   "0": 0
+  },
+  "S16_vs_unpatched_engine_diffs": 0
+ },
+ "projection_S": {
+  "16@16.0ms": {
+   "T_p50_serial_s": 7.57,
+   "T_p90_serial_s": 15.05,
+   "T_p50_promiseall_s": 5.53,
+   "T_p90_promiseall_s": 13.57,
+   "saved_per_search_p50_ms": 0,
+   "saved_per_search_mean_ms": 0
+  },
+  "64@16.0ms": {
+   "T_p50_serial_s": 4.01,
+   "T_p90_serial_s": 13.5,
+   "T_p50_promiseall_s": 2.46,
+   "T_p90_promiseall_s": 11.9,
+   "saved_per_search_p50_ms": 1472,
+   "saved_per_search_mean_ms": 1454
+  },
+  "256@16.0ms": {
+   "T_p50_serial_s": 3.29,
+   "T_p90_serial_s": 12.78,
+   "T_p50_promiseall_s": 2.43,
+   "T_p90_promiseall_s": 11.34,
+   "saved_per_search_p50_ms": 1981,
+   "saved_per_search_mean_ms": 1992
+  },
+  "0@16.0ms": {
+   "T_p50_serial_s": 3.29,
+   "T_p90_serial_s": 12.62,
+   "T_p50_promiseall_s": 1.99,
+   "T_p90_promiseall_s": 11.18,
+   "saved_per_search_p50_ms": 2055,
+   "saved_per_search_mean_ms": 2131
+  },
+  "16@12.5ms": {
+   "T_p50_serial_s": 7.57,
+   "T_p90_serial_s": 15.05,
+   "T_p50_promiseall_s": 5.53,
+   "T_p90_promiseall_s": 13.57,
+   "saved_per_search_p50_ms": 0,
+   "saved_per_search_mean_ms": 0
+  },
+  "64@12.5ms": {
+   "T_p50_serial_s": 4.31,
+   "T_p90_serial_s": 13.81,
+   "T_p50_promiseall_s": 2.73,
+   "T_p90_promiseall_s": 12.21,
+   "saved_per_search_p50_ms": 1225,
+   "saved_per_search_mean_ms": 1264
+  },
+  "256@12.5ms": {
+   "T_p50_serial_s": 3.66,
+   "T_p90_serial_s": 12.97,
+   "T_p50_promiseall_s": 2.44,
+   "T_p90_promiseall_s": 11.49,
+   "saved_per_search_p50_ms": 1915,
+   "saved_per_search_mean_ms": 1875
+  },
+  "0@12.5ms": {
+   "T_p50_serial_s": 3.52,
+   "T_p90_serial_s": 12.84,
+   "T_p50_promiseall_s": 2.11,
+   "T_p90_promiseall_s": 11.37,
+   "saved_per_search_p50_ms": 1970,
+   "saved_per_search_mean_ms": 1999
+  },
+  "16@8.0ms": {
+   "T_p50_serial_s": 7.57,
+   "T_p90_serial_s": 15.05,
+   "T_p50_promiseall_s": 5.53,
+   "T_p90_promiseall_s": 13.57,
+   "saved_per_search_p50_ms": 0,
+   "saved_per_search_mean_ms": 0
+  },
+  "64@8.0ms": {
+   "T_p50_serial_s": 4.98,
+   "T_p90_serial_s": 14.23,
+   "T_p50_promiseall_s": 3.16,
+   "T_p90_promiseall_s": 12.69,
+   "saved_per_search_p50_ms": 800,
+   "saved_per_search_mean_ms": 886
+  },
+  "256@8.0ms": {
+   "T_p50_serial_s": 4.37,
+   "T_p90_serial_s": 13.58,
+   "T_p50_promiseall_s": 2.79,
+   "T_p90_promiseall_s": 11.93,
+   "saved_per_search_p50_ms": 1368,
+   "saved_per_search_mean_ms": 1413
+  },
+  "0@8.0ms": {
+   "T_p50_serial_s": 4.37,
+   "T_p90_serial_s": 13.49,
+   "T_p50_promiseall_s": 2.79,
+   "T_p90_promiseall_s": 11.83,
+   "saved_per_search_p50_ms": 1396,
+   "saved_per_search_mean_ms": 1507
+  },
+  "baseline_promiseall_alone_p50_s": 5.53
+ },
+ "runs": {
+  "S": {
+   "16": {
+    "misses": 13549,
+    "gain_vs_16": 0.0,
+    "searches": 59,
+    "misses_per_search": 229.6,
+    "peak_held_MB": 8.24,
+    "extra_held_MB_vs_16": 0.0,
+    "by_pack": {
+     "boar-factbook": 2703,
+     "boar-crypto": 2476,
+     "boar-firstaid-en": 1986,
+     "boar-medlineplus-en": 1717,
+     "boar-visa-en": 2167,
+     "boar-wikivoyage-en": 2500
+    },
+    "distinct_blocks": {
+     "boar-factbook": 102,
+     "boar-crypto": 379,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "64": {
+    "misses": 6862,
+    "gain_vs_16": 0.4935,
+    "searches": 59,
+    "misses_per_search": 116.3,
+    "peak_held_MB": 28.34,
+    "extra_held_MB_vs_16": 20.11,
+    "by_pack": {
+     "boar-factbook": 1050,
+     "boar-firstaid-en": 1223,
+     "boar-visa-en": 760,
+     "boar-wikivoyage-en": 2324,
+     "boar-medlineplus-en": 35,
+     "boar-crypto": 1470
+    },
+    "distinct_blocks": {
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431,
+     "boar-medlineplus-en": 35,
+     "boar-crypto": 379
+    }
+   },
+   "256": {
+    "misses": 2953,
+    "gain_vs_16": 0.7821,
+    "searches": 59,
+    "misses_per_search": 50.1,
+    "peak_held_MB": 72.94,
+    "extra_held_MB_vs_16": 64.71,
+    "by_pack": {
+     "boar-crypto": 642,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1886
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "0": {
+    "misses": 2235,
+    "gain_vs_16": 0.835,
+    "searches": 59,
+    "misses_per_search": 37.9,
+    "peak_held_MB": 173.76,
+    "extra_held_MB_vs_16": 165.52,
+    "by_pack": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   }
+  },
+  "R1": {
+   "16": {
+    "misses": 13555,
+    "gain_vs_16": 0.0,
+    "searches": 59,
+    "misses_per_search": 229.7,
+    "peak_held_MB": 8.31,
+    "extra_held_MB_vs_16": 0.0,
+    "by_pack": {
+     "boar-crypto": 2485,
+     "boar-factbook": 2693,
+     "boar-firstaid-en": 1984,
+     "boar-medlineplus-en": 1722,
+     "boar-visa-en": 2169,
+     "boar-wikivoyage-en": 2502
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "64": {
+    "misses": 6916,
+    "gain_vs_16": 0.4898,
+    "searches": 59,
+    "misses_per_search": 117.2,
+    "peak_held_MB": 28.31,
+    "extra_held_MB_vs_16": 20.01,
+    "by_pack": {
+     "boar-factbook": 1065,
+     "boar-crypto": 1487,
+     "boar-firstaid-en": 1293,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 772,
+     "boar-wikivoyage-en": 2264
+    },
+    "distinct_blocks": {
+     "boar-factbook": 102,
+     "boar-crypto": 379,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "256": {
+    "misses": 3032,
+    "gain_vs_16": 0.7763,
+    "searches": 59,
+    "misses_per_search": 51.4,
+    "peak_held_MB": 72.84,
+    "extra_held_MB_vs_16": 64.53,
+    "by_pack": {
+     "boar-crypto": 654,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1953
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "0": {
+    "misses": 2235,
+    "gain_vs_16": 0.8351,
+    "searches": 59,
+    "misses_per_search": 37.9,
+    "peak_held_MB": 173.76,
+    "extra_held_MB_vs_16": 165.45,
+    "by_pack": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   }
+  },
+  "R2": {
+   "16": {
+    "misses": 13594,
+    "gain_vs_16": 0.0,
+    "searches": 59,
+    "misses_per_search": 230.4,
+    "peak_held_MB": 8.35,
+    "extra_held_MB_vs_16": 0.0,
+    "by_pack": {
+     "boar-crypto": 2497,
+     "boar-factbook": 2693,
+     "boar-medlineplus-en": 1754,
+     "boar-wikivoyage-en": 2502,
+     "boar-firstaid-en": 1980,
+     "boar-visa-en": 2168
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-medlineplus-en": 35,
+     "boar-wikivoyage-en": 1431,
+     "boar-firstaid-en": 193,
+     "boar-visa-en": 95
+    }
+   },
+   "64": {
+    "misses": 6918,
+    "gain_vs_16": 0.4911,
+    "searches": 59,
+    "misses_per_search": 117.3,
+    "peak_held_MB": 28.16,
+    "extra_held_MB_vs_16": 19.81,
+    "by_pack": {
+     "boar-crypto": 1472,
+     "boar-factbook": 1066,
+     "boar-firstaid-en": 1277,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 736,
+     "boar-wikivoyage-en": 2332
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "256": {
+    "misses": 3039,
+    "gain_vs_16": 0.7764,
+    "searches": 59,
+    "misses_per_search": 51.5,
+    "peak_held_MB": 72.88,
+    "extra_held_MB_vs_16": 64.53,
+    "by_pack": {
+     "boar-crypto": 642,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1972
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "0": {
+    "misses": 2235,
+    "gain_vs_16": 0.8356,
+    "searches": 59,
+    "misses_per_search": 37.9,
+    "peak_held_MB": 173.76,
+    "extra_held_MB_vs_16": 165.4,
+    "by_pack": {
+     "boar-crypto": 379,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-factbook": 102,
+     "boar-wikivoyage-en": 1431
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-factbook": 102,
+     "boar-wikivoyage-en": 1431
+    }
+   }
+  },
+  "R3": {
+   "16": {
+    "misses": 13604,
+    "gain_vs_16": 0.0,
+    "searches": 59,
+    "misses_per_search": 230.6,
+    "peak_held_MB": 8.24,
+    "extra_held_MB_vs_16": 0.0,
+    "by_pack": {
+     "boar-factbook": 2708,
+     "boar-crypto": 2498,
+     "boar-firstaid-en": 1997,
+     "boar-medlineplus-en": 1735,
+     "boar-visa-en": 2166,
+     "boar-wikivoyage-en": 2500
+    },
+    "distinct_blocks": {
+     "boar-factbook": 102,
+     "boar-crypto": 379,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "64": {
+    "misses": 6902,
+    "gain_vs_16": 0.4926,
+    "searches": 59,
+    "misses_per_search": 117.0,
+    "peak_held_MB": 28.19,
+    "extra_held_MB_vs_16": 19.95,
+    "by_pack": {
+     "boar-crypto": 1493,
+     "boar-factbook": 1032,
+     "boar-firstaid-en": 1286,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 722,
+     "boar-wikivoyage-en": 2334
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431
+    }
+   },
+   "256": {
+    "misses": 2988,
+    "gain_vs_16": 0.7804,
+    "searches": 59,
+    "misses_per_search": 50.6,
+    "peak_held_MB": 73.07,
+    "extra_held_MB_vs_16": 64.83,
+    "by_pack": {
+     "boar-crypto": 638,
+     "boar-factbook": 102,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1925,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35
+    }
+   },
+   "0": {
+    "misses": 2235,
+    "gain_vs_16": 0.8357,
+    "searches": 59,
+    "misses_per_search": 37.9,
+    "peak_held_MB": 173.76,
+    "extra_held_MB_vs_16": 165.52,
+    "by_pack": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431,
+     "boar-medlineplus-en": 35,
+     "boar-firstaid-en": 193
+    },
+    "distinct_blocks": {
+     "boar-crypto": 379,
+     "boar-factbook": 102,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 1431,
+     "boar-medlineplus-en": 35,
+     "boar-firstaid-en": 193
+    }
+   }
+  },
+  "M": {
+   "16": {
+    "misses": 21302,
+    "gain_vs_16": 0.0,
+    "searches": 86,
+    "misses_per_search": 247.7,
+    "peak_held_MB": 8.31,
+    "extra_held_MB_vs_16": 0.0,
+    "by_pack": {
+     "boar-factbook": 4306,
+     "boar-medlineplus-en": 2352,
+     "boar-firstaid-en": 3483,
+     "boar-visa-en": 3447,
+     "boar-wikivoyage-en": 4333,
+     "boar-crypto": 3381
+    },
+    "distinct_blocks": {
+     "boar-factbook": 102,
+     "boar-medlineplus-en": 35,
+     "boar-firstaid-en": 193,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 2221,
+     "boar-crypto": 401
+    }
+   },
+   "64": {
+    "misses": 11702,
+    "gain_vs_16": 0.4507,
+    "searches": 86,
+    "misses_per_search": 136.1,
+    "peak_held_MB": 28.91,
+    "extra_held_MB_vs_16": 20.6,
+    "by_pack": {
+     "boar-crypto": 2452,
+     "boar-factbook": 1757,
+     "boar-firstaid-en": 2157,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 1208,
+     "boar-wikivoyage-en": 4093
+    },
+    "distinct_blocks": {
+     "boar-crypto": 401,
+     "boar-factbook": 102,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 2221
+    }
+   },
+   "256": {
+    "misses": 5104,
+    "gain_vs_16": 0.7604,
+    "searches": 86,
+    "misses_per_search": 59.3,
+    "peak_held_MB": 75.13,
+    "extra_held_MB_vs_16": 66.82,
+    "by_pack": {
+     "boar-crypto": 1017,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-wikivoyage-en": 3662,
+     "boar-factbook": 102,
+     "boar-visa-en": 95
+    },
+    "distinct_blocks": {
+     "boar-crypto": 401,
+     "boar-firstaid-en": 193,
+     "boar-medlineplus-en": 35,
+     "boar-wikivoyage-en": 2221,
+     "boar-factbook": 102,
+     "boar-visa-en": 95
+    }
+   },
+   "0": {
+    "misses": 3047,
+    "gain_vs_16": 0.857,
+    "searches": 86,
+    "misses_per_search": 35.4,
+    "peak_held_MB": 235.47,
+    "extra_held_MB_vs_16": 227.16,
+    "by_pack": {
+     "boar-crypto": 401,
+     "boar-factbook": 102,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 2221,
+     "boar-firstaid-en": 193
+    },
+    "distinct_blocks": {
+     "boar-crypto": 401,
+     "boar-factbook": 102,
+     "boar-medlineplus-en": 35,
+     "boar-visa-en": 95,
+     "boar-wikivoyage-en": 2221,
+     "boar-firstaid-en": 193
+    }
+   }
+  }
+ },
+ "kill_at_256": {
+  "gain_S": 0.7821,
+  "gain_shuffled_mean": 0.7777,
+  "extra_MB": 64.71,
+  "fail_gain": false,
+  "fail_bytes": true,
+  "fail_order": false,
+  "parity_ok": true,
+  "verdict": "CLOSED"
+ }
+}

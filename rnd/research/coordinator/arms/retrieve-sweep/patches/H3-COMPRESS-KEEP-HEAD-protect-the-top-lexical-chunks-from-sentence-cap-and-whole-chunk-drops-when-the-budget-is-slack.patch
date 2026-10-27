@@ -1,0 +1,313 @@
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/compress.test.ts rs-H3/src/rag/compress.test.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/compress.test.ts	2026-10-07 09:27:55
++++ rs-H3/src/rag/compress.test.ts	2026-10-22 16:00:39
+@@ -202,3 +202,87 @@
+     expect(compressForAnswer("anything", [], "lookup")).toEqual({ chunks: [], keptIndices: [], tokensBefore: 0, tokensAfter: 0 });
+   });
+ });
++
++describe("RS_COMPRESS_HEAD (COMPRESS-KEEP-HEAD, bench-only env switch)", () => {
++  const withHead = <T,>(env: Record<string, string> | null, fn: () => T): T => {
++    const saved = { h: process.env.RS_COMPRESS_HEAD, t: process.env.RS_COMPRESS_HEAD_TOK };
++    delete process.env.RS_COMPRESS_HEAD;
++    delete process.env.RS_COMPRESS_HEAD_TOK;
++    if (env) Object.assign(process.env, env);
++    try {
++      return fn();
++    } finally {
++      for (const [k, v] of [["RS_COMPRESS_HEAD", saved.h], ["RS_COMPRESS_HEAD_TOK", saved.t]] as const) {
++        if (v === undefined) delete process.env[k];
++        else process.env[k] = v;
++      }
++    }
++  };
++  // 6 sentences, ~120 tokens; only two of them name the question's words.
++  const SIX = chunk(
++    "six",
++    "Altitude sickness",
++    "Altitude sickness is a condition that affects people who climb quickly. " +
++      "It usually starts above two thousand five hundred metres of elevation. " +
++      "Headache is the most common early symptom of the condition. " +
++      "Many climbers also feel tired, dizzy and short of breath for the first days. " +
++      "Resting at the same height lets the body adjust to the thinner air over time. " +
++      "Severe cases need a quick descent to a lower altitude and medical care for the lungs and brain."
++  );
++  const FILLER = (id: string, title: string) =>
++    chunk(id, title, `${title} is a topic described in many books. It has a long history with many details. The details are listed in encyclopedias of every size.`);
++
++  it("slack budget: a 6-sentence ~120-token chunk comes back whole, with the switch on only", () => {
++    expect(approxTokens(`${SIX.title}\n${SIX.body}`)).toBeLessThanOrEqual(160);
++    expect(approxTokens(`${SIX.title}\n${SIX.body}`)).toBeGreaterThan(90);
++    const q = "What are the early symptoms of altitude sickness?";
++    const off = withHead(null, () => compressContext(q, [SIX], { tokenBudget: 1200 }));
++    expect(off.chunks[0].body).not.toBe(SIX.body);
++    expect(off.headProtected).toBeUndefined();
++    const on = withHead({ RS_COMPRESS_HEAD: "1" }, () => compressContext(q, [SIX], { tokenBudget: 1200 }));
++    expect(on.chunks[0].body).toBe(SIX.body);
++    expect(on.headProtected).toBe(true);
++    // A chunk over RS_COMPRESS_HEAD_TOK is not returned whole.
++    const small = withHead({ RS_COMPRESS_HEAD: "1", RS_COMPRESS_HEAD_TOK: "40" }, () => compressContext(q, [SIX], { tokenBudget: 1200 }));
++    expect(small.chunks[0].body).not.toBe(SIX.body);
++  });
++
++  it("binding budget: input positions 0 and 1 survive instead of being displaced by a lower-ranked symptom match", () => {
++    const hiv = chunk("hiv", "HIV", "HIV is a virus that attacks the immune system. Over many years it can lead to AIDS, a late stage of the infection.");
++    const flu = chunk("flu", "Influenza", "Influenza is a viral infection of the airways. It spreads when people cough near others. Vaccines are given every season.");
++    const sym = chunk(
++      "alt",
++      "Altitude sickness",
++      "Altitude sickness causes headache, dizziness, fatigue and nausea. Fever and fatigue are not typical, though headache and dizziness are common. Fatigue and headache can last for days."
++    );
++    const more = chunk("m", "Mountain", "Mountains are tall landforms. Headache and dizziness are common words on mountain trips.");
++    const q = "What causes headache, dizziness and fatigue?";
++    const input = [hiv, flu, sym, more];
++    const off = withHead(null, () => compressContext(q, input, { tokenBudget: 60 }));
++    expect(off.keptIndices.includes(0) && off.keptIndices.includes(1)).toBe(false);
++    const on = withHead({ RS_COMPRESS_HEAD: "1" }, () => compressContext(q, input, { tokenBudget: 60 }));
++    expect(on.keptIndices).toContain(0);
++    expect(on.keptIndices).toContain(1);
++    expect(on.chunks.find((c) => c.chunkId === "hiv")!.body.startsWith("HIV is a virus")).toBe(true);
++    expect(on.headProtected).toBe(true);
++  });
++
++  it("switch off (or head chunks already kept and budget binding): output deep-equal to the baseline on 20 fixture calls", () => {
++    const pool = [CANBERRA, SYDNEY, MOLD, INDUSTRIAL, SIX, FILLER("f1", "Rivers"), FILLER("f2", "Coins")];
++    const queries = ["What is the capital of Australia?", "Why did the Industrial Revolution begin?", "What are the symptoms of altitude sickness?", "Tell me about mold"];
++    const calls: [string, RetrievedChunk[], number][] = [];
++    for (let i = 0; i < 20; i++) calls.push([queries[i % 4], [0, 1, 2, 3].map((k) => pool[(i + k * 2) % pool.length]), [60, 120, 300, 1200, 2000][i % 5]]);
++    const ref = calls.map(([q, ch, b]) => withHead(null, () => compressContext(q, ch, { tokenBudget: b })));
++    const unset = calls.map(([q, ch, b]) => withHead(null, () => compressContext(q, ch, { tokenBudget: b })));
++    const zero = calls.map(([q, ch, b]) => withHead({ RS_COMPRESS_HEAD: "0" }, () => compressContext(q, ch, { tokenBudget: b })));
++    expect(unset).toEqual(ref);
++    expect(zero).toEqual(ref);
++    expect(ref.every((r) => r.headProtected === undefined)).toBe(true);
++    const on = calls.map(([q, ch, b]) => withHead({ RS_COMPRESS_HEAD: "1" }, () => compressContext(q, ch, { tokenBudget: b })));
++    expect(on.some((o) => o.headProtected)).toBe(true);
++    // Unflagged results are identical to the baseline.
++    on.forEach((o, i) => {
++      if (!o.headProtected) expect(o).toEqual(ref[i]);
++    });
++  });
++});
+diff -ruN be-0cfd4a77-cut7-litepacks/src/rag/compress.ts rs-H3/src/rag/compress.ts
+--- be-0cfd4a77-cut7-litepacks/src/rag/compress.ts	2026-10-07 09:27:55
++++ rs-H3/src/rag/compress.ts	2026-10-22 15:59:50
+@@ -159,6 +159,8 @@
+   keptIndices: number[];
+   tokensBefore: number;
+   tokensAfter: number;
++  /** RS_COMPRESS_HEAD (RETRIEVE-SWEEP arm H3, bench-only): true when the head protection changed the output. Absent when the switch is off. */
++  headProtected?: boolean;
+ }
+ 
+ /**
+@@ -173,8 +175,30 @@
+ const FILL_MAX_TOKENS = 60;
+ 
+ 
++/**
++ * RS_COMPRESS_HEAD=1 (RETRIEVE-SWEEP arm H3 COMPRESS-KEEP-HEAD, bench-only env switch, unset = unchanged):
++ *  (1) budget slack (the input chunks' tokens fit the budget): every chunk of at most RS_COMPRESS_HEAD_TOK tokens (default 160)
++ *      comes back whole (verbatim body, no sentence cap);
++ *  (2) the chunks at input positions 0 and 1 (the top lexical chunks) are never dropped wholesale: when the base pass drops one,
++ *      it is re-run with that chunk protected (relevance floor bypassed, its opening sentence and best sentences ranked first).
++ * Sentence scoring is untouched.
++ */
+ export function compressContext(query: string, chunks: RetrievedChunk[], opts: CompressOptions = {}): CompressedContext {
++  const env = (globalThis as any).process?.env;
++  const baseRes = compressBase(query, chunks, opts, new Set<number>(), 0);
++  if (env?.RS_COMPRESS_HEAD !== "1") return baseRes;
+   const budget = opts.tokenBudget ?? 1200;
++  const headTok = Number(env.RS_COMPRESS_HEAD_TOK) > 0 ? Number(env.RS_COMPRESS_HEAD_TOK) : 160;
++  const slack = baseRes.tokensBefore <= budget;
++  const miss = [0, 1].filter((i) => i < chunks.length && !baseRes.keptIndices.includes(i));
++  if (!miss.length && !slack) return baseRes;
++  const res = compressBase(query, chunks, opts, new Set(miss), slack ? headTok : 0);
++  const changed = res.keptIndices.join() !== baseRes.keptIndices.join() || res.chunks.some((c, i) => c.body !== baseRes.chunks[i]?.body);
++  return changed ? { ...res, headProtected: true } : baseRes;
++}
++
++function compressBase(query: string, chunks: RetrievedChunk[], opts: CompressOptions, protectedIdx: ReadonlySet<number>, wholeTok: number): CompressedContext {
++  const budget = opts.tokenBudget ?? 1200;
+   const perChunk = opts.maxSentencesPerChunk ?? 4;
+   const count = opts.countTokens ?? approxTokens;
+   const tokensBefore = chunks.reduce((acc, c) => acc + count(`${c.title}\n${c.body}`), 0);
+@@ -187,12 +211,18 @@
+   const chunkBest = chunks.map((_, ci) => Math.max(0, ...scored.filter((s) => s.chunkIndex === ci).map((s) => s.score)));
+   const topBest = Math.max(0, ...chunkBest);
+   const pinnedIdx = new Set(chunks.map((c, i) => (opts.pinned?.has(c.chunkId) ? i : -1)).filter((i) => i >= 0));
+-  const relevant = (ci: number) => pinnedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
++  const relevant = (ci: number) => pinnedIdx.has(ci) || protectedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
+   // Rank: matching sentences by score (ties → retrieval rank, then position);
+   // with no match at all, fall back to each chunk's opening sentence.
+   const ranked = (anyMatch ? scored.filter((s) => s.score > 0 && relevant(s.chunkIndex)) : scored.filter((s) => s.position === 0)).sort(
+     (a, b) => b.score - a.score || a.chunkIndex - b.chunkIndex || a.position - b.position
+   );
++  // RS_COMPRESS_HEAD: the protected head chunks compete first (after the pinned ones, who go in front below).
++  if (protectedIdx.size) {
++    const opening = scored.filter((s) => protectedIdx.has(s.chunkIndex) && s.position === 0);
++    const protRanked = [...opening, ...ranked.filter((s) => protectedIdx.has(s.chunkIndex) && s.position !== 0)];
++    ranked.splice(0, ranked.length, ...protRanked, ...ranked.filter((s) => !protectedIdx.has(s.chunkIndex)));
++  }
+   // Pinned chunks first: their opening sentence (and best ones) before anything else competes for the budget.
+   if (pinnedIdx.size) {
+     const opening = scored.filter((s) => pinnedIdx.has(s.chunkIndex) && s.position === 0);
+@@ -251,8 +281,13 @@
+     }
+   }
+ 
+-  const keptIndices = [...picked.keys()].sort((a, b) => Number(pinnedIdx.has(b)) - Number(pinnedIdx.has(a)) || chunkBest[b] - chunkBest[a] || a - b);
++  // RS_COMPRESS_HEAD (1): under a slack budget the chunks of at most wholeTok tokens come back whole.
++  const whole = new Set<number>(wholeTok > 0 ? chunks.map((c, i) => (count(`${c.title}\n${c.body}`) <= wholeTok ? i : -1)).filter((i) => i >= 0) : []);
++  const keptIndices = [...(whole.size ? new Set([...picked.keys(), ...whole]) : picked.keys())].sort(
++    (a, b) => Number(pinnedIdx.has(b)) - Number(pinnedIdx.has(a)) || chunkBest[b] - chunkBest[a] || a - b
++  );
+   const out = keptIndices.map((ci) => {
++    if (whole.has(ci)) return { ...chunks[ci] };
+     const positions = [...picked.get(ci)!].sort((a, b) => a - b);
+     const body = positions
+       .map((p) => scored.find((s) => s.chunkIndex === ci && s.position === p)!.text)
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/answer.ts rs-H3/src/routing/answer.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/answer.ts	2026-10-20 17:44:17
++++ rs-H3/src/routing/answer.ts	2026-10-22 15:59:50
+@@ -1063,6 +1063,7 @@
+       const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
++      if (compressed.headProtected) reasonCodes.push("rs:compress-head"); // RS_COMPRESS_HEAD (bench-only)
+ 
+       // Grounding: sources must be on topic in absolute terms, not just the best of what came back.
+       // Always on (Quill, 014c054: the chat reads "passages found, none cited" from a non-empty sources
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/context.test.ts rs-H3/src/routing/context.test.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/context.test.ts	2026-10-07 09:27:55
++++ rs-H3/src/routing/context.test.ts	2026-10-22 16:01:41
+@@ -896,3 +896,47 @@
+     expect(isHealthQuestion("Como se diz obrigado em tailandês, e muda se eu for homem ou mulher?")).toBe(false);
+   });
+ });
++
++describe("compressContext: RS_COMPRESS_HEAD (COMPRESS-KEEP-HEAD, bench-only env switch; the live answer path)", () => {
++  const mk = (chunkId: string, title: string, body: string): RetrievedChunk => ({ chunkId, docId: chunkId, title, body, score: 1, matchType: "hybrid" });
++  const withHead = <T,>(on: boolean, fn: () => T): T => {
++    const saved = process.env.RS_COMPRESS_HEAD;
++    if (on) process.env.RS_COMPRESS_HEAD = "1";
++    else delete process.env.RS_COMPRESS_HEAD;
++    try {
++      return fn();
++    } finally {
++      if (saved === undefined) delete process.env.RS_COMPRESS_HEAD;
++      else process.env.RS_COMPRESS_HEAD = saved;
++    }
++  };
++  const SIX = mk(
++    "six",
++    "Altitude sickness",
++    "Altitude sickness is a condition that affects people who climb quickly. It usually starts above two thousand five hundred metres of elevation. " +
++      "Headache is the most common early symptom of the condition. Many climbers also feel tired, dizzy and short of breath for the first days. " +
++      "Resting at the same height lets the body adjust to the thinner air over time. Severe cases need a quick descent to a lower altitude and medical care for the lungs and brain."
++  );
++  it("slack budget: a 6-sentence ~120-token chunk comes back whole; off = unchanged", () => {
++    const q = "What are the early symptoms of altitude sickness?";
++    const off = withHead(false, () => compressContext(q, [SIX], { tokenBudget: 1200 }));
++    const on = withHead(true, () => compressContext(q, [SIX], { tokenBudget: 1200 }));
++    expect(off.chunks[0].body).not.toBe(SIX.body);
++    expect(off.headProtected).toBeUndefined();
++    expect(on.chunks[0].body).toBe(SIX.body);
++    expect(on.headProtected).toBe(true);
++  });
++  it("binding budget: positions 0 and 1 are not dropped wholesale", () => {
++    const hiv = mk("hiv", "HIV", "HIV is a virus that attacks the immune system. Over many years it can lead to AIDS, a late stage of the infection.");
++    const flu = mk("flu", "Influenza", "Influenza is a viral infection of the airways. It spreads when people cough near others. Vaccines are given every season.");
++    const sym = mk("alt", "Altitude sickness", "Altitude sickness causes headache, dizziness, fatigue and nausea. Fever and fatigue are not typical, though headache and dizziness are common. Fatigue and headache can last for days.");
++    const more = mk("m", "Mountain", "Mountains are tall landforms. Headache and dizziness are common words on mountain trips.");
++    const q = "What causes headache, dizziness and fatigue?";
++    const off = withHead(false, () => compressContext(q, [hiv, flu, sym, more], { tokenBudget: 60 }));
++    const on = withHead(true, () => compressContext(q, [hiv, flu, sym, more], { tokenBudget: 60 }));
++    expect(off.keptIndices.includes(0) && off.keptIndices.includes(1)).toBe(false);
++    expect(on.keptIndices).toContain(0);
++    expect(on.keptIndices).toContain(1);
++    expect(on.headProtected).toBe(true);
++  });
++});
+diff -ruN be-0cfd4a77-cut7-litepacks/src/routing/context.ts rs-H3/src/routing/context.ts
+--- be-0cfd4a77-cut7-litepacks/src/routing/context.ts	2026-10-07 09:27:55
++++ rs-H3/src/routing/context.ts	2026-10-22 16:01:29
+@@ -1446,6 +1446,8 @@
+   keptIndices: number[];
+   tokensBefore: number;
+   tokensAfter: number;
++  /** RS_COMPRESS_HEAD (RETRIEVE-SWEEP arm H3, bench-only): true when the head protection changed the output. Absent when the switch is off. */
++  headProtected?: boolean;
+ }
+ 
+ /**
+@@ -1462,8 +1464,28 @@
+ /** The shown relevance of an article the question names: the UI's 'high' band (Quill: >= 0.75). */
+ const NAMED_ARTICLE_RELEVANCE = 0.75;
+ 
++/**
++ * RS_COMPRESS_HEAD=1 (RETRIEVE-SWEEP arm H3 COMPRESS-KEEP-HEAD, bench-only env switch, unset = unchanged); same logic as rag/compress.ts:
++ *  (1) budget slack (the input chunks' tokens fit the budget): every chunk of at most RS_COMPRESS_HEAD_TOK tokens (default 160) comes back whole;
++ *  (2) the chunks at input positions 0 and 1 are never dropped wholesale: a dropped one is re-ranked first (relevance floor bypassed).
++ * Sentence scoring is untouched.
++ */
+ export function compressContext(query: string, chunks: RetrievedChunk[], opts: CompressOptions = {}): CompressedContext {
++  const env = (globalThis as any).process?.env;
++  const baseRes = compressBase(query, chunks, opts, new Set<number>(), 0);
++  if (env?.RS_COMPRESS_HEAD !== "1") return baseRes;
+   const budget = opts.tokenBudget ?? 1200;
++  const headTok = Number(env.RS_COMPRESS_HEAD_TOK) > 0 ? Number(env.RS_COMPRESS_HEAD_TOK) : 160;
++  const slack = baseRes.tokensBefore <= budget;
++  const miss = [0, 1].filter((i) => i < chunks.length && !baseRes.keptIndices.includes(i));
++  if (!miss.length && !slack) return baseRes;
++  const res = compressBase(query, chunks, opts, new Set(miss), slack ? headTok : 0);
++  const changed = res.keptIndices.join() !== baseRes.keptIndices.join() || res.chunks.some((c, i) => c.body !== baseRes.chunks[i]?.body);
++  return changed ? { ...res, headProtected: true } : baseRes;
++}
++
++function compressBase(query: string, chunks: RetrievedChunk[], opts: CompressOptions, protectedIdx: ReadonlySet<number>, wholeTok: number): CompressedContext {
++  const budget = opts.tokenBudget ?? 1200;
+   const perChunk = opts.maxSentencesPerChunk ?? 4;
+   const count = opts.countTokens ?? approxTokens;
+   const tokensBefore = chunks.reduce((acc, c) => acc + count(`${c.title}\n${c.body}`), 0);
+@@ -1476,12 +1498,18 @@
+   const chunkBest = chunks.map((_, ci) => Math.max(0, ...scored.filter((s) => s.chunkIndex === ci).map((s) => s.score)));
+   const topBest = Math.max(0, ...chunkBest);
+   const pinnedIdx = new Set(chunks.map((c, i) => (opts.pinned?.has(c.chunkId) ? i : -1)).filter((i) => i >= 0));
+-  const relevant = (ci: number) => pinnedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
++  const relevant = (ci: number) => pinnedIdx.has(ci) || protectedIdx.has(ci) || !anyMatch || chunkBest[ci] >= RELATIVE_RELEVANCE_FLOOR * topBest;
+   // Rank: matching sentences by score (ties → retrieval rank, then position);
+   // with no match at all, fall back to each chunk's opening sentence.
+   const ranked = (anyMatch ? scored.filter((s) => s.score > 0 && relevant(s.chunkIndex)) : scored.filter((s) => s.position === 0)).sort(
+     (a, b) => b.score - a.score || a.chunkIndex - b.chunkIndex || a.position - b.position
+   );
++  // RS_COMPRESS_HEAD: the protected head chunks compete first (after the pinned ones, who go in front below).
++  if (protectedIdx.size) {
++    const opening = scored.filter((s) => protectedIdx.has(s.chunkIndex) && s.position === 0);
++    const protRanked = [...opening, ...ranked.filter((s) => protectedIdx.has(s.chunkIndex) && s.position !== 0)];
++    ranked.splice(0, ranked.length, ...protRanked, ...ranked.filter((s) => !protectedIdx.has(s.chunkIndex)));
++  }
+   // Pinned chunks first: their opening sentence (and best ones) before anything else competes for the budget.
+   if (pinnedIdx.size) {
+     const opening = scored.filter((s) => pinnedIdx.has(s.chunkIndex) && s.position === 0);
+@@ -1537,7 +1565,11 @@
+     }
+   }
+ 
+-  const keptIndices = [...picked.keys()].sort((a, b) => Number(pinnedIdx.has(b)) - Number(pinnedIdx.has(a)) || chunkBest[b] - chunkBest[a] || a - b);
++  // RS_COMPRESS_HEAD (1): under a slack budget the chunks of at most wholeTok tokens come back whole.
++  const whole = new Set<number>(wholeTok > 0 ? chunks.map((c, i) => (count(`${c.title}\n${c.body}`) <= wholeTok ? i : -1)).filter((i) => i >= 0) : []);
++  const keptIndices = [...(whole.size ? new Set([...picked.keys(), ...whole]) : picked.keys())].sort(
++    (a, b) => Number(pinnedIdx.has(b)) - Number(pinnedIdx.has(a)) || chunkBest[b] - chunkBest[a] || a - b
++  );
+   const qTerms = [...new Set(tokenizeTerms(query))];
+   const shownRelevance = (ci: number) => {
+     const best = scored.filter((x) => x.chunkIndex === ci).sort((a, b) => b.score - a.score)[0];
+@@ -1551,6 +1583,7 @@
+     return named ? Math.max(share, NAMED_ARTICLE_RELEVANCE) : share;
+   };
+   const out = keptIndices.map((ci) => {
++    if (whole.has(ci)) return { ...chunks[ci], ...(anyMatch ? { relevance: shownRelevance(ci) } : {}) };
+     const positions = [...picked.get(ci)!].sort((a, b) => a - b);
+     const body = positions
+       .map((p) => scored.find((s) => s.chunkIndex === ci && s.position === p)!.text)

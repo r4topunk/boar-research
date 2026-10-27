@@ -1,0 +1,397 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index d6a772c..00419ff 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -811,7 +811,7 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     f.retrieved = [];
+     f.deps.engine.generate = async () => "Fue un compromiso entre Sídney y Melbourne.";
+     const { events } = await collect("¿Por qué se eligió Canberra como capital de Australia?");
+-    expect((events.find((e) => e.type === "done") as any).finalText).toBe("Esta respuesta no viene de una fuente offline de este teléfono; verifícala antes de confiar en ella.\n\nFue un compromiso entre Sídney y Melbourne.");
++    expect((events.find((e) => e.type === "done") as any).finalText).toBe("Esta respuesta no viene de una fuente offline de este teléfono; verifíquela antes de confiar en ella.\n\nFue un compromiso entre Sídney y Melbourne.");
+   });
+ 
+   it("estask3: an ES knowledge question without ¿ (estask2 L1 cs-056) gets ES fixed strings on both profiles", async () => {
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index a7a2e2c..45bca7c 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -29,6 +29,7 @@ import {
+   stripModelDisclaimer,
+   stripModelReferences,
+   withSeekCare,
++  emergencyLineFor,
+   PT_ANSWER_LANGUAGE,
+   PT_ANSWER_LANGUAGE_NO_SOURCES,
+   situationNote,
+@@ -149,7 +150,7 @@ function noSourceHealthCard(query: string, pt: boolean, es: boolean, reasonCodes
+     if (fromHistory) reasonCodes.push("grounding:fa-card-from-history");
+     return { text, label: "First aid card" };
+   }
+-  return { text: noHealthSourceAnswer(pt, es), label: "No offline source" };
++  return { text: noHealthSourceAnswer(pt, es, query), label: "No offline source" };
+ }
+ 
+ /** Development builds log each answer's checks to Metro ([ANSWER] lines); never in a release build or a test. */
+@@ -1041,7 +1042,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         // dng-001: "pressure immobilization … remains a point of controversy"). None: emergency + get care.
+         let text = "";
+         for (const k of healthSourceOrder(fullSources, rules.procedure ?? null)) {
+-          const first = healthExtract(fullSources[k], k + 1, pt, rules, es);
++          const first = healthExtract(fullSources[k], k + 1, pt, rules, es, req.query);
+           if (!safeHealthExcerpt(first)) {
+             reasonCodes.push(`grounding:health-unsafe-excerpt-${k + 1}`);
+             continue;
+@@ -1075,7 +1076,7 @@ export function createAnswerer(deps: AnswerDeps) {
+           const { condition } = conversationCondition(req.query, userTurns);
+           const card = condition && condition !== "MULTI" ? conditionCardText(condition, req.query, !pt && isSpanishQuery(req.query) ? "es" : pt ? "pt" : "en") : null;
+           if (card) reasonCodes.push(`grounding:fa-card-${condition}`);
+-          const fixed = card ?? noSafeStepsAnswer(pt, es);
++          const fixed = card ?? noSafeStepsAnswer(pt, es, req.query);
+           markVisible();
+           emit({ type: "token", answerId, tier: "instant", text: fixed });
+           return finish("instant", "success", fixed, [], receipt({ modelId: "grounding-guard", modelLabel: "No safe source", retrievalMs }));
+@@ -1260,12 +1261,12 @@ export function createAnswerer(deps: AnswerDeps) {
+               const fullSources = sources.map((c) => raw.find((r) => r.chunkId === c.chunkId) ?? c);
+               const rules = excerptRules(req.query, healthTopicTerms(req.query, english));
+               const safe = healthSourceOrder(fullSources, rules.procedure ?? null)
+-                .map((k) => healthExtract(fullSources[k], k + 1, pt, rules, es))
++                .map((k) => healthExtract(fullSources[k], k + 1, pt, rules, es, req.query))
+                 .find(safeHealthExcerpt);
+-              text = safe ?? noSafeStepsAnswer(pt, es);
++              text = safe ?? noSafeStepsAnswer(pt, es, req.query);
+             } else if (!/emergency number|emerg[êe]ncia/i.test(text)) {
+               // A model-written health answer ends with the emergency line too.
+-              text = `${text.trim()}\n\n${emergencyLine(pt, es)}`;
++              text = `${text.trim()}\n\n${emergencyLineFor(req.query, pt, es)}`;
+             }
+             markVisible();
+             emit({ type: "token", answerId, tier: genTier, text });
+diff --git a/src/routing/conditionCards.ts b/src/routing/conditionCards.ts
+index 948f1c4..6566e04 100644
+--- a/src/routing/conditionCards.ts
++++ b/src/routing/conditionCards.ts
+@@ -122,7 +122,7 @@ export function pickCondition(query: string): string | null {
+ 
+ type CardText = { en: string; pt: string; es?: string; sources: string; status?: string };
+ export type CardLang = "en" | "pt" | "es";
+-const ES_EMERGENCY = "En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
++const ES_EMERGENCY = "En una emergencia, llame al número de emergencias local."; // Opus reviewer 2026-10-03: usted; country numbers when named
+ const CARDS = (cards as { cards: Record<string, CardText> }).cards;
+ 
+ /** The condition's card text in the question's language (the emergency line appended, as for the snakebite card); null
+@@ -133,7 +133,7 @@ export function conditionCardText(condition: string, query: string, lang: CardLa
+   const c = CARDS[condition];
+   const body = c?.[l];
+   if (!c || !body) return null;
+-  const emergency = l === "es" ? ES_EMERGENCY : emergencyNumbersLine(query, l === "pt") ?? emergencyLine(l === "pt");
++  const emergency = l === "es" ? emergencyNumbersLine(query, false, true) ?? ES_EMERGENCY : emergencyNumbersLine(query, l === "pt") ?? emergencyLine(l === "pt");
+   return `${body}\n\n${l === "pt" ? "Fonte" : l === "es" ? "Fuente" : "Source"}: ${c.sources}.\n\n${emergency}`;
+ }
+ 
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 70d66e9..26c2590 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -14,6 +14,7 @@
+  * instead; this module is the fallback over plain RetrievedChunks.
+  */
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { emergencyNumbersLine } from "./emergencyNumbers";
+ 
+ export interface ScoredSentence {
+   chunkIndex: number;
+@@ -663,7 +664,7 @@ export const MIN_TERMS_FOR_COVERAGE = 3;
+  */
+ /** Opens a knowledge answer that cites none of its sources (Boar, gate ea5978c): the reader must not take it as the library's. */
+ export function uncitedPreface(pt: boolean, es = false): string {
+-  if (es && !pt) return "Esta respuesta no viene de una fuente offline de este teléfono; verifícala antes de confiar en ella.";
++  if (es && !pt) return "Esta respuesta no viene de una fuente offline de este teléfono; verifíquela antes de confiar en ella.";
+   return pt
+     ? "Esta resposta não vem de uma fonte offline deste celular; confira antes de confiar nela."
+     : "This answer is not from an offline source on this phone; check it before relying on it.";
+@@ -1034,8 +1035,16 @@ export function healthActionScore(c: RetrievedChunk): number {
+  * the compressed one), cut at a sentence end and cited by its number.
+  */
+ /** Always under a health or disaster answer, whatever the excerpt says (Boar, safety-008). */
++/** ES emergency line (Opus reviewer 2026-10-03: usted; no '911 en gran parte de América': the country's numbers when a
++ * country is named, this neutral line otherwise). */
++export const ES_EMERGENCY_NEUTRAL = "En una emergencia, llame al número de emergencias local.";
++/** The emergency line for an answer: for a Spanish question that names a country, that country's numbers; else emergencyLine. */
++export function emergencyLineFor(query: string, pt: boolean, es = false): string {
++  return (es && !pt ? emergencyNumbersLine(query, false, true) : null) ?? emergencyLine(pt, es);
++}
++
+ export function emergencyLine(pt: boolean, es = false): string {
+-  if (es && !pt) return "En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
++  if (es && !pt) return ES_EMERGENCY_NEUTRAL;
+   return pt
+     ? "Em uma emergência, ligue para o serviço de emergência local (192 SAMU, 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
+     : "In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
+@@ -1165,7 +1174,7 @@ export function imperativeSteps(text: string): number {
+     .filter((x) => IMPERATIVE.test(x)).length;
+ }
+ 
+-export function healthExtract(source: RetrievedChunk, sourceNumber: number, pt: boolean, rulesOrProcedure: ExcerptRules | RegExp | null = null, es = false): string {
++export function healthExtract(source: RetrievedChunk, sourceNumber: number, pt: boolean, rulesOrProcedure: ExcerptRules | RegExp | null = null, es = false, query = ""): string {
+   const esq = es && !pt;
+   const rules: ExcerptRules = rulesOrProcedure instanceof RegExp || rulesOrProcedure === null ? { procedure: rulesOrProcedure } : rulesOrProcedure;
+   const procedure = rules.procedure ?? null;
+@@ -1219,7 +1228,7 @@ export function healthExtract(source: RetrievedChunk, sourceNumber: number, pt:
+       ? "Da fonte offline (em inglês):"
+       : "From the offline source:"
+     : esq
+-      ? "La fuente offline no trae los pasos de primeros auxilios para esto. En una emergencia, llama al número de emergencias local. Lo que dice la fuente (en inglés):"
++      ? "La fuente offline no trae los pasos de primeros auxilios para esto. En una emergencia, llame al número de emergencias local. Lo que dice la fuente (en inglés):"
+       : pt
+       ? "A fonte offline não traz os passos de socorro para isso. Em uma emergência, ligue para o serviço de emergência local (192 SAMU, 193 Bombeiros). O que a fonte diz (em inglês):"
+       : "The offline source doesn't give first-aid steps for this. In an emergency, call your local emergency number. What the source says:";
+@@ -1229,12 +1238,12 @@ export function healthExtract(source: RetrievedChunk, sourceNumber: number, pt:
+   if (!steps && imperativeSteps(text) >= 1) return `${lead}\n${text} [${sourceNumber}]`;
+   if (!steps)
+     return esq
+-      ? "La fuente offline no trae los pasos de primeros auxilios para esto. En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa)."
++      ? `La fuente offline no trae los pasos de primeros auxilios para esto. ${emergencyLineFor(query, pt, es)}`
+       : pt
+       ? "A fonte offline não traz os passos de socorro para isso. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
+       : "The offline source doesn't give first-aid steps for this. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
+   // The emergency line closes every health answer.
+-  return `${lead}\n${text} [${sourceNumber}]\n\n${emergencyLine(pt, es)}`;
++  return `${lead}\n${text} [${sourceNumber}]\n\n${emergencyLineFor(query, pt, es)}`;
+ }
+ 
+ // First-aid instructions the sources call wrong (NHS, CDC, Ready.gov), as a model might phrase them.
+@@ -1330,9 +1339,11 @@ export function safeHealthExcerpt(text: string): boolean {
+ }
+ 
+ /** No safe first-aid text in the library: the emergency number and "get care", no steps from memory. */
+-export function noSafeStepsAnswer(pt: boolean, es = false): string {
+-  if (es && !pt)
+-    return "No encontré en la biblioteca offline instrucciones de primeros auxilios seguras para esto. Llama ahora al número de emergencias local (911 en gran parte de América, 112 en Europa) y busca atención médica lo antes posible.";
++export function noSafeStepsAnswer(pt: boolean, es = false, query = ""): string {
++  if (es && !pt) {
++    const line = emergencyNumbersLine(query, false, true);
++    return "No encontré en la biblioteca offline instrucciones de primeros auxilios seguras para esto. Llame ahora al número de emergencias local y busque atención médica lo antes posible." + (line ? `\n\n${line}` : "");
++  }
+   return pt
+     ? "Não encontrei no acervo offline instruções de primeiros socorros seguras para isso. Ligue agora para o serviço de emergência (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA) e procure atendimento médico o quanto antes."
+     : "I didn't find safe first-aid instructions for this in the offline library. Call your local emergency number now (911 in the US, 112 in Europe) and get medical care as soon as possible.";
+@@ -1362,9 +1373,8 @@ export function isNoStepsAnswer(text: string): boolean {
+   return /^(The offline source doesn't give first-aid steps for this\.|A fonte offline não traz os passos de socorro para isso\.|La fuente offline no trae los pasos de primeros auxilios para esto\.)/.test(text) && !/\[\d+\]/.test(text);
+ }
+ 
+-export function noHealthSourceAnswer(pt: boolean, es = false): string {
+-  if (es && !pt)
+-    return "No tengo una fuente offline confiable sobre esto, así que no voy a dar consejos de salud de memoria. En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).";
++export function noHealthSourceAnswer(pt: boolean, es = false, query = ""): string {
++  if (es && !pt) return "No tengo una fuente offline confiable sobre esto, así que no voy a dar consejos de salud de memoria. " + emergencyLineFor(query, pt, es);
+   return pt
+     ? "Não tenho uma fonte offline confiável sobre isso, então não vou arriscar orientações de saúde de memória. Em uma emergência, ligue para o serviço de emergência local (192 SAMU ou 193 Bombeiros no Brasil, 112 na Europa, 911 nos EUA)."
+     : "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).";
+diff --git a/src/routing/emergencyNumbers.ts b/src/routing/emergencyNumbers.ts
+index 8e4acc2..f56be19 100644
+--- a/src/routing/emergencyNumbers.ts
++++ b/src/routing/emergencyNumbers.ts
+@@ -2,7 +2,11 @@
+  * "Quais números de emergência eu preciso saber na Tailândia?" (Sextant trv-001-pt, gate a11d730): the library
+  * had nothing on Thailand, and the no-source health answer gave Brazil's, Europe's and the US numbers. A small
+  * fixed table of national emergency numbers answers exactly, for the countries it lists (from each country's
+- * official numbers as listed by Wikipedia's "List of emergency telephone numbers"; checked 2026-09). Pure.
++ * official numbers as listed by Wikipedia's "List of emergency telephone numbers"; checked 2026-09). 2026-10-03 (Compass): AR/CO/CL/PE/ES/MX/BR/PT/EU
++ * verified on government pages (compass/exp/emergency-numbers/official-2026-10-03.json); aliases are Unicode-safe (\b missed "Canadá"),
++ * Spain matches "España", Turkey only as a country name (not the food), Chile/Peru only capitalised (chile/peru = chili/turkey).
++ * Opus reviewer (2026-10-03): lowercase "usa" (verb) no longer means the US, "franca" no longer France, "china" (porcelain/pebble/orange)
++ * no longer China, food continuations excluded for Turkey/Chile/Peru, "returned from X" ignored by emergencyNumbersLine. Pure.
+  */
+ 
+ interface CountryNumbers {
+@@ -13,28 +17,33 @@ interface CountryNumbers {
+ }
+ 
+ const COUNTRIES: CountryNumbers[] = [
+-  { names: /\b(thailand|tail[âa]ndia|bangkok)\b/i, en: "Thailand: police 191, ambulance 1669, fire 199, tourist police 1155 (English-speaking).", pt: "Tailândia: polícia 191, ambulância 1669, bombeiros 199, polícia turística 1155 (atende em inglês).", es: "Tailandia: policía 191, ambulancia 1669, bomberos 199, policía turística 1155 (atiende en inglés)." },
+-  { names: /\b(brazil|brasil)\b/i, en: "Brazil: police 190, ambulance (SAMU) 192, fire 193.", pt: "Brasil: polícia 190, ambulância (SAMU) 192, bombeiros 193.", es: "Brasil: policía 190, ambulancia (SAMU) 192, bomberos 193." },
+-  { names: /\b(portugal)\b/i, en: "Portugal: 112 (police, ambulance and fire).", pt: "Portugal: 112 (polícia, ambulância e bombeiros).", es: "Portugal: 112 (policía, ambulancia y bomberos)." },
+-  { names: /\b(spain|espanha)\b/i, en: "Spain: 112 (all emergencies).", pt: "Espanha: 112 (todas as emergências).", es: "España: 112 (todas las emergencias)." },
+-  { names: /\b(france|fran[çc]a)\b/i, en: "France: 112, or ambulance (SAMU) 15, police 17, fire 18.", pt: "França: 112, ou ambulância (SAMU) 15, polícia 17, bombeiros 18.", es: "Francia: 112, o ambulancia (SAMU) 15, policía 17, bomberos 18." },
+-  { names: /\b(germany|alemanha)\b/i, en: "Germany: ambulance and fire 112, police 110.", pt: "Alemanha: ambulância e bombeiros 112, polícia 110.", es: "Alemania: ambulancia y bomberos 112, policía 110." },
+-  { names: /\b(italy|it[áa]lia)\b/i, en: "Italy: 112 (all emergencies).", pt: "Itália: 112 (todas as emergências).", es: "Italia: 112 (todas las emergencias)." },
+-  { names: /\b(united kingdom|uk|england|scotland|wales|reino unido|inglaterra|esc[óo]cia)\b/i, en: "United Kingdom: 999 or 112.", pt: "Reino Unido: 999 ou 112.", es: "Reino Unido: 999 o 112." },
+-  { names: /\b(united states|usa|u\.s\.|estados unidos|eua)\b/i, en: "United States: 911.", pt: "Estados Unidos: 911.", es: "Estados Unidos: 911." },
+-  { names: /\b(canada|canad[áa])\b/i, en: "Canada: 911.", pt: "Canadá: 911.", es: "Canadá: 911." },
+-  { names: /\b(mexico|m[ée]xico)\b/i, en: "Mexico: 911.", pt: "México: 911.", es: "México: 911." },
+-  { names: /\b(argentina)\b/i, en: "Argentina: 911 (police), ambulance 107, fire 100.", pt: "Argentina: 911 (polícia), ambulância 107, bombeiros 100.", es: "Argentina: 911 (policía), ambulancia 107, bomberos 100." },
+-  { names: /\b(japan|jap[ãa]o)\b/i, en: "Japan: police 110, fire and ambulance 119.", pt: "Japão: polícia 110, bombeiros e ambulância 119.", es: "Japón: policía 110, bomberos y ambulancia 119." },
+-  { names: /\b(china)\b/i, en: "China: police 110, ambulance 120, fire 119.", pt: "China: polícia 110, ambulância 120, bombeiros 119.", es: "China: policía 110, ambulancia 120, bomberos 119." },
++  { names: /(?<![\p{L}])(?:thailand|tail[âa]ndia|bangkok)(?![\p{L}])/iu, en: "Thailand: police 191, ambulance 1669, fire 199, tourist police 1155 (English-speaking).", pt: "Tailândia: polícia 191, ambulância 1669, bombeiros 199, polícia turística 1155 (atende em inglês).", es: "Tailandia: policía 191, ambulancia 1669, bomberos 199, policía turística 1155 (atiende en inglés)." },
++  { names: /(?<![\p{L}])(?:brazil|brasil)(?![\p{L}])/iu, en: "Brazil: police 190, ambulance (SAMU) 192, fire 193.", pt: "Brasil: polícia 190, ambulância (SAMU) 192, bombeiros 193.", es: "Brasil: policía 190, ambulancia (SAMU) 192, bomberos 193." },
++  { names: /(?<![\p{L}])(?:portugal|lisboa|lisbon)(?![\p{L}])/iu, en: "Portugal: 112 (police, ambulance and fire).", pt: "Portugal: 112 (polícia, ambulância e bombeiros).", es: "Portugal: 112 (policía, ambulancia y bomberos)." },
++  { names: /(?<![\p{L}])(?:spain|espanha|espa[ñn]a)(?![\p{L}])/iu, en: "Spain: 112 (all emergencies).", pt: "Espanha: 112 (todas as emergências).", es: "España: 112 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:france|frança)(?![\p{L}])/iu, en: "France: 112, or ambulance (SAMU) 15, police 17, fire 18.", pt: "França: 112, ou ambulância (SAMU) 15, polícia 17, bombeiros 18.", es: "Francia: 112, o ambulancia (SAMU) 15, policía 17, bomberos 18." },
++  { names: /(?<![\p{L}])(?:germany|alemanha)(?![\p{L}])/iu, en: "Germany: ambulance and fire 112, police 110.", pt: "Alemanha: ambulância e bombeiros 112, polícia 110.", es: "Alemania: ambulancia y bomberos 112, policía 110." },
++  { names: /(?<![\p{L}])(?:italy|it[áa]lia)(?![\p{L}])/iu, en: "Italy: 112 (all emergencies).", pt: "Itália: 112 (todas as emergências).", es: "Italia: 112 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:united kingdom|uk|england|scotland|wales|reino unido|inglaterra|esc[óo]cia)(?![\p{L}])/iu, en: "United Kingdom: 999 or 112.", pt: "Reino Unido: 999 ou 112.", es: "Reino Unido: 999 o 112." },
++  { names: /(?<![\p{L}])(?:[Uu]nited [Ss]tates|UNITED STATES|[Ee]stados [Uu]nidos|ESTADOS UNIDOS|EUA|eua|USA|U\.S\.|EE\.? ?UU\.?)(?![\p{L}])/u, en: "United States: 911.", pt: "Estados Unidos: 911.", es: "Estados Unidos: 911." },
++  { names: /(?<![\p{L}])(?:canada|canad[áa])(?![\p{L}])/iu, en: "Canada: 911.", pt: "Canadá: 911.", es: "Canadá: 911." },
++  { names: /(?<![\p{L}])(?:mexico|m[ée]xico|ciudad de m[ée]xico|cdmx|canc[úu]n)(?![\p{L}])/iu, en: "Mexico: 911.", pt: "México: 911.", es: "México: 911." },
++  { names: /(?<![\p{L}])(?:argentina|buenos aires|bariloche|ushuaia)(?![\p{L}])/iu, en: "Argentina: 911 (police or ambulance); ambulance also 107 (City of Buenos Aires and most provinces), fire 100.", pt: "Argentina: 911 (polícia ou ambulância); ambulância também 107 (Cidade de Buenos Aires e a maioria das províncias), bombeiros 100.", es: "Argentina: 911 (policía o ambulancia); ambulancia también 107 (Ciudad de Buenos Aires y la mayoría de las provincias), bomberos 100." },
++  { names: /(?<![\p{L}])(?:japan|jap[ãa]o)(?![\p{L}])/iu, en: "Japan: police 110, fire and ambulance 119.", pt: "Japão: polícia 110, bombeiros e ambulância 119.", es: "Japón: policía 110, bomberos y ambulancia 119." },
++  { names: /(?<![\p{L}])(?:China|CHINA)(?![\p{L}])/u, en: "China: police 110, ambulance 120, fire 119.", pt: "China: polícia 110, ambulância 120, bombeiros 119.", es: "China: policía 110, ambulancia 120, bomberos 119." },
+   // Not North Korea ("North Korea", "Coreia do Norte"): South Korea's numbers would be wrong there.
+   { names: /\b(south korea|coreia do sul)\b|(?<!north\s)\bkorea\b|\bcoreia\b(?!\s+do\s+norte)/i, en: "South Korea: police 112, fire and ambulance 119.", pt: "Coreia do Sul: polícia 112, bombeiros e ambulância 119.", es: "Corea del Sur: policía 112, bomberos y ambulancia 119." },
+-  { names: /\b(india|[íi]ndia)\b/i, en: "India: 112 (all emergencies).", pt: "Índia: 112 (todas as emergências).", es: "India: 112 (todas las emergencias)." },
+-  { names: /\b(australia|austr[áa]lia)\b/i, en: "Australia: 000 (112 also works from mobile phones).", pt: "Austrália: 000 (112 também funciona em celulares).", es: "Australia: 000 (112 también funciona desde celulares)." },
+-  { names: /\b(new zealand|nova zel[âa]ndia)\b/i, en: "New Zealand: 111.", pt: "Nova Zelândia: 111.", es: "Nueva Zelanda: 111." },
+-  { names: /\b(vietnam|vietn[ãa])\b/i, en: "Vietnam: police 113, fire 114, ambulance 115.", pt: "Vietnã: polícia 113, bombeiros 114, ambulância 115.", es: "Vietnam: policía 113, bomberos 114, ambulancia 115." },
+-  { names: /\b(philippines|filipinas)\b/i, en: "Philippines: 911.", pt: "Filipinas: 911.", es: "Filipinas: 911." },
+-  { names: /\b(turkey|t[üu]rkiye|turquia)\b/i, en: "Turkey: 112 (all emergencies).", pt: "Turquia: 112 (todas as emergências).", es: "Turquía: 112 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:india|[íi]ndia)(?![\p{L}])/iu, en: "India: 112 (all emergencies).", pt: "Índia: 112 (todas as emergências).", es: "India: 112 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:australia|austr[áa]lia)(?![\p{L}])/iu, en: "Australia: 000 (112 also works from mobile phones).", pt: "Austrália: 000 (112 também funciona em celulares).", es: "Australia: 000 (112 también funciona desde celulares)." },
++  { names: /(?<![\p{L}])(?:new zealand|nova zel[âa]ndia)(?![\p{L}])/iu, en: "New Zealand: 111.", pt: "Nova Zelândia: 111.", es: "Nueva Zelanda: 111." },
++  { names: /(?<![\p{L}])(?:vietnam|vietn[ãa])(?![\p{L}])/iu, en: "Vietnam: police 113, fire 114, ambulance 115.", pt: "Vietnã: polícia 113, bombeiros 114, ambulância 115.", es: "Vietnam: policía 113, bomberos 114, ambulancia 115." },
++  { names: /(?<![\p{L}])(?:philippines|filipinas)(?![\p{L}])/iu, en: "Philippines: 911.", pt: "Filipinas: 911.", es: "Filipinas: 911." },
++  { names: /(?<![\p{L}])(?:Turkey|TURKEY|T[üu]rkiye|t[üu]rkiye|Turquia|turquia|Turqu[íi]a|turqu[íi]a)(?![\p{L}])(?!\s+(?:bones?|meat|sandwich(?:es)?|legs?|breast|dinner|gravy|stuffing|burgers?|bacon|slices?|skin|neck|wings?|jerky|sub|deli))/u, en: "Turkey: 112 (all emergencies).", pt: "Turquia: 112 (todas as emergências).", es: "Turquía: 112 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:col[ôo]mbia|bogot[áa]|medell[íi]n)(?![\p{L}])/iu, en: "Colombia: 123 (all emergencies).", pt: "Colômbia: 123 (todas as emergências).", es: "Colombia: 123 (todas las emergencias)." },
++  { names: /(?<![\p{L}])(?:Chile|CHILE|Valpara[íi]so|valpara[íi]so|Punta Arenas|San Pedro de Atacama|Isla de Pascua|Easter Island|Ilha de P[áa]scoa)(?![\p{L}])(?!\s+(?:en\s+(?:el|la|los|las|mi|mis|su|sus|tu|tus)\s|en polvo|powder|peppers?|oil|flakes|sauce|seeds|habanero|jalape|serrano|verde|rojo|piqu|chipotle|picante|molido|de [áa]rbol))/u, en: "Chile: ambulance (SAMU) 131, fire 132, police (Carabineros) 133.", pt: "Chile: ambulância (SAMU) 131, bombeiros 132, polícia (Carabineros) 133.", es: "Chile: ambulancia (SAMU) 131, bomberos 132, policía (Carabineros) 133." },
++  { names: /(?<![\p{L}])(?:Peru|Perú|PERU|PERÚ|perú|Cusco|Cuzco|cusco|cuzco|Machu Picchu|machu picchu|Arequipa|arequipa)(?![\p{L}])(?!\s+(?:assado|recheado|defumado|desfiado|de [Nn]atal))/u, en: "Peru: ambulance (SAMU) 106, fire 116, police 105.", pt: "Peru: ambulância (SAMU) 106, bombeiros 116, polícia 105.", es: "Perú: ambulancia (SAMU) 106, bomberos 116, policía 105." },
++  // EU row LAST so a named country wins (European Commission / Your Europe: 112 across the EU).
++  { names: /(?<![\p{L}])(?:european union|uni[ãa]o europeia|uni[óo]n europea|europe|europa)(?![\p{L}])/iu, en: "European Union: 112 works in every EU country and many others in Europe (police, ambulance, fire).", pt: "União Europeia: 112 funciona em todos os países da UE e em muitos outros da Europa (polícia, ambulância, bombeiros).", es: "Unión Europea: 112 funciona en todos los países de la UE y en muchos otros de Europa (policía, ambulancia, bomberos)." },
+ ];
+ 
+ const ASKS_NUMBERS =
+@@ -47,14 +56,19 @@ export function emergencyNumbersAnswer(query: string, pt: boolean, es = false):
+   if (!hits.length) return null;
+   const esq = es && !pt;
+   const lines = hits.map((c) => (pt ? c.pt : esq ? c.es : c.en));
+-  if (esq) return `Números de emergencia (tabla offline de la app): ${lines.join(" ")} Si una vida está en riesgo, llama de inmediato.`;
++  if (esq) return `Números de emergencia (tabla offline de la app): ${lines.join(" ")} Si una vida está en riesgo, llame de inmediato.`;
+   return pt
+     ? `Números de emergência (tabela offline do app): ${lines.join(" ")} Em caso de risco à vida, ligue imediatamente.`
+     : `Emergency numbers (the app's offline table): ${lines.join(" ")} If a life is at risk, call right away.`;
+ }
+ 
+ /** The emergency numbers line of the first listed country the text names, or null. */
++/** "Returned from X" spans are removed before the line lookup (Opus reviewer 2026-10-03, #27: "desde que voltei de bariloche"
++ * gave a Brazilian Argentina's numbers). The explicit numbers answer keeps them ("números de emergencia en X" names X on purpose). */
++const RETURNED_FROM = /(?:volv[ií](?:mos)?|regres[eé]|regresamos|voltei|voltamos|vim|viemos|retornei|came back|got back|returned|flew back|back home)\s+(?:de|del|da|do|das|dos|from)\s+(?:la\s+|el\s+|a\s+|o\s+|the\s+)?\p{L}+(?:\s+\p{L}+)?/giu;
++
+ export function emergencyNumbersLine(text: string, pt: boolean, es = false): string | null {
+-  const hit = COUNTRIES.find((c) => c.names.test(text));
++  const t = text.replace(RETURNED_FROM, "");
++  const hit = COUNTRIES.find((c) => c.names.test(t));
+   return hit ? (pt ? `Emergência — ${hit.pt}` : es ? `Emergencia — ${hit.es}` : `Emergency — ${hit.en}`) : null;
+ }
+diff --git a/src/routing/esFixedStrings.test.ts b/src/routing/esFixedStrings.test.ts
+index 601c6eb..1f21f34 100644
+--- a/src/routing/esFixedStrings.test.ts
++++ b/src/routing/esFixedStrings.test.ts
+@@ -1,39 +1,74 @@
+ import { describe, expect, it } from "vitest";
+-import { currentEventAnswer, emergencyLine, isNoStepsAnswer, noSafeStepsAnswer, sourceLanguageLead, uncitedPreface, stripModelDisclaimer } from "./context";
++import { currentEventAnswer, emergencyLine, emergencyLineFor, ES_EMERGENCY_NEUTRAL, isNoStepsAnswer, noHealthSourceAnswer, noSafeStepsAnswer, sourceLanguageLead, uncitedPreface, stripModelDisclaimer } from "./context";
+ import { emergencyNumbersAnswer, emergencyNumbersLine } from "./emergencyNumbers";
+ import { snakebiteFirstAidCard } from "./firstAidCards";
+ 
+-// R1+ES (Compass, after chat-v3 blind B3): Spanish versions of fixed engine strings. PT keeps precedence (pt=true wins).
+-describe("R1+ES fixed strings", () => {
+-  it("emergency line, no-safe-steps, current events, uncited preface in ES; PT and EN unchanged", () => {
+-    expect(emergencyLine(false, true)).toBe("En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).");
++// R1+ES (Compass) + ES strings v2 (Opus reviewer 2026-10-03: usted; the country's numbers when a country is named, a neutral
++// line otherwise; official numbers for AR/CO/CL/PE/ES/MX/BR/PT/EU). PT keeps precedence (pt=true wins).
++describe("ES fixed strings", () => {
++  it("usted register and the neutral emergency line; PT and EN unchanged", () => {
++    expect(emergencyLine(false, true)).toBe("En una emergencia, llame al número de emergencias local.");
++    expect(ES_EMERGENCY_NEUTRAL).not.toMatch(/911|112|América/);
+     expect(emergencyLine(true, true)).toBe(emergencyLine(true));
+     expect(emergencyLine(false)).toMatch(/^In an emergency/);
+-    expect(noSafeStepsAnswer(false, true)).toMatch(/^No encontré en la biblioteca offline.*Llama ahora al número de emergencias/);
++    expect(noSafeStepsAnswer(false, true)).toBe("No encontré en la biblioteca offline instrucciones de primeros auxilios seguras para esto. Llame ahora al número de emergencias local y busque atención médica lo antes posible.");
+     expect(noSafeStepsAnswer(true, true)).toBe(noSafeStepsAnswer(true));
+     expect(currentEventAnswer(false, true)).toMatch(/^Estoy sin conexión.*septiembre de 2026/);
+-    expect(uncitedPreface(false, true)).toMatch(/^Esta respuesta no viene de una fuente offline/);
++    expect(uncitedPreface(false, true)).toBe("Esta respuesta no viene de una fuente offline de este teléfono; verifíquela antes de confiar en ella.");
+     expect(stripModelDisclaimer(`${uncitedPreface(false, true)}\n\nFue un compromiso.`, false, true)).toBe("Fue un compromiso.");
++    expect(noHealthSourceAnswer(false, true)).toMatch(/llame al número de emergencias local\.$/);
+   });
+-  it("the ES no-steps answer is recognised as a no-steps answer (card logic depends on it)", () => {
+-    expect(isNoStepsAnswer("La fuente offline no trae los pasos de primeros auxilios para esto. En una emergencia, llama al número de emergencias local (911 en gran parte de América, 112 en Europa).")).toBe(true);
++  it("a Spanish question that names a country gets that country's numbers", () => {
++    expect(emergencyLineFor("me picó un alacrán, estoy en Cusco", false, true)).toBe("Emergencia — Perú: ambulancia (SAMU) 106, bomberos 116, policía 105.");
++    expect(emergencyLineFor("estamos en Chile, se cayó y no responde", false, true)).toMatch(/^Emergencia — Chile: ambulancia \(SAMU\) 131/);
++    expect(emergencyLineFor("estoy en Bogotá y me duele el pecho", false, true)).toBe("Emergencia — Colombia: 123 (todas las emergencias).");
++    expect(emergencyLineFor("me duele el pecho", false, true)).toBe(ES_EMERGENCY_NEUTRAL);
++    expect(noSafeStepsAnswer(false, true, "estoy en Medellín")).toMatch(/\n\nEmergencia — Colombia: 123/);
++    expect(emergencyLineFor("estoy em Lisboa", true, false)).toBe(emergencyLine(true)); // PT/EN unchanged by this patch
++  });
++  it("the ES no-steps answer is still recognised as a no-steps answer", () => {
++    expect(isNoStepsAnswer(`La fuente offline no trae los pasos de primeros auxilios para esto. ${ES_EMERGENCY_NEUTRAL}`)).toBe(true);
+     expect(isNoStepsAnswer("La fuente offline no trae los pasos de primeros auxilios para esto. Lo que dice la fuente (en inglés):\nDrop. [1]")).toBe(false);
+   });
+   it("source-language lead for an ES question", () => {
+     expect(sourceLanguageLead(false, "The monsoon is a seasonal wind of the Indian Ocean and the rains it brings to the land.", true)).toBe("De la fuente offline (en inglés):");
+-    expect(sourceLanguageLead(true, "The monsoon is a seasonal wind of the Indian Ocean and the rains it brings to the land.", true)).toBe("Da fonte offline (em inglês):");
+   });
+-  it("emergency numbers in ES for an ES question; PT precedence kept", () => {
+-    const q = "¿Cuáles son los números de emergencia en Tailandia?";
+-    expect(emergencyNumbersAnswer(q, false, true)).toBe("Números de emergencia (tabla offline de la app): Tailandia: policía 191, ambulancia 1669, bomberos 199, policía turística 1155 (atiende en inglés). Si una vida está en riesgo, llama de inmediato.");
+-    expect(emergencyNumbersAnswer(q, true, true)).toMatch(/^Números de emergência/);
+-    expect(emergencyNumbersLine("en México", false, true)).toBe("Emergencia — México: 911.");
++  it("emergency numbers table: verified rows, Unicode-safe aliases, no food matches", () => {
++    expect(emergencyNumbersAnswer("¿Cuáles son los números de emergencia en Tailandia?", false, true)).toBe("Números de emergencia (tabla offline de la app): Tailandia: policía 191, ambulancia 1669, bomberos 199, policía turística 1155 (atiende en inglés). Si una vida está en riesgo, llame de inmediato.");
++    expect(emergencyNumbersAnswer("números de emergencia en España", false, true)).toMatch(/España: 112/);
++    expect(emergencyNumbersLine("emergency numbers in Canadá please", false)).toBe("Emergency — Canada: 911.");
++    expect(emergencyNumbersLine("he choked on a turkey bone", false)).toBeNull();
++    expect(emergencyNumbersLine("engasgou com osso de peru", true)).toBeNull();
++    expect(emergencyNumbersLine("me cayó chile en los ojos", false, true)).toBeNull();
++    expect(emergencyNumbersLine("we are in Turkey", false)).toMatch(/Turkey: 112/);
++    expect(emergencyNumbersLine("números de emergencia en Argentina", false, true)).toBe("Emergencia — Argentina: 911 (policía o ambulancia); ambulancia también 107 (Ciudad de Buenos Aires y la mayoría de las provincias), bomberos 100.");
++    expect(emergencyNumbersLine("estamos en Europa", false, true)).toMatch(/112/);
++    expect(emergencyNumbersLine("estamos en España, Europa", false, true)).toMatch(/^Emergencia — España/); // a named country wins over the EU row
++    expect(emergencyNumbersAnswer("¿Cuáles son los números de emergencia en Tailandia?", true, true)).toMatch(/^Números de emergência/);
+   });
+-  it("snakebite card in ES (draft wording) closes with an ES emergency line", () => {
++  it("snakebite card in ES (usted) closes with an ES emergency line", () => {
+     const card = snakebiteFirstAidCard("me mordió una serpiente, ayuda", false, true);
+-    expect(card).toMatch(/^Mordedura de serpiente, primeros auxilios:/);
+-    expect(card).toMatch(/NO uses un torniquete apretado/);
+-    expect(card.trim().endsWith("112 en Europa).")).toBe(true);
++    expect(card).toMatch(/^Mordedura de serpiente, primeros auxilios: aléjese de la serpiente/);
++    expect(card).toMatch(/NO use un torniquete apretado/);
++    expect(card.trim().endsWith("llame al número de emergencias local.")).toBe(true);
+     expect(snakebiteFirstAidCard("fui picado por uma cobra, o que faço?", true, true)).toMatch(/^Picada de cobra/);
+   });
+ });
++
++// The Opus reviewer's alias cases (esstrings-v2/REVIEWER.md §4–§5; 1 accepted false negative: "Chile en el sur").
++describe("country aliases: reviewer cases", () => {
++  const line = (t: string) => emergencyNumbersLine(t, false, true);
++  const none = ["Turkey bone stuck in my throat", "Turkey sandwich made him sick", "mi papá usa marcapasos y se desmayó", "qué se usa para una quemadura",
++    "minha mae q usa andador", "Usa insulina y está confundido", "hemorragia franca", "moro em Franca", "cut my hand on broken china",
++    "se me metió una china en el ojo", "jugo de china", "Chile en los ojos qué hago", "Chile powder in my eyes", "Peru assado no natal",
++    "to com tosse desde que voltei de bariloche", "just got back from Lisbon, chest pain", "Chile en el sur"];
++  it.each(none)("no country line: %s", (t) => expect(line(t)).toBeNull());
++  const hits: Array<[string, RegExp]> = [["we are in Turkey", /Turkey|Turquía/], ["Turkey, what number?", /Turquía/], ["Turkey emergency number", /Turquía/],
++    ["estamos en Estados Unidos", /Estados Unidos/], ["we're in the USA", /Estados Unidos/], ["nos EUA", /Estados Unidos/], ["en EE.UU.", /Estados Unidos/],
++    ["in the U.S. now", /Estados Unidos/], ["estou na França", /Francia/], ["ESTOU NA FRANÇA", /Francia/], ["in France", /Francia/], ["estoy en China", /China/],
++    ["estamos en Chile, se cayó", /Chile/], ["Chile, qué número", /Chile/], ["Santiago de Chile", /Chile/], ["no Peru", /Perú/], ["estoy en Cusco", /Perú/],
++    ["estoy en Buenos Aires, volví de Chile ayer", /Argentina/], ["returned from the beach in Lisbon", /Portugal/]];
++  it.each(hits)("country line: %s", (t, rx) => expect(line(t)).toMatch(rx));
++  it("the EU row says 112 also works beyond the EU", () => expect(line("estamos en Europa")).toBe("Emergencia — Unión Europea: 112 funciona en todos los países de la UE y en muchos otros de Europa (policía, ambulancia, bomberos)."));
++  it("snakebite ES says where not to put chemicals", () => expect(snakebiteFirstAidCard("me mordió una serpiente", false, true)).toMatch(/ni ponga productos químicos en la herida\./));
++});
+diff --git a/src/routing/firstAidCards.ts b/src/routing/firstAidCards.ts
+index 327afac..ca9df5c 100644
+--- a/src/routing/firstAidCards.ts
++++ b/src/routing/firstAidCards.ts
+@@ -25,10 +25,10 @@ export function isSnakebiteFirstAid(query: string): boolean {
+ export function snakebiteFirstAidCard(query: string, pt: boolean, es = false): string {
+   const esq = es && !pt;
+   const emergency = emergencyNumbersLine(query, pt, esq) ?? emergencyLine(pt, esq);
+-  // ES: a translation of the EN/PT card above (same WHO statements), DRAFT pending native-speaker review (Compass, R1+ES).
++  // ES: a translation of the EN/PT card above (same WHO statements); register usted per the Opus reviewer (2026-10-03).
+   if (esq)
+     return (
+-      "Mordedura de serpiente, primeros auxilios: aléjate de la serpiente y no intentes atraparla ni matarla. Mantén a la persona quieta y tranquila, sin que se mueva; si puedes, llévala en una camilla improvisada y trasládala a atención médica sin demora. NO uses un torniquete apretado, NO cortes la herida y NO chupes el veneno ni pongas productos químicos.\n\n" +
++      "Mordedura de serpiente, primeros auxilios: aléjese de la serpiente y no intente atraparla ni matarla. Mantenga a la persona quieta y tranquila, sin que se mueva; si puede, llévela en una camilla improvisada y trasládela a atención médica sin demora. NO use un torniquete apretado, NO corte la herida y NO chupe el veneno ni ponga productos químicos en la herida.\n\n" +
+       "Fuente: OMS, preguntas y respuestas sobre el envenenamiento por mordedura de serpiente (2019).\n\n" +
+       emergency
+     );

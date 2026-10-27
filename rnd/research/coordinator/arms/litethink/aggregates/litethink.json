@@ -1,0 +1,605 @@
+{
+ "criterion_sha256": "e235f9bc36f69232d32c9407a48141520eceda1d6bca5be87ddab632e11d17e7",
+ "n": 20,
+ "judge": "claude-haiku-5-5 effort low, N=4 shards, both orders",
+ "estimator": "l2_agg.py per-item bootstrap ratio-of-sums diff, B 2000, seed 11, paired on queryId",
+ "stats": {
+  "NT": {
+   "n": 20,
+   "raw": 0.522,
+   "raw_ci": [
+    0.465,
+    0.58
+   ],
+   "above_min": 0.383,
+   "above_min_ci": [
+    0.307,
+    0.46
+   ],
+   "win_tie_loss": [
+    0,
+    0,
+    20
+   ],
+   "pos_consistency": 1.0
+  },
+  "T512": {
+   "n": 20,
+   "raw": 0.481,
+   "raw_ci": [
+    0.419,
+    0.548
+   ],
+   "above_min": 0.333,
+   "above_min_ci": [
+    0.258,
+    0.42
+   ],
+   "win_tie_loss": [
+    0,
+    0,
+    20
+   ],
+   "pos_consistency": 1.0
+  },
+  "T256": {
+   "n": 20,
+   "raw": 0.52,
+   "raw_ci": [
+    0.455,
+    0.588
+   ],
+   "above_min": 0.383,
+   "above_min_ci": [
+    0.301,
+    0.469
+   ],
+   "win_tie_loss": [
+    0,
+    0,
+    20
+   ],
+   "pos_consistency": 1.0
+  }
+ },
+ "timing": {
+  "NT": {
+   "reasoning_p50": 0.0,
+   "reasoning_p90": 0,
+   "reasoning_max": 0,
+   "reasoning_zero": 20,
+   "total_p50_s": 6.54,
+   "ttft_p50_s": 4.71,
+   "answer_words_p50": 38.5,
+   "prompt_p50": 789.5
+  },
+  "T512": {
+   "reasoning_p50": 118.0,
+   "reasoning_p90": 219,
+   "reasoning_max": 520,
+   "reasoning_zero": 5,
+   "total_p50_s": 8.09,
+   "ttft_p50_s": 6.74,
+   "answer_words_p50": 37.5,
+   "prompt_p50": 785.5,
+   "budget_hit_share": 0.05
+  },
+  "T256": {
+   "reasoning_p50": 118.0,
+   "reasoning_p90": 219,
+   "reasoning_max": 264,
+   "reasoning_zero": 5,
+   "total_p50_s": 8.85,
+   "ttft_p50_s": 7.54,
+   "answer_words_p50": 37.5,
+   "prompt_p50": 785.5,
+   "budget_hit_share": 0.1
+  }
+ },
+ "paired": {
+  "T512-NT": {
+   "n": 20,
+   "d_raw": -0.041,
+   "d_raw_ci": [
+    -0.084,
+    0.003
+   ],
+   "d_above_min": -0.049,
+   "d_above_min_ci": [
+    -0.104,
+    0.006
+   ],
+   "items_better_worse": [
+    7,
+    10
+   ]
+  },
+  "T256-NT": {
+   "n": 20,
+   "d_raw": -0.001,
+   "d_raw_ci": [
+    -0.038,
+    0.038
+   ],
+   "d_above_min": 0.0,
+   "d_above_min_ci": [
+    -0.044,
+    0.048
+   ],
+   "items_better_worse": [
+    8,
+    6
+   ]
+  },
+  "T512-T256": {
+   "n": 20,
+   "d_raw": -0.04,
+   "d_raw_ci": [
+    -0.074,
+    -0.01
+   ],
+   "d_above_min": -0.049,
+   "d_above_min_ci": [
+    -0.093,
+    -0.012
+   ],
+   "items_better_worse": [
+    4,
+    9
+   ]
+  },
+  "Tmean-NT": {
+   "n": 20,
+   "d_raw": -0.021,
+   "d_raw_ci": [
+    -0.058,
+    0.017
+   ],
+   "d_above_min": -0.025,
+   "d_above_min_ci": [
+    -0.07,
+    0.023
+   ],
+   "items_better_worse": [
+    7,
+    9
+   ]
+  },
+  "Tmean-NT_on_15_thinking_items": {
+   "n": 15,
+   "d_raw": -0.015,
+   "d_raw_ci": [
+    -0.067,
+    0.03
+   ],
+   "d_above_min": -0.017,
+   "d_above_min_ci": [
+    -0.082,
+    0.039
+   ],
+   "items_better_worse": [
+    6,
+    6
+   ]
+  }
+ },
+ "split": {
+  "T512": {
+   "thin": {
+    "n": 8,
+    "d_raw": -0.011,
+    "d_raw_ci": [
+     -0.075,
+     0.033
+    ],
+    "d_above_min": -0.014,
+    "d_above_min_ci": [
+     -0.093,
+     0.04
+    ],
+    "items_better_worse": [
+     4,
+     1
+    ]
+   },
+   "invented": {
+    "n": 1,
+    "d_raw": 0.077,
+    "d_raw_ci": [
+     0.077,
+     0.077
+    ],
+    "d_above_min": 0.1,
+    "d_above_min_ci": [
+     0.1,
+     0.1
+    ],
+    "items_better_worse": [
+     1,
+     0
+    ]
+   },
+   "rest": {
+    "n": 11,
+    "d_raw": -0.073,
+    "d_raw_ci": [
+     -0.133,
+     -0.014
+    ],
+    "d_above_min": -0.088,
+    "d_above_min_ci": [
+     -0.166,
+     -0.011
+    ],
+    "items_better_worse": [
+     2,
+     9
+    ]
+   }
+  },
+  "T256": {
+   "thin": {
+    "n": 8,
+    "d_raw": 0.029,
+    "d_raw_ci": [
+     0.005,
+     0.058
+    ],
+    "d_above_min": 0.034,
+    "d_above_min_ci": [
+     0.006,
+     0.067
+    ],
+    "items_better_worse": [
+     3,
+     0
+    ]
+   },
+   "invented": {
+    "n": 1,
+    "d_raw": 0.115,
+    "d_raw_ci": [
+     0.115,
+     0.115
+    ],
+    "d_above_min": 0.15,
+    "d_above_min_ci": [
+     0.15,
+     0.15
+    ],
+    "items_better_worse": [
+     1,
+     0
+    ]
+   },
+   "rest": {
+    "n": 11,
+    "d_raw": -0.032,
+    "d_raw_ci": [
+     -0.086,
+     0.029
+    ],
+    "d_above_min": -0.035,
+    "d_above_min_ci": [
+     -0.102,
+     0.04
+    ],
+    "items_better_worse": [
+     4,
+     6
+    ]
+   }
+  }
+ },
+ "verdict": {
+  "T512": "NEGATIVE",
+  "T256": "FLAT"
+ },
+ "per_item": {
+  "st-boar-factbook-001": {
+   "bucket": "rest",
+   "NT": -1.0,
+   "T512": -1.333,
+   "T256": -0.667,
+   "rNT": 0,
+   "rT512": 89,
+   "rT256": 89,
+   "ansNT": "Kyrgyzstan's capital is Bishkek, it has approximately 6.2 million residents, and the land is mostly mountainous, with 94% of the country above 1,000 meters in e",
+   "ansT512": "Kyrgyzstan's capital is Bishkek, home to approximately 6.2 million people, and the country is predominantly mountainous, with 94% of its area above 1,000 meters",
+   "ansT256": "Kyrgyzstan's capital is Bishkek, home to approximately 6.2 million people, and the country is predominantly mountainous, with 94% of its area above 1,000 meters"
+  },
+  "st-boar-factbook-004": {
+   "bucket": "rest",
+   "NT": -1.667,
+   "T512": -3.333,
+   "T256": -2.667,
+   "rNT": 0,
+   "rT512": 164,
+   "rT256": 164,
+   "ansNT": "The capital of Bhutan, Thimphu, got its name from a legend involving a local deity. Bhutan has a population of approximately 892,877 people. The story involves ",
+   "ansT512": "Bhutan's capital, Thimphu, derives its name from the local Dzongkha term \"Druk Yul\" (Land of the Dragon), rooted in a legend of a deity dissolving before a trav",
+   "ansT256": "Bhutan's capital, Thimphu, derives its name from the local Dzongkha term \"Druk Yul\" (Land of the Dragon), rooted in a legend of a deity dissolving before a trav"
+  },
+  "st-boar-firstaid-en-008": {
+   "bucket": "rest",
+   "NT": -2.5,
+   "T512": -2.833,
+   "T256": -3.0,
+   "rNT": 0,
+   "rT512": 0,
+   "rT256": 0,
+   "ansNT": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT512": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT256": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112"
+  },
+  "st-boar-firstaid-en-009": {
+   "bucket": "rest",
+   "NT": -2.333,
+   "T512": -2.667,
+   "T256": -2.167,
+   "rNT": 0,
+   "rT512": 0,
+   "rT256": 0,
+   "ansNT": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT512": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT256": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112"
+  },
+  "st-boar-medlineplus-en-005": {
+   "bucket": "thin",
+   "NT": -2.333,
+   "T512": -3.333,
+   "T256": -2.333,
+   "rNT": 0,
+   "rT512": 520,
+   "rT256": 264,
+   "ansNT": "Pubic lice spread mainly through sexual contact and can also spread through close physical contact or shared clothing [4]. To get rid of them, use over-the-coun",
+   "ansT512": "Pubic lice (crabs) spread through sexual contact and physical touch, and treatment involves washing clothes, using hot water, and vacuuming.",
+   "ansT256": "Pubic lice (crabs) spread primarily through sexual contact and close physical contact [4]. To remove them, wash clothes, bedding, and towels in hot water, vacuu"
+  },
+  "st-boar-medlineplus-en-008": {
+   "bucket": "thin",
+   "NT": -1.833,
+   "T512": -1.833,
+   "T256": -1.833,
+   "rNT": 0,
+   "rT512": 123,
+   "rT256": 123,
+   "ansNT": "High blood sugar can cause symptoms like thirst, fatigue, headaches, and urinating often. It happens in people with diabetes because their bodies can't regulate",
+   "ansT512": "High blood sugar (hyperglycemia) warns of symptoms like thirst, fatigue, headaches, frequent urination, and blurred vision. It occurs in diabetics due to impair",
+   "ansT256": "High blood sugar (hyperglycemia) warns of symptoms like thirst, fatigue, headaches, frequent urination, and blurred vision. It occurs in diabetics due to impair"
+  },
+  "st-boar-medlineplus-en-017": {
+   "bucket": "rest",
+   "NT": -2.833,
+   "T512": -3.5,
+   "T256": -3.333,
+   "rNT": 0,
+   "rT512": 0,
+   "rT256": 0,
+   "ansNT": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT512": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112",
+   "ansT256": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112"
+  },
+  "st-boar-simplewiki-en-004": {
+   "bucket": "thin",
+   "NT": -1.0,
+   "T512": -1.167,
+   "T256": -1.0,
+   "rNT": 0,
+   "rT512": 158,
+   "rT256": 158,
+   "ansNT": "One joule is defined as the work done when a force of 1 newton is applied over a distance of 1 meter, and one watt is the rate of energy transfer, measured in j",
+   "ansT512": "One joule is the work done by a force of 1 newton over 1 meter, and 1 watt is the rate of energy transfer (work per second) [1]. Thus, 1 watt equals 1 joule per",
+   "ansT256": "One joule is the work done by a force of 1 newton over 1 meter, and 1 watt is the rate of energy transfer (work per second) [1]. Thus, 1 watt equals 1 joule per"
+  },
+  "st-boar-simplewiki-en-018": {
+   "bucket": "rest",
+   "NT": -3.667,
+   "T512": -3.833,
+   "T256": -3.833,
+   "rNT": 0,
+   "rT512": 219,
+   "rT256": 219,
+   "ansNT": "The Laetoli footprints are older than the Kabwe skull, which dates to about 7 million years ago. The Laetoli footprints represent Australopithecus afarensis, wh",
+   "ansT512": "The Laetoli footprints (3.6 million years old) are older than the Kabwe skull, which dates to about 7 million years ago. The Laetoli footprints represent *Austr",
+   "ansT256": "The Laetoli footprints (3.6 million years old) are older than the Kabwe skull, which dates to about 7 million years ago. The Laetoli footprints represent *Austr"
+  },
+  "st-qa-bitcoin-se-003": {
+   "bucket": "thin",
+   "NT": -1.5,
+   "T512": -1.5,
+   "T256": -1.5,
+   "rNT": 0,
+   "rT512": 160,
+   "rT256": 160,
+   "ansNT": "Bitcoin's price is determined by supply and demand in the market, as well as factors like adoption, technological advancements, and investor sentiment. It is no",
+   "ansT512": "Bitcoin's dollar price is determined by market forces, including supply, demand, and investor sentiment, as it operates without a central authority or intrinsic",
+   "ansT256": "Bitcoin's dollar price is determined by market forces, including supply, demand, and investor sentiment, as it operates without a central authority or intrinsic"
+  },
+  "st-qa-bitcoin-se-019": {
+   "bucket": "rest",
+   "NT": -2.0,
+   "T512": -2.0,
+   "T256": -2.333,
+   "rNT": 0,
+   "rT512": 97,
+   "rT256": 97,
+   "ansNT": "Some websites offering free Bitcoin by sharing an address are scams, and sharing your address can be dangerous as it may lead to identity theft or financial los",
+   "ansT512": "Sharing your Bitcoin address for faucets can be risky, as sites may collect addresses for ads or scams. Faucets typically distribute tiny amounts of Bitcoin, bu",
+   "ansT256": "Sharing your Bitcoin address for faucets can be risky, as sites may collect addresses for ads or scams. Faucets typically distribute tiny amounts of Bitcoin, bu"
+  },
+  "st-qa-ethereum-se-002": {
+   "bucket": "rest",
+   "NT": -2.5,
+   "T512": -2.833,
+   "T256": -3.167,
+   "rNT": 0,
+   "rT512": 163,
+   "rT256": 163,
+   "ansNT": "When an ENS domain expires, the permanent registrar takes ownership, and the current owner must renew it to maintain control. Renewal involves transferring the ",
+   "ansT512": "When an ENS domain expires, you must manually transfer it to the new permanent registrar to avoid losing it [2]. The process involves transferring the domain, n",
+   "ansT256": "When an ENS domain expires, you must manually transfer it to the new permanent registrar to avoid losing it [2]. The process involves transferring the domain, n"
+  },
+  "st-qa-ethereum-se-014": {
+   "bucket": "invented",
+   "NT": -2.0,
+   "T512": -1.667,
+   "T256": -1.5,
+   "rNT": 0,
+   "rT512": 94,
+   "rT256": 94,
+   "ansNT": "Exchanges typically support four-letter token symbols, but some may limit them to three letters [1]. There is no official maximum length for token symbols, but ",
+   "ansT512": "There's no maximum limit on token symbols, but most exchanges use three-letter symbols [4]. Four-letter symbols are valid and may be supported by some platforms",
+   "ansT256": "There's no maximum limit on token symbols, but most exchanges use three-letter symbols [4]. Four-letter symbols are valid and may be supported by some platforms"
+  },
+  "st-qa-health-se-001": {
+   "bucket": "thin",
+   "NT": -2.833,
+   "T512": -2.833,
+   "T256": -2.167,
+   "rNT": 0,
+   "rT512": 175,
+   "rT256": 175,
+   "ansNT": "Vitamin pills are made in a lab and are generally as effective as food-based vitamins. They are formulated to deliver specific nutrients, but the effectiveness ",
+   "ansT512": "Vitamin pills are made in labs but contain the same nutrients as food, so they are not inherently worse. The effectiveness depends on the active ingredients, no",
+   "ansT256": "Vitamin pills are made in labs but contain the same nutrients as food, so they are not inherently worse. The effectiveness depends on the active ingredients, no"
+  },
+  "st-qa-health-se-003": {
+   "bucket": "thin",
+   "NT": -2.167,
+   "T512": -2.167,
+   "T256": -2.0,
+   "rNT": 0,
+   "rT512": 113,
+   "rT256": 113,
+   "ansNT": "Chronic hiccups can be managed with techniques like drinking water, hyperventilation, and holding breath, but if they persist for weeks or are severe, see a doc",
+   "ansT512": "Chronic hiccups may require medical evaluation if they persist for more than a week, as they can signal an underlying condition. Over-the-counter remedies like ",
+   "ansT256": "Chronic hiccups may require medical evaluation if they persist for more than a week, as they can signal an underlying condition. Over-the-counter remedies like "
+  },
+  "st-qa-outdoors-se-007": {
+   "bucket": "thin",
+   "NT": -2.5,
+   "T512": -2.333,
+   "T256": -2.5,
+   "rNT": 0,
+   "rT512": 0,
+   "rT256": 0,
+   "ansNT": "Contouring around a hill in orienteering means following the land's elevation to stay at a consistent height, helping navigate slopes and avoid drops. It is use",
+   "ansT512": "Contouring around a hill in orienteering means following the land's elevation to stay at a specific level, such as a trail or elevation mark [1]. It's useful wh",
+   "ansT256": "Contouring around a hill in orienteering means following the land's elevation to stay at a specific level, such as a trail or elevation mark [1]. It's useful wh"
+  },
+  "st-qa-outdoors-se-008": {
+   "bucket": "rest",
+   "NT": -1.833,
+   "T512": -2.333,
+   "T256": -1.667,
+   "rNT": 0,
+   "rT512": 0,
+   "rT256": 0,
+   "ansNT": "The name \"nor'easter\" refers to the wind direction, not the storm's travel direction [2]. The storm moves from the southwest to the northeast, but the winds com",
+   "ansT512": "The name \"nor'easter\" refers to the direction the storm's winds come from, not the direction the storm moves [2]. The storm moves from the southwest up the coas",
+   "ansT256": "The name \"nor'easter\" refers to the direction the storm's winds come from, not the direction the storm moves [2]. The storm moves from the southwest up the coas"
+  },
+  "st-qa-outdoors-se-020": {
+   "bucket": "rest",
+   "NT": -2.333,
+   "T512": -2.0,
+   "T256": -1.5,
+   "rNT": 0,
+   "rT512": 274,
+   "rT256": 264,
+   "ansNT": "Sleeping in the Austrian Alps without a tent is allowed for one night in a designated area, but it's considered camping and must be planned [2]. You should chec",
+   "ansT512": "Sleeping in the Austrian Alps without a tent for one night is allowed, but multiple nights requires a planned bivouac (temporary camp) and must avoid protected ",
+   "ansT256": "Sleeping in the Austrian Alps without a tent is allowed for one night in a single spot, but multiple nights is considered camping and prohibited [1]. A \"bivouac"
+  },
+  "st-qa-travel-se-001": {
+   "bucket": "rest",
+   "NT": -1.667,
+   "T512": -2.0,
+   "T256": -2.333,
+   "rNT": 0,
+   "rT512": 128,
+   "rT256": 128,
+   "ansNT": "If you leave a day late, you will be charged a 500 Baht fine, and you may be required to pay the fine before departing. The airport may not issue an \"Overstay\" ",
+   "ansT512": "If you leave a day late, you\u2019ll likely be denied entry and required to pay a 500 Baht fine. The fine may result in an \"Overstay\" stamp on your passport, but it\u2019",
+   "ansT256": "If you leave a day late, you\u2019ll likely be denied entry and required to pay a 500 Baht fine. The fine may result in an \"Overstay\" stamp on your passport, but it\u2019"
+  },
+  "st-qa-travel-se-017": {
+   "bucket": "thin",
+   "NT": -2.0,
+   "T512": -1.5,
+   "T256": -1.5,
+   "rNT": 0,
+   "rT512": 71,
+   "rT256": 71,
+   "ansNT": "Swedish border control may accept a phone-based insurance policy, but it's better to have a paper copy for clarity. Always carry the insurance document with you",
+   "ansT512": "Swedish border control may accept a phone-screened insurance policy if it contains the required details, but a physical copy is recommended for safety.",
+   "ansT256": "Swedish border control may accept a phone-screened insurance policy if it contains the required details, but a physical copy is recommended for safety."
+  }
+ },
+ "noise": {
+  "T512-T256_on_18_identical_answers": {
+   "n": 18,
+   "d_raw": -0.027,
+   "d_raw_ci": [
+    -0.059,
+    0.001
+   ],
+   "d_above_min": -0.033,
+   "d_above_min_ci": [
+    -0.072,
+    0.002
+   ],
+   "items_better_worse": [
+    4,
+    7
+   ]
+  },
+  "T512-NT_on_3_identical_deterministic": {
+   "n": 3,
+   "d_raw": -0.076,
+   "d_raw_ci": [
+    -0.117,
+    -0.052
+   ],
+   "d_above_min": -0.09,
+   "d_above_min_ci": [
+    -0.14,
+    -0.058
+   ],
+   "items_better_worse": [
+    0,
+    3
+   ]
+  },
+  "T256-NT_on_3_identical_deterministic": {
+   "n": 3,
+   "d_raw": -0.047,
+   "d_raw_ci": [
+    -0.087,
+    0.042
+   ],
+   "d_above_min": -0.055,
+   "d_above_min_ci": [
+    -0.104,
+    0.056
+   ],
+   "items_better_worse": [
+    1,
+    2
+   ]
+  }
+ },
+ "identity": {
+  "answers_identical_T512_T256": 18,
+  "answers_identical_to_NT": [
+   "st-boar-firstaid-en-008",
+   "st-boar-firstaid-en-009",
+   "st-boar-medlineplus-en-017"
+  ],
+  "reasoning0_llm": [
+   "st-qa-outdoors-se-007",
+   "st-qa-outdoors-se-008"
+  ]
+ }
+}

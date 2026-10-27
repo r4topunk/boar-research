@@ -1,0 +1,40 @@
+diff -ru be-0cfd4a77-cut7-tk2off/src/rag/wikiPack.ts be-0cfd4a77-cut7-h8/src/rag/wikiPack.ts
+--- be-0cfd4a77-cut7-tk2off/src/rag/wikiPack.ts	2026-10-07 09:27:55
++++ be-0cfd4a77-cut7-h8/src/rag/wikiPack.ts	2026-10-13 23:18:18
+@@ -435,7 +435,9 @@
+     private hasDf: boolean,
+     private hasMeta: boolean,
+     /** Sources besides Wikipedia and Wikivoyage in a multi-source pack (EIPs, BIPs…): their titles count as names too. */
+-    private topicSources: PackSource[] = []
++    private topicSources: PackSource[] = [],
++    /** H8-ST (research): the copy carries fts_h8(title, section, body, lead) = the same index + the article's first sentence. */
++    private hasH8 = false
+   ) {}
+ 
+   static async open(db: PackSql, decompress: Decompress): Promise<WikiPack> {
+@@ -458,7 +460,7 @@
+           .map((r) => SOURCES[r.source])
+           .filter((x): x is PackSource => !!x && x !== "enwiki" && x !== "enwikivoyage")
+       : [];
+-    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources);
++    return new WikiPack(db, decompress, meta, Number(meta.indexedChunks) || 1, has("redirects"), has("df"), has("article_meta"), topicSources, has("fts_h8"));
+   }
+ 
+   /** [stem, idf] for the content words of `text`, stemmed by FTS5 itself. */
+@@ -663,9 +665,15 @@
+   async bm25Candidates(stems: Stem[], pool = this.tuning.pool, prior = this.tuning.prior, perArticle = 2): Promise<Candidate[]> {
+     const terms = this.queryTerms(stems);
+     if (!terms.length) return [];
++    // H8-ST (research, default off): BOAR_H8_INDEX=lead matches against fts_h8 (lead column weight BOAR_H8_LEAD_W, default 1)
++    // when the pack has it; term selection/idf stay on the original index. Unset -> the original SQL, byte for byte.
++    const env = typeof process !== "undefined" ? process.env : undefined;
++    const h8 = this.hasH8 && env?.BOAR_H8_INDEX === "lead";
++    const fts = h8 ? "fts_h8" : "fts";
++    const weights = h8 ? [...this.tuning.weights, Number(env?.BOAR_H8_LEAD_W ?? 1)] : this.tuning.weights;
+     const rows = await this.db.getAllAsync<{ id: number; s: number; article_id: number; start: number; end: number; views: number }>(
+       `SELECT f.rowid AS id, f.s, c.article_id, c.start, c.end, a.views
+-       FROM (SELECT rowid, bm25(fts, ${this.tuning.weights.map(Number).join(", ")}) AS s FROM fts WHERE fts MATCH ? ORDER BY s LIMIT ?) f
++       FROM (SELECT rowid, bm25(${fts}, ${weights.map(Number).join(", ")}) AS s FROM ${fts} WHERE ${fts} MATCH ? ORDER BY s LIMIT ?) f
+        JOIN chunks c ON c.id = f.rowid JOIN articles a ON a.id = c.article_id`,
+       [terms.map(matchTerm).join(" OR "), pool]
+     );

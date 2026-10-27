@@ -1,0 +1,531 @@
+{
+ "arm": "LITE4",
+ "date": "2026-10-15",
+ "criterion_sha": "e2c166b623c81f83f51de5a75e336f7d5cd2967106b2a9f0a1d66776835e97de",
+ "patch_sha": "caff1bff8aa2134c7c4bc73bdc503536f2e6ffdd6d7651cae5ab34b8c50647b8",
+ "adapter_sha_mini": "ff9d36b609e49cd7f9d61c56185d6003ab4f97230d0db37d70e8f5a966df87eb",
+ "model": "Qwen3-1.7B-Q4_K_M sha b139949c\u20261897",
+ "prompt_growth_smoke": {
+  "per_item": [
+   19,
+   38,
+   38,
+   38,
+   38
+  ],
+  "mean_on": 517.6,
+  "mean_off": 483.4
+ },
+ "off_identity_smoke": "5/5 answers and prompt tokens equal to LITE2 l-smoke",
+ "gate0": {
+  "gate": {
+   "G1_changed_invented": [
+    10,
+    10,
+    true
+   ],
+   "G2_hedged_core22": [
+    0,
+    1,
+    true
+   ],
+   "G3_words_p50_core32": [
+    38.0,
+    35.5,
+    true
+   ],
+   "G4_prompt_tokens_p50_core32": [
+    413.5,
+    451.5,
+    38.0,
+    true
+   ],
+   "G5_deterministic_identical": [
+    7,
+    7,
+    true
+   ],
+   "G0_infra": [
+    {
+     "n_on": 40,
+     "errors": 0,
+     "empty": 0,
+     "reasoning_pos": 0,
+     "think_tag": 0
+    },
+    true
+   ]
+  },
+  "verdict": "PASS",
+  "changed_invented_ids": [
+   "v02-crypto-B05",
+   "v02-explanation-B01",
+   "v02-honesty-refusal-A02",
+   "v02-honesty-refusal-B01",
+   "v02-reasoning-A08",
+   "v02-reasoning-B10",
+   "st-boar-simplewiki-en-018",
+   "st-qa-bitcoin-se-019",
+   "st-qa-ethereum-se-014",
+   "st-qa-travel-se-017"
+  ],
+  "unchanged_invented_ids": [],
+  "hedged_core22_on": [
+   "v02-synthesis-B02"
+  ],
+  "hedged_core22_off": [],
+  "deterministic_ids": [
+   "st-boar-firstaid-en-008",
+   "st-boar-firstaid-en-009",
+   "st-boar-medlineplus-en-017",
+   "v02-danger-A01",
+   "v02-danger-A02",
+   "v02-health-A01",
+   "v02-reasoning-A03"
+  ],
+  "hedged_invented": [
+   0,
+   0
+  ],
+  "words_p50_invented": [
+   36.0,
+   34.5
+  ],
+  "lite_codes": {
+   "lite:source-bound-sourced": 22,
+   "lite:source-bound-memory": 7,
+   "lite:source-bound-nosource": 4
+  }
+ },
+ "precheck": {
+  "kit": "16/20 changed (marker lite:), kept-diff 0; unchanged = 4 deterministic",
+  "st20": "17/20 changed, kept-diff 0; unchanged = 3 deterministic"
+ },
+ "L1_haiku": {
+  "ON_vs_OFF": {
+   "missing": {
+    "L4": [],
+    "L": []
+   },
+   "L4": {
+    "n": 20,
+    "ratio": 0.4288,
+    "ci": [
+     0.3402,
+     0.5286
+    ],
+    "win": 0,
+    "tie": 0.05,
+    "loss": 0.95,
+    "posCons": 0.95,
+    "floorAdj": 0.2785,
+    "floorAdjCI": [
+     0.1677,
+     0.3965
+    ],
+    "winRateCI": [
+     0,
+     0
+    ]
+   },
+   "L": {
+    "n": 20,
+    "ratio": 0.4298,
+    "ci": [
+     0.3423,
+     0.5232
+    ],
+    "win": 0,
+    "tie": 0,
+    "loss": 1,
+    "posCons": 1,
+    "floorAdj": 0.2823,
+    "floorAdjCI": [
+     0.1744,
+     0.3961
+    ],
+    "winRateCI": [
+     0,
+     0
+    ]
+   },
+   "paired": {
+    "n": 20,
+    "dRatio": -0.001,
+    "dRatioCI": [
+     -0.0637,
+     0.0629
+    ],
+    "dFloor": -0.0038,
+    "dFloorCI": [
+     -0.0823,
+     0.0822
+    ],
+    "winsVsRef": {
+     "L4": 0,
+     "L": 0
+    },
+    "tiesVsRef": {
+     "L4": 1,
+     "L": 0
+    },
+    "lossesVsRef": {
+     "L4": 19,
+     "L": 20
+    },
+    "headToHead": {
+     "aHigher": 6,
+     "same": 8,
+     "bHigher": 6
+    }
+   }
+  },
+  "ON_vs_4B": {
+   "missing": {
+    "L4": [],
+    "C": []
+   },
+   "L4": {
+    "n": 20,
+    "ratio": 0.4288,
+    "ci": [
+     0.3402,
+     0.5286
+    ],
+    "win": 0,
+    "tie": 0.05,
+    "loss": 0.95,
+    "posCons": 0.95,
+    "floorAdj": 0.2785,
+    "floorAdjCI": [
+     0.1677,
+     0.3965
+    ],
+    "winRateCI": [
+     0,
+     0
+    ]
+   },
+   "C": {
+    "n": 20,
+    "ratio": 0.5409,
+    "ci": [
+     0.4614,
+     0.6134
+    ],
+    "win": 0,
+    "tie": 0.05,
+    "loss": 0.95,
+    "posCons": 0.95,
+    "floorAdj": 0.4198,
+    "floorAdjCI": [
+     0.3241,
+     0.5183
+    ],
+    "winRateCI": [
+     0,
+     0
+    ]
+   },
+   "paired": {
+    "n": 20,
+    "dRatio": -0.1121,
+    "dRatioCI": [
+     -0.184,
+     -0.0509
+    ],
+    "dFloor": -0.1413,
+    "dFloorCI": [
+     -0.2279,
+     -0.0623
+    ],
+    "winsVsRef": {
+     "L4": 0,
+     "C": 0
+    },
+    "tiesVsRef": {
+     "L4": 1,
+     "C": 1
+    },
+    "lossesVsRef": {
+     "L4": 19,
+     "C": 19
+    },
+    "headToHead": {
+     "aHigher": 5,
+     "same": 2,
+     "bHigher": 13
+    }
+   }
+  }
+ },
+ "buckets_kit": {
+  "all": {
+   "n": 20,
+   "on": 0.4264,
+   "off": 0.4319,
+   "c4b": 0.5421,
+   "d_on_off": -0.0056,
+   "ci_item_mean": [
+    -0.076,
+    0.0624
+   ],
+   "up/same/down": [
+    8,
+    7,
+    5
+   ]
+  },
+  "invented": {
+   "n": 6,
+   "on": 0.3139,
+   "off": 0.2417,
+   "c4b": 0.5121,
+   "d_on_off": 0.0722,
+   "ci_item_mean": [
+    0.0,
+    0.2167
+   ],
+   "up/same/down": [
+    1,
+    5,
+    0
+   ]
+  },
+  "other": {
+   "n": 14,
+   "on": 0.4746,
+   "off": 0.5135,
+   "c4b": 0.5549,
+   "d_on_off": -0.0389,
+   "ci_item_mean": [
+    -0.1133,
+    0.0167
+   ],
+   "up/same/down": [
+    7,
+    2,
+    5
+   ]
+  },
+  "other_core": {
+   "n": 9,
+   "on": 0.4274,
+   "off": 0.5082,
+   "c4b": 0.5639,
+   "d_on_off": -0.0808,
+   "ci_item_mean": [
+    -0.1731,
+    -0.0013
+   ],
+   "up/same/down": [
+    2,
+    2,
+    5
+   ]
+  },
+  "health_safety": {
+   "n": 5,
+   "on": 0.5595,
+   "off": 0.523,
+   "c4b": 0.5389,
+   "d_on_off": 0.0365,
+   "ci_item_mean": [
+    0.0229,
+    0.0533
+   ],
+   "up/same/down": [
+    5,
+    0,
+    0
+   ]
+  },
+  "worst3": [
+   [
+    "v02-reasoning-B04",
+    -0.36
+   ],
+   [
+    "v02-travel-practical-A02",
+    -0.275
+   ],
+   [
+    "v02-explanation-A02",
+    -0.1
+   ]
+  ],
+  "best3": [
+   [
+    "v02-honesty-refusal-B01",
+    0.433
+   ],
+   [
+    "v02-health-A01",
+    0.067
+   ],
+   [
+    "v02-explanation-A04",
+    0.067
+   ]
+  ]
+ },
+ "perItem_kit_ratios": {
+  "v02-comparison-A03": {
+   "on": 0.533,
+   "off": 0.533,
+   "c4b": 0.533,
+   "bucket": "other"
+  },
+  "v02-comparison-A06": {
+   "on": 0.567,
+   "off": 0.6,
+   "c4b": 0.69,
+   "bucket": "other"
+  },
+  "v02-crypto-B01": {
+   "on": 0.533,
+   "off": 0.533,
+   "c4b": 0.5,
+   "bucket": "other"
+  },
+  "v02-crypto-B05": {
+   "on": 0.4,
+   "off": 0.4,
+   "c4b": 0.533,
+   "bucket": "invented"
+  },
+  "v02-danger-A01": {
+   "on": 0.867,
+   "off": 0.833,
+   "c4b": 0.828,
+   "bucket": "health_safety"
+  },
+  "v02-danger-A02": {
+   "on": 0.9,
+   "off": 0.867,
+   "c4b": 0.867,
+   "bucket": "health_safety"
+  },
+  "v02-explanation-A02": {
+   "on": 0.333,
+   "off": 0.433,
+   "c4b": 0.533,
+   "bucket": "other"
+  },
+  "v02-explanation-A04": {
+   "on": 0.333,
+   "off": 0.267,
+   "c4b": 0.533,
+   "bucket": "other"
+  },
+  "v02-explanation-B01": {
+   "on": 0.25,
+   "off": 0.25,
+   "c4b": 0.458,
+   "bucket": "invented"
+  },
+  "v02-explanation-B07": {
+   "on": 0.571,
+   "off": 0.552,
+   "c4b": 0.552,
+   "bucket": "other"
+  },
+  "v02-health-A01": {
+   "on": 0.333,
+   "off": 0.267,
+   "c4b": 0.3,
+   "bucket": "health_safety"
+  },
+  "v02-health-A04": {
+   "on": 0.464,
+   "off": 0.448,
+   "c4b": 0.5,
+   "bucket": "health_safety"
+  },
+  "v02-honesty-refusal-A02": {
+   "on": 0.2,
+   "off": 0.2,
+   "c4b": 0.433,
+   "bucket": "invented"
+  },
+  "v02-honesty-refusal-B01": {
+   "on": 0.633,
+   "off": 0.2,
+   "c4b": 0.7,
+   "bucket": "invented"
+  },
+  "v02-reasoning-A03": {
+   "on": 0.233,
+   "off": 0.2,
+   "c4b": 0.2,
+   "bucket": "health_safety"
+  },
+  "v02-reasoning-A08": {
+   "on": 0.2,
+   "off": 0.2,
+   "c4b": 0.233,
+   "bucket": "invented"
+  },
+  "v02-reasoning-B04": {
+   "on": 0.207,
+   "off": 0.567,
+   "c4b": 0.567,
+   "bucket": "other"
+  },
+  "v02-reasoning-B10": {
+   "on": 0.2,
+   "off": 0.2,
+   "c4b": 0.714,
+   "bucket": "invented"
+  },
+  "v02-synthesis-B02": {
+   "on": 0.435,
+   "off": 0.48,
+   "c4b": 0.667,
+   "bucket": "other"
+  },
+  "v02-travel-practical-A02": {
+   "on": 0.333,
+   "off": 0.609,
+   "c4b": 0.5,
+   "bucket": "other"
+  }
+ },
+ "latency": {
+  "kit_on": {
+   "n_gen": 16,
+   "p50_total_s": 2.62,
+   "p50_ttft_s": 1.8,
+   "decode_tok_s_p50": 53.2,
+   "answer_tokens_p50": 47.5
+  },
+  "kit_off": {
+   "n_gen": 16,
+   "p50_total_s": 2.59,
+   "p50_ttft_s": 1.62,
+   "decode_tok_s_p50": 56.0,
+   "answer_tokens_p50": 48.0
+  },
+  "st20_on": {
+   "n_gen": 17,
+   "p50_total_s": 3.2,
+   "p50_ttft_s": 2.23,
+   "decode_tok_s_p50": 53.6,
+   "answer_tokens_p50": 45
+  },
+  "st20_off": {
+   "n_gen": 17,
+   "p50_total_s": 3.31,
+   "p50_ttft_s": 2.31,
+   "decode_tok_s_p50": 53.7,
+   "answer_tokens_p50": 44
+  }
+ },
+ "calls": {
+  "haiku": 40,
+  "opus": 0,
+  "jev": 0,
+  "preflight_probe": 0
+ },
+ "verdict": "DIRECTION-NEGATIVE (frozen rule: paired dRatio < 0; -0.001, h2h 6/8/6, within judge noise)"
+}

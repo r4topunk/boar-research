@@ -1,0 +1,266 @@
+{
+ "rule": "share_kept <= 0.40 and resolvable gold raw6/kept not lower than baseline (both sets)",
+ "tree": "wt/packs",
+ "config": "--deep --gate rules --k 6 --pool 20; sets v01 public + rivalset (public); no --tasks-from",
+ "sets": {
+  "v01": {
+   "n": 60,
+   "retrieving": 54,
+   "gold_items": 39,
+   "gold_strings": 46,
+   "gold_resolvable_strings": 22,
+   "base": {
+    "kept_slots": 111,
+    "empty_kept": 15,
+    "p50_ms": 177.2,
+    "gold": {
+     "res_raw6": 16,
+     "res_kept": 14,
+     "all_raw6": 16,
+     "all_kept": 14
+    },
+    "kept_slots_by_pack": {
+     "boar-wikivoyage-en": 73,
+     "seed": 1,
+     "boar-crypto": 37
+    }
+   },
+   "runs": {
+    "boar-visa-en": {
+     "kept_slots": 111,
+     "pack_kept_slots": 1,
+     "share_kept": 0.009,
+     "items_pack_ge1": 1,
+     "pack_raw6_slots": 4,
+     "share_raw6": 0.015,
+     "gold": {
+      "res_raw6": 16,
+      "res_kept": 14,
+      "all_raw6": 16,
+      "all_kept": 14
+     },
+     "gold_items_lower": [],
+     "empty_kept": 15,
+     "changed_kept": 1,
+     "changed_raw": 3,
+     "retrieving": 54,
+     "p50_ms": 189.1,
+     "category": {
+      "matching": [
+       "travel",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 3,
+       "pack_slots": 0,
+       "kept_slots": 10,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "out": {
+       "items": 57,
+       "pack_slots": 1,
+       "kept_slots": 101,
+       "items_pack_ge1": 1,
+       "share": 0.01
+      },
+      "by_category": {
+       "comparison": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "crypto": {
+        "items": 7,
+        "pack_slots": 0,
+        "kept_slots": 26,
+        "items_pack_ge1": 0
+       },
+       "danger": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "danger-situation": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "explanation": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 16,
+        "items_pack_ge1": 0
+       },
+       "health": {
+        "items": 4,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "honesty-refusal": {
+        "items": 6,
+        "pack_slots": 1,
+        "kept_slots": 12,
+        "items_pack_ge1": 1
+       },
+       "local-food": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 0,
+        "items_pack_ge1": 0
+       },
+       "reasoning": {
+        "items": 11,
+        "pack_slots": 0,
+        "kept_slots": 15,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "travel-local": {
+        "items": 1,
+        "pack_slots": 0,
+        "kept_slots": 4,
+        "items_pack_ge1": 0
+       },
+       "travel-practical": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    }
+   }
+  },
+  "rival": {
+   "n": 72,
+   "retrieving": 70,
+   "gold_items": 0,
+   "gold_strings": 0,
+   "gold_resolvable_strings": 0,
+   "base": {
+    "kept_slots": 89,
+    "empty_kept": 33,
+    "p50_ms": 192.1,
+    "gold": {},
+    "kept_slots_by_pack": {
+     "boar-wikivoyage-en": 85,
+     "boar-crypto": 2,
+     "seed": 2
+    }
+   },
+   "runs": {
+    "boar-visa-en": {
+     "kept_slots": 88,
+     "pack_kept_slots": 0,
+     "share_kept": 0.0,
+     "items_pack_ge1": 0,
+     "pack_raw6_slots": 7,
+     "share_raw6": 0.034,
+     "gold": {},
+     "gold_items_lower": [],
+     "empty_kept": 34,
+     "changed_kept": 1,
+     "changed_raw": 5,
+     "retrieving": 70,
+     "p50_ms": 205.6,
+     "category": {
+      "matching": [
+       "travel",
+       "travel-local",
+       "travel-practical"
+      ],
+      "in": {
+       "items": 20,
+       "pack_slots": 0,
+       "kept_slots": 45,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "out": {
+       "items": 52,
+       "pack_slots": 0,
+       "kept_slots": 43,
+       "items_pack_ge1": 0,
+       "share": 0.0
+      },
+      "by_category": {
+       "abstain": {
+        "items": 2,
+        "pack_slots": 0,
+        "kept_slots": 2,
+        "items_pack_ge1": 0
+       },
+       "compare": {
+        "items": 5,
+        "pack_slots": 0,
+        "kept_slots": 5,
+        "items_pack_ge1": 0
+       },
+       "explain": {
+        "items": 5,
+        "pack_slots": 0,
+        "kept_slots": 5,
+        "items_pack_ge1": 0
+       },
+       "medical": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 6,
+        "items_pack_ge1": 0
+       },
+       "multihop": {
+        "items": 5,
+        "pack_slots": 0,
+        "kept_slots": 10,
+        "items_pack_ge1": 0
+       },
+       "numeric": {
+        "items": 3,
+        "pack_slots": 0,
+        "kept_slots": 5,
+        "items_pack_ge1": 0
+       },
+       "synthesis": {
+        "items": 5,
+        "pack_slots": 0,
+        "kept_slots": 7,
+        "items_pack_ge1": 0
+       },
+       "tail": {
+        "items": 24,
+        "pack_slots": 0,
+        "kept_slots": 3,
+        "items_pack_ge1": 0
+       },
+       "travel": {
+        "items": 20,
+        "pack_slots": 0,
+        "kept_slots": 45,
+        "items_pack_ge1": 0
+       }
+      }
+     },
+     "gold_not_lower": true,
+     "pass": true
+    }
+   }
+  }
+ },
+ "verdict": {
+  "boar-visa-en": "default-eligible"
+ }
+}

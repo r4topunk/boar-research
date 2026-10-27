@@ -1,0 +1,6 @@
+# MICROD2Q criterion — addendum 1 (frozen 2026-10-14 03:1x, coordinator): generation budget and build
+Amends MICROD2Q-criterion.md (sha 5988da96…) after two dry runs failed the 1.5 s/chunk speed gate (CPU build 5.23, Metal node-llama-cpp 3.09; both parse 100 %, keep 52 %). The speed gate was a budget proxy, not a quality gate; the MacBook is idle overnight and the mini is reserved for SFT4B, so:
+- Generation runs on the MacBook with the Metal build (node-llama-cpp 3.21.1 prebuilt Metal, same GGUF sha 3605803b…, chat template, temp 0.7 / top_p 0.9 / top_k 40 / min_p 0.05, max 160, seed 42), budget ≤ 6 h wall for the fixed 5,975-chunk target set (tools/targets.json fcbdbc8e…), resumable, under nohup.
+- New filter step before the cosine filter: drop questions containing non-ASCII letters outside Latin-1 (observed Chinese drift) and log the count.
+- No rented GPU for the PoC (free equivalent exists: idle MacBook); GPU only if the PoC passes and the 9-pack build is wanted (est. [usage detail removed]–8 on a 4090, 15–25 on L4/A10G; measured 263 prompt + 67 output tokens per chunk).
+- Everything else (X1/X2 replays, gates G1–G3, declared split, inflation check with the top-20 % most item-similar expansions removed, v0.1 no-harm) unchanged.

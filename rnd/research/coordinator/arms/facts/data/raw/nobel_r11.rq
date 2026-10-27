@@ -1,0 +1,4 @@
+SELECT ?w ?wLabel ?time ?src ?st WHERE {
+  { wd:Q37922 p:P1346 ?st . ?st ps:P1346 ?w ; pq:P585 ?time . BIND("P1346" AS ?src) }
+  UNION { ?w p:P166 ?st . ?st ps:P166 wd:Q37922 ; pq:P585 ?time . BIND("P166" AS ?src) }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } }

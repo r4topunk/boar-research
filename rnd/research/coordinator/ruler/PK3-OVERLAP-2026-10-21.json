@@ -1,0 +1,3692 @@
+{
+ "method": "ORACLE-ST stage 0: oracle files for the 180 public self-test items (9 packs x 20). Run: python3 -I build_oracle.py\nin : rnd/research/packs/selftest/<pack>.jsonl (in_pack_facts[].chunk_index, source.article_id), shared-data/packs/{wave2,wave1}/<pack>.sqlite\nout: tools/oracle-add.json, tools/oracle-only.json  ({queryId: {pack, article_id, chunk_index, mode, question}}; the oracle chunk = the\n     FIRST in_pack_facts entry with a chunk_index (article = fact.article if given, else source.article_id), chunks ordered by start as d0_st2.py)\n     tools/oracle-facts.json  (per item: oracle chunkId, all fact chunkIds (d0_st2 definition), lead chunkId, chunk text sha256 (UTF-16 slice, trimmed))\nFails loudly (exit 2) if > 5 % of items lack article_id/chunk_index or the index is out of range.",
+ "criterion_sha256": "0f78d13fd110c2ce4f52bc8ae3b3e8f8b67c9d5afbc9f66d44565fd34b50c7be",
+ "oracle_text_sha_match": "180/180",
+ "T90_idf": 9.064,
+ "n_real": 37,
+ "real_labels": {
+  "Y": 22,
+  "P": 15
+ },
+ "overlap": {
+  "J": {
+   "real": {
+    "n": 37,
+    "median": 0.0532,
+    "q25": 0.0341,
+    "q75": 0.0761
+   },
+   "cand80": {
+    "n": 80,
+    "median": 0.0445,
+    "q25": 0.0268,
+    "q75": 0.0633
+   },
+   "st180": {
+    "n": 180,
+    "median": 0.0486,
+    "q25": 0.0298,
+    "q75": 0.0659
+   },
+   "boar-factbook": {
+    "n": 20,
+    "median": 0.0253,
+    "q25": 0.0174,
+    "q75": 0.0371
+   },
+   "boar-firstaid-en": {
+    "n": 20,
+    "median": 0.0401,
+    "q25": 0.0236,
+    "q75": 0.0676
+   },
+   "boar-medlineplus-en": {
+    "n": 20,
+    "median": 0.0496,
+    "q25": 0.0433,
+    "q75": 0.064
+   },
+   "boar-simplewiki-en": {
+    "n": 20,
+    "median": 0.0588,
+    "q25": 0.0484,
+    "q75": 0.0653
+   },
+   "qa-bitcoin-se": {
+    "n": 20,
+    "median": 0.0474,
+    "q25": 0.0399,
+    "q75": 0.0659
+   },
+   "qa-ethereum-se": {
+    "n": 20,
+    "median": 0.0513,
+    "q25": 0.0357,
+    "q75": 0.0703
+   },
+   "qa-health-se": {
+    "n": 20,
+    "median": 0.049,
+    "q25": 0.0336,
+    "q75": 0.0622
+   },
+   "qa-outdoors-se": {
+    "n": 20,
+    "median": 0.0529,
+    "q25": 0.043,
+    "q75": 0.079
+   },
+   "qa-travel-se": {
+    "n": 20,
+    "median": 0.0552,
+    "q25": 0.044,
+    "q75": 0.0714
+   }
+  },
+  "RANK": {
+   "real": {
+    "n": 37,
+    "median": 4.0,
+    "q25": 1.0,
+    "q75": 10.0
+   },
+   "cand80": {
+    "n": 80,
+    "median": 8.0,
+    "q25": 2.0,
+    "q75": 49.0
+   },
+   "st180": {
+    "n": 180,
+    "median": 14.5,
+    "q25": 3.0,
+    "q75": 99.5
+   },
+   "boar-factbook": {
+    "n": 20,
+    "median": 25.0,
+    "q25": 5.25,
+    "q75": 86.5
+   },
+   "boar-firstaid-en": {
+    "n": 20,
+    "median": 40.5,
+    "q25": 9.5,
+    "q75": 90.5
+   },
+   "boar-medlineplus-en": {
+    "n": 20,
+    "median": 3.0,
+    "q25": 1.0,
+    "q75": 6.75
+   },
+   "boar-simplewiki-en": {
+    "n": 20,
+    "median": 2.0,
+    "q25": 1.0,
+    "q75": 18.0
+   },
+   "qa-bitcoin-se": {
+    "n": 20,
+    "median": 589.0,
+    "q25": 39.25,
+    "q75": 1001.0
+   },
+   "qa-ethereum-se": {
+    "n": 20,
+    "median": 33.0,
+    "q25": 7.0,
+    "q75": 239.25
+   },
+   "qa-health-se": {
+    "n": 20,
+    "median": 6.5,
+    "q25": 2.75,
+    "q75": 13.75
+   },
+   "qa-outdoors-se": {
+    "n": 20,
+    "median": 6.0,
+    "q25": 2.0,
+    "q75": 24.25
+   },
+   "qa-travel-se": {
+    "n": 20,
+    "median": 88.0,
+    "q25": 3.75,
+    "q75": 529.25
+   }
+  },
+  "RARE": {
+   "real": {
+    "n": 12,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 1.0
+   },
+   "cand80": {
+    "n": 29,
+    "median": 1.0,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "st180": {
+    "n": 86,
+    "median": 0.8335,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "boar-factbook": {
+    "n": 5,
+    "median": 1.0,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "boar-firstaid-en": {
+    "n": 6,
+    "median": 0.0,
+    "q25": 0.0,
+    "q75": 0.2498
+   },
+   "boar-medlineplus-en": {
+    "n": 9,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 1.0
+   },
+   "boar-simplewiki-en": {
+    "n": 9,
+    "median": 1.0,
+    "q25": 0.5,
+    "q75": 1.0
+   },
+   "qa-bitcoin-se": {
+    "n": 13,
+    "median": 1.0,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "qa-ethereum-se": {
+    "n": 17,
+    "median": 1.0,
+    "q25": 0.25,
+    "q75": 1.0
+   },
+   "qa-health-se": {
+    "n": 7,
+    "median": 0.0,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "qa-outdoors-se": {
+    "n": 9,
+    "median": 0.5,
+    "q25": 0.0,
+    "q75": 1.0
+   },
+   "qa-travel-se": {
+    "n": 11,
+    "median": 0.5,
+    "q25": 0.0,
+    "q75": 1.0
+   }
+  },
+  "LCS": {
+   "real": {
+    "n": 37,
+    "median": 2.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "cand80": {
+    "n": 80,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "st180": {
+    "n": 180,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "boar-factbook": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "boar-firstaid-en": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "boar-medlineplus-en": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "boar-simplewiki-en": {
+    "n": 20,
+    "median": 2.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "qa-bitcoin-se": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "qa-ethereum-se": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "qa-health-se": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "qa-outdoors-se": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   },
+   "qa-travel-se": {
+    "n": 20,
+    "median": 1.0,
+    "q25": 1.0,
+    "q75": 2.0
+   }
+  },
+  "nq": {
+   "real": {
+    "n": 37,
+    "median": 6.0,
+    "q25": 5.0,
+    "q75": 9.0
+   },
+   "cand80": {
+    "n": 80,
+    "median": 9.0,
+    "q25": 8.0,
+    "q75": 11.0
+   },
+   "st180": {
+    "n": 180,
+    "median": 9.0,
+    "q25": 8.0,
+    "q75": 11.0
+   },
+   "boar-factbook": {
+    "n": 20,
+    "median": 10.0,
+    "q25": 8.75,
+    "q75": 11.0
+   },
+   "boar-firstaid-en": {
+    "n": 20,
+    "median": 9.0,
+    "q25": 7.75,
+    "q75": 9.25
+   },
+   "boar-medlineplus-en": {
+    "n": 20,
+    "median": 8.5,
+    "q25": 7.0,
+    "q75": 10.0
+   },
+   "boar-simplewiki-en": {
+    "n": 20,
+    "median": 10.0,
+    "q25": 9.0,
+    "q75": 11.25
+   },
+   "qa-bitcoin-se": {
+    "n": 20,
+    "median": 9.0,
+    "q25": 8.0,
+    "q75": 10.0
+   },
+   "qa-ethereum-se": {
+    "n": 20,
+    "median": 10.0,
+    "q25": 8.0,
+    "q75": 11.0
+   },
+   "qa-health-se": {
+    "n": 20,
+    "median": 9.0,
+    "q25": 8.0,
+    "q75": 10.0
+   },
+   "qa-outdoors-se": {
+    "n": 20,
+    "median": 8.5,
+    "q25": 7.0,
+    "q75": 10.0
+   },
+   "qa-travel-se": {
+    "n": 20,
+    "median": 11.5,
+    "q25": 10.0,
+    "q75": 13.25
+   }
+  }
+ },
+ "share_selftests_above_real_J_p90": {
+  "real_p90": 0.1121,
+  "cand80": 0.05,
+  "st180": 0.056
+ },
+ "rank_top1": {
+  "real": 10,
+  "cand80": 19,
+  "st180": 28
+ },
+ "rank_top10": {
+  "real": 29,
+  "cand80": 41,
+  "st180": 85
+ },
+ "primary": {
+  "system": "1.7B",
+  "n": 80,
+  "key": "J",
+  "cuts_real": [
+   0.0357,
+   0.0659
+  ],
+  "all": {
+   "d": 0.069,
+   "ci": [
+    0.038,
+    0.1
+   ]
+  },
+  "bands": {
+   "low": {
+    "n": 31,
+    "real_n": 13,
+    "U0": 0.385,
+    "U1": 0.427,
+    "d": 0.042,
+    "ci": [
+     -0.007,
+     0.095
+    ]
+   },
+   "mid": {
+    "n": 33,
+    "real_n": 12,
+    "U0": 0.37,
+    "U1": 0.472,
+    "d": 0.101,
+    "ci": [
+     0.051,
+     0.151
+    ]
+   },
+   "high": {
+    "n": 16,
+    "real_n": 12,
+    "U0": 0.461,
+    "U1": 0.511,
+    "d": 0.051,
+    "ci": [
+     -0.006,
+     0.107
+    ]
+   }
+  },
+  "reweighted": {
+   "d": 0.064,
+   "ci": [
+    0.035,
+    0.095
+   ],
+   "weights": {
+    "low": 0.351,
+    "mid": 0.324,
+    "high": 0.324
+   },
+   "merged": []
+  },
+  "verdict": "KILL",
+  "low_band_estimable": true
+ },
+ "secondary": {
+  "Gemma cand80 J": {
+   "system": "Gemma",
+   "n": 80,
+   "key": "J",
+   "cuts_real": [
+    0.0357,
+    0.0659
+   ],
+   "all": {
+    "d": 0.102,
+    "ci": [
+     0.061,
+     0.144
+    ]
+   },
+   "bands": {
+    "low": {
+     "n": 31,
+     "real_n": 13,
+     "U0": 0.391,
+     "U1": 0.43,
+     "d": 0.039,
+     "ci": [
+      -0.021,
+      0.094
+     ]
+    },
+    "mid": {
+     "n": 33,
+     "real_n": 12,
+     "U0": 0.379,
+     "U1": 0.537,
+     "d": 0.158,
+     "ci": [
+      0.075,
+      0.232
+     ]
+    },
+    "high": {
+     "n": 16,
+     "real_n": 12,
+     "U0": 0.436,
+     "U1": 0.547,
+     "d": 0.111,
+     "ci": [
+      0.048,
+      0.176
+     ]
+    }
+   },
+   "reweighted": {
+    "d": 0.101,
+    "ci": [
+     0.064,
+     0.139
+    ],
+    "weights": {
+     "low": 0.351,
+     "mid": 0.324,
+     "high": 0.324
+    },
+    "merged": []
+   },
+   "verdict": "KILL",
+   "low_band_estimable": true
+  },
+  "1.7B st180 J": {
+   "system": "1.7B",
+   "n": 180,
+   "key": "J",
+   "cuts_real": [
+    0.0357,
+    0.0659
+   ],
+   "all": {
+    "d": 0.029,
+    "ci": [
+     0.011,
+     0.049
+    ]
+   },
+   "bands": {
+    "low": {
+     "n": 54,
+     "real_n": 13,
+     "U0": 0.391,
+     "U1": 0.412,
+     "d": 0.021,
+     "ci": [
+      -0.015,
+      0.058
+     ]
+    },
+    "mid": {
+     "n": 81,
+     "real_n": 12,
+     "U0": 0.366,
+     "U1": 0.404,
+     "d": 0.038,
+     "ci": [
+      0.01,
+      0.065
+     ]
+    },
+    "high": {
+     "n": 45,
+     "real_n": 12,
+     "U0": 0.382,
+     "U1": 0.406,
+     "d": 0.024,
+     "ci": [
+      -0.005,
+      0.057
+     ]
+    }
+   },
+   "reweighted": {
+    "d": 0.028,
+    "ci": [
+     0.008,
+     0.047
+    ],
+    "weights": {
+     "low": 0.351,
+     "mid": 0.324,
+     "high": 0.324
+    },
+    "merged": []
+   },
+   "verdict": "PARTIAL (not killed)",
+   "low_band_estimable": true
+  },
+  "1.7B cand80 RANK": {
+   "system": "1.7B",
+   "n": 80,
+   "key": "RANK",
+   "cuts_real": [
+    6.0,
+    3.0
+   ],
+   "all": {
+    "d": 0.069,
+    "ci": [
+     0.038,
+     0.1
+    ]
+   },
+   "bands": {
+    "low": {
+     "n": 42,
+     "real_n": 13,
+     "U0": 0.374,
+     "U1": 0.439,
+     "d": 0.065,
+     "ci": [
+      0.023,
+      0.109
+     ]
+    },
+    "mid": {
+     "n": 13,
+     "real_n": 12,
+     "U0": 0.414,
+     "U1": 0.473,
+     "d": 0.058,
+     "ci": [
+      -0.03,
+      0.145
+     ]
+    },
+    "high": {
+     "n": 25,
+     "real_n": 12,
+     "U0": 0.415,
+     "U1": 0.495,
+     "d": 0.08,
+     "ci": [
+      0.028,
+      0.133
+     ]
+    }
+   },
+   "reweighted": {
+    "d": 0.068,
+    "ci": [
+     0.033,
+     0.104
+    ],
+    "weights": {
+     "low": 0.351,
+     "mid": 0.324,
+     "high": 0.324
+    },
+    "merged": []
+   },
+   "verdict": "KILL",
+   "low_band_estimable": true
+  },
+  "Gemma cand80 RANK": {
+   "system": "Gemma",
+   "n": 80,
+   "key": "RANK",
+   "cuts_real": [
+    6.0,
+    3.0
+   ],
+   "all": {
+    "d": 0.102,
+    "ci": [
+     0.061,
+     0.144
+    ]
+   },
+   "bands": {
+    "low": {
+     "n": 42,
+     "real_n": 13,
+     "U0": 0.38,
+     "U1": 0.451,
+     "d": 0.071,
+     "ci": [
+      0.019,
+      0.126
+     ]
+    },
+    "mid": {
+     "n": 13,
+     "real_n": 12,
+     "U0": 0.409,
+     "U1": 0.452,
+     "d": 0.042,
+     "ci": [
+      -0.081,
+      0.148
+     ]
+    },
+    "high": {
+     "n": 25,
+     "real_n": 12,
+     "U0": 0.412,
+     "U1": 0.598,
+     "d": 0.187,
+     "ci": [
+      0.123,
+      0.256
+     ]
+    }
+   },
+   "reweighted": {
+    "d": 0.099,
+    "ci": [
+     0.052,
+     0.145
+    ],
+    "weights": {
+     "low": 0.351,
+     "mid": 0.324,
+     "high": 0.324
+    },
+    "merged": []
+   },
+   "verdict": "KILL",
+   "low_band_estimable": true
+  },
+  "1.7B st180 RANK": {
+   "system": "1.7B",
+   "n": 180,
+   "key": "RANK",
+   "cuts_real": [
+    6.0,
+    3.0
+   ],
+   "all": {
+    "d": 0.029,
+    "ci": [
+     0.011,
+     0.049
+    ]
+   },
+   "bands": {
+    "low": {
+     "n": 111,
+     "real_n": 13,
+     "U0": 0.368,
+     "U1": 0.388,
+     "d": 0.021,
+     "ci": [
+      -0.003,
+      0.044
+     ]
+    },
+    "mid": {
+     "n": 26,
+     "real_n": 12,
+     "U0": 0.404,
+     "U1": 0.434,
+     "d": 0.031,
+     "ci": [
+      -0.022,
+      0.086
+     ]
+    },
+    "high": {
+     "n": 43,
+     "real_n": 12,
+     "U0": 0.387,
+     "U1": 0.438,
+     "d": 0.051,
+     "ci": [
+      0.015,
+      0.09
+     ]
+    }
+   },
+   "reweighted": {
+    "d": 0.034,
+    "ci": [
+     0.012,
+     0.056
+    ],
+    "weights": {
+     "low": 0.351,
+     "mid": 0.324,
+     "high": 0.324
+    },
+    "merged": []
+   },
+   "verdict": "PARTIAL (not killed)",
+   "low_band_estimable": true
+  }
+ },
+ "spearman_gain_vs_overlap": {
+  "1.7B cand80": {
+   "n": 80,
+   "J": 0.127,
+   "negRANK": 0.055
+  },
+  "Gemma cand80": {
+   "n": 80,
+   "J": 0.185,
+   "negRANK": 0.191
+  },
+  "1.7B st180": {
+   "n": 180,
+   "J": 0.047,
+   "negRANK": 0.167
+  },
+  "1.7B real Y/P": {
+   "n": 37,
+   "J": -0.03,
+   "negRANK": -0.087
+  }
+ },
+ "real_gain_1.7B": {
+  "n": 37,
+  "d": 0.017,
+  "ci": [
+   -0.013,
+   0.046
+  ]
+ },
+ "real_at_selftest_overlap": {
+  "cand80_J_median": 0.0445,
+  "n": 22,
+  "d": 0.017,
+  "ci": [
+   -0.026,
+   0.06
+  ],
+  "ids": [
+   "lan-cmp-001",
+   "lan-cmp-005",
+   "lan-exp-002",
+   "lan-exp-003",
+   "lan-hlt-002",
+   "lan-ref-002",
+   "lan-ref-003",
+   "lan-ref-005",
+   "lan-rsn-001",
+   "lan-rsn-002",
+   "lan-rsn-003",
+   "lan-rsn-004",
+   "lan-rsn-006",
+   "lan-rsn-007",
+   "vit-cry-003",
+   "vit-cry-004",
+   "vit-cry-008",
+   "vit-cry-009",
+   "vit-cry-010",
+   "vit-cry-011",
+   "vit-hlt-001",
+   "vit-trv-003"
+  ]
+ },
+ "cand80_within_real_J_range": {
+  "real_J_max": 0.1739,
+  "n": 77,
+  "d": 0.065,
+  "ci": [
+   0.032,
+   0.097
+  ]
+ },
+ "items": {
+  "st-boar-factbook-001": {
+   "J": 0.0171,
+   "RANK": 59,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.033,
+   "gG": 0.477
+  },
+  "st-boar-factbook-002": {
+   "J": 0.037,
+   "RANK": 9,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.167,
+   "gG": 0.233
+  },
+  "st-boar-factbook-003": {
+   "J": 0.0421,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.421,
+   "gG": 0.387
+  },
+  "st-boar-factbook-004": {
+   "J": 0.0268,
+   "RANK": 83,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 14,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.033,
+   "gG": -0.067
+  },
+  "st-boar-factbook-005": {
+   "J": 0.0179,
+   "RANK": 907,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.033,
+   "gG": 0.033
+  },
+  "st-boar-factbook-006": {
+   "J": 0.0175,
+   "RANK": 1001,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.481,
+   "gG": 0.303
+  },
+  "st-boar-factbook-007": {
+   "J": 0.0097,
+   "RANK": 211,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.099,
+   "gG": 0.202
+  },
+  "st-boar-factbook-008": {
+   "J": 0.0238,
+   "RANK": 26,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.291,
+   "gG": 0.189
+  },
+  "st-boar-factbook-009": {
+   "J": 0.0202,
+   "RANK": 7,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.122,
+   "gG": -0.179
+  },
+  "st-boar-factbook-010": {
+   "J": 0.0267,
+   "RANK": 58,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.167,
+   "gG": -0.0
+  },
+  "st-boar-factbook-011": {
+   "J": 0.0374,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 12,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.047,
+   "gG": 0.101
+  },
+  "st-boar-factbook-012": {
+   "J": 0.02,
+   "RANK": 20,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.4,
+   "gG": 0.085
+  },
+  "st-boar-factbook-013": {
+   "J": 0.0286,
+   "RANK": 6,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.067,
+   "gG": -0.483
+  },
+  "st-boar-factbook-014": {
+   "J": 0.0909,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.058,
+   "gG": 0.231
+  },
+  "st-boar-factbook-015": {
+   "J": 0.0435,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.087,
+   "gG": 0.317
+  },
+  "st-boar-factbook-016": {
+   "J": 0.0455,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.222,
+   "gG": 0.214
+  },
+  "st-boar-factbook-017": {
+   "J": 0.008,
+   "RANK": 167,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.033
+  },
+  "st-boar-factbook-018": {
+   "J": 0.0088,
+   "RANK": 63,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-factbook-019": {
+   "J": 0.0337,
+   "RANK": 24,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.067,
+   "gG": 0.0
+  },
+  "st-boar-factbook-020": {
+   "J": 0.0153,
+   "RANK": 97,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 13,
+   "pack": "boar-factbook",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.247,
+   "gG": 0.048
+  },
+  "st-boar-firstaid-en-001": {
+   "J": 0.0612,
+   "RANK": 14,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.282,
+   "gG": 0.597
+  },
+  "st-boar-firstaid-en-002": {
+   "J": 0.0326,
+   "RANK": 72,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.167,
+   "gG": 0.167
+  },
+  "st-boar-firstaid-en-003": {
+   "J": 0.0488,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-004": {
+   "J": 0.0465,
+   "RANK": 3,
+   "RARE": 0.333,
+   "n_rare": 3,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.359,
+   "gG": -0.453
+  },
+  "st-boar-firstaid-en-005": {
+   "J": 0.0159,
+   "RANK": 61,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-006": {
+   "J": 0.0,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 0,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.132,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-007": {
+   "J": 0.1538,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.138,
+   "gG": -0.018
+  },
+  "st-boar-firstaid-en-008": {
+   "J": 0.0286,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-009": {
+   "J": 0.0147,
+   "RANK": 302,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-010": {
+   "J": 0.0667,
+   "RANK": 47,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.11,
+   "gG": 0.186
+  },
+  "st-boar-firstaid-en-011": {
+   "J": 0.0175,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-012": {
+   "J": 0.0704,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-013": {
+   "J": 0.027,
+   "RANK": 17,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.192,
+   "gG": -0.088
+  },
+  "st-boar-firstaid-en-014": {
+   "J": 0.0952,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.048,
+   "gG": -0.012
+  },
+  "st-boar-firstaid-en-015": {
+   "J": 0.0508,
+   "RANK": 11,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.187,
+   "gG": 0.14
+  },
+  "st-boar-firstaid-en-016": {
+   "J": 0.0741,
+   "RANK": 18,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 5,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-017": {
+   "J": 0.0139,
+   "RANK": 104,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.083,
+   "gG": 0.017
+  },
+  "st-boar-firstaid-en-018": {
+   "J": 0.0755,
+   "RANK": 34,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-firstaid-en-019": {
+   "J": 0.0337,
+   "RANK": 55,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.036,
+   "gG": 0.244
+  },
+  "st-boar-firstaid-en-020": {
+   "J": 0.0256,
+   "RANK": 86,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "boar-firstaid-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.054,
+   "gG": 0.034
+  },
+  "st-boar-medlineplus-en-001": {
+   "J": 0.1071,
+   "RANK": 1,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.163,
+   "gG": -0.111
+  },
+  "st-boar-medlineplus-en-002": {
+   "J": 0.0625,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.018,
+   "gG": 0.036
+  },
+  "st-boar-medlineplus-en-003": {
+   "J": 0.0278,
+   "RANK": 12,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.033,
+   "gG": -0.033
+  },
+  "st-boar-medlineplus-en-004": {
+   "J": 0.0448,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.1,
+   "gG": 0.067
+  },
+  "st-boar-medlineplus-en-005": {
+   "J": 0.0441,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.08,
+   "gG": 0.183
+  },
+  "st-boar-medlineplus-en-006": {
+   "J": 0.0,
+   "RANK": 193,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 0,
+   "nq": 8,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-medlineplus-en-007": {
+   "J": 0.0492,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.276,
+   "gG": 0.436
+  },
+  "st-boar-medlineplus-en-008": {
+   "J": 0.0635,
+   "RANK": 108,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.005,
+   "gG": 0.218
+  },
+  "st-boar-medlineplus-en-009": {
+   "J": 0.0469,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.162,
+   "gG": 0.2
+  },
+  "st-boar-medlineplus-en-010": {
+   "J": 0.0435,
+   "RANK": 4,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.062,
+   "gG": 0.12
+  },
+  "st-boar-medlineplus-en-011": {
+   "J": 0.069,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 6,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-medlineplus-en-012": {
+   "J": 0.0656,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.374,
+   "gG": 0.467
+  },
+  "st-boar-medlineplus-en-013": {
+   "J": 0.0588,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.02,
+   "gG": -0.367
+  },
+  "st-boar-medlineplus-en-014": {
+   "J": 0.0526,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.067,
+   "gG": 0.033
+  },
+  "st-boar-medlineplus-en-015": {
+   "J": 0.0357,
+   "RANK": 15,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-medlineplus-en-016": {
+   "J": 0.0822,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.117,
+   "gG": 0.155
+  },
+  "st-boar-medlineplus-en-017": {
+   "J": 0.0294,
+   "RANK": 19,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-medlineplus-en-018": {
+   "J": 0.0769,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.1,
+   "gG": 0.14
+  },
+  "st-boar-medlineplus-en-019": {
+   "J": 0.05,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.084,
+   "gG": 0.133
+  },
+  "st-boar-medlineplus-en-020": {
+   "J": 0.0426,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-medlineplus-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.054,
+   "gG": -0.014
+  },
+  "st-boar-simplewiki-en-001": {
+   "J": 0.0526,
+   "RANK": 11,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.169,
+   "gG": -0.25
+  },
+  "st-boar-simplewiki-en-002": {
+   "J": 0.0667,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.038,
+   "gG": 0.188
+  },
+  "st-boar-simplewiki-en-003": {
+   "J": 0.2105,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.165,
+   "gG": 0.222
+  },
+  "st-boar-simplewiki-en-004": {
+   "J": 0.1852,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.096,
+   "gG": 0.133
+  },
+  "st-boar-simplewiki-en-005": {
+   "J": 0.0649,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 12,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.129,
+   "gG": 0.356
+  },
+  "st-boar-simplewiki-en-006": {
+   "J": 0.0517,
+   "RANK": 42,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.193,
+   "gG": 0.336
+  },
+  "st-boar-simplewiki-en-007": {
+   "J": 0.0421,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.333,
+   "gG": 0.407
+  },
+  "st-boar-simplewiki-en-008": {
+   "J": 0.0548,
+   "RANK": 24,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 12,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.062,
+   "gG": 0.248
+  },
+  "st-boar-simplewiki-en-009": {
+   "J": 0.0299,
+   "RANK": 23,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.067,
+   "gG": 0.011
+  },
+  "st-boar-simplewiki-en-010": {
+   "J": 0.06,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.204,
+   "gG": 0.19
+  },
+  "st-boar-simplewiki-en-011": {
+   "J": 0.0588,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.014,
+   "gG": 0.59
+  },
+  "st-boar-simplewiki-en-012": {
+   "J": 0.0698,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.227,
+   "gG": 0.21
+  },
+  "st-boar-simplewiki-en-013": {
+   "J": 0.2273,
+   "RANK": 2,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 3,
+   "nq": 10,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.262,
+   "gG": 0.414
+  },
+  "st-boar-simplewiki-en-014": {
+   "J": 0.0238,
+   "RANK": 21,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.026,
+   "gG": 0.194
+  },
+  "st-boar-simplewiki-en-015": {
+   "J": 0.0638,
+   "RANK": 25,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.13,
+   "gG": 0.024
+  },
+  "st-boar-simplewiki-en-016": {
+   "J": 0.0588,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 13,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.0
+  },
+  "st-boar-simplewiki-en-017": {
+   "J": 0.0633,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": -0.046,
+   "gG": 0.049
+  },
+  "st-boar-simplewiki-en-018": {
+   "J": 0.0435,
+   "RANK": 4,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.033,
+   "gG": 0.067
+  },
+  "st-boar-simplewiki-en-019": {
+   "J": 0.0143,
+   "RANK": 1,
+   "RARE": 0.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 17,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.0,
+   "gG": 0.071
+  },
+  "st-boar-simplewiki-en-020": {
+   "J": 0.05,
+   "RANK": 17,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 9,
+   "pack": "boar-simplewiki-en",
+   "label": "oracle",
+   "set": "cand80",
+   "g17": 0.093,
+   "gG": 0.238
+  },
+  "st-qa-bitcoin-se-001": {
+   "J": 0.0351,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-002": {
+   "J": 0.1081,
+   "RANK": 697,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 10,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-003": {
+   "J": 0.0167,
+   "RANK": 1001,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.017,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-004": {
+   "J": 0.0408,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.077,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-005": {
+   "J": 0.0286,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-006": {
+   "J": 0.0417,
+   "RANK": 4,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.07,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-007": {
+   "J": 0.0702,
+   "RANK": 43,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.121,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-008": {
+   "J": 0.0441,
+   "RANK": 984,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.007,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-009": {
+   "J": 0.1228,
+   "RANK": 8,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.036,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-010": {
+   "J": 0.037,
+   "RANK": 1001,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.042,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-011": {
+   "J": 0.0423,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.033,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-012": {
+   "J": 0.0645,
+   "RANK": 246,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 14,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.034,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-013": {
+   "J": 0.0492,
+   "RANK": 889,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.017,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-014": {
+   "J": 0.0702,
+   "RANK": 481,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 7,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.019,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-015": {
+   "J": 0.0556,
+   "RANK": 101,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.061,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-016": {
+   "J": 0.0455,
+   "RANK": 148,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.04,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-017": {
+   "J": 0.0519,
+   "RANK": 28,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.007,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-018": {
+   "J": 0.0286,
+   "RANK": 773,
+   "RARE": 0.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.074,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-019": {
+   "J": 0.0769,
+   "RANK": 6,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.016,
+   "gG": null
+  },
+  "st-qa-bitcoin-se-020": {
+   "J": 0.0571,
+   "RANK": 1001,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-bitcoin-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.019,
+   "gG": null
+  },
+  "st-qa-ethereum-se-001": {
+   "J": 0.0851,
+   "RANK": 41,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.016,
+   "gG": null
+  },
+  "st-qa-ethereum-se-002": {
+   "J": 0.0893,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 12,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-003": {
+   "J": 0.0667,
+   "RANK": 7,
+   "RARE": 1.0,
+   "n_rare": 3,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-004": {
+   "J": 0.0702,
+   "RANK": 22,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.016,
+   "gG": null
+  },
+  "st-qa-ethereum-se-005": {
+   "J": 0.0492,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.007,
+   "gG": null
+  },
+  "st-qa-ethereum-se-006": {
+   "J": 0.0476,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-007": {
+   "J": 0.0541,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 6,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.027,
+   "gG": null
+  },
+  "st-qa-ethereum-se-008": {
+   "J": 0.0337,
+   "RANK": 357,
+   "RARE": 0.0,
+   "n_rare": 3,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.038,
+   "gG": null
+  },
+  "st-qa-ethereum-se-009": {
+   "J": 0.0256,
+   "RANK": 14,
+   "RARE": 0.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-010": {
+   "J": 0.0533,
+   "RANK": 88,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.118,
+   "gG": null
+  },
+  "st-qa-ethereum-se-011": {
+   "J": 0.0294,
+   "RANK": 25,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.115,
+   "gG": null
+  },
+  "st-qa-ethereum-se-012": {
+   "J": 0.0196,
+   "RANK": 1001,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.019,
+   "gG": null
+  },
+  "st-qa-ethereum-se-013": {
+   "J": 0.0889,
+   "RANK": 510,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-014": {
+   "J": 0.0638,
+   "RANK": 7,
+   "RARE": 0.25,
+   "n_rare": 4,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.06,
+   "gG": null
+  },
+  "st-qa-ethereum-se-015": {
+   "J": 0.0704,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-ethereum-se-016": {
+   "J": 0.0492,
+   "RANK": 9,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.083,
+   "gG": null
+  },
+  "st-qa-ethereum-se-017": {
+   "J": 0.0448,
+   "RANK": 143,
+   "RARE": 0.667,
+   "n_rare": 3,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.138,
+   "gG": null
+  },
+  "st-qa-ethereum-se-018": {
+   "J": 0.1364,
+   "RANK": 48,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.011,
+   "gG": null
+  },
+  "st-qa-ethereum-se-019": {
+   "J": 0.027,
+   "RANK": 200,
+   "RARE": 0.25,
+   "n_rare": 4,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.063,
+   "gG": null
+  },
+  "st-qa-ethereum-se-020": {
+   "J": 0.0364,
+   "RANK": 1001,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-ethereum-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.107,
+   "gG": null
+  },
+  "st-qa-health-se-001": {
+   "J": 0.0556,
+   "RANK": 133,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.103,
+   "gG": null
+  },
+  "st-qa-health-se-002": {
+   "J": 0.0968,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 10,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.036,
+   "gG": null
+  },
+  "st-qa-health-se-003": {
+   "J": 0.0133,
+   "RANK": 8,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.038,
+   "gG": null
+  },
+  "st-qa-health-se-004": {
+   "J": 0.0351,
+   "RANK": 35,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.414,
+   "gG": null
+  },
+  "st-qa-health-se-005": {
+   "J": 0.0645,
+   "RANK": 6,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-health-se-006": {
+   "J": 0.0615,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.185,
+   "gG": null
+  },
+  "st-qa-health-se-007": {
+   "J": 0.0471,
+   "RANK": 10,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 15,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-health-se-008": {
+   "J": 0.0253,
+   "RANK": 49,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.275,
+   "gG": null
+  },
+  "st-qa-health-se-009": {
+   "J": 0.0508,
+   "RANK": 7,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.116,
+   "gG": null
+  },
+  "st-qa-health-se-010": {
+   "J": 0.0241,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.042,
+   "gG": null
+  },
+  "st-qa-health-se-011": {
+   "J": 0.0759,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.135,
+   "gG": null
+  },
+  "st-qa-health-se-012": {
+   "J": 0.029,
+   "RANK": 8,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-health-se-013": {
+   "J": 0.0426,
+   "RANK": 3,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.047,
+   "gG": null
+  },
+  "st-qa-health-se-014": {
+   "J": 0.0375,
+   "RANK": 8,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 6,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.036,
+   "gG": null
+  },
+  "st-qa-health-se-015": {
+   "J": 0.044,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.071,
+   "gG": null
+  },
+  "st-qa-health-se-016": {
+   "J": 0.0541,
+   "RANK": 25,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 4,
+   "nq": 11,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.276,
+   "gG": null
+  },
+  "st-qa-health-se-017": {
+   "J": 0.0789,
+   "RANK": 3,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 13,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.027,
+   "gG": null
+  },
+  "st-qa-health-se-018": {
+   "J": 0.0588,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-health-se-019": {
+   "J": 0.082,
+   "RANK": 4,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.192,
+   "gG": null
+  },
+  "st-qa-health-se-020": {
+   "J": 0.0274,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-health-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-001": {
+   "J": 0.0169,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-002": {
+   "J": 0.0933,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.01,
+   "gG": null
+  },
+  "st-qa-outdoors-se-003": {
+   "J": 0.0462,
+   "RANK": 7,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-004": {
+   "J": 0.0375,
+   "RANK": 71,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.08,
+   "gG": null
+  },
+  "st-qa-outdoors-se-005": {
+   "J": 0.129,
+   "RANK": 1,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-006": {
+   "J": 0.0494,
+   "RANK": 22,
+   "RARE": 0.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.023,
+   "gG": null
+  },
+  "st-qa-outdoors-se-007": {
+   "J": 0.0962,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.027,
+   "gG": null
+  },
+  "st-qa-outdoors-se-008": {
+   "J": 0.0909,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.308,
+   "gG": null
+  },
+  "st-qa-outdoors-se-009": {
+   "J": 0.0448,
+   "RANK": 24,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-010": {
+   "J": 0.0319,
+   "RANK": 99,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.085,
+   "gG": null
+  },
+  "st-qa-outdoors-se-011": {
+   "J": 0.0566,
+   "RANK": 282,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-012": {
+   "J": 0.1176,
+   "RANK": 75,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.013,
+   "gG": null
+  },
+  "st-qa-outdoors-se-013": {
+   "J": 0.061,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 9,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.01,
+   "gG": null
+  },
+  "st-qa-outdoors-se-014": {
+   "J": 0.0597,
+   "RANK": 4,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-015": {
+   "J": 0.0563,
+   "RANK": 18,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.197,
+   "gG": null
+  },
+  "st-qa-outdoors-se-016": {
+   "J": 0.075,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.091,
+   "gG": null
+  },
+  "st-qa-outdoors-se-017": {
+   "J": 0.0484,
+   "RANK": 8,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 7,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.326,
+   "gG": null
+  },
+  "st-qa-outdoors-se-018": {
+   "J": 0.0118,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-outdoors-se-019": {
+   "J": 0.0469,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 7,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.01,
+   "gG": null
+  },
+  "st-qa-outdoors-se-020": {
+   "J": 0.0286,
+   "RANK": 25,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-outdoors-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.097,
+   "gG": null
+  },
+  "st-qa-travel-se-001": {
+   "J": 0.0244,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 14,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.083,
+   "gG": null
+  },
+  "st-qa-travel-se-002": {
+   "J": 0.0455,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 18,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-003": {
+   "J": 0.0571,
+   "RANK": 372,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 13,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-004": {
+   "J": 0.026,
+   "RANK": 1001,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.113,
+   "gG": null
+  },
+  "st-qa-travel-se-005": {
+   "J": 0.1458,
+   "RANK": 4,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.099,
+   "gG": null
+  },
+  "st-qa-travel-se-006": {
+   "J": 0.0395,
+   "RANK": 40,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.143,
+   "gG": null
+  },
+  "st-qa-travel-se-007": {
+   "J": 0.0714,
+   "RANK": 68,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.077,
+   "gG": null
+  },
+  "st-qa-travel-se-008": {
+   "J": 0.069,
+   "RANK": 17,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-009": {
+   "J": 0.0233,
+   "RANK": 1001,
+   "RARE": 0.0,
+   "n_rare": 3,
+   "LCS": 1,
+   "nq": 16,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-010": {
+   "J": 0.0588,
+   "RANK": 19,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-011": {
+   "J": 0.0455,
+   "RANK": 315,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.044,
+   "gG": null
+  },
+  "st-qa-travel-se-012": {
+   "J": 0.0455,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 12,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-013": {
+   "J": 0.125,
+   "RANK": 2,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 12,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.079,
+   "gG": null
+  },
+  "st-qa-travel-se-014": {
+   "J": 0.087,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 15,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.248,
+   "gG": null
+  },
+  "st-qa-travel-se-015": {
+   "J": 0.0,
+   "RANK": 1001,
+   "RARE": 0.0,
+   "n_rare": 2,
+   "LCS": 0,
+   "nq": 11,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-016": {
+   "J": 0.046,
+   "RANK": 1,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 13,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-017": {
+   "J": 0.0714,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 13,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.0,
+   "gG": null
+  },
+  "st-qa-travel-se-018": {
+   "J": 0.0556,
+   "RANK": 363,
+   "RARE": 0.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.016,
+   "gG": null
+  },
+  "st-qa-travel-se-019": {
+   "J": 0.0549,
+   "RANK": 176,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 10,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": -0.055,
+   "gG": null
+  },
+  "st-qa-travel-se-020": {
+   "J": 0.0893,
+   "RANK": 108,
+   "RARE": 0.5,
+   "n_rare": 4,
+   "LCS": 2,
+   "nq": 14,
+   "pack": "qa-travel-se",
+   "label": "oracle",
+   "set": "st180",
+   "g17": 0.115,
+   "gG": null
+  },
+  "lan-cmp-001": {
+   "J": 0.0612,
+   "RANK": 2,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 3,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-cmp-005": {
+   "J": 0.0577,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": 0.375,
+   "gG": null
+  },
+  "lan-exp-001": {
+   "J": 0.0175,
+   "RANK": 10,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-factbook",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.067,
+   "gG": null
+  },
+  "lan-exp-002": {
+   "J": 0.0459,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "boar-factbook",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.103,
+   "gG": null
+  },
+  "lan-exp-003": {
+   "J": 0.0531,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-factbook",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.057,
+   "gG": null
+  },
+  "lan-exp-004": {
+   "J": 0.0357,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 4,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.167,
+   "gG": null
+  },
+  "lan-exp-005": {
+   "J": 0.0341,
+   "RANK": 6,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.1,
+   "gG": null
+  },
+  "lan-exp-006": {
+   "J": 0.0357,
+   "RANK": 2,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 3,
+   "pack": "boar-wikivoyage-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-exp-007": {
+   "J": 0.0211,
+   "RANK": 24,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-factbook",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.133,
+   "gG": null
+  },
+  "lan-hlt-001": {
+   "J": 0.0299,
+   "RANK": 7,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 6,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.107,
+   "gG": null
+  },
+  "lan-hlt-002": {
+   "J": 0.1667,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 9,
+   "pack": "boar-medlineplus-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.067,
+   "gG": null
+  },
+  "lan-hlt-003": {
+   "J": 0.0235,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-firstaid-en",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.033,
+   "gG": null
+  },
+  "lan-ref-001": {
+   "J": 0.0357,
+   "RANK": 647,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 5,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-ref-002": {
+   "J": 0.1136,
+   "RANK": 15,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 5,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": -0.023,
+   "gG": null
+  },
+  "lan-ref-003": {
+   "J": 0.0455,
+   "RANK": 4,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 4,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": -0.067,
+   "gG": null
+  },
+  "lan-ref-004": {
+   "J": 0.0096,
+   "RANK": 4,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 4,
+   "pack": "boar-factbook",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-ref-005": {
+   "J": 0.0625,
+   "RANK": 5,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 5,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-rsn-001": {
+   "J": 0.1429,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 7,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": 0.172,
+   "gG": null
+  },
+  "lan-rsn-002": {
+   "J": 0.0532,
+   "RANK": 1,
+   "RARE": 0.5,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "lan-rsn-003": {
+   "J": 0.1739,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 8,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": -0.036,
+   "gG": null
+  },
+  "lan-rsn-004": {
+   "J": 0.08,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 11,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": -0.233,
+   "gG": null
+  },
+  "lan-rsn-006": {
+   "J": 0.0761,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 9,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.033,
+   "gG": null
+  },
+  "lan-rsn-007": {
+   "J": 0.0702,
+   "RANK": 3,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 6,
+   "pack": "boar-simplewiki-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "vit-cry-002": {
+   "J": 0.0323,
+   "RANK": 29,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 4,
+   "pack": "boar-crypto",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.016,
+   "gG": null
+  },
+  "vit-cry-003": {
+   "J": 0.082,
+   "RANK": 8,
+   "RARE": 0.667,
+   "n_rare": 3,
+   "LCS": 2,
+   "nq": 10,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": 0.038,
+   "gG": null
+  },
+  "vit-cry-004": {
+   "J": 0.1111,
+   "RANK": 10,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 8,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": 0.1,
+   "gG": null
+  },
+  "vit-cry-005": {
+   "J": 0.0366,
+   "RANK": 39,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": -0.05,
+   "gG": null
+  },
+  "vit-cry-006": {
+   "J": 0.0377,
+   "RANK": 3,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 4,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": 0.092,
+   "gG": null
+  },
+  "vit-cry-008": {
+   "J": 0.0606,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 3,
+   "pack": "boar-crypto",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.043,
+   "gG": null
+  },
+  "vit-cry-009": {
+   "J": 0.08,
+   "RANK": 1001,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 1,
+   "nq": 9,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": -0.067,
+   "gG": null
+  },
+  "vit-cry-010": {
+   "J": 0.0667,
+   "RANK": 1,
+   "RARE": 1.0,
+   "n_rare": 2,
+   "LCS": 2,
+   "nq": 6,
+   "pack": "boar-crypto",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.067,
+   "gG": null
+  },
+  "vit-cry-011": {
+   "J": 0.06,
+   "RANK": 4,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 5,
+   "pack": "boar-crypto",
+   "label": "P",
+   "set": "real",
+   "g17": 0.069,
+   "gG": null
+  },
+  "vit-hlt-001": {
+   "J": 0.08,
+   "RANK": 4,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 1,
+   "nq": 11,
+   "pack": "boar-wikivoyage-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "vit-hlt-002": {
+   "J": 0.026,
+   "RANK": 27,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-wikivoyage-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.0,
+   "gG": null
+  },
+  "vit-hlt-003": {
+   "J": 0.0282,
+   "RANK": 1,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 1,
+   "nq": 5,
+   "pack": "boar-medlineplus-en",
+   "label": "Y",
+   "set": "real",
+   "g17": -0.117,
+   "gG": null
+  },
+  "vit-hum-004": {
+   "J": 0.03,
+   "RANK": 4,
+   "RARE": 1.0,
+   "n_rare": 1,
+   "LCS": 2,
+   "nq": 4,
+   "pack": "boar-simplewiki-en",
+   "label": "P",
+   "set": "real",
+   "g17": 0.033,
+   "gG": null
+  },
+  "vit-trv-003": {
+   "J": 0.0659,
+   "RANK": 14,
+   "RARE": null,
+   "n_rare": 0,
+   "LCS": 3,
+   "nq": 6,
+   "pack": "boar-wikivoyage-en",
+   "label": "Y",
+   "set": "real",
+   "g17": 0.04,
+   "gG": null
+  }
+ },
+ "script_sha256": "2e85358fb6706b313543c61fb3ec41c07d58a286b4b564697c09007a71963f90"
+}

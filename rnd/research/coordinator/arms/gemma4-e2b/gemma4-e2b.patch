@@ -1,0 +1,48 @@
+diff -ru a/be/adapter-litedecline.ts b/be/adapter-litedecline.ts
+--- a/be/adapter-litedecline.ts	2026-10-20 22:12:36
++++ b/be/adapter-litedecline.ts	2026-10-20 22:12:36
+@@ -144,6 +144,10 @@
+ process.env.BOAR_EVAL_PLATFORM = config.device.platform;
+ process.env.BOAR_APP_GPU = cli.gpu ? "1" : process.env.BOAR_APP_GPU ?? "1"; // embeddings: Metal is fine (not timed)
+ 
++// GEMMA4-E2B arm: google/gemma-4-E2B-it card "Best Practices" / generation_config.json: temperature=1.0, top_p=0.95, top_k=64 for all use cases
++// (no min_p in the card: 0). Temperature 1.0 is the default in be/server.ts samplerFor (patched), not in this override, so the engine's per-item
++// health temperature 0 still wins.
++process.env.BOAR_SAMPLER_JSON ??= '{"top_k":64,"top_p":0.95,"min_p":0}';
+ // ---------------------------------------------------------------- models (sha256 = HF LFS oid)
+ const MODELS: Record<string, { file: string; sha256: string }> = {
+   "qwen2.5-1.5b-instruct-q4km": { file: "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", sha256: "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370" },
+@@ -163,7 +167,9 @@
+   // its template thinks only with enable_thinking=true (BOAR_THINK_KWARG=1 in server.ts).
+   "gemma-4-26b-a4b-ud-q2kxl": { file: "gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf", sha256: "2a1d26dfe6ea00a467940a5728316af6edb366bbdba950d65b85d232392fb658" },
+   // LITE2/LITE5 (2026-10-15): unsloth/Qwen3-1.7B-GGUF @ d7f544ee (Apache-2.0; Q4_K_M); stock llama.cpp b11010; thinking OFF (BOAR_SERVER_EXTRA_ARGS="--reasoning off" + enable_thinking:false).
+-  "qwen3-1.7b-q4km": { file: "lite/Qwen3-1.7B-Q4_K_M.gguf", sha256: "b139949c5bd74937ad8ed8c8cf3d9ffb1e99c866c823204dc42c0d91fa181897" },
++  // GEMMA4-E2B arm, vendor-sampling variant (2026-10-20): the 1.7B id loads unsloth/gemma-4-E2B-it-GGUF @ 0314792d Q4_K_M (google/gemma-4-E2B-it @ 3e22461f, Apache-2.0);
++  // vendor sampling (1.0/0.95/64, min_p 0; health 0 kept). The trace's versions["model.sha256"] identifies the weights.
++  "qwen3-1.7b-q4km": { file: "lite/gemma-4-E2B-it-Q4_K_M.gguf", sha256: "740185b21d22ceb83a11c3aa62ad5842ef32c70f6096d756bbee85a1e4ec34b8" },
+ };
+ /**
+  * Models under test that the engine tree's catalog (src/models/manifest.ts) does not list yet: the adapter supplies the
+@@ -181,7 +187,9 @@
+ const ADAPTER_CATALOG: Record<string, Record<string, unknown>> = {
+   // LITE2/LITE5: same shape as the BONSAI2 entries (roles general + fast, answerTier default), so the fast tier picks it.
+   "qwen3-1.7b-q4km": {
+-    id: "qwen3-1.7b-q4km", kind: "llm", label: "Qwen3-1.7B (Q4_K_M)",
++    id: "qwen3-1.7b-q4km", kind: "llm", label: "Gemma 4 E2B-it (Q4_K_M) [GEMMA4-E2B arm]",
++    // GEMMA4-E2B: sizeBytes kept at the 1.7B's value on purpose (real file 3106738272 B > the compact cap), so the compact tier, prompts and
++    // declines stay byte-identical to the 1.7B path and only the weights differ.
+     filename: "models/qwen3-1.7b-q4km.gguf", sizeBytes: 1107409472, // LITEDECLINE: untiered = compact by size, as in the product
+     capabilities: { roles: ["general", "fast"], usesChatTemplate: true },
+   },
+diff -ru a/be/server.ts b/be/server.ts
+--- a/be/server.ts	2026-10-20 22:12:36
++++ b/be/server.ts	2026-10-20 22:12:36
+@@ -24,7 +24,7 @@
+ 
+ /** Sampler identical to the node path: request override, else the engine's, else 0.7; top_k 40, top_p 0.95, min_p 0.05. */
+ export function samplerFor(o: GenOpts, temp: number | undefined, seed: number) {
+-  return { temperature: temp ?? o.temperature ?? 0.7, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
++  return { temperature: temp ?? o.temperature ?? 1.0 /* GEMMA4-E2B arm: vendor T 1.0 */, top_k: 40, top_p: 0.95, min_p: 0.05, seed, ...samplerOverride() };
+ }
+ /**
+  * DEEPSAMP: BOAR_SAMPLER_JSON='{"temperature":1,"top_k":20,"min_p":0,"presence_penalty":1.5}' overrides sampler fields on

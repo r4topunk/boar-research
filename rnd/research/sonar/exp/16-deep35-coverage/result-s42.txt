@@ -1,0 +1,5 @@
+all: n=57 fast 0.518 deep 0.545 Δ +0.028
+in-kit-key: n=11 fast 0.628 deep 0.613 Δ -0.015
+out (not-in-kit + in-kit-no-key): n=41 fast 0.500 deep 0.536 Δ +0.036
+unkeyed: n=5 fast 0.419 deep 0.473 Δ +0.054
+P1 (Δ out > Δ in-kit-key): HOLDS | P2 (|Δ in-kit-key| <= 0.05): HOLDS  [seed 42 only, preliminary]

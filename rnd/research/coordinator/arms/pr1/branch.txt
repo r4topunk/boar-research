@@ -1,0 +1,16 @@
+pr/cut7-engine eb95ac7deddfd2a82fcd810b6ea9f0829fc09f17 tree 6011a527bc0c083dd529f9b3ad50a31f9d933f80
+upstream/main 8fdb665f3a0e3791740e932d518741747855242f
+coord/cut7 6d0b93b191b4dc4290cb22997bcf3bede17cec05 tree 17d42f2027bdd3b95f2956655d5e49b9924db1a1
+eb95ac7deddfd2a82fcd810b6ea9f0829fc09f17 CUT7: cut 6 (5e5567ca, tree b0f53fe0) + FACTS r6 (arms/facts/facts-r6.vs-cut6.patch sha 0eee6a0b)
+1ef38626aaafbd35f3812317956c87a3aca58210 DETMAX: with history, score the detector on the window and the turn alone, take the max
+b86ecb0efec31d9aaf00f8594252cde9577ec436 CUT5-SPEED 3: skip the route gate when the rules decide (lookup/research/compare, no detector fire, no history, not about BOAR, no safety/hazard/greeting wording)
+625907d25bbcd8939b2ab1d4ce0219dac6272fa3 CUT5-SPEED 2: second KV prefix, the static no-source system message gets its own session key (.nosrc) + save/restore; prompt token-identical
+dc9b4ab50b711f75765fafe1267d8745c5963f29 INSTANT-SUBJ: an instant extractive snippet is final only if the question's entity is its subject or the slot possessor
+8d7a582b3bd96bdc12268238767dda926766f985 INSTANT-FRAG: list/heading fragments and figurative 'capital' matches are not a final instant answer
+dea4d0404b0184cd038dac975c09e8bb544117d1 KVFIX: flatten KV session key (no path separators) and mkdir the target dirname before saveSession
+e5dca4e96c95d70fda662fdc86e5c4d3fda6b6cc VG v3: abstain on ambiguous attribution (F1), rank scope/subject (F2), multi-year first-fact (F3); reviewer probes as tests (F4)
+476f27f09c8879c06a17be897c8a08fe6ebbfc3a SBt: reviewed EN snakebite text on cut 2's card; trigger/card code files byte-identical to cut 2
+f5bb375706a7e89bb32ed10c5b7057113e5403f8 VG v2: compared quantity tied to the question's kind and unit; rank abstains on list/count mismatch or another subject; no ratio for ranges
+1e1c45324627365c30bf76cc5112c0ddbc7ba5f4 AR: rate x quantity / ceil-division calculators + detector numeric guard (EN)
+858ebc253f9638e72ed1f30519a6bda8a697b70a VG: verdict guard (template repair, EN model answers only)
+945c271848033746b67da11588606c0b8bbe5ef6 cut 2 (shipcut2-norv2 7931b9a8) on 0cfd4a77

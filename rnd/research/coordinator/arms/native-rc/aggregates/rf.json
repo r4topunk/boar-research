@@ -1,0 +1,108 @@
+{
+ "families": {
+  "G1 Claude (Opus vs Claude refs)": {
+   "n": 71,
+   "U_total": 0.16392904073587386,
+   "U_total_w1": 0.16414294367050272,
+   "U_H_anchors": 0.1657372986369269,
+   "win_rate": 0.0,
+   "win_tie_rate": 0.0,
+   "wtl": {
+    "loss": 71
+   },
+   "CR": 0.20930232558139536,
+   "correct_per_100": 21.12676056338028,
+   "CE_answered": 0.29411764705882354,
+   "CE_over_H": 0.28169014084507044,
+   "refusals_items_H": 3,
+   "coverage": 0.9295774647887324,
+   "abs_app": 0.6501272264631044,
+   "abs_ref": 3.8727735368956746,
+   "factavail": {
+    "AVAILABLE": {
+     "n": 19,
+     "U": 0.1639344262295082
+    },
+    "PARTIAL": {
+     "n": 25,
+     "U": 0.17387304507819684
+    },
+    "NONE": {
+     "n": 27,
+     "U": 0.15463917525773196
+    }
+   },
+   "CI_U_total": [
+    0.123,
+    0.208
+   ],
+   "CI_U_total_w1": [
+    0.124,
+    0.206
+   ],
+   "complete": true
+  },
+  "G2 Codex (gpt-5.6-sol vs Codex refs)": {
+   "n": 71,
+   "U_total": 0.24498520223610654,
+   "U_total_w1": 0.24332524271844658,
+   "U_H_anchors": 0.24434809538556826,
+   "win_rate": 0.0,
+   "win_tie_rate": 0.007042253521126761,
+   "wtl": {
+    "loss": 70,
+    "tie": 1
+   },
+   "CR": 0.24806201550387597,
+   "correct_per_100": 25.352112676056336,
+   "CE_answered": 0.27941176470588236,
+   "CE_over_H": 0.2676056338028169,
+   "refusals_items_H": 3,
+   "coverage": 0.9295774647887324,
+   "abs_app": 0.955470737913486,
+   "abs_ref": 3.8689567430025447,
+   "factavail": {
+    "AVAILABLE": {
+     "n": 19,
+     "U": 0.2724935732647815
+    },
+    "PARTIAL": {
+     "n": 25,
+     "U": 0.23774954627949182
+    },
+    "NONE": {
+     "n": 27,
+     "U": 0.23341946597760554
+    }
+   },
+   "CI_U_total": [
+    0.194,
+    0.3
+   ],
+   "CI_U_total_w1": [
+    0.194,
+    0.298
+   ],
+   "complete": true
+  }
+ },
+ "min_over_families": {
+  "point": 0.16392904073587386,
+  "ci": [
+   0.123,
+   0.206
+  ]
+ },
+ "paired_vs_f1023b93_s42_G1": {
+  "f1023b93_U_s42": 0.17805519053876478,
+  "lite_U": 0.16392904073587386,
+  "delta": -0.014126149802890934,
+  "ci": [
+   -0.04,
+   0.011
+  ],
+  "better": 13,
+  "worse": 24
+ },
+ "notes": "ONE seed (42, addendum); one reference family per judge family; stage 1 not run; no errata; desktop twin (harness-lite conv, port nh), not the APK"
+}

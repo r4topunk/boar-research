@@ -1,0 +1,9 @@
+# COMPOSE criterion (FROZEN 2026-10-22 18:1x, before any replay): many small packs together
+
+Question (r4to's decision 17:3x: small focused packs, not giant ones): when N small single-topic packs are installed together, do delivered facts grow with N without crowding, and does the global-IDF merge (H4 gidf, patch 4cd94755) keep that true?
+Sets: MAIN 92 keyed items + v0.1 52 (dev); fact-present = FACTPRESENT lexical rule in kept (the coverage-map scorer); funnel ids 25/22 reported.
+Kits (K3 = the current 3-pack kit; small packs on disk, none > 400 MB): N = 0 (K3), 2 (+qa-cooking, +qa-money), 4 (+factbook, +medlineplus), 6 (+firstaid, +visa), 8 (+qa-health, +qa-travel), 10 (+qa-outdoors, +wiki-vital5). Each N with RS_MERGE unset (stock) and RS_MERGE=gidf. Stock settings otherwise, K1 tree, 0 LLM.
+Reads per (N, merge): kept facts MAIN 92 and v0.1 52; S1; mean kept chunks; share of kept slots taken by packs other than the fact's pack on items where the fact is kept (crowding); kept tokens; wall per query.
+Rule: COMPOSES iff kept facts on MAIN 92 are non-decreasing in N under gidf (each step ≥ previous − 1) AND at N = 10 kept ≥ baseline + 6 AND v0.1 kept ≥ baseline at every N; CROWDS iff any step loses ≥ 3. The stock-merge curve is the control. The best (N, merge) by kept facts, if COMPOSES, goes to the Haiku answer screen (1.7B on the mini, changed-context items vs the K3 control, judge.v1 N 4 both orders, cap 300): LEVER-CANDIDATE iff ΔU ≥ +0.02 with CI low > −0.01 and CE-unwarned not up.
+Prediction: stock: kept rises to 29 at N = 2 then flattens or dips (−1…−3) by N = 10; gidf: rises monotonically to 31…34 at N = 10 with crowding share ≤ stock − 5 points; answer screen +0.02…+0.05 on changed items.
+Caps: 0 LLM for the curves; Haiku ≤ 300; Opus 0; paid 0; phone 0. Licences: all packs listed are CC BY-SA / PD (built and published packs).

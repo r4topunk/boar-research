@@ -1,0 +1,1 @@
+qf-boar-crypto-01-F8,qf-boar-crypto-06-F8,qf-boar-factbook-03-F8,qf-boar-factbook-08-F8,qf-boar-firstaid-en-05-F8,qf-boar-medlineplus-en-02-F8,qf-boar-medlineplus-en-07-F8,qf-boar-visa-en-04-F8,qf-boar-wikivoyage-en-01-F8,qf-boar-wikivoyage-en-06-F8

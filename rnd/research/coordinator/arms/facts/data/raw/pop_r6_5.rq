@@ -1,0 +1,3 @@
+SELECT ?item ?amount ?rank ?time WHERE { VALUES ?item { wd:Q979569 wd:Q979922 wd:Q98380389 wd:Q983884 wd:Q984788 wd:Q985130 wd:Q985627 wd:Q986207 wd:Q9863 wd:Q9885 wd:Q988603 wd:Q989283 wd:Q989297 wd:Q98937606 wd:Q98967 wd:Q989733 wd:Q989892 wd:Q9899 wd:Q98995 wd:Q992146 wd:Q992512 wd:Q993859 wd:Q994085 wd:Q994096 wd:Q994105 wd:Q994114 wd:Q99642400 wd:Q99648 wd:Q997623 wd:Q998087 wd:Q998772 wd:Q999076 }
+  ?item p:P1082 ?st . ?st ps:P1082 ?amount ; wikibase:rank ?rank . FILTER(?rank != wikibase:DeprecatedRank)
+  OPTIONAL { ?st pq:P585 ?time } }

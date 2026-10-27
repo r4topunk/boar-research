@@ -1,0 +1,148 @@
+{
+ "notes": "EVALFIX parts 2+3: robust CIs side by side + power numbers. python3 -I robust_ci.py -> aggregates/robust_ci.json, aggregates/power.json\nReads existing judgment rows only (0 judge calls); prints/stores numbers and ids only.\nPer item: boar_i / ref_i = rubric mean (3 criteria) averaged over the two orders (combineOrders averaging) and over seeds.\nHeadline estimand R = sum(boar)/sum(ref) (ratio of sums, as judge-core/paired.mjs). Intervals:\n (a) existing percentile / stratified two-level bootstrap: CITED from aggregates (not recomputed).\n (b) logit-t: per-item ratio b_i/r_i clipped to [0.02,0.98], logit, t-interval, back-transform. Level: CI of the MEAN per-item ratio (different\n     estimand from R, point shown). Delta: t-interval on the paired logit differences theta, mapped as expit(logit(mB)+theta)-mB.\n (c) paired t on delta-method influence values u_i=(b_i-R r_i)/mean(r); delta v_i=uA_i-uB_i; plain paired t (Bonett 2006 correction not applied:\n     it is for variances/binary contrasts, not available in closed form for this ratio-of-sums statistic).",
+ "rows": {
+  "DT512 H-T V-para 2seed": {
+   "n": 51,
+   "delta": 0.0109,
+   "c_paired_t": [
+    -0.0019,
+    0.0237
+   ],
+   "b_logit_t": [
+    0.011,
+    -0.0023,
+    0.0243
+   ],
+   "s_d_linearized": 0.0456,
+   "s_d_item_ratio_diff": 0.0463,
+   "a_cited_bootstrap": [
+    0.0109,
+    -0.0096,
+    0.0306
+   ],
+   "a_source": "arms/dt512/aggregates/paired_gap-HvsT-2seed.json (stratified two-level bootstrap)",
+   "max_end_gap": {
+    "a_vs_b": 0.0073,
+    "a_vs_c": 0.0077,
+    "b_vs_c": 0.0006
+   },
+   "disagree_gt_0.01": []
+  },
+  "DEEPTHINK T-D V-para 2seed": {
+   "n": 51,
+   "delta": 0.0746,
+   "c_paired_t": [
+    0.0421,
+    0.107
+   ],
+   "b_logit_t": [
+    0.0783,
+    0.0435,
+    0.1126
+   ],
+   "s_d_linearized": 0.1155,
+   "s_d_item_ratio_diff": 0.1132,
+   "a_cited_bootstrap": [
+    0.0746,
+    0.0398,
+    0.1099
+   ],
+   "a_source": "arms/deepthink/aggregates/L2-TvsD-2seed.paired_gap.json",
+   "max_end_gap": {
+    "a_vs_b": 0.0037,
+    "a_vs_c": 0.0029,
+    "b_vs_c": 0.0056
+   },
+   "disagree_gt_0.01": []
+  },
+  "QUANTCEIL Q-H V-para 2seed": {
+   "n": 51,
+   "delta": 0.0041,
+   "c_paired_t": [
+    -0.0195,
+    0.0276
+   ],
+   "b_logit_t": [
+    0.0055,
+    -0.0199,
+    0.0307
+   ],
+   "s_d_linearized": 0.0837,
+   "s_d_item_ratio_diff": 0.0827,
+   "a_cited_bootstrap": [
+    0.0041,
+    -0.024,
+    0.0325
+   ],
+   "a_source": "arms/quantceil/aggregates/paired_gap-QvsH-2seed.json",
+   "max_end_gap": {
+    "a_vs_b": 0.0041,
+    "a_vs_c": 0.0049,
+    "b_vs_c": 0.0031
+   },
+   "disagree_gt_0.01": []
+  },
+  "QUANTCEIL Q-H v0.2 s42": {
+   "n": 110,
+   "delta": 0.0083,
+   "c_paired_t": [
+    -0.0113,
+    0.0279
+   ],
+   "b_logit_t": [
+    0.0133,
+    -0.0099,
+    0.0361
+   ],
+   "s_d_linearized": 0.1037,
+   "s_d_item_ratio_diff": 0.1032,
+   "a_cited_bootstrap": [
+    0.0083,
+    -0.0109,
+    0.0282
+   ],
+   "a_source": "arms/quantceil/aggregates/paired_gap-QvsH-1seed.json",
+   "max_end_gap": {
+    "a_vs_b": 0.0079,
+    "a_vs_c": 0.0004,
+    "b_vs_c": 0.0082
+   },
+   "disagree_gt_0.01": []
+  },
+  "SEEDVAR H 3-seed mean V-para": {
+   "n": 51,
+   "R": 0.5496,
+   "c_delta_t": [
+    0.52,
+    0.5792
+   ],
+   "b_logit_t_meanratio": [
+    0.5515,
+    0.5206,
+    0.5821
+   ],
+   "mean_item_ratio_unclipped": 0.5491,
+   "item_sd_u": 0.1052,
+   "a_cited_bootstrap": [
+    0.5497,
+    null,
+    null
+   ],
+   "a_source": "arms/seedvar/aggregates/seedvar-H-3seed.opus.json (per-seed percentile CIs 0.500-0.563 / 0.538-0.607 / 0.509-0.579; seed-level SD 0.0202, k=3 -> t-CI of the seed mean 0.5497 +/- 0.0501)",
+   "a_seed_level_t": [
+    0.5497,
+    0.4996,
+    0.5998
+   ],
+   "max_end_gap": {
+    "a_vs_b": 0.021,
+    "a_vs_c": 0.0206,
+    "b_vs_c": 0.0029
+   },
+   "disagree_gt_0.01": [
+    "a_vs_b",
+    "a_vs_c"
+   ]
+  }
+ }
+}

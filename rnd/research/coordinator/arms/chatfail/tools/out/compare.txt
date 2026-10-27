@@ -1,0 +1,64 @@
+| metric | before | after L2+L3 |
+|---|---|---|
+| intent acc, all turns | 74.8% (119/159) | 85.5% (136/159) |
+| intent acc, capability turns | 34.7% (17/49) | 69.4% (34/49) |
+|   code asks | 0.0% (0/21) | 81.0% (17/21) |
+|   format asks (table/shorter) | 72.2% (13/18) | 72.2% (13/18) |
+|   translate asks | 40.0% (4/10) | 40.0% (4/10) |
+| intent acc, non-capability turns | 92.7% (102/110) | 92.7% (102/110) |
+| capability turns left on a capped (retrieval + 2-3 sentence) class | 91.8% (45/49) | 57.1% (28/49) |
+|   of which code asks | 100.0% (21/21) | 19.0% (4/21) |
+| anchor acc, turns >= 3 (fallback borrows) | 20.2% (20/99) | 76.8% (76/99) |
+| anchor acc, turns >= 3 (fallback keeps own turn) | 20.2% (20/99) | 50.5% (50/99) |
+|   direct-plan turns >= 3 only (no bound ambiguity) | 18.6% (8/43) | 88.4% (38/43) |
+
+capability misrouted before: 65.3% (32/49); fixed by L2+L3: 53.1% (17/32)
+code asks misrouted before: 100.0% (21/21); fixed: 81.0% (17/21)
+anchor lost before (turn>=3, fallback borrows): 79.8% (79/99); regained after: 72.2% (57/79)
+
+control chats: 29 turns, intent class changes: 0; intent acc 89.7% (26/29) -> 89.7% (26/29); anchor changes 8
+intent-change chats: class changed on 17 turns; wrongly 0 (ok -> not ok)
+
+v0.1 public single turns: classify unchanged 60/60
+
+REMAINING misrouted capability turns after:
+  c02 6 "just the function, no explanation" exp code before chat after chat
+  c05 6 "em português" exp translate before chat after chat
+  c06 5 "just the hash part, five lines max" exp code before chat after chat
+  c07 4 "can you put that in a table?" exp format before lookup after lookup
+  c07 6 "em português" exp translate before chat after chat
+  c08 6 "say that in Spanish" exp translate before chat after chat
+  c12 5 "say it in German" exp translate before chat after chat
+  c13 4 "can you put the steps in a numbered list?" exp format before lookup after lookup
+  c13 6 "em português" exp translate before chat after chat
+  c15 4 "explain it like I'm five" exp format before research after research
+  c15 5 "can you make that shorter?" exp format before lookup after lookup
+  c17 4 "can you put that in a table?" exp format before lookup after lookup
+  c17 5 "em português" exp translate before chat after chat
+  c21 5 "how would I plot the orbit?" exp code before research after research
+  c24 5 "not a library, from scratch?" exp code before chat after chat
+
+ANCHOR misses after (turn>=3, fallback borrows):
+  c02 3 "and what happens if the validator goes offline?" plan none exp 1 before 3 after 3
+  c02 4 "show me what the deposit call looks like in code" plan none exp 1 before 4 after 4
+  c02 5 "can you write it in Solidity?" plan direct exp 1 before 4 after 4
+  c02 6 "just the function, no explanation" plan fallback exp 1 before 5 after 4
+  c03 5 "can you show the fee formula in code?" plan none exp 3 before 5 after 5
+  c03 6 "write it in Python" plan direct exp 3 before 5 after 5
+  c06 4 "can you show me an example in JavaScript?" plan none exp 1 before 4 after 4
+  c06 5 "just the hash part, five lines max" plan none exp 1 before 5 after 5
+  c10 3 "what does the road look like in January?" plan none exp 1 before 3 after 3
+  c10 4 "compare it with the Golden Circle" plan direct exp 1 before 3 after 3
+  c10 5 "translate that to Portuguese" plan direct exp 1 before 4 after 3
+  c10 6 "and in a table?" plan fallback exp 1 before 5 after 3
+  c13 4 "can you put the steps in a numbered list?" plan none exp 1 before 4 after 4
+  c13 5 "shorter" plan fallback exp 1 before 4 after 4
+  c13 6 "em português" plan fallback exp 1 before 5 after 4
+  c15 3 "when should I call an ambulance?" plan none exp 1 before 3 after 3
+  c17 3 "when should I see a doctor?" plan none exp 1 before 3 after 3
+  c21 5 "how would I plot the orbit?" plan none exp 1 before 5 after 5
+  c28 4 "which one was the biggest?" plan fallback exp 3 before 3 after 1
+  c28 5 "what's an example of an igneous rock?" plan fallback exp 5 before 4 after 1
+  c29 3 "what does the surface look like up close?" plan none exp 1 before 3 after 3
+  c29 4 "who walked on it first?" plan direct exp 1 before 3 after 3
+  c29 5 "list the phases in order" plan fallback exp 1 before 4 after 3

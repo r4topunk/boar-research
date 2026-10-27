@@ -1,0 +1,75 @@
+
+Loading model... 
+
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b2-0b74404
+model      : Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf
+modalities : text
+using custom system prompt
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+> In which year was the Berlin Wall built, and in which year did it come down?
+
+(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)
+
+[Start thinking]
+Here's a thinking process:
+
+1.  **Analyze User Input:**
+   - Question: "In which year was the Berlin Wall built, and in which year did it come down?"
+   - Style constraint: Keep it short: 2-3 sentences. No lists unless the question asks for one.
+   - Context provided: Mentions 1961 to 1989 for the Berlin Wall [2], and mentions dismantled after German reunification [2].
+   - System constraints: 2-3 short direct sentences or brief paragraph, no preamble, cite sources with numbers like [1], answer from general knowledge if context doesn't cover it, never describe self as animal, no device control, treat greetings conversationally (not applicable here), never claim to have done something.
+
+2.  **Extract Information:**
+   - Built: 1961 [2]
+   - Came down/Dismantled: 1989 [2] (fall of the wall, officially dismantled after reunification)
+   - Context explicitly states: "separating Western and Eastern parts of Berlin from 1961 to 1989" [2].
+
+3.  **Draft Response (mental):**
+   The Berlin Wall was built in 1961 and fell in 1989 [2]. It remained a physical barrier until German reunification led to its complete dismantling shortly after.
+
+4.  **Check Constraints:**
+   - 2-3 short direct sentences? Yes, 2 sentences.
+   - No preamble? Yes.
+   - Cite source? Yes, [2].
+   - Accurate? Yes.
+   - Matches style? Yes.
+
+   Let's refine to strictly meet the 2-3 sentence rule and ensure tone matches instructions.
+   "The Berlin Wall was constructed in 1961 and came down in 1989 [2]. Following its fall, the structure was dismantled as part of the process leading to German reunification."
+
+   Check against constraints:
+   - 2-3 sentences: Yes.
+   - Direct: Yes.
+   - No list: Yes.
+   - Cite: [2].
+   - No animal/self references: Checked.
+   - No device claims: Checked.
+
+   All good. Output matches draft.✅
+   One minor thing: The prompt says
+I have thought enough; answering now.
+
+[End thinking]
+
+The Berlin Wall was constructed in 1961 and came down in 1989 [2]. Following its fall, the structure was rapidly dismantled as part of the process leading to German reunification.
+
+[ Prompt: 36.0 t/s | Generation: 16.1 t/s ]
+
+Exiting...

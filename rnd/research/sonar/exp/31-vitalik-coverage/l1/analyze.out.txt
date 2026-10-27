@@ -1,0 +1,124 @@
+
+=== ios-a.traces.jsonl
+p-jp-01 task=chat declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan', 'Stablecoin']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan', 'Stablecoin']
+   facets in pre text 3/7: ['population', 'geography', 'culture']  ['context:846->441']
+   answer: 'Japan is an island nation in East Asia known for its unique and intricate culture, which has been influenced by its geographical isolation and its close connection to China. Despite its bustling cities, Japan places emph'
+p-ke-02 task=chat declined=False
+   raw=['Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Eastern Kenya']
+   pre=['Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Eastern Kenya']
+   facets in pre text 2/3: ['Nairobi', 'Swahili']  ['context:844->398']
+   answer: 'Kenya is a beautiful country in East Africa known for its stunning landscapes such as the scenic beaches, Nairobi National Park, and the majestic Rift Valley [1]. The country is a dream destination for its Swahili herita'
+p-pq-03 task=lookup declined=True
+   raw=['Quantum cryptography', 'NIST Post-Quantum Cryptography Standardization', 'ethereum.org: Post-quantum cryptography on Ethereum']
+   pre=['NIST Post-Quantum Cryptography Standardization', 'Quantum cryptography', 'ethereum.org: Post-quantum cryptography on Ethereum']
+   facets in pre text 0/3: []  ['context:541->365', 'grounding:uncited-with-sources-declined-compact']
+   answer: "The passages found don't support this answer."
+p-pq-04 task=compare declined=False
+   raw=['Lattice-based cryptography', 'Lattice-based cryptography', 'SPHINCS+', 'SPHINCS+']
+   pre=['SPHINCS+']
+   facets in pre text 2/4: ['ML-DSA', 'SLH-DSA']  ['context:797->321', 'grounding:off-topic-dropped-2']
+   answer: 'ML-DSA and SLH-DSA are both post-quantum cryptographic schemes, but they differ in their security properties. ML-DSA is a modified version of the DSA (Digital Signature Algorithm) with a different hash function, while SL'
+p-pq-05 task=chat declined=False
+   raw=['SPHINCS+', 'SPHINCS+', 'Post-quantum cryptography', 'Digital signature']
+   pre=['Digital signature', 'SPHINCS+', 'Post-quantum cryptography']
+   facets in pre text 3/3: ['SPHINCS', 'hash', 'quantum']  ['context:769->331']
+   answer: 'SPHINCS+ is a post-quantum digital signature scheme that leverages cryptographic hash functions [2]. It was selected by the National Institute of Standards and Technology (NIST) for the Stateless Hash-based Digital Signa'
+p-pq-06 task=research declined=False
+   raw=['Elliptic-curve cryptography', 'ethereum.org: What are zero-knowledge proofs?', 'Diffie–Hellman key exchange', "Shor's algorithm"]
+   pre=['ethereum.org: What are zero-knowledge proofs?']
+   facets in pre text 1/2: ['STARK/ZK/seed']  ['context:560->459', 'grounding:off-topic-dropped-2']
+   answer: 'Ethereum would likely switch to ZK-STARK for signature verification. ZK-STARK is considered quantum-safe and immune to the threat of quantum computing [1].'
+p-cn-07 task=research declined=True
+   raw=['Ethereum EIPs/ERCs: ERC-1491: Human Cost Accounting Standard (Like Gas but for humans)', 'Ethereum EIPs/ERCs: ERC-7681: Dual Nature Multi Token Protocol', 'Ethereum EIPs/ERCs: ERC-7777: Governance for Human Robot Societies', 'Ethereum EIPs/ERCs: ERC-1491: Human Cost Accounting Standard (Like Gas but for humans)']
+   pre=[]
+   facets in pre text 0/4: []  ['context:734->297', 'grounding:off-topic-dropped-4', 'grounding:no-good-source', 'grounding:declined-compact']
+   answer: "I didn't find this in this phone's library."
+p-cn-08 task=lookup declined=True
+   raw=['Wikivoyage: Working in China', 'Bitcoin', 'Wikivoyage: Digital nomad']
+   pre=[]
+   facets in pre text 0/3: []  ['context:612->222', 'grounding:off-topic-dropped-2', 'grounding:no-good-source', 'grounding:declined-compact']
+   answer: "I didn't find this in this phone's library."
+p-tv-09 task=lookup declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan']
+   facets in pre text 2/3: ['visa', 'Japan']  ['context:588->355']
+   answer: 'No, you do not need a visa to visit Japan with a Brazilian passport. [1]'
+p-tv-10 task=lookup declined=True
+   raw=['Wikivoyage: Colombia to Patagonia overland', 'Wikivoyage: Patagonia (Chile)', 'Wikivoyage: South America']
+   pre=['Wikivoyage: Patagonia (Chile)']
+   facets in pre text 0/2: []  ['context:343->170', 'grounding:off-topic-dropped-1', 'grounding:all-citations-removed-declined-compact']
+   answer: "The passages found don't support this answer."
+p-tv-11 task=lookup declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan']
+   facets in pre text 2/2: ['Japan', 'etiquette']  ['context:697->269']
+   answer: "Respect the local customs, especially regarding politics, history, and sensitivity towards sensitive issues. Avoid discussing Japan's political stance openly and steer clear of controversial topics like territorial dispu"
+p-tv-12 task=research declined=True
+   raw=['Wikivoyage: Puno', 'Wikivoyage: Puno', 'Wikivoyage: Lake Titicaca', 'Wikivoyage: Madre de Dios (Peru)']
+   pre=['Wikivoyage: Puno', 'Wikivoyage: Puno', 'Wikivoyage: Lake Titicaca', 'Wikivoyage: Madre de Dios (Peru)']
+   facets in pre text 2/3: ['Puno', 'bus/train']  ['context:127->119', 'grounding:uncited-with-sources-declined-compact']
+   answer: "The passages found don't support this answer."
+
+=== ios-v5.traces.jsonl
+p-jp-01 task=chat declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan', 'Stablecoin']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan', 'Stablecoin']
+   facets in pre text 3/7: ['population', 'geography', 'culture']  ['context:846->441']
+   answer: 'Japan is an island nation in East Asia known for its unique and intricate culture, which has been influenced by its geographical isolation and its close connection to China. Despite its bustling cities, Japan places emph'
+p-ke-02 task=chat declined=False
+   raw=['Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Kenya']
+   pre=['Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Wikivoyage: Kenya', 'Kenya']
+   facets in pre text 2/3: ['Nairobi', 'Swahili']  ['context:856->388']
+   answer: "Kenya is a beautiful country in East Africa, known for its diverse landscapes, wildlife, and rich cultural heritage. It's home to famous attractions like the Nairobi National Park and Lake Naivasha [1]. Kenya's cuisine i"
+p-pq-03 task=lookup declined=True
+   raw=['Quantum cryptography', 'NIST Post-Quantum Cryptography Standardization', 'ethereum.org: Post-quantum cryptography on Ethereum']
+   pre=['NIST Post-Quantum Cryptography Standardization', 'Quantum cryptography', 'ethereum.org: Post-quantum cryptography on Ethereum']
+   facets in pre text 0/3: []  ['context:541->365', 'grounding:uncited-with-sources-declined-compact']
+   answer: "The passages found don't support this answer."
+p-pq-04 task=compare declined=False
+   raw=['Lattice-based cryptography', 'Lattice-based cryptography', 'SPHINCS+', 'SPHINCS+']
+   pre=['SPHINCS+']
+   facets in pre text 2/4: ['ML-DSA', 'SLH-DSA']  ['context:797->321', 'grounding:off-topic-dropped-2']
+   answer: 'ML-DSA and SLH-DSA are both post-quantum cryptographic schemes, but they differ in their security properties. ML-DSA is a modified version of the DSA (Digital Signature Algorithm) with a different hash function, while SL'
+p-pq-05 task=chat declined=False
+   raw=['SPHINCS+', 'SPHINCS+', 'Post-quantum cryptography', 'Digital signature']
+   pre=['Digital signature', 'SPHINCS+', 'Post-quantum cryptography']
+   facets in pre text 3/3: ['SPHINCS', 'hash', 'quantum']  ['context:769->331']
+   answer: 'SPHINCS+ is a post-quantum digital signature scheme that leverages cryptographic hash functions [2]. It was selected by the National Institute of Standards and Technology (NIST) for the Stateless Hash-based Digital Signa'
+p-pq-06 task=research declined=False
+   raw=['Elliptic-curve cryptography', 'ethereum.org: What are zero-knowledge proofs?', 'Diffie–Hellman key exchange', "Shor's algorithm"]
+   pre=['ethereum.org: What are zero-knowledge proofs?']
+   facets in pre text 1/2: ['STARK/ZK/seed']  ['context:560->459', 'grounding:off-topic-dropped-2']
+   answer: 'Ethereum would likely switch to ZK-STARK for signature verification. ZK-STARK is considered quantum-safe and immune to the threat of quantum computing [1].'
+p-cn-07 task=research declined=True
+   raw=['Mencius', 'Xunzi (philosopher)', 'Ethereum EIPs/ERCs: ERC-1491: Human Cost Accounting Standard (Like Gas but for humans)', 'Ethereum EIPs/ERCs: ERC-7681: Dual Nature Multi Token Protocol']
+   pre=['Mencius']
+   facets in pre text 3/4: ['Xunzi', 'nature bad', 'nature good']  ['context:698->127', 'grounding:uncited-with-sources-declined-compact']
+   answer: "The passages found don't support this answer."
+p-cn-08 task=lookup declined=True
+   raw=['Wikivoyage: Working in China', 'Legalism (Chinese philosophy)', 'Legalism (Chinese philosophy)']
+   pre=['Legalism (Chinese philosophy)', 'Legalism (Chinese philosophy)']
+   facets in pre text 1/3: ['law (fa)']  ['context:424->244', 'grounding:off-topic-dropped-1', 'grounding:all-citations-removed-declined-compact']
+   answer: "The passages found don't support this answer."
+p-tv-09 task=lookup declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan']
+   facets in pre text 2/3: ['visa', 'Japan']  ['context:588->355']
+   answer: 'No, you do not need a visa to visit Japan with a Brazilian passport. [1]'
+p-tv-10 task=lookup declined=True
+   raw=['Wikivoyage: Colombia to Patagonia overland', 'Wikivoyage: Patagonia (Chile)', 'Wikivoyage: South America']
+   pre=['Wikivoyage: Patagonia (Chile)']
+   facets in pre text 0/2: []  ['context:343->170', 'grounding:off-topic-dropped-1', 'grounding:all-citations-removed-declined-compact']
+   answer: "The passages found don't support this answer."
+p-tv-11 task=lookup declined=False
+   raw=['Wikivoyage: Japan', 'Wikivoyage: Japan', 'Wikivoyage: Japan']
+   pre=['Wikivoyage: Japan', 'Wikivoyage: Japan']
+   facets in pre text 2/2: ['Japan', 'etiquette']  ['context:697->269']
+   answer: "Respect the local customs, especially regarding politics, history, and sensitivity towards sensitive issues. Avoid discussing Japan's political stance openly and steer clear of controversial topics like territorial dispu"
+p-tv-12 task=research declined=True
+   raw=['Wikivoyage: Puno', 'Wikivoyage: Puno', 'Wikivoyage: Lake Titicaca', 'Wikivoyage: Madre de Dios (Peru)']
+   pre=['Wikivoyage: Puno', 'Wikivoyage: Puno', 'Wikivoyage: Lake Titicaca', 'Wikivoyage: Madre de Dios (Peru)']
+   facets in pre text 2/3: ['Puno', 'bus/train']  ['context:127->119', 'grounding:uncited-with-sources-declined-compact']
+   answer: "The passages found don't support this answer."

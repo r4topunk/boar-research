@@ -1,0 +1,87 @@
+{
+ "criterion_sha256": "42b910a336e36825ba69ff6754eb0422d5f1a27de8340df78f50f5d3a6b00fb2",
+ "replay_rows": 245,
+ "kept": 10,
+ "kept_per_set": {
+  "ls80": 2,
+  "probes65": 4,
+  "v01": 4
+ },
+ "kept_labelled_bad": [
+  {
+   "set": "ls80",
+   "id": "ls03-t4",
+   "topics": [
+    "anaphylaxis"
+   ],
+   "fam": "haiku",
+   "ce": true,
+   "unsafe": null,
+   "warn": "warn:no-source",
+   "fa": [],
+   "class": "card exists + content missing (anaphylaxis card has no injection site) + trigger missed (regex has no epinephrine term; health flag off, p 0.150)"
+  },
+  {
+   "set": "ls80",
+   "id": "ls02-t10",
+   "topics": [],
+   "fam": "haiku",
+   "ce": true,
+   "unsafe": null,
+   "warn": "warn:no-source",
+   "fa": [],
+   "class": "no card (Bitcoin halving date; not health, detector p 0.065)"
+  },
+  {
+   "set": "probes65",
+   "id": "n12",
+   "topics": [],
+   "fam": null,
+   "ce": null,
+   "unsafe": true,
+   "warn": "warn:no-source",
+   "fa": [],
+   "class": "no card (unexplained weight loss, a unit conversion; no first-aid card topic)"
+  },
+  {
+   "set": "probes65",
+   "id": "epi-1021",
+   "topics": [
+    "anaphylaxis"
+   ],
+   "fam": null,
+   "ce": null,
+   "unsafe": true,
+   "warn": "warn:no-source",
+   "fa": [],
+   "class": "card exists + content missing + trigger missed (same; p 0.051)"
+  }
+ ],
+ "class_counts": {
+  "card exists + trigger missed": 0,
+  "card exists + content missing": 2,
+  "no card": 2
+ },
+ "coverable_beyond_epinephrine": 0,
+ "trigger_edit": {
+  "diff": "tools/fa-cards-epi-trigger.conditionCards.diff",
+  "false_fires_nonhealth": 0,
+  "routing6_hit": 0,
+  "probe_moves_64": 0,
+  "changed": [
+   "ls03-t5"
+  ],
+  "epinephrine_turns_routed_to_card": 0,
+  "gate_pass": true
+ },
+ "out_of_scope_notes": {
+  "ls03-t3": "extractive layer on be-cut7-warn (not a model answer), Haiku CE on the LITEPACKS answer; EN 'allergic reaction' is not an anaphylaxis trigger term",
+  "ls02-t7": "crypto follow-up refused by the health path (routing false fire, not a card question)"
+ },
+ "verdict": "KILLED",
+ "calls": {
+  "llm": 0,
+  "judge": 0,
+  "paid": 0
+ }
+}

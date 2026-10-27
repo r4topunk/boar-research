@@ -1,0 +1,8 @@
+# Cross-check: r4to's Grok research PDF (vitalik_mobile_ai_research.pdf, 2026-10-19) vs public sources
+
+Checked against live poidh JSON (https://poidh.xyz/mainnet/bounty/31/data, fetched 2026-10-19 23:52) and map-bounty31-ground-truth.
+- MATCHES: V1 (2026-09-17) killer-app quote, ">50% as good as internet + frontier models", ~10 tok/s 1B, MoE as a direction not a requirement; V2 (2026-09-26) "much slower and less effective at difficult questions than the models that can run on a laptop", weakest at specialized travel (vegan restaurants in the current city); thanks to the app maintainer; bounty requirements; decision by October 31st.
+- NEW AND PUBLICLY CONFIRMED: organizer comment 1278 (2026-10-12): "we are organizing contributors to review all submitted apps before the deadline" -> the first audience of the ruler is the contributor reviewers. Claims now 7: #142 "Offline Research for Android - cited answers in airplane mode" (github.com/a competitor team's repo), #137 "Offline Research: cited answers in airplane mode, Android", #134 "a competitor team: an offline research app for Android" ([competitor link removed]), plus #132 Outpost, #125 a competitor team, #124 Boar, #115 a competitor team. Pool 1.53575 ETH.
+- UNVERIFIED: "the post author contributed 1 ETH" (not in the poidh JSON; check on-chain contributor txs before relying on it); "finalise by 10-25" (not on the public page; public text says October 31st); "Vitanom" submission name (not among the 7 claims); "10-17 tok/s Qwen3 1.7B on iPhone 13" (no source given).
+- OUTDATED: "BOAR models in the 1.5B range" (claim #124 era; current engine uses Qwen3-4B).
+- Effect on the ruler: none of the design changes; adds that the kit and report must be usable by contributor reviewers (comment 1278).

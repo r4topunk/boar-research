@@ -1,0 +1,112 @@
+From 5b33e3385b495f7cd22eedf78f2a2207d114ba9e Mon Sep 17 00:00:00 2001
+From: BOAR R&D <noreply>
+Date: Sun, 18 Oct 2026 16:59:18 -0300
+Subject: [PATCH 1/8] routing: keep number patterns linear on long digit runs
+
+A pasted run of digits made four unanchored number patterns (the calculators' NUM, the temperature conversion, the task classifier's arithmetic test and numguard's NUM) restart at every digit, so a 20,000-digit question took seconds on a desktop and minutes on a phone before any answer. Each pattern now refuses to start inside another number ((?<!\d), and (?<!\d,) for numguard's comma-grouped form). Answers to normal questions are unchanged: full suite 1,484/1,484 with and without HEALTHGAP. Found by the native app's plugin combination suite; longDigits.test.ts fails 5/6 without this change.
+
+Co-Authored-By: Claude Opus 5.5 <noreply>
+---
+ src/routing/calculators.ts     |  2 +-
+ src/routing/classify.ts        |  2 +-
+ src/routing/context.ts         |  2 +-
+ src/routing/longDigits.test.ts | 34 ++++++++++++++++++++++++++++++++++
+ src/routing/numguard.ts        |  2 +-
+ 5 files changed, 38 insertions(+), 4 deletions(-)
+ create mode 100644 src/routing/longDigits.test.ts
+
+diff --git a/src/routing/calculators.ts b/src/routing/calculators.ts
+index 01142375..ca9b1ce5 100644
+--- a/src/routing/calculators.ts
++++ b/src/routing/calculators.ts
+@@ -11,7 +11,7 @@ export interface Calculation {
+   text: string;
+ }
+ 
+-const NUM = String.raw`(\d{1,3}(?:[.\s]\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?)`;
++const NUM = String.raw`(?<!\d)(\d{1,3}(?:[.\s]\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?)`;
+ 
+ /** "7,5" / "7.5" / "2.450" (PT thousands) / "1,200.5" / "18" -> number. */
+ export function parseNumber(raw: string, pt: boolean): number {
+diff --git a/src/routing/classify.ts b/src/routing/classify.ts
+index 03b89e3e..eca2136d 100644
+--- a/src/routing/classify.ts
++++ b/src/routing/classify.ts
+@@ -16,7 +16,7 @@ const PATTERNS: Array<{ type: TaskType; test: RegExp }> = [
+   { type: "summarize", test: /\b(summarize|summarise|summary of|tl;?dr)\b/i },
+   { type: "translate", test: /\btranslate\b/i },
+   { type: "code", test: /```|\b(write (a |some )?code|debug this|refactor|fix this function|regex for)\b/i },
+-  { type: "calculate", test: /\b(calculate|compute|how much is)\b|\d+\s*[+\-*/×÷]\s*\d/i },
++  { type: "calculate", test: /\b(calculate|compute|how much is)\b|(?<!\d)\d+\s*[+\-*/×÷]\s*\d/i },
+   { type: "extract", test: /\b(extract|list all|pull out|find every)\b/i },
+   // Explanation/reasoning questions: never a one-sentence lookup, even when
+   // short and opening with "what" ("What caused the French Revolution?").
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 421df8b3..7b667dac 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -879,7 +879,7 @@ export function historyDate(date: Date): { search: string; isDateArticle: (title
+ }
+ 
+ const TEMPERATURE =
+-  /(-?\d+(?:[.,]\d+)?)\s*(?:°|º|degrees?|graus?)?\s*(c|celsius|centigrade|f|fahrenheit)\b[^?]*?\b(?:in|to|into|em|para)\s+(?:degrees?\s+|graus?\s+)?(celsius|centigrade|fahrenheit|c|f)\b/i;
++  /(?<!\d)(-?\d+(?:[.,]\d+)?)\s*(?:°|º|degrees?|graus?)?\s*(c|celsius|centigrade|f|fahrenheit)\b[^?]*?\b(?:in|to|into|em|para)\s+(?:degrees?\s+|graus?\s+)?(celsius|centigrade|fahrenheit|c|f)\b/i;
+ 
+ /**
+  * "What is 30 °C in Fahrenheit?" (a suggested question, Prism RF-1): arithmetic, not knowledge. Answered
+diff --git a/src/routing/longDigits.test.ts b/src/routing/longDigits.test.ts
+new file mode 100644
+index 00000000..c72385fd
+--- /dev/null
++++ b/src/routing/longDigits.test.ts
+@@ -0,0 +1,34 @@
++import { describe, it, expect } from "vitest";
++import { calculate } from "./calculators";
++import { classifyTask } from "./classify";
++import { temperatureConversion } from "./context";
++import { numericGuard, numericIntent } from "./numguard";
++
++// A pasted run of digits made four unanchored number patterns restart at every digit: quadratic time,
++// about 0.7 s at 8,000 digits on a desktop and minutes on a phone. A number now cannot start inside
++// another number. The bound is loose on purpose (a busy CI runner); the quadratic version took seconds at this length.
++describe("long digit runs stay linear", () => {
++  const run = "1".repeat(20000);
++  const queries = [`what is ${run} + 2`, `${run} °C in fahrenheit`, `how far is ${run} km and back by car`];
++  const fns: Array<[string, (q: string) => unknown]> = [
++    ["calculate", (q) => calculate(q, false)],
++    ["temperatureConversion", (q) => temperatureConversion(q, false)],
++    ["classifyTask", (q) => classifyTask(q)],
++    ["numericIntent", (q) => numericIntent(q)],
++    ["numericGuard", (q) => numericGuard(q, false)],
++  ];
++  for (const [name, fn] of fns) {
++    it(`${name} answers a 20,000-digit question in under 1,000 ms`, () => {
++      for (const q of queries) {
++        const t = performance.now();
++        fn(q);
++        expect(performance.now() - t).toBeLessThan(1000);
++      }
++    });
++  }
++  it("still reads the numbers it read before", () => {
++    expect(temperatureConversion("What is 30 °C in Fahrenheit?", false)).toMatch(/30 °C = 86 °F/);
++    expect(classifyTask("what is 12 * 7")).toBe("calculate");
++    expect(numericIntent("2.2 bar in psi?")).toBe(true);
++  });
++});
+diff --git a/src/routing/numguard.ts b/src/routing/numguard.ts
+index c90c847f..c0065b58 100644
+--- a/src/routing/numguard.ts
++++ b/src/routing/numguard.ts
+@@ -20,7 +20,7 @@ const BODY_TEMP = /\b(?:3\d|4[0-5])(?:[.,]\d+)?\s?(?:°\s?|degrees? )?c(?:elsius
+ // Accented Latin letters (not × ÷): not an English message.
+ const NON_EN = /[À-ÖØ-öø-ɏ]/;
+ 
+-const NUM = String.raw`\d[\d,]*(?:\.\d+)?`;
++const NUM = String.raw`(?<!\d)(?<!\d,)\d[\d,]*(?:\.\d+)?`;
+ // A number followed by a unit, a currency or a percent.
+ const UNIT = new RegExp(
+   String.raw`(?:[$€£¥]\s?${NUM}|${NUM}\s?(?:%|°\s?[cf]?\b|degrees?\b|(?:k?m|cm|mm|km\/h|kph|mph|mi|miles?|ft|feet|foot|inch(?:es)?|yards?|metres?|meters?|kilomet(?:re|er)s?|kg|g|lbs?|pounds?|ounces?|oz|tons?|tonnes?|l|litres?|liters?|gallons?|gal|pints?|cups?|bar|psi|kpa|hpa|mah|wh|kwh|w|watts?|v|volts?|amps?|hz|ghz|mhz|gb|mb|kb|tb|tokens?|bytes?|bits?|sec(?:ond)?s?|min(?:ute)?s?|h|hrs?|hours?|days?|weeks?|dollars?|euros?|usd|eur|gbp|cents?|btc|eth|sats?|gwei|coins?|million|billion|thousand)\b))`,
+-- 
+2.50.1 (Apple Git-155)
+

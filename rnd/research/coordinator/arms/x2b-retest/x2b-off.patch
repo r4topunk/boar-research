@@ -1,0 +1,11 @@
+--- a/be/adapter-litedecline.ts	2026-10-21 12:37:59
++++ b/be/adapter-litedecline.ts	2026-10-21 12:37:59
+@@ -618,6 +618,8 @@
+   // a literal override (a persona under test). Default: the app's DEFAULT_PERSONALITY_ID ("succinct"). Neither key
+   // reaches the engine's answer settings.
+   const { personalityId, personaSystemPrompt, personaStyleReminder, ...answerSettings } = config.settings as Record<string, any>;
++  // X2B-RETEST OFF arm: HEADPASS-X2b disabled (no X1 head-pass append, no budgeted dense append); the retrieved list is unchanged.
++  delete answerSettings.packHeadPass; delete answerSettings.packDense2;
+   if (personalityId !== undefined && personaSystemPrompt !== undefined) fail("settings: personalityId and personaSystemPrompt are exclusive");
+   let persona: { id: string; systemPrompt: string; styleReminder?: string };
+   if (personaSystemPrompt !== undefined) {
