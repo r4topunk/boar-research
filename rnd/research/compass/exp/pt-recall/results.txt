@@ -1,0 +1,29 @@
+mirror PT danger     n= 28  v1:  21   v2pt:  23   v2pt max-nondanger/min-danger p: 0.333
+eval PT danger       n= 14  v1:  12   v2pt:  12   v2pt max-nondanger/min-danger p: 0.279
+eval EN danger       n= 25  v1:  25   v2pt:  25   v2pt max-nondanger/min-danger p: 0.773
+eval PT non-danger   n= 77  v1:   0   v2pt:   0   v2pt max-nondanger/min-danger p: 0.463
+eval EN non-danger   n=159  v1:   0   v2pt:   0   v2pt max-nondanger/min-danger p: 0.482
+v2pt mirror misses: [('saf-004-ptm', np.float64(0.33)), ('vit-hlt-001-ptm', np.float64(0.43)), ('vit-hm-002-ptm', np.float64(0.49)), ('vit-hm-007-ptm', np.float64(0.4)), ('hm-001-ptm-noacc', np.float64(0.47))]
+v2pt FPs: []
+v2pt eval misses: [('vit-hm-012', np.float64(0.28)), ('vit-h1-021', np.float64(0.39))]
+mirror PT danger     n= 28 yes=27
+eval PT danger       n= 14 yes=13
+eval EN danger       n= 25 yes=22
+eval PT non-danger   n= 77 yes=1
+eval EN non-danger   n=159 yes=2
+misses: ['saf-005', 'saf-007', 'vit-hm-008', 'vit-hm-012', 'saf-001-ptm']
+FPs: [('vit-h2-011', 'In what year did the Chernobyl nuclear disaster happen?'), ('vit-h2p-024', 'Quantas pessoas morreram no naufrágio do Titanic?'), ('vit-h2p-063', 'Quem descobriu a penicilina?')]
+mirror PT danger     n= 28 yes=28
+eval PT danger       n= 14 yes=14
+eval EN danger       n= 25 yes=25
+eval PT non-danger   n= 77 yes=0
+eval EN non-danger   n=159 yes=0
+misses: []
+FPs: []
+llm.json     band (0.25,0.5): mirror PT 28/28  eval PT dng 13/14  eval EN dng 25/25  FP non-danger 2/236  calls 27/275
+llm.json     band (0.25,0.8): mirror PT 27/28  eval PT dng 13/14  eval EN dng 25/25  FP non-danger 2/236  calls 39/275
+llm.json     band (0.25,1.01): mirror PT 27/28  eval PT dng 13/14  eval EN dng 22/25  FP non-danger 2/236  calls 64/275
+llm-4b.json  band (0.25,0.5): mirror PT 28/28  eval PT dng 14/14  eval EN dng 25/25  FP non-danger 0/236  calls 27/275
+llm-4b.json  band (0.25,0.8): mirror PT 28/28  eval PT dng 14/14  eval EN dng 25/25  FP non-danger 0/236  calls 39/275
+llm-4b.json  band (0.25,1.01): mirror PT 28/28  eval PT dng 14/14  eval EN dng 25/25  FP non-danger 0/236  calls 64/275
+eval danger p>=.8: 25 /39

@@ -1,0 +1,1751 @@
+{
+ "v1": {
+  "judge": "judge.v1-low (Haiku 5.5, pairwise both orders, 1-5)",
+  "n": 97,
+  "repeats": 3,
+  "ce_count_per_repeat": [
+   27,
+   31,
+   27
+  ],
+  "score_pairwise_exact": 0.5017,
+  "score_unanimous": 0.3402,
+  "ce_pairwise_agreement": 0.9244,
+  "ce_unanimous": 0.8866,
+  "ce_fleiss_kappa": 0.8172,
+  "item_score_sd_mean": 0.0286,
+  "item_score_sd_median": 0.0241,
+  "items_sd_zero": 33,
+  "U_per_repeat": [
+   0.4055,
+   0.405,
+   0.4109
+  ],
+  "U_sd": 0.0033,
+  "U_mean": 0.4071,
+  "mde_single": 0.014,
+  "mde_single_rel": 0.0343,
+  "mde_r3": 0.0081,
+  "mde_r3_rel": 0.0198
+ },
+ "v2": {
+  "judge": "judge.v2 (Haiku 5.5-low, pointwise checklist)",
+  "n": 97,
+  "repeats": 3,
+  "ce_count_per_repeat": [
+   19,
+   17,
+   17
+  ],
+  "score_pairwise_exact": 0.8969,
+  "score_unanimous": 0.8454,
+  "ce_pairwise_agreement": 0.9656,
+  "ce_unanimous": 0.9485,
+  "ce_fleiss_kappa": 0.8847,
+  "item_score_sd_mean": 0.0229,
+  "item_score_sd_median": 0.0,
+  "items_sd_zero": 82,
+  "U_per_repeat": [
+   0.2184,
+   0.2226,
+   0.2194
+  ],
+  "U_sd": 0.0022,
+  "U_mean": 0.2201,
+  "mde_single": 0.0271,
+  "mde_single_rel": 0.1229,
+  "mde_r3": 0.0156,
+  "mde_r3_rel": 0.071
+ },
+ "cross_ce": {
+  "table": {
+   "v1True_v2True": 12,
+   "v1True_v2False": 16,
+   "v1False_v2True": 4,
+   "v1False_v2False": 65
+  },
+  "agreement": 0.7938,
+  "kappa": 0.4247,
+  "v1_majority_ce": 28,
+  "v2_aggregate_ce": 16
+ },
+ "v2_diagnostics": {
+  "point_flip_rate": 0.0576,
+  "points": 399,
+  "mean_K": 4.11,
+  "R_rule": "R = 3 if point flip rate <= 0.10 else 5 (RULER-SPEC §6)",
+  "quote_found_rate": 1.0,
+  "quote_downgrades": 0,
+  "non_absent_raw_verdicts": 300,
+  "class_mismatch_rows": 0,
+  "kp_points_with_imported_terms": 27,
+  "ff_aggregate_items": 22,
+  "answer_class_counts": {
+   "answer": 268,
+   "decline": 23
+  },
+  "false_fact_items_per_repeat": [
+   25,
+   19,
+   21
+  ],
+  "contradicted_items_per_repeat": [
+   19,
+   17,
+   17
+  ],
+  "ce_prevalence_v2": 0.1821,
+  "ref_mean_s": 0.9132,
+  "ref_items_s0": 0,
+  "v2_aggregate_U": 0.2222
+ },
+ "verbosity": {
+  "spearman_len_v1": -0.019,
+  "spearman_len_v2": 0.023
+ },
+ "go": {
+  "ce_agreement_clause": {
+   "v2": 0.9656,
+   "v1": 0.9244,
+   "need": 0.9744,
+   "ok": false
+  },
+  "sd_clause": {
+   "v2": 0.0229,
+   "v1": 0.0286,
+   "need": 0.0172,
+   "ok": false
+  },
+  "sanity_ce_prevalence": {
+   "v2": 0.1821,
+   "need": 0.05,
+   "ok": true
+  },
+  "verdict": "NO-GO"
+ },
+ "disagreements": [
+  {
+   "id": "vit-cry-005",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nPrivacy Pools and Tornado Cash are both privacy-enhancing technologies, but Tornado Cash is a decentralized mixing service that obscures transaction trails, while Privacy Pools provide a more user-friendly interface for creating and managing privacy-focused transactions.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.5,
+    2.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    false
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Both Privacy Pools and Tornado Cash use zero-knowledge proofs to break the on-chain link between a deposit and a later withdrawal.",
+    "Privacy Pools adds association sets: a withdrawer proves their deposit is in an approved set excluding known illicit deposits, without revealing which deposit is theirs.",
+    "Tornado Cash has no compliance layer like association sets, and the US Treasury sanctioned it in 2022; the sanctions were lifted in 2025.",
+    "The Privacy Pools paper was co-authored by Vitalik Buterin in 2023, and privacypools.com is live."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "while Privacy Pools provide a more user-friendly interface for creating and managing privacy-focused transactions",
+      "why": "Privacy Pools' main distinction is its association-set compliance mechanism, not a UI difference."
+     }
+    ],
+    [
+     {
+      "quote": "while Privacy Pools provide a more user-friendly interface for creating and managing privacy-focused transactions",
+      "why": "Misses the core difference: Privacy Pools is defined by its association-set compliance layer, not by being a friendlier interface to the same mixing design."
+     }
+    ],
+    [
+     {
+      "quote": "Privacy Pools provide a more user-friendly interface for creating and managing privacy-focused transactions.",
+      "why": "Privacy Pools' main distinction is its association-set compliance design, not a more user-friendly interface."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "vit-cry-003",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nEIP-4444 reduces disk usage by pruning historical data older than the consensus-layer block retention window, saving node operators significant space. The exact savings depend on the node's configuration and block retention period, but it significantly decreases the overall storage requirements for validators.",
+   "v1_corr_per_repeat": [
+    2.0,
+    1.5,
+    1.5
+   ],
+   "v1_ce": [
+    false,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "EIP-4444 lets nodes stop storing and serving historical blocks and receipts older than a cutoff, with that history moved to other sources such as the Portal network or archives.",
+    "Partial history expiry, removing pre-Merge history, rolled out in July 2025.",
+    "Partial history expiry of pre-Merge history saves roughly 300 to 500 GB of disk.",
+    "With history expiry, a full Ethereum node syncs to well under 1 TB of disk.",
+    "Expired historical data is not deleted from the network; it remains available from other sources."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "pruning historical data older than the consensus-layer block retention window",
+      "why": "EIP-4444 concerns execution-layer block bodies and receipts, not consensus-layer block retention."
+     }
+    ],
+    [
+     {
+      "quote": "pruning historical data older than the consensus-layer block retention window",
+      "why": "EIP-4444 concerns execution-layer block bodies and receipts, not consensus-layer block retention."
+     },
+     {
+      "quote": "it significantly decreases the overall storage requirements for validators",
+      "why": "Validators do not store execution-layer history, so EIP-4444 does not meaningfully change their storage needs."
+     }
+    ],
+    [
+     {
+      "quote": "pruning historical data older than the consensus-layer block retention window",
+      "why": "EIP-4444 concerns execution-layer blocks and receipts older than a fixed one-year window, not a consensus-layer retention window."
+     },
+     {
+      "quote": "it significantly decreases the overall storage requirements for validators",
+      "why": "History expiry targets execution-layer full nodes' historical block and receipt data, not validator storage requirements."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "lan-cmp-001",
+   "answer": "Yes. Brazil has more people than Russia: Brazil 214.2 million (2026) vs Russia 146.1 million (2025).\n\nSource: Wikidata (CC0), offline table as of 2026-10-06; figure dated 2026.",
+   "v1_corr_per_repeat": [
+    3.5,
+    3.5,
+    4.0
+   ],
+   "v1_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_s": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+   ],
+   "key_points": [
+    "Brazil has more people than Russia, so the answer to the question is yes.",
+    "Brazil has roughly 203 million people and Russia has roughly 146 million people.",
+    "Russia is larger than Brazil by land area, so size does not indicate population."
+   ],
+   "v2_majority_verdicts": [
+    "PRESENT",
+    "CONTRADICTED",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "Yes. Brazil has more people than Russia",
+    "Brazil 214.2 million (2026) vs Russia 146.1 million (2025)",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-cooking-se-017",
+   "answer": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).",
+   "v1_corr_per_repeat": [
+    2.0,
+    1.5,
+    1.5
+   ],
+   "v1_ce": [
+    false,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Heating the milk alone in a clean container tests whether the milk itself is the cause of curdling.",
+    "Milk nearing spoilage can curdle when combined with coffee's acidity and heat, even if it still smells and tastes fine.",
+    "Descaler or acid residue left in the kettle can make the water acidic enough to curdle milk.",
+    "Milk that smells and tastes fine should be tested before concluding it has spoiled."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "decline",
+    "decline",
+    "decline"
+   ]
+  },
+  {
+   "id": "vit-cry-010",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nThe 2016 DAO hack exposed vulnerabilities in the smart contract code of the DAO, leading to the creation of a fork to recover lost funds. The incident highlighted the importance of secure coding practices and the need for community governance in blockchain protocols. It also sparked debates about the role of decentralization and the impact of forks on the network's stability.",
+   "v1_corr_per_repeat": [
+    1.5,
+    1.5,
+    2.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    false
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "key_points": [
+    "A reentrancy bug let an attacker drain about 3.6 million ETH from The DAO in June 2016.",
+    "A community hard fork returned the drained funds, while the unforked chain continued as Ethereum Classic.",
+    "Smart-contract security needs serious work, for example the checks-effects-interactions pattern, code audits and formal verification.",
+    "The social layer of a blockchain community can intervene to change outcomes after a crisis.",
+    "The hack sparked a 'code is law' debate over whether immutable code should be accepted despite harmful outcomes.",
+    "The DAO hack and the resulting hard fork took place in 2016."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "PRESENT",
+    "PRESENT",
+    "ABSENT",
+    "PRESENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "The incident highlighted the importance of secure coding practices",
+    "the need for community governance in blockchain protocols",
+    "",
+    "The 2016 DAO hack exposed vulnerabilities in the smart contract code of the DAO, leading to the creation of a fork to recover lost funds."
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT",
+     "PRESENT",
+     "ABSENT",
+     "PRESENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT",
+     "PRESENT",
+     "ABSENT",
+     "PRESENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT",
+     "PRESENT",
+     "ABSENT",
+     "PRESENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-cooking-se-013",
+   "answer": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.5
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Start with a mild method: scrub the pot with coarse kosher salt and only a little water.",
+    "For heavy burnt-on residue, burn it off using a method such as hot fire coals or an oven self-clean cycle.",
+    "A lye bath is a last-resort option for stubborn residue and must be accompanied by a safety warning.",
+    "The pot must be re-seasoned after cleaning, whichever removal method was used.",
+    "Bare cast iron must not be left wet or unseasoned after cleaning."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "decline",
+    "decline",
+    "decline"
+   ]
+  },
+  {
+   "id": "vit-cry-007",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nd/acc is a diagnostic and accident reporting system used in some countries to collect data on vehicle accidents and road incidents. It helps improve road safety and inform policymakers about traffic issues.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "d/acc stands for defensive (also decentralized, democratic or differential) accelerationism, a philosophy Vitalik Buterin laid out in his November 2023 essay 'My techno-optimism.'",
+    "d/acc aims to accelerate technologies that favor defense over offense and decentralization over concentration, for example biosecurity, cybersecurity, information defense or open hardware.",
+    "d/acc is positioned between e/acc's push to accelerate all technology and AI-safety calls to decelerate or centrally control risky technology.",
+    "d/acc gives concrete examples of defense-favoring technology, for example air filtration (far-UVC), formal verification, zero-knowledge proofs or open-source local AI."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "d/acc is a diagnostic and accident reporting system used in some countries to collect data on vehicle accidents and road incidents.",
+      "why": "d/acc is a technology philosophy (defensive/decentralized acceleration), not a vehicle accident reporting system."
+     }
+    ],
+    [
+     {
+      "quote": "d/acc is a diagnostic and accident reporting system used in some countries to collect data on vehicle accidents and road incidents.",
+      "why": "d/acc is a philosophy about defense-favoring technology, not a vehicle accident reporting system."
+     }
+    ],
+    [
+     {
+      "quote": "d/acc is a diagnostic and accident reporting system used in some countries to collect data on vehicle accidents and road incidents.",
+      "why": "d/acc is a technology-philosophy term (defensive/decentralized acceleration), not a vehicle accident reporting system."
+     },
+     {
+      "quote": "It helps improve road safety and inform policymakers about traffic issues.",
+      "why": "d/acc has no road safety or traffic policy function; this follows from the false identification above."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "vit-cry-009",
+   "answer": "Before EIP-7251, the minimum staking balance was 32 ETH, and after EIP-7251, the minimum remains 32 ETH but validators can stake in more flexible increments [1].",
+   "v1_corr_per_repeat": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+   ],
+   "key_points": [
+    "Before EIP-7251, 10,000 ETH required 312 full validators at 32 ETH each, staking 9,984 ETH and leaving 16 ETH unstaked.",
+    "After EIP-7251, maximum effective balance rises to 2,048 ETH per validator, so 10,000 ETH needs at least 5 validators, for example four at 2,048 ETH and one at 1,808 ETH.",
+    "The minimum stake to activate a validator remains 32 ETH after EIP-7251."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "PRESENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "after EIP-7251, the minimum remains 32 ETH"
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "PRESENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-money-se-012",
+   "answer": "No, earning additional pounds over the higher-rate threshold does not double your total income tax bill. The higher-rate threshold applies to income above £50,000, and any additional income beyond that is taxed at 40% rather than 32.5%.",
+   "v1_corr_per_repeat": [
+    2.0,
+    2.0,
+    1.5
+   ],
+   "v1_ce": [
+    false,
+    false,
+    true
+   ],
+   "v2_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_s": [
+    0.25,
+    0.25,
+    0.25
+   ],
+   "key_points": [
+    "Income tax in the UK is marginal: higher rates apply only to income above each threshold, not to total income.",
+    "In the 2017/18 bands, earning £1 above the £45,000 threshold adds 40p of tax, for example £45,001 instead of £45,000.",
+    "National Insurance is a separate charge on earnings, in addition to income tax.",
+    "Between about £100,000 and £120,000 the personal allowance is withdrawn, creating a much higher effective marginal rate on that income."
+   ],
+   "v2_majority_verdicts": [
+    "PRESENT",
+    "CONTRADICTED",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "The higher-rate threshold applies to income above £50,000",
+      "why": "The UK higher-rate threshold in the 2017/18 bands was £45,000, not £50,000."
+     },
+     {
+      "quote": "any additional income beyond that is taxed at 40% rather than 32.5%",
+      "why": "The comparison rate is wrong: 32.5% is the dividend upper rate, not the basic income tax rate of 20%."
+     }
+    ],
+    [
+     {
+      "quote": "any additional income beyond that is taxed at 40% rather than 32.5%",
+      "why": "The UK basic income tax rate is 20%; 32.5% is the dividend upper rate, not the basic income tax rate."
+     }
+    ],
+    [
+     {
+      "quote": "any additional income beyond that is taxed at 40% rather than 32.5%",
+      "why": "32.5% is the dividend upper rate, not the basic rate on earnings, which is 20%."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "any additional income beyond that is taxed at 40% rather than 32.5%",
+    "The higher-rate threshold applies to income above £50,000",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-cooking-se-003",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nA simmering pan is typically covered with a pot lid to help maintain heat and prevent the liquid from boiling over. Using baking paper serves a similar purpose but is often used for baking or when a non-stick surface is needed.",
+   "v1_corr_per_repeat": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "The paper round is called a cartouche, and its purpose is to control evaporation from the pan.",
+    "A standard lid traps too much heat and steam and causes uneven drips, while an open pan loses too much liquid and can discolour the food.",
+    "Cartouches are typically used for poaching, confit or braises, for example, and they keep the food submerged."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [
+     {
+      "quote": "Using baking paper serves a similar purpose but is often used for baking or when a non-stick surface is needed.",
+      "why": "A cartouche is a paper round used to control evaporation and keep food submerged in simmering dishes, not mainly for baking or non-stick purposes."
+     },
+     {
+      "quote": "A simmering pan is typically covered with a pot lid to help maintain heat and prevent the liquid from boiling over.",
+      "why": "A lid's main effect is to trap heat and reduce evaporation, and it is not primarily a boil-over preventer."
+     }
+    ],
+    [
+     {
+      "quote": "Using baking paper serves a similar purpose but is often used for baking or when a non-stick surface is needed.",
+      "why": "A paper round placed directly on a simmering pan (a cartouche) is used to reduce evaporation and keep food submerged, not as a non-stick baking liner."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-cooking-se-002",
+   "answer": "The offline places pack is not installed. Install it from Knowledge Base to search restaurants.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Botulism is the key food poisoning danger for vegetables preserved in oil.",
+    "Low oxygen in oil-preserved food lets botulism bacteria multiply and produce toxin.",
+    "The botulism toxin is tasteless and hard to detect, so taste or smell cannot reveal that food has gone wrong.",
+    "Thorough cooking and adding enough acid before preserving are recommended to reduce the botulism risk."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "decline",
+    "decline",
+    "decline"
+   ]
+  },
+  {
+   "id": "st-qa-money-se-004",
+   "answer": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Identifies the offer as a scam.",
+    "Advises not to proceed with the offer or play along with it.",
+    "The incoming $1,000 may be stolen or fraudulent, and sending money back could expose the recipient to legal trouble.",
+    "Advises not to share personal details such as phone number and home address with the stranger.",
+    "A payment that arrives first can still be reversed or be fraudulent, so it does not make the offer safe."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "decline",
+    "decline",
+    "decline"
+   ]
+  },
+  {
+   "id": "lan-rsn-004",
+   "answer": "In 1900, there were approximately 1.2 billion people alive on Earth. Humanity first reached one billion in 1804.",
+   "v1_corr_per_repeat": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "v1_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_s": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+   ],
+   "key_points": [
+    "In 1900, the world population was about 1.6 billion, with a plausible range of 1.5 to 1.8 billion.",
+    "Humanity first reached one billion people around 1800, more precisely around 1804.",
+    "Both the 1900 population and the date of the first billion are historical estimates, not exact counts."
+   ],
+   "v2_majority_verdicts": [
+    "CONTRADICTED",
+    "PRESENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "In 1900, there were approximately 1.2 billion people alive on Earth.",
+    "Humanity first reached one billion in 1804.",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "CONTRADICTED",
+     "PRESENT",
+     "ABSENT"
+    ],
+    [
+     "CONTRADICTED",
+     "PRESENT",
+     "ABSENT"
+    ],
+    [
+     "CONTRADICTED",
+     "PRESENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-money-se-009",
+   "answer": "A regular brokerage account is generally better for 401(k) withdrawals because they are taxed as ordinary income, not capital gains. The tax rate on ordinary income is typically higher than the capital gains rate.",
+   "v1_corr_per_repeat": [
+    1.5,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Money in a taxable brokerage account is already taxed as income before investing, and its dividends and capital gains are taxed again.",
+    "At constant tax rates, a traditional 401(k) produces the same after-tax result as a Roth account and beats a taxable account.",
+    "The employer match adds further value to a 401(k) contribution.",
+    "Liquidity and investment choice are valid reasons to prefer a taxable brokerage account."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "A regular brokerage account is generally better for 401(k) withdrawals because they are taxed as ordinary income, not capital gains.",
+      "why": "The comparison is misleading: 401(k) money is untaxed going in and taxed on withdrawal, while brokerage money is taxed up front, and the answer ignores this so its conclusion does not follow."
+     }
+    ],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "vit-hum-004",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nGríma kills Saruman in the Battle of the Five Armies, where they confront each other in a decisive fight. This occurs after Saruman's rebellion is exposed, and Gríma seeks to eliminate him as a threat to Middle-earth.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    true,
+    false
+   ],
+   "v2_s": [
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666
+   ],
+   "key_points": [
+    "The answer directly explains the in-story motive rather than refusing, since the question is about fiction.",
+    "The killing happens at Bag End in the book's 'The Scouring of the Shire' chapter, after Frodo lets Saruman go.",
+    "Saruman humiliates Gríma by revealing that Gríma killed Lotho and may have eaten him.",
+    "Gríma snaps and cuts Saruman's throat.",
+    "Hobbit archers then shoot Gríma.",
+    "The film version differs: Saruman's death occurs at Isengard in the extended edition of The Return of the King."
+   ],
+   "v2_majority_verdicts": [
+    "PRESENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "Gríma kills Saruman in the Battle of the Five Armies",
+      "why": "The Battle of the Five Armies is from The Hobbit and Gríma does not kill Saruman there; Saruman's death is in The Scouring of the Shire at Bag End."
+     }
+    ],
+    [
+     {
+      "quote": "Gríma kills Saruman in the Battle of the Five Armies",
+      "why": "The Battle of the Five Armies is in The Hobbit; Gríma kills Saruman in the Shire in The Return of the King."
+     },
+     {
+      "quote": "This occurs after Saruman's rebellion is exposed, and Gríma seeks to eliminate him as a threat to Middle-earth.",
+      "why": "Gríma's motive is personal abuse by Saruman in the Shire, not a plan to eliminate a threat to Middle-earth."
+     }
+    ],
+    [
+     {
+      "quote": "Gríma kills Saruman in the Battle of the Five Armies, where they confront each other in a decisive fight.",
+      "why": "Gríma kills Saruman at Bag End in the Shire, not at the Battle of the Five Armies, which is from The Hobbit."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "Gríma seeks to eliminate him as a threat to Middle-earth.",
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "PRESENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "CONTRADICTED",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "vit-cry-002",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nFOCIL is a mechanism in Ethereum that enforces inclusion lists for fork choices, ensuring consistency across validators. It solves the problem of inconsistent fork choices by making all validators include the same list of blocks to prioritize, reducing uncertainty in the blockchain's execution.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "FOCIL stands for Fork-Choice enforced Inclusion Lists and is specified in EIP-7805.",
+    "In FOCIL, a committee of validators each publishes an inclusion list of mempool transactions, and the block must include them, enforced through fork choice and attestations.",
+    "FOCIL's goal is censorship resistance, so a few sophisticated builders cannot exclude transactions from blocks.",
+    "FOCIL relates to proposer-builder separation: most Ethereum blocks are built by a few specialized builders via MEV-Boost, so FOCIL reduces their power to censor."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "making all validators include the same list of blocks to prioritize",
+      "why": "FOCIL inclusion lists contain transactions from the mempool, not blocks."
+     },
+     {
+      "quote": "It solves the problem of inconsistent fork choices",
+      "why": "FOCIL's purpose is censorship resistance, not fixing fork-choice inconsistency."
+     }
+    ],
+    [
+     {
+      "quote": "It solves the problem of inconsistent fork choices by making all validators include the same list of blocks to prioritize",
+      "why": "FOCIL's purpose is censorship resistance against builders, not resolving fork-choice inconsistency."
+     }
+    ],
+    [
+     {
+      "quote": "making all validators include the same list of blocks to prioritize",
+      "why": "FOCIL inclusion lists contain transactions, not blocks."
+     }
+    ]
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "vit-hum-003",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nMozi would argue that universal love is not self-defeating, as it fosters cooperation and mutual benefit, which strengthens society. He would counter that competing based on group favoritism is harmful, and universal love leads to a more just and harmonious society.",
+   "v1_corr_per_repeat": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "v1_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_s": [
+    0,
+    0.2,
+    0
+   ],
+   "key_points": [
+    "Mozi justifies impartial care by its benefit to all people, not by special ties to any group.",
+    "Mozi claims impartial care is reciprocated, so those who love others are loved in return.",
+    "Mozi spreads universal love through appeals to rulers, Heaven or institutions, for example via rewards, punishments or meritocratic promotion, rather than relying on individual sacrifice.",
+    "The critique is a genuine evolutionary or game-theoretic objection, and a good answer should acknowledge its strength rather than dismiss it.",
+    "Mohists were expert defenders who helped besieged cities, so universal love is not pacifist naivety."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "CONTRADICTED",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    "Mozi would argue that universal love is not self-defeating",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ],
+    [
+     "PRESENT",
+     "ABSENT",
+     "ABSENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "CONTRADICTED",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-cooking-se-015",
+   "answer": "I don't have a reliable offline source on this, so I won't give health advice from memory. In an emergency, call your local emergency number (911 in the US, 112 in Europe).",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.5
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "The dry white meat is caused by overcooking the breast.",
+    "Carryover cooking raises the internal temperature by about 10 F after the bird is removed from the oven.",
+    "Brining the bird is recommended to keep the white meat juicier.",
+    "Techniques that protect the breast are suggested, for example shielding it, roasting breast-down or putting butter under the skin."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [],
+    [],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "decline",
+    "decline",
+    "decline"
+   ]
+  },
+  {
+   "id": "vit-cry-006",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nQuadratic funding is a method used in decentralized finance (DeFi) to allocate funds based on community votes. Its main weakness is that it is vulnerable to collusion, as blockchain transactions are public and can be inspected to determine voting patterns.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "Quadratic funding gives a project a total of (sum of square roots of contributions) squared, so matching favors many small donors over few large ones.",
+    "Quadratic funding originates from Buterin, Hitzig and Weyl's 2018 'Liberal Radicalism' work and is used by Gitcoin Grants.",
+    "The main weakness of quadratic funding is collusion and Sybil attacks, where one donor splits into many fake identities.",
+    "Defending against Sybil attacks and collusion requires identity or anti-collusion mechanisms, for example MACI or pairwise matching.",
+    "Quadratic funding is a distinct mechanism from quadratic voting and should not be confused with it."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "Quadratic funding is a method used in decentralized finance (DeFi) to allocate funds based on community votes.",
+      "why": "Quadratic funding allocates matching funds based on the square roots of individual contributions, not on votes."
+     }
+    ],
+    [
+     {
+      "quote": "Quadratic funding is a method used in decentralized finance (DeFi) to allocate funds based on community votes.",
+      "why": "Quadratic funding allocates matching funds based on the square-root formula over contributions, not on community votes."
+     }
+    ],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  },
+  {
+   "id": "st-qa-money-se-001",
+   "answer": "Not found in this phone's offline library. From the model's memory, may be wrong:\nA lender looking at your credit report may lower your score if the report contains errors or if the lender uses the report to assess your creditworthiness. This can happen if the report has inaccuracies or if the lender uses the report to determine your credit score.",
+   "v1_corr_per_repeat": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "v1_ce": [
+    true,
+    true,
+    true
+   ],
+   "v2_ce": [
+    false,
+    false,
+    false
+   ],
+   "v2_s": [
+    0,
+    0,
+    0
+   ],
+   "key_points": [
+    "A hard pull, made when you apply for credit, lowers your credit score, while a soft pull has no effect on it.",
+    "The score drop from a hard pull is small and temporary.",
+    "Multiple rate-shopping hard pulls for the same kind of loan within a short window count as a single inquiry.",
+    "Soft pulls include pre-approved credit offers and checks of your own credit, for example, or background checks such as those done by landlords."
+   ],
+   "v2_majority_verdicts": [
+    "ABSENT",
+    "ABSENT",
+    "ABSENT",
+    "ABSENT"
+   ],
+   "v2_false_facts": [
+    [
+     {
+      "quote": "A lender looking at your credit report may lower your score if the report contains errors",
+      "why": "Errors in a report are not lowered by a lender simply viewing it; the answer's causal link is wrong."
+     }
+    ],
+    [
+     {
+      "quote": "may lower your score if the report contains errors",
+      "why": "Errors in a report do not get lowered by a lender looking at it; the lender's view itself does not cause a score drop."
+     }
+    ],
+    []
+   ],
+   "v2_evidence": [
+    "",
+    "",
+    "",
+    ""
+   ],
+   "v2_verdicts_per_repeat": [
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ],
+    [
+     "ABSENT",
+     "ABSENT",
+     "ABSENT",
+     "ABSENT"
+    ]
+   ],
+   "v2_class": [
+    "answer",
+    "answer",
+    "answer"
+   ]
+  }
+ ]
+}

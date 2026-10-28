@@ -11,7 +11,7 @@ TL;DR: branch `coord/cvs` (wt/cvs, from coord/cv = CV rev1 a2b2c9c0), one new fi
 
 ## Tests and build
 - vitest 1364/1364 (CV rev1 had 1353: +11 new tests in factSanity.test.ts, covering: classes, mass without exponent (Jupiter 1,898 kg), ship in km (Titanic 269 km), river under 10 km, mountain too high, population without scale, dates, unknown class passes, pair 100x, and CV abstain end to end); tsc clean; applies cleanly to a fresh git archive 0cfd4a77.
-- Patch `arms/cvs/cvs-on-cut3.vs-0cfd4a77.patch` sha256 7bb693c83e7166fa7b67a79b9c26a7a2ef873f9f079d0f5067fd9cddf5a323b5.
+- Patch `arms/cvs/cvs-on-cut3.vs-0cfd4a77.patch` sha256 17bc6db9ce283d3cf8d3e9d9834ec41b7a70f183307d463f0c5c04b1ac1671ea.
 
 ## DEV effect (arms/cvs/cvs-dev-replay.mts, cvs-dev-replay.txt)
 The cv-dev-cv-s44 traces carry the rendered Facts lines, so the figures were re-read from them (115 figures from the 89 CV answers in rev1 scope: compare/threshold/year) and passed to the guard: it would turn **1 of 89** into an abstain: vgq-062 (Moon mass 7.342e19 kg vs Pluto 1.303e22 kg: inside the mass range, caught by the 100x same-class rule). The other DEV facts are plausible by class, so the guard does not fire on them. The DEV probes had no ship/bridge slips, so the three gate-failure types are covered by unit tests, not DEV evidence.

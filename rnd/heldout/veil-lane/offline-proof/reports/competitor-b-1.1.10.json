@@ -1,0 +1,398 @@
+{
+  "apk": {
+    "bytes": 49155300,
+    "entries": 234,
+    "file": "competitor-b-1.1.10.apk",
+    "sha256": "5bc392c3f18ac25d0797c93a6b4f2cd95452146942f659035cd861d1cd54799d"
+  },
+  "findings": [
+    "LOW: allowBackup not false; relies on dataExtractionRules (Android 12+) and fullBackupContent (<unset>) for Android <=11. Check the rules exclude app data."
+  ],
+  "gms": {},
+  "hermes": null,
+  "hosts": {
+    "android.googlesource.com": {
+      "class": "review",
+      "count": 4,
+      "examples": [
+        "https://android.googlesource.com/toolchain/clang",
+        "https://android.googlesource.com/toolchain/lld",
+        "https://android.googlesource.com/toolchain/llvm-project"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libai-chat.so",
+        "lib/arm64-v8a/libandroidx.graphics.path.so",
+        "lib/arm64-v8a/libdatastore_shared_counter.so",
+        "lib/arm64-v8a/libggml-base.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv8.0_1.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv8.2_1.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv8.2_2.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv8.6_1.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv9.0_1.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv9.2_1.so",
+        "lib/arm64-v8a/libggml-cpu-android_armv9.2_2.so",
+        "lib/arm64-v8a/libggml.so",
+        "lib/arm64-v8a/libllama-common.so",
+        "lib/arm64-v8a/libllama.so",
+        "lib/arm64-v8a/libomp.so",
+        "lib/arm64-v8a/libsqliteJni.so"
+      ]
+    },
+    "auth.docker.io": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "creativecommons.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      ],
+      "sources": [
+        "assets/competitor-b-reference-1.0.0.fapack"
+      ]
+    },
+    "docs.z.ai": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://docs.z.ai/guides/capabilities/thinking-mode#preserved-thinking"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "ggml.ai": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://ggml.ai/f0.png"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "github.com": {
+      "class": "doc-link",
+      "count": 12,
+      "examples": [
+        "https://github.com/Kotlin/llvm-project",
+        "https://github.com/ggml-org/llama.cpp/issues/1437",
+        "https://github.com/ggml-org/llama.cpp/pull/15293"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libdatastore_shared_counter.so",
+        "lib/arm64-v8a/libllama-common.so",
+        "lib/arm64-v8a/libllama.so",
+        "lib/arm64-v8a/libomp.so",
+        "lib/arm64-v8a/libsqliteJni.so"
+      ]
+    },
+    "goo.gle": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://goo.gle/compose-feedback"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    },
+    "huggingface.co": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://huggingface.co/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "json-schema.org": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "https://json-schema.org/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "localhost": {
+      "class": "local/dev",
+      "count": 1,
+      "examples": [
+        "http://localhost:8080"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "openmp.llvm.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "http://openmp.llvm.org/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libomp.so"
+      ]
+    },
+    "registry-1.docker.io": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://registry-1.docker.io/v2/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "www.apache.org": {
+      "class": "namespace",
+      "count": 2,
+      "examples": [
+        "http://www.apache.org/licenses/",
+        "https://www.apache.org/licenses/LICENSE-2.0"
+      ],
+      "sources": [
+        "META-INF/androidx/annotation/annotation/LICENSE.txt",
+        "META-INF/androidx/collection/collection-ktx/LICENSE.txt",
+        "META-INF/androidx/collection/collection/LICENSE.txt",
+        "META-INF/androidx/datastore/datastore-core-okio/LICENSE.txt",
+        "META-INF/androidx/datastore/datastore-preferences-proto/LICENSE.txt",
+        "META-INF/androidx/lifecycle/lifecycle-common-java8/LICENSE.txt",
+        "META-INF/androidx/lifecycle/lifecycle-common/LICENSE.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_any.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_common.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_english.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_french.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_german.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_any.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_common.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_english.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_french.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_german.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/ash_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/ash_lang.txt",
+        "org/apache/commons/codec/language/bm/ash_languages.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_any.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_english.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_french.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_german.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_any.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_common.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_english.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_french.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_german.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_turkish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_any.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_common.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_english.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_french.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_german.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_turkish.txt",
+        "org/apache/commons/codec/language/bm/gen_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/gen_lang.txt",
+        "org/apache/commons/codec/language/bm/gen_languages.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_any.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_english.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_french.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_german.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_turkish.txt",
+        "org/apache/commons/codec/language/bm/lang.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_any.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_common.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_french.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_any.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_common.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_french.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/sep_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/sep_lang.txt",
+        "org/apache/commons/codec/language/bm/sep_languages.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_any.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_french.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_spanish.txt",
+        "org/apache/commons/codec/language/dmrules.txt"
+      ]
+    },
+    "youtrack.jetbrains.com": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://youtrack.jetbrains.com/issue/KT-55980"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    }
+  },
+  "indirect_channels": [
+    "Exported receiver androidx.profileinstaller.ProfileInstallReceiver schemes=- permission=android.permission.DUMP"
+  ],
+  "ipv4_literals": {},
+  "manifest": {
+    "application": {
+      "allowBackup": "<unset>",
+      "dataExtractionRules": "@0x7f0c0000",
+      "debuggable": "<unset>",
+      "extractNativeLibs": "true",
+      "fullBackupContent": "<unset>",
+      "networkSecurityConfig": "<unset>",
+      "usesCleartextTraffic": "false"
+    },
+    "exported_components": [
+      {
+        "exported": "true",
+        "name": "<competitor package>.MainActivity",
+        "permission": "",
+        "schemes": [],
+        "type": "activity"
+      },
+      {
+        "exported": "true",
+        "name": "androidx.profileinstaller.ProfileInstallReceiver",
+        "permission": "android.permission.DUMP",
+        "schemes": [],
+        "type": "receiver"
+      }
+    ],
+    "meta_data": [
+      "androidx.emoji2.text.EmojiCompatInitializer=androidx.startup",
+      "androidx.lifecycle.ProcessLifecycleInitializer=androidx.startup",
+      "androidx.profileinstaller.ProfileInstallerInitializer=androidx.startup"
+    ],
+    "minSdk": "33",
+    "package": "<competitor package>",
+    "permissions": [
+      "<competitor package>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    ],
+    "queries": [],
+    "sharedUserId": "",
+    "targetSdk": "36",
+    "uses_library": [],
+    "versionCode": "13",
+    "versionName": "1.1.10"
+  },
+  "native_network_imports": {
+    "lib/arm64-v8a/libllama-common.so": {
+      "needed": [],
+      "network_imports": [
+        "bind",
+        "connect",
+        "getaddrinfo",
+        "listen",
+        "sendto",
+        "socket"
+      ]
+    }
+  },
+  "network_libraries_present": {},
+  "network_permissions": {},
+  "remote_code_loading": {},
+  "sensitive_permissions": {},
+  "signing": {
+    "cert_sha256": [
+      "131127512c99a625acd0dd4baf20e1c7cd240b0fd573449197070000e3d6b666"
+    ],
+    "debug_cert": false,
+    "subject": "O=Independent Developer, CN=POIDH Bounty 31 Android Release",
+    "v1_jar": false,
+    "v2": true,
+    "v3": false
+  },
+  "tool": {
+    "name": "offline-proof/audit_apk.py",
+    "version": "0.2.0"
+  },
+  "trackers": {},
+  "verdict": "NO-NETWORK-BY-CONSTRUCTION",
+  "watch_domains": {
+    "huggingface.co": [
+      "lib/arm64-v8a/libllama-common.so"
+    ]
+  }
+}

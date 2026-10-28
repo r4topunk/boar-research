@@ -1,0 +1,18 @@
+{
+ "title": "V-para (blind) on cut 3 — BOAR vs internet + frontier AI",
+ "bench": "vitalik-para1 (58 items; 51 judge-graded, 7 venue-graded by OSM gold)",
+ "questions": "<workspace>/blind/vitalik-para1/items.jsonl",
+ "decline_ratio": 0.306,
+ "reference_recipe": "claude-opus-5-5 + WebSearch/WebFetch, reference.v1 (gen_refs.vpara.mjs)",
+ "headline": "and4b",
+ "systems": [{"key": "and4b", "label": "BOAR Android 12 GB (cut 3, places kit)", "tier": "Android 12 GB", "kind": "boar",
+   "runs": ["<workspace>/blind/vitalik-para1/runs-cut3/cut3-vpara-s42", "<workspace>/blind/vitalik-para1/runs-cut3/cut3-vpara-s43"], "timing_source": "desktop-proxy"}],
+ "anchors": [
+  {"key": "haiku", "label": "Haiku, no web", "tier": "context", "kind": "anchor", "runs": ["<workspace>/blind/vitalik-para1/runs-cut3/anchors/haiku"]},
+  {"key": "sonnet", "label": "Sonnet, no web", "tier": "context", "kind": "anchor", "runs": ["<workspace>/blind/vitalik-para1/runs-cut3/anchors/sonnet"]},
+  {"key": "opus", "label": "Opus, no web", "tier": "context", "kind": "anchor", "runs": ["<workspace>/blind/vitalik-para1/runs-cut3/anchors/opus"]},
+  {"key": "fable", "label": "Fable, no web", "tier": "context", "kind": "anchor", "runs": ["<workspace>/blind/vitalik-para1/runs-cut3/anchors/fable"]}],
+ "slices": [{"title": "V-para judge-graded items", "ids": "<workspace>/blind/vitalik-para1/runs-cut3/judged.ids", "note": "aggregates only (no per_item)."}],
+ "caveats": ["Blind set; run once. Venue and over-refusal numbers come from the venue scorer / traces as counts.", "No 1.5B profile run (P7 not requested)."],
+ "thin_strata": "plain"
+}

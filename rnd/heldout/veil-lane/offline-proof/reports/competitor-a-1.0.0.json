@@ -1,0 +1,265 @@
+{
+  "apk": {
+    "bytes": 56857610,
+    "entries": 152,
+    "file": "competitor-a-1.0.0.apk",
+    "sha256": "246bd4ee2ed7049d63b2b5ec926ca3efab29ea677d9c7f817a16a5e1bb4fc013"
+  },
+  "findings": [
+    "MEDIUM: shared-storage write access: model/corpus files there can be tampered with by other apps."
+  ],
+  "gms": {},
+  "hermes": null,
+  "hosts": {
+    "android.googlesource.com": {
+      "class": "review",
+      "count": 3,
+      "examples": [
+        "https://android.googlesource.com/toolchain/clang",
+        "https://android.googlesource.com/toolchain/llvm",
+        "https://android.googlesource.com/toolchain/llvm-project"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libandroidx.graphics.path.so",
+        "lib/arm64-v8a/libbmoe-cli.so",
+        "lib/arm64-v8a/libc++_shared.so",
+        "lib/arm64-v8a/libggml-base.so",
+        "lib/arm64-v8a/libggml-cpu.so",
+        "lib/arm64-v8a/libggml.so",
+        "lib/arm64-v8a/libllama-common.so",
+        "lib/arm64-v8a/libllama.so",
+        "lib/arm64-v8a/libsqlite3x.so",
+        "lib/arm64-v8a/libzstd-jni-1.5.6-6.so"
+      ]
+    },
+    "auth.docker.io": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "docs.z.ai": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://docs.z.ai/guides/capabilities/thinking-mode#preserved-thinking"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "ggml.ai": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://ggml.ai/f0.png"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "github.com": {
+      "class": "doc-link",
+      "count": 10,
+      "examples": [
+        "https://github.com/ggml-org/llama.cpp/issues",
+        "https://github.com/ggml-org/llama.cpp/issues/1437",
+        "https://github.com/ggml-org/llama.cpp/pull/15293"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so",
+        "lib/arm64-v8a/libllama.so"
+      ]
+    },
+    "goo.gle": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://goo.gle/compose-feedback"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    },
+    "huggingface.co": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://huggingface.co/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "issuetracker.google.com": {
+      "class": "doc-link",
+      "count": 2,
+      "examples": [
+        "https://issuetracker.google.com/issues/297974033",
+        "https://issuetracker.google.com/issues/300280216"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    },
+    "json-schema.org": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "https://json-schema.org/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "localhost": {
+      "class": "local/dev",
+      "count": 1,
+      "examples": [
+        "http://localhost:8080"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "registry-1.docker.io": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://registry-1.docker.io/v2/"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libllama-common.so"
+      ]
+    },
+    "schemas.android.com": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "http://schemas.android.com/apk/res/android"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    },
+    "www.w3.org": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "http://www.w3.org/2000/svg"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    }
+  },
+  "indirect_channels": [
+    "Shared-storage access: files placed there (models, corpora, exports) are readable/writable by other apps that may have INTERNET (exfiltration or tampering by a colluding app).",
+    "Exported receiver androidx.profileinstaller.ProfileInstallReceiver schemes=- permission=android.permission.DUMP"
+  ],
+  "ipv4_literals": {},
+  "manifest": {
+    "application": {
+      "allowBackup": "false",
+      "dataExtractionRules": "<unset>",
+      "debuggable": "<unset>",
+      "extractNativeLibs": "true",
+      "fullBackupContent": "<unset>",
+      "networkSecurityConfig": "<unset>",
+      "usesCleartextTraffic": "<unset>"
+    },
+    "exported_components": [
+      {
+        "exported": "true",
+        "name": "competitor-a.example.MainActivity",
+        "permission": "",
+        "schemes": [],
+        "type": "activity"
+      },
+      {
+        "exported": "true",
+        "name": "androidx.profileinstaller.ProfileInstallReceiver",
+        "permission": "android.permission.DUMP",
+        "schemes": [],
+        "type": "receiver"
+      }
+    ],
+    "meta_data": [
+      "android.support.FILE_PROVIDER_PATHS=@0x7f0c0000",
+      "androidx.emoji2.text.EmojiCompatInitializer=androidx.startup",
+      "androidx.lifecycle.ProcessLifecycleInitializer=androidx.startup",
+      "androidx.profileinstaller.ProfileInstallerInitializer=androidx.startup"
+    ],
+    "minSdk": "29",
+    "package": "<competitor package>",
+    "permissions": [
+      "android.permission.FOREGROUND_SERVICE",
+      "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+      "android.permission.MANAGE_EXTERNAL_STORAGE",
+      "android.permission.POST_NOTIFICATIONS",
+      "android.permission.WAKE_LOCK",
+      "<competitor package>"
+    ],
+    "queries": [],
+    "sharedUserId": "",
+    "targetSdk": "34",
+    "uses_library": [],
+    "versionCode": "100",
+    "versionName": "1.0.0-dev"
+  },
+  "native_network_imports": {
+    "lib/arm64-v8a/libllama-common.so": {
+      "needed": [],
+      "network_imports": [
+        "bind",
+        "connect",
+        "getaddrinfo",
+        "listen",
+        "sendto",
+        "socket"
+      ]
+    }
+  },
+  "network_libraries_present": {
+    "android.app.DownloadManager": [
+      "android.app.DownloadManager"
+    ],
+    "android.webkit.WebView": [
+      "android.webkit.WebView"
+    ],
+    "java.net.Socket": [
+      "java.net.Socket"
+    ]
+  },
+  "network_permissions": {},
+  "remote_code_loading": {},
+  "sensitive_permissions": {
+    "android.permission.MANAGE_EXTERNAL_STORAGE": "all-files access (shared storage is readable by other apps)",
+    "android.permission.POST_NOTIFICATIONS": "notifications"
+  },
+  "signing": {
+    "cert_sha256": [
+      "51b8c61c8f1a435e094964a5f6a31eac97f6552c2d4ed2420c5539c43bb83da3"
+    ],
+    "debug_cert": false,
+    "subject": "O=a competitor team, CN=a competitor team",
+    "v1_jar": false,
+    "v2": true,
+    "v3": false
+  },
+  "tool": {
+    "name": "offline-proof/audit_apk.py",
+    "version": "0.2.0"
+  },
+  "trackers": {},
+  "verdict": "NO-NETWORK-BY-CONSTRUCTION",
+  "watch_domains": {
+    "huggingface.co": [
+      "lib/arm64-v8a/libllama-common.so"
+    ]
+  }
+}

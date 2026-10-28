@@ -23,7 +23,7 @@ TL;DR: CVO changes **0 answers** versus a same-day cut 3 control (120/120 byte-i
   - PT and health: no CVO;
   - unreadable verdict, unparseable facts and a throwing generate: no override.
 - tsc clean. The patch applies to a fresh `git archive 0cfd4a77` (tsc clean and 1377/1377 there).
-- Patch `arms/cvo/cvo-on-cut3.vs-0cfd4a77.patch`, sha256 `25415359e2916e22ee113b8a0739e064b7e0d8ee48f6ea3ccc2870209abaa1c3`, 1377 unit tests.
+- Patch `arms/cvo/cvo-on-cut3.vs-0cfd4a77.patch`, sha256 `bf303b29acb876d7d70d34dd23d4b3551dfa1ee55cd165631f3777c0ac61627f`, 1377 unit tests.
 
 ## Run
 - Tree `be-0cfd4a77-cvo` (setup.sh + be-ship adapter 949eee03 copied from the cut 3 tree, PATCH_SHA256 checked by the script), detector v3b, `--places` kit-vexact, Android 12 GB 4B, kit A, cut3-confirm requests re-keyed (arm cvo), heavy lock (HEAVY_CLASS=normal), seeds 44 and 45: 60/60 valid, 0 errors each. Script `rnd/kiln/l1/cvo-l1.sh`; traces `boar-eval/runs/kiln/cvo-l1/cvo-v01-s4{4,5}.traces.jsonl`.

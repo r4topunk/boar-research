@@ -1,8 +1,24 @@
 # What was excluded, and why
 
-TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,810 files (1136 MB) are in this record; the rest is excluded for the reasons below. Held-out and burnt evaluation sets are never published as text, so the record keeps their **ids, categories, aggregates and the exposure ledger** (`rnd/research/coordinator/EXPOSURES.md`), and the bench repository keeps the **sha256 hashes** of the frozen files. Nothing excluded was opened by the release scripts beyond its path, for anything under a `blind/` or `veil/` segment.
+TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,810 files (1136 MB) are in this record; the rest is excluded for the reasons below. **v1.1 (2026-10-27): the held-out and burnt sets, their runs and the v0.4 ruler are no longer excluded** (section 3 below says what moved); what is still excluded is only what is private to the author or the app maintainer, spend, credentials, git history and unlicensed competitor material (section 0). The v1.0 text below is kept as the record of what was withheld between 2026-10-26 and 2026-10-27.
 
-## 1. Exclusion classes from the inventory (by path and content class)
+## 0. What still stays out (v1.1)
+
+| class | why | how it is checked |
+|---|---|---|
+| the author's private relays: chats, DMs, session handoffs, drafts written for a person | private to the author | path classes plus content patterns (Discord/Telegram, handoff, DM) on every file of the new tranche |
+| plan-usage, quota and spend lines and per-call spend fields | author rule: no usage or spend detail | the line rules, `money-usd`, the plan-wording rule and the json-drop keys of the redaction map; replaced by `[usage detail removed]` or dropped |
+| the app maintainer's data: his questions, traces, telemetry, device scores, messages | private to him | scanned all new item sets, runs and docs for maintainer-written or `maint-*` origin rows: none were present; two PR comment drafts addressed to him were excluded; the word hits left are third-party names (an economist, a Stack Exchange user, a Wikipedia article) |
+| credentials and keys | secrecy | gitleaks (0 findings after documented allowlists); public BIP test vectors replaced |
+| git history | never exported | the repository is one snapshot per release |
+| competitor question sets with no licence | not private, but no licence to redistribute | competitor-derived cases stay out; only numbers and opaque indices from the similarity checks remain (competitor names replaced). In the v1.1 tranche the 27 `vit-fa-*` cases appear as ids only: question, rubric, reference and answer text replaced by `[competitor case text removed in v1.1]` in 26 files |
+| NHS wording | not redistributed (as in v1.0) | 75 verbatim NHS quotations in crisis1, hm-fresh2, hm-fresh3, hm-loc1 withheld in `boar-bench` (org and URL kept) |
+| third-party personal data | not ours to publish | emails in retrieved passages replaced; OpenStreetMap `phone` and `contact:*` fields dropped; venue coordinates are public landmarks and stay; Stack Exchange display names stay only where the CC BY-SA licence requires attribution |
+| raw third-party web snapshots, model weights, large binaries, file caches keyed by prompt hash, symlink duplicates | licence, size, no information | as in v1.0 |
+
+Not published in the v1.1 tranche, by count: 79,330 files of the V-para/v0.2 run folders (78,731 prompt-hash gateway caches, 144 symlink duplicates, 61 exact duplicates, 377 run logs with host paths and rate-limit lines, 10 spend ledgers, 3 pycache), 2 PR comment drafts to the app maintainer and 1 `.pyc` from the Veil lane.
+
+## 1. Exclusion classes from the inventory (by path and content class) (v1.0)
 
 | class | files | MB | what it is |
 |---|---:|---:|---|
@@ -36,7 +52,11 @@ TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,
 
 The competitor-landscape web sweeps and notes were removed whole: they mix literature with other teams' scores. Raw third-party HTML snapshots were removed because they embed site tokens and are third-party copyright (the extracted facts and the URLs stay).
 
-## 3. Withheld evaluation sets (what the record keeps instead)
+## 3. Evaluation sets: withheld in v1.0, public since v1.1
+
+**v1.1, 2026-10-27: everything in this table is public now.** Items and references: `boar-bench` (`bench/heldout/<set>/`, `bench/v0.4/`). Runs, judgments, labels and reports: `rnd/heldout/` (map in `rnd/heldout/README.md`); raw traces: `r4topunk/boar-traces` at the same paths. Content notes for the health, crisis and medical-emergency probe sets are on every card.
+
+The v1.0 table (what was withheld, and what the record kept instead):
 
 | set | status | what stays public |
 |---|---|---|
@@ -427,3 +447,7 @@ Kept on purpose: 1-2 generic questions of a competitor team's public test set (f
 - `research/rnd/research/coordinator/arms/native-partime`
 
 </details>
+
+## v1.1 opening (2026-10-27)
+
+The author decided, after submitting the project, to open everything that is not private to him or to the app maintainer. Added: the runs, judgments, summaries and method documents of bench v0.2, V-para, health-fresh1-3, chat-v3, es/meta sets, localgate, the Veil lane (crisis1, h*, hm*, o2*, quarantine, offline-proof, threat model) under `rnd/heldout/` (1,277 files: 569 from the v0.2/V-para run folders, 708 from the other sets and the 160 files restored from the v1.0 overlap removal), and the v0.4 ruler in `boar-bench`. The scoped read exception for `blind/`, rnd/veil (private lab path) and `boar-eval/bench/v0.4` is logged in `rnd/research/coordinator/EXPOSURES.md`. The overlap-based removals of the second leak pass (268 "held-out id with content" files, 2026-10-27) were of held-out text and are reversed for the 160 files that could be restored; the rest of that list was spend, competitor or maintainer material and stays out.

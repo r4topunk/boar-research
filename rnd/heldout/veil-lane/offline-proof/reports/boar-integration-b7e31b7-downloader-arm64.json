@@ -1,0 +1,768 @@
+{
+  "apk": {
+    "bytes": 135950326,
+    "entries": 1331,
+    "file": "boar-integration-b7e31b7-downloader-arm64.apk",
+    "sha256": "206ddccb9c1cd208f1a564a264aefed4c474b4b62d176ae447a2054bb7d92272"
+  },
+  "findings": [
+    "HIGH if distributed / MEDIUM for local test builds: signed with a PUBLIC key (React Native / Expo prebuild template debug.keystore (SHA-1 5E:8F:16:06:2E:A3:CD:2C:...)). Anyone can sign an APK with the same package name that Android accepts as an update over this one, inheriting the app's private data. Never ship it; check the distributed APK's signer.",
+    "HIGH: declares INTERNET; every `review` host below needs a justification and a dynamic test.",
+    "INFO: Expo dev-launcher module present as a 8-class stub (no DevLauncherController/launcher package): consistent with the release no-op variant."
+  ],
+  "gms": {},
+  "hermes": {
+    "printable_ratio": 0.9988,
+    "strings": 192040,
+    "version": 98
+  },
+  "hosts": {
+    "android.googlesource.com": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://android.googlesource.com/toolchain/llvm-project"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libappmodules.so",
+        "lib/arm64-v8a/libc++_shared.so",
+        "lib/arm64-v8a/libexpo-modules-core.so",
+        "lib/arm64-v8a/libexpo-sqlite.so",
+        "lib/arm64-v8a/libfbjni.so",
+        "lib/arm64-v8a/libgesturehandler.so",
+        "lib/arm64-v8a/libgifimage.so",
+        "lib/arm64-v8a/libhermestooling.so",
+        "lib/arm64-v8a/libhermesvm.so",
+        "lib/arm64-v8a/libimagepipeline.so",
+        "lib/arm64-v8a/libjsi.so",
+        "lib/arm64-v8a/libnative-filters.so",
+        "lib/arm64-v8a/libnative-imagetranscoder.so",
+        "lib/arm64-v8a/libreact_codegen_RNKC.so",
+        "lib/arm64-v8a/libreact_codegen_rnscreens.so",
+        "lib/arm64-v8a/libreact_codegen_safeareacontext.so",
+        "lib/arm64-v8a/libreactnative.so",
+        "lib/arm64-v8a/libreanimated.so",
+        "lib/arm64-v8a/librnllama.so",
+        "lib/arm64-v8a/librnllama_jni.so",
+        "lib/arm64-v8a/librnllama_jni_v8.so",
+        "lib/arm64-v8a/librnllama_jni_v8_2.so",
+        "lib/arm64-v8a/librnllama_jni_v8_2_dotprod.so",
+        "lib/arm64-v8a/librnllama_jni_v8_2_dotprod_i8mm.so",
+        "lib/arm64-v8a/librnllama_jni_v8_2_dotprod_i8mm_hexagon_opencl.so",
+        "lib/arm64-v8a/librnllama_jni_v8_2_i8mm.so",
+        "lib/arm64-v8a/librnllama_v8.so",
+        "lib/arm64-v8a/librnllama_v8_2.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm_hexagon_opencl.so",
+        "lib/arm64-v8a/librnllama_v8_2_i8mm.so",
+        "lib/arm64-v8a/librnscreens.so",
+        "lib/arm64-v8a/libstatic-webp.so",
+        "lib/arm64-v8a/libworklets.so",
+        "lib/arm64-v8a/libzstd-kmp.so"
+      ]
+    },
+    "apache.org": {
+      "class": "namespace",
+      "count": 2,
+      "examples": [
+        "http://apache.org/xml/features/disallow-doctype-decl",
+        "http://apache.org/xml/features/nonvalidating/load-external-dtd"
+      ],
+      "sources": [
+        "classes2.dex"
+      ]
+    },
+    "archive.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://archive.org/details/USArmyFM2176"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "classic-assets.eascdn.net": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://classic-assets.eascdn.net/~assets/"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "dev.to": {
+      "class": "doc-link",
+      "count": 1,
+      "examples": [
+        "https://dev.to/li/how-to-requestpermission-for-devicemotion-and-deviceorientation-events-in-ios-13-46g2"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "docs.expo.dev": {
+      "class": "doc-link",
+      "count": 2,
+      "examples": [
+        "https://docs.expo.dev/development/introduction/",
+        "https://docs.expo.dev/versions/v54.0.0/sdk/filesystem/"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "docs.swmansion.com": {
+      "class": "doc-link",
+      "count": 15,
+      "examples": [
+        "https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration",
+        "https://docs.swmansion.com/react-native-worklets",
+        "https://docs.swmansion.com/react-native-worklets/docs/guides/troubleshooting#tried-to-synchronously-call-a-remote-function"
+      ],
+      "sources": [
+        "assets/index.android.bundle",
+        "classes2.dex",
+        "lib/arm64-v8a/libworklets.so"
+      ]
+    },
+    "eips.ethereum.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://eips.ethereum.org"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "en.wikibooks.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://en.wikibooks.org"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "en.wikipedia.org": {
+      "class": "review",
+      "count": 301,
+      "examples": [
+        "https://en.wikipedia.org/wiki/CRISPR",
+        "https://en.wikipedia.org/wiki/Samsung_Galaxy_M21",
+        "https://en.wikipedia.org/wiki/Vector_database"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "en.wikivoyage.org": {
+      "class": "review",
+      "count": 2,
+      "examples": [
+        "https://en.wikivoyage.org",
+        "https://en.wikivoyage.org/wiki/"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "ercs.ethereum.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://ercs.ethereum.org"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "ethereum.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://ethereum.org"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "filesystem.local": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "http://filesystem.local"
+      ],
+      "sources": [
+        "classes2.dex"
+      ]
+    },
+    "github.com": {
+      "class": "doc-link",
+      "count": 26,
+      "examples": [
+        "https://github.com/ethereum/yellowpaper",
+        "https://github.com/software-mansion/react-native-reanimated.git",
+        "https://github.com/software-mansion/react-native-reanimated/issues"
+      ],
+      "sources": [
+        "assets/index.android.bundle",
+        "classes.dex",
+        "classes2.dex",
+        "lib/arm64-v8a/librnllama.so",
+        "lib/arm64-v8a/librnllama_v8.so",
+        "lib/arm64-v8a/librnllama_v8_2.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm_hexagon_opencl.so",
+        "lib/arm64-v8a/librnllama_v8_2_i8mm.so"
+      ]
+    },
+    "github.com (downloads)": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://github.com/UPSTREAM_REPO/boar-app/releases/download/knowledge-pack-v1/wiki-vital5.sqlite"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "huggingface.co": {
+      "class": "review",
+      "count": 22,
+      "examples": [
+        "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF/resolve/49c14831707011e64d70b2ebd8462ba08d608434/LFM2.5-8B-A1B-Q4_K_M.gguf",
+        "https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/6d70da17e749a471ccb62ade694486011a75cda3/Phi-3.5-mini-instruct-Q4_K_M.gguf",
+        "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+      ],
+      "sources": [
+        "assets/index.android.bundle",
+        "lib/arm64-v8a/librnllama.so",
+        "lib/arm64-v8a/librnllama_v8.so",
+        "lib/arm64-v8a/librnllama_v8_2.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm.so",
+        "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm_hexagon_opencl.so",
+        "lib/arm64-v8a/librnllama_v8_2_i8mm.so"
+      ]
+    },
+    "localhost": {
+      "class": "local/dev",
+      "count": 1,
+      "examples": [
+        "http://localhost:8081/"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "ns.adobe.com": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "http://ns.adobe.com/xfdf/"
+      ],
+      "sources": [
+        "classes2.dex"
+      ]
+    },
+    "raw.githubusercontent.com": {
+      "class": "review",
+      "count": 2,
+      "examples": [
+        "https://raw.githubusercontent.com/UPSTREAM_REPO/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-full.json",
+        "https://raw.githubusercontent.com/UPSTREAM_REPO/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-standard.json"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "react.dev": {
+      "class": "doc-link",
+      "count": 1,
+      "examples": [
+        "https://react.dev/link/invalid-hook-call"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "react.i18next.com": {
+      "class": "doc-link",
+      "count": 1,
+      "examples": [
+        "https://react.i18next.com/latest/usetranslation-hook"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "reactnative.dev": {
+      "class": "doc-link",
+      "count": 1,
+      "examples": [
+        "https://reactnative.dev/docs/debugging"
+      ],
+      "sources": [
+        "lib/arm64-v8a/libreactnative.so"
+      ]
+    },
+    "reactnavigation.org": {
+      "class": "doc-link",
+      "count": 8,
+      "examples": [
+        "https://reactnavigation.org/docs/getting-started",
+        "https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization",
+        "https://reactnavigation.org/docs/nesting-navigators"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "schemas.android.com": {
+      "class": "namespace",
+      "count": 2,
+      "examples": [
+        "http://schemas.android.com/apk/res-auto",
+        "http://schemas.android.com/apk/res/android"
+      ],
+      "sources": [
+        "classes.dex",
+        "classes2.dex"
+      ]
+    },
+    "scripts.sil.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "http://scripts.sil.org/OFL"
+      ],
+      "sources": [
+        "assets/com/tom_roush/pdfbox/resources/ttf/LiberationSans-Regular.ttf"
+      ]
+    },
+    "sourceforge.net": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "http://sourceforge.net/adobe/aglfn/"
+      ],
+      "sources": [
+        "assets/com/tom_roush/pdfbox/resources/glyphlist/glyphlist.txt",
+        "assets/com/tom_roush/pdfbox/resources/glyphlist/zapfdingbats.txt"
+      ]
+    },
+    "www.android.com": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "http://www.android.com/"
+      ],
+      "sources": [
+        "classes.dex"
+      ]
+    },
+    "www.apache.org": {
+      "class": "namespace",
+      "count": 2,
+      "examples": [
+        "http://www.apache.org/licenses/",
+        "http://www.apache.org/licenses/LICENSE-2.0"
+      ],
+      "sources": [
+        "META-INF/androidx/annotation/annotation/LICENSE.txt",
+        "assets/com/tom_roush/pdfbox/resources/glyphlist/additional.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_any.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_common.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_english.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_french.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_german.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_any.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_common.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_english.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_french.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_german.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/ash_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/ash_lang.txt",
+        "org/apache/commons/codec/language/bm/ash_languages.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_any.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_english.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_french.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_german.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_hungarian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_polish.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_romanian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_russian.txt",
+        "org/apache/commons/codec/language/bm/ash_rules_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_any.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_common.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_english.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_french.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_german.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_approx_turkish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_any.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_common.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_english.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_french.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_german.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_exact_turkish.txt",
+        "org/apache/commons/codec/language/bm/gen_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/gen_lang.txt",
+        "org/apache/commons/codec/language/bm/gen_languages.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_any.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_arabic.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_cyrillic.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_czech.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_dutch.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_english.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_french.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_german.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_greek.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_greeklatin.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_hungarian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_italian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_polish.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_portuguese.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_romanian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_russian.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_spanish.txt",
+        "org/apache/commons/codec/language/bm/gen_rules_turkish.txt",
+        "org/apache/commons/codec/language/bm/lang.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_any.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_common.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_french.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_approx_spanish.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_any.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_approx_common.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_common.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_french.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_exact_spanish.txt",
+        "org/apache/commons/codec/language/bm/sep_hebrew_common.txt",
+        "org/apache/commons/codec/language/bm/sep_lang.txt",
+        "org/apache/commons/codec/language/bm/sep_languages.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_any.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_french.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_hebrew.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_italian.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_portuguese.txt",
+        "org/apache/commons/codec/language/bm/sep_rules_spanish.txt",
+        "org/apache/commons/codec/language/dmrules.txt"
+      ]
+    },
+    "www.appropedia.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://www.appropedia.org"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "www.ascendercorp.com": {
+      "class": "review",
+      "count": 2,
+      "examples": [
+        "http://www.ascendercorp.com/",
+        "http://www.ascendercorp.com/typedesigners.html"
+      ],
+      "sources": [
+        "assets/com/tom_roush/pdfbox/resources/ttf/LiberationSans-Regular.ttf"
+      ]
+    },
+    "www.bouncycastle.org": {
+      "class": "namespace",
+      "count": 1,
+      "examples": [
+        "https://www.bouncycastle.org"
+      ],
+      "sources": [
+        "classes3.dex"
+      ]
+    },
+    "www.openstreetmap.org": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://www.openstreetmap.org/"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "www.ready.gov": {
+      "class": "review",
+      "count": 1,
+      "examples": [
+        "https://www.ready.gov"
+      ],
+      "sources": [
+        "assets/index.android.bundle"
+      ]
+    },
+    "www.unicode.org": {
+      "class": "doc-link",
+      "count": 6,
+      "examples": [
+        "http://www.unicode.org/reports/tr24/",
+        "http://www.unicode.org/reports/tr44/",
+        "http://www.unicode.org/terms_of_use.html"
+      ],
+      "sources": [
+        "assets/com/tom_roush/fontbox/resources/unicode/Scripts.txt",
+        "assets/com/tom_roush/pdfbox/resources/text/BidiMirroring.txt"
+      ]
+    },
+    "xml.org": {
+      "class": "namespace",
+      "count": 2,
+      "examples": [
+        "http://xml.org/sax/features/external-general-entities",
+        "http://xml.org/sax/features/external-parameter-entities"
+      ],
+      "sources": [
+        "classes2.dex"
+      ]
+    },
+    "youtrack.jetbrains.com": {
+      "class": "review",
+      "count": 2,
+      "examples": [
+        "https://youtrack.jetbrains.com/issue/KT-55980",
+        "https://youtrack.jetbrains.com/issue/KT-67202"
+      ],
+      "sources": [
+        "classes2.dex"
+      ]
+    }
+  },
+  "indirect_channels": [
+    "Declares <queries> for VIEW http(s): can hand a URL to a browser (user-visible; URL could carry data).",
+    "Declares <queries> for SEND: can open the share sheet (user-mediated export).",
+    "Exported activity team.sopa.aoair.MainActivity schemes=['exp+boar-app'] permission=-",
+    "Exported receiver androidx.profileinstaller.ProfileInstallReceiver schemes=- permission=android.permission.DUMP"
+  ],
+  "ipv4_literals": {
+    "10.0.1.1": [
+      "classes.dex"
+    ],
+    "10.0.2.2": [
+      "classes.dex"
+    ],
+    "10.0.3.2": [
+      "classes.dex"
+    ],
+    "127.0.0.1": [
+      "classes.dex"
+    ]
+  },
+  "manifest": {
+    "application": {
+      "allowBackup": "false",
+      "dataExtractionRules": "@0x7f130001",
+      "debuggable": "<unset>",
+      "extractNativeLibs": "false",
+      "fullBackupContent": "false",
+      "networkSecurityConfig": "<unset>",
+      "usesCleartextTraffic": "false"
+    },
+    "exported_components": [
+      {
+        "exported": "true",
+        "name": "team.sopa.aoair.MainActivity",
+        "permission": "",
+        "schemes": [
+          "exp+boar-app"
+        ],
+        "type": "activity"
+      },
+      {
+        "exported": "true",
+        "name": "androidx.profileinstaller.ProfileInstallReceiver",
+        "permission": "android.permission.DUMP",
+        "schemes": [],
+        "type": "receiver"
+      }
+    ],
+    "meta_data": [
+      "android.support.FILE_PROVIDER_PATHS=@0x7f130002",
+      "android.support.FILE_PROVIDER_PATHS=@0x7f130008",
+      "androidx.emoji2.text.EmojiCompatInitializer=androidx.startup",
+      "androidx.lifecycle.ProcessLifecycleInitializer=androidx.startup",
+      "androidx.profileinstaller.ProfileInstallerInitializer=androidx.startup",
+      "com.facebook.soloader.enabled=true",
+      "expo.modules.clipboard.CLIPBOARD_FILE_PROVIDER_PATHS=@0x7f130000",
+      "expo.modules.updates.ENABLED=false",
+      "expo.modules.updates.ENABLE_BSDIFF_PATCH_SUPPORT=true",
+      "expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH=ALWAYS",
+      "expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS=0",
+      "org.unimodules.core.AppLoader#react-native-headless=expo.modules.adapters.react.apploader.RNHeadlessAppLoader"
+    ],
+    "minSdk": "24",
+    "package": "team.sopa.aoair",
+    "permissions": [
+      "android.permission.ACCESS_COARSE_LOCATION",
+      "android.permission.ACCESS_FINE_LOCATION",
+      "android.permission.INTERNET",
+      "android.permission.RECORD_AUDIO",
+      "android.permission.VIBRATE",
+      "android.permission.WAKE_LOCK",
+      "team.sopa.aoair.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    ],
+    "queries": [
+      "android.intent.action.OPEN_DOCUMENT */*",
+      "android.intent.action.OPEN_DOCUMENT_TREE",
+      "android.intent.action.SEND */*",
+      "android.intent.action.VIEW https"
+    ],
+    "sharedUserId": "",
+    "targetSdk": "36",
+    "uses_library": [
+      "androidx.window.extensions (required=false)",
+      "androidx.window.sidecar (required=false)"
+    ],
+    "versionCode": "1",
+    "versionName": "1.0.0"
+  },
+  "native_network_imports": {},
+  "network_libraries_present": {
+    "OkHttp": [
+      "okhttp3.Address",
+      "okhttp3.Authenticator",
+      "okhttp3.Authenticator$Companion",
+      "okhttp3.Authenticator$Companion$AuthenticatorNone",
+      "okhttp3.Cache",
+      "... +318 more"
+    ],
+    "React Native WebSocket": [
+      "com.facebook.react.modules.websocket.WebSocketModule",
+      "com.facebook.react.modules.websocket.WebSocketModule$Companion",
+      "com.facebook.react.modules.websocket.WebSocketModule$ContentHandler",
+      "com.facebook.react.modules.websocket.WebSocketModule$connect$2"
+    ],
+    "React Native networking": [
+      "com.facebook.react.modules.network.CookieJarContainer",
+      "com.facebook.react.modules.network.CustomClientBuilder",
+      "com.facebook.react.modules.network.ForwardingCookieHandler",
+      "com.facebook.react.modules.network.ForwardingCookieHandler$$ExternalSyntheticLambda0",
+      "com.facebook.react.modules.network.ForwardingCookieHandler$Companion",
+      "... +27 more"
+    ],
+    "android.webkit.WebView": [
+      "android.webkit.WebView"
+    ],
+    "java.net.HttpURLConnection": [
+      "java.net.HttpURLConnection"
+    ],
+    "java.net.Socket": [
+      "java.net.Socket"
+    ]
+  },
+  "network_permissions": {
+    "android.permission.INTERNET": "open network sockets (kernel-enforced via the inet group)"
+  },
+  "remote_code_loading": {
+    "Expo dev launcher (loads JS from a URL)": [
+      "expo.modules.devlauncher.BuildConfig",
+      "expo.modules.devlauncher.DevLauncherPackage",
+      "expo.modules.devlauncher.DevLauncherPackageDelegate",
+      "expo.modules.devlauncher.R",
+      "expo.modules.devlauncher.modules.ExpoDevLauncherModule",
+      "... +3 more"
+    ]
+  },
+  "sensitive_permissions": {
+    "android.permission.ACCESS_COARSE_LOCATION": "approximate location",
+    "android.permission.ACCESS_FINE_LOCATION": "precise location",
+    "android.permission.RECORD_AUDIO": "microphone"
+  },
+  "signing": {
+    "cert_sha256": [
+      "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+    ],
+    "debug_cert": true,
+    "subject": "O=Unknown, CN=Android Debug",
+    "v1_jar": false,
+    "v2": true,
+    "v3": false
+  },
+  "tool": {
+    "name": "offline-proof/audit_apk.py",
+    "version": "0.2.0"
+  },
+  "trackers": {},
+  "verdict": "NETWORK-CAPABLE",
+  "watch_domains": {
+    "githubusercontent.com": [
+      "assets/index.android.bundle"
+    ],
+    "huggingface.co": [
+      "assets/index.android.bundle",
+      "lib/arm64-v8a/librnllama.so",
+      "lib/arm64-v8a/librnllama_v8.so",
+      "lib/arm64-v8a/librnllama_v8_2.so",
+      "lib/arm64-v8a/librnllama_v8_2_dotprod.so",
+      "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm.so",
+      "lib/arm64-v8a/librnllama_v8_2_dotprod_i8mm_hexagon_opencl.so",
+      "lib/arm64-v8a/librnllama_v8_2_i8mm.so"
+    ]
+  }
+}

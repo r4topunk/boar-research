@@ -1,6 +1,6 @@
 # Data card
 
-TL;DR: every folder of this record that holds data files (jsonl, json, csv, tsv, txt) of 20 KB or more, with what is in it and under which licence. Part 1 describes the data classes once; Part 2 lists the 278 folders (1038 MB) with file counts, sizes and kinds. The table was generated from the tree by a script; descriptions of what each experiment asked are in the folder's own report. The held-out and burnt sets are **not** here (aggregates and ids only): see `docs/EXCLUDED.md`.
+TL;DR: every folder of this record that holds data files (jsonl, json, csv, tsv, txt) of 20 KB or more, with what is in it and under which licence. Part 1 describes the data classes once; Part 2 lists the 278 folders (1038 MB) with file counts, sizes and kinds. The table was generated from the tree by a script; descriptions of what each experiment asked are in the folder's own report. The retired held-out sets are in `rnd/heldout/` (v1.1, 2026-10-27; see its README for the map, content note and licences; the Part 2 table below was generated for v1.0 and does not list them): what stays out is in `docs/EXCLUDED.md`.
 
 ## Part 1: data classes
 

@@ -1,5 +1,7 @@
 # Blind / held-out set exposures (ledger)
 
+**2026-10-27 (v1.1): every set in this ledger is RETIRED and PUBLIC dev data** (author decision after submission; see the last section). The status columns below are historical: they say what each set was at the time of each run.
+
 TL;DR: of the 9 sets in `blind/`, only **es-fresh2** is untouched (es-fresh1 is unrun but style-contaminated, secondary only). **v0.2 is burnt → dev** (plaintext in boar-eval git `d8154b6`, 1 item printed to Sonar, 4 claim-grade engine spends + 1 deep-tier arm, all judged by Opus judge.v1). **V-para** was spent twice for the claim (cut 3, cut 6) and then by 5 deep-tier/venue arms; ruled 2026-10-09: held-out for the 4B claim runs (cut 3/cut 6), development-style for everything measured after 2026-10-06 (see Open questions). The health/chat/meta sets were each spent on 1–3 confirmations. The claim must say: v0.2 = 12 full generation runs + 8 full Opus judge passes (Claude-family judge), V-para = 11 engine runs + 4 Claude anchor runs + 10 full Opus passes; a final number needs v0.3 (non-Claude writer).
 Backfilled 2026-10-09 from QUEUE.md (l. = line), coordinator docs and `ls` of `blind/*/runs*` (names + counts only; no blind file opened). Ids and counts only.
 
@@ -203,3 +205,18 @@ Not exposures (checked): JUDGE2, HAIKUJUDGE, PARJUDGE, OPUSSHARD, L1CTL and DEEP
 | 10-24 20:3x | v0.4 ruler (items.jsonl f9ad2f2f…) | NATIVE-RC RULER-FINAL (arms/native-rc, addendum ADDENDUM-RULER-FINAL): BoarLite b4ef94f3 desktop twin answered v0.4 (seed 42, mini generation), judged by Opus vs the Claude refs and by Codex gpt-5.6-sol (r4to's [usage detail removed]) vs the Codex refs | generation + judge | 75 items (88 turns) x 1 seed | 150 Opus + 150 Codex | scripts only: no agent printed or read item, reference or answer text | held-out ruler; v0.4 is the claim set, BoarLite engine frozen at b4ef94f3 (any later change = developed after exposure) | arms/native-rc/NATIVE-RC.md RULER-FINAL |
 | 10-25 03:3x | v0.4 ruler (items.jsonl f9ad2f2f…) + F3 probes 65 + PACKPROOF on-k13 140 + UXMATRIX on 60 | DEVICE-FINAL (arms/device-final, criterion 9321994d): LabRat 7788924a APK path on the Pixel 8a answered v0.4 (seeds 42/43/44, 88 turns each) and the three product sets (seed 42); v0.4 judged by Opus vs the Claude refs (3 seeds) and Codex gpt-5.6-sol vs the Codex refs (seed 42, more if the [usage detail removed] allows); product sets labelled by Haiku 5.5-low | generation + judge | 75 items x 3 seeds + 265 product items | ≤ 480 Opus + ≤ 320 Codex + ≤ 600 Haiku | scripts only: no agent prints item, reference or answer text; coordinator reads counts |
 | 10-25 12:2x | v0.4 ruler (bench/v0.4/CHANGELOG.md) | DEVICE-FINAL submission-draft agent: a grep of CHANGELOG.md printed one errata summary line of cw-032 into that agent's context (no question/reference text; nothing used in the drafts) | incidental read | 1 item | 0 | agent context only; coordinator saw the item id only |
+
+## Retirement of all held-out sets (2026-10-27, v1.1)
+
+Author decision (r4to, 2026-10-27, after the project was submitted): open everything that is not private to him or to the app maintainer. Scoped exception: the release builder read `blind/`, `rnd/veil/` and `boar-eval/bench/v0.4/` (read only) to publish them; no engine, pack or prompt work used them.
+
+| set | status before | status now | where |
+|---|---|---|---|
+| bench-v02 (110) | burnt, dev | **public dev data** | items `boar-bench` `bench/heldout/bench-v02/`; runs `rnd/heldout/bench-v02/` |
+| V-para (58) | held-out for the 4B claim runs, dev-style after 2026-10-06 | **public dev data** | `bench/heldout/vpara1/` (bench), `rnd/heldout/vitalik-para1/` |
+| health-fresh1-3, chat-v3, meta-fresh1, es-fresh1-2 | spent / dev / unrun | **public dev data** (es-fresh2 never spent: public unspent) | items in bench, runs in `rnd/heldout/<set>/` |
+| crisis1, h1-fresh, h2-fresh, h2-pool, hm-fresh1-3, hm-loc1, o2-blind-items, o2v2c-fresh (Veil lane) | held-out / quarantine | **public dev data** (quarantine = contaminated, labelled so) | bench `bench/heldout/`, `rnd/heldout/veil-lane/` |
+| localgate | private probe data | **public** | `rnd/heldout/localgate/` |
+| v0.4 ruler (75 items, 71 headline) | frozen held-out claim set (hashes `f9ad2f2f...`, `23b6febf...`) | **retired, public** (the submitted number stands; items, references, drafts and critiques are public) | `boar-bench` `bench/v0.4/` |
+
+Rule from now on: a number on any of these sets is a development number. Content notes on the cards: safety evaluation probes; AI-reviewed, not clinically reviewed.

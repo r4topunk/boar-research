@@ -42,8 +42,8 @@ All packs are published as one dataset: r4topunk/boar-packs (revision: record th
 |---|---|---|---|
 | bench v0.1 (60 public items, frozen references) | dev, public | https://github.com/r4topunk/boar-bench | CC BY 4.0 (our items/gold); CC BY-SA 4.0 for Wikivoyage-derived gold; ODbL for 3 OSM venue golds; quotation with links for 25 items quoting a public author's posts |
 | longsession-v1 (10 sessions × 5 turns) | multi-turn dev slice | https://github.com/r4topunk/boar-bench | CC BY 4.0 |
-| v0.2 (110), V-para (58: 51 judged + 7 venue), fresh sets | held-out / burnt | private; hashes and aggregates only | — |
-| bench v0.3 | final held-out (in preparation) | hashes only before scoring | — |
+| v0.2 (110), V-para (58: 51 judged + 7 venue), fresh sets, Veil-lane sets | retired 2026-10-27, public dev data | items: https://github.com/r4topunk/boar-bench `bench/heldout/`; runs: `rnd/heldout/` and https://huggingface.co/datasets/r4topunk/boar-traces | CC BY 4.0 (our items and reports); CC BY-SA 4.0 (retrieved Wikipedia text); ODbL (OSM gold) |
+| bench v0.3 / v0.4 | v0.4 = claim ruler, retired 2026-10-27, public | https://github.com/r4topunk/boar-bench `bench/v0.4/` (hashes `f9ad2f2f...` items, `23b6febf...` candidate verify) | CC BY 4.0 |
 | Pack self-tests (180 items over the 9 published packs) | pack scoring | shipped: `rnd/research/packs/selftest/` (also in boar-bench `bench/selftest/`) | per pack source (CC BY-SA 4.0 / CC0 / public domain), see boar-bench `bench/selftest/DATA-CARD.md` |
 | Wikidata fact table (FACTS arm) | cut 7 fact lookup | embedded in `rnd/research/coordinator/arms/facts/*.patch` | CC0 (Wikidata) |
 
@@ -68,7 +68,7 @@ UNKNOWN: HF revisions of the two catalog models and of the packs dataset commit;
 | Brand images (`rnd/research/brand/logo-v2/export/*.png`) | 20-65 KB each | kept privately | binary assets |
 | Learned-detector heads `bge-head.head.npz`, `e5-head.head.npz` | 3,588 bytes each | `rnd/research/sonar/exp/30-learned-detector/results/` (BOM only, not copied) | model files |
 
-The held-out and burnt evaluation sets are not artefacts of this table: see `docs/EXCLUDED.md`.
+The retired held-out sets are described in `rnd/heldout/README.md`; what stays out is in `docs/EXCLUDED.md`.
 
 - `bge-head.head.npz`: 3588 bytes, sha256 `b48102154d41347008ffa6b9484746756a13082647a4ad443de696b0e616f541`
 - `e5-head.head.npz`: 3588 bytes, sha256 `2ab75c08c2259879e609d15424adee239abf8bd83e908b7e7db1a4ab10d098a8`
