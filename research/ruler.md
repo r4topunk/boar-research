@@ -1,8 +1,8 @@
 # 2 · Building a ruler
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 - Page: https://r4topunk.github.io/boar-research/research/ruler/ · Markdown twin: https://r4topunk.github.io/boar-research/research/ruler.md · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt
 - Span: 2026-10-01 → 10-03
@@ -81,7 +81,7 @@ python3 scorers/score.py --traces my.traces.jsonl --judgments my.judgments.jsonl
 
 ### Sets
 
-v0.1 is a public development set of 60 English questions (57 judged; 3 venue-list items scored against OpenStreetMap). 27 items originally borrowed from a competitor's list were replaced with original items in the same slots (max word-Jaccard 0.30 against the removed items). v0.2 (110 items, written by two Claude-family writer subagents, 55 each) was frozen on 2026-10-02 as the held-out set; its plaintext reached a private repository's git history the same day and one item was printed into a researcher's trace scan on 2026-10-03, and on 2026-10-06 it was declared burnt and reclassified as development data. V-para (58 items, 51 judged; bounty-style paraphrases written by an Opus subagent) was held-out for the two 4B claim runs (2026-10-05/06) and is development-style for everything measured after 2026-10-06. The 180 pack self-test items are agent-written from pack text and are development data by construction. No unexposed English set exists as of 2026-10-24: v0.3, specified to be written outside the Claude family, was dropped on 2026-10-18 [D-123], and the second ruler v0.4 (§3.6) is half Claude-written and was exposed on 2026-10-24. From 2026-10-18 most screens used MAIN 97 (v0.1 57 + 40 cooking/money pack self-tests) and CV5 51 (v0.1 judged items), both development data.
+v0.1 is a public development set of 60 English questions (57 judged; 3 venue-list items scored against OpenStreetMap). 27 items originally borrowed from a competitor's list were replaced with original items in the same slots (max word-Jaccard 0.30 against the removed items). v0.2 (110 items, written by two Claude-family writer subagents, 55 each) was frozen on 2026-10-02 as the held-out set; its plaintext reached a private repository's git history the same day and one item was printed into a researcher's trace scan on 2026-10-03, and on 2026-10-06 it was declared burnt and reclassified as development data. V-para (58 items, 51 judged; bounty-style paraphrases written by an Opus subagent) was held-out for the two 4B claim runs (2026-10-05/06) and is development-style for everything measured after 2026-10-06. All of these sets were retired and published on 2026-10-27 in boar-bench (bench/heldout/), with their runs in boar-traces; items are byte-identical to the hashes committed before they were opened, except documented redactions (old and new hashes in bench/heldout/HASHES.md). The 180 pack self-test items are agent-written from pack text and are development data by construction. No unexposed English set exists as of 2026-10-24: v0.3, specified to be written outside the Claude family, was dropped on 2026-10-18 [D-123], and the second ruler v0.4 (§3.6) is half Claude-written and was exposed on 2026-10-24. From 2026-10-18 most screens used MAIN 97 (v0.1 57 + 40 cooking/money pack self-tests) and CV5 51 (v0.1 judged items), both development data.
 
 *Facts: [F-123] [F-124] [F-217] [F-209] [F-218] [F-231] [F-129] [F-130] [F-990] [D-004] [D-037] [D-055]*
 
@@ -182,6 +182,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

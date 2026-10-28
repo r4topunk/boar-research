@@ -1,8 +1,8 @@
 # 12 · A second ruler (bench v0.4)
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 - Page: https://r4topunk.github.io/boar-research/research/new-ruler/ · Markdown twin: https://r4topunk.github.io/boar-research/research/new-ruler.md · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt
 - Span: 2026-10-19 → 10-24
@@ -25,11 +25,11 @@ The first ruler compared our desktop engine with answers written by one AI famil
 
 On the old scale a polite refusal still earned a few points. The new ruler first asks "did this even try to answer?"; if not, it scores zero. Then both AI families grade it, and the lower grade counts.
 
-#### Graded, not yet published
+#### Graded, then published
 
-By the evening of 24 October both AI families had written their answer keys, and the submitted app's engine had sat the exam on a desktop copy of the phone app, graded by both families. The grade exists; whether it is published is the author's call, and until then this page shows no number and no direction. A test on the phone itself started on 25 October; it has no result yet.
+By the evening of 24 October both AI families had written their answer keys, and the submitted app's engine had sat the exam on a desktop copy of the phone app, graded by both families. The grade was published as history. A test on the phone itself ran on 25 October and is the headline. On 27 October the questions, both answer keys and the drafts were published too, so anyone can check them against the fingerprints recorded before the exam.
 
-**In one sentence card:** "A fairer exam is written and sealed; the submitted app has sat it, and the grade waits for the author (as of 24 October 2026, 20:34)."
+**In one sentence card:** "A fairer exam was written and sealed; the submitted app sat it on a phone and scored below the bar, and the exam itself is now public (as of 28 October 2026)."
 
 *Facts: [D-131] [F-2070] [F-1416] [F-2081] [F-1529] [G-u-total] [F-2110] [F-2212] [F-2214]*
 
@@ -39,7 +39,7 @@ By the evening of 24 October both AI families had written their answer keys, and
 
 Bench v0.4 has 75 items (71 headline + 4 anchors taken from the example questions in Vitalik Buterin's post that inspired the bounty, scored outside the headline), frozen on 2026-10-20 at 16:45 (sha f9ad2f2f) before any system answered; candidates came from Claude (36) and OpenAI gpt-5.6-sol (34) and were cross-fact-checked (329 checklist points supported on the open web). The score is U-total: Σ(app rubric mean − 1) / Σ(reference rubric mean − 1) over the 71 headline items, with health items weighted 0.5 (weight-1 beside), so the rubric floor maps to 0. Because judge.v1 still gave a bare refusal U 0.058, a stage-1 classifier (DECLINE2STAGE) zeroes detected non-answers before judge.v1 scores the rest (RULING R1). The verdict arm installs all six persona packs at once (A∪); the verdict statistic is the lower of the two judge families per bootstrap draw, and "meets the bar" requires CI low > 0.50 with every gate (RAM, storage, offline, speed, safety) passed. Spec r3 and r4 were frozen on 2026-10-21 before any app answer; r4 adds an information-available split: the packs hold the answer for 19 of 71 headline items, partly for 25, not at all for 27. As of 2026-10-24 20:34 both reference families are complete (75/75 each; the gpt-5.6-sol half at 20:05, 0 hard failures; [F-2212]), and three engines have answered on desktop twins. The last of them is the final run on BoarLite's engine b4ef94f3 (RULER-FINAL): one seed instead of the spec's two (the author's choice), each judge family against its own references, stage 1 not run, no errata, no phone run [F-2214] [D-204]. Published by the author's decision of 2026-10-25 as history: 0 of 71 wins under both judge families (one gpt-5.6-sol tie); U-total (desktop twin of engine b4ef94f3) Claude Opus 0.164 (0.123–0.208), OpenAI gpt-5.6-sol 0.245 (0.194–0.300); the lower family, 0.164 (0.123–0.206), is below the 0.50 bar; by information available (Claude family) 0.164 where the packs hold the answer (n 19), 0.174 partly (n 25), 0.155 not at all (n 27): with the information present, the 1.7B did not deliver it [F-2215] [F-2217]. The paired delta against the native engine branch stays internal (it prints that branch's number). They are numbers for b4ef94f3: the shipped LabRat 7788924a changes the grounding prompt's identity line after this run [F-2225], and the on-phone re-measure is DEVICE-FINAL (OF-8, running; criterion frozen 2026-10-25, [F-2227]) (the ruler run predates the Rat persona line).
 
-**Rule box:** "No item text, reference or label list is published before the result card" [D-195]. "Any engine change after 2026-10-24 counts as developed after exposure" [F-2108]; "v0.4 is the claim set: no tuning after the final run" [D-204].
+**Rule box:** "No item text, reference or label list is published before the result card" [D-195]; lifted when the record closed: the v0.4 items, references and drafts were published on 2026-10-27. "Any engine change after 2026-10-24 counts as developed after exposure" [F-2108]; "v0.4 is the claim set: no tuning after the final run" [D-204].
 
 ## For AI professionals {#ai}
 
@@ -47,7 +47,7 @@ Bench v0.4 has 75 items (71 headline + 4 anchors taken from the example question
 
 **Key facts:**
 - Design (10-19): a public ruler with a true-zero utility, uncapped two-family web references, items written outside the judge family where possible, and the submitted app as the scored system ([D-131] / [F-1383]).
-- Bench v0.4: 75 items (71 headline + 4 anchors taken from the example questions in Vitalik Buterin's post that inspired the bounty, scored outside the headline), frozen 2026-10-20 16:45, sha f9ad2f2f, before any system answered [F-2070] [F-1353]. Candidate writers: Claude 36, OpenAI gpt-5.6-sol 34 [F-1416]. 329 checklist points supported on the open web (at least one family, none contradicting; the 32 balance-round points by both). It is **not** written outside the Claude family: half is Claude-written, a stated deviation [G-ruler-v04]. Its item text and references are not public [D-195].
+- Bench v0.4: 75 items (71 headline + 4 anchors taken from the example questions in Vitalik Buterin's post that inspired the bounty, scored outside the headline), frozen 2026-10-20 16:45, sha f9ad2f2f, before any system answered [F-2070] [F-1353]. Candidate writers: Claude 36, OpenAI gpt-5.6-sol 34 [F-1416]. 329 checklist points supported on the open web (at least one family, none contradicting; the 32 balance-round points by both). It is **not** written outside the Claude family: half is Claude-written, a stated deviation [G-ruler-v04]. Its item text, references and drafts were not public until the record closed [D-195] and were published on 2026-10-27 in boar-bench (`bench/v0.4/`).
 - Metric: U-total, a ratio of sums of (rubric mean − 1) for the app over the reference, so the rubric floor maps to 0; health items weigh 0.5 with weight-1 printed beside ([D-137]; the weighting was decided after the items existed, [F-1389]); verdict = the lower of the two families, "meets the bar" only if CI low > 0.50 with all gates passed [G-u-total].
 - Why a stage-1 zero: judge.v1 gives a bare refusal U 0.058 (0.037–0.081), a hedge 0.053, a fluent no-content answer 0.016 (Haiku, 30 v0.1 dev ids; [F-2081]). A binary-checklist judge v2 failed its retest gate (CE retest 0.966 vs a needed 0.974; [F-1431]). RULING R1 kept judge.v1 unchanged and added DECLINE2STAGE, a classifier that zeroes detected non-answers; it was a coordinator override of a frozen FAIL, accepted with conditions by the spec reviewer ([D-144] / [F-1529]).
 - Spec r3 (sha 0fac2286, 20:48) and r4 (sha 82772e33, 21:18) were frozen on 2026-10-21 before any app answered a v0.4 item [F-2109]. Verdict arm A∪: the app with all six persona packs installed at once [D-139] [D-156].
@@ -109,7 +109,7 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 - [D-157] 2026-10-21 · Freeze RULER-SPEC v1 r3 (private) · why: pre-registration before any v0.4 answer. · status: kept
 - [D-158] 2026-10-21 · Freeze r4: add information-available split (FACT-AVAIL) + ORACLE/ORACLE-0 rows; U-total stays verdict · why: separate "packs lack it" from "app fails to deliver it" · status: kept
 - [D-191] 2026-10-21 · Honest 8 GB UX; no 35B deep mode delivered; final score = submitted native APK on Pixel 8a with v0.4, Claude + OpenAI gpt-5.6-sol judges · why: deep tier needs 12 GB and integration work. · status: kept
-- [D-195] 2026-10-21 · No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card · why: held-out discipline. · status: kept
+- [D-195] 2026-10-21 · No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card · why: held-out discipline. · status: kept (Update 2026-10-27: the rule ended with the record; the v0.4 items, both reference halves and drafts were published in boar-bench (bench/v0.4/), with their runs in boar-traces.)
 - [D-204] 2026-10-24 · Final ruler run frozen: BoarLite b4ef94f3, v0.4, one seed, both judge families — decision: Run v0.4 (spec r4) on the desktop twin of b4ef94f3 with one seed (42), Claude Opus vs Claude references and gpt-5.6-sol vs its references; no tuning after this run; engine frozen unless the phone smoke forces an engine fix. · why: one seed was the author's choice; stated in every number. · status: kept
 
 <!-- lint:exempt:end -->
@@ -121,6 +121,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

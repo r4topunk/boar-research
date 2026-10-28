@@ -1,8 +1,8 @@
 # RatLab — A Boar Research, read as: Curious
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 The story and the headline numbers, no jargon.
 
@@ -316,11 +316,11 @@ The first ruler compared our desktop engine with answers written by one AI famil
 
 On the old scale a polite refusal still earned a few points. The new ruler first asks "did this even try to answer?"; if not, it scores zero. Then both AI families grade it, and the lower grade counts.
 
-##### Graded, not yet published
+##### Graded, then published
 
-By the evening of 24 October both AI families had written their answer keys, and the submitted app's engine had sat the exam on a desktop copy of the phone app, graded by both families. The grade exists; whether it is published is the author's call, and until then this page shows no number and no direction. A test on the phone itself started on 25 October; it has no result yet.
+By the evening of 24 October both AI families had written their answer keys, and the submitted app's engine had sat the exam on a desktop copy of the phone app, graded by both families. The grade was published as history. A test on the phone itself ran on 25 October and is the headline. On 27 October the questions, both answer keys and the drafts were published too, so anyone can check them against the fingerprints recorded before the exam.
 
-**In one sentence card:** "A fairer exam is written and sealed; the submitted app has sat it, and the grade waits for the author (as of 24 October 2026, 20:34)."
+**In one sentence card:** "A fairer exam was written and sealed; the submitted app sat it on a phone and scored below the bar, and the exam itself is now public (as of 28 October 2026)."
 
 *Facts: [D-131] [F-2070] [F-1416] [F-2081] [F-1529] [G-u-total] [F-2110] [F-2212] [F-2214]*
 
@@ -422,9 +422,9 @@ Renaming the app also changed one line of the instructions the model reads: it n
 
 ##### Where to get it
 
-The download is too big for GitHub's file limit (3 GB), so it will be hosted on Hugging Face with an install page. One open risk: Android's new developer checks may add a warning and a wait for apps installed from a browser; a test on an ordinary certified phone is planned.
+The download is too big for GitHub's file limit (3 GB), so it is hosted on Hugging Face with an install page. One open risk: Android's new developer checks may add a warning and a wait for apps installed from a browser; a test on an ordinary certified phone is still to be done.
 
-**In one sentence card:** "The entry is a deliberately simple app, LabRat, that runs offline on a phone; as of 25 October 2026 its desktop dry run is below the bar and its final test on the phone, the one that counts, is running."
+**In one sentence card:** "The entry is a deliberately simple app, LabRat, that runs offline on a phone; as of 25 October 2026 its desktop dry run is below the bar and its final test on the phone, the one that counts, is below the bar too."
 
 *Facts: [D-152] [D-183] [D-211] [F-2224] [D-181] [F-1703] [F-2189] [G-fixed-line] [F-2210] [F-2192] [F-2193] [F-2206] [F-2207] [F-2209] [G-grounded-dose-rule] [G-on-no-health] [F-2198] [F-2201] [F-2220] [F-2221] [D-206] [F-2222] [D-207] [D-208] [D-209] [D-210] [F-2225] [F-2223] [F-2230] [D-214] [F-2231]*
 
@@ -456,17 +456,17 @@ Whole chapter: https://r4topunk.github.io/boar-research/research/honest-number.m
 
 ##### Everything is public
 
-The first exam, the judge and the research record are on GitHub; the libraries are on Hugging Face. Anyone can run their own assistant against the same answer key.
+The exams, the judge and the research record are on GitHub; the run traces, the app and the libraries are on Hugging Face. Since 27 October the sealed exams are public too, so anyone can run their own assistant against the same answer keys and check the results.
 
-##### What is still being finished
+##### What is still open
 
-Finishing LabRat (the final build and its upload to Hugging Face); the final test of the app on the phone, running now, whose grade becomes the headline; posting the revised claim with a link to this article. The reshaped factbook library stays unpublished. Each card says what changes if it works and what changes if it doesn't.
+Posting the revised claim with a link to this article. The final build is on Hugging Face and the final test of the app on the phone landed on 25 October: 0 wins in 71, below the bar. The reshaped factbook library stays unpublished. Each card says what changes if it works and what changes if it doesn't.
 
 ##### What we stopped testing, and why
 
 The big model on a phone (dropped when the author ruled out a deep mode), streaming it from storage on Android (built, never measured), and a sealed exam written entirely outside the Claude family (never written).
 
-**In one sentence card:** "The research is closed; what remains is the phone test of the simple app, hosting it, and posting the claim."
+**In one sentence card:** "The research is closed and the app is hosted; what remains is posting the claim."
 
 *Facts: [F-1316] [F-1532] [F-2118]*
 
@@ -474,7 +474,7 @@ Whole chapter: https://r4topunk.github.io/boar-research/research/handoff.md
 
 ## 18 · Reproduce it (appendix) {#reproduce}
 
-Yes, most of it. The benchmark questions, reference answers, judge prompt and scoring code of the first exam are public, and you can run them on your own app with a few commands. What you cannot rerun: the sealed question sets (sealed by design), the new exam (sealed until it is graded), and the exact judge outputs (the judge is a closed model, so reruns agree closely but not bit for bit).
+Yes, almost all of it. The benchmark questions, reference answers, judge prompt and scoring code are public, and you can run them on your own app with a few commands. Since 27 October that includes the sealed question sets and the new exam, with the run traces behind every number. What you cannot rerun exactly: the judge outputs (the judge is a closed model, so reruns agree closely but not bit for bit). Still private: personal correspondence, the app maintainer's data, spend records and the git history.
 
 *Facts: [D-195]*
 

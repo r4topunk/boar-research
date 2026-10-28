@@ -1,6 +1,6 @@
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 Markdown twin of the article at /. Chapters: https://r4topunk.github.io/boar-research/research/ · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt · Data: https://r4topunk.github.io/boar-research/data/.
 
@@ -24,14 +24,17 @@ This is the story of how we learned that, the ruler we had to build first, the m
 >
 > **Install:** [huggingface.co/r4topunk/labrat](https://huggingface.co/r4topunk/labrat) · sha256 `d2e00ba4a9adff6f903eab7d34759fd4f4db9cd721303dc7c38ae280b465dae8` release record [F-2246] · 3.04 GB, about 6 GB free, Android 8+, allow "install unknown apps", accept the Play Protect prompt install notes [F-2230]. Android's new developer checks may add a warning on some phones; untested on a certified phone as of 2026-10-25 open risk [F-2231].
 >
-> **Verify:** the old judge, its scorers and the frozen analysis plan are in the public boar-bench repository; the second ruler's spec and scorer are planned to join them. Tap any number below for its source row in [/data/facts.json](https://r4topunk.github.io/boar-research/data/facts.json).
+> **Verify:** the judge, its scorers, the frozen analysis plan and every evaluation set are in the public boar-bench repository, and the raw run traces are in boar-traces. Tap any number below for its source row in [/data/facts.json](https://r4topunk.github.io/boar-research/data/facts.json).
+>
+> **Open data:** the retired held-out sets and the second ruler's items, references and drafts were published on 2026-10-27 in [boar-bench](https://github.com/r4topunk/boar-bench), with their runs in [boar-traces](https://huggingface.co/datasets/r4topunk/boar-traces); byte-identical to the hashes committed before opening, except documented redactions.
 >
 > **Everything public:**
 >
 > - [github.com/r4topunk/labrat-boar-fork](https://github.com/r4topunk/labrat-boar-fork): the LabRat app source, the submission repo record [F-2247]
 > - [huggingface.co/r4topunk/labrat](https://huggingface.co/r4topunk/labrat): the APK
 > - [github.com/r4topunk/boar-research](https://github.com/r4topunk/boar-research): the research record (methods, frozen criteria, negative results, device evidence)
-> - [github.com/r4topunk/boar-bench](https://github.com/r4topunk/boar-bench): the benchmark, the judge harness and the trace format
+> - [github.com/r4topunk/boar-bench](https://github.com/r4topunk/boar-bench): the benchmark, the judge, all evaluation sets (the retired held-out sets in `bench/heldout/`, the second ruler in `bench/v0.4/`) and the trace format
+> - [huggingface.co/datasets/r4topunk/boar-traces](https://huggingface.co/datasets/r4topunk/boar-traces): the raw run traces behind every number
 > - [huggingface.co/datasets/r4topunk/boar-packs](https://huggingface.co/datasets/r4topunk/boar-packs): the knowledge packs
 
 ## 1. The question
@@ -54,9 +57,9 @@ Two choices matter most.
 
 **Two judges from different families.** Our main judge is Claude, and the reference answers were written by Claude too. A judge might favour writing from its own family, and a second Claude judge cannot catch that method check [F-1216]. So we added a judge from OpenAI, gpt-5.6-sol through the Codex CLI. Run after the fact, it scored both systems it re-judged 0.08 to 0.14 higher, but kept the same ranking and almost no wins dev-style · 2 seeds · run after the fact [F-017]. A rule fixed in advance says the stricter judge sets the headline rule [F-1239].
 
-**Rules before results.** Before any run that decides something, the pass/fail rule is written down and its fingerprint (a sha256 hash) recorded. An audit matched 65 of 65; an outside critic later found 16 of 17 matching audit [F-1169]. Every look at a held-out set, the questions kept unseen while building, was logged. That log is also how we know both early held-out sets later became practice data exposure log [F-038].
+**Rules before results.** Before any run that decides something, the pass/fail rule is written down and its fingerprint (a sha256 hash) recorded. An audit matched 65 of 65; an outside critic later found 16 of 17 matching audit [F-1169]. Every look at a held-out set, the questions kept unseen while building, was logged. That log is also how we know both early held-out sets later became practice data exposure log [F-038]. On 2026-10-27 those sets were retired and published, so anyone can check them against the hashes recorded before they were opened.
 
-For the app's verdict we built a second ruler, bench v0.4: 75 questions frozen before any system answered them frozen 2026-10-20 [F-2070], written roughly half by each judge family writers [F-1416], with references from both families Claude refs [F-2110] OpenAI refs [F-2212]. On it, a refusal scores zero design [F-1836]. Our engines have answered it since 2026-10-24, so it is no longer unseen exposed [F-2214].
+For the app's verdict we built a second ruler, bench v0.4: 75 questions frozen before any system answered them frozen 2026-10-20 [F-2070], written roughly half by each judge family writers [F-1416], with references from both families Claude refs [F-2110] OpenAI refs [F-2212]. On it, a refusal scores zero design [F-1836]. Our engines have answered it since 2026-10-24, so it is no longer unseen exposed [F-2214]. Its items, both reference halves and the drafts were published on 2026-10-27, so the 0.50 verdict can be checked item by item.
 
 ## 3. The floor trap
 
@@ -138,7 +141,8 @@ One human and a lab of AI agents. Research agents work in fixed lanes, write one
 
 ## 9. Go deeper
 
-- **Repositories:** [app source](https://github.com/r4topunk/labrat-boar-fork) · [APK](https://huggingface.co/r4topunk/labrat) · [research record](https://github.com/r4topunk/boar-research) · [benchmark and judge](https://github.com/r4topunk/boar-bench) · [knowledge packs](https://huggingface.co/datasets/r4topunk/boar-packs).
+- **Repositories:** [app source](https://github.com/r4topunk/labrat-boar-fork) · [APK](https://huggingface.co/r4topunk/labrat) · [research record](https://github.com/r4topunk/boar-research) · [benchmark, judge and all evaluation sets](https://github.com/r4topunk/boar-bench) · [raw run traces](https://huggingface.co/datasets/r4topunk/boar-traces) · [knowledge packs](https://huggingface.co/datasets/r4topunk/boar-packs).
+- **Open data:** the retired held-out sets and the second ruler's items and references were published on 2026-10-27 (`bench/heldout/`, `bench/v0.4/` in boar-bench), with their runs in boar-traces; hashes and redactions are listed in `bench/heldout/HASHES.md`. Still private: personal correspondence, the app maintainer's data, usage and spend records, credentials and git history.
 - **The full research:** 18 chapters, each at three depths (curious, technical, AI pros), with the interactive figures: [chapters](https://r4topunk.github.io/boar-research/research/).
 - **The map:** the ideas, experiments and decisions, linked by "led to", "ruled out" and "uses": [map](https://r4topunk.github.io/boar-research/map/).
 - **Ask your AI:** hand your assistant [/llms.txt](https://r4topunk.github.io/boar-research/llms.txt), [/llms-full.txt](https://r4topunk.github.io/boar-research/llms-full.txt) and the open data in [/data/](https://r4topunk.github.io/boar-research/data/). Every number has a source row, so it can cite instead of guess.
@@ -231,6 +235,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

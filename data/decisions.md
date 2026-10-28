@@ -1,8 +1,8 @@
 # RatLab decision log
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what was decided, why, and whether it still stands. 208 decisions · kept 184 · superseded 22 · reversed 2. Machine-readable twin: https://r4topunk.github.io/boar-research/data/decisions.json. Fact ids resolve in https://r4topunk.github.io/boar-research/data/facts.json.
 
@@ -427,7 +427,7 @@ Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what wa
   - alternatives considered: keep v1 loop; Fresh-context `claude -p` ticks (kept as option behind a shadow run)
   - what happened next: T1–T7 built 10-15; T8 10-16
   - facts: [F-890] [F-927]
-- [D-097] 2026-10-14 · Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only · why: other teams cannot run the judge comparably without refs. · status: kept
+- [D-097] 2026-10-14 · Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only · why: other teams cannot run the judge comparably without refs. · status: kept (Update 2026-10-27: the v0.2 and V-para references were published with the retired held-out sets in boar-bench (bench/heldout/); items are byte-identical to the hashes committed before opening, except documented redactions.)
   - alternatives considered: publish hashes only
   - what happened next: boar-bench carries refs with provenance on the dataset card
   - facts: [F-1310]
@@ -852,7 +852,7 @@ Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what wa
 ## 2026-10-21
 
 <!-- lint:exempt:start -->
-- [D-195] 2026-10-21 · No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card · why: held-out discipline. · status: kept
+- [D-195] 2026-10-21 · No public upload of v0.4 items or references; labels of FACT-AVAIL quarantined (coordinator-only) until the result card · why: held-out discipline. · status: kept (Update 2026-10-27: the rule ended with the record; the v0.4 items, both reference halves and drafts were published in boar-bench (bench/v0.4/), with their runs in boar-traces.)
   - alternatives considered: publish kit early
   - what happened next: quarantine in spec §2.4
   - facts: [F-1865]

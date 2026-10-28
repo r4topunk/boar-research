@@ -1,8 +1,8 @@
 # 17 · Open fronts and hand-off
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 - Page: https://r4topunk.github.io/boar-research/research/handoff/ · Markdown twin: https://r4topunk.github.io/boar-research/research/handoff.md · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt
 - Span: 2026-10-14 →
@@ -13,17 +13,17 @@
 
 #### Everything is public
 
-The first exam, the judge and the research record are on GitHub; the libraries are on Hugging Face. Anyone can run their own assistant against the same answer key.
+The exams, the judge and the research record are on GitHub; the run traces, the app and the libraries are on Hugging Face. Since 27 October the sealed exams are public too, so anyone can run their own assistant against the same answer keys and check the results.
 
-#### What is still being finished
+#### What is still open
 
-Finishing LabRat (the final build and its upload to Hugging Face); the final test of the app on the phone, running now, whose grade becomes the headline; posting the revised claim with a link to this article. The reshaped factbook library stays unpublished. Each card says what changes if it works and what changes if it doesn't.
+Posting the revised claim with a link to this article. The final build is on Hugging Face and the final test of the app on the phone landed on 25 October: 0 wins in 71, below the bar. The reshaped factbook library stays unpublished. Each card says what changes if it works and what changes if it doesn't.
 
 #### What we stopped testing, and why
 
 The big model on a phone (dropped when the author ruled out a deep mode), streaming it from storage on Android (built, never measured), and a sealed exam written entirely outside the Claude family (never written).
 
-**In one sentence card:** "The research is closed; what remains is the phone test of the simple app, hosting it, and posting the claim."
+**In one sentence card:** "The research is closed and the app is hosted; what remains is posting the claim."
 
 *Facts: [F-1316] [F-1532] [F-2118]*
 
@@ -32,7 +32,7 @@ The big model on a phone (dropped when the author ruled out a deep mode), stream
 ### The record for this chapter
 
 **Key facts:**
-- Public repos live 2026-10-15 10:07: boar-bench (139 files) and boar-research (411 files); scrubbed, mechanically gated, independently reviewed (41/44 findings applied) [F-1316] [D-105].
+- Public repos live 2026-10-15 10:07: boar-bench (139 files) and boar-research (411 files); on 2026-10-27/28 the open-source release added the retired held-out sets and the ruler v0.4 in boar-bench, the raw run traces (boar-traces) and the packs; scrubbed, mechanically gated, independently reviewed (41/44 findings applied) [F-1316] [D-105].
 - Engine pull request to the upstream app opened 10-15 10:10 [F-1272]; later NUMGUARD r3 and HEALTHGAP r2 added (E-chron-late timeline).
 - Pack uploads after 10-17: a fixed Simple English Wikipedia revision (a unit-conversion converter bug, 3,176 → 524 artefact chunks) on 10-21 and a knowledge-base index snapshot on 10-22 [F-1601] [F-1989]. The shaped factbook is drafted as user-selected only and unpublished (OF-7; [D-175]).
 - A reusable 0-LLM retrieval bench (RETBENCH v1) exists in the private research log; its publication is not recorded as of 2026-10-24 [F-1720].
@@ -47,11 +47,11 @@ The big model on a phone (dropped when the author ruled out a deep mode), stream
 
 ### Limitations and open fronts
 
-As of 2026-10-25 the record contains no unexposed held-out number and no number written entirely outside the Claude family: v0.3 was dropped (2026-10-18), and the second ruler is half Claude-written and was exposed on 2026-10-24. Its final run on BoarLite's engine (OF-6, landed 2026-10-24 20:34) is a desktop twin with one seed, published as history (lower family 0.164, below the bar); it measured b4ef94f3, before the Rat persona line of LabRat 7788924a; the on-phone run of LabRat (DEVICE-FINAL, OF-8) is running with no result in this record; with 71 headline items its power is below that of the 110-item design (at n = 110 a one-sided "> 0.50" needs a point estimate near 0.53; [F-205]). The deep tier never ran on a phone and was not delivered (OF-1 and OF-2 dropped, [D-147]). The thesis's evidence rests on pack-written self-tests labelled by one cheap judge with one seed. The human label check was not done. BoarLite's health rules are fitted on the 65 probes they are checked on, and its search port was adopted against a failed frozen safety verdict (§6.11). Open fronts (`data/status.json`, each with what would change in either direction; criteria frozen in the research repository before each run): OF-4 LabRat (formerly BoarLite) delivery (final bundled build, Hugging Face upload, install-path check); OF-5 the claim text (v4.2.4 prepared, posting not recorded, to be revised for LabRat and posted with a link to the article); OF-6 landed (published as history; b4ef94f3); OF-7 the shaped factbook (kept unpublished by the author); OF-8 DEVICE-FINAL, the on-phone matrix (running). Beyond closure: reading in small models, a pre-registered (not post-hoc) cross-family judge, and an item set written entirely outside both judge families.
+As of 2026-10-25 the record contains no unexposed held-out number and no number written entirely outside the Claude family: v0.3 was dropped (2026-10-18), and the second ruler is half Claude-written and was exposed on 2026-10-24. Its final run on BoarLite's engine (OF-6, landed 2026-10-24 20:34) is a desktop twin with one seed, published as history (lower family 0.164, below the bar); it measured b4ef94f3, before the Rat persona line of LabRat 7788924a; the on-phone run of LabRat (DEVICE-FINAL, OF-8) landed on 2026-10-25 as the headline (0 of 71 wins under both families, the lower family below the 0.50 bar; [F-2238]); with 71 headline items its power is below that of the 110-item design (at n = 110 a one-sided "> 0.50" needs a point estimate near 0.53; [F-205]). The deep tier never ran on a phone and was not delivered (OF-1 and OF-2 dropped, [D-147]). The thesis's evidence rests on pack-written self-tests labelled by one cheap judge with one seed. The human label check was not done. BoarLite's health rules are fitted on the 65 probes they are checked on, and its search port was adopted against a failed frozen safety verdict (§6.11). Open fronts (`data/status.json`, each with what would change in either direction; criteria frozen in the research repository before each run): OF-4 LabRat (formerly BoarLite) delivery (final bundled build, Hugging Face upload, install-path check); OF-5 the claim text (v4.2.4 prepared, posting not recorded, to be revised for LabRat and posted with a link to the article); OF-6 landed (published as history; b4ef94f3); OF-7 the shaped factbook (kept unpublished by the author); OF-8 DEVICE-FINAL, the on-phone matrix (landed 2026-10-25, the headline). Beyond closure: reading in small models, a pre-registered (not post-hoc) cross-family judge, and an item set written entirely outside both judge families.
 
 *Facts: [F-205] [F-1252] [F-1297] [F-1253] [F-270] [F-211] [D-123] [D-147] [F-2108]*
 
-### Open fronts (status.json, as of 2026-10-25)
+### Open fronts (status.json, as of 2026-10-28)
 
 #### OF-1 · Deep tier on a 12 GB-class phone (dropped)
 
@@ -121,7 +121,7 @@ Why it matters: The ruler replaces the old judge.v1 ratio as the headline metric
 
 What would change, in either direction: If the lower-family U-total (desktop twin of engine b4ef94f3) has CI low > 0.50 with all gates passed, the standing becomes "meets the bar" for that app; if the point estimate is above 0.50 with CI low below, "above, not established"; otherwise "below the bar". In every case it is printed beside the old-scale numbers, never pooled with them.
 
-Note: Landed 2026-10-24 20:34 as a desktop-twin run: references of both families 75/75 (OpenAI gpt-5.6-sol half completed 20:05); BoarLite b4ef94f3 scored on the 71 headline items under both judge families, one seed, stage 1 not run, no phone run. The verdict numbers are internal-pending-author (internal_fact_ids) until the author rules on AD-15; the ruler is now exposed to three engines. As of 2026-10-25, Update 2026-10-25: this run measured b4ef94f3; LabRat 7788924a adds the Rat persona line to the grounding prompt after it, so its number must not be attributed to LabRat without that caveat; the on-phone re-measure of LabRat is OF-8. Update 2026-10-25 (author's publication decisions): the numbers are public as history (F-2215, F-2217): lower-family U-total (desktop twin of engine b4ef94f3) 0.164, win-rate 0 of 71 under both families, below the 0.50 bar; the paired delta vs the native engine branch ([internal row]) stays internal because it prints that branch's absolute.
+Note: Landed 2026-10-24 20:34 as a desktop-twin run: references of both families 75/75 (OpenAI gpt-5.6-sol half completed 20:05); BoarLite b4ef94f3 scored on the 71 headline items under both judge families, one seed, stage 1 not run, no phone run. The verdict numbers are internal-pending-author (internal_fact_ids) until the author rules on AD-15; the ruler is now exposed to three engines. As of 2026-10-28, Update 2026-10-25: this run measured b4ef94f3; LabRat 7788924a adds the Rat persona line to the grounding prompt after it, so its number must not be attributed to LabRat without that caveat; the on-phone re-measure of LabRat is OF-8. Update 2026-10-25 (author's publication decisions): the numbers are public as history (F-2215, F-2217): lower-family U-total (desktop twin of engine b4ef94f3) 0.164, win-rate 0 of 71 under both families, below the 0.50 bar; the paired delta vs the native engine branch ([internal row]) stays internal because it prints that branch's absolute.
 
 Owner: author. Related: [F-2070] [F-2108] [F-1536] [F-1543] [F-2212] [F-2214] [F-2225] [F-2215] [F-2217].
 
@@ -164,6 +164,7 @@ Owner: author. Related: [F-2227] [F-2228] [F-2229] [F-2225] [F-2214] [F-2238] [F
 - 2026-10-25 · 0.4-preprint · BoarLite renamed LabRat (assistant Rat) at the app maintainer's request; the Rat persona line entered the grounding prompt after the ruler run (ruler number = b4ef94f3); cleanup decisions (long-chat summary, PIN, Portuguese and the Expo/React Native tree removed; Settings simplified; licences in About); logo n8; APK hosting decided (Hugging Face); install-path risk noted; DEVICE-FINAL criterion frozen and the on-phone matrix started (OF-8, running; interrupted once by an APK install and restarted); open engine bug Citations.applyShown recorded.
 - 2026-10-25 · 0.4-preprint · Author's publication decisions: LabRat (formerly BoarLite) numbers public, the app maintainer's app numbers stay internal; headline = the final ruler on the phone (DEVICE-FINAL, templated, running); the desktop ruler run of b4ef94f3 published as history (lower-family U-total 0.164, 0 of 71 wins, below the 0.50 bar); thesis restated (F-2236); Citations.applyShown documented as a known limitation (the ruler run predates the Rat persona line).
 - 2026-10-25 · 1.0 · Final: DEVICE-FINAL landed (OF-8): on a Pixel 8a LabRat wins 0 of 71 under both judge families, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), two seeds, below the 0.50 bar; phone = desktop twin; M2-M5 product numbers added (the ruler run predates the Rat persona line). LabRat 1.0.0 hosted on Hugging Face and its source public (OF-4 landed); pack counts stated once (13 shipped, 9 self-tested, 7 tested on the phone); article live; headline filled.
+- 2026-10-28 · 1.0 · Open-source release folded in (2026-10-27/28): the research record (boar-research), the benchmark, judge and all evaluation sets (boar-bench), the raw run traces (boar-traces) and the knowledge packs (boar-packs) are public, alongside the hosted APK and the app source. The held-out sets (v0.2, V-para, health-fresh 1-3, chat-v3, es/meta-fresh, the older probe sets) and the second ruler v0.4 (items, both reference halves, drafts) were retired and published on 2026-10-27 in boar-bench (bench/heldout/, bench/v0.4/), with their runs in boar-traces; items are byte-identical to the hashes committed before opening, except documented redactions (old and new hashes in bench/heldout/HASHES.md). Still private: personal correspondence, the app maintainer's data, usage and spend records, credentials, git history. No number changed: LabRat 0 of 71 wins, U-total (desktop twin of engine b4ef94f3) 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar (the ruler run predates the Rat persona line).
 
 ## Facts cited {#facts}
 
@@ -246,7 +247,7 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 ### Decisions cited {#decisions}
 
 <!-- lint:exempt:start -->
-- [D-097] 2026-10-14 · Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only · why: other teams cannot run the judge comparably without refs. · status: kept
+- [D-097] 2026-10-14 · Publish research AND benchmark for other teams; publish v0.1 reference-answer text; v0.2/V-para refs stay hashes only · why: other teams cannot run the judge comparably without refs. · status: kept (Update 2026-10-27: the v0.2 and V-para references were published with the retired held-out sets in boar-bench (bench/heldout/); items are byte-identical to the hashes committed before opening, except documented redactions.)
 - [D-100] 2026-10-15 · First public push by the coordinator, only for the two new repos, on the author's explicit instruction · why: release. · status: kept
 - [D-105] 2026-10-15 · Release as two fresh repos with one squashed commit, neutral author, curated whitelist + scrub + mechanical gate + independent review; never the private history · why: Private history holds held-out plaintext and personal data. · status: kept
 - [D-123] 2026-10-18 · D1: no LFM2.5 desktop replay · why: audit already 7/58 vs 3/73 wrong; product already chose Qwen. · status: kept
@@ -259,6 +260,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

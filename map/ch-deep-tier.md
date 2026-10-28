@@ -1,6 +1,6 @@
 # 6 · The deep tier
 
-> Living preprint · as of 2026-10-25 · map node CH-deep-tier (chapter) · interim record, not a final result.
+> Closed record · as of 2026-10-28 · map node CH-deep-tier (chapter) · the standing on that date; open fronts in https://r4topunk.github.io/boar-research/data/status.json.
 
 Chapter 6: The deep tier (2026-10-02, 10-06 → 10-10; dropped from delivery 10-21). Read it at https://r4topunk.github.io/boar-research/research/deep-tier.md.
 
@@ -14,6 +14,6 @@ Chapter 6: The deep tier (2026-10-02, 10-06 → 10-10; dropped from delivery 10-
 
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

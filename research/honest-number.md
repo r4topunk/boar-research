@@ -1,13 +1,13 @@
 # 16 · Where it stands (live)
 
-> Closed record · research record 1.0 · as of 2026-10-25 16:46; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
-> Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
+> Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 - Page: https://r4topunk.github.io/boar-research/research/honest-number/ · Markdown twin: https://r4topunk.github.io/boar-research/research/honest-number.md · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt
 - Span: 2026-10-05 → 10-25
 
-**In one sentence.** As of 2026-10-25 03:30 the research lines are closed and the submitted app (LabRat, formerly BoarLite) runs offline on a phone. Its headline number will be the final ruler (bench v0.4) measured on the phone by DEVICE-FINAL, which is running and has no result yet (author's decision of 2026-10-25, AD-05). As of 2026-10-25, until it lands the record holds history: the same ruler on the desktop twin of the pre-rename engine b4ef94f3 (one seed, before the Rat persona line) won 0 of 71 under both judge families with a lower-family U-total of 0.164, below the 0.50 bar; under the Claude judge the old ratio did not reach 0.50 on the earlier held-out sets; and no unexposed held-out number exists. The thesis the record presents is the author's: small models need external knowledge, and the app is a harness built around what a small model can really do [F-2236]; the outcome labels of the closing tests are its evidence and its limits. Three metric families stay separate. This chapter is finalized at closure (v1.0).
+**In one sentence.** As of 2026-10-25 03:30 the research lines are closed and the submitted app (LabRat, formerly BoarLite) runs offline on a phone. Its headline number is the final ruler (bench v0.4) measured on the phone by DEVICE-FINAL, which landed on 2026-10-25 (author's decision of 2026-10-25, AD-05): 0 of 71 wins under both judge families, the lower family below the 0.50 bar [F-2238]. As of 2026-10-28, the record also holds history: the same ruler on the desktop twin of the pre-rename engine b4ef94f3 (one seed, before the Rat persona line) won 0 of 71 under both judge families with a lower-family U-total of 0.164, below the 0.50 bar; under the Claude judge the old ratio did not reach 0.50 on the earlier held-out sets; and no unexposed held-out number exists. The thesis the record presents is the author's: small models need external knowledge, and the app is a harness built around what a small model can really do [F-2236]; the outcome labels of the closing tests are its evidence and its limits. Three metric families stay separate. This chapter is finalized at closure (v1.0).
 
 ## For curious readers {#curious}
 
@@ -36,7 +36,7 @@ The prepared sentence: "BOAR is not shown to be half as good as frontier AI with
 **Key facts, in three panels that never share an axis:**
 - **Panel A, judge.v1 ratio (old scale; history since 2026-10-25, `history.old_scale`).** V-para (held-out at run time, Opus, 2 seeds): the frozen 4B build raw 0.413 (0.384–0.445), floor-adjusted 0.261 (0.224–0.300), 0 of 51 wins [F-001]. v0.2 (burnt → dev): raw 0.512 / floor-adjusted 0.388, 0/0/110 and 0/1/109 [F-002]. Bar reading: no configuration reaches floor-adjusted 0.50; the formal raw rule is met only by the desktop deep tier on development data [F-004]. Closest configuration (desktop, dev-style): floor-adjusted 0.436 (0.401–0.472), 0 of 51 [F-009]; never delivered [F-1532]. Cross-family (post-hoc): V-para 0.361 / 0.577 floor-adjusted, win 0.00–0.01 [F-017]; v0.2 [F-018]. Set status: both former held-out sets are now development data [F-038].
 - **Panel B, outcome labels (closing tests; dev; pack-written where named; Haiku labels).** With the pack, correct-any 0.48 vs 0.26 without [F-1704]; 0 of 9 packs at 0.75 [F-1707]; 44 of 50 undelivered facts already in the kit [F-2100]; the shipped style on ENGINE-RC: correct-any 0.43, wrong-unwarned 0.12 [F-1727].
-- **Panel C, the second ruler.** Bench v0.4 frozen [F-2070]; references of both families 75/75 [F-2110] [F-2212]. **On the phone (headline):** DEVICE-FINAL is running (OF-8; criterion frozen 2026-10-25, [F-2227]); when it lands, its M1 (win-rate first, both families, seeds stated, U-total per family, the lower family against the bar) and M5 (speed, memory, offline) fill the headline slot in whichever direction they fall; until then the panel predicts nothing. **On the desktop (history, `history.desktop_ruler`):** BoarLite b4ef94f3, one seed: 0 of 71 wins under both families; U-total Claude 0.164 (0.123–0.208), gpt-5.6-sol 0.245 (0.194–0.300); lower family 0.164 (0.123–0.206), below the 0.50 bar; information-available split as in chapter 12 [F-2215] [F-2217]; labelled "desktop twin, one seed, not a phone run" and "engine b4ef94f3, before the Rat persona line".
+- **Panel C, the second ruler.** Bench v0.4 frozen [F-2070]; references of both families 75/75 [F-2110] [F-2212]. **On the phone (headline):** DEVICE-FINAL landed on 2026-10-25 (OF-8; criterion frozen before the run, [F-2227]): 0 of 71 wins under both families, the lower family below the 0.50 bar ([F-2238], [F-2239], [F-2240]; two seeds, 42 and 43). **On the desktop (history, `history.desktop_ruler`):** BoarLite b4ef94f3, one seed: 0 of 71 wins under both families; U-total Claude 0.164 (0.123–0.208), gpt-5.6-sol 0.245 (0.194–0.300); lower family 0.164 (0.123–0.206), below the 0.50 bar; information-available split as in chapter 12 [F-2215] [F-2217]; labelled "desktop twin, one seed, not a phone run" and "engine b4ef94f3, before the Rat persona line".
 - **Product state.** Main engine Qwen3-1.7B [F-1386]; the 4B leads it by +0.109 under Opus on v0.1 51 dev [F-2077]; submission LabRat (formerly BoarLite; renamed 2026-10-25, [F-2224]), built from final candidate b4ef94f3 [F-2210] plus the Rat persona line and removed code [F-2225] [F-2223], offline on a Pixel 8a with the first answer in 11.9 s on a pre-rename APK [F-2201]; search port merged as ON_NO_HEALTH against its frozen verdict, by the author's prior condition [F-2207] [F-2209]; ships with the Wikipedia-health limitation [F-2206].
 - Claim text: the prepared sentence is "BOAR is not shown to be half as good as frontier AI with web" (draft v4.2.4, [F-1245]). Whether it was posted is not in the record; it must be revised for LabRat before closure (OF-5); by the author's decision of 2026-10-25 the revised claim is posted after v1.0 with a link to the article (AD-17). The plan (2026-10-24 PM): lead with what the app does and the final ruler numbers labelled with both judge families, seeds, desktop twin or phone, and win-rate, with product numbers labelled by engine; wording to an independent reviewer, then the author [F-2233].
 
@@ -54,7 +54,7 @@ On V-para (held-out at run time; n = 51; seeds 42 and 43; Opus) the 4B claim bui
 
 **Body:** imported verbatim from §5 (one source of truth), grouped as construct, internal, external, statistical-conclusion and reproducibility threats, each with "mitigation in place" and "residual risk".
 
-### The standing, as of 2026-10-25
+### The standing, as of 2026-10-28
 
 **Headline (OF-8): Final ruler (bench v0.4) measured on the phone: LabRat on a Pixel 8a (DEVICE-FINAL, M1 + M5)**
 
@@ -201,6 +201,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-25. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.
