@@ -9,13 +9,13 @@ Every claim in `CO_HAZARD_EN` (engine `src/routing/coHazard.ts`) maps to an offi
 | generator: "Never run them inside a home, garage, basement, shed … even with the doors or windows open: that is not enough ventilation" | "NEVER use a generator inside homes, garages, crawlspaces, sheds, or similar areas, even when using fans or opening doors and windows for ventilation." · "NEVER use inside a home or garage, EVEN IF doors and windows are open." | CPSC 5123 [S] |
 | same, for any gasoline engine; basement | "Never run a generator, pressure washer, or any gasoline-powered engine inside a basement, garage, or other enclosed structure, even if the doors or windows are open, unless the equipment is professionally installed and vented." | CDC, What to Do to Protect Yourself During a Power Outage [W†] |
 | charcoal / gas grill, camping stove, lantern: "tent or camper" | "Never use a charcoal grill, hibachi, lantern, or portable camping stove inside a home, tent, or camper." | CDC, Power Outage [W†] |
-| | "do not use a barbecue or camping stove indoors or inside a tent" | NHS, Carbon monoxide poisoning (reviewed 16 Dec 2025) [S] |
+| | [NHS quote withheld; see url] | NHS, Carbon monoxide poisoning (reviewed 16 Dec 2025) [S] |
 | charcoal "even with ventilation" | "Also, never burn charcoal grills indoors, even with ventilation." | CPSC, Generators and Engine-Driven Tools [W†] |
 | fuel heater "that isn't made and vented for indoor use"; gas grill | "During a power outage, never use generators, grills, or other gasoline-, propane-, or charcoal-burning devices inside your home, garage, or carport or near doors, windows, or vents." | CDC, PSA toolkit "Avoiding Carbon Monoxide Poisoning" [W†]. **Generalisation:** the CDC line is about power outages. The heater qualifier ("isn't made and vented for indoor use") is Compass's wording, so that vented furnaces and indoor-rated heaters are not called deadly. **Reviewer: please check this.** |
 | "at least 20 feet (6 metres) from any door, window or vent" | "Never use a generator, pressure washer, or any gasoline-powered engine inside your home, basement, or garage or less than 20 feet from any window, door, or vent." | CDC, Power Outage [W†]. 6 m is our conversion (20 ft = 6.1 m) |
 | "Run a generator outside only" | "Only use OUTSIDE and far away from windows, doors, and vents." | CPSC 5123 [S] |
 | car or engine running in a garage | "Never leave the motor running in a vehicle parked in an enclosed or partially enclosed space, such as a garage." | CDC, Power Outage [W†] |
-| | "do not leave vehicles or other engines on in enclosed spaces (such as a garage)" | NHS [S] |
+| | [NHS quote withheld; see url] | NHS [S] |
 | "never heat a home with a gas oven" | "Never use a gas range or oven to heat a home." | CDC, Power Outage [W†] |
 | "Have a battery-powered CO alarm" | "Install battery-operated CO alarms or plug-in CO alarms with battery back-up in your home" | CPSC 5123 [S] |
 | symptoms list | "The most common symptoms of CO poisoning are headache, dizziness, weakness, nausea, vomiting, chest pain, and confusion." | CDC, Power Outage [W†] |

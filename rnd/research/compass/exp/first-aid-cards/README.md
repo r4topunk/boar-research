@@ -53,7 +53,7 @@ TL;DR: 4 more cards in EN/PT/ES (`round2.py`, review sheet **REVIEW-2.md**). The
 ## Round 3 (2026-10-03): burn, frostbite, heatstroke, nosebleed, earthquake (inland), animal bite
 TL;DR: 6 more cards in EN/PT/ES (`round3.py`, review sheet **REVIEW-3.md**) replacing Sonar's unvetted placeholders, which health6 now shows more often (burn: saf-004, saf-010, rep-08). 55 new verbatim quotes (SOURCES.raw-3.md: 244/244 exact, all curl). All 60 card texts (3 rounds) are clean under safety v0.8.2 **and** the v0.8.3 proposal. 13/14 round-3 broken copies are caught: the miss was a PT gap (frost-direct-heat had no "fogo"), now added to v0.8.3. Engine drop-in: 20 of 29 keys draft-vetted; conditionCards.test.ts 6/6, tsc clean; the same 7 pre-existing answer.test failures.
 - Decisions for r4to (each card in REVIEW-3.md):
-  - burn: cool vs cold water; any burned child → doctor (BRC) vs NHS 111 'if not sure';
+  - burn: cool vs cold water; any burned child → doctor (BRC) vs NHS 111 [NHS quote withheld];
   - frostbite: a water-temperature figure (40 °C St John, 40–42 °C healthdirect; WMS 37–39 °C not verifiable);
   - heatstroke: fluid rule only from healthdirect; cold-pack placement;
   - nosebleed: 10–15 min (NHS) vs 30 min (St John);
@@ -128,7 +128,7 @@ UNKNOWN: engine drop-in not rerun this round (conditionCards.ts must learn the t
 - The reviewer's additions are sourced in `reviewer_sources.py` (6 rows, exact substrings of `snapshots-rev/`):
   - CDC BE FAST.
   - St John drowning 'keep warm'.
-  - NHS 'sugary fizzy drink' (supports 'not diet' only indirectly; flagged).
+  - NHS [NHS quote withheld] (supports 'not diet' only indirectly; flagged).
   - St John adult abdominal thrusts (NHS has no adult choking page).
   - healthdirect 'vomit more than once'.
   - MedlinePlus stingray 'chest or abdomen'.

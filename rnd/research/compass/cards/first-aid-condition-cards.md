@@ -24,19 +24,19 @@ Evidence:
 
   | Condition | Must-do (card, own words) | Key don'ts | Sources |
   |---|---|---|---|
-  | CO | get everyone into fresh air now; call emergency | don't go back in until checked; don't drive yourself | NHS (rev. Dec 2025) "go outside", "do not go back into the affected building…"; CDC/NIOSH † "Get to fresh air and seek medical help immediately" |
-  | Burns/scalds | cool running water 20 min, ASAP | no ice/butter/oil/creams; don't burst blisters | NHS (rev. Mar 2026) "Hold the burn or scald under cool running water for 20 minutes"; "no ice" only in SJA/MedlinePlus |
+  | CO | get everyone into fresh air now; call emergency | don't go back in until checked; don't drive yourself | NHS (rev. Dec 2025) "go outside", [NHS quote withheld]; CDC/NIOSH † "Get to fresh air and seek medical help immediately" |
+  | Burns/scalds | cool running water 20 min, ASAP | no ice/butter/oil/creams; don't burst blisters | NHS (rev. Mar 2026) [NHS quote withheld]; "no ice" only in SJA/MedlinePlus |
   | Heatstroke | call emergency; cool fast (wet sheet, cold water, fan) | nothing by mouth if not fully alert | NHS (May 2026); CDC/NIOSH †; "nothing by mouth" = MedlinePlus (corroboration) |
-  | Hypothermia | shelter, remove wet clothes, wrap incl. head; call emergency | no exertion; no hot bath/bottle/lamp; don't rub limbs; no alcohol | NHS (Jun 2023, review overdue) "do not rub…", "do not use a hot bath…"; WMS CPG (no exertion in moderate) |
-  | Frostbite | rewarm in warm water ~37–39 °C until soft | don't rub; no fire/heater; don't thaw if it may refreeze | NHS (Jun 2025) "warm (not hot) water", "do not rub"; WMS 2024 "37° and 39°C", refreeze rule. MedlinePlus says 40–42 °C (conflict: WMS chosen) |
+  | Hypothermia | shelter, remove wet clothes, wrap incl. head; call emergency | no exertion; no hot bath/bottle/lamp; don't rub limbs; no alcohol | NHS (Jun 2023, review overdue) [NHS quote withheld]; WMS CPG (no exertion in moderate) |
+  | Frostbite | rewarm in warm water ~37–39 °C until soft | don't rub; no fire/heater; don't thaw if it may refreeze | NHS (Jun 2025) [NHS quote withheld]; WMS 2024 "37° and 39°C", refreeze rule. MedlinePlus says 40–42 °C (conflict: WMS chosen) |
   | Choking | 5 back blows, then 5 abdominal thrusts, repeat; call emergency | let them cough if they can; no blind finger sweep | SJA (2025); MedlinePlus. **No reusable source** (NHS has no adult page; US Red Cross page gone; AHA 2025 unverified) |
   | Severe bleeding | firm direct pressure, keep pressing; call emergency | don't remove embedded objects; soaked: add cloth on top | SJA vs MedlinePlus **conflict** on a soaked dressing; card follows MedlinePlus (keep pressure) |
-  | Heart attack | call emergency; adult, not allergic: 300 mg aspirin, chewed | don't drive | NHS (Mar 2026) "Take aspirin (300mg)"; "chew" = SJA |
+  | Heart attack | call emergency; adult, not allergic: 300 mg aspirin, chewed | don't drive | NHS (Mar 2026) [NHS quote withheld]; "chew" = SJA |
   | Stroke | call emergency now even if signs pass; note the time | don't drive yourself | NHS FAST (Sep 2024); CDC † "Note the time" |
   | Seizure | protect, cushion head, time it; side position after | don't restrain; nothing in mouth; emergency > 5 min | NHS (Dec 2023); CDC † "Don't hold the person down" |
   | Anaphylaxis | adrenaline auto-injector; call emergency ("anaphylaxis") | don't stand or walk; 2nd injector after 5 min | NHS (Jun 2023, review overdue) |
   | Button battery | emergency department now, even if fine | don't make them vomit; no food or drink | CAPT (UK); NCPC. Honey (US NCPC, ≥ 12 months, never delay) **left out** because UK guidance differs |
-  | Chemical in eye | rinse with lukewarm running water ≥ 20 min, keep rinsing en route | don't rub | NHS (Mar 2026) "at least 20 minutes" (MedlinePlus says 15) |
+  | Chemical in eye | rinse with lukewarm running water ≥ 20 min, keep rinsing en route | don't rub | NHS (Mar 2026) [NHS quote withheld] (MedlinePlus says 15) |
   | Electric shock | don't touch until power is off; ≥ 6 m from power lines; call emergency | | SJA; MedlinePlus. **No reusable source** |
   | Jellyfish | rinse with seawater (not fresh); remove tentacles; hot-water soak 20–30 min; tropical/box: vinegar + hospital | don't rub; don't pee on it | NHS (Jun 2024); healthdirect (Oct 2024). Vinegar is wrong for bluebottles, so the card scopes it to tropical/box |
   | Nosebleed | sit, lean forward, pinch soft part 10–15 min | not head back | NHS (Dec 2023); "not back" = SJA |

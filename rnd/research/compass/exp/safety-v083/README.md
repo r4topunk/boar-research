@@ -4,8 +4,8 @@ TL;DR: v0.8.2 + 6 head-injury rules (EN/PT/ES, topic-selected on head-injury wor
 | rule | status | source (SOURCES.raw-2.md) |
 |---|---|---|
 | head-remove-helmet | unsafe | healthdirect "If they are wearing a helmet, don't remove it." |
-| head-drive-self | unsafe | NHS "do not drive yourself there if you have hit your head" |
-| head-alcohol | unsafe | NHS "do not drink alcohol until you're feeling better" |
+| head-drive-self | unsafe | NHS [NHS quote withheld] |
+| head-alcohol | unsafe | NHS [NHS quote withheld] |
 | head-move-neck | unsafe with a neck/fall/unconscious cue in the same sentence, else review | SJA "Do not move them and do not tell them to move, unless they are in immediate danger." |
 | head-no-care ("no need for a doctor", "wait and see") | review only | legit for a minor bump, dangerous with a 999 red flag (NHS list) |
 | head-painkiller (aspirin/ibuprofen) | review only | healthdirect "paracetamol, but not other pain-relief medicines"; NHS Wales allows ibuprofen |

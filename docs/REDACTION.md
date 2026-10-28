@@ -18,6 +18,7 @@ TL;DR: the copied files went through one deterministic redaction pass (a rule ta
 | the author of the post that inspired the bounty | named only as that author; other mentions are "the post author" |
 | the cross-family judge | "OpenAI gpt-5.6-sol via the Codex CLI" |
 | paid-gateway per-call cost fields in judge outputs | dropped when numeric |
+| NHS (UK National Health Service) guidance text | withheld (v1.1.1): the quoted wording is replaced by a marker (`quotes_withheld` / `quote_withheld` with `note_licence` in JSON; `[NHS quote withheld]` in prose, tables and scripts); the organisation name and the source URL stay |
 
 ## Rule hits in this build (rule id, files, hits)
 
@@ -103,6 +104,12 @@ TL;DR: the copied files went through one deterministic redaction pass (a rule ta
 ## Hashes
 
 Frozen criteria, patches and manifests quote sha256 values. When redaction changed a file, every quoted sha256 (and unique 8 to 64 character prefix) of its original bytes was rewritten to the released bytes, repeated until stable. `docs/REDACTION-HASHES.tsv` lists, for every changed file (10,878 files), its path, the **original sha256** (of the private file) and the **released sha256**. So a criterion that says "frozen with sha X" is checked against the released file by following the `.sha256` file next to it, and against the private original by the table's original column. Frozen criteria were not edited in meaning: only names, paths, hosts and usage lines changed.
+
+### v1.1.1 (2026-10-28): remaining NHS quotations withheld
+
+The v1.0 and v1.1 passes left verbatim NHS wording in 52 files (safety rule files `rules.v0.1`..`v0.9.1` and their build scripts and READMEs, the first-aid-cards source tables and review sheets, `fa-cards` and `co-hazard` source notes, `rnd/bench/safety`, the condition-card evidence table, `sc-REVIEW.md`). Each NHS quotation is now a marker that keeps "NHS" and the URL, as for the held-out safety sets in `boar-bench`. In the JSON rule files 130 NHS source entries carry `quotes_withheld` (a count) and `note_licence` instead of the quote list; in the other files the quoted wording is `[NHS quote withheld]`. Quotes from other organisations, our own card wording, the OGL attribution sentence and the licence-terms excerpts are unchanged. Short fragments of two words or fewer (for example "go outside") were left in running prose. Rule matching is unaffected: no rule pattern, test or score changed.
+
+Re-pin: 52 edited files plus 20 `SHA256SUMS*` and `REVIEWER-DECISIONS-6.*` files that quote their hashes (72 files in all). `docs/REDACTION-HASHES.tsv` has one row per file with the v1.1 released sha256 in the original column and the new one in the released column (3 rows already present had only their released value replaced: `rnd/research/compass/LOG.md`, `rnd/research/compass/exp/co-hazard/SHA256SUMS`, `rnd/research/compass/exp/first-aid-cards/SHA256SUMS`; 69 rows added). Quoted sha256 values and 12-character prefixes of the old bytes inside the record were rewritten to the new ones.
 
 ## Known residuals (documented, not hidden)
 

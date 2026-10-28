@@ -20,7 +20,7 @@ Both cards were verified sentence by sentence; nothing in the proposed text is u
 - "If you are alone, call for help first; if no one can reach you, move calmly and slowly toward help rather than waiting."
 - No official health-agency source says this. I searched and found it only in non-agency pages, which are not usable here.
 - Its second half contradicts WHO ("keep them from moving around at all") and CDC ("Lay or sit down").
-- **Decision: remove it** and use the brief's option (b), supported by CDC ("get medical help right away"), NHS ("Call 999… immediately") and healthdirect ("Call triple zero (000)"): "if you are alone, call right away and follow their instructions." Movement decisions are left to the call handler.
+- **Decision: remove it** and use the brief's option (b), supported by CDC ("get medical help right away"), NHS ([NHS quote withheld]) and healthdirect ("Call triple zero (000)"): "if you are alone, call right away and follow their instructions." Movement decisions are left to the call handler.
 
 ## Card 1: water safety. Verdict **CHANGE**
 Sentence check of the proposed text: every sentence is supported (CDC-W/EPA-W quotes re-verified verbatim). Gaps found:
@@ -56,13 +56,13 @@ Issues:
 | # | issue | resolution |
 |---|---|---|
 | 1 | "Alone" sentence is unsourced and contradicts immobilisation. | Replaced (flagged issue 2). |
-| 2 | **No explicit "call" in the card body.** The emergency line comes only at the very end, after about ten sentences. | Add "Call emergency services now." as sentence 2 (NHS "Call 999 … immediately"; healthdirect "Call triple zero (000)"; CDC "Seek emergency medical attention as soon as possible"). |
+| 2 | **No explicit "call" in the card body.** The emergency line comes only at the very end, after about ten sentences. | Add "Call emergency services now." as sentence 2 (NHS [NHS quote withheld]; healthdirect "Call triple zero (000)"; CDC "Seek emergency medical attention as soon as possible"). |
 | 3 | **"Wash the bite with soap and water" conflicts by region.** healthdirect (Australian Government): "Do not wash the bite area — venom left on the skin and clothing can help identify the snake." | Region-neutral rule: drop washing. It has no acute benefit, and the clean dry dressing stays (CDC). |
-| 4 | "and anything tight": WHO is silent. | Now sourced by NHS: "take off any jewellery and loosen clothes near the bite". Use "loosen clothing near the bite". Don't say "anything tight", which could be read as removing an Australian pressure bandage. |
-| 5 | "tight tourniquet" implies a loose one is fine. | CDC "Do not apply a tourniquet", NHS "do not tie anything tightly round the part of the body", healthdirect "Do not apply a tourniquet": use "Do NOT use a tourniquet". |
-| 6 | "painkillers such as aspirin or ibuprofen" reads as all painkillers; NHS says "take paracetamol for any pain" and "do not take aspirin or ibuprofen". | Name only the agreed drugs: "don't take aspirin, ibuprofen or naproxen" (CDC list). |
+| 4 | "and anything tight": WHO is silent. | Now sourced by NHS: [NHS quote withheld]. Use "loosen clothing near the bite". Don't say "anything tight", which could be read as removing an Australian pressure bandage. |
+| 5 | "tight tourniquet" implies a loose one is fine. | CDC "Do not apply a tourniquet", NHS [NHS quote withheld], healthdirect "Do not apply a tourniquet": use "Do NOT use a tourniquet". |
+| 6 | "painkillers such as aspirin or ibuprofen" reads as all painkillers; NHS says [NHS quote withheld]. | Name only the agreed drugs: "don't take aspirin, ibuprofen or naproxen" (CDC list). |
 | 7 | No airway or collapse step (dangerous omission). | Add the side position ("on their side if possible", WHO + NHS "recovery position"; compatible with CDC "Lay or sit down"). Add "If the person stops responding or stops breathing normally, start CPR" (healthdirect). This answers brief points 2 and 3. |
-| 8 | Brief point 4, photo | Add, distance-guarded: CDC "Take a photograph from a safe distance to identify the snake if possible"; NHS "try to remember the colour and pattern". The first sentence already says to move away. |
+| 8 | Brief point 4, photo | Add, distance-guarded: CDC "Take a photograph from a safe distance to identify the snake if possible"; NHS [NHS quote withheld]. The first sentence already says to move away. |
 | 9 | Pressure-immobilisation bandage (healthdirect; WHO: neurotoxic snakes only) | Not added. It is region- and species-dependent and needs a technique the card can't teach. "Do NOT use a tourniquet" does not forbid it. |
 
 **Replacement text for `SNAKEBITE_EN`:**

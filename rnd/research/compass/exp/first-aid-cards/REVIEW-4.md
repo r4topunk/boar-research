@@ -9,7 +9,7 @@ Automatic checks (check_cards.py): citations on every step = PASS; safety rules 
 ## bleeding: Severe bleeding
 Covers: placeholder bleeding card
 
-**Decisions for you:** (1) Soaked dressing: St John + BRC 'remove and replace with a fresh one, keep firm pressure' vs NHS 'add another on top'. The card follows SJA/BRC. (2) Raising the wound: NHS only; SJA/BRC raise the legs only for shock. Left out (shock line kept). (3) Tourniquet: RCUK 2025 (life-threatening limb bleeding pressure can't control; 5–7 cm above, not on a joint, write the time, don't release). SJA: an improvised one only if the 999 call handler asks. Keep?
+**Decisions for you:** (1) Soaked dressing: St John + BRC 'remove and replace with a fresh one, keep firm pressure' vs NHS [NHS quote withheld]. The card follows SJA/BRC. (2) Raising the wound: NHS only; SJA/BRC raise the legs only for shock. Left out (shock line kept). (3) Tourniquet: RCUK 2025 (life-threatening limb bleeding pressure can't control; 5–7 cm above, not on a joint, write the time, don't release). SJA: an improvised one only if the 999 call handler asks. Keep?
 
 **EN: Severe bleeding**
 
@@ -40,8 +40,8 @@ Covers: placeholder bleeding card
 
 <details><summary>Sources quoted</summary>
 
-- **BLEED-CALL** NHS, Cuts and grazes: "Immediate action required: Call 999 or go to A&E if: / you have a cut and cannot stop the bleeding / the blood comes out in spurts and is bright red and hard to control" (https://www.nhs.uk/conditions/cuts-and-grazes/)
-- **BLEED-OBJECT** NHS, Cuts and grazes: "If there's something stuck in the wound, do not try to take it out. Make sure not to press down on the object. Press firmly either side of it to push the edges of the wound together." (https://www.nhs.uk/conditions/cuts-and-grazes/)
+- **BLEED-CALL** NHS, Cuts and grazes: [NHS quote withheld] (https://www.nhs.uk/conditions/cuts-and-grazes/)
+- **BLEED-OBJECT** NHS, Cuts and grazes: [NHS quote withheld] (https://www.nhs.uk/conditions/cuts-and-grazes/)
 - **BLEED-PRESS** St John Ambulance (UK), Severe bleeding: "Apply direct firm pressure to the wound using a sterile dressing if possible or a clean non-fluffy cloth to stop the bleeding. / Ask a helper to call 999 or 112 for emergency help." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
 - **BLEED-PRESS-BRC** British Red Cross, Bleeding heavily: "Step 1. Put pressure on the wound with whatever is available to stop or slow down the flow of blood. / Step 2. Call 999. / Step 3. Keep pressure on the wound until help arrives." (https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily)
 - **BLEED-SHOCK** St John Ambulance (UK), Severe bleeding: "Treat them for this by helping them to lie down on a rug or blanket. Raise and support their legs, so that they are above the level of their heart." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
@@ -88,11 +88,11 @@ Covers: placeholder stroke card
 
 <details><summary>Sources quoted</summary>
 
-- **STROKE-CALL** NHS, Symptoms of a stroke: "Immediate action required: Call 999 now if: / you've had signs of a stroke within the last 24 hours even if they've now stopped" (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC calls stopped symptoms a TIA → tell a health care team right away
+- **STROKE-CALL** NHS, Symptoms of a stroke: [NHS quote withheld] (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC calls stopped symptoms a TIA → tell a health care team right away
 - **STROKE-COMFORT** British Red Cross, Stroke: "Stay calm and let them know that help is on the way. Help them sit or lie down and reassure them while you wait for the ambulance." (https://www.redcross.org.uk/first-aid/learn-first-aid/stroke)
 - **STROKE-DRIVE** CDC, Signs and Symptoms of Stroke: "Do not drive to the hospital or let someone else drive you. Call 9-1-1 for an ambulance so that medical personnel can begin life-saving treatment on the way to the emergency room." (https://www.cdc.gov/stroke/signs-symptoms/index.html)
 - **STROKE-ES** CDC en español, Signos y síntomas de accidente cerebrovascular: "O: Obtenga ayuda RÁPIDO, ¡llame a emergencias! Si ve alguno de estos signos, llame al 911 de inmediato. / Tome nota de cuándo se presentó por primera vez cualquiera de los síntomas. / No conduzca hacia el hospital ni deje que otra persona lo lleve." (https://www.cdc.gov/stroke/es/signs-symptoms/signos-y-sintomas-de-accidente-cerebrovascular.html)
-- **STROKE-FAST** NHS, Symptoms of a stroke: "face weakness – one side of your face may droop (fall) and it might be hard to smile / arm weakness – you may not be able to fully lift both arms and keep them there because of weakness or numbness in 1 arm / speech problems – you may slur your words or sound confused / The easiest way to remember these symptoms is the word FAST. This stands for: face, arms, speech and time to call 999." (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC uses BE FAST (balance, eyes); CDC ES uses RÁPIDO
+- **STROKE-FAST** NHS, Symptoms of a stroke: [NHS quote withheld] (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC uses BE FAST (balance, eyes); CDC ES uses RÁPIDO
 - **STROKE-FOOD** St John Ambulance (UK), Stroke: "Do not give them anything to eat or drink because it may be hard for them to swallow." (https://www.sja.org.uk/first-aid-advice/stroke/) ok (single source)
 - **STROKE-TIME** CDC, Signs and Symptoms of Stroke: "Note the time when any symptoms first appear. This information helps health care providers determine the best treatment." (https://www.cdc.gov/stroke/signs-symptoms/index.html)
 
@@ -103,7 +103,7 @@ Sign-off: [ ] EN  [ ] PT  [ ] ES  [ ] clinical review done  · notes: ____
 ## anaphylaxis: Anaphylaxis (severe allergic reaction)
 Covers: placeholder anaphylaxis card
 
-**Decisions for you:** (1) Legs: NHS 'you can raise your legs' (optional), SJA legs raised. The card says lie down, legs raised if they can. (2) CPR line only on healthdirect (NHS/RCUK anaphylaxis pages have none).
+**Decisions for you:** (1) Legs: NHS [NHS quote withheld] (optional), SJA legs raised. The card says lie down, legs raised if they can. (2) CPR line only on healthdirect (NHS/RCUK anaphylaxis pages have none).
 
 **EN: Severe allergic reaction (anaphylaxis)**
 
@@ -131,11 +131,11 @@ Covers: placeholder anaphylaxis card
 
 <details><summary>Sources quoted</summary>
 
-- **ANA-ADR** NHS, Anaphylaxis: "Use an adrenaline auto-injector (such as an EpiPen) if you have one – instructions are included on the side of the injector. / Call 999 for an ambulance and say that you think you're having an anaphylactic reaction. / If your symptoms have not improved after 5 minutes, use a 2nd adrenaline auto-injector." (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
+- **ANA-ADR** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
 - **ANA-ADR-SJA** St John Ambulance (UK), Anaphylaxis: "Call 999 or 112 and tell ambulance control that you suspect anaphylaxis." (https://www.sja.org.uk/first-aid-advice/anaphylaxis/)
 - **ANA-CPR** healthdirect (AU), Anaphylaxis: "If the person is unresponsive and not breathing normally, start CPR." (https://www.healthdirect.gov.au/anaphylaxis) ok (single source)
-- **ANA-LIE** NHS, Anaphylaxis: "Lie down – you can raise your legs, and if you're struggling to breathe, raise your shoulders or sit up slowly (if you're pregnant, lie on your left side). / Do not stand or walk at any time, even if you feel better." (https://www.nhs.uk/conditions/anaphylaxis/)
-- **ANA-SIGNS** NHS, Anaphylaxis: "swelling of your throat and tongue / difficulty breathing or breathing very fast / wheezing, coughing or noisy breathing / feeling faint, dizzy or fainting / skin that feels cold to the touch / blue, grey or pale skin, lips or tongue" (https://www.nhs.uk/conditions/anaphylaxis/)
+- **ANA-LIE** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
+- **ANA-SIGNS** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
 
 </details>
 
@@ -176,10 +176,10 @@ Covers: placeholder eyechem card
 <details><summary>Sources quoted</summary>
 
 - **EYE-CALL** St John Ambulance (UK), Eye injury: "For major eye injuries, like a wound, embedded object, or chemical splashes, call 999 or 112 or go to an Emergency Department or Eye Casualty Department." (https://www.sja.org.uk/first-aid-advice/eye-injury/) CONFLICT (tier): NHS = strong chemicals (oven cleaner, bleach) only
-- **EYE-CALL-NHS** NHS, Eye injuries: "Immediate action required: Go to A&E or call 999 if: / a strong chemical, such as oven cleaner or bleach, is in your eye / Do not drive to A&E. Ask someone to drive you or call 999 and ask for an ambulance." (https://www.nhs.uk/conditions/eye-injuries/)
-- **EYE-DONT** NHS, Eye injuries: "do not touch or rub your eye until it's better" (https://www.nhs.uk/conditions/eye-injuries/)
+- **EYE-CALL-NHS** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
+- **EYE-DONT** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
 - **EYE-LENS** healthdirect (AU), Objects or chemicals in the eye: "If you're wearing contact lenses, try to take out your contact lenses. If the surface of your eye is badly damaged do not remove the contact lenses." (https://www.healthdirect.gov.au/objects-or-chemicals-in-eye) CONFLICT (nuance): SJA 'remove them if they can'; NHS no step
-- **EYE-RINSE** NHS, Eye injuries: "use clean water (not hot) – this can be from a tap or shower, or bottled water if you're not at home / run lots of water over your eyeball for at least 20 minutes / keep rinsing your eye with water while waiting for medical help, and take the container with you as the information on it may help with treatment" (https://www.nhs.uk/conditions/eye-injuries/)
+- **EYE-RINSE** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
 - **EYE-RINSE-SJA** St John Ambulance (UK), Eye injury: "If it is a chemical splash, hold the casualty’s eye under gently running water for at least 20 minutes and make sure the outside and inside of the eyelid is washed. / Make sure the contaminated water does not splash the uninjured eye, you, or the casualty." (https://www.sja.org.uk/first-aid-advice/eye-injury/)
 
 </details>
@@ -261,8 +261,8 @@ Covers: placeholder altitude card (vit-hlt-002-type questions)
 
 - **ALT-ALCOHOL** CDC Yellow Book, High-Altitude Travel and Altitude Illness: "Respiratory depressants such as alcohol and opiates should not be used to aid sleep at high altitude." (https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html)
 - **ALT-NEVER** CDC Yellow Book, High-Altitude Travel and Altitude Illness: "Never ascend to sleep at a higher altitude when experiencing symptoms of altitude illness, no matter how minor the symptoms seem." (https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html) ok (clinician chapter)
-- **ALT-SEVERE** NHS, Altitude sickness: "Urgent advice: Get medical help immediately if: / are confused / have problems with balance or coordination / feel short of breath, even when resting / have a cough or are coughing up frothy or bloody spit / are very sleepy or difficult to wake / Go to a lower altitude straight away (around 300 to 1,000 metres lower) if you can." (https://www.nhs.uk/conditions/altitude-sickness/)
-- **ALT-STOP** NHS, Altitude sickness: "rest at the same altitude until you feel better – do not travel or climb to a higher altitude / If your symptoms get worse or do not improve after 1 day, go to a lower altitude if you can. Try to go around 300 to 1,000 metres lower." (https://www.nhs.uk/conditions/altitude-sickness/) CONFLICT: CDC = descend if worse despite rest (no day count)
+- **ALT-SEVERE** NHS, Altitude sickness: [NHS quote withheld] (https://www.nhs.uk/conditions/altitude-sickness/)
+- **ALT-STOP** NHS, Altitude sickness: [NHS quote withheld] (https://www.nhs.uk/conditions/altitude-sickness/) CONFLICT: CDC = descend if worse despite rest (no day count)
 
 </details>
 
@@ -271,7 +271,7 @@ Sign-off: [ ] EN  [ ] PT  [ ] ES  [ ] clinical review done  · notes: ____
 ## marinepuncture: Stingray, sea urchin, weever or stonefish
 Covers: placeholder marinepuncture card
 
-**Decisions for you:** (1) Hot water: NHS 'as hot as can be tolerated, at least 30 minutes'; healthdirect 45 °C up to 90 min for fish/stingray. The card says 30–90 minutes, as hot as tolerated. (2) Spines: NHS remove; healthdirect leave STONEFISH spines in. The card splits by creature. (3) Stingray alone: NHS minor injuries unit (not 999); stonefish: emergency (healthdirect).
+**Decisions for you:** (1) Hot water: NHS [NHS quote withheld]; healthdirect 45 °C up to 90 min for fish/stingray. The card says 30–90 minutes, as hot as tolerated. (2) Spines: NHS remove; healthdirect leave STONEFISH spines in. The card splits by creature. (3) Stingray alone: NHS minor injuries unit (not 999); stonefish: emergency (healthdirect).
 
 **EN: Stingray, sea urchin, weever or stonefish**
 
@@ -299,10 +299,10 @@ Covers: placeholder marinepuncture card
 
 <details><summary>Sources quoted</summary>
 
-- **SEA-CALL** NHS, Jellyfish and other sea creature stings: "Non-urgent advice: Go to a minor injuries unit if: / you've been stung by a stingray / Immediate action required: Go to A&E or call 999 if: / difficulty breathing / chest pain / severe swelling around the affected area / severe bleeding / lightheadedness or loss of consciousness" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
-- **SEA-DONT** NHS, Jellyfish and other sea creature stings: "do not apply ice or a cold pack / do not cover or close the wound / do not pee on the sting" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
-- **SEA-HOT** NHS, Jellyfish and other sea creature stings: "soak the area in very warm water (as hot as can be tolerated) for at least 30 minutes – use hot flannels or towels if you cannot soak it" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT (time/°C): healthdirect fish/stingray 45 °C up to 90 min; stonefish up to 30 min; urchin 20 min
-- **SEA-SPINE** NHS, Jellyfish and other sea creature stings: "remove any spines from the skin using tweezers or the edge of a bank card / do not touch any tentacles or spines with your bare hands" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT: healthdirect = leave stonefish spines in
+- **SEA-CALL** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
+- **SEA-DONT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
+- **SEA-HOT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT (time/°C): healthdirect fish/stingray 45 °C up to 90 min; stonefish up to 30 min; urchin 20 min
+- **SEA-SPINE** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT: healthdirect = leave stonefish spines in
 - **SEA-STONEFISH** healthdirect (AU), Sea creature bites and stings: "Leave the spine in the skin — unless the ambulance operator tells you to remove it. / are stung by a stonefish or other stinging fish / Call triple zero (000) and ask for an ambulance." (https://www.healthdirect.gov.au/sea-creature-stings)
 
 </details>
@@ -343,13 +343,13 @@ Covers: placeholder tick card
 
 <details><summary>Sources quoted</summary>
 
-- **ANA-ADR** NHS, Anaphylaxis: "Use an adrenaline auto-injector (such as an EpiPen) if you have one – instructions are included on the side of the injector. / Call 999 for an ambulance and say that you think you're having an anaphylactic reaction. / If your symptoms have not improved after 5 minutes, use a 2nd adrenaline auto-injector." (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
-- **ANA-SIGNS** NHS, Anaphylaxis: "swelling of your throat and tongue / difficulty breathing or breathing very fast / wheezing, coughing or noisy breathing / feeling faint, dizzy or fainting / skin that feels cold to the touch / blue, grey or pale skin, lips or tongue" (https://www.nhs.uk/conditions/anaphylaxis/)
+- **ANA-ADR** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
+- **ANA-SIGNS** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
 - **TICK-AU** healthdirect (AU), Tick bites: "If you have a tick, you should kill it as soon as possible by freezing it with an ether-containing product. / Do not try to remove ticks with tweezers. / If the tick does not drop off, or can't be frozen, leave it in place and get urgent medical help." (https://www.healthdirect.gov.au/tick-bites) CONFLICT with UK/US: region-specific
 - **TICK-DONT** CDC, What to Do After a Tick Bite: "Do not use petroleum jelly, heat, nail polish, or other substances to try and make the tick detach from the skin." (https://www.cdc.gov/ticks/after-a-tick-bite/index.html)
 - **TICK-REMOVE** CDC, What to Do After a Tick Bite: "Grasp the tick as close to the skin's surface as possible using clean fine-tipped tweezers. / Pull tick away from the skin with steady, even pressure. Don't twist or jerk the tick. / After removing the tick, thoroughly clean the bite area and your hands with soap and water, rubbing alcohol, or hand sanitizer." (https://www.cdc.gov/ticks/after-a-tick-bite/index.html) CONFLICT: Australia (healthdirect, ASCIA) = freeze, no tweezers
-- **TICK-REMOVE-NHS** NHS, Lyme disease: "Slowly pull upwards, taking care not to squeeze or crush the tick." (https://www.nhs.uk/conditions/lyme-disease/)
-- **TICK-WATCH** NHS, Lyme disease: "The rash can appear up to 3 months after being bitten by an infected tick, but usually appears within 1 to 4 weeks. / The rash may look like a bullseye on a dartboard. / Urgent advice: Ask for an urgent GP appointment or get help from NHS 111 if: / feel unwell with flu-like symptoms" (https://www.nhs.uk/conditions/lyme-disease/)
+- **TICK-REMOVE-NHS** NHS, Lyme disease: [NHS quote withheld] (https://www.nhs.uk/conditions/lyme-disease/)
+- **TICK-WATCH** NHS, Lyme disease: [NHS quote withheld] (https://www.nhs.uk/conditions/lyme-disease/)
 - **TICK-WATCH-CDC** CDC, What to Do After a Tick Bite: "If you develop a rash or fever within several weeks of removing a tick, see your doctor:" (https://www.cdc.gov/ticks/after-a-tick-bite/index.html)
 
 </details>
@@ -387,8 +387,8 @@ Covers: placeholder heatexhaustion card
 
 <details><summary>Sources quoted</summary>
 
-- **HEX-CALL** NHS, Heat exhaustion and heatstroke: "Immediate action required: Call 999 now if: / still being unwell after 30 minutes of resting in a cool place, being cooled and drinking fluids / hot skin that's not sweating and might look red / confusion and lack of coordination / a seizure or fit / loss of consciousness" (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
-- **HEX-STEPS** NHS, Heat exhaustion and heatstroke: "Move them to a cool place. / Remove all unnecessary clothing like a jacket or socks. / Give them plenty of water to drink – you can also give them an isotonic sports drink or oral rehydration powder that you mix with water, which will help replace salt lost through sweating. / Cool their skin – spray or sponge them with cool water and fan them. Cold packs, wrapped in a cloth and put under the armpits or on the neck are good too. / They should start to cool down and feel better within 30 minutes." (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
+- **HEX-CALL** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
+- **HEX-STEPS** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
 
 </details>
 

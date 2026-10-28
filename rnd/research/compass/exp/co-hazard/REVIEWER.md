@@ -105,10 +105,10 @@ export function coHazardAnswer(query: string): string {
 
 ## 5. Symptoms and action
 - The symptom list is the CDC's exact list. It is correct, but it **omits the most dangerous signs for a lay user**: drowsiness and loss of consciousness. CO victims often fall asleep and don't wake up.
-  - The NHS lists "tiredness", "shortness of breath" and, under call 999, "have lost consciousness".
+  - The NHS lists "tiredness", [NHS quote withheld] and, under call 999, [NHS quote withheld].
 - "Get everyone out into fresh air and call emergency services right away" is correct. It matches the CPSC ("get to fresh air RIGHT AWAY") and the CDC ("call 911 … right away").
 - It **omits "don't go back in"**. People re-enter to switch off the generator or get belongings.
-  - The NHS says: "do not go back into the affected building until you have got advice".
+  - The NHS says: [NHS quote withheld].
 - **Change (T5)**, see the final text below.
 
 ## 6. Misreading risks (stressed user)

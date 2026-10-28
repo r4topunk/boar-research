@@ -9,7 +9,7 @@ Automatic checks (check_cards.py): citations on every step = PASS; safety rules 
 ## burn: Burn or scald
 Covers: saf-004, saf-010, rep-08 (placeholder burn card, shown more often under health6)
 
-**Decisions for you:** (1) Water: 'cool' (NHS, St John, healthdirect) vs 'cold' (British Red Cross). The card says cool. (2) Children: BRC and Pregnancy Birth and Baby say every burned baby or child needs a doctor; NHS says call 111 'if not sure'. The card follows BRC. (3) No cling film on the face (healthdirect only). Kept.
+**Decisions for you:** (1) Water: 'cool' (NHS, St John, healthdirect) vs 'cold' (British Red Cross). The card says cool. (2) Children: BRC and Pregnancy Birth and Baby say every burned baby or child needs a doctor; NHS says call 111 [NHS quote withheld]. The card follows BRC. (3) No cling film on the face (healthdirect only). Kept.
 
 **EN: Burn or scald**
 
@@ -43,19 +43,19 @@ Covers: saf-004, saf-010, rep-08 (placeholder burn card, shown more often under 
 
 <details><summary>Sources quoted</summary>
 
-- **BURN-CALL** NHS, Burns and scalds: "Immediate action required: Call 999 or go to A&E if: / is very large or deep / is on your face, genitals or bottom / has been caused by an acid or chemical, or by electricity" (https://www.nhs.uk/conditions/burns-and-scalds/)
+- **BURN-CALL** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
 - **BURN-CALL-HD** healthdirect (AU), Burns and scalds: "Call an ambulance or go straight to your nearest emergency department if the burn: / is deep, even if it isn't painful / involves your face, hands or genitals / has caused your skin to have patches of brown, black or white / was caused by chemicals or electricity" (https://www.healthdirect.gov.au/burns-and-scalds)
 - **BURN-CALL-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "your child has burns to their throat or airways, or is having trouble breathing" (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
-- **BURN-CHILD** British Red Cross, Burns: "Always seek medical advice for a baby or child who has been burned. / Even small burns can be potentially life-threatening to a baby or child, so always seek medical advice." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns) CONFLICT: NHS uses 111 'if not sure'
+- **BURN-CHILD** British Red Cross, Burns: "Always seek medical advice for a baby or child who has been burned. / Even small burns can be potentially life-threatening to a baby or child, so always seek medical advice." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns) CONFLICT: NHS uses 111 [NHS quote withheld]
 - **BURN-CHILD-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "All infants and children who have been burnt will need to be checked by a doctor." (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
-- **BURN-COOL** NHS, Burns and scalds: "Hold the burn or scald under cool running water for 20 minutes. Do this as soon as possible, within 3 hours of it happening. If there's no running water available, you can use cool bottled water or a wet towel." (https://www.nhs.uk/conditions/burns-and-scalds/)
+- **BURN-COOL** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
 - **BURN-COVER** British Red Cross, Burns: "Step 2. After the burn has been cooled, loosely cover it with cling film or a clean plastic bag." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
 - **BURN-COVER-HD** healthdirect (AU), Burns and scalds: "Cover the burn with a light, loose, non-stick dressing. Plastic cling film is a good choice. Do not use plastic cling film if the burn is to the face." (https://www.healthdirect.gov.au/burns-and-scalds) CONFLICT: face exception only here
-- **BURN-COVER-NHS** NHS, Burns and scalds: "When the burn or scald has cooled, lay cling film over it if you can. Do not wrap the cling film around it." (https://www.nhs.uk/conditions/burns-and-scalds/)
-- **BURN-DONT** NHS, Burns and scalds: "do not put any creams, oils or butter on burns or scalds / do not use plasters or sticky dressings to cover a burn or scald / do not burst any blisters" (https://www.nhs.uk/conditions/burns-and-scalds/)
+- **BURN-COVER-NHS** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
+- **BURN-DONT** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
 - **BURN-DONT-BRC** British Red Cross, Burns: "No. Butter, cream or toothpaste will not cool the area." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
 - **BURN-DONT-SJA** St John Ambulance (UK), Burns and scalds: "Do not use ice, creams or gels. They may cause damage and increase the risk of infection. / Do not break any blisters that may appear as this may cause infection." (https://www.sja.org.uk/first-aid-advice/burns-and-scalds/)
-- **BURN-REMOVE** NHS, Burns and scalds: "Remove any clothing or jewellery that's near the affected area – but do not remove anything that is stuck to the affected area." (https://www.nhs.uk/conditions/burns-and-scalds/)
+- **BURN-REMOVE** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
 - **BURN-WARM** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "While cooling the burn, it's important to keep the rest of the body warm. Small children can become too cold (hypothermia)." (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
 - **BURN-WARM-BRC** British Red Cross, Burns: "Avoid putting their whole body under a cold shower or in a cold bath as it could induce hypothermia." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
 
@@ -100,14 +100,14 @@ Covers: placeholder frostbite card (unvetted)
 
 <details><summary>Sources quoted</summary>
 
-- **FROST-CALL** NHS, Frostbite: "Immediate action required: Call 999 or go to A&E if: / have hard, frozen skin / have swelling and loss of feeling in the affected area / have blisters filled with blood or a clear or milky fluid / you're constantly shivering, have slurred speech, slow breathing and are tired and confused" (https://www.nhs.uk/conditions/frostbite/)
+- **FROST-CALL** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-CALL-CDC** CDC, Preventing Frostbite: "If you notice signs of frostbite on yourself or someone else, seek medical care." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
-- **FROST-DONT** NHS, Frostbite: "do not rub the affected area / do not use things like a fire, radiator, hot water bottle or heat lamp to warm the affected area / do not have a hot bath to warm yourself up" (https://www.nhs.uk/conditions/frostbite/)
+- **FROST-DONT** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-DONT-CDC** CDC, Preventing Frostbite: "Do not rub the frostbitten area with snow or massage it at all. This can cause more damage." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
 - **FROST-REFREEZE** healthdirect (AU), Frostbite: "If a frostbitten area refreezes, this can cause more damage. Only rewarm the area when you are in a warm dry place." (https://www.healthdirect.gov.au/frostbite) ok (single source)
-- **FROST-REWARM** NHS, Frostbite: "place the affected body part in warm (not hot) water, dry it and put on a light dressing, such as a gauze bandage, if you have one / if you're with someone who has frostbite, place the affected body part in your lap and gently warm it with your hands / put your hands in your armpits (if your hands are affected)" (https://www.nhs.uk/conditions/frostbite/)
+- **FROST-REWARM** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-REWARM-CDC** CDC, Preventing Frostbite: "Put the areas affected by frostbite in warm—not hot—water (the temperature should be comfortable to the touch for unaffected parts of the body)." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html) CONFLICT (figure): SJA ~40 °C, healthdirect 40–42 °C; WMS 37–39 °C not fetchable
-- **FROST-SHELTER** NHS, Frostbite: "go indoors or somewhere sheltered as quickly as possible / remove clothing and jewellery, such as gloves, rings and boots from the affected area / wrap yourself in something warm like a blanket, sleeping bag or dry towel" (https://www.nhs.uk/conditions/frostbite/)
+- **FROST-SHELTER** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-SHELTER-CDC** CDC, Preventing Frostbite: "2) Get them into a warm room or shelter. / 3) Remove any wet clothing." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
 - **FROST-WALK** CDC, Preventing Frostbite: "Unless absolutely necessary, do not walk on feet or toes that show signs of frostbite—this increases the damage." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
 
@@ -147,11 +147,11 @@ Covers: placeholder heatstroke card (unvetted)
 <details><summary>Sources quoted</summary>
 
 - **HEAT-CALL** British Red Cross, Heatstroke: "If someone has heatstroke, call 999 immediately. Heatstroke is a medical emergency and can quickly become life-threatening." (https://www.redcross.org.uk/first-aid/learn-first-aid/heatstroke)
-- **HEAT-CALL-NHS** NHS, Heat exhaustion and heatstroke: "Immediate action required: Call 999 now if: / still being unwell after 30 minutes of resting in a cool place, being cooled and drinking fluids / hot skin that's not sweating and might look red (this can be harder to see on brown or black skin) / confusion and lack of coordination / a seizure or fit" (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
-- **HEAT-COOL** NHS, Heat exhaustion and heatstroke: "Wrap the person in a cool, wet sheet, or fan them or sponge them down with cold water while you wait for help to arrive. / Move them to a cool place." (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
+- **HEAT-CALL-NHS** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
+- **HEAT-COOL** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
 - **HEAT-COOL-SJA** St John Ambulance (UK), Heatstroke: "If available, use cold packs placed in the armpits and around the neck." (https://www.sja.org.uk/first-aid-advice/heatstroke/) CONFLICT (placement): healthdirect 'cheeks, palms and soles'
 - **HEAT-FLUIDS** healthdirect (AU), Heatstroke: "Give them sips of cool fluid if they are conscious. / If they are unconscious, place them on their side with their mouth down and their chin up. You may need to do CPR." (https://www.healthdirect.gov.au/heatstroke) ok (single source for the fluid rule)
-- **HEAT-UNCONSC** NHS, Heat exhaustion and heatstroke: "If they lose consciousness while you're waiting for help, put them in the recovery position and tell the ambulance service. Check their breathing and pulse and carry out CPR if they show no sign of life." (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
+- **HEAT-UNCONSC** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
 
 </details>
 
@@ -160,7 +160,7 @@ Sign-off: [ ] EN  [ ] PT  [ ] ES  [ ] clinical review done  · notes: ____
 ## nosebleed: Nosebleed
 Covers: placeholder nosebleed card (unvetted)
 
-**Decisions for you:** (1) When to get help: NHS says A&E after 10–15 minutes; St John says 999 after 30 minutes. The card follows NHS. (2) Blood thinners: NHS puts them in the 'see a GP' tier, not A&E. Not on the card. (3) Ice pack on the top of the nose: NHS says the evidence is weak. Left out.
+**Decisions for you:** (1) When to get help: NHS says A&E after 10–15 minutes; St John says 999 after 30 minutes. The card follows NHS. (2) Blood thinners: NHS puts them in the [NHS quote withheld] tier, not A&E. Not on the card. (3) Ice pack on the top of the nose: NHS says the evidence is weak. Left out.
 
 **EN: Nosebleed**
 
@@ -188,12 +188,12 @@ Covers: placeholder nosebleed card (unvetted)
 
 <details><summary>Sources quoted</summary>
 
-- **NOSE-AFTER** NHS, Nosebleed: "After a nosebleed, to reduce the chance of another nosebleed, try not to do the following for 24 hours: / blow your nose / pick your nose / drink hot drinks or alcohol / do any heavy lifting or strenuous exercise / lie down flat" (https://www.nhs.uk/conditions/nosebleed/)
+- **NOSE-AFTER** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
 - **NOSE-BACK** St John Ambulance (UK), Nosebleed: "Do not tell them to lean their head back as this could cause the blood to trickle down the back of their throat and block the airway." (https://www.sja.org.uk/first-aid-advice/nosebleed/)
-- **NOSE-CALL** NHS, Nosebleed: "Immediate action required: Go to A&E if: / your nosebleed lasts longer than 10 to 15 minutes / the bleeding seems excessive / you're swallowing a large amount of blood that makes you vomit / the bleeding started after a blow to your head / you're feeling weak or dizzy / you're having difficulty breathing" (https://www.nhs.uk/conditions/nosebleed/) CONFLICT: SJA = 999 after 30 min
-- **NOSE-PINCH** NHS, Nosebleed: "pinch your nose just above your nostrils for 10 to 15 minutes / breathe through your mouth" (https://www.nhs.uk/conditions/nosebleed/)
+- **NOSE-CALL** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/) CONFLICT: SJA = 999 after 30 min
+- **NOSE-PINCH** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
 - **NOSE-PINCH-SJA** St John Ambulance (UK), Nosebleed: "Ask them to breathe through their mouth and pinch the soft part of their nose." (https://www.sja.org.uk/first-aid-advice/nosebleed/)
-- **NOSE-POSITION** NHS, Nosebleed: "sit down and lean forward, with your head tilted forward and your mouth open" (https://www.nhs.uk/conditions/nosebleed/)
+- **NOSE-POSITION** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
 
 </details>
 
@@ -285,11 +285,11 @@ Covers: placeholder animalbite card (unvetted)
 
 <details><summary>Sources quoted</summary>
 
-- **BITE-BLEED** NHS, Animal and human bites: "press a dry dressing or clean cloth firmly onto the wound to stop the bleeding if it's bleeding heavily / after cleaning the wound, gently pat it dry and cover it with a clean dressing" (https://www.nhs.uk/conditions/animal-and-human-bites/)
+- **BITE-BLEED** NHS, Animal and human bites: [NHS quote withheld] (https://www.nhs.uk/conditions/animal-and-human-bites/)
 - **BITE-CALL** healthdirect (AU), Dog, cat, bat and human bites: "Go to the emergency department of your nearest hospital if: / your wound is large or deep / you were bitten on your face or head / you can't stop the bleeding" (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT: NHS puts a face bite in the 111 tier
 - **BITE-CARE** healthdirect (AU), Dog, cat, bat and human bites: "If you are bitten and the skin is broken, get medical advice immediately to avoid developing tetanus." (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT (tier): NHS lists criteria (hands, feet, face, head, tetanus > 10 y, hot/swollen) for 111
-- **BITE-DRIVE** NHS, Animal and human bites: "Do not drive to A&E. Ask someone to drive you or call 999 and ask for an ambulance." (https://www.nhs.uk/conditions/animal-and-human-bites/)
-- **BITE-RABIES** NHS, Rabies: "Urgent advice: Get medical help immediately if: / you've been bitten or scratched by an animal while you're abroad / you've been bitten or scratched by a bat in the UK / If you're abroad, get medical help as soon as possible. Do not wait until you get back to the UK." (https://www.nhs.uk/conditions/rabies/)
+- **BITE-DRIVE** NHS, Animal and human bites: [NHS quote withheld] (https://www.nhs.uk/conditions/animal-and-human-bites/)
+- **BITE-RABIES** NHS, Rabies: [NHS quote withheld] (https://www.nhs.uk/conditions/rabies/)
 - **BITE-RABIES-THP** TravelHealthPro (NaTHNaC, UKHSA-funded), Rabies: "Get urgent medical help, even if the wound or incident seems very trivial. Seek medical attention locally, do not wait until you return to the UK." (https://travelhealthpro.org.uk/factsheets/rabies)
 - **BITE-WASH** WHO, Rabies (fact sheet): "If a person is bitten or scratched by a potentially rabid animal, they should immediately and always wash the wound with water and soap for at least 15 minutes and seek medical attention." (https://www.who.int/news-room/fact-sheets/detail/rabies)
 - **BITE-WASH-CDC** CDC, Preventing Rabies: "Wash any wounds immediately with soap and water for 15 minutes to flush out any virus." (https://www.cdc.gov/rabies/prevention/index.html)

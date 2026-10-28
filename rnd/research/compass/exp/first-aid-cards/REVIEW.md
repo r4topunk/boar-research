@@ -34,9 +34,9 @@ Covers: saf-011 (CO at home, PT; the 4B lost 'leave + call' under the health wid
 
 <details><summary>Sources quoted</summary>
 
-- **CO-CALL** NHS, Carbon monoxide poisoning: "Immediate action required: Call 999 or go to A&E if: / You think you or someone else has been exposed to carbon monoxide and: / are finding it hard to breathe / have suddenly become confused / have lost consciousness / are feeling weak / have chest or muscle pain / Urgent advice: Call NHS 111 if: / you think you might have symptoms of carbon monoxide poisoning / Do not drive to A&E." (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/)
+- **CO-CALL** NHS, Carbon monoxide poisoning: [NHS quote withheld] (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/)
 - **CO-CALL-CDC** CDC NIOSH, Carbon Monoxide Hazards at Work: "Call 911 or another local emergency number for medical attention or assistance if symptoms occur" (https://www.cdc.gov/niosh/carbon-monoxide/about/index.html) † summary-only
-- **CO-OUT** NHS, Carbon monoxide poisoning: "stop using appliances you think might be making carbon monoxide (such as a boiler, cooker or heater) if you can / go outside / get medical advice as soon as possible – do not go back into the affected building until you have got advice" (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/)
+- **CO-OUT** NHS, Carbon monoxide poisoning: [NHS quote withheld] (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/)
 
 </details>
 
@@ -76,7 +76,7 @@ Covers: vit-loc1-026, vit-hm2-017 (rescued child not breathing; myth: drain wate
 
 <details><summary>Sources quoted</summary>
 
-- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: "If a choking child is, or becomes, unconscious: / call 999, putting the phone on speakerphone so your hands are free / start cardiopulmonary resuscitation (CPR)" (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **DROWN-1** Saudi Ministry of Health, Drowning First Aid Steps: "Do not try to remove water from the mouth or press on the chest/abdomen—this is ineffective and can cause injury. / CPR takes priority over attempts to “expel water.”" (https://www.moh.gov.sa/en/awarenessplateform/FirstAid/Pages/Drowning.aspx)
 - **DROWN-1b** St John Ambulance NSW, Rescuing a drowning person: "Avoid delays or interruptions to CPR. Do not empty a distended stomach by applying external pressure. It is not necessary to drain clear water or frothy fluid that can build up in the upper airway during CPR." (https://stjohnnsw.com.au/first-aid-guides/rescuing-a-drowning-person/)
 - **DROWN-2** St John Ambulance (UK), Drowning: "Check the airway is open before giving five initial rescue breaths. / After 30 chest compressions, give two rescue breaths." (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/) CONFLICT: 5 initial breaths (SJA, British Red Cross) vs 2 (Saudi MOH)
@@ -125,10 +125,10 @@ Covers: vit-hm2-011, vit-hm3-014 (myth: pee on it)
 
 <details><summary>Sources quoted</summary>
 
-- **FA-JELLY-HOT** NHS, Jellyfish and other sea creature stings: "soak the area in very warm water (as hot as can be tolerated) for at least 30 minutes / do not pee on the sting / do not apply ice or a cold pack" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) ok (2026-10-02; re-seen 2026-10-03)
+- **FA-JELLY-HOT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) ok (2026-10-02; re-seen 2026-10-03)
 - **FA-JELLY-VINEGAR** healthdirect (AU), Jellyfish stings: "remove any tentacles… pour vinegar on the sting site and go to hospital (tropical) / Do not put vinegar on the sting. (bluebottle)" (https://www.healthdirect.gov.au/jellyfish-stings) ok (2026-10-02)
-- **JELLY-CALL** NHS, Jellyfish and other sea creature stings: "Immediate action required: Go to A&E or call 999 if: / you've been stung by a sea creature and have: / difficulty breathing / chest pain / fits or seizures / severe swelling around the affected area / severe bleeding / vomiting / lightheadedness or loss of consciousness" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
-- **JELLY-TENT** NHS, Jellyfish and other sea creature stings: "remove any spines from the skin using tweezers or the edge of a bank card / do not touch any tentacles or spines with your bare hands / rinse the affected area with seawater (not fresh water)" (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
+- **JELLY-CALL** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
+- **JELLY-TENT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
 
 </details>
 
@@ -163,10 +163,10 @@ Covers: vit-hm3-049 (myth: spoon in the mouth)
 
 <details><summary>Sources quoted</summary>
 
-- **FA-SEIZ** NHS, What to do if someone has a seizure (fit): "cushion their head if they're on the ground / turn them on to their side after their convulsions stop / Do not put anything in their mouth, including your fingers." (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/) ok (2026-10-02; mouth line re-seen 2026-10-03)
+- **FA-SEIZ** NHS, What to do if someone has a seizure (fit): [NHS quote withheld] (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/) ok (2026-10-02; mouth line re-seen 2026-10-03)
 - **FA-SEIZ-HOLD** CDC, First aid for seizures: "Don't hold the person down or stop their movements." (https://www.cdc.gov/epilepsy/first-aid-for-seizures/index.html) † summary-only (2026-10-02)
-- **SEIZ-CALL** NHS, What to do if someone has a seizure (fit): "Call 999 and ask for an ambulance if: / it's the first time someone has had a seizure / … / the seizure lasts more than 5 minutes, if you do not know how long their seizures usually last / the person does not regain full consciousness, or has several seizures without regaining consciousness / the person is seriously injured during the seizure / the person has difficulty breathing after the seizure" (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/)
-- **SEIZ-TIME** NHS, What to do if someone has a seizure (fit): "note the time the seizure starts and finishes" (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/)
+- **SEIZ-CALL** NHS, What to do if someone has a seizure (fit): [NHS quote withheld] (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/)
+- **SEIZ-TIME** NHS, What to do if someone has a seizure (fit): [NHS quote withheld] (https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/)
 
 </details>
 
@@ -208,10 +208,10 @@ Covers: vit-hm2-021 (type 1, shaky and sweaty, can swallow; myth: give insulin)
 
 - **FA-HYPO-15** CDC, Treatment of Low Blood Sugar (Hypoglycemia): "Have 15 grams of carbs, then wait 15 minutes. Check your blood sugar again." (https://www.cdc.gov/diabetes/treatment/treatment-low-blood-sugar-hypoglycemia.html) † summary-only (2026-10-02)
 - **FA-HYPO-15b** healthdirect (AU), Hypoglycaemia: "Have about 15g of fast-acting carbohydrate." (https://www.healthdirect.gov.au/hypoglycaemia) ok (2026-10-02)
-- **HYPO-AFTER** NHS, Low blood sugar (hypoglycaemia): "Once your symptoms have improved and your blood sugar is above 4mmol/L, eat something that will keep your blood sugar up for longer, such as some biscuits, a sandwich, or your next meal if it's due." (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (NHS page review overdue)
-- **HYPO-GLUCAGON** NHS, Low blood sugar (hypoglycaemia): "Do not give them any food or drink as they will not be able to swallow safely. / Put them into the recovery position. / Give them a glucagon injection straight away, if one is available and you know how to use it. / Call 999 if: / a glucagon injection is not available or you do not know how to use it / you've given a glucagon injection and they have not recovered within 10 minutes" (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/)
+- **HYPO-AFTER** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (NHS page review overdue)
+- **HYPO-GLUCAGON** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/)
 - **HYPO-INSULIN** St John New Zealand, Diabetes (first aid library): "DO NOT try to give the person insulin – that can be dangerous." (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) single source
-- **HYPO-SUGARY-NHS** NHS, Low blood sugar (hypoglycaemia): "Eat or drink something that will raise your blood sugar quickly, such as a small glass of fruit juice or sugary fizzy drink, 5 glucose or dextrose tablets, 4 large jelly babies, or 2 tubes of glucose gel." (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (curl); supports 'regular (not diet or zero)' only indirectly, via 'sugary'
+- **HYPO-SUGARY-NHS** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (curl); supports [NHS quote withheld] only indirectly, via 'sugary'
 - **HYPO-UNRESP-CALL** St John New Zealand, Diabetes (first aid library): "Call 111 for an ambulance if: / The person is unresponsive or unconscious" (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) ok (via SOURCES.raw.md HYPO-GLUCAGON note)
 
 </details>
@@ -296,12 +296,12 @@ Covers: requested: choking child (Sonar repro 'Criança engasgada')
 <details><summary>Sources quoted</summary>
 
 - **CHOKE-ADULT-SJA** St John Ambulance (UK), Adult choking: "give five abdominal thrusts. To do this, stand behind them and put your arms around their waist. Place one hand in a clenched fist between their belly button and the bottom of their chest. With your other hand, grasp your fist and pull sharply inwards and upwards up to five times." (https://www.sja.org.uk/get-advice/first-aid-advice/choking/adult-choking/) ok (curl); NHS has no adult choking page (404), SJA used instead
-- **CHOKE-CHILD-1** NHS, How to stop a child from choking: "If your child's coughing loudly, encourage them to carry on coughing to bring up what they're choking on and don't leave them." (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-1** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-CHILD-2** British Red Cross, Choking child: "1. Give up to five back blows. / Hit them firmly on their back between the shoulder blades." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-child)
-- **CHOKE-CHILD-3** NHS, How to stop a child from choking: "stand or kneel behind your child, place your arms under the child's arms and around their upper abdomen / clench your fist and place it between the navel and ribs / grasp this hand with your other hand and pull sharply inwards and upwards / repeat up to 5 times" (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-CHILD-4** NHS, How to stop a child from choking: "Call 999 if the blockage doesn't come out after trying back blows and either chest or abdominal thrusts. Keep trying this cycle until help arrives. / Even if the object has come out, get medical help." (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-CHILD-5a** NHS, How to stop a child from choking: "If you can see the object, try to remove it. Don't poke blindly or repeatedly with your fingers." (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: "If a choking child is, or becomes, unconscious: / call 999, putting the phone on speakerphone so your hands are free / start cardiopulmonary resuscitation (CPR)" (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-3** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-4** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-5a** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 
 </details>
 
@@ -341,9 +341,9 @@ Covers: requested: choking infant (new engine key; needs the trigger split in tr
 
 <details><summary>Sources quoted</summary>
 
-- **CHOKE-CHILD-5a** NHS, How to stop a child from choking: "If you can see the object, try to remove it. Don't poke blindly or repeatedly with your fingers." (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: "If a choking child is, or becomes, unconscious: / call 999, putting the phone on speakerphone so your hands are free / start cardiopulmonary resuscitation (CPR)" (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-INFANT-1** NHS, How to stop a child from choking: "sit down and lay your baby face down along your thigh or forearm, supporting their head and neck with your hand / give up to 5 sharp back blows with the heel of your hand in the middle of your baby's back between their shoulder blades" (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-5a** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-CHILD-5b** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
+- **CHOKE-INFANT-1** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-INFANT-2** British Red Cross, Choking baby: "Place two fingers in the middle of their chest just below the nipples. Push sharply downwards up to five times." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby) CONFLICT: two fingers (NHS, BRC) vs two-thumb encircling (SJA)
 - **CHOKE-INFANT-3** British Red Cross, Choking baby: "Abdominal thrusts are used to help choking children and adults only. Using abdominal thrusts on a baby could damage their internal organs, which are fragile and still developing." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby)
 - **CHOKE-INFANT-4** St John Ambulance (UK), Baby choking: "Call 999 or 112 for emergency help if the obstruction hasn't cleared. / Take the baby with you to make the call. / All babies who have received chest thrusts should be seen in hospital." (https://www.sja.org.uk/get-advice/first-aid-advice/choking/baby-choking/)
@@ -382,8 +382,8 @@ Covers: requested: swallowed battery/coin (Sonar repro 'Minha filha engoliu uma 
 
 - **BATT-1** CAPT (Child Accident Prevention Trust), Button Batteries: In an emergency: "Take them straight to the A&E department at your local hospital or dial 999 for an ambulance. / Trust your instincts and act fast – do not wait to see if any symptoms develop." (https://capt.org.uk/button-batteries-in-an-emergency/)
 - **BATT-2** CAPT (Child Accident Prevention Trust), Button Batteries: In an emergency: "Do not let your child eat or drink. / Do not make them sick." (https://capt.org.uk/button-batteries-in-an-emergency/)
-- **COIN-1** NHS West Yorkshire Healthier Together, Swallowed an object: "If you are concerned your child has swallowed an object such as a coin, toy, magnet or battery you should take them to the nearest Accident and Emergency Department." (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object) ok (regional NHS; no national page)
-- **COIN-1b** NHS West Yorkshire Healthier Together, Swallowed an object: "Go to the nearest Accident and Emergency Department or phone 999: Is choking / Drooling more than normal / Starts gagging, vomiting or retching / Working hard to breathe" (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object)
+- **COIN-1** NHS West Yorkshire Healthier Together, Swallowed an object: [NHS quote withheld] (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object) ok (regional NHS; no national page)
+- **COIN-1b** NHS West Yorkshire Healthier Together, Swallowed an object: [NHS quote withheld] (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object)
 
 </details>
 
@@ -423,11 +423,11 @@ Covers: Sonar (b): 'criança picada por abelha e o rosto está inchando' fires b
 
 <details><summary>Sources quoted</summary>
 
-- **ANAPH-ADR** NHS, Anaphylaxis: "Use an adrenaline auto-injector (such as an EpiPen) if you have one … / If your symptoms have not improved after 5 minutes, use a 2nd adrenaline auto-injector." (https://www.nhs.uk/conditions/anaphylaxis/)
-- **ANAPH-LIE** NHS, Anaphylaxis: "Lie down – you can raise your legs, and if you're struggling to breathe, raise your shoulders or sit up slowly … / Do not stand or walk at any time, even if you feel better." (https://www.nhs.uk/conditions/anaphylaxis/)
-- **BEE-ANAPH-SIGNS** NHS, Insect bites and stings: "Immediate action required: Call 999 if: / your lips, mouth, throat or tongue suddenly become swollen / you're breathing very fast or struggling to breathe … / your throat feels tight or you're struggling to swallow / you suddenly become very confused, drowsy or dizzy / someone faints and cannot be woken up" (https://www.nhs.uk/conditions/insect-bites-and-stings/)
-- **BEE-SCRAPE** NHS, Insect bites and stings: "Brush or scrape the stinger sideways with your fingernail or the edge of a bank card. / Do not use tweezers to pull out a stinger as you could squeeze poison out of it." (https://www.nhs.uk/conditions/insect-bites-and-stings/) ok (NHS page review overdue)
-- **BEE-WASH-COLD** NHS, Insect bites and stings: "Wash the area with soap and water. / put an ice pack wrapped in a cloth, or a clean cloth soaked in cold water, on the bite or sting for at least 20 minutes, if it's swollen" (https://www.nhs.uk/conditions/insect-bites-and-stings/)
+- **ANAPH-ADR** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
+- **ANAPH-LIE** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
+- **BEE-ANAPH-SIGNS** NHS, Insect bites and stings: [NHS quote withheld] (https://www.nhs.uk/conditions/insect-bites-and-stings/)
+- **BEE-SCRAPE** NHS, Insect bites and stings: [NHS quote withheld] (https://www.nhs.uk/conditions/insect-bites-and-stings/) ok (NHS page review overdue)
+- **BEE-WASH-COLD** NHS, Insect bites and stings: [NHS quote withheld] (https://www.nhs.uk/conditions/insect-bites-and-stings/)
 
 </details>
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.1, 2026-10-28
+
+- v1.1.1: remaining NHS quotes withheld (52 files in the safety rules, first-aid-cards, fa-cards, co-hazard and bench/safety folders; organisation name and URL kept; affected sha256 pins re-pinned, see `docs/REDACTION.md` and `docs/REDACTION-HASHES.tsv`).
+
 ## v1.1, 2026-10-27: held-out sets retired and published
 
 - Author decision after submission: open everything that is not private to him or to the app maintainer. No git history (still one snapshot).

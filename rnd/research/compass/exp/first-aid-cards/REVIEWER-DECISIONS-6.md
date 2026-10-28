@@ -4,7 +4,7 @@ TL;DR: **10 decisions** made (the 9 r6 flags plus the MedlinePlus licence decisi
 
 Principles: same as REVIEWER-DECISIONS.md. Text must be safe for an untrained, stressed bystander in any country. Where sources conflict, the more conservative or region-neutral wording wins, and current 2025 resuscitation guidance (ERC/RCUK; AHA where readable) beats older lay pages. ES uses usted, neutral Latin-American Spanish. PT has no inline numbers. Every card says when to call. No dosing.
 
-Inputs (sha256): `round6.py` 7b63e59defad…, `REVIEW-6.md` 0cf179c1bce0…, `SOURCES.raw-6.md` 40b71486ef34…, `conditionCards.v1.json` 15b0be37cc47…, `cards.json` 43246fc429cb…, `REVIEWER-DECISIONS.json` d9eecb1dfebf…. The round-6 cards are not in conditionCards.v1.json yet; the text reviewed is round6.py `build()`, which is the same as REVIEW-6.md.
+Inputs (sha256): `round6.py` 9048ae3a3b8b…, `REVIEW-6.md` 15d437a03979…, `SOURCES.raw-6.md` d06e6f25e7a9…, `conditionCards.v1.json` 15b0be37cc47…, `cards.json` 43246fc429cb…, `REVIEWER-DECISIONS.json` d9eecb1dfebf…. The round-6 cards are not in conditionCards.v1.json yet; the text reviewed is round6.py `build()`, which is the same as REVIEW-6.md.
 
 ## Decisions (10)
 

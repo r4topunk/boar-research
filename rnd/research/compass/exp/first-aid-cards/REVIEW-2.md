@@ -44,16 +44,16 @@ Covers: Sonar: the placeholder heartattack card (with aspirin dosing) fires on 5
 <details><summary>Sources quoted</summary>
 
 - **HEART-ASPIRIN** St John Ambulance (UK), Heart attack: "Give them one aspirin tablet (300mg) and ask them to chew it slowly. / Do not give aspirin to the casualty if they are under 16 or if they are allergic to it." (https://www.sja.org.uk/first-aid-advice/heart-attack/) CONFLICT: chew + under-16 only on SJA (BRC: chew); NHS/BHF: 300 mg + allergy only
-- **HEART-ASPIRIN-NHS** NHS, Heart attack: "Take aspirin (300mg) if you have any – do not give aspirin to someone who has an aspirin allergy." (https://www.nhs.uk/conditions/heart-attack/)
+- **HEART-ASPIRIN-NHS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-CALL** British Heart Foundation, Heart attack: "Call 999 if you think you or someone you know is having a heart attack. / It’s important you get medical attention immediately. Do not worry about wasting anyone’s time. A heart attack is a medical emergency." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
-- **HEART-CALL-NHS** NHS, Heart attack: "Immediate action required: Call 999 if: / you have chest pain that feels tight or like squeezing on your chest / someone has passed out and is not responding normally" (https://www.nhs.uk/conditions/heart-attack/)
+- **HEART-CALL-NHS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-CALM** British Heart Foundation, Heart attack: "sit down and stay calm / wait for the ambulance." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
 - **HEART-CPR** St John Ambulance (UK), CPR: "If they are not breathing normally, ask a helper to call 999 or 112 for an ambulance while you start CPR. Ask a helper to find and bring a defibrillator, if available. / Do not leave the casualty to look for a defibrillator yourself." (https://www.sja.org.uk/first-aid-advice/cpr/)
 - **HEART-CPR-BHF** British Heart Foundation, How to do CPR: "Call 999. If the person is unconscious and not breathing, or not breathing normally, start CPR. / Use a defibrillator as soon as you can. Follow its instructions carefully while you continue to give CPR." (https://www.bhf.org.uk/how-you-can-help/how-to-save-a-life/how-to-do-cpr)
-- **HEART-DRIVE** NHS, Heart attack: "Do not drive yourself to A&E." (https://www.nhs.uk/conditions/heart-attack/)
+- **HEART-DRIVE** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-DRIVE-BHF** British Heart Foundation, Heart attack: "Do not try and take yourself to hospital, as the ambulance team will give you the best care and do tests on the way." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
-- **HEART-REST** NHS, Heart attack: "Sit and rest on the floor in a comfortable position, with your knees bent and your back supported. If you cannot do this, you can also sit on a chair. / Keep checking someone who may be having a heart attack to make sure they're still responding and breathing." (https://www.nhs.uk/conditions/heart-attack/)
-- **HEART-SIGNS** NHS, Heart attack: "chest pain which may feel like crushing or squeezing on your chest – the pain may also spread to your arm, neck and jaw / feeling short of breath / feeling sick (nausea) or being sick (vomiting) / sweating" (https://www.nhs.uk/conditions/heart-attack/)
+- **HEART-REST** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
+- **HEART-SIGNS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-SIGNS-CDC** CDC, About Heart Attack Symptoms, Risk, and Recovery: "Pain or discomfort in the jaw, neck, or back. / Pain or discomfort in one or both arms or shoulders. / Shortness of breath. / You may also break into a cold sweat." (https://www.cdc.gov/heart-disease/about/heart-attack.html)
 
 </details>
@@ -94,10 +94,10 @@ Covers: requested: head injury (and Sonar's 'Criança caiu e está sem responder
 
 <details><summary>Sources quoted</summary>
 
-- **HEAD-111** NHS, Head injury and concussion: "Urgent advice: Get help from NHS 111 if: / are being sick (vomiting) / feel dizzy / have a condition that thins your blood or take medicine that thins your blood / were drinking alcohol or taking drugs at the time of the injury / If you’re told to go to A&E, do not drive yourself there if you have hit your head." (https://www.nhs.uk/conditions/head-injury-and-concussion/) CONFLICT (tier): vomiting = NHS 111 (England); 'more than once' = emergency (healthdirect, CDC 'repeatedly'); any vomiting = 999 (BRC)
-- **HEAD-999** NHS, Head injury and concussion: "Immediate action required: Call 999 if: / has been knocked out and has not woken up / cannot stay awake or keep their eyes open / has a fit (seizure) / has fallen from a height of more than 1 metre or 5 stairs / has problems with their vision or hearing / has clear fluid coming from their ears or nose / is bleeding from their ears or has bruising behind their ears / has new numbness or weakness in any part of their body / has problems with walking, balance, understanding, speaking or writing / hit their head at high speed, such as in a road accident / their behaviour has changed, like being more irritable or distracted, or losing interest in things around them" (https://www.nhs.uk/conditions/head-injury-and-concussion/)
+- **HEAD-111** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/) CONFLICT (tier): vomiting = NHS 111 (England); [NHS quote withheld] = emergency (healthdirect, CDC 'repeatedly'); any vomiting = 999 (BRC)
+- **HEAD-999** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/)
 - **HEAD-COLD-BRC** British Red Cross, Head injury: "Never place ice directly on the skin, as it’s too cold." (https://www.redcross.org.uk/first-aid/learn-first-aid/head-injury)
-- **HEAD-HOME** NHS, Head injury and concussion: "hold an ice pack (or a bag of frozen peas) wrapped in a tea towel to the area regularly for short periods in the first few days to bring down any swelling / rest and avoid stress – you or your child do not need to stay awake if you're tired / make sure an adult stays with you or your child for at least the first 24 hours / do not play contact sports for at least 3 weeks – children should avoid rough play for a few days / do not drink alcohol until you're feeling better" (https://www.nhs.uk/conditions/head-injury-and-concussion/)
+- **HEAD-HOME** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/)
 - **HEAD-NECK** St John Ambulance (UK), Spinal injury: "Reassure the casualty. Do not move them and do not tell them to move, unless they are in immediate danger. / Steady and support their head so that their head, neck, and spine are in a straight line." (https://www.sja.org.uk/first-aid-advice/spinal-injury/)
 - **HEAD-NECK-SJA** St John Ambulance (UK), Head injury: "Try not to move the casualty from the position you found them in as they may have a spinal injury. Only move them if they are in danger." (https://www.sja.org.uk/first-aid-advice/head-injury/)
 - **HEAD-RECOVERY** St John Ambulance (UK), Recovery position: "It’s safe to place someone in the recovery position who is not responding to you but is breathing normally. / If you suspect someone has a spinal injury and they cannot maintain an open airway, you need to place them in the recovery position. / Try to keep the head and spine in a straight line where possible while maintaining an open airway." (https://www.sja.org.uk/first-aid-advice/recovery-position/) CONFLICT: BRC turns every unresponsive breathing person onto their side even with a suspected neck injury; SJA only if the airway can't be kept open
@@ -197,18 +197,18 @@ Covers: Sonar: the placeholder hypothermia card fires on dng-002 / saf-002; repl
 
 <details><summary>Sources quoted</summary>
 
-- **HYPOTH-CALL** NHS, Hypothermia: "Immediate action required: Go to A&E or call 999 if: / you think you or your child have hypothermia / Do not drive to A&E. Ask someone to drive you or call 999 and ask for an ambulance." (https://www.nhs.uk/conditions/hypothermia/)
+- **HYPOTH-CALL** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 - **HYPOTH-CPR** CDC, Preventing Hypothermia: "Perform CPR, even if the person appears dead. CPR should continue until the person responds or medical aid becomes available. Keep warming the person while performing CPR." (https://www.cdc.gov/winter-weather/prevention/index.html)
-- **HYPOTH-DONT** NHS, Hypothermia: "do not use a hot bath, hot water bottle or heat lamp to warm them up / do not rub their arms, legs, feet or hands / do not give them alcohol to drink" (https://www.nhs.uk/conditions/hypothermia/)
+- **HYPOTH-DONT** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 - **HYPOTH-DONT-SJA** St John Ambulance (UK), Hypothermia: "Do not place any direct heat such as hot water bottles or fires near a casualty as this can cause burns." (https://www.sja.org.uk/first-aid-advice/hypothermia/)
-- **HYPOTH-DRINK** NHS, Hypothermia: "give them a warm non-alcoholic drink and some sugary food like chocolate if they're fully awake" (https://www.nhs.uk/conditions/hypothermia/)
+- **HYPOTH-DRINK** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 - **HYPOTH-DRINK-CDC** CDC, Preventing Hypothermia: "Warm drinks can help increase body temperature, but do not give alcoholic drinks. Do not try to give beverages to an unconscious person." (https://www.cdc.gov/winter-weather/prevention/index.html)
 - **HYPOTH-ES-CDC** CDC en español, Cómo prevenir la hipotermia: "Las bebidas calientes pueden ayudar a aumentar la temperatura del cuerpo, pero no le dé bebidas alcohólicas. No intente darle bebidas a una persona inconsciente." (https://www.cdc.gov/winter-weather/es/prevention/como-prevenir-la-hipotermia.html)
 - **HYPOTH-GENTLE** CDC, Preventing Hypothermia: "In this case, handle the person gently, and get emergency assistance immediately." (https://www.cdc.gov/winter-weather/prevention/index.html) ok (said for severe hypothermia)
-- **HYPOTH-SHELTER** NHS, Hypothermia: "move the person indoors or somewhere sheltered as quickly as possible" (https://www.nhs.uk/conditions/hypothermia/) ok (NHS page review overdue)
+- **HYPOTH-SHELTER** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/) ok (NHS page review overdue)
 - **HYPOTH-SHELTER-SJA** St John Ambulance (UK), Hypothermia: "If you are unable to get them indoors, try to take them to a sheltered place as quickly as possible, shielding the casualty from the wind. / Try to protect the casualty from the ground." (https://www.sja.org.uk/first-aid-advice/hypothermia/)
 - **HYPOTH-SKIN** CDC, Preventing Hypothermia: "You can also use skin-to-skin contact under loose, dry layers of blankets, clothing, towels, or sheets." (https://www.cdc.gov/winter-weather/prevention/index.html)
-- **HYPOTH-WET** NHS, Hypothermia: "remove any wet clothing, wrap them in a blanket, sleeping bag or dry towel, making sure their head is covered" (https://www.nhs.uk/conditions/hypothermia/)
+- **HYPOTH-WET** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 
 </details>
 
