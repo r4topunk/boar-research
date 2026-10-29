@@ -1,6 +1,6 @@
 # RatLab decision log
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -143,7 +143,7 @@ Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what wa
 ## 2026-10-04
 
 <!-- lint:exempt:start -->
-- [D-031] 2026-10-04 · Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team · why: token budget; no 12 GB phone. · status: superseded (4B levers exhausted by 10-05; deep tier reopened 10-06)
+- [D-031] 2026-10-04 · Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team · why: work budget; no 12 GB phone. · status: superseded (4B levers exhausted by 10-05; deep tier reopened 10-06)
   - alternatives considered: keep deep tier active
   - what happened next: 4B levers exhausted by 10-05; deep tier reopened 10-06
   - facts: [F-704]
@@ -384,7 +384,7 @@ Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what wa
   - what happened next: 7 + 2 + 2 packs published
   - facts: [F-1036]
 - [D-085] 2026-10-13 · No cap on Haiku judge calls (Rule 25) · why: Haiku is cheap triage; idle caps cost machine time. · status: kept
-  - alternatives considered: weekly Haiku 400 cap
+  - alternatives considered: [usage detail removed]
   - what happened next: 720-call scoring passes became routine
   - facts: [F-876]
 - [D-086] 2026-10-13 · Run an oracle/ceiling cell (ORACLE-ST) before more pre-processing levers · why: decide whether reader or retrieval is the wall. · status: kept
@@ -407,7 +407,7 @@ Public decisions of the research (2026-09-26 → 2026-10-25), ADR-style: what wa
 ## 2026-10-14
 
 <!-- lint:exempt:start -->
-- [D-091] 2026-10-14 · Run doc2query PoC overnight on the MacBook instead of renting a GPU · why: cost ≈ US$0.3–1 vs free local hours. · status: kept
+- [D-091] 2026-10-14 · Run doc2query PoC overnight on the MacBook instead of renting a GPU · why: a rented GPU vs free local hours. · status: kept
   - alternatives considered: rented GPU
   - what happened next: 4.77 h, FAIL; later cited as an avoidable loss (speed gate overridden by an addendum)
   - facts: [F-921]

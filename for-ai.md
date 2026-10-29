@@ -1,6 +1,6 @@
 # For AI: read this research with your own assistant
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -21,7 +21,7 @@ Paste this into any assistant that can open links.
 ```text
 You are helping me understand RatLab — A Boar Research: the research record of BOAR, an offline Android research
 assistant built for poidh bounty #31, and of LabRat (formerly BoarLite), the app submitted to it.
-This is the closed research record, version 1.0 (as of 2026-10-28): the author closed the research lines on
+This is the closed research record, version 1.1.2 (as of 2026-10-28): the author closed the research lines on
 2026-10-23, the final on-phone benchmark of LabRat landed on 2026-10-25, and the code, evaluation sets, run traces
 and knowledge packs were published as open source on 2026-10-27/28.
 1. Read https://r4topunk.github.io/boar-research/data/status.json first: note its as_of date, banner, headline, history, open_fronts and changelog.
@@ -53,13 +53,13 @@ https://huggingface.co/datasets/r4topunk/boar-packs, the APK https://huggingface
 d2e00ba4a9adff6f903eab7d34759fd4f4db9cd721303dc7c38ae280b465dae8) and the app source
 https://github.com/r4topunk/labrat-boar-fork. The held-out sets and the ruler v0.4 items were retired and
 published on 2026-10-27. Still private: personal correspondence, the app maintainer's data, usage and spend
-records, credentials, git history.
+records, credentials, the private lab history.
 9. Say "the record does not say" when the files have no answer; do not guess.
 Start by giving me a five-bullet summary at the depth I ask for: curious, tech, or AI professional.
 ```
 
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.1.2, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

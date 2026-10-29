@@ -1,25 +1,25 @@
 # 16 · Where it stands (live)
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
 - Page: https://r4topunk.github.io/boar-research/research/honest-number/ · Markdown twin: https://r4topunk.github.io/boar-research/research/honest-number.md · Whole paper: https://r4topunk.github.io/boar-research/llms-full.txt · Index: https://r4topunk.github.io/boar-research/llms.txt
 - Span: 2026-10-05 → 10-25
 
-**In one sentence.** As of 2026-10-25 03:30 the research lines are closed and the submitted app (LabRat, formerly BoarLite) runs offline on a phone. Its headline number is the final ruler (bench v0.4) measured on the phone by DEVICE-FINAL, which landed on 2026-10-25 (author's decision of 2026-10-25, AD-05): 0 of 71 wins under both judge families, the lower family below the 0.50 bar [F-2238]. As of 2026-10-28, the record also holds history: the same ruler on the desktop twin of the pre-rename engine b4ef94f3 (one seed, before the Rat persona line) won 0 of 71 under both judge families with a lower-family U-total of 0.164, below the 0.50 bar; under the Claude judge the old ratio did not reach 0.50 on the earlier held-out sets; and no unexposed held-out number exists. The thesis the record presents is the author's: small models need external knowledge, and the app is a harness built around what a small model can really do [F-2236]; the outcome labels of the closing tests are its evidence and its limits. Three metric families stay separate. This chapter is finalized at closure (v1.0).
+**In one sentence.** The research lines closed on 2026-10-23, and the submitted app (LabRat, formerly BoarLite) runs offline on a phone. Its headline number is the final ruler (bench v0.4) measured on the phone by DEVICE-FINAL, which landed on 2026-10-25 (author's decision of 2026-10-25, AD-05): 0 of 71 wins under both judge families, the lower family below the 0.50 bar [F-2238]. As of 2026-10-28, the record also holds history: the same ruler on the desktop twin of the pre-rename engine b4ef94f3 (one seed, before the Rat persona line) won 0 of 71 under both judge families with a lower-family U-total of 0.164, below the 0.50 bar; under the Claude judge the old ratio did not reach 0.50 on the earlier held-out sets; and no unexposed held-out number exists. The thesis the record presents is the author's: small models need external knowledge, and the app is a harness built around what a small model can really do [F-2236]; the outcome labels of the closing tests are its evidence and its limits. Three metric families stay separate. This chapter is finalized at closure (v1.0).
 
 ## For curious readers {#curious}
 
 #### Not shown, as of 25 October
 
-As of 25 October 2026, the research is closed and the bar has not been shown to be reached. The number that will count is the new exam measured on the phone, running now. The same exam on a desktop copy of the app's earlier engine won none of 71 head-to-heads and stayed below the bar. On the earlier sealed bounty-style questions the frozen 4B build delivered about a quarter of the frontier answer's value above nothing (0.261) and won none of 51.
+As of 25 October 2026, the research is closed and the bar has not been shown to be reached. The number that counts is the new exam measured on the phone on 25 October: 0 wins in 71 head-to-heads under either judge, below the bar. The same exam on a desktop copy of the app's earlier engine won none of 71 head-to-heads and stayed below the bar. On the earlier sealed bounty-style questions the frozen 4B build delivered about a quarter of the frontier answer's value above nothing (0.261) and won none of 51.
 
 *Badge:* new exam · desktop copy · 2 judge families · 71 · 1 run (history) | V-para · sealed at the time · Claude Opus · 51 · 2 runs · old scale (history).
 
 #### Three numbers that are not the same kind
 
-You will see three kinds of number on this site: the old ratio against the frontier answer, answer labels from the closing tests ("right", "wrong without a warning"), and the new exam's score (on the phone: running; on a desktop copy: below the bar). We never put them on one scale.
+You will see three kinds of number on this site: the old ratio against the frontier answer, answer labels from the closing tests ("right", "wrong without a warning"), and the new exam's score (on the phone and on a desktop copy: both below the bar). We never put them on one scale.
 
 #### Our claim, in our words
 
@@ -201,6 +201,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.1.2, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

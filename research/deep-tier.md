@@ -1,6 +1,6 @@
 # 6 · The deep tier
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -149,7 +149,7 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 
 <!-- lint:exempt:start -->
 - [D-013] 2026-10-02 · Run the deep tier (35B MoE); its ratio counts only reported separately from the default, with its latency · why: first candidate lever with a prior above noise; bounty hint about large MoE. · status: kept
-- [D-031] 2026-10-04 · Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team · why: token budget; no 12 GB phone. · status: superseded (4B levers exhausted by 10-05; deep tier reopened 10-06)
+- [D-031] 2026-10-04 · Focus on the 4B default tier; deep tier parked at D1; coordinator runs work with subagents instead of a standing chat team · why: work budget; no 12 GB phone. · status: superseded (4B levers exhausted by 10-05; deep tier reopened 10-06)
 - [D-039] 2026-10-06 · Stop answer-identical 4B arms; reopen the deep tier as the primary quality lever · why: 15 arms, 0 ratio movement. · status: kept
 - [D-056] 2026-10-09 · Recommend thinking budget 512 for the deep tier · why: CHEAPER-PARITY with 1024 at 0.55× time. · status: kept
 - [D-058] 2026-10-10 · Seed-noise reading rule (V-para one-seed deep Δ < ~0.03 is noise; later raised to 0.05) · why: SEEDVAR three-seed spread. · status: superseded by D-113 (Threshold raised from 0.03 to 0.05 on 2026-10-16 after the outside critique (SEEDVAR showed a −0.039 gap between seeds).)
@@ -160,6 +160,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.1.2, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

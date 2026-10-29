@@ -1,6 +1,6 @@
 # 10 · Measuring the measurer
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -102,7 +102,7 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 - [F-996] Haiku 5.5-low vs Opus on 57 v0.1 items: same winner 54/57, r 0.922, κ 0.651, ratio −0.069 lower, 3.52 s/call, 0 failures. 54/57 (judge.v1 ratio) · set v0.1 dev (dev, development data) · judge Haiku vs Opus · n 57, · seeds UNKNOWN · CI n 57, 228 calls · date 2026-10-07 · caveat: 'same winner 54/57' carries almost no information because the reference wins ≈ 100 % of items (CRITIQUE-2026-10-16.md:32); quote the informative statistics instead: r 0.922, κ 0.651, level −0.069, Haiku Δ ≈ 0.70-0.85× the Opus Δ on pack arms
 - [F-1078] Multiplicity check. ≈ 60 judged comparisons → ≈ 1.5 false "CI low > 0" expected; X2b z ≈ 5.5 survives Bonferroni over 100 · set UNKNOWN (status UNKNOWN) · judge UNKNOWN · n UNKNOWN · seeds UNKNOWN · CI not computed · date 2026-10-16 · caveat: main risk is selection on dev sets, not multiplicity
 - [F-1079] Large levers survive multiplicity correction. X2b z ≈ 5.5, LITE5-180 z ≈ 6, DEEPTHINK z ≈ 4.2 · set UNKNOWN (status UNKNOWN) · judge UNKNOWN · n UNKNOWN · seeds UNKNOWN · CI ≈ 60 judged comparisons · date 2026-10-16 · caveat: citation fix; ≈ 60 judged comparisons, Bonferroni over 100; the bigger risk is selection on the same dev sets
-- [F-1142] Second Claude judge (Fable 5.1) vs Opus: same winner 453/456 verdicts, Pearson r 0.939, κ (correctness ≥ 4) 0.894, ratio +0.004…+0.010. 453/456 (judge.v1 ratio) · set v0.1 dev (dev, development data) · judge Opus vs Fable · n UNKNOWN · seeds UNKNOWN · CI 456 verdicts · date 2026-10-02 · caveat: both judges are Claude: tests noise, not self-preference; ≈ 23 USD list
+- [F-1142] Second Claude judge (Fable 5.1) vs Opus: same winner 453/456 verdicts, Pearson r 0.939, κ (correctness ≥ 4) 0.894, ratio +0.004…+0.010. 453/456 (judge.v1 ratio) · set v0.1 dev (dev, development data) · judge Opus vs Fable · n UNKNOWN · seeds UNKNOWN · CI 456 verdicts · date 2026-10-02 · caveat: both judges are Claude: tests noise, not self-preference
 - [F-1153] Haiku compresses paired gaps: deep35 − 4B was +0.007 under Haiku vs +0.029 under Opus (×0.25). +0.007 vs +0.029 · set v0.1 dev (dev, development data) · judge both · n 57 · seeds UNKNOWN · CI n 57 · date 2026-10-07 · caveat: review later measured ×0.6-1.0 on full deep sets, ×3-4 on hard slices
 - [F-1166] On the 20 hardest items Haiku showed +0.029 where Opus gave +0.091; on the full set they agreed within 0.005 (+0.022 vs +0.026). ×3 compression on slice · set V-para dev (dev, development data) · judge both · n 20 · seeds UNKNOWN · CI n 20 / 51 · date 2026-10-10
 - [F-1187] Haiku L1 compresses paired gaps vs Opus. Haiku Δ ≈ 0.70-0.95× the Opus Δ across six pack/retrieval arms (X1 0.70, pack 0.76, ONLY 0.83, X2b 0.85, ST2 0.88, ADD 0.95); per-item Δ r 0.75-0.84 · set 180 self-tests (status UNKNOWN) · judge Haiku vs Opus · n 180 (inferred from set) · seeds UNKNOWN · CI several arms · date 2026-10-14/16 · caveat: citation fix (critique row is l.32); '0.70-0.85' are the two quoted examples; on deep/4B slices compression ranged ×0.25 to a sign flip
@@ -131,6 +131,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.1.2, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

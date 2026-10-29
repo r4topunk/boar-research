@@ -1,4 +1,4 @@
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -34,7 +34,7 @@ This is the story of how we learned that, the ruler we had to build first, the m
 > - [huggingface.co/r4topunk/labrat](https://huggingface.co/r4topunk/labrat): the APK
 > - [github.com/r4topunk/boar-research](https://github.com/r4topunk/boar-research): the research record (methods, frozen criteria, negative results, device evidence)
 > - [github.com/r4topunk/boar-bench](https://github.com/r4topunk/boar-bench): the benchmark, the judge, all evaluation sets (the retired held-out sets in `bench/heldout/`, the second ruler in `bench/v0.4/`) and the trace format
-> - [huggingface.co/datasets/r4topunk/boar-traces](https://huggingface.co/datasets/r4topunk/boar-traces): the raw run traces behind every number
+> - [huggingface.co/datasets/r4topunk/boar-traces](https://huggingface.co/datasets/r4topunk/boar-traces): raw run traces of many experiments, including the final phone exam's outputs, traces and judgments
 > - [huggingface.co/datasets/r4topunk/boar-packs](https://huggingface.co/datasets/r4topunk/boar-packs): the knowledge packs
 
 ## 1. The question
@@ -103,7 +103,7 @@ That became the project's thesis: small models need external knowledge author's 
 - **Better delivery.** We ported the research bench's search fixes into the app, switched off on turns it reads as health. Delivered key facts went from 26 to 40 of 92 dev · 1 seed · no judge [F-2207]. The port failed its frozen safety rule (6 against 4 unsupported dose figures on the 10 health probes whose sources changed) and was merged under a condition the author had set before the run: accept the health loss if it was worth it for the rest author decision [F-2209]. No probe changed its final health path.
 - **Short answers.** Longer styles were not right more often: 42 % against 43 % for the short one. They showed a wrong answer with no warning about twice as often: 23–25 per 100 against 12 dev · 1 seed [F-2106] dev · 1 seed [F-1728]. The app has one short style.
 - **A line that admits it.** Every model answer ends with "May contain errors; check the source." app record [F-2211]
-- **A health gate.** When no health source is found, the app shows a fixed safe text with the emergency number instead of a model answer. On 65 written safety probes, the same ones its rules were tuned on, it did so 41 times, including all 4 where the model had invented a dose; 23 still got a model answer dev · no judge [F-2210] dev · no judge [F-2192]. AI-reviewed, not clinically reviewed. Nothing here is medical advice.
+- **A health gate.** When no health source is found, the app shows a fixed safe text with the emergency number instead of a model answer. On 65 written safety probes, the same ones its rules were tuned on, the installed app on the phone showed it 53 times phone · no judge [F-2241]. The desktop twin of b4ef94f3, measured before the phone run, did so 41 times, including all 4 where the model had invented a dose, and 23 still got a model answer there dev · no judge [F-2210] dev · no judge [F-2192]. AI-reviewed, not clinically reviewed. Nothing here is medical advice.
 - **Sums in code.** Arithmetic and unit conversions are computed without the model, never on health turns app record [F-2200].
 - **Honest gaps.** With no relevant source, the model is told to say so and answer only briefly.
 
@@ -113,7 +113,7 @@ The limits, once each. Those 48 % and 65 % come from questions written from the 
 
 The headline is the second ruler, bench v0.4, measured on the phone itself: LabRat on a Pixel 8a in airplane mode, two seeds under both judge families (a third seed was dropped for time; two is the ruler's spec). Its rule was frozen before a single answer was generated frozen criterion [F-2227]. The run was interrupted once by an app install on the phone and resumed process note [F-2244].
 
-**The result.** LabRat won 0 of 71 questions against the reference under the Claude judge and 0 of 71 under gpt-5.6-sol. Its U-total (desktop twin of engine b4ef94f3) is 0.165 (0.127–0.205) with Claude Opus and 0.242 (0.194–0.296) with OpenAI gpt-5.6-sol. The lower family is 0.165: below the 0.50 bar phone · 2 seeds [F-2238]. The phone repeats the desktop run of its engine: +0.003 under Claude and −0.007 under gpt-5.6-sol, paired on the same questions paired · 1 seed [F-2239].
+**The result.** LabRat won 0 of 71 questions against the reference under the Claude judge and 0 of 71 under gpt-5.6-sol. Its U-total (desktop twin of engine b4ef94f3) is 0.165 (0.127–0.205) with Claude Opus and 0.242 (0.194–0.296) with OpenAI gpt-5.6-sol. The lower family is 0.165: below the 0.50 bar phone · 2 seeds [F-2238]. The phone repeats the desktop run of its engine: +0.003 under Claude and −0.007 under gpt-5.6-sol, paired on the same questions paired · 1 seed [F-2239]. The paired difference is divided by the pooled reference score of both runs, so it is not the plain gap between two scores: under gpt-5.6-sol the phone scored 0.244 and the desktop twin of b4ef94f3 0.245, a plain difference of −0.001 paired · 1 seed [F-2239].
 
 On the same phone: right on 40 % of 140 questions written from its own packs pack-written · 1 seed [F-2242]; 53 of 65 health and safety probes got the fixed safe text, and 2 model answers added a dose figure nobody asked for phone · no judge [F-2241]. AI-reviewed, not clinically reviewed. Median answer 13.9 s, first word in about 10 s, about 12 tokens per second, 3.9 GB of memory at peak, no network traffic phone · 1 seed [F-2240].
 
@@ -142,12 +142,12 @@ One human and a lab of AI agents. Research agents work in fixed lanes, write one
 ## 9. Go deeper
 
 - **Repositories:** [app source](https://github.com/r4topunk/labrat-boar-fork) · [APK](https://huggingface.co/r4topunk/labrat) · [research record](https://github.com/r4topunk/boar-research) · [benchmark, judge and all evaluation sets](https://github.com/r4topunk/boar-bench) · [raw run traces](https://huggingface.co/datasets/r4topunk/boar-traces) · [knowledge packs](https://huggingface.co/datasets/r4topunk/boar-packs).
-- **Open data:** the retired held-out sets and the second ruler's items and references were published on 2026-10-27 (`bench/heldout/`, `bench/v0.4/` in boar-bench), with their runs in boar-traces; hashes and redactions are listed in `bench/heldout/HASHES.md`. Still private: personal correspondence, the app maintainer's data, usage and spend records, credentials and git history.
+- **Open data:** the retired held-out sets and the second ruler's items and references were published on 2026-10-27 (`bench/heldout/`, `bench/v0.4/` in boar-bench), with their runs in boar-traces; hashes and redactions are listed in `bench/heldout/HASHES.md`. Still private: personal correspondence, the app maintainer's data, usage and spend records, credentials and the private lab's working history (the public repos keep one commit per release; earlier releases remain in history).
 - **The full research:** 18 chapters, each at three depths (curious, technical, AI pros), with the interactive figures: [chapters](https://r4topunk.github.io/boar-research/research/).
 - **The map:** the ideas, experiments and decisions, linked by "led to", "ruled out" and "uses": [map](https://r4topunk.github.io/boar-research/map/).
 - **Ask your AI:** hand your assistant [/llms.txt](https://r4topunk.github.io/boar-research/llms.txt), [/llms-full.txt](https://r4topunk.github.io/boar-research/llms-full.txt) and the open data in [/data/](https://r4topunk.github.io/boar-research/data/). Every number has a source row, so it can cite instead of guess.
 
-Text CC BY 4.0; code Apache-2.0; data under each source's licence. Health content is AI-reviewed, not clinically reviewed.
+Text and data CC BY 4.0; code MIT (boar-research, boar-bench); the raw traces (boar-traces) are CC BY-SA 4.0 because they quote CC BY-SA passages, and our own fields in them are also CC BY 4.0; other data under each source's licence. Health content is AI-reviewed, not clinically reviewed.
 
 ## Facts cited {#facts}
 
@@ -235,6 +235,6 @@ Resolve every [F-…] marker in https://r4topunk.github.io/boar-research/data/fa
 <!-- lint:exempt:end -->
 ---
 
-Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.0, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
+Cite as: r4to, independent researcher. RatLab — A Boar Research (2026), research record 1.1.2, as of 2026-10-28. Text and data CC BY 4.0. Fact ids or a link must travel with a quote. How to cite: https://r4topunk.github.io/boar-research/cite/ · https://r4topunk.github.io/boar-research/CITATION.cff.
 
 AI-reviewed, not clinically reviewed. Nothing here is medical advice.

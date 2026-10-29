@@ -1,6 +1,6 @@
 # RatLab — A Boar Research, read as: Curious
 
-> Closed record · research record 1.0 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
+> Closed record · research record 1.1.2 · as of 2026-10-28; the author closed the research lines on 2026-10-23. Current standing, not a final result: Open fronts: https://r4topunk.github.io/boar-research/data/status.json.
 >
 > Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar
 
@@ -418,7 +418,7 @@ In one night the author took things out: the long-chat summary (on the phone the
 
 ##### A new name, and one new line
 
-Renaming the app also changed one line of the instructions the model reads: it now introduces itself as Rat. That line came after the app's engine was graded on the new exam on a desktop copy (0 wins in 71, below the bar), so that grade belongs to the engine before the rename and is kept as history. The phone test running now measures LabRat as it ships, and its grade is the headline.
+Renaming the app also changed one line of the instructions the model reads: it now introduces itself as Rat. That line came after the app's engine was graded on the new exam on a desktop copy (0 wins in 71, below the bar), so that grade belongs to the engine before the rename and is kept as history. The phone test of 25 October (DEVICE-FINAL) measured LabRat as it ships, and its grade is the headline: 0 wins in 71, below the bar.
 
 ##### Where to get it
 
@@ -434,13 +434,13 @@ Whole chapter: https://r4topunk.github.io/boar-research/research/submission.md
 
 ##### Not shown, as of 25 October
 
-As of 25 October 2026, the research is closed and the bar has not been shown to be reached. The number that will count is the new exam measured on the phone, running now. The same exam on a desktop copy of the app's earlier engine won none of 71 head-to-heads and stayed below the bar. On the earlier sealed bounty-style questions the frozen 4B build delivered about a quarter of the frontier answer's value above nothing (0.261) and won none of 51.
+As of 25 October 2026, the research is closed and the bar has not been shown to be reached. The number that counts is the new exam measured on the phone on 25 October: 0 wins in 71 head-to-heads under either judge, below the bar. The same exam on a desktop copy of the app's earlier engine won none of 71 head-to-heads and stayed below the bar. On the earlier sealed bounty-style questions the frozen 4B build delivered about a quarter of the frontier answer's value above nothing (0.261) and won none of 51.
 
 *Badge:* new exam · desktop copy · 2 judge families · 71 · 1 run (history) | V-para · sealed at the time · Claude Opus · 51 · 2 runs · old scale (history).
 
 ##### Three numbers that are not the same kind
 
-You will see three kinds of number on this site: the old ratio against the frontier answer, answer labels from the closing tests ("right", "wrong without a warning"), and the new exam's score (on the phone: running; on a desktop copy: below the bar). We never put them on one scale.
+You will see three kinds of number on this site: the old ratio against the frontier answer, answer labels from the closing tests ("right", "wrong without a warning"), and the new exam's score (on the phone and on a desktop copy: both below the bar). We never put them on one scale.
 
 ##### Our claim, in our words
 
@@ -474,7 +474,7 @@ Whole chapter: https://r4topunk.github.io/boar-research/research/handoff.md
 
 ## 18 · Reproduce it (appendix) {#reproduce}
 
-Yes, almost all of it. The benchmark questions, reference answers, judge prompt and scoring code are public, and you can run them on your own app with a few commands. Since 27 October that includes the sealed question sets and the new exam, with the run traces behind every number. What you cannot rerun exactly: the judge outputs (the judge is a closed model, so reruns agree closely but not bit for bit). Still private: personal correspondence, the app maintainer's data, spend records and the git history.
+Yes, almost all of it. The benchmark questions, reference answers, judge prompt and scoring code are public, and you can run them on your own app with a few commands. Since 27 October that includes the sealed question sets and the new exam, with stored run traces for many experiments, including the raw phone outputs, traces and judgments of the final exam. What you cannot rerun exactly: the judge outputs (the judge is a closed model, so reruns agree closely but not bit for bit). Still private: personal correspondence, the app maintainer's data, spend records and the private lab's working history (the public repos keep one commit per release; earlier releases remain in history).
 
 *Facts: [D-195]*
 
