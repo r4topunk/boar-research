@@ -9,7 +9,7 @@ Automatic checks (check_cards.py): citations on every step = PASS; safety rules 
 ## bleeding: Severe bleeding
 Covers: placeholder bleeding card
 
-**Decisions for you:** (1) Soaked dressing: St John + BRC 'remove and replace with a fresh one, keep firm pressure' vs NHS [NHS quote withheld]. The card follows SJA/BRC. (2) Raising the wound: NHS only; SJA/BRC raise the legs only for shock. Left out (shock line kept). (3) Tourniquet: RCUK 2025 (life-threatening limb bleeding pressure can't control; 5–7 cm above, not on a joint, write the time, don't release). SJA: an improvised one only if the 999 call handler asks. Keep?
+**Decisions for you:** (1) Soaked dressing: St John + BRC [quote withheld; replace the soaked dressing and keep pressing] vs NHS [NHS quote withheld]. The card follows SJA/BRC. (2) Raising the wound: NHS only; SJA/BRC raise the legs only for shock. Left out (shock line kept). (3) Tourniquet: RCUK 2025 (life-threatening limb bleeding pressure can't control; 5–7 cm above, not on a joint, write the time, don't release). SJA: an improvised one only if the 999 call handler asks. Keep?
 
 **EN: Severe bleeding**
 
@@ -42,13 +42,13 @@ Covers: placeholder bleeding card
 
 - **BLEED-CALL** NHS, Cuts and grazes: [NHS quote withheld] (https://www.nhs.uk/conditions/cuts-and-grazes/)
 - **BLEED-OBJECT** NHS, Cuts and grazes: [NHS quote withheld] (https://www.nhs.uk/conditions/cuts-and-grazes/)
-- **BLEED-PRESS** St John Ambulance (UK), Severe bleeding: "Apply direct firm pressure to the wound using a sterile dressing if possible or a clean non-fluffy cloth to stop the bleeding. / Ask a helper to call 999 or 112 for emergency help." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
-- **BLEED-PRESS-BRC** British Red Cross, Bleeding heavily: "Step 1. Put pressure on the wound with whatever is available to stop or slow down the flow of blood. / Step 2. Call 999. / Step 3. Keep pressure on the wound until help arrives." (https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily)
-- **BLEED-SHOCK** St John Ambulance (UK), Severe bleeding: "Treat them for this by helping them to lie down on a rug or blanket. Raise and support their legs, so that they are above the level of their heart." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
-- **BLEED-SOAK** St John Ambulance (UK), Severe bleeding: "If blood comes through the dressing, remove it and reapply pressure with a new dressing or pad to control the bleeding." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/) CONFLICT: NHS = add another cloth on top
-- **BLEED-SOAK-BRC** British Red Cross, Bleeding heavily: "Remove the item and replace with a fresh one, make sure that firm pressure is applied to the wound." (https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily)
-- **BLEED-TQ** Resuscitation Council UK, First aid guidelines (2025): "Apply a tourniquet as soon as possible for life-threatening extremity bleeding that is not controlled by direct manual pressure: / Place the tourniquet around the traumatised limb 5-7cm above the injury, but not over a joint. / Write the time the tourniquet was applied. / Do not release the tourniquet. It should only be released by a healthcare professional." (https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/first-aid-guidelines)
-- **BLEED-TQ-SJA** St John Ambulance (UK), Severe bleeding: "If the bleed is not controlled with pressure, it is possible that the emergency call handler will ask you to improvise a tourniquet if you do not have one or are not trained." (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
+- **BLEED-PRESS** St John Ambulance (UK), Severe bleeding: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
+- **BLEED-PRESS-BRC** British Red Cross, Bleeding heavily: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily)
+- **BLEED-SHOCK** St John Ambulance (UK), Severe bleeding: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
+- **BLEED-SOAK** St John Ambulance (UK), Severe bleeding: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/severe-bleeding/) CONFLICT: NHS = add another cloth on top
+- **BLEED-SOAK-BRC** British Red Cross, Bleeding heavily: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily)
+- **BLEED-TQ** Resuscitation Council UK, First aid guidelines (2025): [quote withheld (copyright); see url] (https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/first-aid-guidelines)
+- **BLEED-TQ-SJA** St John Ambulance (UK), Severe bleeding: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/severe-bleeding/)
 
 </details>
 
@@ -89,11 +89,11 @@ Covers: placeholder stroke card
 <details><summary>Sources quoted</summary>
 
 - **STROKE-CALL** NHS, Symptoms of a stroke: [NHS quote withheld] (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC calls stopped symptoms a TIA → tell a health care team right away
-- **STROKE-COMFORT** British Red Cross, Stroke: "Stay calm and let them know that help is on the way. Help them sit or lie down and reassure them while you wait for the ambulance." (https://www.redcross.org.uk/first-aid/learn-first-aid/stroke)
+- **STROKE-COMFORT** British Red Cross, Stroke: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/stroke)
 - **STROKE-DRIVE** CDC, Signs and Symptoms of Stroke: "Do not drive to the hospital or let someone else drive you. Call 9-1-1 for an ambulance so that medical personnel can begin life-saving treatment on the way to the emergency room." (https://www.cdc.gov/stroke/signs-symptoms/index.html)
 - **STROKE-ES** CDC en español, Signos y síntomas de accidente cerebrovascular: "O: Obtenga ayuda RÁPIDO, ¡llame a emergencias! Si ve alguno de estos signos, llame al 911 de inmediato. / Tome nota de cuándo se presentó por primera vez cualquiera de los síntomas. / No conduzca hacia el hospital ni deje que otra persona lo lleve." (https://www.cdc.gov/stroke/es/signs-symptoms/signos-y-sintomas-de-accidente-cerebrovascular.html)
 - **STROKE-FAST** NHS, Symptoms of a stroke: [NHS quote withheld] (https://www.nhs.uk/conditions/stroke/symptoms/) CONFLICT: CDC uses BE FAST (balance, eyes); CDC ES uses RÁPIDO
-- **STROKE-FOOD** St John Ambulance (UK), Stroke: "Do not give them anything to eat or drink because it may be hard for them to swallow." (https://www.sja.org.uk/first-aid-advice/stroke/) ok (single source)
+- **STROKE-FOOD** St John Ambulance (UK), Stroke: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/stroke/) ok (single source)
 - **STROKE-TIME** CDC, Signs and Symptoms of Stroke: "Note the time when any symptoms first appear. This information helps health care providers determine the best treatment." (https://www.cdc.gov/stroke/signs-symptoms/index.html)
 
 </details>
@@ -132,8 +132,8 @@ Covers: placeholder anaphylaxis card
 <details><summary>Sources quoted</summary>
 
 - **ANA-ADR** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
-- **ANA-ADR-SJA** St John Ambulance (UK), Anaphylaxis: "Call 999 or 112 and tell ambulance control that you suspect anaphylaxis." (https://www.sja.org.uk/first-aid-advice/anaphylaxis/)
-- **ANA-CPR** healthdirect (AU), Anaphylaxis: "If the person is unresponsive and not breathing normally, start CPR." (https://www.healthdirect.gov.au/anaphylaxis) ok (single source)
+- **ANA-ADR-SJA** St John Ambulance (UK), Anaphylaxis: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/anaphylaxis/)
+- **ANA-CPR** healthdirect (AU), Anaphylaxis: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/anaphylaxis) ok (single source)
 - **ANA-LIE** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
 - **ANA-SIGNS** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
 
@@ -175,12 +175,12 @@ Covers: placeholder eyechem card
 
 <details><summary>Sources quoted</summary>
 
-- **EYE-CALL** St John Ambulance (UK), Eye injury: "For major eye injuries, like a wound, embedded object, or chemical splashes, call 999 or 112 or go to an Emergency Department or Eye Casualty Department." (https://www.sja.org.uk/first-aid-advice/eye-injury/) CONFLICT (tier): NHS = strong chemicals (oven cleaner, bleach) only
+- **EYE-CALL** St John Ambulance (UK), Eye injury: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/eye-injury/) CONFLICT (tier): NHS = strong chemicals (oven cleaner, bleach) only
 - **EYE-CALL-NHS** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
 - **EYE-DONT** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
-- **EYE-LENS** healthdirect (AU), Objects or chemicals in the eye: "If you're wearing contact lenses, try to take out your contact lenses. If the surface of your eye is badly damaged do not remove the contact lenses." (https://www.healthdirect.gov.au/objects-or-chemicals-in-eye) CONFLICT (nuance): SJA 'remove them if they can'; NHS no step
+- **EYE-LENS** healthdirect (AU), Objects or chemicals in the eye: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/objects-or-chemicals-in-eye) CONFLICT (nuance): SJA [quote withheld]; NHS no step
 - **EYE-RINSE** NHS, Eye injuries: [NHS quote withheld] (https://www.nhs.uk/conditions/eye-injuries/)
-- **EYE-RINSE-SJA** St John Ambulance (UK), Eye injury: "If it is a chemical splash, hold the casualty’s eye under gently running water for at least 20 minutes and make sure the outside and inside of the eyelid is washed. / Make sure the contaminated water does not splash the uninjured eye, you, or the casualty." (https://www.sja.org.uk/first-aid-advice/eye-injury/)
+- **EYE-RINSE-SJA** St John Ambulance (UK), Eye injury: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/eye-injury/)
 
 </details>
 
@@ -220,12 +220,12 @@ Covers: placeholder electric card
 
 <details><summary>Sources quoted</summary>
 
-- **ELEC-CALL** healthdirect (AU), Electric shocks and burns: "Call an ambulance on triple zero (000) if someone has had an electric shock and has lost consciousness, has difficulty breathing or has a slow or fast heartbeat. / If they are not breathing normally, you should start CPR. / If there is an electrical burn, you can treat it in the same way as you would any other burn. / It's important to get your heart checked after any electric shock." (https://www.healthdirect.gov.au/electric-shocks-and-burns)
-- **ELEC-CALL-SJA** St John Ambulance (UK), Electrocution: "Call 999 or 112 for emergency help." (https://www.sja.org.uk/first-aid-advice/electrocution/)
-- **ELEC-HV** healthdirect (AU), Electric shocks and burns: "If there is a power line down, stay at least 6 metres away. Do not try to remove a live power cable yourself. Ask the person not to move." (https://www.healthdirect.gov.au/electric-shocks-and-burns) CONFLICT (distance): American Red Cross 35 ft (~10.7 m); the old 18 m is in no source
-- **ELEC-HV-ARC** American Red Cross, Power Outage: "Keep away from power lines. Stay at least 35 feet away from fallen power lines and anything they are touching. Call 911 and let them know." (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/power-outage.html)
-- **ELEC-OFF** healthdirect (AU), Electric shocks and burns: "Look first, don't touch — the person may still be in contact with the electric current and if you touch them, you can get an electric shock. / Switch off the electricity at the mains, remove fuses, turn off all power points and unplug cords before approaching the person. / If you can't turn off the electricity, use something like a dry wooden broom handle, to separate the person from the electricity source." (https://www.healthdirect.gov.au/electric-shocks-and-burns)
-- **ELEC-OFF-SJA** St John Ambulance (UK), Electrocution: "Do not touch the casualty if they’re still in contact with the electrical source as you are at risk of electrocution. / Turn off the source of electricity to break the contact between the electrical supply and the casualty." (https://www.sja.org.uk/first-aid-advice/electrocution/) ok (low-voltage page)
+- **ELEC-CALL** healthdirect (AU), Electric shocks and burns: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/electric-shocks-and-burns)
+- **ELEC-CALL-SJA** St John Ambulance (UK), Electrocution: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/electrocution/)
+- **ELEC-HV** healthdirect (AU), Electric shocks and burns: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/electric-shocks-and-burns) CONFLICT (distance): American Red Cross 35 ft (~10.7 m); the old 18 m is in no source
+- **ELEC-HV-ARC** American Red Cross, Power Outage: [quote withheld (copyright); see url] (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/power-outage.html)
+- **ELEC-OFF** healthdirect (AU), Electric shocks and burns: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/electric-shocks-and-burns)
+- **ELEC-OFF-SJA** St John Ambulance (UK), Electrocution: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/electrocution/) ok (low-voltage page)
 
 </details>
 
@@ -303,7 +303,7 @@ Covers: placeholder marinepuncture card
 - **SEA-DONT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
 - **SEA-HOT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT (time/°C): healthdirect fish/stingray 45 °C up to 90 min; stonefish up to 30 min; urchin 20 min
 - **SEA-SPINE** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) CONFLICT: healthdirect = leave stonefish spines in
-- **SEA-STONEFISH** healthdirect (AU), Sea creature bites and stings: "Leave the spine in the skin — unless the ambulance operator tells you to remove it. / are stung by a stonefish or other stinging fish / Call triple zero (000) and ask for an ambulance." (https://www.healthdirect.gov.au/sea-creature-stings)
+- **SEA-STONEFISH** healthdirect (AU), Sea creature bites and stings: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/sea-creature-stings)
 
 </details>
 
@@ -345,7 +345,7 @@ Covers: placeholder tick card
 
 - **ANA-ADR** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/) ok (NHS page review overdue)
 - **ANA-SIGNS** NHS, Anaphylaxis: [NHS quote withheld] (https://www.nhs.uk/conditions/anaphylaxis/)
-- **TICK-AU** healthdirect (AU), Tick bites: "If you have a tick, you should kill it as soon as possible by freezing it with an ether-containing product. / Do not try to remove ticks with tweezers. / If the tick does not drop off, or can't be frozen, leave it in place and get urgent medical help." (https://www.healthdirect.gov.au/tick-bites) CONFLICT with UK/US: region-specific
+- **TICK-AU** healthdirect (AU), Tick bites: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/tick-bites) CONFLICT with UK/US: region-specific
 - **TICK-DONT** CDC, What to Do After a Tick Bite: "Do not use petroleum jelly, heat, nail polish, or other substances to try and make the tick detach from the skin." (https://www.cdc.gov/ticks/after-a-tick-bite/index.html)
 - **TICK-REMOVE** CDC, What to Do After a Tick Bite: "Grasp the tick as close to the skin's surface as possible using clean fine-tipped tweezers. / Pull tick away from the skin with steady, even pressure. Don't twist or jerk the tick. / After removing the tick, thoroughly clean the bite area and your hands with soap and water, rubbing alcohol, or hand sanitizer." (https://www.cdc.gov/ticks/after-a-tick-bite/index.html) CONFLICT: Australia (healthdirect, ASCIA) = freeze, no tweezers
 - **TICK-REMOVE-NHS** NHS, Lyme disease: [NHS quote withheld] (https://www.nhs.uk/conditions/lyme-disease/)

@@ -2,72 +2,72 @@
 marinepuncture, tick, heatexhaustion. Imported by build_cards.py. Sources: SOURCES.raw-4.md (all curl, 233/233 exact)."""
 
 NHS_CUT, SJA_BLEED, BRC_BLEED, RCUK = ("https://www.nhs.uk/conditions/cuts-and-grazes/", "https://www.sja.org.uk/first-aid-advice/severe-bleeding/",
-    "https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily", "https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/first-aid-guidelines")
+    "[quote withheld (copyright); see url]", "https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/first-aid-guidelines")
 SJA_LTB = "https://www.sja.org.uk/first-aid-advice/life-threatening-bleed/"
 NHS_STROKE, CDC_STROKE, SJA_STROKE, BRC_STROKE = ("https://www.nhs.uk/conditions/stroke/symptoms/", "https://www.cdc.gov/stroke/signs-symptoms/index.html",
     "https://www.sja.org.uk/first-aid-advice/stroke/", "https://www.redcross.org.uk/first-aid/learn-first-aid/stroke")
 CDC_STROKE_ES = "https://www.cdc.gov/stroke/es/signs-symptoms/signos-y-sintomas-de-accidente-cerebrovascular.html"
-NHS_ANA, SJA_ANA, HD_ANA = "https://www.nhs.uk/conditions/anaphylaxis/", "https://www.sja.org.uk/first-aid-advice/anaphylaxis/", "https://www.healthdirect.gov.au/anaphylaxis"
-NHS_EYE, SJA_EYE, HD_EYE = "https://www.nhs.uk/conditions/eye-injuries/", "https://www.sja.org.uk/first-aid-advice/eye-injury/", "https://www.healthdirect.gov.au/objects-or-chemicals-in-eye"
+NHS_ANA, SJA_ANA, HD_ANA = "https://www.nhs.uk/conditions/anaphylaxis/", "https://www.sja.org.uk/first-aid-advice/anaphylaxis/", "[quote withheld (copyright); see url]"
+NHS_EYE, SJA_EYE, HD_EYE = "https://www.nhs.uk/conditions/eye-injuries/", "https://www.sja.org.uk/first-aid-advice/eye-injury/", "[quote withheld (copyright); see url]"
 SJA_ELEC, HD_ELEC, ARC_PO = ("https://www.sja.org.uk/first-aid-advice/electrocution/", "https://www.healthdirect.gov.au/electric-shocks-and-burns",
-    "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/power-outage.html")
+    "[quote withheld (copyright); see url]")
 NHS_ALT, CDC_ALT = "https://www.nhs.uk/conditions/altitude-sickness/", "https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html"
 NHS_SEA, HD_SEA = "https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/", "https://www.healthdirect.gov.au/sea-creature-stings"
 CDC_TICK, NHS_LYME, SJA_TICK, HD_TICK = ("https://www.cdc.gov/ticks/after-a-tick-bite/index.html", "https://www.nhs.uk/conditions/lyme-disease/",
-    "https://www.sja.org.uk/first-aid-advice/tick-bite/", "https://www.healthdirect.gov.au/tick-bites")
+    "[NHS quote withheld; see url]", "https://www.healthdirect.gov.au/tick-bites")
 NHS_HEAT, SJA_HEX = "https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/", "https://www.sja.org.uk/first-aid-advice/heat-exhaustion/"
 
 S4 = {
- "BLEED-PRESS": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "Apply direct firm pressure to the wound using a sterile dressing if possible or a clean non-fluffy cloth to stop the bleeding. / Ask a helper to call 999 or 112 for emergency help.", "ok"),
- "BLEED-PRESS-BRC": ("British Red Cross, Bleeding heavily", BRC_BLEED, "Step 1. Put pressure on the wound with whatever is available to stop or slow down the flow of blood. / Step 2. Call 999. / Step 3. Keep pressure on the wound until help arrives.", "ok"),
- "BLEED-SOAK": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "If blood comes through the dressing, remove it and reapply pressure with a new dressing or pad to control the bleeding.", "CONFLICT: NHS = add another cloth on top"),
- "BLEED-SOAK-BRC": ("British Red Cross, Bleeding heavily", BRC_BLEED, "Remove the item and replace with a fresh one, make sure that firm pressure is applied to the wound.", "ok"),
+ "BLEED-PRESS": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "[quote withheld (copyright); see url]", "ok"),
+ "BLEED-PRESS-BRC": ("British Red Cross, Bleeding heavily", BRC_BLEED, "[quote withheld (copyright); see url]", "ok"),
+ "BLEED-SOAK": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "[quote withheld (copyright); see url]", "CONFLICT: NHS = add another cloth on top"),
+ "BLEED-SOAK-BRC": ("British Red Cross, Bleeding heavily", BRC_BLEED, "[quote withheld (copyright); see url]", "ok"),
  "BLEED-OBJECT": ("NHS, Cuts and grazes", NHS_CUT, "[NHS quote withheld]", "ok"),
- "BLEED-TQ": ("Resuscitation Council UK, First aid guidelines (2025)", RCUK, "Apply a tourniquet as soon as possible for life-threatening extremity bleeding that is not controlled by direct manual pressure: / Place the tourniquet around the traumatised limb 5-7cm above the injury, but not over a joint. / Write the time the tourniquet was applied. / Do not release the tourniquet. It should only be released by a healthcare professional.", "ok"),
- "BLEED-TQ-SJA": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "If the bleed is not controlled with pressure, it is possible that the emergency call handler will ask you to improvise a tourniquet if you do not have one or are not trained.", "ok"),
- "BLEED-SHOCK": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "Treat them for this by helping them to lie down on a rug or blanket. Raise and support their legs, so that they are above the level of their heart.", "ok"),
+ "BLEED-TQ": ("Resuscitation Council UK, First aid guidelines (2025)", RCUK, "[quote withheld (copyright); see url]", "ok"),
+ "BLEED-TQ-SJA": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "[quote withheld (copyright); see url]", "ok"),
+ "BLEED-SHOCK": ("St John Ambulance (UK), Severe bleeding", SJA_BLEED, "[quote withheld (copyright); see url]", "ok"),
  "BLEED-CALL": ("NHS, Cuts and grazes", NHS_CUT, "[NHS quote withheld]", "ok"),
  "STROKE-FAST": ("NHS, Symptoms of a stroke", NHS_STROKE, "[NHS quote withheld]", "CONFLICT: CDC uses BE FAST (balance, eyes); CDC ES uses RÁPIDO"),
  "STROKE-CALL": ("NHS, Symptoms of a stroke", NHS_STROKE, "[NHS quote withheld]", "CONFLICT: CDC calls stopped symptoms a TIA → tell a health care team right away"),
  "STROKE-TIME": ("CDC, Signs and Symptoms of Stroke", CDC_STROKE, "Note the time when any symptoms first appear. This information helps health care providers determine the best treatment.", "ok"),
  "STROKE-DRIVE": ("CDC, Signs and Symptoms of Stroke", CDC_STROKE, "Do not drive to the hospital or let someone else drive you. Call 9-1-1 for an ambulance so that medical personnel can begin life-saving treatment on the way to the emergency room.", "ok"),
- "STROKE-FOOD": ("St John Ambulance (UK), Stroke", SJA_STROKE, "Do not give them anything to eat or drink because it may be hard for them to swallow.", "ok (single source)"),
- "STROKE-COMFORT": ("British Red Cross, Stroke", BRC_STROKE, "Stay calm and let them know that help is on the way. Help them sit or lie down and reassure them while you wait for the ambulance.", "ok"),
+ "STROKE-FOOD": ("St John Ambulance (UK), Stroke", SJA_STROKE, "[quote withheld (copyright); see url]", "ok (single source)"),
+ "STROKE-COMFORT": ("British Red Cross, Stroke", BRC_STROKE, "[quote withheld (copyright); see url]", "ok"),
  "STROKE-ES": ("CDC en español, Signos y síntomas de accidente cerebrovascular", CDC_STROKE_ES, "O: Obtenga ayuda RÁPIDO, ¡llame a emergencias! Si ve alguno de estos signos, llame al 911 de inmediato. / Tome nota de cuándo se presentó por primera vez cualquiera de los síntomas. / No conduzca hacia el hospital ni deje que otra persona lo lleve.", "ok"),
  "ANA-ADR": ("NHS, Anaphylaxis", NHS_ANA, "[NHS quote withheld]", "ok (NHS page review overdue)"),
- "ANA-ADR-SJA": ("St John Ambulance (UK), Anaphylaxis", SJA_ANA, "Call 999 or 112 and tell ambulance control that you suspect anaphylaxis.", "ok"),
+ "ANA-ADR-SJA": ("St John Ambulance (UK), Anaphylaxis", SJA_ANA, "[quote withheld (copyright); see url]", "ok"),
  "ANA-LIE": ("NHS, Anaphylaxis", NHS_ANA, "[NHS quote withheld]", "ok"),
  "ANA-SIGNS": ("NHS, Anaphylaxis", NHS_ANA, "[NHS quote withheld]", "ok"),
- "ANA-CPR": ("healthdirect (AU), Anaphylaxis", HD_ANA, "If the person is unresponsive and not breathing normally, start CPR.", "ok (single source)"),
+ "ANA-CPR": ("healthdirect (AU), Anaphylaxis", HD_ANA, "[quote withheld (copyright); see url]", "ok (single source)"),
  "EYE-RINSE": ("NHS, Eye injuries", NHS_EYE, "[NHS quote withheld]", "ok"),
- "EYE-RINSE-SJA": ("St John Ambulance (UK), Eye injury", SJA_EYE, "If it is a chemical splash, hold the casualty’s eye under gently running water for at least 20 minutes and make sure the outside and inside of the eyelid is washed. / Make sure the contaminated water does not splash the uninjured eye, you, or the casualty.", "ok"),
- "EYE-LENS": ("healthdirect (AU), Objects or chemicals in the eye", HD_EYE, "If you're wearing contact lenses, try to take out your contact lenses. If the surface of your eye is badly damaged do not remove the contact lenses.", "CONFLICT (nuance): SJA 'remove them if they can'; NHS no step"),
+ "EYE-RINSE-SJA": ("St John Ambulance (UK), Eye injury", SJA_EYE, "[quote withheld (copyright); see url]", "ok"),
+ "EYE-LENS": ("healthdirect (AU), Objects or chemicals in the eye", HD_EYE, "[quote withheld (copyright); see url]", "CONFLICT (nuance): SJA 'remove them if they can'; NHS no step"),
  "EYE-DONT": ("NHS, Eye injuries", NHS_EYE, "[NHS quote withheld]", "ok"),
- "EYE-CALL": ("St John Ambulance (UK), Eye injury", SJA_EYE, "For major eye injuries, like a wound, embedded object, or chemical splashes, call 999 or 112 or go to an Emergency Department or Eye Casualty Department.", "CONFLICT (tier): NHS = strong chemicals (oven cleaner, bleach) only"),
+ "EYE-CALL": ("St John Ambulance (UK), Eye injury", SJA_EYE, "[quote withheld (copyright); see url]", "CONFLICT (tier): NHS = strong chemicals (oven cleaner, bleach) only"),
  "EYE-CALL-NHS": ("NHS, Eye injuries", NHS_EYE, "[NHS quote withheld]", "ok"),
- "ELEC-OFF": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "Look first, don't touch — the person may still be in contact with the electric current and if you touch them, you can get an electric shock. / Switch off the electricity at the mains, remove fuses, turn off all power points and unplug cords before approaching the person. / If you can't turn off the electricity, use something like a dry wooden broom handle, to separate the person from the electricity source.", "ok"),
- "ELEC-OFF-SJA": ("St John Ambulance (UK), Electrocution", SJA_ELEC, "Do not touch the casualty if they’re still in contact with the electrical source as you are at risk of electrocution. / Turn off the source of electricity to break the contact between the electrical supply and the casualty.", "ok (low-voltage page)"),
- "ELEC-HV": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "If there is a power line down, stay at least 6 metres away. Do not try to remove a live power cable yourself. Ask the person not to move.", "CONFLICT (distance): American Red Cross 35 ft (~10.7 m); the old 18 m is in no source"),
- "ELEC-HV-ARC": ("American Red Cross, Power Outage", ARC_PO, "Keep away from power lines. Stay at least 35 feet away from fallen power lines and anything they are touching. Call 911 and let them know.", "ok"),
- "ELEC-CALL": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "Call an ambulance on triple zero (000) if someone has had an electric shock and has lost consciousness, has difficulty breathing or has a slow or fast heartbeat. / If they are not breathing normally, you should start CPR. / If there is an electrical burn, you can treat it in the same way as you would any other burn. / It's important to get your heart checked after any electric shock.", "ok"),
- "ELEC-CALL-SJA": ("St John Ambulance (UK), Electrocution", SJA_ELEC, "Call 999 or 112 for emergency help.", "ok"),
+ "ELEC-OFF": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "[quote withheld (copyright); see url]", "ok"),
+ "ELEC-OFF-SJA": ("St John Ambulance (UK), Electrocution", SJA_ELEC, "[quote withheld (copyright); see url]", "ok (low-voltage page)"),
+ "ELEC-HV": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "[quote withheld (copyright); see url]", "CONFLICT (distance): American Red Cross 35 ft (~10.7 m); the old 18 m is in no source"),
+ "ELEC-HV-ARC": ("American Red Cross, Power Outage", ARC_PO, "[quote withheld (copyright); see url]", "ok"),
+ "ELEC-CALL": ("healthdirect (AU), Electric shocks and burns", HD_ELEC, "[quote withheld (copyright); see url]", "ok"),
+ "ELEC-CALL-SJA": ("St John Ambulance (UK), Electrocution", SJA_ELEC, "[quote withheld (copyright); see url]", "ok"),
  "ALT-STOP": ("NHS, Altitude sickness", NHS_ALT, "[NHS quote withheld]", "CONFLICT: CDC = descend if worse despite rest (no day count)"),
  "ALT-NEVER": ("CDC Yellow Book, High-Altitude Travel and Altitude Illness", CDC_ALT, "Never ascend to sleep at a higher altitude when experiencing symptoms of altitude illness, no matter how minor the symptoms seem.", "ok (clinician chapter)"),
  "ALT-SEVERE": ("NHS, Altitude sickness", NHS_ALT, "[NHS quote withheld]", "ok"),
  "ALT-ALCOHOL": ("CDC Yellow Book, High-Altitude Travel and Altitude Illness", CDC_ALT, "Respiratory depressants such as alcohol and opiates should not be used to aid sleep at high altitude.", "ok"),
  "SEA-HOT": ("NHS, Jellyfish and other sea creature stings", NHS_SEA, "[NHS quote withheld]", "CONFLICT (time/°C): healthdirect fish/stingray 45 °C up to 90 min; stonefish up to 30 min; urchin 20 min"),
  "SEA-SPINE": ("NHS, Jellyfish and other sea creature stings", NHS_SEA, "[NHS quote withheld]", "CONFLICT: healthdirect = leave stonefish spines in"),
- "SEA-STONEFISH": ("healthdirect (AU), Sea creature bites and stings", HD_SEA, "Leave the spine in the skin — unless the ambulance operator tells you to remove it. / are stung by a stonefish or other stinging fish / Call triple zero (000) and ask for an ambulance.", "ok"),
+ "SEA-STONEFISH": ("healthdirect (AU), Sea creature bites and stings", HD_SEA, "[quote withheld (copyright); see url]", "ok"),
  "SEA-DONT": ("NHS, Jellyfish and other sea creature stings", NHS_SEA, "[NHS quote withheld]", "ok"),
  "SEA-CALL": ("NHS, Jellyfish and other sea creature stings", NHS_SEA, "[NHS quote withheld]", "ok"),
  "TICK-REMOVE": ("CDC, What to Do After a Tick Bite", CDC_TICK, "Grasp the tick as close to the skin's surface as possible using clean fine-tipped tweezers. / Pull tick away from the skin with steady, even pressure. Don't twist or jerk the tick. / After removing the tick, thoroughly clean the bite area and your hands with soap and water, rubbing alcohol, or hand sanitizer.", "CONFLICT: Australia (healthdirect, ASCIA) = freeze, no tweezers"),
  "TICK-REMOVE-NHS": ("NHS, Lyme disease", NHS_LYME, "[NHS quote withheld]", "ok"),
  "TICK-DONT": ("CDC, What to Do After a Tick Bite", CDC_TICK, "Do not use petroleum jelly, heat, nail polish, or other substances to try and make the tick detach from the skin.", "ok"),
- "TICK-AU": ("healthdirect (AU), Tick bites", HD_TICK, "If you have a tick, you should kill it as soon as possible by freezing it with an ether-containing product. / Do not try to remove ticks with tweezers. / If the tick does not drop off, or can't be frozen, leave it in place and get urgent medical help.", "CONFLICT with UK/US: region-specific"),
+ "TICK-AU": ("healthdirect (AU), Tick bites", HD_TICK, "[quote withheld (copyright); see url]", "CONFLICT with UK/US: region-specific"),
  "TICK-WATCH": ("NHS, Lyme disease", NHS_LYME, "[NHS quote withheld]", "ok"),
  "TICK-WATCH-CDC": ("CDC, What to Do After a Tick Bite", CDC_TICK, "If you develop a rash or fever within several weeks of removing a tick, see your doctor:", "ok"),
  "HEX-STEPS": ("NHS, Heat exhaustion and heatstroke", NHS_HEAT, "[NHS quote withheld]", "ok"),
- "HEX-LIE": ("St John Ambulance (UK), Heat exhaustion", SJA_HEX, "Help them to lie down in a cool, shaded place and raise their legs.", "CONFLICT: not on NHS"),
+ "HEX-LIE": ("St John Ambulance (UK), Heat exhaustion", SJA_HEX, "[quote withheld (copyright); see url]", "CONFLICT: not on NHS"),
  "HEX-CALL": ("NHS, Heat exhaustion and heatstroke", NHS_HEAT, "[NHS quote withheld]", "ok"),
 }
 
@@ -77,7 +77,7 @@ def build(st, L):
     C.append({"id": "bleeding", "round": 4, "condition": "Severe bleeding", "covers": "placeholder bleeding card",
      "topic": {"en": "severe bleeding, won't stop bleeding", "pt": "sangramento forte, não para de sangrar", "es": "sangrado fuerte, no para de sangrar"},
      "rules": ["bleed-remove-object"],
-     "review_flags": ["Soaked dressing: St John + BRC 'remove and replace with a fresh one, keep firm pressure' vs NHS 'add another on top'. The card follows SJA/BRC.",
+     "review_flags": ["Soaked dressing: St John + BRC [quote withheld; replace the soaked dressing and keep pressing] vs NHS [NHS quote withheld]. The card follows SJA/BRC.",
                       "Raising the wound: NHS only; SJA/BRC raise the legs only for shock. Left out (shock line kept).",
                       "Tourniquet: RCUK 2025 (life-threatening limb bleeding pressure can't control; 5–7 cm above, not on a joint, write the time, don't release). SJA: an improvised one only if the 999 call handler asks. Keep?"],
      "langs": {

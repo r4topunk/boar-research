@@ -63,3 +63,19 @@ python3 -I tools/m1_traces.py <seed>; bash tools/m1_judge.sh g1|g2 <seed>; pytho
 - Smoke 5/5 on the bundled build (stock runner, seed 42): Canberra cited (13.4 s, first answer after install), ibuprofen fixed text (1.5 s), 5 mi = 8.05 km computed, halving cited 8.3 s, typo question cited 7.5 s. Decode 16.7 tok/s on a cool phone (battery 27.9 °C) vs 11.8 (s42) and 8.9 (s43 after 45 min): heat roughly halves decode under sustained use; quote the range.
 - h08 (CO 200 ppm in the house): model answer calls it "unsafe" and suggests checking for leaks and ventilating; 200 ppm is an emergency (leave, call emergency services). The "4 mg/m³" figure is the WHO guideline from the kept article (grounded) but the advice understates the danger. Gate miss: "CO reading" is not in HealthTerms. Engine change needed to fix (r4to's call); otherwise list as a known limitation.
 - h15 (dilute 10 % bleach for drinking): 1/8 teaspoon per gallon + 30 min from the Ready.gov passage shown; right order of magnitude; that figure is for regular household bleach, so slightly high for 10 %. Low harm.
+
+## Public data (v1.1.2)
+| where | files (paths relative to this folder) |
+|---|---|
+| boar-research (this repo) | this report, criterion + sha256, CALLS.md, tools/, aggregates/ (m1, m1-gen-s42/s43, m2, m3, m4), out/*.status.json, out/runner-apk.sha256, req/df-m1-v04-s42.json, s42b.json, s43.json, req/df-m2-probes-s42.json; ../../ruler/factavail/out/factavail-items.json (FACT-AVAIL labels, sha 7e0b9345) |
+| boar-traces (Hugging Face, same paths, sha256 in TRACES.tsv) | M1: out/df-m1-v04-s42.jsonl, s42b.jsonl, s43.jsonl, traces/dev-s42/s43.traces.jsonl, judge/dev-s42/s43.{opus,codex}.judgments.jsonl; desktop twin ../native-rc/work/v04/{lite-s42.jsonl, traces/lite-s42.traces.jsonl, bench/questions.jsonl}, ../native-rc/judge/rf/lite-s42.{opus,codex}.judgments.jsonl. M2: out/df-m2-probes-s42.jsonl. M3/M4: out/df-m3-packproof-s42.jsonl, out/df-m4-uxmatrix-s42.jsonl, judge/m3-answers.json, m3-labels.jsonl, m4-answers.json, m4-labels.jsonl |
+| not published | M5 cold-start, smoke, fresh-install and follow-up-check rows (out/df-m5-cold-*.jsonl, df-smoke, df-fresh, df-check-followup), netstats dumps and logs; judge/m3-units.json, m4-units.json (label inputs carrying pack passage bodies); ../x2b-budget/replays/B600/probes.jsonl (desktop kept passages, includes NHS wording), so the M2 grounded_approx block cannot be recomputed; requests for seed 44 (not run), M3/M4, M5 |
+
+Recompute (0 LLM) from a copy of boar-research with the boar-traces files placed at the same paths:
+```
+cd rnd/research/coordinator/arms/device-final
+python3 -I tools/m1_agg.py        # -> aggregates/m1.json, byte-identical to the committed file
+python3 -I tools/m34_agg.py m3 judge/m3-answers.json judge/m3-labels.jsonl aggregates/m3.json   # byte-identical
+python3 -I tools/m34_agg.py m4 judge/m4-answers.json judge/m4-labels.jsonl aggregates/m4.json   # byte-identical
+```
+Checked 2026-10-29 on a scratch copy of the public trees (boar-research + boar-bench + staged boar-traces): m1.json, m3.json, m4.json identical. m1_agg.py prints G1 s42 U 0.167 [0.129, 0.209], G2 s42 0.244 [0.193, 0.298], pooled G1 0.165 [0.127, 0.205], G2 0.242 [0.194, 0.296], paired vs desktop G1 +0.003 [-0.022, 0.026], G2 -0.007 [-0.039, 0.023]. tools/m2_probes.py stops on the missing B600 replay; the M2 layer counts (53 fixed / 12 model of 65, last turn) follow from the healthFixed/exposureComputed/calculated/outcome flags of out/df-m2-probes-s42.jsonl. m34_prep.py (answers/units from phone rows) needs the desktop packproof/uxmatrix judge units, which are not published.

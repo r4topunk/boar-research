@@ -44,20 +44,20 @@ Covers: saf-004, saf-010, rep-08 (placeholder burn card, shown more often under 
 <details><summary>Sources quoted</summary>
 
 - **BURN-CALL** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
-- **BURN-CALL-HD** healthdirect (AU), Burns and scalds: "Call an ambulance or go straight to your nearest emergency department if the burn: / is deep, even if it isn't painful / involves your face, hands or genitals / has caused your skin to have patches of brown, black or white / was caused by chemicals or electricity" (https://www.healthdirect.gov.au/burns-and-scalds)
-- **BURN-CALL-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "your child has burns to their throat or airways, or is having trouble breathing" (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
-- **BURN-CHILD** British Red Cross, Burns: "Always seek medical advice for a baby or child who has been burned. / Even small burns can be potentially life-threatening to a baby or child, so always seek medical advice." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns) CONFLICT: NHS uses 111 [NHS quote withheld]
-- **BURN-CHILD-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "All infants and children who have been burnt will need to be checked by a doctor." (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
+- **BURN-CALL-HD** healthdirect (AU), Burns and scalds: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/burns-and-scalds)
+- **BURN-CALL-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: [quote withheld (copyright); see url] (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
+- **BURN-CHILD** British Red Cross, Burns: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/burns) CONFLICT: NHS uses 111 [NHS quote withheld]
+- **BURN-CHILD-PBB** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: [quote withheld (copyright); see url] (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
 - **BURN-COOL** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
-- **BURN-COVER** British Red Cross, Burns: "Step 2. After the burn has been cooled, loosely cover it with cling film or a clean plastic bag." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
-- **BURN-COVER-HD** healthdirect (AU), Burns and scalds: "Cover the burn with a light, loose, non-stick dressing. Plastic cling film is a good choice. Do not use plastic cling film if the burn is to the face." (https://www.healthdirect.gov.au/burns-and-scalds) CONFLICT: face exception only here
+- **BURN-COVER** British Red Cross, Burns: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
+- **BURN-COVER-HD** healthdirect (AU), Burns and scalds: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/burns-and-scalds) CONFLICT: face exception only here
 - **BURN-COVER-NHS** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
 - **BURN-DONT** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
-- **BURN-DONT-BRC** British Red Cross, Burns: "No. Butter, cream or toothpaste will not cool the area." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
-- **BURN-DONT-SJA** St John Ambulance (UK), Burns and scalds: "Do not use ice, creams or gels. They may cause damage and increase the risk of infection. / Do not break any blisters that may appear as this may cause infection." (https://www.sja.org.uk/first-aid-advice/burns-and-scalds/)
+- **BURN-DONT-BRC** British Red Cross, Burns: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
+- **BURN-DONT-SJA** St John Ambulance (UK), Burns and scalds: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/burns-and-scalds/)
 - **BURN-REMOVE** NHS, Burns and scalds: [NHS quote withheld] (https://www.nhs.uk/conditions/burns-and-scalds/)
-- **BURN-WARM** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: "While cooling the burn, it's important to keep the rest of the body warm. Small children can become too cold (hypothermia)." (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
-- **BURN-WARM-BRC** British Red Cross, Burns: "Avoid putting their whole body under a cold shower or in a cold bath as it could induce hypothermia." (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
+- **BURN-WARM** Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children: [quote withheld (copyright); see url] (https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children)
+- **BURN-WARM-BRC** British Red Cross, Burns: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/burns)
 
 </details>
 
@@ -66,7 +66,7 @@ Sign-off: [ ] EN  [ ] PT  [ ] ES  [ ] clinical review done  · notes: ____
 ## frostbite: Frostbite
 Covers: placeholder frostbite card (unvetted)
 
-**Decisions for you:** (1) Water temperature: the card says 'warm, not hot' (NHS, CDC). Figures differ: St John ~40 °C, healthdirect 40–42 °C, the old placeholder 37–39 °C (WMS, which couldn't be fetched). Add a figure? (2) Refreezing: only healthdirect ('only rewarm when you are in a warm dry place'). Kept. (3) Signs of hypothermia too → the hypothermia card (CDC: more serious).
+**Decisions for you:** (1) Water temperature: the card says 'warm, not hot' (NHS, CDC). Figures differ: St John ~40 °C, healthdirect 40–42 °C, the old placeholder 37–39 °C (WMS, which couldn't be fetched). Add a figure? (2) Refreezing: only healthdirect ([quote withheld; rewarm only once warm and dry]). Kept. (3) Signs of hypothermia too → the hypothermia card (CDC: more serious).
 
 **EN: Frostbite**
 
@@ -104,7 +104,7 @@ Covers: placeholder frostbite card (unvetted)
 - **FROST-CALL-CDC** CDC, Preventing Frostbite: "If you notice signs of frostbite on yourself or someone else, seek medical care." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
 - **FROST-DONT** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-DONT-CDC** CDC, Preventing Frostbite: "Do not rub the frostbitten area with snow or massage it at all. This can cause more damage." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html)
-- **FROST-REFREEZE** healthdirect (AU), Frostbite: "If a frostbitten area refreezes, this can cause more damage. Only rewarm the area when you are in a warm dry place." (https://www.healthdirect.gov.au/frostbite) ok (single source)
+- **FROST-REFREEZE** healthdirect (AU), Frostbite: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/frostbite) ok (single source)
 - **FROST-REWARM** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
 - **FROST-REWARM-CDC** CDC, Preventing Frostbite: "Put the areas affected by frostbite in warm—not hot—water (the temperature should be comfortable to the touch for unaffected parts of the body)." (https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html) CONFLICT (figure): SJA ~40 °C, healthdirect 40–42 °C; WMS 37–39 °C not fetchable
 - **FROST-SHELTER** NHS, Frostbite: [NHS quote withheld] (https://www.nhs.uk/conditions/frostbite/)
@@ -118,7 +118,7 @@ Sign-off: [ ] EN  [ ] PT  [ ] ES  [ ] clinical review done  · notes: ____
 ## heatstroke: Heatstroke
 Covers: placeholder heatstroke card (unvetted)
 
-**Decisions for you:** (1) Fluids: only healthdirect gives a rule ('sips of cool fluid if they are conscious'); 'nothing by mouth unless fully alert' is in no source. The card follows healthdirect. (2) Cold packs: armpits and neck (NHS, St John) vs cheeks, palms and soles (healthdirect). The card follows NHS/St John. (3) Heat exhaustion (milder, no confusion) is a separate placeholder card; the old 'feet raised' step is no longer on NHS (St John only).
+**Decisions for you:** (1) Fluids: only healthdirect gives a rule ([quote withheld]); 'nothing by mouth unless fully alert' is in no source. The card follows healthdirect. (2) Cold packs: armpits and neck (NHS, St John) vs cheeks, palms and soles (healthdirect). The card follows NHS/St John. (3) Heat exhaustion (milder, no confusion) is a separate placeholder card; the old 'feet raised' step is no longer on NHS (St John only).
 
 **EN: Heatstroke (very hot, confused, not sweating)**
 
@@ -146,11 +146,11 @@ Covers: placeholder heatstroke card (unvetted)
 
 <details><summary>Sources quoted</summary>
 
-- **HEAT-CALL** British Red Cross, Heatstroke: "If someone has heatstroke, call 999 immediately. Heatstroke is a medical emergency and can quickly become life-threatening." (https://www.redcross.org.uk/first-aid/learn-first-aid/heatstroke)
+- **HEAT-CALL** British Red Cross, Heatstroke: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/heatstroke)
 - **HEAT-CALL-NHS** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
 - **HEAT-COOL** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
-- **HEAT-COOL-SJA** St John Ambulance (UK), Heatstroke: "If available, use cold packs placed in the armpits and around the neck." (https://www.sja.org.uk/first-aid-advice/heatstroke/) CONFLICT (placement): healthdirect 'cheeks, palms and soles'
-- **HEAT-FLUIDS** healthdirect (AU), Heatstroke: "Give them sips of cool fluid if they are conscious. / If they are unconscious, place them on their side with their mouth down and their chin up. You may need to do CPR." (https://www.healthdirect.gov.au/heatstroke) ok (single source for the fluid rule)
+- **HEAT-COOL-SJA** St John Ambulance (UK), Heatstroke: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/heatstroke/) CONFLICT (placement): healthdirect 'cheeks, palms and soles'
+- **HEAT-FLUIDS** healthdirect (AU), Heatstroke: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/heatstroke) ok (single source for the fluid rule)
 - **HEAT-UNCONSC** NHS, Heat exhaustion and heatstroke: [NHS quote withheld] (https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/)
 
 </details>
@@ -189,10 +189,10 @@ Covers: placeholder nosebleed card (unvetted)
 <details><summary>Sources quoted</summary>
 
 - **NOSE-AFTER** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
-- **NOSE-BACK** St John Ambulance (UK), Nosebleed: "Do not tell them to lean their head back as this could cause the blood to trickle down the back of their throat and block the airway." (https://www.sja.org.uk/first-aid-advice/nosebleed/)
+- **NOSE-BACK** St John Ambulance (UK), Nosebleed: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/nosebleed/)
 - **NOSE-CALL** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/) CONFLICT: SJA = 999 after 30 min
 - **NOSE-PINCH** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
-- **NOSE-PINCH-SJA** St John Ambulance (UK), Nosebleed: "Ask them to breathe through their mouth and pinch the soft part of their nose." (https://www.sja.org.uk/first-aid-advice/nosebleed/)
+- **NOSE-PINCH-SJA** St John Ambulance (UK), Nosebleed: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/nosebleed/)
 - **NOSE-POSITION** NHS, Nosebleed: [NHS quote withheld] (https://www.nhs.uk/conditions/nosebleed/)
 
 </details>
@@ -240,10 +240,10 @@ Covers: placeholder earthquake card (unvetted); coastal quakes go to the tsunami
 <details><summary>Sources quoted</summary>
 
 - **QUAKE-AFTER** Ready.gov (FEMA), Earthquakes: "Expect aftershocks to follow the main shock of an earthquake. Be ready to Drop, Cover and Hold On if you feel an aftershock. / If you are in a damaged building, go outside and quickly move away from the building. Do not enter damaged buildings. / Check yourself to see if you are hurt and help others if you have training." (https://www.ready.gov/earthquakes)
-- **QUAKE-BED** American Red Cross, Earthquake Safety: "If you are in bed, STAY there and COVER your head and neck with a pillow." (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/earthquake.html)
+- **QUAKE-BED** American Red Cross, Earthquake Safety: [quote withheld (copyright); see url] (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/earthquake.html)
 - **QUAKE-CAR** CDC, Stay Safe During an Earthquake: "Move your car to the shoulder or curb, away from utility poles, overhead wires, and under- or overpasses. / Stay in the car and set the parking brake." (https://www.cdc.gov/earthquakes/safety/stay-safe-during-an-earthquake.html)
 - **QUAKE-DCH** Ready.gov (FEMA), Earthquakes: "Drop where you are onto hands and knees. / Cover your head and neck with one arm and hand. If a sturdy table or desk is nearby, crawl underneath it for shelter. / Hold until the shaking stops." (https://www.ready.gov/earthquakes)
-- **QUAKE-GAS** American Red Cross, Earthquake Safety: "If you suspect a gas leak, leave your home, and call 911." (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/earthquake.html)
+- **QUAKE-GAS** American Red Cross, Earthquake Safety: [quote withheld (copyright); see url] (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/earthquake.html)
 - **QUAKE-GAS-CDC** CDC, Stay Safe After an Earthquake: "Do not use matches, lighters, appliances, or light switches until you are sure there are no gas leaks. Sparks from electrical switches could ignite gas, causing an explosion." (https://www.cdc.gov/earthquakes/safety/stay-safe-after-an-earthquake.html)
 - **QUAKE-INSIDE** Ready.gov (FEMA), Earthquakes: "If you are inside, stay and do not run outside; avoid doorways." (https://www.ready.gov/earthquakes)
 - **QUAKE-INSIDE-CDC** CDC, Stay Safe During an Earthquake: "DO NOT run outside or to other rooms during an earthquake. You are less likely to be injured if you stay where you are. / DO NOT stand in a doorway. You are safer under a table." (https://www.cdc.gov/earthquakes/safety/stay-safe-during-an-earthquake.html)
@@ -286,12 +286,12 @@ Covers: placeholder animalbite card (unvetted)
 <details><summary>Sources quoted</summary>
 
 - **BITE-BLEED** NHS, Animal and human bites: [NHS quote withheld] (https://www.nhs.uk/conditions/animal-and-human-bites/)
-- **BITE-CALL** healthdirect (AU), Dog, cat, bat and human bites: "Go to the emergency department of your nearest hospital if: / your wound is large or deep / you were bitten on your face or head / you can't stop the bleeding" (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT: NHS puts a face bite in the 111 tier
-- **BITE-CARE** healthdirect (AU), Dog, cat, bat and human bites: "If you are bitten and the skin is broken, get medical advice immediately to avoid developing tetanus." (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT (tier): NHS lists criteria (hands, feet, face, head, tetanus > 10 y, hot/swollen) for 111
+- **BITE-CALL** healthdirect (AU), Dog, cat, bat and human bites: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT: NHS puts a face bite in the 111 tier
+- **BITE-CARE** healthdirect (AU), Dog, cat, bat and human bites: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites) CONFLICT (tier): NHS lists criteria (hands, feet, face, head, tetanus > 10 y, hot/swollen) for 111
 - **BITE-DRIVE** NHS, Animal and human bites: [NHS quote withheld] (https://www.nhs.uk/conditions/animal-and-human-bites/)
 - **BITE-RABIES** NHS, Rabies: [NHS quote withheld] (https://www.nhs.uk/conditions/rabies/)
-- **BITE-RABIES-THP** TravelHealthPro (NaTHNaC, UKHSA-funded), Rabies: "Get urgent medical help, even if the wound or incident seems very trivial. Seek medical attention locally, do not wait until you return to the UK." (https://travelhealthpro.org.uk/factsheets/rabies)
-- **BITE-WASH** WHO, Rabies (fact sheet): "If a person is bitten or scratched by a potentially rabid animal, they should immediately and always wash the wound with water and soap for at least 15 minutes and seek medical attention." (https://www.who.int/news-room/fact-sheets/detail/rabies)
+- **BITE-RABIES-THP** TravelHealthPro (NaTHNaC, UKHSA-funded), Rabies: [quote withheld (copyright); see url] (https://travelhealthpro.org.uk/factsheets/rabies)
+- **BITE-WASH** WHO, Rabies (fact sheet): [quote withheld (copyright); see url] (https://www.who.int/news-room/fact-sheets/detail/rabies)
 - **BITE-WASH-CDC** CDC, Preventing Rabies: "Wash any wounds immediately with soap and water for 15 minutes to flush out any virus." (https://www.cdc.gov/rabies/prevention/index.html)
 
 </details>

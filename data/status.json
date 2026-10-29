@@ -1,13 +1,13 @@
 {
  "schema": "boar-publication/status",
  "schema_version": "1.3.0",
- "as_of": "2026-10-25",
+ "as_of": "2026-10-28",
  "research_state": "closed",
  "research_closed_on": "2026-10-23",
  "planned_close": null,
- "version": "1.0",
+ "version": "1.1.2",
  "license": "CC BY 4.0 (text and data)",
- "banner": "Final · as of 2026-10-25 16:46 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar",
+ "banner": "Final · as of 2026-10-28 · 0 of 71 wins on the phone, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar",
  "standing": [
   "F-038",
   "F-1653",
@@ -163,10 +163,7 @@
     "F-2215",
     "F-2217"
    ],
-   "note": "Landed 2026-10-24 20:34 as a desktop-twin run: references of both families 75/75 (OpenAI gpt-5.6-sol half completed 20:05); BoarLite b4ef94f3 scored on the 71 headline items under both judge families, one seed, stage 1 not run, no phone run. The verdict numbers are internal-pending-author (internal_fact_ids) until the author rules on AD-15; the ruler is now exposed to three engines. Update 2026-10-25: this run measured b4ef94f3; LabRat 7788924a adds the Rat persona line to the grounding prompt after it, so its number must not be attributed to LabRat without that caveat; the on-phone re-measure of LabRat is OF-8. Update 2026-10-25 (author's publication decisions): the numbers are public as history (F-2215, F-2217): lower-family U-total 0.164, win-rate 0 of 71 under both families, below the 0.50 bar; the paired delta vs the native engine branch (F-2216) stays internal because it prints that branch's absolute.",
-   "internal_fact_ids": [
-    "F-2216"
-   ]
+   "note": "Landed 2026-10-24 20:34 as a desktop-twin run: references of both families 75/75 (OpenAI gpt-5.6-sol half completed 20:05); BoarLite b4ef94f3 scored on the 71 headline items under both judge families, one seed, stage 1 not run, no phone run. The verdict numbers are internal-pending-author (internal_fact_ids) until the author rules on AD-15; the ruler is now exposed to three engines. Update 2026-10-25: this run measured b4ef94f3; LabRat 7788924a adds the Rat persona line to the grounding prompt after it, so its number must not be attributed to LabRat without that caveat; the on-phone re-measure of LabRat is OF-8. Update 2026-10-25 (author's publication decisions): the numbers are public as history (F-2215, F-2217): lower-family U-total 0.164, win-rate 0 of 71 under both families, below the 0.50 bar; the paired delta vs the native engine branch ([internal row]) stays internal because it prints that branch's absolute."
   },
   {
    "id": "OF-7",
@@ -273,27 +270,18 @@
    "date": "2026-10-25",
    "version": "1.0",
    "change": "Final: DEVICE-FINAL landed (OF-8): on a Pixel 8a LabRat wins 0 of 71 under both judge families, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), two seeds, below the 0.50 bar; phone = desktop twin; M2-M5 product numbers added. LabRat 1.0.0 hosted on Hugging Face and its source public (OF-4 landed); pack counts stated once (13 shipped, 9 self-tested, 7 tested on the phone); article live; headline filled."
+  },
+  {
+   "date": "2026-10-28",
+   "version": "1.0",
+   "change": "Open-source release folded in (2026-10-27/28): the research record (boar-research), the benchmark, judge and all evaluation sets (boar-bench), the raw run traces (boar-traces) and the knowledge packs (boar-packs) are public, alongside the hosted APK and the app source. The held-out sets (v0.2, V-para, health-fresh 1-3, chat-v3, es/meta-fresh, the older probe sets) and the second ruler v0.4 (items, both reference halves, drafts) were retired and published on 2026-10-27 in boar-bench (bench/heldout/, bench/v0.4/), with their runs in boar-traces; items are byte-identical to the hashes committed before opening, except documented redactions (old and new hashes in bench/heldout/HASHES.md). Still private: personal correspondence, the app maintainer's data, usage and spend records, credentials, the private lab history. No number changed: LabRat 0 of 71 wins, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar."
+  },
+  {
+   "date": "2026-10-29",
+   "version": "1.1.2",
+   "change": "Record 1.1.2: site, data and repositories brought to one version. One experiment registry of 387 rows on the site and in boar-research data/ (15 rows that cite only internal facts, 13 of them withheld numbers of the app maintainer's app, stay out under the maintainer-data rule); facts source_public paths resolve in boar-research; DEVICE-FINAL raw traces and judgments added to boar-traces; licences stated per artefact (text and data CC BY 4.0, code MIT, boar-traces CC BY-SA 4.0); spend lines and competitor scores removed from the public rows. No number changed: LabRat 0 of 71 wins, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol), below the 0.50 bar."
   }
  ],
- "notes": [
-  "This file is the single source for the site's status banner, the live standing and the open-fronts list. Update it whenever a new result lands (PLAN.md task PT-13).",
-  "Pass/fail criteria for the runs behind these open fronts are frozen (sha256) in the research repository before each run, not here. This file only reports state; it never defines a criterion.",
-  "Standing lists the fact ids of the headline numbers as of as_of; a number that changes gets a new fact row, never an edit of the old one.",
-  "No open front is predicted to succeed or fail; what_would_change states both directions.",
-  "EDITOR FLAG (2026-10-24): the headline changed. OLD standing (as of 2026-10-18): F-001, F-002, F-004, F-009, F-012, F-013, F-015, F-016, F-017, F-018, F-023, F-035, F-038, F-1245 — judge.v1 ratios (raw + floor-adjusted) of the frozen 4B build and the desktop deep tier on V-para / v0.2, Claude headline, win-rate 0. NEW standing (as of 2026-10-24): research closed; thesis supported only in a conditional form (outcome labels on pack-written self-tests); small engine Qwen3-1.7B; submission BoarLite; ruler v0.4 frozen with no verdict. The old rows stay in standing because they are still the only claim-build numbers on the old scale. Never put the outcome-label shares, the ruler U-total and the judge.v1 ratio on one axis.",
-  "Three metric families now coexist: (1) judge.v1 ratio, raw and floor-adjusted (old headline; V-para, v0.2, MAIN 97, CV5 51); (2) outcome-label shares (CWS, correct-any, WU, WW, HU; Claude Haiku labels on 60 or 180 dev items); (3) ruler v0.4 U-total (71 headline items, health weight 0.5, min over two judge families). Each is defined in glossary.json.",
-  "research_state = closed means the author closed the research lines on 2026-10-23 (no new research arms). Content-side pack work reopened that afternoon under CONTENT-FIRST, validation of the closed engine ran overnight, and product decisions followed on 2026-10-24; the ruler verdict run and the BoarLite delivery are still open (OF-4, OF-6).",
-  "planned_close is null: the research lines closed on 2026-10-23 (research_closed_on); the date of the v1.0 upload is not in the record. The bounty page gives a public decision date of 2026-10-31 (F-040).",
-  "EDITOR FLAG (2026-10-24 20:34): standing drops F-1703 (BoarLite as first declared: factbook v2, ported warning line) and F-2108 (v0.4 exposed, no verdict) and adds the final candidate (F-2210), the phone run (F-2201), the search-port trade-off (F-2207, F-2209), the second-family references (F-2212) and the final ruler run as a process row (F-2214; numbers internal). The 'ruler v0.4 frozen with no verdict' wording of the earlier flag is superseded.",
-  "Submitted-app numbers (the app maintainer's RC1, its replica deltas, the native engine branch, the first ruler v0.4 numbers of both engines, and BoarLite's own scores incl. the final ruler run and the search-port S2 counts) are visibility internal-pending-author: no author ruling lifting PD-09 exists as of 2026-10-24 20:34 (AD-15). An independent review held that publishing an engine-vs-app delta while withholding the app's absolute is a material omission: publish both or neither.",
-  "Evening 2026-10-24: as_of_time (added 1.2.0) gives the clock time of as_of; open fronts may carry internal_fact_ids (added 1.2.0), ids of internal-pending-author rows that resolve the front and must not render. The banner deliberately states no direction for the ruler verdict while its numbers are internal.",
-  "EDITOR FLAG (2026-10-25): standing drops F-2219 (6aa7508a release APK, superseded) and adds the rename (F-2224), the persona-line caveat (F-2225), the latest LabRat APK smoke (F-2235) and the DEVICE-FINAL criterion (F-2227). The RULER-FINAL number is for b4ef94f3; never attribute it to LabRat 7788924a without the persona-line caveat.",
-  "as_of_time 2026-10-25: 03:30 stands for the last research-log row included (DEVICE-FINAL start, recorded as 03:3x, minute not stated); later product events of the same day (logo 11:24, run interruption 11:28, hosting) are included as dated rows.",
-  "EDITOR FLAG (2026-10-25, author decisions): standing moves the old-scale rows (F-001, F-002, F-004, F-009, F-017, F-018) to history.old_scale and adds the restated thesis (F-2236) and the publication decision (F-2237); headline (added 1.3.0) is a template filled only by DEVICE-FINAL rows; history (added 1.3.0) lists earlier readings never pooled with it. F-2215 / F-2217 / F-2208 / E-473 are public (AD-15 (b)); F-2216 and every row about the app maintainer's app or the native engine branch stay internal.",
-  "EDITOR FLAG (2026-10-25 final): headline landed from F-2238, F-2239 and F-2240; the desktop-twin run of b4ef94f3 stays history (never pooled). apply_author_decisions.py leaves status.json alone once the headline has landed.",
-  "as_of_time 2026-10-25 final: 16:46 is the last record row folded in (article v1 live); later marketing rows (bento grid, film v2) are not research rows."
- ],
- "as_of_time": "16:46",
  "headline": {
   "label": "Final ruler (bench v0.4) measured on the phone: LabRat on a Pixel 8a (DEVICE-FINAL, M1 + M5)",
   "front": "OF-8",
@@ -330,5 +318,16 @@
    "F-2217",
    "F-2214"
   ]
- }
+ },
+ "notes": [
+  "Pass/fail criteria for the runs behind these open fronts are frozen (sha256) in the research repository before each run, not here. This file only reports state; it never defines a criterion.",
+  "Standing lists the fact ids of the headline numbers as of as_of; a number that changes gets a new fact row, never an edit of the old one.",
+  "No open front is predicted to succeed or fail; what_would_change states both directions.",
+  "Three metric families now coexist: (1) judge.v1 ratio, raw and floor-adjusted (old headline; V-para, v0.2, MAIN 97, CV5 51); (2) outcome-label shares (CWS, correct-any, WU, WW, HU; Claude Haiku labels on 60 or 180 dev items); (3) ruler v0.4 U-total (71 headline items, health weight 0.5, min over two judge families). Each is defined in glossary.json.",
+  "research_state = closed means the author closed the research lines on 2026-10-23 (no new research arms). Content-side pack work reopened that afternoon under CONTENT-FIRST, validation of the closed engine ran overnight, and product decisions followed on 2026-10-24; the ruler verdict run and the BoarLite delivery are still open (OF-4, OF-6).",
+  "planned_close is null: the research lines closed on 2026-10-23 (research_closed_on); the date of the v1.0 upload is not in the record. The bounty page gives a public decision date of 2026-10-31 (F-040).",
+  "as_of_time 2026-10-25: 03:30 stands for the last research-log row included (DEVICE-FINAL start, recorded as 03:3x, minute not stated); later product events of the same day (logo 11:24, run interruption 11:28, hosting) are included as dated rows.",
+  "as_of_time 2026-10-25 final: 16:46 is the last record row folded in (article v1 live); later marketing rows (bento grid, film v2) are not research rows.",
+  "as_of 2026-10-28: the record is unchanged in its numbers since 2026-10-25; as_of moves to the date the open-source release was folded in (2026-10-27/28): the research record, the benchmark with all evaluation sets (the retired held-out sets and the ruler v0.4 items, both reference halves and drafts, published 2026-10-27), the raw run traces and the knowledge packs are public; the as_of_time field was removed."
+ ]
 }

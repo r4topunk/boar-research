@@ -29,7 +29,7 @@ SWIM_OUT = [r"\b(?:swim|go|head|paddle|wade) (?:out )?(?:to|after|towards?) (?:h
 FLOAT = r"life ?jacket|flotation|float(?:ing)? device|\bfloat\b|rescue tube|boia|colete|prancha|flutuador|flotador|chaleco|salvavidas|tabla"
 r["rules"].append({"id": "rip-swim-out-rescue", "topic_regex": RIP_TOPIC, "topic_always": True, "patterns": SWIM_OUT, "review_if": FLOAT,
                    "why": "Bystanders who swim out after someone in a rip current often drown too: call the lifeguard or emergency, throw something that floats, talk them out",
-                   "sources": [{"cite": "first-aid-cards SOURCES.raw-5.md RIP-911 (NWS: 'Never enter the water without a floatation device'), RIP-OTHER (NOAA), RIP-ARC-HELP (American Red Cross + USLA: 'Do not enter the water to help a person who is in trouble unless you are trained to do so')"}]})
+                   "sources": [{"cite": "first-aid-cards SOURCES.raw-5.md RIP-911 (NWS: 'Never enter the water without a floatation device'), RIP-OTHER (NOAA), RIP-ARC-HELP (American Red Cross + USLA: '[quote withheld]')"}]})
 SCORP_TOPIC = r"scorpions?|escorpi[ãa]o|escorpi[oó]n|alacr[áa]n"
 DEFER = (r"\b(?:see|visit|call|check with) (?:a|your) (?:doctor|gp|physician)\b[^.]{0,30}\b(?:tomorrow|later|in a (?:day|few days)|if (?:it|the pain|the swelling|symptoms?) (?:gets? worse|persists?|doesn'?t improve|continues?))"
          r"|\b(?:if|when) (?:it|the pain|the swelling|symptoms?) (?:gets? worse|persists?|doesn'?t (?:improve|go away))\b[^.]{0,30}\b(?:see|visit|call) (?:a|your) (?:doctor|gp)"

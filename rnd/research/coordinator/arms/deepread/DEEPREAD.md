@@ -57,7 +57,7 @@ The 4B R450 run did not record tok/s (node-llama-cpp, `timing` nulls). On the Ma
 ## Settings, and deviations from the 4B R450 run
 | | 4B R450 (Anvil) | deep35 R450 (this run) |
 |---|---|---|
-| contexts | `anvil/exp/oracle/ctx-R450.jsonl` | **same file, reused** (sha256 `ad73972b…`) |
+| contexts | `anvil/exp/oracle/ctx-R450.jsonl` | **same file, reused** (sha256 `65322180…`) |
 | prompt | gen_oracle.mts | same logic, ported to `build_msgs.mjs` |
 | sampler | 0.7 / 40 / 0.95 / 0.05, seed 42, max 512 tokens | same |
 | context size | 4096 | `-c 4096` |
@@ -88,7 +88,7 @@ The 4B R450 run did not record tok/s (node-llama-cpp, `timing` nulls). On the Ma
 - 114 calls, 0 rate limits, 0 errors. All 114 rows are judge.v1 / claude-opus-5-5.
 
 ## Files (all in this folder)
-- `requests.jsonl` (sha256 `f9c0b3ed…`): the 57 chat requests.
+- `requests.jsonl` (sha256 `a7c2cbe4…`): the 57 chat requests.
 - `build_msgs.mjs`: prompt builder plus the 4B context check.
 - `gen_server.py`: llama-server client with the RSS sampler.
 - `gen-run.log`, `deep35-R450.traces.server.log`: logs. Mini copy: `<runner>/kiln/deepread/`.

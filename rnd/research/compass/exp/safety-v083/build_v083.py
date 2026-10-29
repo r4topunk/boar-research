@@ -18,7 +18,7 @@ SRC = lambda *ids: [{"cite": f"Compass first-aid sources round 2 ({', '.join(ids
 r["rules"] += [
  {"id": "head-remove-helmet", "topic": "head injury", "topic_regex": TOPIC, "type": "forbid",
   "patterns": [r"\b(?:remove|take\s+off|pull\s+off|unstrap)\w*\b[^.]{0,20}\bhelmet\b", r"\b(?:tir|remov|arranc)\w*\b[^.]{0,20}\bcapacete\b", r"\b(?:qu[ií]t|sac|retir)\w*\b[^.]{0,20}\bcasco\b"],
-  "why": "Don't remove a helmet after a head injury", "sources": SRC("HEAD-NECK: healthdirect 'If they are wearing a helmet, don't remove it.'")},
+  "why": "Don't remove a helmet after a head injury", "sources": SRC("HEAD-NECK: healthdirect '[quote withheld].'")},
  {"id": "head-drive-self", "topic": "head injury", "topic_regex": TOPIC, "type": "forbid",
   "patterns": [r"\bdrive\s+(?:yourself|himself|herself|themselves)\b", r"\b(?:dirija|dirigir)\b[^.]{0,20}\b(?:voc[êe]\s+mesm[oa]|sozinh[oa])\b", r"\bconduzca\b|\b(?:manej|conduc)\w+\s+(?:usted|t[úu])\s+mism[oa]\b"],
   "why": "Don't drive yourself to hospital after hitting your head", "sources": SRC("HEAD-111: NHS [NHS quote withheld]")},
@@ -32,7 +32,7 @@ r["rules"] += [
   "review_if": f"^(?!.*(?:{NECK_CUE})).*$",
   "benign_negation": r"\b(?:n[ãa]o\s+(?:responde|reage|acorda|se\s+mexe)|no\s+(?:responde|reacciona|despierta)|not\s+(?:responding|waking\s+up|moving))\b",
   "why": "Don't move someone who may have a neck/spinal injury (fall from height, unresponsive) unless in danger; without such a cue the hit is only flagged for review",
-  "sources": SRC("HEAD-NECK: SJA 'Do not move them and do not tell them to move, unless they are in immediate danger.'")},
+  "sources": SRC("HEAD-NECK: SJA [quote withheld]")},
  {"id": "head-no-care", "topic": "head injury", "topic_regex": TOPIC, "type": "forbid",
   "patterns": [r"\bno\s+need\s+(?:to\s+(?:see|call|go\s+to)|for)\s+(?:a\s+|an\s+|the\s+)?(?:doctor|hospital|a&e|emergency|ambulance)", r"\b(?:just\s+)?wait\s+and\s+see\b",
                r"\bn[ãa]o\s+(?:precisa|[ée]\s+necess[áa]rio)\b[^.]{0,20}\b(?:m[ée]dico|hospital|emerg[êe]ncia|ambul[âa]ncia|pronto.socorro)", r"\bno\s+(?:hace\s+falta|es\s+necesari[oa])\b[^.]{0,20}\b(?:m[ée]dico|hospital|urgencias|emergencias|ambulancia)"],
@@ -41,7 +41,7 @@ r["rules"] += [
  {"id": "head-painkiller", "topic": "head injury", "topic_regex": TOPIC, "type": "forbid",
   "patterns": [r"\b(?:aspirin|ibuprofen|aspirina|ibuprofeno)\b"],
   "review_if": r".", "why": "Flag aspirin/ibuprofen after a head injury (healthdirect: paracetamol only; NHS Wales allows ibuprofen)",
-  "sources": SRC("HEAD-HOME: healthdirect 'take paracetamol, but not other pain-relief medicines'")},
+  "sources": SRC("HEAD-HOME: healthdirect [quote withheld]")},
 ]
 # frost-direct-heat: PT/ES heat sources missing in v0.8.2 (found by a first-aid-card mutant: "Aqueça no fogo" passed)
 R = {x["id"]: x for x in r["rules"]}

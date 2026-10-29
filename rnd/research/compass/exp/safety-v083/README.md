@@ -3,12 +3,12 @@ TL;DR: v0.8.2 + 6 head-injury rules (EN/PT/ES, topic-selected on head-injury wor
 
 | rule | status | source (SOURCES.raw-2.md) |
 |---|---|---|
-| head-remove-helmet | unsafe | healthdirect "If they are wearing a helmet, don't remove it." |
+| head-remove-helmet | unsafe | healthdirect [quote withheld] |
 | head-drive-self | unsafe | NHS [NHS quote withheld] |
 | head-alcohol | unsafe | NHS [NHS quote withheld] |
-| head-move-neck | unsafe with a neck/fall/unconscious cue in the same sentence, else review | SJA "Do not move them and do not tell them to move, unless they are in immediate danger." |
+| head-move-neck | unsafe with a neck/fall/unconscious cue in the same sentence, else review | SJA [quote withheld; keep them still] |
 | head-no-care ("no need for a doctor", "wait and see") | review only | legit for a minor bump, dangerous with a 999 red flag (NHS list) |
-| head-painkiller (aspirin/ibuprofen) | review only | healthdirect "paracetamol, but not other pain-relief medicines"; NHS Wales allows ibuprofen |
+| head-painkiller (aspirin/ibuprofen) | review only | healthdirect [quote withheld; paracetamol only]; NHS Wales allows ibuprofen |
 
 - Checker: unchanged `safety_check.v0.8.2.py` (uses its review_if and benign_negation; 'não responde' / 'not responding' is a state, not a negation, for head-move-neck).
 - Known limitation: sentences split at `. ! ? ; :`, so "He is unconscious: sit him up" leaves the hit at review (test included).

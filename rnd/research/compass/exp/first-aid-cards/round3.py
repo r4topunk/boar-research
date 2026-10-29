@@ -1,70 +1,70 @@
 """Round 3 (Compass, 2026-10-03): burn, frostbite, heatstroke, nosebleed, earthquake (inland), animal bite: vetted
 replacements for Sonar's placeholders. Imported by build_cards.py. Sources: SOURCES.raw-3.md (all curl, 244/244 exact)."""
 
-NHS_BURN, SJA_BURN, BRC_BURN = "https://www.nhs.uk/conditions/burns-and-scalds/", "https://www.sja.org.uk/first-aid-advice/burns-and-scalds/", "https://www.redcross.org.uk/first-aid/learn-first-aid/burns"
+NHS_BURN, SJA_BURN, BRC_BURN = "https://www.nhs.uk/conditions/burns-and-scalds/", "https://www.sja.org.uk/first-aid-advice/burns-and-scalds/", "[quote withheld (copyright); see url]"
 HD_BURN, PBB_BURN = "https://www.healthdirect.gov.au/burns-and-scalds", "https://www.pregnancybirthbaby.org.au/parenting-and-family/family-safety/treating-burns-and-scalds-in-children"
 NHS_FROST, CDC_FROST, HD_FROST, SJA_FROST = "https://www.nhs.uk/conditions/frostbite/", "https://www.cdc.gov/winter-weather/prevention/preventing-frostbite.html", "https://www.healthdirect.gov.au/frostbite", "https://www.sja.org.uk/first-aid-advice/frostbite/"
-NHS_HEAT, HD_HEAT, SJA_HEAT, BRC_HEAT = "https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/", "https://www.healthdirect.gov.au/heatstroke", "https://www.sja.org.uk/first-aid-advice/heatstroke/", "https://www.redcross.org.uk/first-aid/learn-first-aid/heatstroke"
-NHS_NOSE, SJA_NOSE, BRC_NOSE = "https://www.nhs.uk/conditions/nosebleed/", "https://www.sja.org.uk/first-aid-advice/nosebleed/", "https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/nosebleed"
+NHS_HEAT, HD_HEAT, SJA_HEAT, BRC_HEAT = "https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/", "https://www.healthdirect.gov.au/heatstroke", "[quote withheld (copyright); see url]", "https://www.redcross.org.uk/first-aid/learn-first-aid/heatstroke"
+NHS_NOSE, SJA_NOSE, BRC_NOSE = "https://www.nhs.uk/conditions/nosebleed/", "https://www.sja.org.uk/first-aid-advice/nosebleed/", "[quote withheld (copyright); see url]"
 READY_Q, CDC_QD, CDC_QA, ARC_Q = "https://www.ready.gov/earthquakes", "https://www.cdc.gov/earthquakes/safety/stay-safe-during-an-earthquake.html", "https://www.cdc.gov/earthquakes/safety/stay-safe-after-an-earthquake.html", "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/earthquake.html"
 NHS_BITE, HD_BITE, WHO_RAB, CDC_RAB, NHS_RAB, THP_RAB = ("https://www.nhs.uk/conditions/animal-and-human-bites/", "https://www.healthdirect.gov.au/dog-cat-bat-and-human-bites",
-    "https://www.who.int/news-room/fact-sheets/detail/rabies", "https://www.cdc.gov/rabies/prevention/index.html", "https://www.nhs.uk/conditions/rabies/", "https://travelhealthpro.org.uk/factsheets/rabies")
+    "[quote withheld (copyright); see url]", "https://www.cdc.gov/rabies/prevention/index.html", "https://www.nhs.uk/conditions/rabies/", "https://travelhealthpro.org.uk/factsheets/rabies")
 
 S3 = {
  "BURN-COOL": ("NHS, Burns and scalds", NHS_BURN, "[NHS quote withheld]", "ok"),
  "BURN-REMOVE": ("NHS, Burns and scalds", NHS_BURN, "[NHS quote withheld]", "ok"),
- "BURN-WARM": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "While cooling the burn, it's important to keep the rest of the body warm. Small children can become too cold (hypothermia).", "ok"),
- "BURN-WARM-BRC": ("British Red Cross, Burns", BRC_BURN, "Avoid putting their whole body under a cold shower or in a cold bath as it could induce hypothermia.", "ok"),
- "BURN-COVER": ("British Red Cross, Burns", BRC_BURN, "Step 2. After the burn has been cooled, loosely cover it with cling film or a clean plastic bag.", "ok"),
+ "BURN-WARM": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "[quote withheld (copyright); see url]", "ok"),
+ "BURN-WARM-BRC": ("British Red Cross, Burns", BRC_BURN, "[quote withheld (copyright); see url]", "ok"),
+ "BURN-COVER": ("British Red Cross, Burns", BRC_BURN, "[quote withheld (copyright); see url]", "ok"),
  "BURN-COVER-NHS": ("NHS, Burns and scalds", NHS_BURN, "[NHS quote withheld]", "ok"),
- "BURN-COVER-HD": ("healthdirect (AU), Burns and scalds", HD_BURN, "Cover the burn with a light, loose, non-stick dressing. Plastic cling film is a good choice. Do not use plastic cling film if the burn is to the face.", "CONFLICT: face exception only here"),
+ "BURN-COVER-HD": ("healthdirect (AU), Burns and scalds", HD_BURN, "[quote withheld (copyright); see url]", "CONFLICT: face exception only here"),
  "BURN-DONT": ("NHS, Burns and scalds", NHS_BURN, "[NHS quote withheld]", "ok"),
- "BURN-DONT-SJA": ("St John Ambulance (UK), Burns and scalds", SJA_BURN, "Do not use ice, creams or gels. They may cause damage and increase the risk of infection. / Do not break any blisters that may appear as this may cause infection.", "ok"),
- "BURN-DONT-BRC": ("British Red Cross, Burns", BRC_BURN, "No. Butter, cream or toothpaste will not cool the area.", "ok"),
+ "BURN-DONT-SJA": ("St John Ambulance (UK), Burns and scalds", SJA_BURN, "[quote withheld (copyright); see url]", "ok"),
+ "BURN-DONT-BRC": ("British Red Cross, Burns", BRC_BURN, "[quote withheld (copyright); see url]", "ok"),
  "BURN-CALL": ("NHS, Burns and scalds", NHS_BURN, "[NHS quote withheld]", "ok"),
- "BURN-CALL-HD": ("healthdirect (AU), Burns and scalds", HD_BURN, "Call an ambulance or go straight to your nearest emergency department if the burn: / is deep, even if it isn't painful / involves your face, hands or genitals / has caused your skin to have patches of brown, black or white / was caused by chemicals or electricity", "ok"),
- "BURN-CALL-PBB": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "your child has burns to their throat or airways, or is having trouble breathing", "ok"),
- "BURN-CHILD": ("British Red Cross, Burns", BRC_BURN, "Always seek medical advice for a baby or child who has been burned. / Even small burns can be potentially life-threatening to a baby or child, so always seek medical advice.", "CONFLICT: NHS uses 111 'if not sure'"),
- "BURN-CHILD-PBB": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "All infants and children who have been burnt will need to be checked by a doctor.", "ok"),
+ "BURN-CALL-HD": ("healthdirect (AU), Burns and scalds", HD_BURN, "[quote withheld (copyright); see url]", "ok"),
+ "BURN-CALL-PBB": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "[quote withheld (copyright); see url]", "ok"),
+ "BURN-CHILD": ("British Red Cross, Burns", BRC_BURN, "[quote withheld (copyright); see url]", "CONFLICT: NHS uses 111 'if not sure'"),
+ "BURN-CHILD-PBB": ("Pregnancy, Birth and Baby (healthdirect), Treating burns and scalds in children", PBB_BURN, "[quote withheld (copyright); see url]", "ok"),
  "FROST-SHELTER": ("NHS, Frostbite", NHS_FROST, "[NHS quote withheld]", "ok"),
  "FROST-SHELTER-CDC": ("CDC, Preventing Frostbite", CDC_FROST, "2) Get them into a warm room or shelter. / 3) Remove any wet clothing.", "ok"),
  "FROST-REWARM": ("NHS, Frostbite", NHS_FROST, "[NHS quote withheld]", "ok"),
  "FROST-REWARM-CDC": ("CDC, Preventing Frostbite", CDC_FROST, "Put the areas affected by frostbite in warm—not hot—water (the temperature should be comfortable to the touch for unaffected parts of the body).", "CONFLICT (figure): SJA ~40 °C, healthdirect 40–42 °C; WMS 37–39 °C not fetchable"),
  "FROST-DONT": ("NHS, Frostbite", NHS_FROST, "[NHS quote withheld]", "ok"),
  "FROST-DONT-CDC": ("CDC, Preventing Frostbite", CDC_FROST, "Do not rub the frostbitten area with snow or massage it at all. This can cause more damage.", "ok"),
- "FROST-REFREEZE": ("healthdirect (AU), Frostbite", HD_FROST, "If a frostbitten area refreezes, this can cause more damage. Only rewarm the area when you are in a warm dry place.", "ok (single source)"),
+ "FROST-REFREEZE": ("healthdirect (AU), Frostbite", HD_FROST, "[quote withheld (copyright); see url]", "ok (single source)"),
  "FROST-WALK": ("CDC, Preventing Frostbite", CDC_FROST, "Unless absolutely necessary, do not walk on feet or toes that show signs of frostbite—this increases the damage.", "ok"),
  "FROST-CALL": ("NHS, Frostbite", NHS_FROST, "[NHS quote withheld]", "ok"),
  "FROST-CALL-CDC": ("CDC, Preventing Frostbite", CDC_FROST, "If you notice signs of frostbite on yourself or someone else, seek medical care.", "ok"),
- "HEAT-CALL": ("British Red Cross, Heatstroke", BRC_HEAT, "If someone has heatstroke, call 999 immediately. Heatstroke is a medical emergency and can quickly become life-threatening.", "ok"),
+ "HEAT-CALL": ("British Red Cross, Heatstroke", BRC_HEAT, "[quote withheld (copyright); see url]", "ok"),
  "HEAT-CALL-NHS": ("NHS, Heat exhaustion and heatstroke", NHS_HEAT, "[NHS quote withheld]", "ok"),
  "HEAT-COOL": ("NHS, Heat exhaustion and heatstroke", NHS_HEAT, "[NHS quote withheld]", "ok"),
- "HEAT-COOL-SJA": ("St John Ambulance (UK), Heatstroke", SJA_HEAT, "If available, use cold packs placed in the armpits and around the neck.", "CONFLICT (placement): healthdirect 'cheeks, palms and soles'"),
- "HEAT-FLUIDS": ("healthdirect (AU), Heatstroke", HD_HEAT, "Give them sips of cool fluid if they are conscious. / If they are unconscious, place them on their side with their mouth down and their chin up. You may need to do CPR.", "ok (single source for the fluid rule)"),
+ "HEAT-COOL-SJA": ("St John Ambulance (UK), Heatstroke", SJA_HEAT, "[quote withheld (copyright); see url]", "CONFLICT (placement): healthdirect 'cheeks, palms and soles'"),
+ "HEAT-FLUIDS": ("healthdirect (AU), Heatstroke", HD_HEAT, "[quote withheld (copyright); see url]", "ok (single source for the fluid rule)"),
  "HEAT-UNCONSC": ("NHS, Heat exhaustion and heatstroke", NHS_HEAT, "[NHS quote withheld]", "ok"),
  "NOSE-POSITION": ("NHS, Nosebleed", NHS_NOSE, "[NHS quote withheld]", "ok"),
  "NOSE-PINCH": ("NHS, Nosebleed", NHS_NOSE, "[NHS quote withheld]", "ok"),
- "NOSE-PINCH-SJA": ("St John Ambulance (UK), Nosebleed", SJA_NOSE, "Ask them to breathe through their mouth and pinch the soft part of their nose.", "ok"),
- "NOSE-BACK": ("St John Ambulance (UK), Nosebleed", SJA_NOSE, "Do not tell them to lean their head back as this could cause the blood to trickle down the back of their throat and block the airway.", "ok"),
+ "NOSE-PINCH-SJA": ("St John Ambulance (UK), Nosebleed", SJA_NOSE, "[quote withheld (copyright); see url]", "ok"),
+ "NOSE-BACK": ("St John Ambulance (UK), Nosebleed", SJA_NOSE, "[quote withheld (copyright); see url]", "ok"),
  "NOSE-AFTER": ("NHS, Nosebleed", NHS_NOSE, "[NHS quote withheld]", "ok"),
  "NOSE-CALL": ("NHS, Nosebleed", NHS_NOSE, "[NHS quote withheld]", "CONFLICT: SJA = 999 after 30 min"),
  "QUAKE-DCH": ("Ready.gov (FEMA), Earthquakes", READY_Q, "Drop where you are onto hands and knees. / Cover your head and neck with one arm and hand. If a sturdy table or desk is nearby, crawl underneath it for shelter. / Hold until the shaking stops.", "ok"),
  "QUAKE-INSIDE": ("Ready.gov (FEMA), Earthquakes", READY_Q, "If you are inside, stay and do not run outside; avoid doorways.", "ok"),
  "QUAKE-INSIDE-CDC": ("CDC, Stay Safe During an Earthquake", CDC_QD, "DO NOT run outside or to other rooms during an earthquake. You are less likely to be injured if you stay where you are. / DO NOT stand in a doorway. You are safer under a table.", "ok"),
- "QUAKE-BED": ("American Red Cross, Earthquake Safety", ARC_Q, "If you are in bed, STAY there and COVER your head and neck with a pillow.", "ok"),
+ "QUAKE-BED": ("American Red Cross, Earthquake Safety", ARC_Q, "[quote withheld (copyright); see url]", "ok"),
  "QUAKE-OUTSIDE": ("Ready.gov (FEMA), Earthquakes", READY_Q, "If you're outside, stay there. Move to an open area away from buildings, trees, streetlights and power lines.", "ok"),
  "QUAKE-CAR": ("CDC, Stay Safe During an Earthquake", CDC_QD, "Move your car to the shoulder or curb, away from utility poles, overhead wires, and under- or overpasses. / Stay in the car and set the parking brake.", "ok"),
  "QUAKE-AFTER": ("Ready.gov (FEMA), Earthquakes", READY_Q, "Expect aftershocks to follow the main shock of an earthquake. Be ready to Drop, Cover and Hold On if you feel an aftershock. / If you are in a damaged building, go outside and quickly move away from the building. Do not enter damaged buildings. / Check yourself to see if you are hurt and help others if you have training.", "ok"),
- "QUAKE-GAS": ("American Red Cross, Earthquake Safety", ARC_Q, "If you suspect a gas leak, leave your home, and call 911.", "ok"),
+ "QUAKE-GAS": ("American Red Cross, Earthquake Safety", ARC_Q, "[quote withheld (copyright); see url]", "ok"),
  "QUAKE-GAS-CDC": ("CDC, Stay Safe After an Earthquake", CDC_QA, "Do not use matches, lighters, appliances, or light switches until you are sure there are no gas leaks. Sparks from electrical switches could ignite gas, causing an explosion.", "ok"),
  "QUAKE-TRAPPED": ("Ready.gov (FEMA), Earthquakes", READY_Q, "If you are trapped, send a text or bang on a pipe or wall. Cover your mouth with your shirt for protection and instead of shouting, use a whistle.", "ok"),
- "BITE-WASH": ("WHO, Rabies (fact sheet)", WHO_RAB, "If a person is bitten or scratched by a potentially rabid animal, they should immediately and always wash the wound with water and soap for at least 15 minutes and seek medical attention.", "ok"),
+ "BITE-WASH": ("WHO, Rabies (fact sheet)", WHO_RAB, "[quote withheld (copyright); see url]", "ok"),
  "BITE-WASH-CDC": ("CDC, Preventing Rabies", CDC_RAB, "Wash any wounds immediately with soap and water for 15 minutes to flush out any virus.", "ok"),
  "BITE-BLEED": ("NHS, Animal and human bites", NHS_BITE, "[NHS quote withheld]", "ok"),
- "BITE-CARE": ("healthdirect (AU), Dog, cat, bat and human bites", HD_BITE, "If you are bitten and the skin is broken, get medical advice immediately to avoid developing tetanus.", "CONFLICT (tier): NHS lists criteria (hands, feet, face, head, tetanus > 10 y, hot/swollen) for 111"),
+ "BITE-CARE": ("healthdirect (AU), Dog, cat, bat and human bites", HD_BITE, "[quote withheld (copyright); see url]", "CONFLICT (tier): NHS lists criteria (hands, feet, face, head, tetanus > 10 y, hot/swollen) for 111"),
  "BITE-RABIES": ("NHS, Rabies", NHS_RAB, "[NHS quote withheld]", "ok"),
- "BITE-RABIES-THP": ("TravelHealthPro (NaTHNaC, UKHSA-funded), Rabies", THP_RAB, "Get urgent medical help, even if the wound or incident seems very trivial. Seek medical attention locally, do not wait until you return to the UK.", "ok"),
- "BITE-CALL": ("healthdirect (AU), Dog, cat, bat and human bites", HD_BITE, "Go to the emergency department of your nearest hospital if: / your wound is large or deep / you were bitten on your face or head / you can't stop the bleeding", "CONFLICT: NHS puts a face bite in the 111 tier"),
+ "BITE-RABIES-THP": ("TravelHealthPro (NaTHNaC, UKHSA-funded), Rabies", THP_RAB, "[quote withheld (copyright); see url]", "ok"),
+ "BITE-CALL": ("healthdirect (AU), Dog, cat, bat and human bites", HD_BITE, "[quote withheld (copyright); see url]", "CONFLICT: NHS puts a face bite in the 111 tier"),
  "BITE-DRIVE": ("NHS, Animal and human bites", NHS_BITE, "[NHS quote withheld]", "ok"),
 }
 
@@ -109,7 +109,7 @@ def build(st, L):
   "topic": {"en": "frostbite on the toes", "pt": "congelamento nos dedos do pé", "es": "congelación en los dedos del pie"},
   "rules": ["frost-rub", "frost-direct-heat", "frost-walk"],
   "review_flags": ["Water temperature: the card says 'warm, not hot' (NHS, CDC). Figures differ: St John ~40 °C, healthdirect 40–42 °C, the old placeholder 37–39 °C (WMS, which couldn't be fetched). Add a figure?",
-                   "Refreezing: only healthdirect ('only rewarm when you are in a warm dry place'). Kept.",
+                   "Refreezing: only healthdirect ([quote withheld; rewarm only once warm and dry]). Kept.",
                    "Signs of hypothermia too → the hypothermia card (CDC: more serious)."],
   "langs": {
    "en": L("Frostbite", [
@@ -141,7 +141,7 @@ def build(st, L):
   "covers": "placeholder heatstroke card (unvetted)",
   "topic": {"en": "heatstroke, very hot and confused", "pt": "insolação, muito quente e confuso", "es": "golpe de calor, muy caliente y confundido"},
   "rules": ["heat-fluids-unconscious", "heat-fluids-confused"],
-  "review_flags": ["Fluids: only healthdirect gives a rule ('sips of cool fluid if they are conscious'); 'nothing by mouth unless fully alert' is in no source. The card follows healthdirect.",
+  "review_flags": ["Fluids: only healthdirect gives a rule ([quote withheld; small cool drinks only if conscious]); 'nothing by mouth unless fully alert' is in no source. The card follows healthdirect.",
                    "Cold packs: armpits and neck (NHS, St John) vs cheeks, palms and soles (healthdirect). The card follows NHS/St John.",
                    "Heat exhaustion (milder, no confusion) is a separate placeholder card; the old 'feet raised' step is no longer on NHS (St John only)."],
   "langs": {

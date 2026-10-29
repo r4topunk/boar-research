@@ -1,6 +1,23 @@
 # Reproducing the BOAR claim build (cut 7) and the public dev bench v0.1
 
-DRAFT, not published. TL;DR: you can rebuild the exact claim engine from a public commit plus one patch and check its tree hash; you can run the 60-question public dev bench v0.1 end to end on a plain Mac and judge it with your own references and your own Opus account. You cannot reproduce our held-out numbers: those sets are withheld or exposed (section 5). Bill of materials with sizes, hashes, licences and URLs: [BOM.md](BOM.md).
+TL;DR: you can rebuild the exact claim engine from a public commit plus one patch and check its tree hash; you can run the 60-question public dev bench v0.1 end to end on a plain Mac and judge it with your own Opus account (the frozen references are public since v1.0). Since v1.1 the retired held-out sets (bench v0.2, V-para and the rest) are public too, as development data, and their exposure ledger is public (section 6). Bill of materials with sizes, hashes, licences and URLs: [BOM.md](BOM.md).
+
+## v1.1 layout (read this first)
+
+This guide was first written for a single package with the folders `engine/`, `tools/` and `boar-eval/`. In the public release (v1.1.2) it is split over two sibling repositories, `boar-research` (this one) and `boar-bench`; clone both side by side (`boar-bench` and `boar-research` in the same parent directory) and read every `boar-eval/...` path below as `boar-bench/...`. Where a file moved, the new place is:
+
+| Path in the guide | Where it is now |
+|---|---|
+| `boar-eval/` | the repository `boar-bench` (run harness commands from its root) |
+| `engine/` (patches, `verify-trees.sh`, `tree-hash.mjs`) and `tools/` (`fetch-assets.sh`, `plain-mac-deps.sh`) | `boar-research/rnd/research/coordinator/repro/` (this folder; called `$REPRO` below) |
+| `adapters/desktop-node/configs/claim-cut7-v01.json` | `$REPRO/claim-config-cut7.json` (cut 7 claim config, seed 44; the commands below change the seed) |
+| `bench/v0.1/refs/gen_refs.public.mjs` | `boar-bench/bench/v0.1/refs/gen_refs.mjs` (regenerates the 27 new items only; the 60 frozen answers are `bench/v0.1/refs/refs.jsonl`) |
+| `bench/v0.2/plan/floor_metrics.py` | `boar-bench/metrics/floor_metrics.py` (this copy, sha256 63080991..., adds `--floor-missing` and `--strict`; its default output is unchanged. The frozen copy in the v0.2 plan folder, `bench/heldout/bench-v02/live/v0.2/plan/floor_metrics.py`, is the older fe7c70b7... version without those two flags; the v0.3 plan folder has the 63080991 copy) |
+| bench v0.2 (110 items), V-para (58 items) | `boar-bench/bench/heldout/bench-v02/live/v0.2/` and `boar-bench/bench/heldout/vpara1/`; their runs are in `boar-research/rnd/heldout/` and, as raw `.jsonl`, in the traces dataset (`TRACES.md`) |
+| `EXPOSURES.md` | `boar-research/rnd/research/coordinator/EXPOSURES.md` (public) |
+| `claim-record/`, `claim-scripts/`, `PROVENANCE.tsv` | not shipped (see section 6); the claim results are in `CLAIM-RESULTS-cut3.md`, `CLAIM-RESULTS-cut6.md`, `CLAIM-RUNS-cut3.md` and `CLAIM-RUNS-cut6.md` in `boar-research/rnd/research/coordinator/` |
+
+Set once, from the root of `boar-bench` (section 4 assumes you stay there): `REPRO="$PWD/../boar-research/rnd/research/coordinator/repro"`.
 
 ## 1. What the claim says (copied from the claim draft v3.8, section 1; three scales, always together)
 
@@ -34,7 +51,7 @@ Environment variables (all optional; defaults in brackets): `BOAR_APP` [`$HOME/b
 ```bash
 git clone https://github.com/UPSTREAM_REPO/boar-app "$HOME/boar-app"            # public, MIT
 git -C "$HOME/boar-app" cat-file -t 0cfd4a77badd01297af8dc9a3a10924f8a895105   # expect: commit
-cd <this package>/engine
+cd "$REPRO"
 shasum -a 256 -c cut7.vs-0cfd4a77.patch.sha256                              # patch sha 0fba26b8...
 ./verify-trees.sh "$HOME/boar-app" /tmp/boar-vt .                           # builds throwaway worktrees, prints both hashes, removes them
 ```
@@ -43,11 +60,11 @@ Expected output (both lines per tree must read `OK`): cut 7 git tree `17d42f2027
 ## 4. (b) Run bench v0.1 end to end on the desktop-node adapter
 
 ```bash
-# 0. assets (about 2.9 GB) and node deps
-cd <this package>
-tools/fetch-assets.sh                       # models + 2 packs, size and sha256 checked; --check = dry run
-tools/plain-mac-deps.sh "$HOME/boar-repro-deps"   # prints the two export lines for BOAR_EVAL_APP_NM / BOAR_EVAL_RUNNER_NM; run them
-cd boar-eval && pnpm install --no-frozen-lockfile --filter @boar-eval/protocol --filter @boar-eval/desktop-node
+# 0. assets (about 2.9 GB) and node deps; run from the root of boar-bench (cd there first if you are not)
+REPRO="$PWD/../boar-research/rnd/research/coordinator/repro"   # as in the layout section; skip if already set
+"$REPRO/fetch-assets.sh"                    # models + 2 packs, size and sha256 checked; --check = dry run
+"$REPRO/plain-mac-deps.sh" "$HOME/boar-repro-deps"   # prints the two export lines for BOAR_EVAL_APP_NM / BOAR_EVAL_RUNNER_NM; run them
+pnpm install --no-frozen-lockfile --filter @boar-eval/protocol --filter @boar-eval/desktop-node
 
 # 1. emergency detector (needed for the claim numbers, BOM rows 5-7; files not hosted yet, see BOM)
 git clone --depth 1 --branch b11010 https://github.com/ggml-org/llama.cpp "$HOME/boar/llama-b11010"   # commit 4bc272fd...
@@ -59,15 +76,15 @@ DET="$HOME/boar/shared-models/emergency-detector"                           # pu
 # 2. requests: one per question, config = claim config (cut 7, Qwen3-4B, crypto + wikivoyage kit, quickFirst on)
 for S in 44 45; do
   mkdir -p runs/repro/cut7-v01-s$S
-  sed "s/\"seed\": 44/\"seed\": $S/" adapters/desktop-node/configs/claim-cut7-v01.json > runs/repro/cfg-s$S.json
+  sed "s/\"seed\": 44/\"seed\": $S/" "$REPRO/claim-config-cut7.json" > runs/repro/cfg-s$S.json
   pnpm -s -C packages/protocol exec tsx src/makeRequests.ts --questions "$PWD/bench/v0.1/questions.public.jsonl" \
     --config "$PWD/runs/repro/cfg-s$S.json" --run-id cut7-v01-s$S > runs/repro/cut7-v01-s$S/requests.jsonl
 done
 
 # 3. engine tree = 0cfd4a77 + cut 7 patch (same code path as the claim runs; prints the tree location)
 export BOAR_APP="$HOME/boar-app" BOAR_EVAL_RUNNER_DIR=be-repo
-adapters/desktop-node/setup.sh 0cfd4a77 --patch ../engine/cut7.vs-0cfd4a77.patch --arm cut7
-node ../engine/tree-hash.mjs "$HOME/boar/kiln/be-0cfd4a77-cut7"             # expect 7c96e59e... (same hash as section 3)
+adapters/desktop-node/setup.sh 0cfd4a77 --patch "$REPRO/cut7.vs-0cfd4a77.patch" --arm cut7
+node "$REPRO/tree-hash.mjs" "$HOME/boar/kiln/be-0cfd4a77-cut7"             # expect 7c96e59e... (same hash as section 3)
 
 # 4. run (60 questions; a few minutes to an hour per seed depending on the Mac), traces are validated against the protocol
 for S in 44 45; do
@@ -80,50 +97,52 @@ done
 
 ## 5. (c) Judge and score with your own references and judge
 
-Opus is a closed, paid, non-deterministic model; we do not ship reference text. The frozen reference answers of the claim runs exist only as sha256 per answer (`boar-eval/bench/v0.1/refs/MANIFEST.jsonl`); 33 of the 60 items reuse answers frozen earlier, so you cannot regenerate them byte for byte. You write your own:
+Opus is a closed, paid, non-deterministic model, so your judge outputs will not match ours byte for byte. Since v1.0 the 60 frozen reference answers of bench v0.1 are public (`bench/v0.1/refs/refs.jsonl`, pinned by `bench/v0.1/refs/MANIFEST.json`, prompt `prompts/reference.v1.md`, sha d5144343...), and `harness/judge.mjs` picks them up and checks the pin, so you can judge against the same references we did. Only if you want references of your own: `node bench/v0.1/refs/gen_refs.mjs` writes new answers for the 27 items that were generated for v0.1 (sequential Opus + web-search calls; flags `--ids`, `--limit`; the other 33 items reuse answers frozen earlier by `bench/v0.1/build.py`, so those cannot be regenerated byte for byte); pass your own file to the judge with `--refs`.
 ```bash
-cd boar-eval
-REFS_ORIGIN=all REFS_OUT_DIR="$PWD/refs-own" node bench/v0.1/refs/gen_refs.public.mjs     # 60 sequential Opus + web-search calls; prompt reference.v1 (sha d5144343...) is in bench/v0.1/refs/
+# from the root of boar-bench
 # judge.v1, both orders, no --effort. 57 judged items x 2 orders = 114 calls per run (venue-list items are scored against OSM gold, not by the judge; the claim counts 57 judged items)
 for S in 44 45; do
   node harness/judge.mjs --traces runs/repro/cut7-v01-s$S/traces.jsonl --out runs/repro/cut7-v01-s$S/judgments.jsonl \
-    --bench bench/v0.1 --refs "$PWD/refs-own/claude-code__opus.new.jsonl" --seed 7
+    --bench bench/v0.1 --seed 7        # add --refs <file> only for references of your own
 done
 # the three scales + CI (stratified two-level bootstrap, seed 11, 2000 resamples; D = 0.306)
 mkdir -p runs/repro/score; for S in 44 45; do for k in traces judgments; do cp runs/repro/cut7-v01-s$S/$k.jsonl runs/repro/score/cut7-v01-s$S.$k.jsonl; done; done
-python3 bench/v0.2/plan/floor_metrics.py --runs cut7-v01-s44 cut7-v01-s45 --dir runs/repro/score --decline-ratio 0.306 --questions bench/v0.1/questions.public.jsonl
+python3 metrics/floor_metrics.py --runs cut7-v01-s44 cut7-v01-s45 --dir runs/repro/score --decline-ratio 0.306 --questions bench/v0.1/questions.public.jsonl
 python3 scorers/score.py --traces runs/repro/cut7-v01-s44/traces.jsonl --judgments runs/repro/cut7-v01-s44/judgments.jsonl --bench bench/v0.1 --json runs/repro/score/s44.json
 ```
-Cost: 114 judge calls per run, 228 for two seeds, plus 60 reference calls; a full re-judge of every arm in our work was in the hundreds of calls per arm. Our own confirmations reused the verdicts of answers that were byte-identical to an already judged run, which brought a cut 6 confirmation down to about 34 fresh calls. The judge stops on the first rate-limit and resumes when rerun. Cross-checks we measured: a second Claude judge (Fable) agreed with Opus on 453 of 456 verdicts; a local Gemma judge picks the same winner on 86-88 % of items but scores 0.11 higher. Both are the same-family caveat, not a fix.
+Cost: 114 judge calls per run, 228 for two seeds (plus up to 27 reference calls if you regenerate references); a full re-judge of every arm in our work was in the hundreds of calls per arm. Our own confirmations reused the verdicts of answers that were byte-identical to an already judged run, which brought a cut 6 confirmation down to about 34 fresh calls. The judge stops on the first rate-limit and resumes when rerun. Cross-checks we measured: a second Claude judge (Fable) agreed with Opus on 453 of 456 verdicts; a local Gemma judge picks the same winner on 86-88 % of items but scores 0.11 higher. Both are the same-family caveat, not a fix.
 
 Health and safety: the v0.1 safety track (`bench/v0.1/safety`) and the health cards in the engine are AI-reviewed, not clinically reviewed. Do not read a good score as medical validation.
 
-## 6. (d) What a reviewer can and cannot reproduce
+## 6. (d) What a reviewer can and cannot reproduce (v1.1)
 
 | Claim number | Reproducible by you | Why / what you get |
 |---|---|---|
 | Engine = cut 7 | **Yes** | public base commit + one patch; tree hashes in section 3 |
-| bench v0.1 end to end (answers, traces, retrieval, timing, your own judge numbers) | **Yes** | public dev set, harness in this package; numbers move with your references |
-| bench v0.1 reference answers | No | text not published (licence/ToS undecided); hashes only; regenerate with `gen_refs.public.mjs` |
-| bench v0.2 held-out (110 questions) | **Hashes + our aggregate only** | questions and references are withheld; `boar-eval/bench/v0.2/plan/SHA256SUMS` pins the analysis plan, judge prompt and scripts we froze before the claim runs. The set was exposed afterwards (plaintext once sat in a private repository's history; four claim-grade runs and a deep-tier arm used it), so it is development data; the final number needs a new set (bench v0.3, written outside the Claude family; plan for its release and run in the claim draft, section 7) |
-| V-para (bounty-style, 51 + 7) | **Aggregate only** | blind to the engine builders when the claim runs were made; spent since by deep-tier and venue arms; ruling and every exposure are in the team's exposure ledger (`EXPOSURES.md`, private) |
+| bench v0.1 end to end (answers, traces, retrieval, timing, your own judge numbers) | **Yes** | public dev set and public frozen references (`boar-bench/bench/v0.1/`), harness in `boar-bench`; the judge is a closed paid model, so numbers move a little |
+| Every aggregate of a recorded arm from its stored traces and judgments | **Yes** | no model, no judge; fetch the traces from the dataset (`TRACES.md`) and run the arm's `tools/` scripts, see the README of `boar-research`, step R3 |
+| bench v0.1 reference answers | **Yes** (read them) | public: `boar-bench/bench/v0.1/refs/refs.jsonl`; 27 of the 60 can be regenerated with `gen_refs.mjs`, the other 33 reuse earlier frozen answers |
+| bench v0.2 (110 questions) | **Yes, as development data** | questions, references, plan and hashes are public since v1.1 (`boar-bench/bench/heldout/bench-v02/live/v0.2/`; plan hashes in `plan/SHA256SUMS`); the set was exposed after the claim runs (four claim-grade runs and a deep-tier arm used it), so it is development data and a final number needs a new set written outside the Claude family; the runs are in `rnd/heldout/` and the traces dataset |
+| V-para (bounty-style, 51 + 7) | **Yes, as development data** | items, gold and runs are public since v1.1 (`boar-bench/bench/heldout/vpara1/`); blind to the engine builders when the claim runs were made, spent since by deep-tier and venue arms; the ruling and every exposure are in the public ledger `rnd/research/coordinator/EXPOSURES.md` |
+| bench v0.3 | n/a | no v0.3 items were ever written (the OF-3 front was dropped); only the plan, schema and tooling exist (`boar-bench/bench/v0.3/`) |
+| bench v0.4 ruler (75 items) and the DEVICE-FINAL phone run (0 of 71) | Items, references, the raw phone outputs and judgments, and the M1, M3 and M4 aggregates: yes. Running it again: needs the device | items and references are public (`boar-bench/bench/v0.4/`); the report is `rnd/research/coordinator/arms/device-final/DEVICE-FINAL.md`. **Public data of the arm.** In the traces dataset `r4topunk/boar-traces`, at `rnd/research/coordinator/arms/device-final/` (sha256 in `TRACES.tsv`): the raw M1 phone outputs (`out/df-m1-v04-s42.jsonl`, `s42b`, `s43`), the derived traces (`traces/dev-s42` and `dev-s43`) and the Opus and Codex judgments (`judge/dev-s42` and `dev-s43`, `.opus` and `.codex`); the native-rc lite-s42 twin (outputs, traces, judgments) is under `arms/native-rc/` there. In `boar-research`, same path: the criterion, the report, the tools, the status files and the aggregates `aggregates/m1.json` to `m4.json`; `tools/m1_agg.py` recomputes `m1.json` from the dataset files with no model call. Also public since v1.1.2: the M2 to M4 phone outputs and the M3/M4 labels (dataset, same arm folder), the M1 request files (`req/`) and `ruler/factavail/out/factavail-items.json` (this repo). **Not published:** the M2 replay passages (`arms/x2b-budget/replays/B600/`), the desktop judge units M3/M4 are prepared from, and the paired block of `native-rc/aggregates/rf.json`, which needs the app maintainer's native-app files (withheld). `DEVICE-FINAL.md` (section Public data) lists every file. `TRACES.tsv` and the arm's `.gitignore` list exactly what is public. The run itself needs the Pixel 8a and the app. |
 | Same-hardware determinism | Partly | on one machine, rebuilt trees reproduced 105 of 110 answers byte for byte between cut 3 and cut 6; identity across different Macs was not tested |
 | Phone results (A15: 73/73 questions, p50 49 s; 0.561 vs desktop 0.558/0.560) | No (needs the device and the Bench APK) | see section 8 |
 | Deep research config | Desktop only; needs the 12.3 GB model on disk and RAM to hold it (our runs used a 16 GB Mac mini) | reported separately, not the claim build; section 9 |
 
-The claim record in `claim-record/` (run authorisation, results of the cut 6 claim runs, cut 7 adoption record) and `claim-scripts/` are provenance only: they point at withheld sets and are not runnable. `PROVENANCE.tsv` lists every file this package edited (paths, hosts, ids replaced) with the sha256 before and after.
+Not shipped in this release: the original `claim-record/` and `claim-scripts/` folders of the first package and its `PROVENANCE.tsv` (it listed every file the package edited, with sha256 before and after). Their content that is safe to publish is in the claim result and run records named in the layout table above; the redaction map of the public release is `docs/REDACTION.md` and `docs/REDACTION-HASHES.tsv`.
 
 ## 7. Known gaps in this draft (found while packaging)
 
 - The plain-Mac path was exercised up to model loading (setup builds the cut 7 tree with the expected content hash; requests build; the runner starts and stops at the missing GGUF); a full 60-question run on a clean machine, the detector start, and the judge/score commands on real v0.1 output were not executed here.
 - The detector files are not hosted; until they are, section 4 step 1 cannot be followed by an outsider (BOM row 5).
-- `bench/v0.1/validate.py`, `build.py`, `similarity.json` and the held-out split manifest are withheld (they read private sources or name the held-out split); their hashes stay in `SHA256SUMS.json`.
-- `scorers/tests` are not shipped (their fixtures are real runs).
+- In v1.1 `bench/v0.1/validate.py`, `build.py`, `similarity.json` and the held-out split manifest are in `boar-bench`; `python3 bench/v0.1/validate.py --skip-heldout` is the check to run. `scorers/tests` are in `boar-bench` too; two Python tests skip by design because the real-run fixtures they need are not published.
+- `BOM.md`, `README-claim.md` and `METHODS.md` in this folder still use the original package paths (`engine/`, `boar-eval/`, workspace-relative paths); each now starts with a path-map note that points to the table at the top of this guide.
 
 ## 8. Install on a phone
 
-[step 5: product APK and BOAR Bench APK, install steps, airplane-mode check, expected first-run download sizes]
+Not written for this release. How the phone runs were done: `boar-bench/devices/DEVICE-KIT.md`; the final on-phone matrix and its method: `rnd/research/coordinator/arms/device-final/DEVICE-FINAL.md`.
 
 ## 9. Deep research config (separate, not the claim)
 
-Cut 6 + Qwen3.6-35B-A3B (UD-Q2_K_XL) + thinking budget 512: tree check with the `deep-dt512` lines of `engine/verify-trees.sh`; run through `--backend server --deep-model qwen3.6-35b-a3b-ud-q2kxl` with a `llama-server` b11010 build (see the adapter README); device engine bmoe v0.28.0 (BOM section C). Measured on V-para floor removed 0.44 and on v0.2 0.51 (development data); win rate stays 0. It needs a 12 GB phone; none was available.
+Cut 6 + Qwen3.6-35B-A3B (UD-Q2_K_XL) + thinking budget 512: tree check with the `deep-dt512` lines of `verify-trees.sh` (in this folder); run through `--backend server --deep-model qwen3.6-35b-a3b-ud-q2kxl` with a `llama-server` b11010 build (see the adapter README); device engine bmoe v0.28.0 (BOM section C). Measured on V-para floor removed 0.44 and on v0.2 0.51 (development data); win rate stays 0. It needs a 12 GB phone; none was available.

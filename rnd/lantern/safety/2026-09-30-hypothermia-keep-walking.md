@@ -9,7 +9,7 @@
 - **Source:** **not an app first-aid card.** It is a verbatim excerpt of **Wikivoyage "Cold weather"** (page_id 36601, pack article id 19386), section "Frostbite and hypothermia". The pack is `boar-wikivoyage-en`, sha256 `ff8595e32f56b8b84e20464afd8bf88532d47d2d82d799e3df8489440004b66e`, `r4topunk/boar-packs@9557c7b`.
 - **Why it is unsafe for this presentation:**
   - Confusion + slurred speech mean alertness is declining, i.e. at least moderate hypothermia.
-  - The WMS 2019 guideline allows increasing exercise **only in mild** hypothermia. For moderate it says "patients with moderate hypothermia should be kept horizontal to prevent afterdrop" and "Handle gently".
+  - The WMS 2019 guideline allows increasing exercise **only in mild** hypothermia. For moderate it says to keep the patient horizontal, to prevent afterdrop, and to handle them gently (paraphrase; wording withheld for copyright, see the guideline).
   - CDC's steps are shelter, remove wet clothing, and dry layers. **The excerpt omits all three.**
   - It does say "in severe cases… keep the victim at rest", but only after leading with walking. It also leaves the user to stage the case.
 - **The app code turned a neutral paragraph into walking-first advice.** `healthExtract` jumps to the first "action" sentence and dropped the two sentences before it ("Hypothermia is overall reduced body temperature. It will lead to loss of initiative, sluggish thinking and irrational behaviour."). `safeHealthExcerpt` has no rule against exertion advice in hypothermia.
@@ -33,12 +33,12 @@
 - **CDC, Winter Weather** (https://www.cdc.gov/winter-weather/prevention/index.html, fetched 2026-09-30).
   - Warning signs in adults: "Shivering," "Exhaustion or feeling very tired," "Confusion," "Fumbling hands," "Memory loss," "Slurred speech," "Drowsiness."
   - Steps: "Seek medical attention as soon as possible." "Get them into a warm room or shelter." "Remove any wet clothing." "Warm them under dry layers of blankets and clothing."
-- **Wilderness Medical Society, Clinical Practice Guidelines for the Out-of-Hospital Evaluation and Treatment of Accidental Hypothermia: 2019 Update** (Dow et al., Wilderness Environ Med 2019; https://journals.sagepub.com/doi/full/10.1016/j.wem.2019.10.002). Quoted from the AAFP summary (https://www.aafp.org/afp/2020/1101/p571, fetched 2026-09-30):
-  - "Hypothermia first affects movement when mild, followed by declining alertness and loss of shivering in moderate hypothermia";
-  - for mild only: "allowing the patient to increase exercise slowly to generate additional heat may be considered";
-  - "patients with moderate hypothermia should be kept horizontal to prevent afterdrop";
-  - "Handle gently".
-  - UNKNOWN: I did not read the full WMS PDF (the mirror URL returned 404). The quotes come from the AAFP summary page.
+- **Wilderness Medical Society, Clinical Practice Guidelines for the Out-of-Hospital Evaluation and Treatment of Accidental Hypothermia: 2019 Update** (Dow et al., Wilderness Environ Med 2019; https://journals.sagepub.com/doi/full/10.1016/j.wem.2019.10.002). Read via the AAFP summary (https://www.aafp.org/afp/2020/1101/p571, fetched 2026-09-30). Paraphrased; the verbatim wording is withheld for copyright (see the url):
+  - mild hypothermia affects movement first; moderate adds declining alertness and loss of shivering;
+  - for mild only: slowly increasing exercise to generate heat may be considered;
+  - moderate: keep the patient horizontal to prevent afterdrop;
+  - handle the patient gently.
+  - UNKNOWN: I did not read the full WMS PDF (the mirror URL returned 404). The points come from the AAFP summary page.
 
 ## Why the eval gates missed it
 

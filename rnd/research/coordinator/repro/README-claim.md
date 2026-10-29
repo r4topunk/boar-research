@@ -1,5 +1,7 @@
 # BOAR: offline research assistant for Android (poidh bounty #31 claim, cut 7)
 
+> **Public-release path map (v1.1.2).** This file was written for the first single-package release. Read `boar-eval/...` as `boar-bench/...` (sibling repository) and `engine/...` and `tools/...` as this folder (`rnd/research/coordinator/repro/`); other workspace-relative paths resolve in `boar-research` or `boar-bench` unless `docs/EXCLUDED.md` lists them as withheld. Full table: [REPRODUCE.md](REPRODUCE.md), section "v1.1 layout".
+
 DRAFT, not published. Numbers are copied from the claim draft v3.8, section 1 (now [METHODS.md](METHODS.md)); nothing here is new evidence.
 
 ## What it is and how it works

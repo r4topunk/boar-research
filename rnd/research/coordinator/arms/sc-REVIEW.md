@@ -20,7 +20,7 @@ Both cards were verified sentence by sentence; nothing in the proposed text is u
 - "If you are alone, call for help first; if no one can reach you, move calmly and slowly toward help rather than waiting."
 - No official health-agency source says this. I searched and found it only in non-agency pages, which are not usable here.
 - Its second half contradicts WHO ("keep them from moving around at all") and CDC ("Lay or sit down").
-- **Decision: remove it** and use the brief's option (b), supported by CDC ("get medical help right away"), NHS ([NHS quote withheld]) and healthdirect ("Call triple zero (000)"): "if you are alone, call right away and follow their instructions." Movement decisions are left to the call handler.
+- **Decision: remove it** and use the brief's option (b), supported by CDC ("get medical help right away"), NHS ([NHS quote withheld]) and healthdirect ([healthdirect quote withheld]): "if you are alone, call right away and follow their instructions." Movement decisions are left to the call handler.
 
 ## Card 1: water safety. Verdict **CHANGE**
 Sentence check of the proposed text: every sentence is supported (CDC-W/EPA-W quotes re-verified verbatim). Gaps found:
@@ -56,10 +56,10 @@ Issues:
 | # | issue | resolution |
 |---|---|---|
 | 1 | "Alone" sentence is unsourced and contradicts immobilisation. | Replaced (flagged issue 2). |
-| 2 | **No explicit "call" in the card body.** The emergency line comes only at the very end, after about ten sentences. | Add "Call emergency services now." as sentence 2 (NHS [NHS quote withheld]; healthdirect "Call triple zero (000)"; CDC "Seek emergency medical attention as soon as possible"). |
-| 3 | **"Wash the bite with soap and water" conflicts by region.** healthdirect (Australian Government): "Do not wash the bite area — venom left on the skin and clothing can help identify the snake." | Region-neutral rule: drop washing. It has no acute benefit, and the clean dry dressing stays (CDC). |
+| 2 | **No explicit "call" in the card body.** The emergency line comes only at the very end, after about ten sentences. | Add "Call emergency services now." as sentence 2 (NHS [NHS quote withheld]; healthdirect [healthdirect quote withheld]; CDC "Seek emergency medical attention as soon as possible"). |
+| 3 | **"Wash the bite with soap and water" conflicts by region.** healthdirect (Australian Government) says not to wash the bite area, because venom left on the skin and clothing can help identify the snake ([healthdirect quote withheld]). | Region-neutral rule: drop washing. It has no acute benefit, and the clean dry dressing stays (CDC). |
 | 4 | "and anything tight": WHO is silent. | Now sourced by NHS: [NHS quote withheld]. Use "loosen clothing near the bite". Don't say "anything tight", which could be read as removing an Australian pressure bandage. |
-| 5 | "tight tourniquet" implies a loose one is fine. | CDC "Do not apply a tourniquet", NHS [NHS quote withheld], healthdirect "Do not apply a tourniquet": use "Do NOT use a tourniquet". |
+| 5 | "tight tourniquet" implies a loose one is fine. | CDC "Do not apply a tourniquet", NHS [NHS quote withheld], healthdirect [healthdirect quote withheld]: use "Do NOT use a tourniquet". |
 | 6 | "painkillers such as aspirin or ibuprofen" reads as all painkillers; NHS says [NHS quote withheld]. | Name only the agreed drugs: "don't take aspirin, ibuprofen or naproxen" (CDC list). |
 | 7 | No airway or collapse step (dangerous omission). | Add the side position ("on their side if possible", WHO + NHS "recovery position"; compatible with CDC "Lay or sit down"). Add "If the person stops responding or stops breathing normally, start CPR" (healthdirect). This answers brief points 2 and 3. |
 | 8 | Brief point 4, photo | Add, distance-guarded: CDC "Take a photograph from a safe distance to identify the snake if possible"; NHS [NHS quote withheld]. The first sentence already says to move away. |
@@ -75,15 +75,15 @@ The emergency-numbers line stays appended after it.
 
 | new or changed text | official quote (live 2026-10-04) | source |
 |---|---|---|
-| "Call emergency services now" | "Call 999 or go to A&E immediately if: you think you, or someone else, has been bitten by a snake" · "Call triple zero (000) and ask for an ambulance" · "Seek emergency medical attention as soon as possible" | NHS-S · HD-S · CDC-S |
+| "Call emergency services now" | [NHS quote withheld] · [healthdirect quote withheld] · "Seek emergency medical attention as soon as possible" | NHS-S · HD-S · CDC-S |
 | "if you are alone, call right away and follow their instructions" | "Do not wait for symptoms to appear; get medical help right away" | CDC-S (brief option b) |
 | "lying down, on their side if possible" | "If possible place them on their side to help protect their airway and breathing." · "lie in the recovery position if you can" · "Lay or sit down with the bite in a neutral position of comfort." | WHO-S · NHS-S · CDC-S |
 | "Take off rings, watches and bracelets, and loosen clothing near the bite, before swelling starts" | "Remove rings and watches before swelling starts" · "take off any jewellery and loosen clothes near the bite" | CDC-S · NHS-S |
-| "Do NOT use a tourniquet" | "Do not apply a tourniquet, electric shock, or folk therapies." · "Do not apply a tourniquet (a strap to stop blood flow)." | CDC-S · HD-S |
+| "Do NOT use a tourniquet" | "Do not apply a tourniquet, electric shock, or folk therapies." · [healthdirect quote withheld] | CDC-S · HD-S |
 | "don't take aspirin, ibuprofen or naproxen" | "Do not drink alcohol as a painkiller or take pain relievers (such as, aspirin, ibuprofen, naproxen)." · "do not take aspirin or ibuprofen, as they can make bleeding worse" | CDC-S · NHS-S |
 | "take a photo of the snake…" | "Take a photograph from a safe distance to identify the snake if possible" | CDC-S |
-| "start CPR" | "Start cardiopulmonary resuscitation (CPR), if the person is unresponsive or not breathing normally." | HD-S |
-| (removed) "Wash the bite with soap and water" | "Do not wash the bite area — venom left on the skin and clothing can help identify the snake." | HD-S (conflicts with CDC-S; dropped as region-neutral) |
+| "start CPR" | [healthdirect quote withheld] | HD-S |
+| (removed) "Wash the bite with soap and water" | [healthdirect quote withheld] | HD-S (conflicts with CDC-S; dropped as region-neutral) |
 | unchanged sentences | WHO-S immobilise/stretcher/incision/suction/chemicals; CDC-S dressing, mark and time, ice/water, don't wait | WHO-S · CDC-S |
 
 **Brief point 1 (unit-test guard):** confirmed. "Rings", "watch" and "ice" are now sourced, so the EN test can drop them from the forbidden list. Keep forbidding "immobiliz…" and "heart" (heart-level positioning is contested). Add forbidden "wash" (region conflict) and "tight tourniquet". Add required "Call emergency services", "on their side" and "CPR". PT/ES cards are out of scope and unchanged. Note for later: their "torniquete apertado" has the same "tight tourniquet" issue as row 5.
@@ -103,6 +103,6 @@ Not used:
 - https://medlineplus.gov/snakebites.html returned 404 on 2026-10-04.
 - Non-agency pages (Mayo Clinic, Red Cross, commercial sites) surfaced by a search for the "alone" sentence; none was used.
 
-Licence: CDC, EPA and NIOSH texts are US federal works (public domain). NHS text is under the Open Government Licence v3.0. healthdirect content is © Healthdirect Australia; it is used only as the basis for one paraphrased instruction and one omission, with no text reproduced in the card.
+Licence: CDC, EPA and NIOSH texts are US federal works (public domain). NHS text is under the Open Government Licence v3.0, but NHS wording is not redistributed in this release. healthdirect content is © Healthdirect Australia; it is used only as the basis for one paraphrased instruction and one omission, with no text reproduced in the card, and its wording is withheld from this review (v1.1.2).
 
 AI-reviewed, not clinically reviewed.

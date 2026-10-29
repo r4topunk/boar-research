@@ -35,9 +35,9 @@ Criterion: `COMPLETE-criterion.md`, sha256 `bff13f1ca4d84d00…`. I checked it b
 -
 -(Response style: Keep it short: 2-3 sentences. No lists unless the question asks for one.)
 ```
-Also `max_tokens` 512 → 700. Nothing else changed: same contexts `ctx-R450.jsonl` (sha `ad73972b…`), same sampler (0.7/40/0.95/0.05, seed 42), same `llama-server` b11010 (0.4.1-dev, commit 4bc272f), same flags (`-t 4 -tb 4 -c 4096 -ngl 0 -np 1 --jinja --no-webui --cache-ram 0 --reasoning-format deepseek`, `cache_prompt:false`), same model Qwen3.6-35B-A3B UD-Q2_K_XL (sha `96b9c0af…`, re-verified on the mini), thinking off. Mini, heavy lock, `<runner>/kiln/complete/`.
+Also `max_tokens` 512 → 700. Nothing else changed: same contexts `ctx-R450.jsonl` (sha `65322180…`), same sampler (0.7/40/0.95/0.05, seed 42), same `llama-server` b11010 (0.4.1-dev, commit 4bc272f), same flags (`-t 4 -tb 4 -c 4096 -ngl 0 -np 1 --jinja --no-webui --cache-ram 0 --reasoning-format deepseek`, `cache_prompt:false`), same model Qwen3.6-35B-A3B UD-Q2_K_XL (sha `96b9c0af…`, re-verified on the mini), thinking off. Mini, heavy lock, `<runner>/kiln/complete/`.
 
-**Interpretation to flag:** the old prompt states the answer length in two places. One is the system sentence. The other is a user-turn suffix, `(Response style: Keep it short: 2-3 sentences. …)`. I treated the suffix as part of "the answer instruction" and removed it, so the new instruction is not contradicted in the same request. Everything else in the system prompt is byte-identical: the bullets rule, the sources/citation rule, the "context doesn't cover" rule, the safety lines and "concise offline research assistant". A check over all 57 requests shows they differ from DEEPREAD's only by these two strings (0 mismatches). requests.jsonl sha `c247a4af…`.
+**Interpretation to flag:** the old prompt states the answer length in two places. One is the system sentence. The other is a user-turn suffix, `(Response style: Keep it short: 2-3 sentences. …)`. I treated the suffix as part of "the answer instruction" and removed it, so the new instruction is not contradicted in the same request. Everything else in the system prompt is byte-identical: the bullets rule, the sources/citation rule, the "context doesn't cover" rule, the safety lines and "concise offline research assistant". A check over all 57 requests shows they differ from DEEPREAD's only by these two strings (0 mismatches). requests.jsonl sha `24895537…`.
 
 ## Results (judge-core `summarize()` on combined orders, same script logic as DEEPREAD)
 | system | ratio (95% CI) | win / tie / loss | rubric C / Cm / U | floor-adj (CI) | pos. consistency |
@@ -110,7 +110,7 @@ Format side-effects: 5/57 answers used bullets and 3/57 cited "[General Knowledg
 ## Files (this folder; mini copy `<runner>/kiln/complete/`, nothing deleted there)
 - `COMPLETE-criterion.md` / `.sha256`: frozen criterion, untouched.
 - `prompt-diff.txt` / `prompt-diff.sha256`: the prompt change, written before generation.
-- `build_msgs.mjs` → `requests.jsonl` (sha `c247a4af…`); `build.log`: context check vs the 4B traces, 0 mismatches.
+- `build_msgs.mjs` → `requests.jsonl` (sha `24895537…`); `build.log`: context check vs the 4B traces, 0 mismatches.
 - `gen_server.py`: DEEPREAD's script with only `max_tokens` 700 and the run name changed.
 - `gen-run.log`, `deep35-complete-R450.traces.server.log`: logs.
 - `deep35-complete-R450.traces.jsonl` (sha `842cfc20…`), `deep35-complete-R450.judgments.jsonl` (sha `497838ca…`), `judge-deep35-complete-R450.log`: traces, judgments, judge log.

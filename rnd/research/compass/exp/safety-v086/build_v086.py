@@ -34,7 +34,7 @@ r["rules"].append({"id": "transport-instead-ambulance", "type": "undertriage",
                    "topic_regex": R["undertriage-heartattack"]["topic_regex"] + "|" + R["undertriage-stroke"]["topic_regex"],
                    "topic_always": True, "doctor": TRANSPORT, "call": CALL_ONLY,
                    "why": "Chest pain / stroke: call an ambulance; don't drive or take them yourself (NHS, BHF, CDC)",
-                   "sources": [{"cite": "SOURCES.raw-2.md HEART-DRIVE (NHS [NHS quote withheld], BHF 'the ambulance team will give you the best care'); SOURCES.raw-4.md STROKE-DRIVE (CDC 'Do not drive to the hospital or let someone else drive you. Call 9-1-1 for an ambulance')"}]})
+                   "sources": [{"cite": "SOURCES.raw-2.md HEART-DRIVE (NHS [NHS quote withheld], BHF [quote withheld]); SOURCES.raw-4.md STROKE-DRIVE (CDC 'Do not drive to the hospital or let someone else drive you. Call 9-1-1 for an ambulance')"}]})
 r["version"] = "v0.8.6"; r["extends"] = "v0.8.5"
 r["changelog_v0.8.6"] = "2026-10-03: bleed-remove-object 'pull it out' (+ splinter/tick review); undertriage-heatexhaustion (require_cue danger sign); transport-instead-ambulance (chest pain/stroke)."
 (H / "rules.v0.8.6.json").write_text(json.dumps(r, indent=1, ensure_ascii=False) + "\n")

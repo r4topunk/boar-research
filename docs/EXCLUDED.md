@@ -1,6 +1,6 @@
 # What was excluded, and why
 
-TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,810 files (1136 MB) are in this record; the rest is excluded for the reasons below. **v1.1 (2026-10-27): the held-out and burnt sets, their runs and the v0.4 ruler are no longer excluded** (section 3 below says what moved); what is still excluded is only what is private to the author or the app maintainer, spend, credentials, git history and unlicensed competitor material (section 0). The v1.0 text below is kept as the record of what was withheld between 2026-10-26 and 2026-10-27.
+TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,810 files (1136 MB) are in this record; the rest is excluded for the reasons below. **v1.1 (2026-10-27): the held-out and burnt sets, their runs and the v0.4 ruler are no longer excluded** (section 3 below says what moved); what is still excluded is only what is private to the author or the app maintainer, spend, credentials and unlicensed competitor material (section 0). The v1.0 text below is kept as the record of what was withheld between 2026-10-26 and 2026-10-27.
 
 ## 0. What still stays out (v1.1)
 
@@ -10,9 +10,9 @@ TL;DR: the source is the private lab's working tree (51,614 files, 1.36 GB). 31,
 | plan-usage, quota and spend lines and per-call spend fields | author rule: no usage or spend detail | the line rules, `money-usd`, the plan-wording rule and the json-drop keys of the redaction map; replaced by `[usage detail removed]` or dropped |
 | the app maintainer's data: his questions, traces, telemetry, device scores, messages | private to him | scanned all new item sets, runs and docs for maintainer-written or `maint-*` origin rows: none were present; two PR comment drafts addressed to him were excluded; the word hits left are third-party names (an economist, a Stack Exchange user, a Wikipedia article) |
 | credentials and keys | secrecy | gitleaks (0 findings after documented allowlists); public BIP test vectors replaced |
-| git history | never exported | the repository is one snapshot per release |
+| earlier releases in git history | not excluded: one commit per release, earlier releases remain in history | text that a later release withheld (NHS and other copyright quotations, v1.1.1 and v1.1.2) is still readable in the commits that predate the withholding; the withholding applies to the current tree |
 | competitor question sets with no licence | not private, but no licence to redistribute | competitor-derived cases stay out; only numbers and opaque indices from the similarity checks remain (competitor names replaced). In the v1.1 tranche the 27 `vit-fa-*` cases appear as ids only: question, rubric, reference and answer text replaced by `[competitor case text removed in v1.1]` in 26 files |
-| NHS wording | not redistributed (as in v1.0) | 75 verbatim NHS quotations in crisis1, hm-fresh2, hm-fresh3, hm-loc1 withheld in `boar-bench` (org and URL kept) |
+| NHS wording and other copyright quotations | not redistributed (NHS as in v1.0; MedlinePlus encyclopedia, healthdirect, Red Cross and similar since v1.1.2) | 75 verbatim NHS quotations in crisis1, hm-fresh2, hm-fresh3, hm-loc1 withheld in `boar-bench` (org and URL kept); in v1.1.2 the same pass over the safety rules and first-aid-card files of both repositories (`quotes_withheld` counts and a licence note in place of the quotes) |
 | third-party personal data | not ours to publish | emails in retrieved passages replaced; OpenStreetMap `phone` and `contact:*` fields dropped; venue coordinates are public landmarks and stay; Stack Exchange display names stay only where the CC BY-SA licence requires attribution |
 | raw third-party web snapshots, model weights, large binaries, file caches keyed by prompt hash, symlink duplicates | licence, size, no information | as in v1.0 |
 

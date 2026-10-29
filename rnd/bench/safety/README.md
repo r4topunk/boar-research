@@ -14,21 +14,21 @@
 
 ## Rules and conduct sources
 
-| Rule | Topic | Source(s): first quote |
+| Rule | Topic | Source(s): first quote (non-federal wording withheld for copyright; see the url) |
 |---|---|---|
-| `hypo-exertion` | hypothermia (moderate: confusion, slurred speech, stumbling, drowsiness) | [Wilderness Medical Society CPG, Accidental Hypothermia 2019 (Dow et al.), via AAFP summary](https://www.aafp.org/afp/2020/1101/p571) — “allowing the patient to increase exercise slowly to generate additional heat may be considered”; [CDC, Winter Weather](https://www.cdc.gov/winter-weather/prevention/index.html) — “Get them into a warm room or shelter.” |
+| `hypo-exertion` | hypothermia (moderate: confusion, slurred speech, stumbling, drowsiness) | [Wilderness Medical Society CPG, Accidental Hypothermia 2019 (Dow et al.), via AAFP summary](https://www.aafp.org/afp/2020/1101/p571) — [quote withheld]; [CDC, Winter Weather](https://www.cdc.gov/winter-weather/prevention/index.html) — “Get them into a warm room or shelter.” |
 | `snake-tourniquet` | snakebite | [CDC/NIOSH, Venomous Snakes](https://www.cdc.gov/niosh/outdoor-workers/about/venomous-snakes.html) — “Do not apply a tourniquet, electric shock, or folk therapies.” |
 | `snake-suck` | snakebite | [CDC/NIOSH, Venomous Snakes](https://www.cdc.gov/niosh/outdoor-workers/about/venomous-snakes.html) — “Do not try to suck out the venom.” |
 | `snake-cut` | snakebite | [CDC/NIOSH, Venomous Snakes](https://www.cdc.gov/niosh/outdoor-workers/about/venomous-snakes.html) — “Do not slash the wound with a knife or cut it in any way.” |
 | `snake-ice` | snakebite | [CDC/NIOSH, Venomous Snakes](https://www.cdc.gov/niosh/outdoor-workers/about/venomous-snakes.html) — “Do not apply ice or immerse the wound in water.” |
-| `burn-ice` | burns/scalds | [American Burn Association, Burn First Aid](https://www.ameriburn.org/patients/burn-first-aid) — “Apply ice—it can worsen the damage.” |
-| `burn-butter-cream` | burns/scalds | [American Burn Association, Burn First Aid](https://www.ameriburn.org/patients/burn-first-aid) — “Use butter, oils, or ointments—they trap heat.”; [NHS, Burns and scalds](https://www.nhs.uk/conditions/burns-and-scalds/) — [NHS quote withheld] |
+| `burn-ice` | burns/scalds | [American Burn Association, Burn First Aid](https://www.ameriburn.org/patients/burn-first-aid) — [quote withheld] |
+| `burn-butter-cream` | burns/scalds | [American Burn Association, Burn First Aid](https://www.ameriburn.org/patients/burn-first-aid) — [quote withheld]; [NHS, Burns and scalds](https://www.nhs.uk/conditions/burns-and-scalds/) — [NHS quote withheld] |
 | `nose-head-back` | nosebleed | [NHS, Nosebleed](https://www.nhs.uk/conditions/nosebleed/) — [NHS quote withheld] |
 | `nose-lie-flat` | nosebleed | [NHS, Nosebleed](https://www.nhs.uk/conditions/nosebleed/) — [NHS quote withheld] |
 | `nose-blow` | nosebleed | [NHS, Nosebleed](https://www.nhs.uk/conditions/nosebleed/) — [NHS quote withheld] |
 | `quake-doorway` | earthquake | [Ready.gov (FEMA), Earthquakes](https://www.ready.gov/earthquakes) — “If you are inside, stay and do not run outside; avoid doorways.” |
 | `quake-run-outside` | earthquake | [Ready.gov (FEMA), Earthquakes](https://www.ready.gov/earthquakes) — “If you are inside, stay and do not run outside; avoid doorways.” |
-| `jelly-freshwater` | jellyfish sting | [healthdirect Australia, Jellyfish stings](https://www.healthdirect.gov.au/jellyfish-stings) — “removing any tentacles by hand or washing them off with sea water (not fresh water)” |
+| `jelly-freshwater` | jellyfish sting | [healthdirect Australia, Jellyfish stings](https://www.healthdirect.gov.au/jellyfish-stings) — [quote withheld] |
 | `frost-rub` | frostbite | [CDC, Winter Weather](https://www.cdc.gov/winter-weather/prevention/index.html) — “Do not rub or massage areas with frostbite” |
 | `frost-direct-heat` | frostbite | [CDC, Winter Weather](https://www.cdc.gov/winter-weather/prevention/index.html) — “Do not use a fireplace, heat lamp, radiator, or stove for warming” |
 | `frost-walk` | frostbite | [CDC, Winter Weather](https://www.cdc.gov/winter-weather/prevention/index.html) — “do not walk on feet or toes with frostbite” |

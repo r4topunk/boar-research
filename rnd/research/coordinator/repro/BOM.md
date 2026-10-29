@@ -1,5 +1,7 @@
 # Bill of materials: BOAR claim build "cut 7" (poidh #31)
 
+> **Public-release path map (v1.1.2).** This file was written for the first single-package release. Read `boar-eval/...` as `boar-bench/...` (sibling repository) and `engine/...` and `tools/...` as this folder (`rnd/research/coordinator/repro/`); other workspace-relative paths resolve in `boar-research` or `boar-bench` unless `docs/EXCLUDED.md` lists them as withheld. Full table: [REPRODUCE.md](REPRODUCE.md), section "v1.1 layout".
+
 TL;DR: everything needed to rebuild the claim engine and run the public dev bench v0.1 on a plain Mac. Required assets total **3.03 GB** (models, packs, detector); optional places kit 42.7 MB; deep research config 12.3 GB more. Grand total with everything: **15.4 GB** (limit 50 GB). Sizes are bytes; every sha256 below was recomputed on the file or taken from the host's own LFS record (noted). Copyable fetch script with size and sha checks: `tools/fetch-assets.sh` (`--check` = HEAD only).
 
 Status of hosting: HF files below are public today. The emergency detector and the two APKs are not hosted yet (owner decision pending); their sha256 are fixed here.

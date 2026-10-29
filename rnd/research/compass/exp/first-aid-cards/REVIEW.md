@@ -77,15 +77,15 @@ Covers: vit-loc1-026, vit-hm2-017 (rescued child not breathing; myth: drain wate
 <details><summary>Sources quoted</summary>
 
 - **CHOKE-CHILD-5b** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **DROWN-1** Saudi Ministry of Health, Drowning First Aid Steps: "Do not try to remove water from the mouth or press on the chest/abdomen—this is ineffective and can cause injury. / CPR takes priority over attempts to “expel water.”" (https://www.moh.gov.sa/en/awarenessplateform/FirstAid/Pages/Drowning.aspx)
-- **DROWN-1b** St John Ambulance NSW, Rescuing a drowning person: "Avoid delays or interruptions to CPR. Do not empty a distended stomach by applying external pressure. It is not necessary to drain clear water or frothy fluid that can build up in the upper airway during CPR." (https://stjohnnsw.com.au/first-aid-guides/rescuing-a-drowning-person/)
-- **DROWN-2** St John Ambulance (UK), Drowning: "Check the airway is open before giving five initial rescue breaths. / After 30 chest compressions, give two rescue breaths." (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/) CONFLICT: 5 initial breaths (SJA, British Red Cross) vs 2 (Saudi MOH)
-- **DROWN-2b** British Red Cross, Drowning first aid: "Step 4. Give five rescue breaths / Step 5. Give 30 chest compressions by pushing firmly in the middle of their chest up and down. / If you are on your own, call 999 after you’ve spent one minute giving them rescue breaths and chest compressions." (https://www.redcross.org.uk/first-aid/learn-first-aid/drowning)
-- **DROWN-3** AAP (HealthyChildren.org), CPR for drowning: updated guidance: "Anyone who needs any level of resuscitation following drowning, including those who only need rescue breaths, should be transported to a hospital for evaluation, monitoring and treatment." (https://www.healthychildren.org/English/news/Pages/cpr-for-drowning-updated-guidance.aspx)
-- **DROWN-3b** St John Ambulance (UK), Drowning: "People who have experienced near-drowning (they have been successfully rescued, with or without the need for resuscitation) may need to be observed for a short period in hospital. Medical advice should be sought, even if they appear well in the immediate aftermath." (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/)
-- **DROWN-WARM-SJA** St John Ambulance (UK), Drowning: "put them in the recovery position. You may also need to treat them for hypothermia by covering them with warm clothes and blankets." (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/) ok (curl)
-- **FA-DROWN-SAFE** St John Ambulance (UK), Drowning: "Do not put yourself in danger…" (https://www.sja.org.uk/first-aid-advice/drowning/) ok (2026-10-02)
-- **HEAD-RECOVERY** St John Ambulance (UK), Recovery position: "It’s safe to place someone in the recovery position who is not responding to you but is breathing normally. / If you suspect someone has a spinal injury and they cannot maintain an open airway, you need to place them in the recovery position. / Try to keep the head and spine in a straight line where possible while maintaining an open airway." (https://www.sja.org.uk/first-aid-advice/recovery-position/) CONFLICT: BRC turns every unresponsive breathing person onto their side even with a suspected neck injury; SJA only if the airway can't be kept open
+- **DROWN-1** Saudi Ministry of Health, Drowning First Aid Steps: [quote withheld (copyright); see url] (https://www.moh.gov.sa/en/awarenessplateform/FirstAid/Pages/Drowning.aspx)
+- **DROWN-1b** St John Ambulance NSW, Rescuing a drowning person: [quote withheld (copyright); see url] (https://stjohnnsw.com.au/first-aid-guides/rescuing-a-drowning-person/)
+- **DROWN-2** St John Ambulance (UK), Drowning: [quote withheld (copyright); see url] (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/) CONFLICT: 5 initial breaths (SJA, British Red Cross) vs 2 (Saudi MOH)
+- **DROWN-2b** British Red Cross, Drowning first aid: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/drowning)
+- **DROWN-3** AAP (HealthyChildren.org), CPR for drowning: [quote withheld (copyright); see url] (https://www.healthychildren.org/English/news/Pages/cpr-for-drowning-updated-guidance.aspx)
+- **DROWN-3b** St John Ambulance (UK), Drowning: [quote withheld (copyright); see url] (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/)
+- **DROWN-WARM-SJA** St John Ambulance (UK), Drowning: [quote withheld (copyright); see url] (https://www.sja.org.uk/get-advice/first-aid-advice/breathing-difficulties/drowning/) ok (curl)
+- **FA-DROWN-SAFE** St John Ambulance (UK), Drowning: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/drowning/) ok (2026-10-02)
+- **HEAD-RECOVERY** St John Ambulance (UK), Recovery position: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/recovery-position/) CONFLICT: BRC turns every unresponsive breathing person onto their side even with a suspected neck injury; SJA only if the airway can't be kept open
 
 </details>
 
@@ -126,7 +126,7 @@ Covers: vit-hm2-011, vit-hm3-014 (myth: pee on it)
 <details><summary>Sources quoted</summary>
 
 - **FA-JELLY-HOT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/) ok (2026-10-02; re-seen 2026-10-03)
-- **FA-JELLY-VINEGAR** healthdirect (AU), Jellyfish stings: "remove any tentacles… pour vinegar on the sting site and go to hospital (tropical) / Do not put vinegar on the sting. (bluebottle)" (https://www.healthdirect.gov.au/jellyfish-stings) ok (2026-10-02)
+- **FA-JELLY-VINEGAR** healthdirect (AU), Jellyfish stings: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/jellyfish-stings) ok (2026-10-02)
 - **JELLY-CALL** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
 - **JELLY-TENT** NHS, Jellyfish and other sea creature stings: [NHS quote withheld] (https://www.nhs.uk/conditions/jellyfish-and-other-sea-creature-stings/)
 
@@ -207,12 +207,12 @@ Covers: vit-hm2-021 (type 1, shaky and sweaty, can swallow; myth: give insulin)
 <details><summary>Sources quoted</summary>
 
 - **FA-HYPO-15** CDC, Treatment of Low Blood Sugar (Hypoglycemia): "Have 15 grams of carbs, then wait 15 minutes. Check your blood sugar again." (https://www.cdc.gov/diabetes/treatment/treatment-low-blood-sugar-hypoglycemia.html) † summary-only (2026-10-02)
-- **FA-HYPO-15b** healthdirect (AU), Hypoglycaemia: "Have about 15g of fast-acting carbohydrate." (https://www.healthdirect.gov.au/hypoglycaemia) ok (2026-10-02)
+- **FA-HYPO-15b** healthdirect (AU), Hypoglycaemia: [quote withheld (copyright); see url] (https://www.healthdirect.gov.au/hypoglycaemia) ok (2026-10-02)
 - **HYPO-AFTER** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (NHS page review overdue)
 - **HYPO-GLUCAGON** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/)
-- **HYPO-INSULIN** St John New Zealand, Diabetes (first aid library): "DO NOT try to give the person insulin – that can be dangerous." (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) single source
+- **HYPO-INSULIN** St John New Zealand, Diabetes (first aid library): [quote withheld (copyright); see url] (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) single source
 - **HYPO-SUGARY-NHS** NHS, Low blood sugar (hypoglycaemia): [NHS quote withheld] (https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/) ok (curl); supports [NHS quote withheld] only indirectly, via 'sugary'
-- **HYPO-UNRESP-CALL** St John New Zealand, Diabetes (first aid library): "Call 111 for an ambulance if: / The person is unresponsive or unconscious" (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) ok (via SOURCES.raw.md HYPO-GLUCAGON note)
+- **HYPO-UNRESP-CALL** St John New Zealand, Diabetes (first aid library): [quote withheld (copyright); see url] (https://www.stjohn.org.nz/first-aid/first-aid-library/diabetes/) ok (via SOURCES.raw.md HYPO-GLUCAGON note)
 
 </details>
 
@@ -249,13 +249,13 @@ Covers: requested: scorpion/venomous sting in a child (Sonar repro ×5 PT; chat-
 
 <details><summary>Sources quoted</summary>
 
-- **SCORP-2** Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões: "Deve-se limpar o local com água e sabão e a vítima deve então ser encaminhada, sem demora, para o ponto de atendimento médico de referência da região." (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes/faq/faq)
-- **SCORP-4** Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões: "A primeira coisa a ser feita é acalmar a pessoa e afastá-la do escorpião causador do acidente." (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes/faq/faq)
-- **SCORP-5** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): "Não fazer torni quete ou garrote, não furar, não cortar, não queimar, não espremer o local da picada; / Não fazer sucção no local da ferida;" (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf) ok ('torni quete' = PDF text split)
-- **SCORP-CHILD-1** Ministério da Saúde (BR), Acidentes por Escorpiões: "Crianças constituem o grupo mais suscetível ao envenenamento sistêmico grave. / Em caso de emergência, contate imediatamente o Serviço de Atendimento Móvel de Urgência (SAMU 192) ou o Corpo de Bombeiros (193)." (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes)
-- **SCORP-CHILD-1b** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): "Para crianças até 10 anos: Deve-se procurar o mais rapidamente possível a unidade de saúde / OBS: Se necessário, ligue para o SAMU pelo 192, pois há urgência no atendimento à criança picada." (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf)
-- **SCORPA-NOSUBST-BR** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): "Não aplicar qualquer ti po de substância sobre o local da picada (fezes, álcool, querosene, fumo, ervas, urina, pó de café, terra)" (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf) ok ('ti po' = PDF text split)
-- **SCORPA-SIGNS-BR** Ministério da Saúde (BR), Acidentes por Escorpiões: "Sudorese profusa, agitação psicomotora, tremores, náuseas, vômitos, sialorreia / Crianças constituem o grupo mais suscetível ao envenenamento sistêmico grave." (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes)
+- **SCORP-2** Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões: [quote withheld (copyright); see url] (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes/faq/faq)
+- **SCORP-4** Ministério da Saúde (BR), Perguntas Frequentes, Acidentes por Escorpiões: [quote withheld (copyright); see url] (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes/faq/faq)
+- **SCORP-5** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): [quote withheld (copyright); see url] (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf) ok ('torni quete' = PDF text split)
+- **SCORP-CHILD-1** Ministério da Saúde (BR), Acidentes por Escorpiões: [quote withheld (copyright); see url] (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes)
+- **SCORP-CHILD-1b** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): [quote withheld (copyright); see url] (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf)
+- **SCORPA-NOSUBST-BR** Secretaria de Estado da Saúde de São Paulo (CVE), Acidentes com escorpiões (alerta à população): [quote withheld (copyright); see url] (https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-de-transmissao-por-vetores-e-zoonoses/escorpiao-evento/alerta23_populacao_escorpiao.pdf) ok ('ti po' = PDF text split)
+- **SCORPA-SIGNS-BR** Ministério da Saúde (BR), Acidentes por Escorpiões: [quote withheld (copyright); see url] (https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/animais-peconhentos/acidentes-por-escorpioes)
 
 </details>
 
@@ -295,9 +295,9 @@ Covers: requested: choking child (Sonar repro 'Criança engasgada')
 
 <details><summary>Sources quoted</summary>
 
-- **CHOKE-ADULT-SJA** St John Ambulance (UK), Adult choking: "give five abdominal thrusts. To do this, stand behind them and put your arms around their waist. Place one hand in a clenched fist between their belly button and the bottom of their chest. With your other hand, grasp your fist and pull sharply inwards and upwards up to five times." (https://www.sja.org.uk/get-advice/first-aid-advice/choking/adult-choking/) ok (curl); NHS has no adult choking page (404), SJA used instead
+- **CHOKE-ADULT-SJA** St John Ambulance (UK), Adult choking: [quote withheld (copyright); see url] (https://www.sja.org.uk/get-advice/first-aid-advice/choking/adult-choking/) ok (curl); NHS has no adult choking page (404), SJA used instead
 - **CHOKE-CHILD-1** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-CHILD-2** British Red Cross, Choking child: "1. Give up to five back blows. / Hit them firmly on their back between the shoulder blades." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-child)
+- **CHOKE-CHILD-2** British Red Cross, Choking child: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-child)
 - **CHOKE-CHILD-3** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-CHILD-4** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-CHILD-5a** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
@@ -344,9 +344,9 @@ Covers: requested: choking infant (new engine key; needs the trigger split in tr
 - **CHOKE-CHILD-5a** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-CHILD-5b** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
 - **CHOKE-INFANT-1** NHS, How to stop a child from choking: [NHS quote withheld] (https://www.nhs.uk/conditions/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/)
-- **CHOKE-INFANT-2** British Red Cross, Choking baby: "Place two fingers in the middle of their chest just below the nipples. Push sharply downwards up to five times." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby) CONFLICT: two fingers (NHS, BRC) vs two-thumb encircling (SJA)
-- **CHOKE-INFANT-3** British Red Cross, Choking baby: "Abdominal thrusts are used to help choking children and adults only. Using abdominal thrusts on a baby could damage their internal organs, which are fragile and still developing." (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby)
-- **CHOKE-INFANT-4** St John Ambulance (UK), Baby choking: "Call 999 or 112 for emergency help if the obstruction hasn't cleared. / Take the baby with you to make the call. / All babies who have received chest thrusts should be seen in hospital." (https://www.sja.org.uk/get-advice/first-aid-advice/choking/baby-choking/)
+- **CHOKE-INFANT-2** British Red Cross, Choking baby: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby) CONFLICT: two fingers (NHS, BRC) vs two-thumb encircling (SJA)
+- **CHOKE-INFANT-3** British Red Cross, Choking baby: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby)
+- **CHOKE-INFANT-4** St John Ambulance (UK), Baby choking: [quote withheld (copyright); see url] (https://www.sja.org.uk/get-advice/first-aid-advice/choking/baby-choking/)
 
 </details>
 
@@ -380,8 +380,8 @@ Covers: requested: swallowed battery/coin (Sonar repro 'Minha filha engoliu uma 
 
 <details><summary>Sources quoted</summary>
 
-- **BATT-1** CAPT (Child Accident Prevention Trust), Button Batteries: In an emergency: "Take them straight to the A&E department at your local hospital or dial 999 for an ambulance. / Trust your instincts and act fast – do not wait to see if any symptoms develop." (https://capt.org.uk/button-batteries-in-an-emergency/)
-- **BATT-2** CAPT (Child Accident Prevention Trust), Button Batteries: In an emergency: "Do not let your child eat or drink. / Do not make them sick." (https://capt.org.uk/button-batteries-in-an-emergency/)
+- **BATT-1** CAPT (Child Accident Prevention Trust), Button Batteries: [quote withheld (copyright); see url] (https://capt.org.uk/button-batteries-in-an-emergency/)
+- **BATT-2** CAPT (Child Accident Prevention Trust), Button Batteries: [quote withheld (copyright); see url] (https://capt.org.uk/button-batteries-in-an-emergency/)
 - **COIN-1** NHS West Yorkshire Healthier Together, Swallowed an object: [NHS quote withheld] (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object) ok (regional NHS; no national page)
 - **COIN-1b** NHS West Yorkshire Healthier Together, Swallowed an object: [NHS quote withheld] (https://wyhealthiertogether.nhs.uk/parentscarers/keeping-your-child-safe/swallowed-foreign-object)
 

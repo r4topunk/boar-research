@@ -43,15 +43,15 @@ Covers: Sonar: the placeholder heartattack card (with aspirin dosing) fires on 5
 
 <details><summary>Sources quoted</summary>
 
-- **HEART-ASPIRIN** St John Ambulance (UK), Heart attack: "Give them one aspirin tablet (300mg) and ask them to chew it slowly. / Do not give aspirin to the casualty if they are under 16 or if they are allergic to it." (https://www.sja.org.uk/first-aid-advice/heart-attack/) CONFLICT: chew + under-16 only on SJA (BRC: chew); NHS/BHF: 300 mg + allergy only
+- **HEART-ASPIRIN** St John Ambulance (UK), Heart attack: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/heart-attack/) CONFLICT: chew + under-16 only on SJA (BRC: chew); NHS/BHF: 300 mg + allergy only
 - **HEART-ASPIRIN-NHS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
-- **HEART-CALL** British Heart Foundation, Heart attack: "Call 999 if you think you or someone you know is having a heart attack. / It’s important you get medical attention immediately. Do not worry about wasting anyone’s time. A heart attack is a medical emergency." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
+- **HEART-CALL** British Heart Foundation, Heart attack: [quote withheld (copyright); see url] (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
 - **HEART-CALL-NHS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
-- **HEART-CALM** British Heart Foundation, Heart attack: "sit down and stay calm / wait for the ambulance." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
-- **HEART-CPR** St John Ambulance (UK), CPR: "If they are not breathing normally, ask a helper to call 999 or 112 for an ambulance while you start CPR. Ask a helper to find and bring a defibrillator, if available. / Do not leave the casualty to look for a defibrillator yourself." (https://www.sja.org.uk/first-aid-advice/cpr/)
-- **HEART-CPR-BHF** British Heart Foundation, How to do CPR: "Call 999. If the person is unconscious and not breathing, or not breathing normally, start CPR. / Use a defibrillator as soon as you can. Follow its instructions carefully while you continue to give CPR." (https://www.bhf.org.uk/how-you-can-help/how-to-save-a-life/how-to-do-cpr)
+- **HEART-CALM** British Heart Foundation, Heart attack: [quote withheld (copyright); see url] (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
+- **HEART-CPR** St John Ambulance (UK), CPR: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/cpr/)
+- **HEART-CPR-BHF** British Heart Foundation, How to do CPR: [quote withheld (copyright); see url] (https://www.bhf.org.uk/how-you-can-help/how-to-save-a-life/how-to-do-cpr)
 - **HEART-DRIVE** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
-- **HEART-DRIVE-BHF** British Heart Foundation, Heart attack: "Do not try and take yourself to hospital, as the ambulance team will give you the best care and do tests on the way." (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
+- **HEART-DRIVE-BHF** British Heart Foundation, Heart attack: [quote withheld (copyright); see url] (https://www.bhf.org.uk/informationsupport/conditions/heart-attack)
 - **HEART-REST** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-SIGNS** NHS, Heart attack: [NHS quote withheld] (https://www.nhs.uk/conditions/heart-attack/)
 - **HEART-SIGNS-CDC** CDC, About Heart Attack Symptoms, Risk, and Recovery: "Pain or discomfort in the jaw, neck, or back. / Pain or discomfort in one or both arms or shoulders. / Shortness of breath. / You may also break into a cold sweat." (https://www.cdc.gov/heart-disease/about/heart-attack.html)
@@ -96,11 +96,11 @@ Covers: requested: head injury (and Sonar's 'Criança caiu e está sem responder
 
 - **HEAD-111** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/) CONFLICT (tier): vomiting = NHS 111 (England); [NHS quote withheld] = emergency (healthdirect, CDC 'repeatedly'); any vomiting = 999 (BRC)
 - **HEAD-999** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/)
-- **HEAD-COLD-BRC** British Red Cross, Head injury: "Never place ice directly on the skin, as it’s too cold." (https://www.redcross.org.uk/first-aid/learn-first-aid/head-injury)
+- **HEAD-COLD-BRC** British Red Cross, Head injury: [quote withheld (copyright); see url] (https://www.redcross.org.uk/first-aid/learn-first-aid/head-injury)
 - **HEAD-HOME** NHS, Head injury and concussion: [NHS quote withheld] (https://www.nhs.uk/conditions/head-injury-and-concussion/)
-- **HEAD-NECK** St John Ambulance (UK), Spinal injury: "Reassure the casualty. Do not move them and do not tell them to move, unless they are in immediate danger. / Steady and support their head so that their head, neck, and spine are in a straight line." (https://www.sja.org.uk/first-aid-advice/spinal-injury/)
-- **HEAD-NECK-SJA** St John Ambulance (UK), Head injury: "Try not to move the casualty from the position you found them in as they may have a spinal injury. Only move them if they are in danger." (https://www.sja.org.uk/first-aid-advice/head-injury/)
-- **HEAD-RECOVERY** St John Ambulance (UK), Recovery position: "It’s safe to place someone in the recovery position who is not responding to you but is breathing normally. / If you suspect someone has a spinal injury and they cannot maintain an open airway, you need to place them in the recovery position. / Try to keep the head and spine in a straight line where possible while maintaining an open airway." (https://www.sja.org.uk/first-aid-advice/recovery-position/) CONFLICT: BRC turns every unresponsive breathing person onto their side even with a suspected neck injury; SJA only if the airway can't be kept open
+- **HEAD-NECK** St John Ambulance (UK), Spinal injury: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/spinal-injury/)
+- **HEAD-NECK-SJA** St John Ambulance (UK), Head injury: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/head-injury/)
+- **HEAD-RECOVERY** St John Ambulance (UK), Recovery position: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/recovery-position/) CONFLICT: BRC turns every unresponsive breathing person onto their side even with a suspected neck injury; SJA only if the airway can't be kept open
 
 </details>
 
@@ -145,13 +145,13 @@ Covers: requested: tsunami / coastal earthquake (Sonar keeps the earthquake carv
 
 - **TSU-BEACH** NOAA National Weather Service, Tsunami Safety: During a Tsunami: "If you are on the beach or near the water and feel an earthquake—no matter how big or how long it lasts—move quickly off the beach to high ground or inland (away from the water) as soon as you can do so safely." (https://www.weather.gov/safety/tsunami-during) CONFLICT (threshold): any quake on the beach (NWS) vs 'strong or long' in a hazard zone (NWS) vs 'hard to stay standing' (SENAPRED)
 - **TSU-FLOAT** Ready.gov (FEMA), Tsunamis: "If you are in the water, then grab onto something that floats, such as a raft or tree trunk." (https://www.ready.gov/tsunamis)
-- **TSU-FOOT** NSW State Emergency Service, Tsunami guide (PDF): "If possible, evacuate on foot to avoid roads that may be closed or congested." (https://www.ses.nsw.gov.au/sites/default/files/document/tsunami-guide.pdf)
+- **TSU-FOOT** NSW State Emergency Service, Tsunami guide (PDF): [quote withheld (copyright); see url] (https://www.ses.nsw.gov.au/sites/default/files/document/tsunami-guide.pdf)
 - **TSU-NOWAIT** NOAA National Weather Service, Tsunami Safety: During a Tsunami: "Do not wait for an official tsunami warning or for instructions from local officials. / the ocean acts strange (e.g., it looks like a fast-rising flood or a wall of water or it drains away suddenly, showing the ocean floor like a very low tide) OR there is a loud roar coming from the ocean, a tsunami is possible and could arrive within minutes." (https://www.weather.gov/safety/tsunami-during)
 - **TSU-QUAKE** Ready.gov (FEMA), Tsunamis: "If there is an earthquake and you are in a tsunami area, protect yourself from the earthquake first. Drop, Cover, and Hold On. / When the shaking stops, if there are natural signs or official warnings of a tsunami, move immediately to a safe place as high and as far inland as possible." (https://www.ready.gov/tsunamis)
-- **TSU-QUAKE-ARC** American Red Cross, Tsunami: "As soon as the shaking stops, move quickly to higher ground or inland away from the coast. Don’t wait for an official alert." (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/tsunami.html)
+- **TSU-QUAKE-ARC** American Red Cross, Tsunami: [quote withheld (copyright); see url] (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/tsunami.html)
 - **TSU-STAY** NOAA National Weather Service, Tsunami Safety: During a Tsunami: "Stay out of the tsunami hazard or evacuation zone until local officials tell you it is safe. The first wave may not be the last or the largest and the danger may last for hours or days." (https://www.weather.gov/safety/tsunami-during)
-- **TSU-VERTICAL** NSW State Emergency Service, Tsunami guide (PDF): "If you can’t leave the area, take shelter in upper floors of a sturdy building." (https://www.ses.nsw.gov.au/sites/default/files/document/tsunami-guide.pdf) CONFLICT: SENAPRED (Chile) = only as a second option, buildings of at least 8 floors; NWS = ask local EM
-- **TSU-VERTICAL-CL** SENAPRED (Chile), Tsunami: "Prioriza la evacuación horizontal hacia un Punto de Encuentro y/o Área de Seguridad. Si esto no es posible, y sólo como segunda alternativa, considera realizar una evacuación vertical hacia edificios de al menos ocho pisos y sube lo más alto posible." (https://senapred.cl/tsunami/)
+- **TSU-VERTICAL** NSW State Emergency Service, Tsunami guide (PDF): [quote withheld (copyright); see url] (https://www.ses.nsw.gov.au/sites/default/files/document/tsunami-guide.pdf) CONFLICT: SENAPRED (Chile) = only as a second option, buildings of at least 8 floors; NWS = ask local EM
+- **TSU-VERTICAL-CL** SENAPRED (Chile), Tsunami: [quote withheld (copyright); see url] (https://senapred.cl/tsunami/)
 
 </details>
 
@@ -200,13 +200,13 @@ Covers: Sonar: the placeholder hypothermia card fires on dng-002 / saf-002; repl
 - **HYPOTH-CALL** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 - **HYPOTH-CPR** CDC, Preventing Hypothermia: "Perform CPR, even if the person appears dead. CPR should continue until the person responds or medical aid becomes available. Keep warming the person while performing CPR." (https://www.cdc.gov/winter-weather/prevention/index.html)
 - **HYPOTH-DONT** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
-- **HYPOTH-DONT-SJA** St John Ambulance (UK), Hypothermia: "Do not place any direct heat such as hot water bottles or fires near a casualty as this can cause burns." (https://www.sja.org.uk/first-aid-advice/hypothermia/)
+- **HYPOTH-DONT-SJA** St John Ambulance (UK), Hypothermia: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/hypothermia/)
 - **HYPOTH-DRINK** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 - **HYPOTH-DRINK-CDC** CDC, Preventing Hypothermia: "Warm drinks can help increase body temperature, but do not give alcoholic drinks. Do not try to give beverages to an unconscious person." (https://www.cdc.gov/winter-weather/prevention/index.html)
 - **HYPOTH-ES-CDC** CDC en español, Cómo prevenir la hipotermia: "Las bebidas calientes pueden ayudar a aumentar la temperatura del cuerpo, pero no le dé bebidas alcohólicas. No intente darle bebidas a una persona inconsciente." (https://www.cdc.gov/winter-weather/es/prevention/como-prevenir-la-hipotermia.html)
 - **HYPOTH-GENTLE** CDC, Preventing Hypothermia: "In this case, handle the person gently, and get emergency assistance immediately." (https://www.cdc.gov/winter-weather/prevention/index.html) ok (said for severe hypothermia)
 - **HYPOTH-SHELTER** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/) ok (NHS page review overdue)
-- **HYPOTH-SHELTER-SJA** St John Ambulance (UK), Hypothermia: "If you are unable to get them indoors, try to take them to a sheltered place as quickly as possible, shielding the casualty from the wind. / Try to protect the casualty from the ground." (https://www.sja.org.uk/first-aid-advice/hypothermia/)
+- **HYPOTH-SHELTER-SJA** St John Ambulance (UK), Hypothermia: [quote withheld (copyright); see url] (https://www.sja.org.uk/first-aid-advice/hypothermia/)
 - **HYPOTH-SKIN** CDC, Preventing Hypothermia: "You can also use skin-to-skin contact under loose, dry layers of blankets, clothing, towels, or sheets." (https://www.cdc.gov/winter-weather/prevention/index.html)
 - **HYPOTH-WET** NHS, Hypothermia: [NHS quote withheld] (https://www.nhs.uk/conditions/hypothermia/)
 
