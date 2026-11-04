@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased: bounty 1520 errata
+
+- Errata confirmed from the audits of poidh bounty 1520 are in `docs/ERRATA-BOUNTY-1520.md` (E1 to E8; the original files are not rewritten). The headline is unchanged: 0 of 71 wins, U-total 0.165 (Claude) / 0.242 (gpt-5.6-sol). Corrected readings: the phone health figures F-2241, F-2242 and the M1 refusal gap describe the eval runner's pack ids, not the app's path (E1); the last clause of F-2217 is unsupported (E2); pooled CR / CE in `device-final/aggregates/m1.json` are invalid (E3); the current-city stratum the spec required: Claude 0.1645 with / 0.1717 without the 7 items, gpt-5.6-sol 0.2424 / 0.2463 (E4); the F-2236 "no gain on real development items" covers cell (a) only (E5); registry verdicts, inherited results and the 387 / 215 count (E6); "answer coverage 0.90" in F-2238 is kept-source coverage (E7); a reading note on the v0.4 reference ceiling (E8).
+
 ## v1.1.2, 2026-10-29: device-final raw data, copyright quotations, corrections
 
 Added
